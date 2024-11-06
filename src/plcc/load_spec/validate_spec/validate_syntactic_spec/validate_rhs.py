@@ -1,7 +1,10 @@
 from ...parse_spec.parse_lexical_spec import LexicalSpec
 from ...parse_spec.parse_syntactic_spec import (
     SyntacticSpec,
+    RhsNonTerminal
 )
+
+from .errors import ValidationError
 
 
 def validate_rhs(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec, nonTerminals: set()):
@@ -18,4 +21,13 @@ class SyntacticRhsValidator:
         self.nonTerminals = set()
 
     def validate(self):
+        self._validateNonTerminals()
+        for rule in self.syntacticSpec:
+            for s in rule.rhsSymbolList:
+                if isinstance(s, RhsNonTerminal):
+                    self._validateNonTerminal(s)
+
+        pass
+
+    def _validateNonTerminal(self, s):
         pass

@@ -13,6 +13,7 @@ from ...parse_spec.parse_syntactic_spec import (
 )
 from .errors import (
     InvalidLhsNameError,
+    InvalidRhsNameError,
     InvalidLhsAltNameError,
     DuplicateLhsError,
 )
@@ -204,6 +205,10 @@ def makeTerminal(name: str | None):
 
 def makeInvalidLhsNameFormatError(rule):
     return InvalidLhsNameError(rule)
+
+
+def makeInvalidRhsNameFormatError(rule):
+    return InvalidRhsNameError(rule)
 
 
 def makeInvalidLhsAltNameFormatError(rule):
