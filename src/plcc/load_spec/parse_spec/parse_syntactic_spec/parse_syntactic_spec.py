@@ -14,7 +14,6 @@ from .structs import (
     RhsNonTerminal,
     Terminal,
     CapturingSymbol,
-    MalformedLHSError,
     MalformedBNFError,
 )
 
@@ -62,8 +61,6 @@ class SyntacticLineParser:
 
     def _parseLeft(self) -> LhsNonTerminal:
         match = self._matchLeft()
-        if not match:
-            raise MalformedLHSError(self.line)
         return LhsNonTerminal(match["nonTerminal"], match["altName"])
 
     def _parseRight(self) -> List[Symbol]:

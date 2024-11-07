@@ -10,6 +10,5 @@ from .structs import (
     RhsNonTerminal,
     Terminal,
     CapturingSymbol,
-    MalformedLHSError,
     MalformedBNFError,
 )
