@@ -42,8 +42,14 @@ two
     ])
 
 
-def makeBlockList(string):
-    lines = [makeLine(s) for s in string.strip().split('\n')]
+def test_include_with_relative_path(fs):
+    fs.create_file('A.java', contents='hi in java')
+    fs.create_file('test.py', contents='''\
+%include A.java
+''')
+    assert load_rough_spec('test.py') == split_rough_spec([
+        makeLine('hi in java', 1, '/A.java')
+    ])
 
 
 def makeLine(string, lineNumber=None, file=None):
