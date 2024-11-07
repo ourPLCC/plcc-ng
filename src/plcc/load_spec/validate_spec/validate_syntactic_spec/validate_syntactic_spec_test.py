@@ -10,12 +10,14 @@ from ...parse_spec.parse_syntactic_spec import (
     Symbol,
     LhsNonTerminal,
     Terminal,
+    RhsNonTerminal
 )
 from .errors import (
     InvalidLhsNameError,
     InvalidRhsNameError,
     InvalidLhsAltNameError,
     DuplicateLhsError,
+    
 )
 
 
@@ -179,6 +181,22 @@ def test_duplicate_resolved_name():
     assert errors[0] == makeDuplicateLhsError(spec[1])
 
 
+def test_invalid_Rhs_error():
+    name1 = makeSyntacticRule(
+        makeLine("<sentence> ::= VERB"),
+        makeLhsNonTerminal("sentence"),
+        [makeTerminal("VERB")],
+    )
+    name2 = makeSyntacticRule(
+        makeLine("<name> ::= <VERB>"),
+        makeLhsNonTerminal("name"),
+        [makeRhsNonTerminal("VERB")],
+    )
+    spec = [name1, name2]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsNameFormatError(spec[1])
+
 def validate(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec = []):
     return validate_syntactic_spec(syntacticSpec, lexicalSpec)
 
@@ -198,6 +216,9 @@ def makeLine(string, lineNumber=1, file=None):
 def makeLhsNonTerminal(name: str | None, altName: str | None = None):
     return LhsNonTerminal(name, altName)
 
+
+def makeRhsNonTerminal(name: str | None, altName: str | None = None):
+    return RhsNonTerminal(name, altName)
 
 def makeTerminal(name: str | None):
     return Terminal(name)
