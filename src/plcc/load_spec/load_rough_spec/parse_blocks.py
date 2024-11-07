@@ -10,17 +10,16 @@ class Block:
     lines: [Line]
 
 
-def parse_blocks(lines, brackets=None, Block=Block):
+def parse_blocks(lines, Block=Block):
     if lines is None:
         return []
-    if brackets is None:
-        PPP = re.compile(r'^%%%(?:\s*#.*)?$')
-        PPLC = re.compile(r'^%%{(?:\s*#.*)?$')
-        PPRC = re.compile(r'^%%}(?:\s*#.*)?$')
-        brackets = {
-            PPP: PPP,
-            PPLC: PPRC
-        }
+    PPP = re.compile(r'^%%%(?:\s*#.*)?$')
+    PPLC = re.compile(r'^%%{(?:\s*#.*)?$')
+    PPRC = re.compile(r'^%%}(?:\s*#.*)?$')
+    brackets = {
+        PPP: PPP,
+        PPLC: PPRC
+    }
     return BlockParser(brackets, Block).parse(lines)
 
 
@@ -64,6 +63,8 @@ class BlockParser():
             if b.match(line.string):
                 self.closing = self.brackets[b]
                 return
+        else:       # pragma: no cover
+            pass    # self.brackets is never empty
 
     def isClosing(self, line):
         return self.closing.match(line.string) is not None
