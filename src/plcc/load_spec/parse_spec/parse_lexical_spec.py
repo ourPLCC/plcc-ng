@@ -46,7 +46,7 @@ class LexicalParser():
     def _generateTokenRule(self, line: Line, lineIsSkipToken: Match[str], lineIsRegularToken: Match[str]) -> LexicalRule:
         if lineIsSkipToken:
             return self._generateSkipToken(line, lineIsSkipToken['Name'], lineIsSkipToken['Pattern'])
-        elif lineIsRegularToken:
+        else: # must be a lineIsRegularToken
             return self._generateRegularToken(line, lineIsRegularToken['Name'], lineIsRegularToken['Pattern'])
 
     def _isBlankOrComment(self, line: Line) -> bool:
