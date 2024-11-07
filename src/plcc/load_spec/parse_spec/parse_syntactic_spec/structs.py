@@ -66,11 +66,6 @@ class SyntacticSpec(list):
     pass
 
 
-class MalformedLHSError(Exception):
-    def __init__(self, line):
-        self.line = line
-
-
 class MalformedBNFError(Exception):
     def __init__(self, line):
         self.line = line
