@@ -62,7 +62,7 @@ class RepeatingSyntacticRule(SyntacticRule):
 @dataclass
 class SyntacticSpec(list):
     def __init__(self, rules=None):
-        if rules: super(rules)
+        if rules: super().__init__(rules)
     pass
 
 
