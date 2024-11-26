@@ -16,8 +16,9 @@ from .errors import (
     InvalidLhsNameError,
     InvalidRhsNameError,
     InvalidLhsAltNameError,
+    InvalidRhsAltNameError,
     DuplicateLhsError,
-    
+
 )
 
 
@@ -113,6 +114,19 @@ def test_undercase_lhs_alt_name():
     errors = validate(spec)
     assert len(errors) == 1
     assert errors[0] == makeInvalidLhsAltNameFormatError(spec[0])
+
+def test_undercase_rhs_alt_name():
+    invalid_alt_name = makeLine("<sentence>:name ::= WORD")
+    Name1 = [
+        makeSyntacticRule(
+            invalid_alt_name,
+            makeRhsNonTerminal("sentence", "name"),
+            [makeTerminal("WORD")],
+        )
+    ]
+    errors = validate(Name1)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsAltNameFormatError(Name1[0])
 
 
 def test_underscore_lhs_alt_name():
@@ -235,6 +249,8 @@ def makeInvalidRhsNameFormatError(rule):
 def makeInvalidLhsAltNameFormatError(rule):
     return InvalidLhsAltNameError(rule)
 
+def makeInvalidRhsAltNameFormatError(rule):
+    return InvalidRhsAltNameError(rule)
 
 def makeDuplicateLhsError(rule):
     return DuplicateLhsError(rule)

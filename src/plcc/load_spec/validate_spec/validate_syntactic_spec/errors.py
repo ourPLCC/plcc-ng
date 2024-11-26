@@ -35,3 +35,11 @@ class InvalidRhsNameError(ValidationError):
         super().__init__(rule)
         self.message = f"Invalid RHS name format for rule: '{
             rule.line.string}' (must start with a lower-case letter, and may contain upper or lower case letters, numbers, and underscore.) on line: {rule.line.number}"
+
+@dataclass
+class InvalidRhsAltNameError(ValidationError):
+    def __init__(self, rule):
+        super().__init__(rule)
+        self.message = f"Invalid RHS alternate name format for rule: '{
+            rule.line.string}' (must start with a lower case letter, and may contain upper or lower case letters, numbers, and underscore. on line: {rule.line.number}"
+

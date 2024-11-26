@@ -4,7 +4,7 @@ from ...parse_spec.parse_syntactic_spec import (
     RhsNonTerminal
 )
 
-from .errors  import ValidationError, InvalidRhsNameError
+from .errors  import ValidationError, InvalidRhsNameError, InvalidRhsAltNameError
 import re
 
 def validate_rhs(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec, nonTerminals: set()):
@@ -29,11 +29,15 @@ class SyntacticRhsValidator:
         return self.errorList
 
     def _validateNonTerminal(self, s, rule):
-        print("world!")
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", s.name):
-            self._appendInvalidRhsAltNameError(rule)
-            print("hello!")
+            self._appendInvalidRhsError(rule)
+
+    def _validateNonTermoinalAltName(self, alt_name: str):
+        if not re.match(r"^[A-Z][a-zA-Z0-9_]+$", alt_name):
+            self._appendInvalidRhsAltNameError()
+
+    def _appendInvalidRhsError(self, rule):
+        self.errorList.append(InvalidRhsNameError(rule))
 
     def _appendInvalidRhsAltNameError(self, rule):
         self.errorList.append(InvalidRhsNameError(rule))
-
