@@ -4,7 +4,7 @@ from plcc.load_spec.load_rough_spec.parse_lines import Line
 from .FirstSets import generate_first_sets
 from .SpecGrammar import create_spec_grammar
 from plcc.load_spec.parse_spec.parse_syntactic_spec.parse_syntactic_spec import parse_syntactic_spec
-from .errors import LeftRecursionError
+from .errors import LeftRecursionException
 
 def test_first_set_terminal():
     checker = setupChecker(["<exp> ::= VAR"])
@@ -51,15 +51,15 @@ def test_first_set_multiple_nonterminals_that_derive_epsilon():
     assert checker["two"] == {"TWO", getEpsilon()}
 
 def test_direct_left_recursion_throws_error():
-    with raises(LeftRecursionError):
+    with raises(LeftRecursionException):
         checker = setupChecker(["<exp> ::= <exp> TEST"])
 
 def test_indirect_left_recursion_throws_error():
-    with raises(LeftRecursionError):
+    with raises(LeftRecursionException):
         checker = setupChecker(["<exp> ::= <test>", "<test> ::= <exp>"])
 
 def test_complex_indirect_left_recursion_throws_error():
-    with raises(LeftRecursionError):
+    with raises(LeftRecursionException):
         checker = setupChecker(["<exp> ::= <test>", "<test> ::= <new>", "<new> ::= <exp>"])
 
 def createGrammarWithSpec(lines):

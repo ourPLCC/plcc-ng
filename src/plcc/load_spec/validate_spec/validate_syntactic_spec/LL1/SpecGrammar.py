@@ -3,7 +3,7 @@ from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import (
 )
 from .Grammar import Grammar
 from .LL1Wrapper import wrap_ll1, LL1Wrapper
-from .errors import InvalidSymbolError, InvalidSyntacticSpecError
+from .errors import InvalidSymbolException, InvalidSyntacticSpecException
 
 def create_spec_grammar(syntactic_spec: SyntacticSpec):
     return SpecGrammar(syntactic_spec)
@@ -26,7 +26,7 @@ class SpecGrammar(Grammar):
 
     def _validateSyntacticSpec(self, syntacticSpec: SyntacticSpec) -> None:
         if not isinstance(syntacticSpec, SyntacticSpec):
-            raise InvalidSyntacticSpecError(str(syntacticSpec))
+            raise InvalidSyntacticSpecException(str(syntacticSpec))
 
     def _processRule(self, rule: SyntacticRule) -> None:
         nonterminal = wrap_ll1(rule.lhs.name, rule.lhs)
@@ -57,7 +57,7 @@ class SpecGrammar(Grammar):
         elif isinstance(sym, Symbol):
             return self._wrapSymbol(sym)
         else:
-            raise InvalidSymbolError(str(sym))
+            raise InvalidSymbolException(str(sym))
 
     def _updateNonterminalsAndTerminals(self, nonterminal: LL1Wrapper, form: list[LL1Wrapper]) -> None:
         self.nonterminals.add(nonterminal)

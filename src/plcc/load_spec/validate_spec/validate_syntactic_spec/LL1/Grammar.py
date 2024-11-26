@@ -1,4 +1,4 @@
-from .errors import InvalidNonterminalError, InvalidFormError
+from .errors import InvalidNonterminalException, InvalidFormException
 
 def generate_grammar():
     return Grammar()
@@ -18,12 +18,12 @@ class Grammar:
 
     def _checkParametersForErrors(self, nonterminal: object, form: list[object]):
         if not self.hasHashMethod(nonterminal) or not self.hasEqMethod(nonterminal) or not nonterminal:
-            raise InvalidNonterminalError(str(nonterminal))
+            raise InvalidNonterminalException(str(nonterminal))
         if not isinstance(form, list):
-            raise InvalidFormError(str(form))
+            raise InvalidFormException(str(form))
         for symbol in form:
             if not self.hasHashMethod(symbol) or not self.hasEqMethod(symbol):
-                raise InvalidFormError(str(form))
+                raise InvalidFormException(str(form))
 
     def _addRuleList(self, nonterminal: str, form: list[str]):
         self.nonterminals.add(nonterminal)

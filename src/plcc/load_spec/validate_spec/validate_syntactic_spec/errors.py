@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ValidationError(Exception):
+class ValidationError():
     def __init__(self, rule):
         self.rule = rule
 

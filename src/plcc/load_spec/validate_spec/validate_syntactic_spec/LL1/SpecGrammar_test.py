@@ -4,7 +4,7 @@ from plcc.load_spec.load_rough_spec.parse_lines import Line
 from .LL1Wrapper import wrap_ll1
 from .SpecGrammar import create_spec_grammar
 from plcc.load_spec.parse_spec.parse_syntactic_spec.parse_syntactic_spec import parse_syntactic_spec
-from .errors import InvalidSymbolError, InvalidSyntacticSpecError
+from .errors import InvalidSymbolException, InvalidSyntacticSpecException
 
 
 def test_init():
@@ -54,16 +54,16 @@ def test_get_duplicate_nonterminals():
 
 def test_invalid_form_parameter():
     grammar = createGrammarWithSpec(["<noun> ::= WORD"])
-    with raises(InvalidSymbolError):
+    with raises(InvalidSymbolException):
         grammar.addRule(grammar.getStartSymbol(), ["invalid"])
 
 def test_add_rule_invalid_lhs_parameter():
     grammar = createGrammarWithSpec(["<exp> ::= VAR"])
-    with raises(InvalidSymbolError):
+    with raises(InvalidSymbolException):
         grammar.addRule("invalid", [])
 
 def test_invalid_syntactic_spec_handling():
-    with raises(InvalidSyntacticSpecError):
+    with raises(InvalidSyntacticSpecException):
         makeSpecGrammar("syntactic_spec")
 
 

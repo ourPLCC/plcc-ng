@@ -1,6 +1,6 @@
 from collections import defaultdict
 from .Grammar import Grammar
-from .errors import LeftRecursionError
+from .errors import LeftRecursionException
 
 def generate_first_sets(grammar: Grammar):
     return FirstSetGenerator(grammar).generate()
@@ -23,7 +23,7 @@ class FirstSetGenerator:
         if self.grammar.isTerminal(symbol.specObject):
             return {symbol.name}
         if symbol.name in self.callStack:
-            raise LeftRecursionError(symbol.name)
+            raise LeftRecursionException(symbol.name)
         self.callStack.append(symbol.name)
         first = {self.grammar.getEpsilon().name} if symbol == self.grammar.getEpsilon() else self._computeFirstForNonterminal(symbol)
         self.callStack.pop()
