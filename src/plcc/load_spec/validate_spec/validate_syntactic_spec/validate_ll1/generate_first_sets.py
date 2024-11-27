@@ -15,6 +15,8 @@ class FirstSetGenerator:
     def generate(self):
         for symbol in self.grammar.getNonterminals():
             self.firstSets[symbol.name] = self._computeFirst(symbol)
+        for symbol in self.grammar.getTerminals():
+            self.firstSets[symbol.name] = self._computeFirst(symbol)
         return self.firstSets
 
     def _computeFirst(self, symbol):

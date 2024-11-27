@@ -9,21 +9,28 @@ from .errors import LeftRecursionException
 def test_first_set_terminal():
     checker = setupChecker(["<exp> ::= VAR"])
     assert checker["exp"] == {"VAR"}
+    assert checker["VAR"] == {"VAR"}
 
 def test_first_set_multiple_terminals():
     checker = setupChecker(["<exp> ::= VAR TWO THREE"])
     assert checker["exp"] == {"VAR"}
+    assert checker["VAR"] == {"VAR"}
+    assert checker["TWO"] == {"TWO"}
+    assert checker["THREE"] == {"THREE"}
 
 def test_first_set_nonterminal():
     checker = setupChecker(["<exp> ::= VAR", "<test> ::= <exp>"])
     assert checker["exp"] == {"VAR"}
     assert checker["test"] == {"VAR"}
+    assert checker["VAR"] == {"VAR"}
 
 def test_first_set_multiple_nonterminals_takes_first():
     checker = setupChecker(["<exp> ::= VAR", "<test> ::= <exp> <two>", "<two> ::= TWO"])
     assert checker["exp"] == {"VAR"}
     assert checker["test"] == {"VAR"}
     assert checker["two"] == {"TWO"}
+    assert checker["VAR"] == {"VAR"}
+    assert checker["TWO"] == {"TWO"}
 
 def test_first_set_derives_epsilon():
     checker = setupChecker(["<exp> ::= "])
@@ -32,23 +39,30 @@ def test_first_set_derives_epsilon():
 def test_first_set_derives_epsilon_plus_terminal():
     checker = setupChecker(["<exp> ::= VAR", "<exp> ::= "])
     assert checker["exp"] == {"VAR", getEpsilon()}
+    assert checker["VAR"] == {"VAR"}
 
 def test_first_set_derives_epsilon_plus_nonterminal():
     checker = setupChecker(["<exp> ::= VAR", "<exp> ::= ", "<test> ::= <exp>"])
     assert checker["exp"] == {"VAR", getEpsilon()}
     assert checker["test"] == {"VAR", getEpsilon()}
+    assert checker["VAR"] == {"VAR"}
 
 def test_first_set_multiple_nonterminals_with_terminal():
     checker = setupChecker(["<exp> ::= ", "<exp> ::= VAR", "<test> ::= <exp> <two> THREE", "<two> ::= TWO", "<two> ::= "])
     assert checker["exp"] == {"VAR", getEpsilon()}
     assert checker["test"] == {"VAR", "TWO", "THREE"}
     assert checker["two"] == {"TWO", getEpsilon()}
+    assert checker["VAR"] == {"VAR"}
+    assert checker["TWO"] == {"TWO"}
+    assert checker["THREE"] == {"THREE"}
 
 def test_first_set_multiple_nonterminals_that_derive_epsilon():
     checker = setupChecker(["<exp> ::= ", "<exp> ::= VAR", "<test> ::= <exp> <two>", "<two> ::= TWO", "<two> ::= "])
     assert checker["exp"] == {"VAR", getEpsilon()}
     assert checker["test"] == {"VAR", "TWO", getEpsilon()}
     assert checker["two"] == {"TWO", getEpsilon()}
+    assert checker["VAR"] == {"VAR"}
+    assert checker["TWO"] == {"TWO"}
 
 def test_direct_left_recursion_throws_error():
     with raises(LeftRecursionException):

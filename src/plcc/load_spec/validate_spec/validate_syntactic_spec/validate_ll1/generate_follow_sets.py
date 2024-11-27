@@ -1,6 +1,6 @@
 from collections import defaultdict
 from .Grammar import Grammar
-from .generate_first_sets import FirstSetGenerator, generate_first_sets
+from .generate_first_sets import generate_first_sets
 
 def generate_follow_sets(grammar: Grammar):
     return FollowSetGenerator(grammar).generate()
@@ -10,7 +10,6 @@ class FollowSetGenerator:
         self.grammar = grammar
         self.firstSets = generate_first_sets(grammar)
         self.followSets = defaultdict(set)
-        self.FirstSetGenerator = FirstSetGenerator(grammar)
 
     def generate(self):
         self.followSets[self.grammar.getStartSymbol()].add(self.grammar.getEOF().name)
@@ -43,7 +42,7 @@ class FollowSetGenerator:
         return updated
 
     def _addFirstOfNextSymbol(self, nextSymbol, nonterminal):
-        nextFirst = self.FirstSetGenerator._computeFirst(nextSymbol) - {self.grammar.getEpsilon().name}
+        nextFirst = self.firstSets[nextSymbol.name] - {self.grammar.getEpsilon().name}
         origLen = len(self.followSets[nonterminal.name])
         self.followSets[nonterminal.name].update(nextFirst)
         return len(self.followSets[nonterminal.name]) > origLen
