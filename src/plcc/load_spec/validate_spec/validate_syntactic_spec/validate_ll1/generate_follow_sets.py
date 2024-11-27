@@ -1,6 +1,6 @@
 from collections import defaultdict
 from .Grammar import Grammar
-from .FirstSets import FirstSetGenerator, generate_first_sets
+from .generate_first_sets import FirstSetGenerator, generate_first_sets
 
 def generate_follow_sets(grammar: Grammar):
     return FollowSetGenerator(grammar).generate()

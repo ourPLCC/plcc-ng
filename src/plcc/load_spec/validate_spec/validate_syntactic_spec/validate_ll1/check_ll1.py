@@ -1,9 +1,15 @@
+from ....parse_spec.parse_syntactic_spec.structs import SyntacticSpec
+
 from .Grammar import Grammar
 from ..errors import ValidationError
-from .FirstSets import generate_first_sets
-from .FollowSets import generate_follow_sets
+from .create_spec_grammar import create_spec_grammar
+from .generate_first_sets import generate_first_sets
+from .generate_follow_sets import generate_follow_sets
 
-def check(grammar: Grammar):
+def check_ll1(syntactic_spec: SyntacticSpec):
+    grammar = create_spec_grammar(syntactic_spec)
+    firsts = generate_first_sets(grammar)
+    follows = generate_follow_sets(grammar)
     return LL1Checker(grammar).check()
 
 class LL1Checker:

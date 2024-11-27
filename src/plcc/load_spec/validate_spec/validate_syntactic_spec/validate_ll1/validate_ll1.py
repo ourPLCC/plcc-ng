@@ -1,7 +1,7 @@
-from .LL1Checker import check
-from .SpecGrammar import create_spec_grammar
+from .check_ll1 import check_ll1
+from .create_spec_grammar import create_spec_grammar
 
-def check_ll1(syntactic_spec):
+def validate_ll1(syntactic_spec):
     return LL1Validator(syntactic_spec).validate()
 
 class LL1Validator:
@@ -10,4 +10,4 @@ class LL1Validator:
 
     def validate(self):
         grammar = create_spec_grammar(self.syntacticSpec)
-        return check(grammar)
+        return check_ll1(grammar)
