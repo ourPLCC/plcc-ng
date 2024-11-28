@@ -1,13 +1,12 @@
 from .check_ll1 import check_ll1
-from .create_spec_grammar import create_spec_grammar
+from ..replace_repeating_with_standard_rules import replace_repeating_with_standard_rules
 
 def validate_ll1(syntactic_spec):
     return LL1Validator(syntactic_spec).validate()
 
 class LL1Validator:
     def __init__(self, syntactic_spec):
-        self.syntacticSpec = syntactic_spec
+        self.syntacticSpec = replace_repeating_with_standard_rules(syntactic_spec)
 
     def validate(self):
-        grammar = create_spec_grammar(self.syntacticSpec)
-        return check_ll1(grammar)
+        return check_ll1(self.syntacticSpec)
