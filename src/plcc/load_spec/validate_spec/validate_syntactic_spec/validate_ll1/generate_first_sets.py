@@ -17,6 +17,10 @@ class FirstSetGenerator:
             self.firstSets[symbol.name] = self._computeFirst(symbol)
         for symbol in self.grammar.getTerminals():
             self.firstSets[symbol.name] = self._computeFirst(symbol)
+        for nonterminal, productions in self.grammar.getRules().items():
+            for production in productions:
+                concatenatedProduction = " ".join(sym.name for sym in production)
+                self.firstSets[concatenatedProduction] = self._computeFirstForProduction(production)
         return self.firstSets
 
     def _computeFirst(self, symbol):
@@ -46,6 +50,17 @@ class FirstSetGenerator:
                     break
             if allDeriveEpsilon:
                 first.add(self.grammar.getEpsilon().name)
+        return first
+
+    def _computeFirstForProduction(self, production):
+        first = set()
+        for symbol in production:
+            symFirst = self._computeFirst(symbol)
+            first.update(symFirst - {self.grammar.getEpsilon().name})
+            if self.grammar.getEpsilon().name not in symFirst:
+                break
+        else:
+            first.add(self.grammar.getEpsilon().name)
         return first
 
     def _hasEpsilonRule(self, symbol):

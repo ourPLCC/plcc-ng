@@ -17,6 +17,7 @@ def test_first_set_multiple_terminals():
     assert checker["VAR"] == {"VAR"}
     assert checker["TWO"] == {"TWO"}
     assert checker["THREE"] == {"THREE"}
+    assert checker["VAR TWO THREE"] == {"VAR"}
 
 def test_first_set_nonterminal():
     checker = setupChecker(["<exp> ::= VAR", "<test> ::= <exp>"])
@@ -31,6 +32,7 @@ def test_first_set_multiple_nonterminals_takes_first():
     assert checker["two"] == {"TWO"}
     assert checker["VAR"] == {"VAR"}
     assert checker["TWO"] == {"TWO"}
+    assert checker["exp two"] == {"VAR"}
 
 def test_first_set_derives_epsilon():
     checker = setupChecker(["<exp> ::= "])
@@ -40,6 +42,7 @@ def test_first_set_derives_epsilon_plus_terminal():
     checker = setupChecker(["<exp> ::= VAR", "<exp> ::= "])
     assert checker["exp"] == {"VAR", getEpsilon()}
     assert checker["VAR"] == {"VAR"}
+    assert checker[""] == {getEpsilon()}
 
 def test_first_set_derives_epsilon_plus_nonterminal():
     checker = setupChecker(["<exp> ::= VAR", "<exp> ::= ", "<test> ::= <exp>"])
@@ -55,6 +58,7 @@ def test_first_set_multiple_nonterminals_with_terminal():
     assert checker["VAR"] == {"VAR"}
     assert checker["TWO"] == {"TWO"}
     assert checker["THREE"] == {"THREE"}
+    assert checker["exp two THREE"] == {"VAR", "TWO", "THREE"}
 
 def test_first_set_multiple_nonterminals_that_derive_epsilon():
     checker = setupChecker(["<exp> ::= ", "<exp> ::= VAR", "<test> ::= <exp> <two>", "<two> ::= TWO", "<two> ::= "])
@@ -63,6 +67,19 @@ def test_first_set_multiple_nonterminals_that_derive_epsilon():
     assert checker["two"] == {"TWO", getEpsilon()}
     assert checker["VAR"] == {"VAR"}
     assert checker["TWO"] == {"TWO"}
+    assert checker["exp two"] == {"VAR", "TWO", getEpsilon()}
+
+def test_first_set_multiple_nonterminals_that_derive_epsilon():
+    checker = setupChecker(["<b> ::= A B", "<b> ::= C <s>", "<d> ::= D", "<d> ::= ", "<s> ::= <b> C", "<s> ::= <d> <b>"])
+    assert checker["d"] == {"D", getEpsilon()}
+    assert checker["b"] == {"A", "C"}
+    assert checker["s"] == {"A", "C", "D"}
+    assert checker["A B"] == {"A"}
+    assert checker["C s"] == {"C"}
+    assert checker["D"] == {"D"}
+    assert checker[""] == {getEpsilon()}
+    assert checker["b C"] == {"A", "C"}
+    assert checker["d b"] == {"D", "A", "C"}
 
 def test_direct_left_recursion_throws_error():
     with raises(LeftRecursionException):
