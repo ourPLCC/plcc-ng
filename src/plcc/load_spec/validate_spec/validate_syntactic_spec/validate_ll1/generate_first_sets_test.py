@@ -69,7 +69,7 @@ def test_first_set_multiple_nonterminals_that_derive_epsilon():
     assert checker["TWO"] == {"TWO"}
     assert checker["exp two"] == {"VAR", "TWO", getEpsilon()}
 
-def test_first_set_multiple_nonterminals_that_derive_epsilon():
+def test_first_set_multiple_rhs_first_sets():
     checker = setupChecker(["<b> ::= A B", "<b> ::= C <s>", "<d> ::= D", "<d> ::= ", "<s> ::= <b> C", "<s> ::= <d> <b>"])
     assert checker["d"] == {"D", getEpsilon()}
     assert checker["b"] == {"A", "C"}
