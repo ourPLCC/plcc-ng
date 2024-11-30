@@ -1,5 +1,5 @@
 from pytest import raises, fixture
-from .Grammar import generate_grammar
+from .Grammar import generate_grammar, Grammar
 from .errors import InvalidFormException, InvalidNonterminalException
 
 @fixture
@@ -83,6 +83,27 @@ def test_invalid_form_list_throws_invalid_form_error(grammar, nonterminal, termi
 def test_unhashable_form_list_symbol_throws_invalid_form_error(grammar, nonterminal, terminal):
     with raises(InvalidFormException):
         grammar.addRule(nonterminal, [[],terminal])
+
+def test_convert_terminals_to_nonterminals():
+    g = generate_grammar()
+    g.addRule('a', ['b'])
+    assertNonterminal(g, 'a')
+    assertTerminal(g, 'b')
+    g.addRule('b', ['a'])
+    assertNonterminal(g, 'a')
+    assertNonterminal(g, 'b')
+
+def assertNonterminal(g: Grammar, nt):
+    assert nt not in g.getTerminals()
+    assert nt in g.getNonterminals()
+    assert not g.isTerminal(nt)
+    assert g.isNonterminal(nt)
+
+def assertTerminal(g: Grammar, t):
+    assert t in g.getTerminals()
+    assert t not in g.getNonterminals()
+    assert g.isTerminal(t)
+    assert not g.isNonterminal(t)
 
 def getanotherNonterminal():
     return 'nonTerminalDiff'

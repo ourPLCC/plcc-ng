@@ -27,6 +27,8 @@ class Grammar:
 
     def _addRuleList(self, nonterminal: str, form: list[str]):
         self.nonterminals.add(nonterminal)
+        if nonterminal in self.terminals:
+            self.terminals.remove(nonterminal)
         if nonterminal not in self.rules:
             self.rules[nonterminal] = []
         self.rules[nonterminal].append(form)
