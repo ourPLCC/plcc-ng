@@ -17,7 +17,7 @@ class Grammar:
         self._updateStartSymbol(nonterminal)
 
     def _checkParametersForErrors(self, nonterminal: object, form: list[object]):
-        if not self.hasHashMethod(nonterminal) or not self.hasEqMethod(nonterminal) or not nonterminal:
+        if not self.hasHashMethod(nonterminal) or not self.hasEqMethod(nonterminal):
             raise InvalidNonterminalException(str(nonterminal))
         if not isinstance(form, list):
             raise InvalidFormException(str(form))
