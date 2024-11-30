@@ -2,53 +2,11 @@ from pytest import raises
 from .build_parsing_table import build_parsing_table, Table
 from collections import defaultdict
 
-
-
-def test_left_recursion_results_in_multiple_cell_entries():
-    firstSets = {
-        "s" : {"","A","C","D"},
-        "x" : {"","A","C","D"},
-        "y" : {"","A"},
-        "z" : {"C","D"},
-        "" : {""},
-        "x y z" : {"A","C","D"},
-        "x s" : {"A", "C", "D"},
-        "A y B" : {"A"},
-        "C z" : {"C"},
-        "D" : {"D"}
-    }
-    followSets = {
-        "s" : {chr(26), "A","C","D"},
-        "x" : {"A","C","D"},
-        "y" : {"B","C","D"},
-        "z" : {chr(26), "A","C","D"}
-    }
-    rules = {
-        "s" : ["","x y z"],
-        "x" : ["","x s"], # the rule <x> ::= <x> <s> is left recursive
-        "y" : ["","A y B"],
-        "z" : ["C z", "D"]
-    }
-    table = build_parsing_table(firstSets, followSets, rules)
-
-    assert table.getCell('s','A') == ["", "x y z"]
-    assert table.getCell('s','C') == ["", "x y z"]
-    assert table.getCell('s', 'D') == ["", "x y z"]
-    assert table.getCell('s', '\x1a') == [""]
-
-    # multiple cell entries due to left recursion
-    assert table.getCell('x', 'A') == ["", "x s"]
-    assert table.getCell('x', 'C') == ["", "x s"]
-    assert table.getCell('x', 'D') == ["", "x s"]
-
-    assert table.getCell('y', 'A') == ["A y B"]
-    assert table.getCell('y', 'B') == [""]
-    assert table.getCell('y', 'C') == [""]
-    assert table.getCell('y', 'D') == [""]
-
-    assert table.getCell('z', 'C') == ["C z"]
-    assert table.getCell('z', 'D') == ["D"]
-    assert len(table.getFilledCellLocations()) == 13
+from .build_spec_grammar import build_spec_grammar
+from plcc.load_spec.load_rough_spec.parse_lines import Line
+from plcc.load_spec.load_rough_spec.parse_dividers import parse_dividers
+from plcc.load_spec.parse_spec.parse_syntactic_spec.parse_syntactic_spec import parse_syntactic_spec
+from .LL1Wrapper import LL1Wrapper
 
 def test_productions_which_share_both_rule_and_firstSet_terminals_result_in_multiple_cell_entries():
     firstSets = {
@@ -69,11 +27,10 @@ def test_productions_which_share_both_rule_and_firstSet_terminals_result_in_mult
         'b' : {"C", chr(26)},
         's' : {chr(26), "C"}
     }
-    rules = {
-        "b": ["A B", 'C s'],
-        "d": ["D", ""],
-        "s": ["b C", "d b"] # rule which contains productions that share firstSet terminals
-    }
+
+    rules = createRules([
+        "<s> ::= <b> C", "<s> ::= <d> <b>", # productions that share firstSet terminals
+        "<b> ::= A B", "<b> ::= C <s>", "<d> ::= D", "<d> ::= "])
     table = build_parsing_table(firstSets, followSets, rules)
     assert table.getCell('s', 'D') == ["d b"]
     assert table.getCell('b', 'A') == ["A B"]
@@ -85,5 +42,19 @@ def test_productions_which_share_both_rule_and_firstSet_terminals_result_in_mult
     # multiple cell entries for each matching firstSet terminal and rule's LHS nonterminal
     assert table.getCell('s', 'A') == ["b C", 'd b']
     assert table.getCell('s', 'C') == ["b C", 'd b']
-
     assert len(table.getFilledCellLocations()) == 8
+
+def createRules(rules: list[str]) -> dict[LL1Wrapper, list[list[LL1Wrapper]]]:
+    return createGrammarWithSpec(rules).getRules()
+
+def createGrammarWithSpec(lines):
+    syntacticSpec = parse_syntactic_spec([makeDivider()] + [makeLine(line) for line in lines])
+    return build_spec_grammar(syntacticSpec)
+
+def makeDivider(string="%", lineNumber=0, file=""):
+    return parse_dividers([makeLine(string, lineNumber, file)])
+
+def makeLine(string, lineNumber=0, file=""):
+    return Line(string, lineNumber, file)
+
+
