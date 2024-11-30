@@ -1,8 +1,8 @@
 from pytest import raises
 from plcc.load_spec.load_rough_spec.parse_dividers import parse_dividers
 from plcc.load_spec.load_rough_spec.parse_lines import Line
-from .generate_first_sets import generate_first_sets
-from .create_spec_grammar import create_spec_grammar
+from .build_first_sets import build_first_sets
+from .build_spec_grammar import build_spec_grammar
 from plcc.load_spec.parse_spec.parse_syntactic_spec.parse_syntactic_spec import parse_syntactic_spec
 from .errors import LeftRecursionException
 
@@ -99,7 +99,7 @@ def createGrammarWithSpec(lines):
 
 def setupChecker(lines):
     grammar = createGrammarWithSpec(lines)
-    checker = generate_first_sets(grammar)
+    checker = build_first_sets(grammar)
     return checker
 
 def makeDivider(string="%", lineNumber=0, file=""):
@@ -109,7 +109,7 @@ def makeLine(string, lineNumber=0, file=""):
     return Line(string, lineNumber, file)
 
 def makeSpecGrammar(syntacticSpec):
-    return create_spec_grammar(syntacticSpec)
+    return build_spec_grammar(syntacticSpec)
 
 def getEpsilon():
     syntacticSpec = parse_syntactic_spec([makeDivider(), makeLine("<epsilon> ::= THIS IS ONLY FOR GETTING EPSILON")])

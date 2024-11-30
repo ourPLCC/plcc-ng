@@ -1,17 +1,17 @@
 from collections import defaultdict
 from .Grammar import Grammar
-from .generate_first_sets import generate_first_sets
+from .build_first_sets import build_first_sets
 
-def generate_follow_sets(grammar: Grammar):
-    return FollowSetGenerator(grammar).generate()
+def build_follow_sets(grammar: Grammar):
+    return FollowSetBuilder(grammar).build()
 
-class FollowSetGenerator:
+class FollowSetBuilder:
     def __init__(self, grammar: Grammar):
         self.grammar = grammar
-        self.firstSets = generate_first_sets(grammar)
+        self.firstSets = build_first_sets(grammar)
         self.followSets = defaultdict(set)
 
-    def generate(self):
+    def build(self):
         self.followSets[self.grammar.getStartSymbol()].add(self.grammar.getEOF().name)
         updated = True
         while updated:

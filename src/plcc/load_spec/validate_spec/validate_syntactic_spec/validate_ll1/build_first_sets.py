@@ -2,17 +2,17 @@ from collections import defaultdict
 from .Grammar import Grammar
 from .errors import LeftRecursionException
 
-def generate_first_sets(grammar: Grammar):
-    return FirstSetGenerator(grammar).generate()
+def build_first_sets(grammar: Grammar):
+    return FirstSetBuilder(grammar).build()
 
-class FirstSetGenerator:
+class FirstSetBuilder:
     def __init__(self, grammar: Grammar):
         self.grammar = grammar
         self.firstSets = defaultdict(set)
         self.memoFirst = {}
         self.callStack = []
 
-    def generate(self):
+    def build(self):
         for symbol in self.grammar.getNonterminals():
             self.firstSets[symbol.name] = self._computeFirst(symbol)
         for symbol in self.grammar.getTerminals():

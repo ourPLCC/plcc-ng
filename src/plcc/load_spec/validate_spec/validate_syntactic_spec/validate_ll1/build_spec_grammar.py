@@ -5,7 +5,7 @@ from .Grammar import Grammar
 from .LL1Wrapper import wrap_ll1, LL1Wrapper
 from .errors import InvalidSymbolException, InvalidSyntacticSpecException
 
-def create_spec_grammar(syntactic_spec: SyntacticSpec):
+def build_spec_grammar(syntactic_spec: SyntacticSpec):
     return SpecGrammar(syntactic_spec)
 
 class SpecGrammar(Grammar):

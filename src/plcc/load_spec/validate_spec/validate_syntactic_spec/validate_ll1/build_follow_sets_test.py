@@ -1,7 +1,7 @@
 from plcc.load_spec.load_rough_spec.parse_dividers import parse_dividers
 from plcc.load_spec.load_rough_spec.parse_lines import Line
-from .generate_follow_sets import generate_follow_sets
-from .create_spec_grammar import create_spec_grammar
+from .build_follow_sets import build_follow_sets
+from .build_spec_grammar import build_spec_grammar
 from plcc.load_spec.parse_spec.parse_syntactic_spec.parse_syntactic_spec import parse_syntactic_spec
 
 def test_follow_set_one_rule():
@@ -40,7 +40,7 @@ def createGrammarWithSpec(lines):
 
 def setupChecker(lines):
     grammar = createGrammarWithSpec(lines)
-    checker = generate_follow_sets(grammar)
+    checker = build_follow_sets(grammar)
     return checker
 
 def makeDivider(string="%", lineNumber=0, file=""):
@@ -50,7 +50,7 @@ def makeLine(string, lineNumber=0, file=""):
     return Line(string, lineNumber, file)
 
 def makeSpecGrammar(syntacticSpec):
-    return create_spec_grammar(syntacticSpec)
+    return build_spec_grammar(syntacticSpec)
 
 def getEOF():
     syntacticSpec = parse_syntactic_spec([makeDivider(), makeLine("<eof> ::= THIS IS ONLY FOR GETTING EOF")])
