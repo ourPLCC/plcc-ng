@@ -1,9 +1,9 @@
 from pytest import raises, fixture
-from .Grammar import generate_grammar, Grammar
+from .Grammar import Grammar
 
 @fixture
 def grammar():
-    return generate_grammar()
+    return Grammar()
 
 @fixture
 def nonterminal():
@@ -86,14 +86,13 @@ def test_non_iterable_form_raises_TypeError(grammar):
     with raises(TypeError):
         grammar.addRule(valid_non_terminal, invalid_form)
 
-def test_convert_terminals_to_nonterminals():
-    g = generate_grammar()
-    g.addRule('a', ['b'])
-    assertNonterminal(g, 'a')
-    assertTerminal(g, 'b')
-    g.addRule('b', ['a'])
-    assertNonterminal(g, 'a')
-    assertNonterminal(g, 'b')
+def test_convert_terminals_to_nonterminals(grammar):
+    grammar.addRule('a', ['b'])
+    assertNonterminal(grammar, 'a')
+    assertTerminal(grammar, 'b')
+    grammar.addRule('b', ['a'])
+    assertNonterminal(grammar, 'a')
+    assertNonterminal(grammar, 'b')
 
 def assertNonterminal(g: Grammar, nt):
     assert nt not in g.getTerminals()

@@ -1,8 +1,5 @@
 from collections import defaultdict
 
-def generate_grammar():
-    return Grammar()
-
 class Grammar:
     def __init__(self):
         self._rules = defaultdict(list)
