@@ -22,6 +22,7 @@ def test_add_rule(grammar, nonterminal, terminal):
     assert grammar.getRules() == {nonterminal: [[terminal]]}
 
 def test_is_terminal(grammar, terminal):
+    grammar.addRule('', [terminal])
     assert grammar.isTerminal(terminal) == True
     assert grammar.isNonterminal(terminal) == False
 

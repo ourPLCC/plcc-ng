@@ -1,49 +1,50 @@
+from collections import defaultdict
+
 def generate_grammar():
     return Grammar()
 
 class Grammar:
     def __init__(self):
-        self.rules = {}
-        self.startSymbol = None
-        self.terminals = set()
-        self.nonterminals = set()
+        self._rules = defaultdict(list)
+        self._startSymbol = None
+        self._terminals = set()
 
     def addRule(self, nonterminal: object, form: list[object]):
-        self._addRuleList(nonterminal, form)
-        self._populateTerminals(form)
         self._updateStartSymbol(nonterminal)
+        self._addForm(nonterminal, form)
+        self._removeFromTerminals(nonterminal)
+        self._addTerminals(form)
 
-    def _addRuleList(self, nonterminal: str, form: list[str]):
-        self.nonterminals.add(nonterminal)
-        if nonterminal in self.terminals:
-            self.terminals.remove(nonterminal)
-        if nonterminal not in self.rules:
-            self.rules[nonterminal] = []
-        self.rules[nonterminal].append(form)
+    def _updateStartSymbol(self, nonterminal):
+        if self._startSymbol is None:
+            self._startSymbol = nonterminal
 
-    def _populateTerminals(self, form: list[str]):
+    def _addForm(self, nonterminal, form):
+        self._rules[nonterminal].append(form)
+
+    def _removeFromTerminals(self, nonterminal):
+        if nonterminal in self._terminals:
+            self._terminals.remove(nonterminal)
+
+    def _addTerminals(self, form):
         for symbol in form:
-            if self.isTerminal(symbol):
-                self.terminals.add(symbol)
+            if symbol not in self._rules:
+                self._terminals.add(symbol)
 
-    def _updateStartSymbol(self, nonterminal: str):
-        if self.startSymbol is None:
-            self.startSymbol = nonterminal
+    def getStartSymbol(self) -> object:
+        return self._startSymbol
 
-    def getStartSymbol(self) -> str:
-        return self.startSymbol
+    def isTerminal(self, object: object) -> bool:
+        return object in self._terminals
 
-    def isTerminal(self, object: str) -> bool:
-        return not self.isNonterminal(object)
+    def isNonterminal(self, object: object) -> bool:
+        return object in self._rules
 
-    def isNonterminal(self, object: str) -> bool:
-        return object in self.nonterminals
+    def getRules(self) -> dict[object, list[list[object]]]:
+        return self._rules
 
-    def getRules(self) -> dict[str, list[list[str]]]:
-        return self.rules
+    def getTerminals(self) -> set[object]:
+        return self._terminals
 
-    def getTerminals(self) -> set[str]:
-        return self.terminals
-
-    def getNonterminals(self) -> set[str]:
-        return self.nonterminals
+    def getNonterminals(self) -> set[object]:
+        return set(self._rules.keys())
