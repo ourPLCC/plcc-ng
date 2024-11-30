@@ -19,9 +19,6 @@ class Grammar:
     def _checkParametersForErrors(self, nonterminal: object, form: list[object]):
         if not isinstance(form, list):
             raise InvalidFormException(str(form))
-        for symbol in form:
-            if not self.hasHashMethod(symbol) or not self.hasEqMethod(symbol):
-                raise InvalidFormException(str(form))
 
     def _addRuleList(self, nonterminal: str, form: list[str]):
         self.nonterminals.add(nonterminal)
@@ -39,12 +36,6 @@ class Grammar:
     def _updateStartSymbol(self, nonterminal: str):
         if self.startSymbol is None:
             self.startSymbol = nonterminal
-
-    def hasHashMethod(self, obj):
-        return hasattr(obj, '__hash__') and obj.__hash__ is not None
-
-    def hasEqMethod(self, obj):
-        return hasattr(obj, '__eq__')
 
     def getStartSymbol(self) -> str:
         return self.startSymbol

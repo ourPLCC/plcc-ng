@@ -72,20 +72,17 @@ def test_no_duplicate_nonterminals(grammar, nonterminal, terminal):
     assert len(grammar.getNonterminals()) == 1
     assert nonterminal in grammar.getNonterminals()
 
-def test_any_object_that_will_work_with_sets_is_a_valid_nonterminal(grammar, terminal):
-    grammar.addRule('', [terminal])
-
-def test_any_object_that_DOES_NOT_work_with_sets_is_not_a_valid_nonterminal(grammar, terminal):
+def test_set_incompatible_nonterminal_raises_TypeError(grammar, terminal):
     with raises(TypeError):
         grammar.addRule([], [terminal])
+
+def test_set_incompatible_symbols_in_form_raises_TypeError(grammar, nonterminal, terminal):
+    with raises(TypeError):
+        grammar.addRule(nonterminal, [[],terminal])
 
 def test_invalid_form_list_throws_invalid_form_error(grammar, nonterminal, terminal):
     with raises(InvalidFormException):
         grammar.addRule(nonterminal, terminal)
-
-def test_unhashable_form_list_symbol_throws_invalid_form_error(grammar, nonterminal, terminal):
-    with raises(InvalidFormException):
-        grammar.addRule(nonterminal, [[],terminal])
 
 def test_convert_terminals_to_nonterminals():
     g = generate_grammar()
