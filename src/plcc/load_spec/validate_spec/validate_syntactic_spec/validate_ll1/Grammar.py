@@ -1,5 +1,3 @@
-from .errors import InvalidFormException
-
 def generate_grammar():
     return Grammar()
 
@@ -11,14 +9,9 @@ class Grammar:
         self.nonterminals = set()
 
     def addRule(self, nonterminal: object, form: list[object]):
-        self._checkParametersForErrors(nonterminal, form)
         self._addRuleList(nonterminal, form)
         self._populateTerminals(form)
         self._updateStartSymbol(nonterminal)
-
-    def _checkParametersForErrors(self, nonterminal: object, form: list[object]):
-        if not isinstance(form, list):
-            raise InvalidFormException(str(form))
 
     def _addRuleList(self, nonterminal: str, form: list[str]):
         self.nonterminals.add(nonterminal)

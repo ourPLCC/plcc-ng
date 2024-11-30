@@ -1,12 +1,6 @@
 from dataclasses import dataclass
 
 @dataclass
-class InvalidFormException(Exception):
-    def __init__(self, rule):
-        super().__init__(rule)
-        self.message = f"Invalid form format: '{rule}' (must be a list)"
-
-@dataclass
 class InvalidSyntacticSpecException(Exception):
     def __init__(self, rule):
         super().__init__(rule)

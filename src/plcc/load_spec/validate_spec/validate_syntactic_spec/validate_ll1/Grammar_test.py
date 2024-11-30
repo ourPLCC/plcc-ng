@@ -1,6 +1,5 @@
 from pytest import raises, fixture
 from .Grammar import generate_grammar, Grammar
-from .errors import InvalidFormException
 
 @fixture
 def grammar():
@@ -80,9 +79,11 @@ def test_set_incompatible_symbols_in_form_raises_TypeError(grammar, nonterminal,
     with raises(TypeError):
         grammar.addRule(nonterminal, [[],terminal])
 
-def test_invalid_form_list_throws_invalid_form_error(grammar, nonterminal, terminal):
-    with raises(InvalidFormException):
-        grammar.addRule(nonterminal, terminal)
+def test_non_iterable_form_raises_TypeError(grammar):
+    valid_non_terminal = ''
+    invalid_form = object()
+    with raises(TypeError):
+        grammar.addRule(valid_non_terminal, invalid_form)
 
 def test_convert_terminals_to_nonterminals():
     g = generate_grammar()
