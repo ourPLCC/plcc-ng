@@ -1,6 +1,6 @@
 from pytest import raises, fixture
 from .Grammar import generate_grammar, Grammar
-from .errors import InvalidFormException, InvalidNonterminalException
+from .errors import InvalidFormException
 
 @fixture
 def grammar():
@@ -76,7 +76,7 @@ def test_any_object_that_will_work_with_sets_is_a_valid_nonterminal(grammar, ter
     grammar.addRule('', [terminal])
 
 def test_any_object_that_DOES_NOT_work_with_sets_is_not_a_valid_nonterminal(grammar, terminal):
-    with raises(InvalidNonterminalException):
+    with raises(TypeError):
         grammar.addRule([], [terminal])
 
 def test_invalid_form_list_throws_invalid_form_error(grammar, nonterminal, terminal):

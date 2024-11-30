@@ -1,12 +1,6 @@
 from dataclasses import dataclass
 
 @dataclass
-class InvalidNonterminalException(Exception):
-    def __init__(self, rule):
-        super().__init__(rule)
-        self.message = f"Invalid nonterminal format for: '{rule}' (must not be empty and it must be an object that has __hah__ and __eq__ methods)"
-
-@dataclass
 class InvalidFormException(Exception):
     def __init__(self, rule):
         super().__init__(rule)
