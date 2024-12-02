@@ -17,6 +17,7 @@ from .errors import (
     InvalidRhsNameError,
     InvalidLhsAltNameError,
     InvalidRhsAltNameError,
+    InvalidRhsTerminalError,
     DuplicateLhsError,
 )
 
@@ -85,6 +86,16 @@ def test_number_lhs_terminal():
     assert len(errors) == 1
     assert errors[0] == makeInvalidLhsNameFormatError(spec[0])
 
+def test_number_rhs_terminal():
+    invalid_terminal = makeLine("<sentence> ::= 1WORD")
+    spec = [
+        makeSyntacticRule(
+            invalid_terminal, makeLhsNonTerminal("sentence"), [makeTerminal("1WORD")]
+        )
+    ]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsTerminalFormatError(spec[0])
 
 def test_capital_lhs_terminal():
     capital_lhs_name = makeLine("<Sentence> ::= WORD")
@@ -255,3 +266,6 @@ def makeInvalidRhsAltNameFormatError(rule):
 
 def makeDuplicateLhsError(rule):
     return DuplicateLhsError(rule)
+
+def makeInvalidRhsTerminalFormatError(rule):
+    return InvalidRhsTerminalError(rule)
