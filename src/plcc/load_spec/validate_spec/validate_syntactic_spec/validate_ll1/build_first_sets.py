@@ -9,7 +9,6 @@ class FirstSetBuilder:
     def __init__(self, grammar: Grammar):
         self.grammar = grammar
         self.firstSets = defaultdict(set)
-        self.memoFirst = {}
         self.callStack = []
 
     def build(self):
@@ -24,8 +23,6 @@ class FirstSetBuilder:
         return self.firstSets
 
     def _computeFirst(self, symbol):
-        if symbol.name in self.memoFirst:
-            return self.memoFirst[symbol.name]
         if self.grammar.isTerminal(symbol.specObject):
             return {symbol.name}
         if symbol.name in self.callStack:
@@ -33,7 +30,6 @@ class FirstSetBuilder:
         self.callStack.append(symbol.name)
         first = {self.grammar.getEpsilon().name} if symbol == self.grammar.getEpsilon() else self._computeFirstForNonterminal(symbol)
         self.callStack.pop()
-        self.memoFirst[symbol.name] = first
         return first
 
     def _computeFirstForNonterminal(self, symbol):
