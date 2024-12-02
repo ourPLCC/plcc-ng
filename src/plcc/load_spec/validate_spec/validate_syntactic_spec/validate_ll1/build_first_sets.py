@@ -1,6 +1,5 @@
 from collections import defaultdict
 from .Grammar import Grammar
-from .errors import LeftRecursionException
 
 def build_first_sets(grammar: Grammar):
     return FirstSetBuilder(grammar).build()
@@ -9,7 +8,6 @@ class FirstSetBuilder:
     def __init__(self, grammar: Grammar):
         self.grammar = grammar
         self.firstSets = defaultdict(set)
-        self.callStack = []
 
     def build(self):
         for symbol in self.grammar.getNonterminals():
@@ -25,11 +23,7 @@ class FirstSetBuilder:
     def _computeFirst(self, symbol):
         if self.grammar.isTerminal(symbol.specObject):
             return {symbol.name}
-        if symbol.name in self.callStack:
-            raise LeftRecursionException(symbol.name)
-        self.callStack.append(symbol.name)
         first = {self.grammar.getEpsilon().name} if symbol == self.grammar.getEpsilon() else self._computeFirstForNonterminal(symbol)
-        self.callStack.pop()
         return first
 
     def _computeFirstForNonterminal(self, symbol):
