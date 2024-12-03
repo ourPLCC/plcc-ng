@@ -2,17 +2,17 @@ from collections import defaultdict
 from .Grammar import Grammar
 from .build_first_sets import build_first_sets
 
-def build_follow_sets(grammar: Grammar):
-    return FollowSetBuilder(grammar).build()
+def build_follow_sets(grammar: Grammar, firsts):
+    return FollowSetBuilder(grammar, firsts).build()
 
 class FollowSetBuilder:
-    def __init__(self, grammar: Grammar):
+    def __init__(self, grammar: Grammar, firsts):
         self.grammar = grammar
-        self.firstSets = build_first_sets(grammar)
+        self.firstSets = firsts
         self.followSets = defaultdict(set)
 
     def build(self):
-        self.followSets[self.grammar.getStartSymbol()].add(self.grammar.getEOF().name)
+        self.followSets[self.grammar.getStartSymbol()].add(self.grammar.getEof())
         updated = True
         while updated:
             updated = False
@@ -42,15 +42,15 @@ class FollowSetBuilder:
         return updated
 
     def _addFirstOfNextSymbol(self, nextSymbol, nonterminal):
-        nextFirst = self.firstSets[nextSymbol.name] - {self.grammar.getEpsilon().name}
-        origLen = len(self.followSets[nonterminal.name])
-        self.followSets[nonterminal.name].update(nextFirst)
-        return len(self.followSets[nonterminal.name]) > origLen
+        nextFirst = self.firstSets[nextSymbol] - {self.grammar.getEpsilon()}
+        origLen = len(self.followSets[nonterminal])
+        self.followSets[nonterminal].update(nextFirst)
+        return len(self.followSets[nonterminal]) > origLen
 
     def _addFollowOfLHS(self, lhs, nonterminal):
-        origLen = len(self.followSets[nonterminal.name])
-        self.followSets[nonterminal.name].update(self.followSets[lhs])
-        return len(self.followSets[nonterminal.name]) > origLen
+        origLen = len(self.followSets[nonterminal])
+        self.followSets[nonterminal].update(self.followSets[lhs])
+        return len(self.followSets[nonterminal]) > origLen
 
     def _canDeriveEmpty(self, symbols):
         return all(self._canDeriveEmptyString(symbol) for symbol in symbols)
@@ -58,12 +58,12 @@ class FollowSetBuilder:
     def _canDeriveEmptyString(self, symbol):
         if symbol == self.grammar.getEpsilon():
             return True
-        if self.grammar.isNonterminal(symbol.specObject):
+        if self.grammar.isNonterminal(symbol):
             if self._allRulesCanDeriveEmpty(symbol):
                 return True
         return False
 
     def _allRulesCanDeriveEmpty(self, symbol):
-        if all(self._canDeriveEmptyString(rule) for rule in self.grammar.getRules()[symbol.name][0]):
+        if all(self._canDeriveEmptyString(rule) for rule in self.grammar.getRules()[symbol][0]):
             return True
 

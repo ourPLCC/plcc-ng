@@ -5,12 +5,15 @@ class Grammar:
         self._rules = defaultdict(list)
         self._startSymbol = None
         self._terminals = set()
+        self._eof = object()
+        self._epsilon = object()
 
     def addRule(self, nonterminal: object, form: list[object]):
+        f = tuple(form)
         self._updateStartSymbol(nonterminal)
-        self._addForm(nonterminal, form)
+        self._addForm(nonterminal, f)
         self._removeFromTerminals(nonterminal)
-        self._addTerminals(form)
+        self._addTerminals(f)
 
     def _updateStartSymbol(self, nonterminal):
         if self._startSymbol is None:
@@ -45,3 +48,9 @@ class Grammar:
 
     def getNonterminals(self) -> set[object]:
         return set(self._rules.keys())
+
+    def getEpsilon(self):
+        return self._epsilon
+
+    def getEof(self):
+        return self._eof
