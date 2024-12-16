@@ -1,8 +1,10 @@
 from collections import defaultdict
 from .Grammar import Grammar
 
+
 def build_first_sets(grammar: Grammar):
     return FirstSetBuilder(grammar).build()
+
 
 class FirstSetBuilder:
     def __init__(self, grammar: Grammar):

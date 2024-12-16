@@ -15,6 +15,3 @@ class LL1Wrapper:
 
     def __hash__(self):
         return hash(self.name)
-
-    def __repr__(self) -> str:
-        return f"LL1Wrapper({self.name}, {self.specObject})"

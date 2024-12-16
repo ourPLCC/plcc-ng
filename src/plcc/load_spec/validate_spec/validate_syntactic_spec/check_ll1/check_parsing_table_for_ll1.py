@@ -1,5 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
+from .build_parsing_table import Table
+
 
 @dataclass
 class LL1Error:
@@ -9,11 +11,11 @@ class LL1Error:
         self.message = f"Two production rules in the same parsing table cell: {cell} -> {production}"
 
 
-def check_parsing_table_for_ll1(parsingTable: defaultdict) -> list[LL1Error]:
+def check_parsing_table_for_ll1(parsingTable: Table) -> list[LL1Error]:
     errorList = []
-    for cell in parsingTable:
-        if len(parsingTable[cell]) > 1:
-            errorList.append(LL1Error(cell, parsingTable[cell]))
+    for X, a in parsingTable.getKeys():
+        if len(parsingTable.getCell(X, a)) > 1:
+            errorList.append(LL1Error((X, a), parsingTable.getCell(X, a)))
     return errorList
 
 
