@@ -40,8 +40,13 @@ class Grammar:
     def isNonterminal(self, object: object) -> bool:
         return object in self._rules
 
-    def getRules(self) -> dict[object, list[list[object]]]:
+    def getRules(self) -> dict[object, list[tuple[object]]]:
         return self._rules
+
+    def getRulesIterator(self):
+        for X, A in self._rules.items():
+            for a in A:
+                yield (X, a)
 
     def getTerminals(self) -> set[object]:
         return self._terminals
