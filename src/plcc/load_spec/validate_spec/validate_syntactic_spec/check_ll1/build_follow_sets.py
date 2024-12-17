@@ -68,8 +68,6 @@ class FollowSetBuilder:
         return all(self._canDeriveEmptyString(symbol) for symbol in symbols)
 
     def _canDeriveEmptyString(self, symbol):
-        if symbol == self.grammar.getEpsilon():
-            return True
         if self.grammar.isNonterminal(symbol):
             if self._allRulesCanDeriveEmpty(symbol):
                 return True

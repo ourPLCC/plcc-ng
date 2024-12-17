@@ -3,6 +3,58 @@ from .build_first_sets import build_first_sets
 from .build_follow_sets import build_follow_sets
 
 
+def test_example():
+    '''
+    This is an acceptance test based on the example given
+    for building FOLLOW sets from
+    https://pages.cs.wisc.edu/~hasti/cs536/readings/Topdown.html#follow
+    '''
+    g, FIRST, FOLLOW = setup([
+        'S B c',
+        'S D B',
+        'B a b',
+        'B c S',
+        'D d',
+        'D'
+    ])
+
+    assert FIRST['D'] == {'d', g.getEpsilon()}
+    assert FIRST['B'] == {'a', 'c'}
+    assert FIRST['S'] == {'a', 'c', 'd'}
+
+    assert FOLLOW['D'] == {'a', 'c'}
+    assert FOLLOW['B'] == {'c', g.getEof()}
+    assert FOLLOW['S'] == {'c', g.getEof()}
+
+
+def test_test_yourself_3():
+    '''
+    This is an acceptance test based on "Test yourself #3" from
+    https://pages.cs.wisc.edu/~hasti/cs536/readings/Topdown.html#follow
+    '''
+    grammar, firsts, follows = setup([
+        'methodHeader VOID ID LPAREN paramList RPAREN',
+        'paramList',
+        'paramList nonEmptyParamList',
+        'nonEmptyParamList ID ID',
+        'nonEmptyParamList ID ID COMMA nonEmptyParamList'
+    ])
+    assert follows['methodHeader'] == {grammar.getEof()}
+    assert follows['paramList'] == {'RPAREN'}
+    assert follows['nonEmptyParamList'] == {'RPAREN'}
+
+
+def test_derives_epsilon():
+    grammar, firsts, follows = setup([
+        'B A C',
+        'A',
+        'C'
+    ])
+    # C follows A. But C can derive epsilon.
+    # So A's follow includes B's follow, which contains EOF.
+    assert follows['A'] == {grammar.getEof()}
+
+
 def test_follow_set_one_rule():
     grammar, firsts, follows = setup(["exp VAR"])
     assert follows["exp"] == {grammar.getEof()}
@@ -19,7 +71,14 @@ def test_follow_set_one_nonterminal():
 
 
 def test_derive_empty():
-    grammar, firsts, follows = setup(["exp ", "exp VAR word", "test ", "test TEST", "s exp test TWO", "word s NEW"])
+    grammar, firsts, follows = setup([
+        "exp",
+        "exp VAR word",
+        "test",
+        "test TEST",
+        "s exp test TWO",
+        "word s NEW"
+    ])
     assert follows["exp"] == {grammar.getEof(), "TEST"}
     assert follows["test"] == {"TWO"}
     assert follows["s"] == {"NEW"}
