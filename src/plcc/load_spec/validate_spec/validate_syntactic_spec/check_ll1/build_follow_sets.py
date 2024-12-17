@@ -10,47 +10,59 @@ class FollowSetBuilder:
         self.grammar = grammar
         self.firstSets = firsts
         self.followSets = defaultdict(set)
+        self._changed = False
 
     def build(self):
-        self.followSets[self.grammar.getStartSymbol()].add(self.grammar.getEof())
-        updated = True
-        while updated:
-            updated = False
-            for nonterminal in self.grammar.getNonterminals():
-                if self._computeFollow(nonterminal):
-                    updated = True
+        self._updateStartSymbol()
+        self._updateNonterminalsUntilNoChange()
         return self.followSets
 
-    def _computeFollow(self, nonterminal):
-        updated = False
-        for lhs, rules in self.grammar.getRules().items():
-            for lists in rules:
-                for i, rule in enumerate(lists):
-                    if rule == nonterminal:
-                        if self._processFollowRule(lhs, lists, i, nonterminal):
-                            updated = True
-        return updated
+    def _updateStartSymbol(self):
+        self.followSets[self.grammar.getStartSymbol()].add(self.grammar.getEof())
 
-    def _processFollowRule(self, lhs, rules, index, nonterminal):
-        updated = False
-        if index + 1 < len(rules):
-            if self._addFirstOfNextSymbol(rules[index + 1], nonterminal):
-                updated = True
-        if index + 1 == len(rules) or self._canDeriveEmpty(rules[index + 1:]):
-            if self._addFollowOfLHS(lhs, nonterminal):
-                updated = True
-        return updated
+    def _updateNonterminalsUntilNoChange(self):
+        self._changed = True
+        while self._changed:
+            self._changed = False
+            self._updateNonterminals()
+
+    def _updateNonterminals(self):
+        for nonterminal in self.grammar.getNonterminals():
+            self._updateNonterminal(nonterminal)
+
+    def _updateNonterminal(self, nonterminal):
+        for lhs, rules in self.grammar.getRules().items():
+            for production in rules:
+                self._updateWithEachOccuranceOfNonterminalInProduction(nonterminal, lhs, production)
+
+    def _updateWithEachOccuranceOfNonterminalInProduction(self, nonterminal, lhs, production):
+        for i, symbol in enumerate(production):
+            if symbol == nonterminal:
+                self._updateWithSingleOccuranceOfNonterminalInProduction(lhs, production, i, nonterminal)
+
+    def _updateWithSingleOccuranceOfNonterminalInProduction(self, lhs, rules, index, nonterminal):
+        if self._isLastOccuranceInRule(rules, index):
+            self._addFollowOfLHS(lhs, nonterminal)
+        else:
+            self._addFirstOfNextSymbol(rules[index + 1], nonterminal)
+            if self._canDeriveEmpty(rules[index + 1:]):
+                self._addFollowOfLHS(lhs, nonterminal)
+
+    def _isLastOccuranceInRule(self, rules, index):
+        return index + 1 == len(rules)
 
     def _addFirstOfNextSymbol(self, nextSymbol, nonterminal):
         nextFirst = self.firstSets[nextSymbol] - {self.grammar.getEpsilon()}
         origLen = len(self.followSets[nonterminal])
         self.followSets[nonterminal].update(nextFirst)
-        return len(self.followSets[nonterminal]) > origLen
+        if len(self.followSets[nonterminal]) > origLen:
+            self._changed = True
 
     def _addFollowOfLHS(self, lhs, nonterminal):
         origLen = len(self.followSets[nonterminal])
         self.followSets[nonterminal].update(self.followSets[lhs])
-        return len(self.followSets[nonterminal]) > origLen
+        if len(self.followSets[nonterminal]) > origLen:
+            self._changed = True
 
     def _canDeriveEmpty(self, symbols):
         return all(self._canDeriveEmptyString(symbol) for symbol in symbols)
