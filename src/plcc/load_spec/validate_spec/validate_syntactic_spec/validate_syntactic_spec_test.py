@@ -124,17 +124,30 @@ def test_undercase_lhs_alt_name():
 
 
 def test_uppercase_rhs_alt_name():
-    invalid_alt_name = makeLine("<sentence>:name ::= <word>:Name")
+    invalid_alt_name = makeLine("<sentence> ::= <word>:Name")
     Name1 = [
         makeSyntacticRule(
             invalid_alt_name,
-            makeLhsNonTerminal("sentence", "Name"),
+            makeLhsNonTerminal("sentence"),
             [makeRhsNonTerminal("word", "Name")],
         )
     ]
     errors = validate(Name1)
     assert len(errors) == 1
     assert errors[0] == makeInvalidRhsAltNameFormatError(Name1[0])
+
+
+def test_valid_rhs_alt_name():
+    invalid_alt_name = makeLine("<sentence> ::= <word>:name")
+    Name1 = [
+        makeSyntacticRule(
+            invalid_alt_name,
+            makeLhsNonTerminal("sentence"),
+            [makeRhsNonTerminal("word", "name")],
+        )
+    ]
+    errors = validate(Name1)
+    assert len(errors) == 0
 
 
 def test_underscore_lhs_alt_name():
