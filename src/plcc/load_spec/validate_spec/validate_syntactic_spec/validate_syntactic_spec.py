@@ -26,6 +26,7 @@ class SyntacticValidator:
         if not self.syntacticSpec:
             return self.errorList
         self._validateLhs()
+        self._validateRhs()
         return self.errorList
 
     def _validateLhs(self):
@@ -35,5 +36,8 @@ class SyntacticValidator:
         self.nonTerminals = non_terminal_set
 
     def _validateRhs(self):
-        _ = validate_rhs(self.syntacticSpec,
+        Rhs_error_list= validate_rhs(self.syntacticSpec,
                          self.lexicalSpec, self.nonTerminals)
+
+        if Rhs_error_list:
+            self.errorList.extend(Rhs_error_list)

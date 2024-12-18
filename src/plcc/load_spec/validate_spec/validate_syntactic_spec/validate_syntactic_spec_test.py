@@ -10,10 +10,14 @@ from ...parse_spec.parse_syntactic_spec import (
     Symbol,
     LhsNonTerminal,
     Terminal,
+    RhsNonTerminal,
 )
 from .errors import (
     InvalidLhsNameError,
+    InvalidRhsNameError,
     InvalidLhsAltNameError,
+    InvalidRhsAltNameError,
+    InvalidRhsTerminalError,
     DuplicateLhsError,
 )
 
@@ -35,8 +39,7 @@ def test_valid_line_no_errors():
     errors = validate(
         [
             makeSyntacticRule(
-                valid_line, makeLhsNonTerminal("sentence"), [
-                    makeTerminal("WORD")]
+                valid_line, makeLhsNonTerminal("sentence"), [makeTerminal("WORD")]
             )
         ]
     )
@@ -76,21 +79,29 @@ def test_number_lhs_terminal():
     invalid_nonterminal = makeLine("<1sentence> ::= WORD")
     spec = [
         makeSyntacticRule(
-            invalid_nonterminal, makeLhsNonTerminal(
-                "1sentence"), [makeTerminal("WORD")]
+            invalid_nonterminal, makeLhsNonTerminal("1sentence"), [makeTerminal("WORD")]
         )
     ]
     errors = validate(spec)
     assert len(errors) == 1
     assert errors[0] == makeInvalidLhsNameFormatError(spec[0])
 
+def test_number_rhs_terminal():
+    invalid_terminal = makeLine("<sentence> ::= 1WORD")
+    spec = [
+        makeSyntacticRule(
+            invalid_terminal, makeLhsNonTerminal("sentence"), [makeTerminal("1WORD")]
+        )
+    ]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsTerminalFormatError(spec[0])
 
 def test_capital_lhs_terminal():
     capital_lhs_name = makeLine("<Sentence> ::= WORD")
     spec = [
         makeSyntacticRule(
-            capital_lhs_name, makeLhsNonTerminal(
-                "Sentence"), [makeTerminal("WORD")]
+            capital_lhs_name, makeLhsNonTerminal("Sentence"), [makeTerminal("WORD")]
         )
     ]
     errors = validate(spec)
@@ -110,6 +121,33 @@ def test_undercase_lhs_alt_name():
     errors = validate(spec)
     assert len(errors) == 1
     assert errors[0] == makeInvalidLhsAltNameFormatError(spec[0])
+
+
+def test_uppercase_rhs_alt_name():
+    invalid_alt_name = makeLine("<sentence> ::= <word>:Name")
+    Name1 = [
+        makeSyntacticRule(
+            invalid_alt_name,
+            makeLhsNonTerminal("sentence"),
+            [makeRhsNonTerminal("word", "Name")],
+        )
+    ]
+    errors = validate(Name1)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsAltNameFormatError(Name1[0])
+
+
+def test_valid_rhs_alt_name():
+    invalid_alt_name = makeLine("<sentence> ::= <word>:name")
+    Name1 = [
+        makeSyntacticRule(
+            invalid_alt_name,
+            makeLhsNonTerminal("sentence"),
+            [makeRhsNonTerminal("word", "name")],
+        )
+    ]
+    errors = validate(Name1)
+    assert len(errors) == 0
 
 
 def test_underscore_lhs_alt_name():
@@ -178,6 +216,23 @@ def test_duplicate_resolved_name():
     assert errors[0] == makeDuplicateLhsError(spec[1])
 
 
+def test_invalid_Rhs_error():
+    name1 = makeSyntacticRule(
+        makeLine("<sentence> ::= VERB"),
+        makeLhsNonTerminal("sentence"),
+        [makeTerminal("VERB")],
+    )
+    name2 = makeSyntacticRule(
+        makeLine("<name> ::= <VERB>"),
+        makeLhsNonTerminal("name"),
+        [makeRhsNonTerminal("VERB")],
+    )
+    spec = [name1, name2]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsNameFormatError(spec[1])
+
+
 def validate(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec = []):
     return validate_syntactic_spec(syntacticSpec, lexicalSpec)
 
@@ -198,6 +253,10 @@ def makeLhsNonTerminal(name: str | None, altName: str | None = None):
     return LhsNonTerminal(name, altName)
 
 
+def makeRhsNonTerminal(name: str | None, altName: str | None = None):
+    return RhsNonTerminal(name, altName)
+
+
 def makeTerminal(name: str | None):
     return Terminal(name)
 
@@ -206,9 +265,20 @@ def makeInvalidLhsNameFormatError(rule):
     return InvalidLhsNameError(rule)
 
 
+def makeInvalidRhsNameFormatError(rule):
+    return InvalidRhsNameError(rule)
+
+
 def makeInvalidLhsAltNameFormatError(rule):
     return InvalidLhsAltNameError(rule)
 
 
+def makeInvalidRhsAltNameFormatError(rule):
+    return InvalidRhsAltNameError(rule)
+
+
 def makeDuplicateLhsError(rule):
     return DuplicateLhsError(rule)
+
+def makeInvalidRhsTerminalFormatError(rule):
+    return InvalidRhsTerminalError(rule)
