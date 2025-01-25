@@ -1,14 +1,18 @@
-from ...parse_spec.parse_lexical_spec import LexicalSpec
-from ...parse_spec.parse_syntactic_spec import SyntacticSpec, RhsNonTerminal, Terminal
-
-from .errors import ValidationError, InvalidRhsNameError, InvalidRhsAltNameError, InvalidRhsTerminalError
+from ...parse_spec.parse_syntactic_spec import (
+    SyntacticSpec,
+    RhsNonTerminal,
+    Terminal,
+)
+from .errors import (
+    InvalidRhsNameError,
+    InvalidRhsAltNameError,
+    InvalidRhsTerminalError,
+)
 import re
 
 
-def validate_rhs(
-    syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec, nonTerminals: set()
-):
-    return SyntacticRhsValidator(syntacticSpec, lexicalSpec, nonTerminals).validate()
+def validate_rhs(syntacticSpec: SyntacticSpec):
+    return SyntacticRhsValidator(syntacticSpec).validate()
 
 
 class SyntacticRhsValidator:
@@ -16,14 +20,10 @@ class SyntacticRhsValidator:
 
     def __init__(
         self,
-        syntacticSpec: SyntacticSpec,
-        lexicalSpec: LexicalSpec,
-        nonTerminals: set(),
+        syntacticSpec: SyntacticSpec
     ):
         self.syntacticSpec = syntacticSpec
-        self.lexicalSpec = lexicalSpec
         self.errorList = []
-        self.nonTerminals = set()
 
     def validate(self):
         for rule in self.syntacticSpec:
