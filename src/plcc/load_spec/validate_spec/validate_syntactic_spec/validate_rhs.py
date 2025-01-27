@@ -46,8 +46,8 @@ class SyntacticRhsValidator:
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", s.name):
             self._appendInvalidRhsError(rule)
 
-    def _validateNonTerminalAltName(self, alt_name: str, rule):
-        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", alt_name):
+    def _validateNonTerminalAltName(self, altName: str, rule):
+        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", altName):
             self._appendInvalidRhsAltNameError(rule)
 
     def _validateNoRepeatRhsSymbols(self, rule):
@@ -63,10 +63,21 @@ class SyntacticRhsValidator:
 
     def _compareSymbolsNames(self, seenSymbol, symbol):
         if seenSymbol.name == symbol.name:
-            return True
+            if self._compareSymbolsAltNames(seenSymbol, symbol):
+                return True
+            else:
+                return False
         else:
             return False
 
+    def _compareSymbolsAltNames(self, seenSymbol, symbol):
+        if seenSymbol.altName and symbol.altName:
+            if seenSymbol.altName == symbol.altName:
+                return True
+            else:
+                return False
+        else:
+            return True
 
     def _appendInvalidRhsError(self, rule):
         self.errorList.append(InvalidRhsNameError(rule))
