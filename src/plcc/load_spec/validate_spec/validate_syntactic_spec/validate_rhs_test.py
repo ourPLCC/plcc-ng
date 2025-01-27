@@ -7,6 +7,7 @@ from ...parse_spec.parse_syntactic_spec import (
     LhsNonTerminal,
     Terminal,
     RhsNonTerminal,
+    CapturingTerminal,
 )
 from .errors import (
     InvalidRhsNameError,
@@ -103,7 +104,7 @@ def test_repeat_rhs_nonterminal_with_different_alt_name_allowed():
     errors = validate(spec)
     assert len(errors) == 0
 
-def test_repeating_terminals_allowed():
+def test_repeating_non_captured_terminals_allowed():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::= ONE ONE ONE ONE ONE"),
         makeLhsNonTerminal("sentence"),
@@ -112,6 +113,38 @@ def test_repeating_terminals_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 0
+
+def test_repeating_captured_terminals_not_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::== <ONE> <ONE>"),
+        makeLhsNonTerminal("sentence"),
+        [makeCapturingTerminal("ONE"), makeCapturingTerminal("ONE")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+
+def test_repeating_captured_terminals_allowed_with_alt_name():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::== <ONE>:name <ONE>:different"),
+        makeLhsNonTerminal("sentence"),
+        [makeCapturingTerminal("ONE", "name"), makeCapturingTerminal("ONE", "different")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 0
+
+def test_repeating_captured_terminals_not_allowed_with_same_alt_name():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::== <ONE>:same <ONE>:same"),
+        makeLhsNonTerminal("sentence"),
+        [makeCapturingTerminal("ONE", "same"), makeCapturingTerminal("ONE", "same")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
 
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
@@ -135,6 +168,9 @@ def makeRhsNonTerminal(name: str | None, altName: str | None = None):
 
 def makeTerminal(name: str | None):
     return Terminal(name)
+
+def makeCapturingTerminal(name: str, altName: str | None = None):
+    return CapturingTerminal(name, altName)
 
 
 def makeInvalidRhsNameFormatError(rule):
