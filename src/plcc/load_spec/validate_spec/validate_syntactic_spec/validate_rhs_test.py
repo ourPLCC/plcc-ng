@@ -12,6 +12,7 @@ from .errors import (
     InvalidRhsNameError,
     InvalidRhsAltNameError,
     InvalidRhsTerminalError,
+    RepeatRhsSymbolNameError,
 )
 from .validate_rhs import validate_rhs
 
@@ -70,6 +71,16 @@ def test_invalid_Rhs_error():
     assert len(errors) == 1
     assert errors[0] == makeInvalidRhsNameFormatError(spec[1])
 
+def test_no_repeat_Rhs_symbol():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= <verb> <verb>"),
+        makeLhsNonTerminal("sentence"),
+        [makeRhsNonTerminal("verb"), makeRhsNonTerminal("verb")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
 
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
@@ -105,3 +116,6 @@ def makeInvalidRhsAltNameFormatError(rule):
 
 def makeInvalidRhsTerminalFormatError(rule):
     return InvalidRhsTerminalError(rule)
+
+def makeRepeateRhsSymbolError(rule):
+    return RepeatRhsSymbolNameError(rule)
