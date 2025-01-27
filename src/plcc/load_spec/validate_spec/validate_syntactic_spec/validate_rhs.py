@@ -60,7 +60,6 @@ class SyntacticRhsValidator:
                     self._appendRepeatRhsSymbolNameError(rule)
             else:
                 seen.append(symbol)
-                print(seen)
 
     def _compareSymbolsNames(self, seenSymbol, symbol):
         if seenSymbol.name == symbol.name:

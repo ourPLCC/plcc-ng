@@ -146,6 +146,16 @@ def test_repeating_captured_terminals_not_allowed_with_same_alt_name():
     assert len(errors) == 1
     assert errors[0] == makeRepeateRhsSymbolError(spec[0])
 
+def test_different_names_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= <this> <IS> <all> <legal>"),
+        makeLhsNonTerminal("sentence"),
+        [makeRhsNonTerminal("this"), makeCapturingTerminal("IS"), makeRhsNonTerminal("all"), makeRhsNonTerminal("legal")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 0
+
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
 
