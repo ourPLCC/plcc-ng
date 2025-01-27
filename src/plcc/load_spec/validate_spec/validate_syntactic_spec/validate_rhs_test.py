@@ -103,6 +103,16 @@ def test_repeat_rhs_nonterminal_with_different_alt_name_allowed():
     errors = validate(spec)
     assert len(errors) == 0
 
+def test_repeating_terminals_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= ONE ONE ONE ONE ONE"),
+        makeLhsNonTerminal("sentence"),
+        [makeTerminal("ONE"), makeTerminal("ONE"), makeTerminal("ONE"), makeTerminal("ONE"), makeTerminal("ONE")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 0
+
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
 

@@ -52,8 +52,9 @@ class SyntacticRhsValidator:
 
     def _validateNoRepeatRhsSymbols(self, rule):
         seen = []
-        print(rule.rhsSymbolList)
         for symbol in rule.rhsSymbolList:
+            if isinstance(symbol, Terminal):
+                continue
             for seenSymbol in seen:
                 if self._compareSymbolsNames(seenSymbol, symbol):
                     self._appendRepeatRhsSymbolNameError(rule)
