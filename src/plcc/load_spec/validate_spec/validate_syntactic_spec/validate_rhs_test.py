@@ -7,11 +7,14 @@ from ...parse_spec.parse_syntactic_spec import (
     LhsNonTerminal,
     Terminal,
     RhsNonTerminal,
+    RepeatingSyntacticRule,
+    CapturingTerminal
 )
 from .errors import (
     InvalidRhsNameError,
     InvalidRhsAltNameError,
     InvalidRhsTerminalError,
+    InvalidRhsSeparatorTypeError
 )
 from .validate_rhs import validate_rhs
 
@@ -70,6 +73,55 @@ def test_invalid_Rhs_error():
     assert len(errors) == 1
     assert errors[0] == makeInvalidRhsNameFormatError(spec[1])
 
+def test_invalid_undefined_separator():
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB")],
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsSeparatorTypeError(spec[0])
+
+def test_invalid_separator_not_terminal():
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB")],
+        separator=makeRhsNonTerminal("sep")
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeInvalidRhsSeparatorTypeError(spec[0])
+
+def test_valid_separator_terminal():
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB")],
+        separator=makeTerminal("SEP")
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 0
+
+def makeRepeatingSyntacticRule(lhs: str, rhsList: List[Symbol], separator=None):
+    return RepeatingSyntacticRule(
+        buildLineRepeating(lhs, rhsList, separator),
+        makeLhsNonTerminal(lhs),
+        rhsList,
+        separator,
+    )
+
+def buildLineRepeating(lhs, rhs, sep=None):
+    if sep:
+        return makeLine(f"{lhs} **={buildRhs(rhs)} +{sep.name}")
+    return makeLine(f"{lhs} **={buildRhs(rhs)}")
+
+def buildRhs(rhs):
+    s = ""
+    for symbol in rhs:
+        s += " " + symbol.name
+    return s
 
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
@@ -105,3 +157,6 @@ def makeInvalidRhsAltNameFormatError(rule):
 
 def makeInvalidRhsTerminalFormatError(rule):
     return InvalidRhsTerminalError(rule)
+
+def makeInvalidRhsSeparatorTypeError(rule):
+    return InvalidRhsSeparatorTypeError(rule)

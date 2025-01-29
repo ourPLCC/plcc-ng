@@ -57,3 +57,10 @@ class UndefinedTerminalError(ValidationError):
         super().__init__(rule)
         self.message = f"Undefined terminal for rule: '{
             rule.line.string}' on line: {rule.line.number}. All terminals must be defined in the lexical section of the grammar file."
+
+@dataclass
+class InvalidRhsSeparatorTypeError(ValidationError):
+    def __init__(self, rule):
+        super().__init__(rule)
+        self.message = f"Invalid RHS separator, must be terminal: '{
+            rule.line.string}' "
