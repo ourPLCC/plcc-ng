@@ -1,4 +1,4 @@
-from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import CapturingTerminal, Terminal
+from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import CapturingTerminal, RepeatingSyntacticRule, Terminal
 from .errors import UndefinedTerminalError
 from ...parse_spec.parse_syntactic_spec import SyntacticSpec
 from ...parse_spec.parse_lexical_spec import LexicalSpec
@@ -15,6 +15,8 @@ class TerminalsDefinedValidator:
 
     def validate(self):
         for rule in self.syntacticSpec:
+            if isinstance(rule, RepeatingSyntacticRule) and rule.separator:
+                self._validateSeparatorIsDefined(rule)
             self._validateTerminalsDefined(rule)
         return self.errorList
 
@@ -22,6 +24,10 @@ class TerminalsDefinedValidator:
         for sym in rule.rhsSymbolList:
             if self._isTerminal(sym) and self._isUndefined(sym):
                 self.errorList.append(UndefinedTerminalError(rule))
+
+    def _validateSeparatorIsDefined(self, rule):
+        if self._isTerminal(rule.separator) and self._isUndefined(rule.separator):
+            self.errorList.append(UndefinedTerminalError(rule))
 
     def _isTerminal(self, sym):
         return isinstance(sym, (Terminal, CapturingTerminal))

@@ -1,6 +1,5 @@
 from typing import List
 
-# Dependencies
 from ...load_rough_spec.parse_lines import Line
 from ...parse_spec.parse_lexical_spec import LexicalRule, LexicalSpec
 from ...parse_spec.parse_syntactic_spec import (
@@ -9,10 +8,10 @@ from ...parse_spec.parse_syntactic_spec import (
     Symbol,
     LhsNonTerminal,
     Terminal,
-    CapturingTerminal
+    CapturingTerminal,
+    RepeatingSyntacticRule
 )
 
-# System under test
 from .validate_terminals_defined import validate_terminals_defined
 from .errors import UndefinedTerminalError
 
@@ -161,11 +160,76 @@ def test_valid_defined_and_captured_terminals():
     errors = validateTerms(syntacticSpec, lexicalSpec)
     assert len(errors) == 0
 
+def test_valid_separator_terminal():
+    verb = makeLexicalRule(name="VERB", pattern="VERB")
+    sep = makeLexicalRule(name="SEP", pattern="SEP")
+    lexicalSpec = makeLexicalSpec([verb, sep])
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB")],
+        separator=makeTerminal("SEP")
+    )
+    syntacticSpec = makeSyntacticSpec([rule])
+    errors = validateTerms(syntacticSpec, lexicalSpec)
+    assert len(errors) == 0
+
+def test_undefined_separator_terminal_error():
+    verb = makeLexicalRule(name="VERB", pattern="VERB")
+    lexicalSpec = makeLexicalSpec([verb])
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB")],
+        separator=makeTerminal("COMMA")
+    )
+    syntacticSpec = makeSyntacticSpec([rule])
+    errors = validateTerms(syntacticSpec, lexicalSpec)
+    assert len(errors) == 1
+
+def test_repeating_rule_no_separator_defined_terminals():
+    verb = makeLexicalRule(name="VERB", pattern="VERB")
+    lexicalSpec = makeLexicalSpec([verb])
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB"), makeCapturingTerminal("VERB")]
+    )
+    syntacticSpec = makeSyntacticSpec([rule])
+    errors = validateTerms(syntacticSpec, lexicalSpec)
+    assert len(errors) == 0
+
+def test_repeating_rule_no_separator_undefined_terminals():
+    lexicalSpec = makeLexicalSpec([])
+    rule = makeRepeatingSyntacticRule(
+        "sentence",
+        [makeTerminal("VERB"), makeCapturingTerminal("VERB")]
+    )
+    syntacticSpec = makeSyntacticSpec([rule])
+    errors = validateTerms(syntacticSpec, lexicalSpec)
+    assert len(errors) == 2
+
 def makeLexicalSpec(ruleList=None):
     return LexicalSpec(ruleList)
 
 def makeLexicalRule(name='TEST', pattern='TEST'):
     return LexicalRule(makeLine('TEST'), False, name, pattern)
+
+def makeRepeatingSyntacticRule(lhs: str, rhsList: List[Symbol], separator=None):
+    return RepeatingSyntacticRule(
+        buildLineRepeating(lhs, rhsList, separator),
+        makeLhsNonTerminal(lhs),
+        rhsList,
+        separator,
+    )
+
+def buildLineRepeating(lhs, rhs, sep=None):
+    if sep:
+        return makeLine(f"{lhs} **={buildRhs(rhs)} +{sep.name}")
+    return makeLine(f"{lhs} **={buildRhs(rhs)}")
+
+def buildRhs(rhs):
+    s = ""
+    for symbol in rhs:
+        s += " " + symbol.name
+    return s
 
 def validateTerms(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec = []):
     return validate_terminals_defined(syntacticSpec, lexicalSpec)
