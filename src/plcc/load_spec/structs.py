@@ -79,28 +79,29 @@ class Terminal(Symbol):
 
 
 @dataclass(frozen=True)
-class CapturingSymbol(Symbol):
+class CapturingSymbol:
     altName: str | None = None
     pass
 
 
 @dataclass(frozen=True)
-class CapturingTerminal(CapturingSymbol):
+class CapturingTerminal(CapturingSymbol, Terminal):
     pass
 
 
 @dataclass(frozen=True)
-class NonTerminal(CapturingSymbol):
+class NonTerminal(Symbol):
     pass
 
 
 @dataclass(frozen=True)
 class LhsNonTerminal(NonTerminal):
+    altName: str | None = None
     pass
 
 
 @dataclass(frozen=True)
-class RhsNonTerminal(NonTerminal):
+class RhsNonTerminal(CapturingSymbol, NonTerminal):
     pass
 
 
