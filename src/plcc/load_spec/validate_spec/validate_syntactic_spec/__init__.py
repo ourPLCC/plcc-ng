@@ -1,4 +1,4 @@
-from ...errors import InvalidLhsAltNameError, InvalidLhsNameError, ValidationError3
+from ...errors import InvalidLhsAltNameError, InvalidLhsNameError, ValidationError
 from ...structs import Divider, Include, Line, SyntacticRule, SyntacticSpec
 from .validate_syntactic_spec import validate_syntactic_spec
 

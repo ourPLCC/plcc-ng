@@ -1,6 +1,6 @@
 import re
 
-from ...errors import InvalidLhsAltNameError, InvalidLhsNameError, ValidationError3
+from ...errors import InvalidLhsAltNameError, InvalidLhsNameError, ValidationError
 from ...structs import (
     SyntacticSpec,
 )
@@ -21,7 +21,7 @@ class SyntacticLhsValidator:
         self.errorList = []
         self.nonTerminals = set()
 
-    def validate(self) -> tuple[list[ValidationError3], set[str]]:
+    def validate(self) -> tuple[list[ValidationError], set[str]]:
         while len(self.spec) > 0:
             self.rule = self.spec.pop(0)
             self._checkLine()
