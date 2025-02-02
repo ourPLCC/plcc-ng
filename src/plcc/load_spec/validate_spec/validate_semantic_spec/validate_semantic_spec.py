@@ -1,12 +1,10 @@
-from dataclasses import dataclass
-from ...load_rough_spec.parse_lines import Line, parse_lines
-from ...parse_spec.parse_semantic_spec import SemanticSpec, CodeFragment
-import re
 
-@dataclass
-class InvalidClassNameError:
-    line: Line
-    message: str
+from plcc.load_spec.errors import InvalidClassNameError
+
+from ...structs import CodeFragment
+from ...load_rough_spec.parse_lines import parse_lines
+from ...structs import SemanticSpec
+import re
 
 def validate_semantic_spec(semanticSpec: SemanticSpec):
     return SemanticValidator(semanticSpec).validate()

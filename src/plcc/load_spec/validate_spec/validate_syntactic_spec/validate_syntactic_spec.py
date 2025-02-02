@@ -1,8 +1,7 @@
-from ...parse_spec.parse_syntactic_spec import (
+from ...structs import (
     SyntacticSpec,
-    SyntacticRule,
 )
-from ...parse_spec.parse_lexical_spec import LexicalSpec
+from ...structs import LexicalSpec, SyntacticRule
 from .validate_lhs import validate_lhs
 from .validate_rhs import validate_rhs
 from .validate_terminals_defined import validate_terminals_defined

@@ -1,8 +1,8 @@
 from pytest import raises
 from .parse_semantic_spec import parse_semantic_spec, parse_code_fragments
-from plcc.load_spec.load_rough_spec.parse_lines import Line, parse_lines
-from plcc.load_spec.load_rough_spec.parse_blocks import Block
-from plcc.load_spec.load_rough_spec.parse_dividers import Divider
+from plcc.load_spec.load_rough_spec.parse_lines import parse_lines
+from plcc.load_spec.structs import Block, Line
+from plcc.load_spec.structs import Divider
 
 def test_basic():
     lines_divider_and_blocks = [make_divider('Java', 'Java', make_line('%')), make_line('Class:init'), make_block()]

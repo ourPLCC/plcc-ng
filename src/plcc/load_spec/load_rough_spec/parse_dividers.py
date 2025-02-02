@@ -1,15 +1,8 @@
-from dataclasses import dataclass
 import re
 
+from plcc.load_spec.structs import Divider
+from ..structs import Line
 
-from .parse_lines import Line
-
-
-@dataclass
-class Divider:
-    tool: str
-    language: str
-    line: Line
 
 def parse_dividers(lines: list[Line], tool='Java', language='Java') -> list[Divider | Line]:
     return DividerParser(lines, tool, language).parse()

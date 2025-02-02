@@ -1,9 +1,11 @@
 from pytest import raises, mark, fixture
-from .validate_semantic_spec import InvalidClassNameError, validate_semantic_spec
-from ...parse_spec.parse_semantic_spec import SemanticSpec, parse_semantic_spec
-from ...load_rough_spec.parse_lines import Line, parse_lines
-from ...load_rough_spec.parse_dividers import Divider
-from ...load_rough_spec.parse_blocks import Block
+
+from ...errors import InvalidClassNameError
+from .validate_semantic_spec import validate_semantic_spec
+from ...parse_spec.parse_semantic_spec import parse_semantic_spec
+from ...load_rough_spec.parse_lines import parse_lines
+from ...structs import Divider, Line, SemanticSpec
+from ...structs import Block
 
 
 

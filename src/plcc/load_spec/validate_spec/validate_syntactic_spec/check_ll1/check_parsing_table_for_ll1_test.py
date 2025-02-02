@@ -1,7 +1,9 @@
 from pytest import raises, mark, fixture
 from collections import defaultdict
 
-from .check_parsing_table_for_ll1 import check_parsing_table_for_ll1, LL1Error
+from ....errors import LL1Error
+
+from .check_parsing_table_for_ll1 import check_parsing_table_for_ll1
 from .build_parsing_table import Table
 
 def test_more_than_one_entry_yields_error():

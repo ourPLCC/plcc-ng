@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 from .parse_rough import parse_rough
-from .parse_includes import Include
+from ..structs import Include
 from .split_rough_spec import split_rough_spec
 
 

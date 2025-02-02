@@ -1,6 +1,70 @@
+from __future__ import annotations
 from dataclasses import dataclass
-from typing import List
-from plcc.load_spec.load_rough_spec.parse_lines import Line
+
+
+@dataclass
+class LexicalSpec:
+    ruleList: list[LexicalRule|Line]
+
+
+@dataclass
+class LexicalRule:
+    line: Line
+    isSkip: bool
+    name: str
+    pattern: str
+
+
+@dataclass
+class RoughSpec:
+    lexicalSection: list[Line]
+    syntacticSection: list[Line | Divider]
+    semanticSectionList: list[list[Line | Divider | Block]]
+
+
+@dataclass
+class Divider:
+    tool: str
+    language: str
+    line: Line
+
+
+@dataclass
+class Block:
+    lines: list[Line]
+
+
+@dataclass(frozen=True)
+class Line:
+    string: str
+    number: int
+    file: str = None
+
+
+@dataclass(frozen=True)
+class Include:
+    file: str
+    line: Line
+
+
+@dataclass
+class SemanticSpec:
+    language: str
+    tool: str
+    codeFragmentList: list[CodeFragment]
+
+
+@dataclass
+class TargetLocator:
+    line: Line
+    className: str
+    modifier: str = None
+
+
+@dataclass
+class CodeFragment:
+    targetLocator: TargetLocator
+    block: Block
 
 
 @dataclass(frozen=True)
@@ -44,7 +108,7 @@ class RhsNonTerminal(NonTerminal):
 class SyntacticRule:
     line: Line
     lhs: LhsNonTerminal
-    rhsSymbolList: List[Symbol]
+    rhsSymbolList: list[Symbol]
     pass
 
 
@@ -65,7 +129,3 @@ class SyntacticSpec(list):
         if rules: super().__init__(rules)
     pass
 
-
-class MalformedBNFError(Exception):
-    def __init__(self, line):
-        self.line = line

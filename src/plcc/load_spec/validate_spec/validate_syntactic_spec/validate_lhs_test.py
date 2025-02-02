@@ -1,15 +1,11 @@
 from typing import List
-from ...load_rough_spec.parse_lines import Line
-from ...parse_spec.parse_syntactic_spec import (
-    SyntacticRule,
+
+from ...errors import InvalidLhsAltNameError, InvalidLhsNameError
+from ...structs import LhsNonTerminal, Line, Symbol, SyntacticRule, Terminal
+from ...structs import (
     SyntacticSpec,
-    Symbol,
-    LhsNonTerminal,
-    Terminal,
 )
-from .errors import (
-    InvalidLhsNameError,
-    InvalidLhsAltNameError,
+from ...errors import (
     DuplicateLhsError
 )
 from .validate_lhs import validate_lhs

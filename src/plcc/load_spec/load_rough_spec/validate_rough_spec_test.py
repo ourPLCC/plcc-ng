@@ -1,9 +1,11 @@
 from pytest import raises, mark, fixture
 
-from .parse_lines import Line
-from .parse_blocks import Block
-from .split_rough_spec import RoughSpec
-from .validate_rough_spec import ValidationError, validate_rough_spec
+from ..errors import ValidationError
+
+from ..structs import Line
+from ..structs import Block
+from ..structs import RoughSpec
+from .validate_rough_spec import validate_rough_spec
 
 
 def test_empty_spec_produces_no_errors():

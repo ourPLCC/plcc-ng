@@ -1,12 +1,6 @@
-from dataclasses import dataclass
-from plcc.load_spec.load_rough_spec.parse_lines import Line
 import re
 
-@dataclass
-class TargetLocator:
-    line: Line
-    className: str
-    modifier: str = None
+from plcc.load_spec.structs import TargetLocator
 
 def parse_target_locator(line, regex=r'^(.+?)(?::([a-z]+))?\s*(?:#.*)?$'):
     match = re.match(regex, line.string)

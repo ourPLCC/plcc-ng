@@ -1,12 +1,7 @@
 from typing import List
-from plcc.load_spec.load_rough_spec.parse_lines import Line
-from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import (
-    LhsNonTerminal,
-    RhsNonTerminal,
-    StandardSyntacticRule,
-    Symbol,
+from plcc.load_spec.structs import LhsNonTerminal, Line, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol
+from plcc.load_spec.structs import (
     SyntacticSpec,
-    RepeatingSyntacticRule,
 )
 
 

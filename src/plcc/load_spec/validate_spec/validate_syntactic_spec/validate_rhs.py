@@ -1,13 +1,9 @@
-from ...parse_spec.parse_syntactic_spec import (
-    SyntacticSpec,
-    RhsNonTerminal,
-    Terminal,
-    RepeatingSyntacticRule
+from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError
+from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal
+from ...structs import (
+    SyntacticSpec
 )
-from .errors import (
-    InvalidRhsNameError,
-    InvalidRhsAltNameError,
-    InvalidRhsTerminalError,
+from ...errors import (
     InvalidRhsSeparatorTypeError
 )
 import re

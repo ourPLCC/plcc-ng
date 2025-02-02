@@ -1,7 +1,9 @@
 from pytest import raises, mark, fixture
 
+from ..structs import Line
 
-from .parse_lines import parse_lines, Line
+
+from .parse_lines import parse_lines
 from .parse_includes import parse_includes
 from .load_rough_spec import process_includes, CircularIncludeError
 

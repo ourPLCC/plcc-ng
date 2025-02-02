@@ -1,13 +1,9 @@
 from typing import List
-from ...load_rough_spec.parse_lines import Line
+from ...structs import LexicalRule, LhsNonTerminal, Line, Symbol, SyntacticRule, Terminal
 from .validate_syntactic_spec import validate_syntactic_spec
-from ...parse_spec.parse_lexical_spec import LexicalRule, LexicalSpec
-from ...parse_spec.parse_syntactic_spec import (
-    SyntacticRule,
+from ...structs import LexicalSpec
+from ...structs import (
     SyntacticSpec,
-    Symbol,
-    LhsNonTerminal,
-    Terminal,
 )
 
 

@@ -1,20 +1,20 @@
 from typing import List
 
-from ...load_rough_spec.parse_lines import Line
-from ...parse_spec.parse_lexical_spec import LexicalRule, LexicalSpec
-from ...parse_spec.parse_syntactic_spec import (
-    SyntacticRule,
-    SyntacticSpec,
-    Symbol,
-    LhsNonTerminal,
-    Terminal,
+# Dependencies
+from plcc.load_spec.structs import (
     CapturingTerminal,
+    LexicalRule,
+    LhsNonTerminal,
+    Line,
+    Symbol,
+    SyntacticRule,
+    Terminal,
+    LexicalSpec,
+    SyntacticSpec,
     RepeatingSyntacticRule
 )
-
 from .validate_terminals_defined import validate_terminals_defined
-from .errors import UndefinedTerminalError
-
+from plcc.load_spec.errors import UndefinedTerminalError
 
 def test_undefined_terminal_error():
     lexicalSpec = makeLexicalSpec([])

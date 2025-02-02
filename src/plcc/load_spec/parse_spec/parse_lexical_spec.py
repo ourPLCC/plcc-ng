@@ -1,18 +1,9 @@
-from dataclasses import dataclass
 import re
 from re import Match
-from ..load_rough_spec.parse_lines import Line
 
-@dataclass
-class LexicalRule:
-    line: Line
-    isSkip: bool
-    name: str
-    pattern: str
-
-@dataclass
-class LexicalSpec:
-    ruleList: [LexicalRule|Line]
+from plcc.load_spec.structs import LexicalRule
+from plcc.load_spec.structs import LexicalSpec
+from ..structs import Line
 
 def parse_lexical_spec(lines: list[Line]) -> LexicalSpec:
     return LexicalParser(lines).parseLexicalSpec()

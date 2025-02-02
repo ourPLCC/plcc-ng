@@ -1,9 +1,11 @@
-from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import (
-    CapturingTerminal, NonTerminal, Symbol, Terminal, SyntacticSpec, SyntacticRule
+from ....errors import InvalidSyntacticSpecException
+from plcc.load_spec.structs import (
+    SyntacticSpec
 )
+from plcc.load_spec.structs import CapturingTerminal, NonTerminal, Symbol, SyntacticRule, Terminal
 from .Grammar import Grammar
 from .LL1Wrapper import wrap_ll1, LL1Wrapper
-from .errors import InvalidSymbolException, InvalidSyntacticSpecException
+from ....errors import InvalidSymbolException
 
 def build_spec_grammar(syntactic_spec: SyntacticSpec):
     return SpecGrammar(syntactic_spec)

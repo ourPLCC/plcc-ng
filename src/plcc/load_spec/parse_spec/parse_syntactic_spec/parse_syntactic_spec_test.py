@@ -1,18 +1,13 @@
 from pytest import raises, mark, fixture
 from typing import List
+
+from plcc.load_spec.structs import CapturingTerminal, Divider, LhsNonTerminal, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol, Terminal
 from .parse_syntactic_spec import parse_syntactic_spec
-from .structs import (
-    CapturingTerminal,
-    RepeatingSyntacticRule,
-    StandardSyntacticRule,
-    LhsNonTerminal,
-    RhsNonTerminal,
-    Terminal,
+from ...errors import (
     MalformedBNFError,
-    Symbol,
 )
-from plcc.load_spec.load_rough_spec.parse_lines import Line
-from plcc.load_spec.load_rough_spec.parse_dividers import Divider, parse_dividers
+from plcc.load_spec.structs import Line
+from plcc.load_spec.load_rough_spec.parse_dividers import parse_dividers
 
 
 def test_None_yields_nothing():

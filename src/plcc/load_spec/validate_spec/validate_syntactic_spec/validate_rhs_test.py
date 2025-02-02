@@ -1,19 +1,11 @@
 from typing import List
-from ...load_rough_spec.parse_lines import Line
-from ...parse_spec.parse_syntactic_spec import (
-    SyntacticRule,
-    SyntacticSpec,
-    Symbol,
-    LhsNonTerminal,
-    Terminal,
-    RhsNonTerminal,
-    RepeatingSyntacticRule,
-    CapturingTerminal
+
+from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError
+from ...structs import CapturingTerminal, LhsNonTerminal, Line, RepeatingSyntacticRule, RhsNonTerminal, Symbol, SyntacticRule, Terminal
+from ...structs import (
+    SyntacticSpec
 )
-from .errors import (
-    InvalidRhsNameError,
-    InvalidRhsAltNameError,
-    InvalidRhsTerminalError,
+from ...errors import (
     InvalidRhsSeparatorTypeError
 )
 from .validate_rhs import validate_rhs

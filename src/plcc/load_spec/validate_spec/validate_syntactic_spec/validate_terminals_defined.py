@@ -1,7 +1,11 @@
-from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import CapturingTerminal, RepeatingSyntacticRule, Terminal
-from .errors import UndefinedTerminalError
-from ...parse_spec.parse_syntactic_spec import SyntacticSpec
-from ...parse_spec.parse_lexical_spec import LexicalSpec
+from plcc.load_spec.structs import (
+    CapturingTerminal,
+    Terminal,
+    RepeatingSyntacticRule,
+    SyntacticSpec,
+    LexicalSpec
+)
+from plcc.load_spec.errors import UndefinedTerminalError
 
 def validate_terminals_defined(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec):
     return TerminalsDefinedValidator(syntacticSpec, lexicalSpec).validate()

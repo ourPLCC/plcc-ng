@@ -1,19 +1,9 @@
 from typing import List
-from plcc.load_spec.load_rough_spec.parse_dividers import Divider
-from plcc.load_spec.load_rough_spec.parse_lines import Line
+from plcc.load_spec.structs import CapturingSymbol, CapturingTerminal, Divider, LhsNonTerminal, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol, SyntacticRule, SyntacticSpec, Terminal
+from plcc.load_spec.structs import Line
 import re
 from re import Match
-from .structs import (
-    SyntacticSpec,
-    SyntacticRule,
-    Symbol,
-    CapturingTerminal,
-    RepeatingSyntacticRule,
-    StandardSyntacticRule,
-    LhsNonTerminal,
-    RhsNonTerminal,
-    Terminal,
-    CapturingSymbol,
+from ...errors import (
     MalformedBNFError,
 )
 

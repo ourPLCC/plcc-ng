@@ -1,20 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from .parse_lines import Line
-from .parse_dividers import Divider
-from .parse_blocks import Block
+
+from plcc.load_spec.structs import RoughSpec
+from ..structs import Divider
 
 
 def split_rough_spec(rough_spec:list) -> RoughSpec:
     return RoughSpecSplitter().split(rough_spec)
-
-
-@dataclass
-class RoughSpec:
-    lexicalSection: list[Line]
-    syntacticSection: list[Line | Divider]
-    semanticSectionList: list[list[Line | Divider | Block]]
 
 
 class RoughSpecSplitter:

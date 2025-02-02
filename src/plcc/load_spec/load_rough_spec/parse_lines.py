@@ -1,11 +1,5 @@
-from dataclasses import dataclass
 
-
-@dataclass(frozen=True)
-class Line:
-    string: str
-    number: int
-    file: str = None
+from plcc.load_spec.structs import Line
 
 
 def parse_lines(string, start=1, file=None, Line=Line):

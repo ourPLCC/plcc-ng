@@ -2,10 +2,10 @@ from pytest import fixture, raises, mark
 
 
 from .parse_rough import parse_rough
-from .parse_lines import Line
-from .parse_blocks import Block
-from .parse_dividers import Divider
-from .parse_includes import Include
+from ..structs import Line
+from ..structs import Block
+from ..structs import Divider
+from ..structs import Include
 
 
 def test_():

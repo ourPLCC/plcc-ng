@@ -1,8 +1,8 @@
 from pytest import raises
-from .parse_code_fragments import CodeFragment, parse_code_fragments, UndefinedTargetLocatorError, DuplicateTargetLocatorError, CodeFragmentMissingBlockError
-from .parse_target_locator import TargetLocator, InvalidTargetLocatorError
-from plcc.load_spec.load_rough_spec.parse_blocks import Block
-from plcc.load_spec.load_rough_spec.parse_lines import Line, parse_lines
+from .parse_code_fragments import parse_code_fragments, UndefinedTargetLocatorError, DuplicateTargetLocatorError, CodeFragmentMissingBlockError
+from .parse_target_locator import InvalidTargetLocatorError
+from plcc.load_spec.structs import Block, CodeFragment, Line, TargetLocator
+from plcc.load_spec.load_rough_spec.parse_lines import parse_lines
 
 def test_basic():
     lines_and_blocks = [make_line('Class:init'), make_block()]

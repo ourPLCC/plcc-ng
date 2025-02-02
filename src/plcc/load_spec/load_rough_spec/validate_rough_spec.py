@@ -1,15 +1,9 @@
-from dataclasses import dataclass
 
-from .parse_lines import Line
-from .parse_dividers import Divider
-from .parse_blocks import Block
-from .split_rough_spec import RoughSpec
+from plcc.load_spec.errors import ValidationError
 
-
-@dataclass
-class ValidationError:
-    line: Line
-    message: str
+from ..structs import Divider
+from ..structs import Block
+from ..structs import RoughSpec
 
 
 def validate_rough_spec(rough_spec:RoughSpec):

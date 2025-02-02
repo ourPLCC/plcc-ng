@@ -1,13 +1,6 @@
-from dataclasses import dataclass
 import re
 
-
-from .parse_lines import Line
-
-
-@dataclass
-class Block:
-    lines: [Line]
+from plcc.load_spec.structs import Block
 
 
 def parse_blocks(lines, Block=Block):

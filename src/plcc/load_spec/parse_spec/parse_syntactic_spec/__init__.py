@@ -1,14 +1,5 @@
+from ...structs import CapturingSymbol, CapturingTerminal, LhsNonTerminal, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol, SyntacticRule, SyntacticSpec, Terminal
 from .parse_syntactic_spec import parse_syntactic_spec
-from .structs import (
-    SyntacticSpec,
-    SyntacticRule,
-    Symbol,
-    CapturingTerminal,
-    RepeatingSyntacticRule,
-    StandardSyntacticRule,
-    LhsNonTerminal,
-    RhsNonTerminal,
-    Terminal,
-    CapturingSymbol,
+from ...errors import (
     MalformedBNFError,
 )

@@ -1,19 +1,14 @@
 from pytest import raises, mark, fixture
 from typing import List
 
-from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import (
+from plcc.load_spec.structs import (
     RepeatingSyntacticRule,
-    RhsNonTerminal,
-    CapturingTerminal,
-    StandardSyntacticRule,
 )
+from plcc.load_spec.structs import CapturingTerminal, LhsNonTerminal, RhsNonTerminal, StandardSyntacticRule
 
-from ...load_rough_spec.parse_lines import Line
-from ...parse_spec.parse_syntactic_spec import (
+from ...structs import Line, Symbol, Terminal
+from ...structs import (
     SyntacticSpec,
-    Symbol,
-    LhsNonTerminal,
-    Terminal,
 )
 from .replace_repeating_with_standard_rules import replace_repeating_with_standard_rules
 

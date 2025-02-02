@@ -1,7 +1,9 @@
 from pytest import fixture
+
+from plcc.load_spec.structs import CapturingTerminal, LhsNonTerminal, Terminal
 from .LL1Wrapper import wrap_ll1
-from plcc.load_spec.parse_spec.parse_syntactic_spec.structs import (
-    LhsNonTerminal, RhsNonTerminal, Terminal, CapturingTerminal
+from plcc.load_spec.structs import (
+    RhsNonTerminal
 )
 
 @fixture

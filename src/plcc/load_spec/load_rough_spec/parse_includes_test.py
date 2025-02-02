@@ -1,9 +1,11 @@
 from pytest import raises, mark, fixture
 
+from ..structs import Block, Include, Line
 
-from .parse_lines import parse_lines, Line
-from .parse_blocks import parse_blocks, Block, UnclosedBlockError
-from .parse_includes import parse_includes, Include
+
+from .parse_lines import parse_lines
+from .parse_blocks import parse_blocks, UnclosedBlockError
+from .parse_includes import parse_includes
 
 
 def test_None_yields_nothing():

@@ -1,14 +1,6 @@
-from dataclasses import dataclass
 import re
 
-
-from .parse_lines import Line
-
-
-@dataclass(frozen=True)
-class Include():
-    file: str
-    line: Line
+from plcc.load_spec.structs import Include
 
 
 def parse_includes(
