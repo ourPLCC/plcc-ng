@@ -15,7 +15,6 @@ class CodeFragmentParser:
         self.lines_and_blocks = lines_and_blocks
         self.codeFragmentList = []
         self.targetLocator = None
-        self.targetLocator_regex = r'^(.+?)(?::([a-z]+))?\s*(?:#.*)?$'
 
     def parse(self):
         for obj in self.lines_and_blocks:
@@ -49,7 +48,7 @@ class CodeFragmentParser:
         if self.targetLocator != None:
             raise DuplicateTargetLocatorError(line.string)
         else:
-            self.targetLocator = parse_target_locator(line, self.targetLocator_regex)
+            self.targetLocator = parse_target_locator(line)
 
 
     def _isCommentOrBlank(self, obj_str):

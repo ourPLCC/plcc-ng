@@ -3,11 +3,8 @@ import re
 from plcc.load_spec.structs import Include
 
 
-def parse_includes(
-        lines,
-        pattern=re.compile(r'^%include\s+(?P<file>[^\0]+)$'),
-        Include=Include
-        ):
+def parse_includes(lines):
+    pattern=re.compile(r'^%include\s+(?P<file>[^\0]+)$')
     if lines is None:
         return
     for line in lines:

@@ -2,7 +2,8 @@ import re
 
 from plcc.load_spec.structs import TargetLocator
 
-def parse_target_locator(line, regex=r'^(.+?)(?::([a-z]+))?\s*(?:#.*)?$'):
+def parse_target_locator(line):
+    regex=r'^(.+?)(?::([a-z]+))?\s*(?:#.*)?$'
     match = re.match(regex, line.string)
     if match:
         name, modifier = match.group(1), match.group(2) or None
