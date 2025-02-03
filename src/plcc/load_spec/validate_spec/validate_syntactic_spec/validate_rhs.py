@@ -1,4 +1,4 @@
-from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError
+from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError, MissingNonTerminalError
 from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal
 from ...structs import (
     SyntacticSpec
@@ -43,6 +43,11 @@ class SyntacticRhsValidator:
             self._validateNonTerminalAltName(s.altName, rule)
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", s.name):
             self._appendInvalidRhsError(rule)
+        if not self._nonTerminalExists(s):
+                    self._appendMissingNonTerminalError(rule)
+
+    def _nonTerminalExists(self, non_terminal):
+        return non_terminal.name in self.syntacticSpec.nonTerminals
 
     def _validateNonTerminalAltName(self, alt_name: str, rule):
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", alt_name):
@@ -63,3 +68,6 @@ class SyntacticRhsValidator:
 
     def _appendInvalidRhsTerminalError(self, rule):
         self.errorList.append(InvalidRhsTerminalError(rule))
+
+    def _appendMissingNonTerminalError(self, rule):
+        self.errorList.append(MissingNonTerminalError(rule))

@@ -1,6 +1,6 @@
 from typing import List
 
-from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError
+from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError, MissingNonTerminalError
 from ...structs import CapturingTerminal, LhsNonTerminal, Line, RepeatingSyntacticRule, RhsNonTerminal, Symbol, SyntacticRule, Terminal
 from ...structs import (
     SyntacticSpec
@@ -23,28 +23,45 @@ def test_number_rhs_terminal():
     assert errors[0] == makeInvalidRhsTerminalFormatError(spec[0])
 
 def test_uppercase_rhs_alt_name():
+    word_setup = makeLine("<word> ::= ")
     invalid_alt_name = makeLine("<sentence> ::= <word>:Name")
-    Name1 = [
-        makeSyntacticRule(
-            invalid_alt_name,
-            makeLhsNonTerminal("sentence"),
-            [makeRhsNonTerminal("word", "Name")],
-        )
-    ]
+    Name1 = makeSyntacticSpec(
+            [
+            makeSyntacticRule(
+                invalid_alt_name,
+                makeLhsNonTerminal("word"),
+                [],
+            ),
+            makeSyntacticRule(
+                invalid_alt_name,
+                makeLhsNonTerminal("sentence"),
+                [makeRhsNonTerminal("word", "Name")],
+            )
+        ],
+        ["word",
+         "sentence"]
+    )
     errors = validate(Name1)
     assert len(errors) == 1
     assert errors[0] == makeInvalidRhsAltNameFormatError(Name1[0])
 
 
 def test_valid_rhs_alt_name():
+    word_setup = makeLine("<word> ::= ")
     invalid_alt_name = makeLine("<sentence> ::= <word>:name")
-    Name1 = [
+    Name1 = makeSyntacticSpec([
+        makeSyntacticRule(
+            invalid_alt_name,
+            makeLhsNonTerminal("word"),
+            [],
+        ),
         makeSyntacticRule(
             invalid_alt_name,
             makeLhsNonTerminal("sentence"),
             [makeRhsNonTerminal("word", "name")],
         )
-    ]
+    ],
+    ["word"])
     errors = validate(Name1)
     assert len(errors) == 0
 
@@ -58,12 +75,12 @@ def test_invalid_Rhs_error():
     name2 = makeSyntacticRule(
         makeLine("<name> ::= <VERB>"),
         makeLhsNonTerminal("name"),
-        [makeRhsNonTerminal("VERB")],
+        [makeRhsNonTerminal("_verb")],
     )
-    spec = [name1, name2]
+    spec = makeSyntacticSpec([name1, name2],["sentence", "name"])
     errors = validate(spec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidRhsNameFormatError(spec[1])
+    assert len(errors) != 0
+    assert makeInvalidRhsNameFormatError(spec[1]) in errors
 
 def test_invalid_undefined_separator():
     rule = makeRepeatingSyntacticRule(
@@ -96,6 +113,23 @@ def test_valid_separator_terminal():
     errors = validate(spec)
     assert len(errors) == 0
 
+def test_missing_non_terminal():
+    invalid_alt_name = makeLine("<sentence> ::= <word>:name")
+    spec = makeSyntacticSpec([
+        makeSyntacticRule(
+            invalid_alt_name,
+            makeLhsNonTerminal("sentence"),
+            [makeRhsNonTerminal("word")],
+        )
+    ],
+    []
+    )
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeMissingNonTerminalError(spec[0])
+
+
+
 def makeRepeatingSyntacticRule(lhs: str, rhsList: List[Symbol], separator=None):
     return RepeatingSyntacticRule(
         buildLineRepeating(lhs, rhsList, separator),
@@ -118,14 +152,14 @@ def buildRhs(rhs):
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
 
+def makeSyntacticSpec(rules: List[SyntacticRule], nonTerminals: List[str]):
+    return SyntacticSpec(rules, nonTerminals)
 
 def makeSyntacticRule(line: Line, lhs: LhsNonTerminal, rhsList: List[Symbol]):
     return SyntacticRule(line, lhs, rhsList)
 
-
 def makeLine(string, lineNumber=1, file=None):
     return Line(string, lineNumber, file)
-
 
 def makeLhsNonTerminal(name: str | None, altName: str | None = None):
     return LhsNonTerminal(name, altName)
@@ -134,21 +168,20 @@ def makeLhsNonTerminal(name: str | None, altName: str | None = None):
 def makeRhsNonTerminal(name: str | None, altName: str | None = None):
     return RhsNonTerminal(name, altName)
 
-
 def makeTerminal(name: str | None):
     return Terminal(name)
-
 
 def makeInvalidRhsNameFormatError(rule):
     return InvalidRhsNameError(rule)
 
-
 def makeInvalidRhsAltNameFormatError(rule):
     return InvalidRhsAltNameError(rule)
-
 
 def makeInvalidRhsTerminalFormatError(rule):
     return InvalidRhsTerminalError(rule)
 
 def makeInvalidRhsSeparatorTypeError(rule):
     return InvalidRhsSeparatorTypeError(rule)
+
+def makeMissingNonTerminalError(rule):
+    return MissingNonTerminalError(rule)

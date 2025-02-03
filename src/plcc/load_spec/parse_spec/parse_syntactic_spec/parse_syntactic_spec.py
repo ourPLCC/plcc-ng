@@ -21,10 +21,16 @@ class SyntacticParser:
         if not self.lines:
             return self.spec
         for line in self.lines[1:]:
-            parser = SyntacticLineParser(line)
-            if parser.isSyntacticRule():
-                self.spec.append(parser.parseSyntacticRule())
+            self.parseLine(line)
         return self.spec
+
+    def parseLine(self, line):
+        parser = SyntacticLineParser(line)
+        if parser.isSyntacticRule():
+            rule = parser.parseSyntacticRule()
+            self.spec.append(rule)
+            self.spec.nonTerminals.append(rule.lhs.name)
+
 
 
 class SyntacticLineParser:
