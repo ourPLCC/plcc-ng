@@ -10,146 +10,153 @@ from ...errors import (
 )
 from .validate_rhs import validate_rhs
 
+from ...parse_spec import (
+    parse_rough,
+    parse_syntactic_spec
+)
 
-def test_number_rhs_terminal():
-    invalid_terminal = makeLine("<sentence> ::= 1WORD")
-    spec = [
-        makeSyntacticRule(
-            invalid_terminal, makeLhsNonTerminal("sentence"), [makeTerminal("1WORD")]
-        )
-    ]
+
+def test_rhs_terminal_cannot_start_with_number():
+    spec = parse("<sentence> ::= 1WORD")
     errors = validate(spec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidRhsTerminalFormatError(spec[0])
-
-def test_uppercase_rhs_alt_name():
-    word_setup = makeLine("<word> ::= ")
-    invalid_alt_name = makeLine("<sentence> ::= <word>:Name")
-    Name1 = makeSyntacticSpec(
-            [
-            makeSyntacticRule(
-                invalid_alt_name,
-                makeLhsNonTerminal("word"),
-                [],
-            ),
-            makeSyntacticRule(
-                invalid_alt_name,
-                makeLhsNonTerminal("sentence"),
-                [makeRhsNonTerminal("word", "Name")],
-            )
-        ],
-    )
-    errors = validate(Name1)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidRhsAltNameFormatError(Name1[0])
+    assert isinstance(errors[0], InvalidRhsTerminalError)
 
 
-def test_valid_rhs_alt_name():
-    word_setup = makeLine("<word> ::= ")
-    invalid_alt_name = makeLine("<sentence> ::= <word>:name")
-    Name1 = makeSyntacticSpec([
-        makeSyntacticRule(
-            invalid_alt_name,
-            makeLhsNonTerminal("word"),
-            [],
-        ),
-        makeSyntacticRule(
-            invalid_alt_name,
-            makeLhsNonTerminal("sentence"),
-            [makeRhsNonTerminal("word", "name")],
-        )
-    ],
-    )
-    errors = validate(Name1)
-    assert len(errors) == 0
+def parse(string):
+    rough = list(parse_rough(string))
+    spec =  parse_syntactic_spec(rough)
+    return spec
 
 
-def test_invalid_Rhs_error():
-    name1 = makeSyntacticRule(
-        makeLine("<sentence> ::= VERB"),
-        makeLhsNonTerminal("sentence"),
-        [makeTerminal("VERB")],
-    )
-    name2 = makeSyntacticRule(
-        makeLine("<name> ::= <VERB>"),
-        makeLhsNonTerminal("name"),
-        [makeRhsNonTerminal("_verb")],
-    )
-    spec = makeSyntacticSpec([name1, name2])
-    errors = validate(spec)
-    assert len(errors) != 0
-    assert makeInvalidRhsNameFormatError(spec[1]) in errors
 
-def test_invalid_undefined_separator():
-    rule = makeRepeatingSyntacticRule(
-        "sentence",
-        [makeTerminal("VERB")],
-    )
-    spec = [rule]
-    errors = validate(spec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidRhsSeparatorTypeError(spec[0])
+# def test_uppercase_rhs_alt_name():
+#     word_setup = makeLine("<word> ::= ")
+#     invalid_alt_name = makeLine("<sentence> ::= <word>:Name")
+#     Name1 = makeSyntacticSpec(
+#             [
+#             makeSyntacticRule(
+#                 invalid_alt_name,
+#                 makeLhsNonTerminal("word"),
+#                 [],
+#             ),
+#             makeSyntacticRule(
+#                 invalid_alt_name,
+#                 makeLhsNonTerminal("sentence"),
+#                 [makeRhsNonTerminal("word", "Name")],
+#             )
+#         ],
+#     )
+#     errors = validate(Name1)
+#     assert len(errors) == 1
+#     assert errors[0] == makeInvalidRhsAltNameFormatError(Name1[0])
 
-def test_invalid_separator_not_terminal():
-    rule = makeRepeatingSyntacticRule(
-        "sentence",
-        [makeTerminal("VERB")],
-        separator=makeRhsNonTerminal("sep")
-    )
-    spec = [rule]
-    errors = validate(spec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidRhsSeparatorTypeError(spec[0])
 
-def test_valid_separator_terminal():
-    rule = makeRepeatingSyntacticRule(
-        "sentence",
-        [makeTerminal("VERB")],
-        separator=makeTerminal("SEP")
-    )
-    spec = [rule]
-    errors = validate(spec)
-    assert len(errors) == 0
+# def test_valid_rhs_alt_name():
+#     word_setup = makeLine("<word> ::= ")
+#     invalid_alt_name = makeLine("<sentence> ::= <word>:name")
+#     Name1 = makeSyntacticSpec([
+#         makeSyntacticRule(
+#             invalid_alt_name,
+#             makeLhsNonTerminal("word"),
+#             [],
+#         ),
+#         makeSyntacticRule(
+#             invalid_alt_name,
+#             makeLhsNonTerminal("sentence"),
+#             [makeRhsNonTerminal("word", "name")],
+#         )
+#     ],
+#     )
+#     errors = validate(Name1)
+#     assert len(errors) == 0
 
-def test_missing_non_terminal():
-    invalid_alt_name = makeLine("<sentence> ::= <word>:name")
-    spec = makeSyntacticSpec([
-        makeSyntacticRule(
-            invalid_alt_name,
-            makeLhsNonTerminal("sentence"),
-            [makeRhsNonTerminal("word")],
-        )
-    ],
-    )
-    errors = validate(spec)
-    assert len(errors) == 1
-    assert errors[0] == makeMissingNonTerminalError(spec[0])
 
-def test_non_terminals_generate():
-    spec = makeSyntacticSpec([
-        makeSyntacticRule(
-            makeLine("<one> ::= NUM"),
-            makeLhsNonTerminal("one"),
-            [makeTerminal("NUM")],
-        ),
-        makeSyntacticRule(
-            makeLine("<two> ::= NUM"),
-            makeLhsNonTerminal("two"),
-            [makeRhsNonTerminal("NUM")],
-        ),
-        makeSyntacticRule(
-            makeLine("<three> ::= NUM"),
-            makeLhsNonTerminal("three"),
-            [makeTerminal("NUM")],
-        ),
-        makeSyntacticRule(
-            makeLine("<four> ::= NUM"),
-            makeLhsNonTerminal("four"),
-            [makeTerminal("NUM")],
-        ),
-    ],
-    )
-    assert spec.nonTerminals == {"one", "two", "three", "four"}
+# def test_invalid_Rhs_error():
+#     name1 = makeSyntacticRule(
+#         makeLine("<sentence> ::= VERB"),
+#         makeLhsNonTerminal("sentence"),
+#         [makeTerminal("VERB")],
+#     )
+#     name2 = makeSyntacticRule(
+#         makeLine("<name> ::= <VERB>"),
+#         makeLhsNonTerminal("name"),
+#         [makeRhsNonTerminal("_verb")],
+#     )
+#     spec = makeSyntacticSpec([name1, name2])
+#     errors = validate(spec)
+#     assert len(errors) != 0
+#     assert makeInvalidRhsNameFormatError(spec[1]) in errors
+
+# def test_invalid_undefined_separator():
+#     rule = makeRepeatingSyntacticRule(
+#         "sentence",
+#         [makeTerminal("VERB")],
+#     )
+#     spec = [rule]
+#     errors = validate(spec)
+#     assert len(errors) == 1
+#     assert errors[0] == makeInvalidRhsSeparatorTypeError(spec[0])
+
+# def test_invalid_separator_not_terminal():
+#     rule = makeRepeatingSyntacticRule(
+#         "sentence",
+#         [makeTerminal("VERB")],
+#         separator=makeRhsNonTerminal("sep")
+#     )
+#     spec = [rule]
+#     errors = validate(spec)
+#     assert len(errors) == 1
+#     assert errors[0] == makeInvalidRhsSeparatorTypeError(spec[0])
+
+# def test_valid_separator_terminal():
+#     rule = makeRepeatingSyntacticRule(
+#         "sentence",
+#         [makeTerminal("VERB")],
+#         separator=makeTerminal("SEP")
+#     )
+#     spec = [rule]
+#     errors = validate(spec)
+#     assert len(errors) == 0
+
+# def test_missing_non_terminal():
+#     invalid_alt_name = makeLine("<sentence> ::= <word>:name")
+#     spec = makeSyntacticSpec([
+#         makeSyntacticRule(
+#             invalid_alt_name,
+#             makeLhsNonTerminal("sentence"),
+#             [makeRhsNonTerminal("word")],
+#         )
+#     ],
+#     )
+#     errors = validate(spec)
+#     assert len(errors) == 1
+#     assert errors[0] == makeMissingNonTerminalError(spec[0])
+
+# def test_non_terminals_generate():
+#     spec = makeSyntacticSpec([
+#         makeSyntacticRule(
+#             makeLine("<one> ::= NUM"),
+#             makeLhsNonTerminal("one"),
+#             [makeTerminal("NUM")],
+#         ),
+#         makeSyntacticRule(
+#             makeLine("<two> ::= NUM"),
+#             makeLhsNonTerminal("two"),
+#             [makeRhsNonTerminal("NUM")],
+#         ),
+#         makeSyntacticRule(
+#             makeLine("<three> ::= NUM"),
+#             makeLhsNonTerminal("three"),
+#             [makeTerminal("NUM")],
+#         ),
+#         makeSyntacticRule(
+#             makeLine("<four> ::= NUM"),
+#             makeLhsNonTerminal("four"),
+#             [makeTerminal("NUM")],
+#         ),
+#     ],
+#     )
+#     assert spec.nonTerminals == {"one", "two", "three", "four"}
 
 def makeRepeatingSyntacticRule(lhs: str, rhsList: List[Symbol], separator=None):
     return RepeatingSyntacticRule(

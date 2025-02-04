@@ -20,7 +20,10 @@ class SyntacticParser:
     def parseSpec(self) -> SyntacticSpec:
         if not self.lines:
             return self.spec
-        for line in self.lines[1:]:
+        lines = self.lines
+        if not isinstance(lines[0], Line):
+            lines = lines[1:]
+        for line in lines:
             self.parseLine(line)
         return self.spec
 
