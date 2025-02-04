@@ -29,7 +29,6 @@ class SyntacticParser:
         if parser.isSyntacticRule():
             rule = parser.parseSyntacticRule()
             self.spec.append(rule)
-            self.spec.nonTerminals.append(rule.lhs.name)
 
 
 

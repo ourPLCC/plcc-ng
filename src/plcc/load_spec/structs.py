@@ -126,9 +126,15 @@ class RepeatingSyntacticRule(SyntacticRule):
 
 @dataclass
 class SyntacticSpec(list):
-    nonTerminals: list[str]
-    def __init__(self, rules=None, nonTerminals=[]):
+    nonTerminals: set[str]
+    def __init__(self, rules=None ):
         if rules: super().__init__(rules)
-        self.nonTerminals = nonTerminals
+        self.nonTerminals = set()
+        self._parseNonTerminals()
+
+    def _parseNonTerminals(self):
+        for rule in self:
+            self.nonTerminals.add(rule.lhs.name)
+        pass
     pass
 

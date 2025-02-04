@@ -38,8 +38,6 @@ def test_uppercase_rhs_alt_name():
                 [makeRhsNonTerminal("word", "Name")],
             )
         ],
-        ["word",
-         "sentence"]
     )
     errors = validate(Name1)
     assert len(errors) == 1
@@ -61,7 +59,7 @@ def test_valid_rhs_alt_name():
             [makeRhsNonTerminal("word", "name")],
         )
     ],
-    ["word"])
+    )
     errors = validate(Name1)
     assert len(errors) == 0
 
@@ -77,7 +75,7 @@ def test_invalid_Rhs_error():
         makeLhsNonTerminal("name"),
         [makeRhsNonTerminal("_verb")],
     )
-    spec = makeSyntacticSpec([name1, name2],["sentence", "name"])
+    spec = makeSyntacticSpec([name1, name2])
     errors = validate(spec)
     assert len(errors) != 0
     assert makeInvalidRhsNameFormatError(spec[1]) in errors
@@ -122,13 +120,36 @@ def test_missing_non_terminal():
             [makeRhsNonTerminal("word")],
         )
     ],
-    []
     )
     errors = validate(spec)
     assert len(errors) == 1
     assert errors[0] == makeMissingNonTerminalError(spec[0])
 
-
+def test_non_terminals_generate():
+    spec = makeSyntacticSpec([
+        makeSyntacticRule(
+            makeLine("<one> ::= NUM"),
+            makeLhsNonTerminal("one"),
+            [makeTerminal("NUM")],
+        ),
+        makeSyntacticRule(
+            makeLine("<two> ::= NUM"),
+            makeLhsNonTerminal("two"),
+            [makeRhsNonTerminal("NUM")],
+        ),
+        makeSyntacticRule(
+            makeLine("<three> ::= NUM"),
+            makeLhsNonTerminal("three"),
+            [makeTerminal("NUM")],
+        ),
+        makeSyntacticRule(
+            makeLine("<four> ::= NUM"),
+            makeLhsNonTerminal("four"),
+            [makeTerminal("NUM")],
+        ),
+    ],
+    )
+    assert spec.nonTerminals == {"one", "two", "three", "four"}
 
 def makeRepeatingSyntacticRule(lhs: str, rhsList: List[Symbol], separator=None):
     return RepeatingSyntacticRule(
@@ -152,8 +173,8 @@ def buildRhs(rhs):
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)
 
-def makeSyntacticSpec(rules: List[SyntacticRule], nonTerminals: List[str]):
-    return SyntacticSpec(rules, nonTerminals)
+def makeSyntacticSpec(rules: List[SyntacticRule]):
+    return SyntacticSpec(rules)
 
 def makeSyntacticRule(line: Line, lhs: LhsNonTerminal, rhsList: List[Symbol]):
     return SyntacticRule(line, lhs, rhsList)
