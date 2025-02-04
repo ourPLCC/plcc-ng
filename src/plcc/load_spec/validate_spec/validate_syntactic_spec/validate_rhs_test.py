@@ -13,7 +13,7 @@ from .errors import (
     InvalidRhsNameError,
     InvalidRhsAltNameError,
     InvalidRhsTerminalError,
-    RepeatRhsSymbolNameError,
+    DuplicateRhsSymbolNameError,
 )
 from .validate_rhs import validate_rhs
 
@@ -81,7 +81,7 @@ def test_no_duplicate_Rhs_nonterminal():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "verb")
 
 def test_duplicate_Rhs_nonterminal_with_same_alt_name_not_allowed():
     rule = makeSyntacticRule(
@@ -92,7 +92,7 @@ def test_duplicate_Rhs_nonterminal_with_same_alt_name_not_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "name")
 
 def test_duplicate_rhs_nonterminal_with_different_alt_name_allowed():
     rule = makeSyntacticRule(
@@ -123,7 +123,7 @@ def test_duplicate_captured_terminals_not_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "one")
 
 def test_duplicate_captured_terminals_allowed_with_alt_name():
     rule = makeSyntacticRule(
@@ -144,7 +144,7 @@ def test_duplicate_captured_terminals_not_allowed_with_same_alt_name():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "same")
 
 def test_different_names_allowed():
     rule = makeSyntacticRule(
@@ -165,7 +165,7 @@ def test_duplicate_captured_terminal_and_non_terminal_not_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "no")
 
 def test_duplicate_altName_and_nonterminal_name_not_allowed():
     rule = makeSyntacticRule(
@@ -176,7 +176,7 @@ def test_duplicate_altName_and_nonterminal_name_not_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "yes")
 
 def test_duplicate_altName_and_terminal_name_not_allowed():
     rule = makeSyntacticRule(
@@ -187,7 +187,7 @@ def test_duplicate_altName_and_terminal_name_not_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 1
-    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+    assert errors[0] == makeDuplicateRhsSymbolNameError(spec[0], "yes")
 
 def test_one_nonterminal_with_different_altName_allowed():
     rule = makeSyntacticRule(
@@ -198,7 +198,6 @@ def test_one_nonterminal_with_different_altName_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 0
-
 
 
 def validate(syntacticSpec: SyntacticSpec):
@@ -239,5 +238,5 @@ def makeInvalidRhsAltNameFormatError(rule):
 def makeInvalidRhsTerminalFormatError(rule):
     return InvalidRhsTerminalError(rule)
 
-def makeRepeateRhsSymbolError(rule):
-    return RepeatRhsSymbolNameError(rule)
+def makeDuplicateRhsSymbolNameError(rule, symbolName):
+    return DuplicateRhsSymbolNameError(rule, symbolName)

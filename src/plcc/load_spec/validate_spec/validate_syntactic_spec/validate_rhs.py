@@ -7,7 +7,7 @@ from .errors import (
     InvalidRhsNameError,
     InvalidRhsAltNameError,
     InvalidRhsTerminalError,
-    RepeatRhsSymbolNameError,
+    DuplicateRhsSymbolNameError,
 )
 import re
 
@@ -57,7 +57,7 @@ class SyntacticRhsValidator:
                 continue
             symbolName = symbol.getAttributeName()
             if symbolName in seen:
-                self._appendRepeatRhsSymbolNameError(rule)
+                self._appendDuplicateRhsSymbolNameError(rule, symbolName)
             else:
                 seen.add(symbolName)
 
@@ -70,5 +70,5 @@ class SyntacticRhsValidator:
     def _appendInvalidRhsTerminalError(self, rule):
         self.errorList.append(InvalidRhsTerminalError(rule))
 
-    def _appendRepeatRhsSymbolNameError(self, rule):
-        self.errorList.append(RepeatRhsSymbolNameError(rule))
+    def _appendDuplicateRhsSymbolNameError(self, rule, symbolName):
+        self.errorList.append(DuplicateRhsSymbolNameError(rule, symbolName))

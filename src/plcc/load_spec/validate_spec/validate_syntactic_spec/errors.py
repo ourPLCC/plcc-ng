@@ -59,7 +59,7 @@ class UndefinedTerminalError(ValidationError):
             rule.line.string}' on line: {rule.line.number}. All terminals must be defined in the lexical section of the grammar file."
 
 @dataclass
-class RepeatRhsSymbolNameError(ValidationError):
-    def __init__(self, rule):
+class DuplicateRhsSymbolNameError(ValidationError):
+    def __init__(self, rule, symbolName):
         super().__init__(rule)
-        self.message = f"Duplciate RHS symbol for rule: '{rule.line.string}' on line: {rule.line.number}. All RHS symbols must have unique names."
+        self.message = f"Duplciate RHS symbol name '{symbolName}' for rule: '{rule.line.string}' on line: {rule.line.number}. All RHS symbols must have unique names."
