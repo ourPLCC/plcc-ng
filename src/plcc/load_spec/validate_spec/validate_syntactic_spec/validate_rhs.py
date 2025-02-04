@@ -33,7 +33,7 @@ class SyntacticRhsValidator:
                     self._validateNonTerminal(s, rule)
                 if isinstance(s, Terminal):
                     self._validateTerminal(s, rule)
-            self._validateNoRepeatRhsSymbols(rule)
+            self._validateNoDuplicateRhsSymbols(rule)
         return self.errorList
 
     def _validateTerminal(self, s, rule):
@@ -50,34 +50,16 @@ class SyntacticRhsValidator:
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", altName):
             self._appendInvalidRhsAltNameError(rule)
 
-    def _validateNoRepeatRhsSymbols(self, rule):
-        seen = []
+    def _validateNoDuplicateRhsSymbols(self, rule):
+        seen = set()
         for symbol in rule.rhsSymbolList:
             if isinstance(symbol, Terminal):
                 continue
-            for seenSymbol in seen:
-                if self._compareSymbolsNames(seenSymbol, symbol):
-                    self._appendRepeatRhsSymbolNameError(rule)
+            symbolName = symbol.getAttributeName()
+            if symbolName in seen:
+                self._appendRepeatRhsSymbolNameError(rule)
             else:
-                seen.append(symbol)
-
-    def _compareSymbolsNames(self, seenSymbol, symbol):
-        if seenSymbol.name == symbol.name:
-            if self._compareSymbolsAltNames(seenSymbol, symbol):
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    def _compareSymbolsAltNames(self, seenSymbol, symbol):
-        if seenSymbol.altName and symbol.altName:
-            if seenSymbol.altName == symbol.altName:
-                return True
-            else:
-                return False
-        else:
-            return True
+                seen.add(symbolName)
 
     def _appendInvalidRhsError(self, rule):
         self.errorList.append(InvalidRhsNameError(rule))

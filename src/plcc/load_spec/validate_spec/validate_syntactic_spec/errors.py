@@ -62,4 +62,4 @@ class UndefinedTerminalError(ValidationError):
 class RepeatRhsSymbolNameError(ValidationError):
     def __init__(self, rule):
         super().__init__(rule)
-        self.message = f"Repeat RHS symbol for rule: '{rule.line.string}' on line: {rule.line.number}. All RHS symbols must have unique names."
+        self.message = f"Duplciate RHS symbol for rule: '{rule.line.string}' on line: {rule.line.number}. All RHS symbols must have unique names."
