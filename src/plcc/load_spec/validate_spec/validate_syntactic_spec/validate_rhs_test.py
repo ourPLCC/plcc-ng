@@ -72,7 +72,7 @@ def test_invalid_Rhs_error():
     assert len(errors) == 1
     assert errors[0] == makeInvalidRhsNameFormatError(spec[1])
 
-def test_no_repeat_Rhs_nonterminal():
+def test_no_duplicate_Rhs_nonterminal():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::= <verb> <verb>"),
         makeLhsNonTerminal("sentence"),
@@ -83,7 +83,7 @@ def test_no_repeat_Rhs_nonterminal():
     assert len(errors) == 1
     assert errors[0] == makeRepeateRhsSymbolError(spec[0])
 
-def test_repeat_Rhs_nonterminal_with_same_alt_name_not_allowed():
+def test_duplicate_Rhs_nonterminal_with_same_alt_name_not_allowed():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::= <verb>:name <verb>:name"),
         makeLhsNonTerminal("sentence"),
@@ -94,7 +94,7 @@ def test_repeat_Rhs_nonterminal_with_same_alt_name_not_allowed():
     assert len(errors) == 1
     assert errors[0] == makeRepeateRhsSymbolError(spec[0])
 
-def test_repeat_rhs_nonterminal_with_different_alt_name_allowed():
+def test_duplicate_rhs_nonterminal_with_different_alt_name_allowed():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::= <verb>:name <verb>:different"),
         makeLhsNonTerminal("sentence"),
@@ -104,7 +104,7 @@ def test_repeat_rhs_nonterminal_with_different_alt_name_allowed():
     errors = validate(spec)
     assert len(errors) == 0
 
-def test_repeating_non_captured_terminals_allowed():
+def test_duplicate_non_captured_terminals_allowed():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::= ONE ONE ONE ONE ONE"),
         makeLhsNonTerminal("sentence"),
@@ -114,7 +114,7 @@ def test_repeating_non_captured_terminals_allowed():
     errors = validate(spec)
     assert len(errors) == 0
 
-def test_repeating_captured_terminals_not_allowed():
+def test_duplicate_captured_terminals_not_allowed():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::== <ONE> <ONE>"),
         makeLhsNonTerminal("sentence"),
@@ -125,7 +125,7 @@ def test_repeating_captured_terminals_not_allowed():
     assert len(errors) == 1
     assert errors[0] == makeRepeateRhsSymbolError(spec[0])
 
-def test_repeating_captured_terminals_allowed_with_alt_name():
+def test_duplicate_captured_terminals_allowed_with_alt_name():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::== <ONE>:name <ONE>:different"),
         makeLhsNonTerminal("sentence"),
@@ -135,7 +135,7 @@ def test_repeating_captured_terminals_allowed_with_alt_name():
     errors = validate(spec)
     assert len(errors) == 0
 
-def test_repeating_captured_terminals_not_allowed_with_same_alt_name():
+def test_duplicate_captured_terminals_not_allowed_with_same_alt_name():
     rule = makeSyntacticRule(
         makeLine("<sentence> ::== <ONE>:same <ONE>:same"),
         makeLhsNonTerminal("sentence"),
@@ -155,6 +155,51 @@ def test_different_names_allowed():
     spec = [rule]
     errors = validate(spec)
     assert len(errors) == 0
+
+def test_duplicate_captured_terminal_and_non_terminal_not_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= <NO> <no>"),
+        makeLhsNonTerminal("sentence"),
+        [makeRhsNonTerminal("no"), makeCapturingTerminal("NO")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+
+def test_duplicate_altName_and_nonterminal_name_not_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= <no>:yes <yes>"),
+        makeLhsNonTerminal("sentence"),
+        [makeRhsNonTerminal("no", "yes"), makeRhsNonTerminal("yes")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+
+def test_duplicate_altName_and_terminal_name_not_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= <no>:yes <YES>"),
+        makeLhsNonTerminal("sentence"),
+        [makeRhsNonTerminal("no", "yes"), makeCapturingTerminal("YES")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 1
+    assert errors[0] == makeRepeateRhsSymbolError(spec[0])
+
+def test_one_nonterminal_with_different_altName_allowed():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= <no>:yes <no>"),
+        makeLhsNonTerminal("sentence"),
+        [makeRhsNonTerminal("no", "yes"), makeRhsNonTerminal("no")]
+    )
+    spec = [rule]
+    errors = validate(spec)
+    assert len(errors) == 0
+
+
 
 def validate(syntacticSpec: SyntacticSpec):
     return validate_rhs(syntacticSpec)

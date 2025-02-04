@@ -21,7 +21,7 @@ class CapturingSymbol(Symbol):
 
     def getAttributeName(self):
         if self.altName == None:
-            return self.name
+            return self.name.lower()
         else:
             return self.altName
 
