@@ -1,91 +1,110 @@
 from pytest import raises, mark, fixture
 
-from ...errors import InvalidClassNameError
+from ...errors import InvalidClassNameError, UndefinedBlockError, UndefinedTargetLocatorError
 from .validate_semantic_spec import validate_semantic_spec
-from ...parse_spec.parse_semantic_spec import parse_semantic_spec
 from ...load_rough_spec.parse_lines import parse_lines
 from ...structs import Divider, Line, SemanticSpec
 from ...structs import Block
 
+from ...parse_spec import (
+    parse_rough,
+    parse_semantic_spec
+)
 
+def test_no_code_fragments_no_errors():
+    spec = parse('%')
+    errors = validate_semantic_spec(spec)
+    assert len(errors) == 0
+
+def test_valid_and_invalid_names():
+    spec = parse('''\
+%
+Valid
+%%%
+%%%
+invalid
+%%%
+%%%
+''')
+    errors = validate_semantic_spec(spec)
+    assert isinstance(errors[0], InvalidClassNameError)
+
+def test_invalid_undefined_target_locator():
+    spec = parse('''\
+%
+%%%
+%%%
+''')
+    errors = validate_semantic_spec(spec)
+    assert isinstance(errors[0], UndefinedTargetLocatorError)
+
+def test_invalid_block_and_target_locator_order():
+    spec = parse('''\
+%
+%%%
+%%%
+Class
+''')
+    errors = validate_semantic_spec(spec)
+    assert isinstance(errors[0], UndefinedTargetLocatorError)
+    assert isinstance(errors[1], UndefinedBlockError)
+
+def test_undefined_block_error_multiple_code_fragments():
+    spec = parse('''\
+%
+Class
+AnotherClass
+%%%
+%%%
+''')
+    errors = validate_semantic_spec(spec)
+    assert isinstance(errors[0], UndefinedBlockError)
+
+def test_undefined_block_error_single_code_fragment():
+    spec = parse('''\
+%
+Class
+''')
+    errors = validate_semantic_spec(spec)
+    assert isinstance(errors[0], UndefinedBlockError)
 
 def test_valid_names_no_errors():
     assertValidClassNames(["Class","CLASS","C_lass_","C123","C", "ClaSs", "C_la55"])
 
-def test_no_code_fragments_no_errors():
-    semanticSpec = makeSemanticSpec([])
-    errors = validate_semantic_spec(semanticSpec)
-    assert len(errors) == 0
-
-def test_begin_lowercase_format_error():
-    assertInvalidClassName("startsLowerCase")
-
-def test_begin_number_format_error():
-    assertInvalidClassName("12MustStartUppercase")
-
-def test_whitespace_name_format_error():
-    assertInvalidClassName("White Space")
-
 def test_multiple_errors_all_counted():
-    assertMultipleInvalidClassNames(["123StartsWithNumbers", "notuppercase", "InvalidChar`", "Invalid space"])
-
-def test_valid_and_invalid_names():
-    semanticSpec = makeSemanticSpec([makeLine("Class"), makeBlock(), makeLine("invalid"), makeBlock()])
-    errors = validate_semantic_spec(semanticSpec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidClassNameError("invalid")
+    assertInvalidClassNames([
+        "123StartsWithNumbers", "notuppercase", "InvalidChar`", "Invalid space",
+        "White Space", "12MustStartUppercase", "startsLowerCase"])
 
 def assertValidClassNames(names: list[str]):
     for name in names:
         assertValidClassName(name)
 
 def assertValidClassName(name: str):
-    semanticSpec = makeSemanticSpec([makeLine(name), makeBlock()])
-    errors = validate_semantic_spec(semanticSpec)
+    spec = parse(f'''\
+%
+{name}
+%%%
+%%%
+''')
+    errors = validate_semantic_spec(spec)
     assert len(errors) == 0
 
+def assertInvalidClassNames(names: list[str]):
+    for name in names:
+        assertInvalidClassName(name)
+
 def assertInvalidClassName(name: str):
-    semanticSpec = makeSemanticSpec([makeLine(name), makeBlock()])
-    errors = validate_semantic_spec(semanticSpec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidClassNameError(name)
-
-def assertMultipleInvalidClassNames(strings):
-    lines_and_blocks = makeLinesAndBlocksFromStrings(strings)
-    semanticSpec = makeSemanticSpec(lines_and_blocks)
-    errors = validate_semantic_spec(semanticSpec)
-    for i, obj in enumerate(lines_and_blocks):
-        if type(obj) is Block:
-            return
-        assert errors[i] == makeInvalidClassNameError(obj.string)
-    else: # pragma: no cover
-        pass
-
-
-def makeLinesAndBlocksFromStrings(strings: list[str]) -> list[Line | Block]:
-    lines_and_blocks = []
-    for string in strings:
-        lines_and_blocks.append(makeLine(string))
-        lines_and_blocks.append(makeBlock())
-    return lines_and_blocks
-
-def makeInvalidClassNameError(name: str):
-    return InvalidClassNameError(
-        makeLine(name),
-        f"Invalid name format for ClassName {name}, (Must start with an upper case letter, and may contain upper or lower case letters, numbers, and underscores).")
-
-def makeSemanticSpec(linesAndBlocks: list[Line | Block]):
-    return parse_semantic_spec([makeDivider('Java', 'Java', makeLine("%"))] + linesAndBlocks)
-
-def makeLine(string, lineNumber=1, file=None):
-    return Line(string, lineNumber, file)
-
-def makeBlock():
-    return  Block(list(parse_lines('''\
+    spec = parse(f'''\
+%
+{name}
 %%%
-block
 %%%
-''')))
+''')
+    errors = validate_semantic_spec(spec)
+    assert isinstance(errors[0], InvalidClassNameError)
 
-def makeDivider(tool, language, line):
-    return Divider(tool=tool, language=language, line=line)
+def parse(string):
+    rough = list(parse_rough(string))
+    spec =  parse_semantic_spec(rough)
+    return spec

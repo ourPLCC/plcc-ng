@@ -1,68 +1,56 @@
-
 from plcc.load_spec.structs import CodeFragment
-from .parse_target_locator import parse_target_locator
+from plcc.load_spec.structs import TargetLocator
 from plcc.load_spec.structs import Line
 from plcc.load_spec.structs import Block
-from plcc.load_spec.structs import Divider
-import re
+from .parse_target_locator import parse_target_locator
 
-def parse_code_fragments(lines_and_blocks: list[Line | Block]):
-    parser = CodeFragmentParser(lines_and_blocks)
-    return parser.parse()
+def parse_code_fragments(lines_and_blocks):
+    locators_and_blocks = parse_locators(lines_and_blocks)
+    return list(parse_fragments(locators_and_blocks))
 
-class CodeFragmentParser:
-    def __init__(self, lines_and_blocks: list[Line | Block]):
-        self.lines_and_blocks = lines_and_blocks
-        self.codeFragmentList = []
-        self.targetLocator = None
+def parse_locators(lines_and_blocks):
+    for locatorOrBlock in lines_and_blocks:
+        if not isEmpty(locatorOrBlock):
+            yield parse_target_locator(locatorOrBlock) if isinstance(locatorOrBlock, Line) else locatorOrBlock
 
-    def parse(self):
-        for obj in self.lines_and_blocks:
-            self._parse_line_or_block(obj)
-
-        if self.targetLocator != None:
-            raise CodeFragmentMissingBlockError(self.targetLocator.line)
-
-        return self.codeFragmentList
-
-    def _parse_line_or_block(self, obj):
-        handler = {
-                Line: self._parse_line,
-                Block: self._parse_block
-            }.get(type(obj))
-
-        handler(obj)
-
-
-    def _parse_block(self, block):
-        if self.targetLocator == None:
-            raise UndefinedTargetLocatorError(block.lines[0])
-
-        self.codeFragmentList.append(CodeFragment(targetLocator=self.targetLocator, block=block))
-        self.targetLocator = None
-
-    def _parse_line(self, line):
-        if self._isCommentOrBlank(line.string):
-                return
-
-        if self.targetLocator != None:
-            raise DuplicateTargetLocatorError(line.string)
+def parse_fragments(locatorsOrBlocks):
+    locatorsOrBlocks = list(locatorsOrBlocks)
+    i = 0
+    while i < len(locatorsOrBlocks):
+        if isLocator(locatorsOrBlocks, i) and isBlock(locatorsOrBlocks, i+1):
+            yield CodeFragment(locatorsOrBlocks[i], locatorsOrBlocks[i+1])
+            i += 2
+        elif isLocator(locatorsOrBlocks, i) and isLocator(locatorsOrBlocks, i+1):
+            yield CodeFragment(locatorsOrBlocks[i], None)
+            i += 1
+        elif isBlock(locatorsOrBlocks, i) and isBlock(locatorsOrBlocks, i+1):
+            yield CodeFragment(None, locatorsOrBlocks[i])
+            i += 1
+        elif isBlock(locatorsOrBlocks, i) and isLocator(locatorsOrBlocks, i+1):
+            yield CodeFragment(None, locatorsOrBlocks[i])
+            i += 1
+        elif isLocator(locatorsOrBlocks, i):
+            yield CodeFragment(locatorsOrBlocks[i], None)
+            i += 1
+        elif isBlock(locatorsOrBlocks, i):
+            yield CodeFragment(None, locatorsOrBlocks[i])
+            i += 1
         else:
-            self.targetLocator = parse_target_locator(line)
+            raise TypeError(f'{type(locatorsOrBlocks[i])}')
 
+def isBlock(locatorsOrBlocks, i):
+    return isType(locatorsOrBlocks, i, Block)
 
-    def _isCommentOrBlank(self, obj_str):
-        return True if re.match(r'\s*#', obj_str) or re.match(r'\s*$', obj_str) else False
+def isLocator(locatorsOrBlocks, i):
+    return isType(locatorsOrBlocks, i, TargetLocator)
 
+def isType(locatorsOrBlocks, i, Type):
+    return i < len(locatorsOrBlocks) and isinstance(locatorsOrBlocks[i], Type)
 
-class CodeFragmentMissingBlockError(Exception):
-    def __init__(self, line):
-        self.line = line
-
-class UndefinedTargetLocatorError(Exception):
-    def __init__(self, line):
-        self.line = line
-
-class DuplicateTargetLocatorError(Exception):
-    def __init__(self, line):
-        self.line = line
+def isEmpty(locatorOrBlock):
+    if locatorOrBlock is None:
+        return True
+    if isinstance(locatorOrBlock, Line):
+        s = locatorOrBlock.string
+        return s is None or s.strip() == ''
+    return False

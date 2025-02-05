@@ -42,12 +42,23 @@ class InvalidRuleError(ValidationError):
         self.line = line
         self.message = f"Invalid rule format found on line: {line.number}"
 
+@dataclass
+class InvalidClassNameError(ValidationError):
+    def __init__(self, line):
+        self.line = line
+        self.message = f"Invalid name format for ClassName {self.line.string} on line: {self.line.number} (Must start with an upper case letter, and may contain upper or lower case letters, numbers, and underscores)."
 
 @dataclass
-class InvalidClassNameError:
-    line: Line
-    message: str
+class UndefinedBlockError(ValidationError):
+    def __init__(self, line):
+        self.line = line
+        self.message = f"Undefined Block for {self.line.string} on line: {self.line.number}"
 
+@dataclass
+class UndefinedTargetLocatorError(ValidationError):
+    def __init__(self, line):
+        self.line = line
+        self.message = f"Undefined class name on line: {self.line.number}"
 
 @dataclass
 class InvalidLhsNameError(ValidationError):
