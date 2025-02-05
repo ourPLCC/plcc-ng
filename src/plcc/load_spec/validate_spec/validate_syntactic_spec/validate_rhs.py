@@ -44,17 +44,17 @@ class SyntacticRhsValidator:
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", s.name):
             self._appendInvalidRhsError(rule)
         if not self._nonTerminalExists(s):
-                    self._appendMissingNonTerminalError(rule)
+            self._appendMissingNonTerminalError(rule)
 
     def _nonTerminalExists(self, non_terminal):
-        return non_terminal.name in self.syntacticSpec.nonTerminals
+        return non_terminal.name in self.syntacticSpec.getNonTerminals()
 
     def _validateNonTerminalAltName(self, alt_name: str, rule):
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", alt_name):
             self._appendInvalidRhsAltNameError(rule)
 
     def _validateSeparatorIsTerminal(self, rule):
-        if not isinstance(rule.separator, Terminal):
+        if not re.match(r"^[A-Z][A-Z0-9_]+$", rule.separator.name):
             self._appendInvalidRhsSeparatorTypeError(rule)
 
     def _appendInvalidRhsSeparatorTypeError(self, rule):
