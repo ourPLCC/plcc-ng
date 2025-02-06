@@ -133,6 +133,14 @@ class InvalidRhsSeparatorTypeError(ValidationError):
 
 
 @dataclass
+class MissingNonTerminalError(ValidationError):
+    def __init__(self, rule):
+        super().__init__(
+        line=rule.line,
+        message = f"RHS Non-Terminal found that does not exist anywhere in LHS in rule: '{rule.line.string}' on line: {rule.line.number}"
+        )
+
+@dataclass
 class LL1Error:
     def __init__(self, cell, production):
         self.cell = cell
@@ -152,3 +160,4 @@ class InvalidSymbolException(Exception):
     def __init__(self, rule):
         super().__init__(rule)
         self.message = f"Invalid Symbol: '{rule}' (must be a Symbol object)"
+

@@ -20,7 +20,6 @@ class SyntacticValidator:
         self.syntacticSpec = syntacticSpec
         self.lexicalSpec = lexicalSpec
         self.errorList = []
-        self.nonTerminals = set()
 
     def validate(self) -> list:
         self._validateLhs()
@@ -31,7 +30,6 @@ class SyntacticValidator:
     def _validateLhs(self):
         lhs_error_list, non_terminal_set = validate_lhs(self.syntacticSpec)
         self.errorList = lhs_error_list
-        self.nonTerminals = non_terminal_set
 
     def _validateRhs(self):
         Rhs_error_list= validate_rhs(self.syntacticSpec)
