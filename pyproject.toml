@@ -31,4 +31,4 @@ dev = [
 ]
 
 [tool.pdm.scripts]
-test = "pytest -vv -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
+test = "pytest -vv -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
