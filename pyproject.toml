@@ -1,6 +1,6 @@
 [project]
-name = "plcc"
-version = "8.0.0"
+name = "plccng"
+version = "0.1.0"
 description = "Programming Languages Compiler Compiler"
 authors = [
     {name = "Tim Fossum", email = "fossum@halsum.org"},
@@ -13,10 +13,6 @@ dependencies = [
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
-
-
-[project.scripts]
-plcc = "plcc.__main__:main"
 
 
 [build-system]
