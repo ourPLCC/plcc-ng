@@ -3,9 +3,7 @@ name = "plccng"
 version = "0.1.0"
 description = "Programming Languages Compiler Compiler"
 authors = [
-    {name = "Tim Fossum", email = "fossum@halsum.org"},
-    {name = "Stoney Jackson", email = "dr.stoney@gmail.com"},
-    {name = "James Heliotis", email = "jehics@rit.edu"}
+    {name = "PLCC Community", email = "https://discord.gg/EVtNSxS9E2"},
 ]
 dependencies = [
     "overrides>=7.7.0",
