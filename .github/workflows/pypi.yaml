@@ -45,6 +45,8 @@ jobs:
       name: pypi
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
       - uses: pdm-project/setup-pdm@v4
       - name: Publish package distributions to PyPI
         run: git log --oneline
