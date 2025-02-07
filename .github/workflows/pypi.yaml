@@ -1,18 +1,45 @@
 ---
-name: Publish to PyPI
+name: release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: jveldboom/action-conventional-versioning@v1
+        id: version
+
+      - name: Update Major Tag
+        env:
+          MAJOR: ${{ steps.version.outputs.major }}
+          MINOR: ${{ steps.version.outputs.minor }}
+          PATCH: ${{ steps.version.outputs.patch }}
+        run: |
+          git tag ${MAJOR}.${MINOR}.${PATCH} ${GITHUB_SHA}
+          git push origin ${MAJOR}.${MINOR}.${PATCH}
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.version }}" \
+            --generate-notes \
+            --target "${{ github.sha }}"
+
   pypi-publish:
-    name: upload release to PyPI
+    needs: release
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       id-token: write
     environment:
       name: pypi
