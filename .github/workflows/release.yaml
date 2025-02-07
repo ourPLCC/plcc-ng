@@ -24,8 +24,8 @@ jobs:
           MINOR: ${{ steps.version.outputs.minor }}
           PATCH: ${{ steps.version.outputs.patch }}
         run: |
-          git tag ${MAJOR}.${MINOR}.${PATCH} ${GITHUB_SHA} || true
-          git push origin ${MAJOR}.${MINOR}.${PATCH} || true
+          git tag ${MAJOR}.${MINOR}.${PATCH} ${GITHUB_SHA}
+          git push origin ${MAJOR}.${MINOR}.${PATCH}
 
       - name: Create GitHub Release
         env:
