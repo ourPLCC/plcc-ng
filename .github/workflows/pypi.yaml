@@ -46,7 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-tags: true
+          fetch-depth: 0
       - uses: pdm-project/setup-pdm@v4
       - name: Publish package distributions to PyPI
         run: pdm publish
