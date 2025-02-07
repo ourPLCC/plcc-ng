@@ -23,15 +23,15 @@ jobs:
           MAJOR: ${{ steps.version.outputs.major }}
         run: |
           git tag -d ${MAJOR} || true
-          git push origin :refs/tags/${MAJOR}
-          git tag ${MAJOR} ${GITHUB_SHA}
-          git push origin ${MAJOR}
+          git push origin :refs/tags/${MAJOR} || true
+          git tag ${MAJOR} ${GITHUB_SHA} || true
+          git push origin ${MAJOR} || true
           git tag -d ${MAJOR}.${MINOR} || true
-          git push origin :refs/tags/${MAJOR}.${MINOR}
-          git tag ${MAJOR}.${MINOR} ${GITHUB_SHA}
-          git push origin ${MAJOR}.${MINOR}
-          git tag ${MAJOR}.${MINOR}.${PATCH} ${GITHUB_SHA}
-          git push origin ${MAJOR}.${MINOR}.${PATCH}
+          git push origin :refs/tags/${MAJOR}.${MINOR} || true
+          git tag ${MAJOR}.${MINOR} ${GITHUB_SHA} || true
+          git push origin ${MAJOR}.${MINOR} || true
+          git tag ${MAJOR}.${MINOR}.${PATCH} ${GITHUB_SHA} || true
+          git push origin ${MAJOR}.${MINOR}.${PATCH} || true
 
       - name: Create GitHub Release
         env:
