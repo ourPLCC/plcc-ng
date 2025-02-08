@@ -1,22 +1,15 @@
 [project]
-name = "plcc"
-version = "8.0.0"
+name = "plccng"
+dynamic = ["version"]
 description = "Programming Languages Compiler Compiler"
 authors = [
-    {name = "Tim Fossum", email = "fossum@halsum.org"},
-    {name = "Stoney Jackson", email = "dr.stoney@gmail.com"},
-    {name = "James Heliotis", email = "jehics@rit.edu"}
+    {name = "PLCC Community", email = "https://discord.gg/EVtNSxS9E2"},
 ]
 dependencies = [
-    "overrides>=7.7.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
-
-
-[project.scripts]
-plcc = "plcc.__main__:main"
 
 
 [build-system]
@@ -28,6 +21,10 @@ build-backend = "pdm.backend"
 distribution = true
 
 
+[tool.pdm.version]
+source = "scm"
+
+
 [tool.pdm.dev-dependencies]
 dev = [
     "pytest>=8.2.0",
@@ -37,4 +34,4 @@ dev = [
 ]
 
 [tool.pdm.scripts]
-test = "pytest -vv -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
+test = "pytest -vv -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
