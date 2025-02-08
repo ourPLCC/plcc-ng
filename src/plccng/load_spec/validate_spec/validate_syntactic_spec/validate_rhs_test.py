@@ -76,6 +76,42 @@ def test_rhs_non_terminal_must_not_start_with_underscore():
     errors = validate(invalid_separator)
     assert isinstance(errors[0], InvalidRhsNameError)
 
+def test_no_duplicate_Rhs_nonterminal():
+    pass
+
+def test_duplicate_Rhs_nonterminal_with_same_alt_name_not_allowed():
+    pass
+
+def test_duplicate_rhs_nonterminal_with_different_alt_name_allowed():
+    pass
+
+def test_duplicate_non_captured_terminals_allowed():
+    pass
+
+def test_duplicate_captured_terminals_not_allowed():
+    pass
+
+def test_duplicate_captured_terminals_allowed_with_alt_name():
+    pass
+
+def test_duplicate_captured_terminals_not_allowed_with_same_alt_name():
+    pass
+
+def test_different_names_allowed():
+    pass
+
+def test_duplicate_captured_terminal_and_non_terminal_not_allowed():
+    pass
+
+def test_duplicate_altName_and_nonterminal_name_not_allowed():
+    pass
+
+def test_duplicate_altName_and_terminal_name_not_allowed():
+    pass
+
+def test_one_nonterminal_with_different_altName_allowed():
+    pass
+
 def parse(string):
     rough = list(parse_rough(string))
     spec =  parse_syntactic_spec(rough)

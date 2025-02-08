@@ -1,18 +1,10 @@
-from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError, MissingNonTerminalError
+from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError, MissingNonTerminalError, DuplicateRhsSymbolNameError
 from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal
 from ...structs import (
     SyntacticSpec
 )
-<<<<<<< HEAD:src/plcc/load_spec/validate_spec/validate_syntactic_spec/validate_rhs.py
-from .errors import (
-    InvalidRhsNameError,
-    InvalidRhsAltNameError,
-    InvalidRhsTerminalError,
-    DuplicateRhsSymbolNameError,
-=======
 from ...errors import (
     InvalidRhsSeparatorTypeError
->>>>>>> dd1752f:src/plccng/load_spec/validate_spec/validate_syntactic_spec/validate_rhs.py
 )
 import re
 
