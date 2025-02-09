@@ -1,8 +1,4 @@
-from pytest import raises, mark, fixture
-
 from ..structs import Line
-
-
 from .parse_lines import parse_lines
 
 
@@ -31,7 +27,7 @@ def test_multiple_lines():
 
 
 def test_set_start_of_numbering():
-    assert list(parse_lines('one\ntwo', start=3)) == [Line('one', 3, None), Line('two', 4, None)]
+    assert list(parse_lines('one\ntwo', startNumber=3)) == [Line('one', 3, None), Line('two', 4, None)]
 
 
 def test_set_file():

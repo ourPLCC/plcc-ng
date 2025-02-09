@@ -1,8 +1,5 @@
-from pytest import raises, mark, fixture
-
+from pytest import raises
 from ..structs import Line
-
-
 from .parse_lines import parse_lines
 from .parse_includes import parse_includes
 from .load_rough_spec import process_includes, CircularIncludeError
@@ -27,8 +24,8 @@ def test_include(fs):
         Line('hi', 1, '/f')
     ]
 
+
 def test_circular_include_errors(fs):
     fs.create_file('/f', contents='%include /f')
     with raises(CircularIncludeError):
         list(process_includes(parse_includes(parse_lines('%include /f'))))
-

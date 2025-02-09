@@ -1,10 +1,6 @@
-from pytest import raises, mark, fixture
-
-from ..structs import Divider, RoughSpec
-
+from ..structs import RoughSpec
 from ..structs import Line
 from .parse_dividers import parse_dividers
-from .load_rough_spec import load_rough_spec
 from .split_rough_spec import split_rough_spec
 
 

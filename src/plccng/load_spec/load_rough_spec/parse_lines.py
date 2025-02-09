@@ -1,8 +1,7 @@
-
 from plccng.load_spec.structs import Line
 
 
-def parse_lines(string, start=1, file=None, Line=Line):
+def parse_lines(string, startNumber=1, file=None):
     '''
     Yield Lines in string. Newlines are not preserved.
 
@@ -13,5 +12,5 @@ def parse_lines(string, start=1, file=None, Line=Line):
     '''
     if string is None:
         return
-    for i, s in enumerate(string.splitlines(), start=start):
+    for i, s in enumerate(string.splitlines(), start=startNumber):
         yield Line(string=s, number=i, file=file)
