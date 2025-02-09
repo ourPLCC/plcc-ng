@@ -23,15 +23,15 @@ def test_rhs_terminal_cannot_start_with_number():
 
 def test_rhs_non_terminal_alt_name_cannot_start_with_uppercase():
      invalid_alt_name = parse('''
-         <word> ::=
-         <sentence> ::= <word>:Name
+         <word> ::= 
+         <sentence> ::= <word>:Name 
      ''')
      errors = validate(invalid_alt_name)
      assert isinstance(errors[0], InvalidRhsAltNameError)
 
 def test_valid_rhs_alt_name():
     valid_alt_name_non_terminal = parse('''
-        <word> ::=
+        <word> ::= 
         <sentence> ::= <word>:name
     ''')
     errors = validate(valid_alt_name_non_terminal)
@@ -39,7 +39,7 @@ def test_valid_rhs_alt_name():
 
 def test_valid_separator_terminal():
     valid_separator = parse('''
-         <sentence> **= WORD +PERIOD
+         <sentence> **= WORD +PERIOD 
     ''')
     errors = validate(valid_separator)
     assert len(errors) == 0
@@ -53,7 +53,7 @@ def test_missing_non_terminal():
 
 def test_invalid_separator_terminal():
     invalid_separator = parse('''
-         <sentence> **= WORD +period
+         <sentence> **= WORD +period 
     ''')
 
     errors = validate(invalid_separator)

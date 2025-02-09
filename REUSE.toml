@@ -1,0 +1,10 @@
+version = 1
+SPDX-PackageName = "PLCC"
+SPDX-PackageSupplier = "PLCC Community <https://discord.gg/EVtNSxS9E2>"
+SPDX-PackageDownloadLocation = "https://github.com/ourPLCC"
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["", "Copyright (C) 2025  Timothy Fossum <plcc@pithon.net>", "Copyright (C) 2025  PLCC Community <https://discord.gg/EVtNSxS9E2>"]
+SPDX-License-Identifier = "AGPL-3.0-or-later"
