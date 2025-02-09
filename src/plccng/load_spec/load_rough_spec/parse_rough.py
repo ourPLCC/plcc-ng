@@ -5,7 +5,8 @@ from .parse_includes import parse_includes
 
 
 def parse_rough(string, file=None):
-    return parse_dividers(parse_includes(parse_blocks(parse_lines(
-        string,
-        file=file
-    ))))
+    lines = parse_lines(string, file=file)
+    blocks = parse_blocks(lines)
+    includes = parse_includes(blocks)
+    dividers = parse_dividers(includes)
+    return dividers

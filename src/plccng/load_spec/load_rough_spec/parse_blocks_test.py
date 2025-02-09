@@ -1,8 +1,5 @@
-from pytest import raises, mark, fixture
-
+from pytest import raises
 from ..structs import Block, Line
-
-
 from .parse_lines import parse_lines
 from .parse_blocks import parse_blocks, UnclosedBlockError
 
@@ -75,8 +72,8 @@ three
 
     assert list(parse_blocks(lines)) == [
         Line('', 1, None),
-        Block(list(parse_lines('%%%\none\ntwo\n%%%', start=2))),
+        Block(list(parse_lines('%%%\none\ntwo\n%%%', startNumber=2))),
         Line('', 6, None),
-        Block(list(parse_lines('%%{\nthree\n%%}', start=7))),
+        Block(list(parse_lines('%%{\nthree\n%%}', startNumber=7))),
         Line('', 10, None),
     ]

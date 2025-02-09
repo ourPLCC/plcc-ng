@@ -1,7 +1,7 @@
 from pytest import raises, mark, fixture
 
-from ..structs import Line, RoughSpec
-from ..structs import Block, Divider
+from ..structs import Line
+from ..structs import Block
 from .parse_dividers import parse_dividers
 from .load_rough_spec import load_rough_spec
 from .split_rough_spec import split_rough_spec
@@ -59,6 +59,6 @@ def makeLine(string, lineNumber=None, file=None):
 def makeDivider(string, lineNumber=None, file=None):
     return next(parse_dividers([makeLine(string, lineNumber, file)]))
 
+
 def makeBlock(string, startLine, endLine, file=None):
     return Block([makeLine(s.strip(), num, file) for s, num in zip(string.strip().split('\n'), range(startLine, endLine + 1))])
-

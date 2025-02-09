@@ -1,9 +1,8 @@
 import re
-
 from plccng.load_spec.structs import Block
 
 
-def parse_blocks(lines, Block=Block):
+def parse_blocks(lines):
     if lines is None:
         return []
     PPP = re.compile(r'^%%%(?:\s*#.*)?$')
@@ -13,7 +12,7 @@ def parse_blocks(lines, Block=Block):
         PPP: PPP,
         PPLC: PPRC
     }
-    return BlockParser(brackets, Block).parse(lines)
+    return BlockParser(brackets).parse(lines)
 
 
 class UnclosedBlockError(Exception):
@@ -22,8 +21,7 @@ class UnclosedBlockError(Exception):
 
 
 class BlockParser():
-    def __init__(self, brackets, Block):
-        self.Block = Block
+    def __init__(self, brackets):
         self.brackets = brackets
         self.closing = None
 
@@ -47,7 +45,7 @@ class BlockParser():
         for line in self.lines:
             blockLines.append(line)
             if self.isClosing(line):
-                yield self.Block(blockLines)
+                yield Block(blockLines)
                 return
         raise UnclosedBlockError(line)
 

@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 from plccng.load_spec.structs import RoughSpec
 from ..structs import Divider
 
