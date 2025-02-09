@@ -83,6 +83,12 @@ class CapturingSymbol:
     altName: str | None = None
     pass
 
+    def getAttributeName(self):
+        if self.altName == None:
+            return self.name.lower()
+        else:
+            return self.altName.lower()
+
 
 @dataclass(frozen=True)
 class CapturingTerminal(CapturingSymbol, Terminal):

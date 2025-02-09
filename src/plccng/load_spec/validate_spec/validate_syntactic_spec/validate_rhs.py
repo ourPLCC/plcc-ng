@@ -1,5 +1,5 @@
 from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError, MissingNonTerminalError, DuplicateRhsSymbolNameError
-from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal
+from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal, CapturingSymbol
 from ...structs import (
     SyntacticSpec
 )
@@ -57,13 +57,12 @@ class SyntacticRhsValidator:
     def _validateNoDuplicateRhsSymbols(self, rule):
         seen = set()
         for symbol in rule.rhsSymbolList:
-            if isinstance(symbol, Terminal):
-                continue
-            symbolName = symbol.getAttributeName()
-            if symbolName in seen:
-                self._appendDuplicateRhsSymbolNameError(rule, symbolName)
-            else:
-                seen.add(symbolName)
+            if isinstance(symbol, CapturingSymbol):
+                symbolName = symbol.getAttributeName()
+                if symbolName in seen:
+                    self._appendDuplicateRhsSymbolNameError(rule, symbolName)
+                else:
+                    seen.add(symbolName)
 
     def _validateSeparatorIsTerminal(self, rule):
         if not re.match(r"^[A-Z][A-Z0-9_]+$", rule.separator.name):

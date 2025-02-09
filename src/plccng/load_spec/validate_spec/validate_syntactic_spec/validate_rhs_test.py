@@ -1,6 +1,6 @@
 from typing import List
 
-from ...errors import InvalidRhsAltNameError, InvalidRhsTerminalError, MissingNonTerminalError, InvalidRhsNameError
+from ...errors import InvalidRhsAltNameError, InvalidRhsTerminalError, MissingNonTerminalError, InvalidRhsNameError, DuplicateRhsSymbolNameError
 from ...structs import CapturingTerminal, LhsNonTerminal, Line, RepeatingSyntacticRule, RhsNonTerminal, Symbol, SyntacticRule, Terminal
 from ...structs import (
     SyntacticSpec
@@ -77,40 +77,100 @@ def test_rhs_non_terminal_must_not_start_with_underscore():
     assert isinstance(errors[0], InvalidRhsNameError)
 
 def test_no_duplicate_Rhs_nonterminal():
-    pass
+    spec = parse('''
+        <sentence> ::= <verb> <verb>
+        <verb> ::= end
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
+
 
 def test_duplicate_Rhs_nonterminal_with_same_alt_name_not_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <verb>:name <verb>:name
+        <verb> ::=
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
 
 def test_duplicate_rhs_nonterminal_with_different_alt_name_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <verb>:name <verb>:different
+        <verb> ::=
+    ''')
+    errors = validate(spec)
+    assert len(errors) == 0
 
 def test_duplicate_non_captured_terminals_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= ONE ONE ONE ONE
+    ''')
+    errors = validate(spec)
+    assert len(errors) == 0
 
 def test_duplicate_captured_terminals_not_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <ONE> <ONE>
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
 
 def test_duplicate_captured_terminals_allowed_with_alt_name():
-    pass
+    spec = parse('''
+        <sentence> ::= <ONE>:name <ONE>:different
+    ''')
+    errors = validate(spec)
+    assert len(errors) == 0
 
 def test_duplicate_captured_terminals_not_allowed_with_same_alt_name():
-    pass
+    spec = parse('''
+        <sentence> ::= <ONE>:same <ONE>:same
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
 
 def test_different_names_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <this> <IS> <all> <legal>
+        <this> ::= END
+        <all> ::= END
+        <legal> ::= END
+    ''')
+    errors = validate(spec)
+    assert len(errors) == 0
 
 def test_duplicate_captured_terminal_and_non_terminal_not_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <NO> <no>
+        <no> ::= END
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
 
 def test_duplicate_altName_and_nonterminal_name_not_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <no>:yes <yes>
+        <no> ::= END
+        <yes> ::= END
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
 
 def test_duplicate_altName_and_terminal_name_not_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <no>:yes <YES>
+        <no> ::= END
+    ''')
+    errors = validate(spec)
+    assert isinstance(errors[0], DuplicateRhsSymbolNameError)
 
 def test_one_nonterminal_with_different_altName_allowed():
-    pass
+    spec = parse('''
+        <sentence> ::= <no>:yes <no>
+        <no> ::= END
+    ''')
+    errors = validate(spec)
+    assert len(errors) == 0
 
 def parse(string):
     rough = list(parse_rough(string))
