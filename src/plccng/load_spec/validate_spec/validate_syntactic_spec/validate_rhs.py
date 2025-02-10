@@ -1,12 +1,19 @@
-from ...errors import InvalidRhsAltNameError, InvalidRhsNameError, InvalidRhsTerminalError, MissingNonTerminalError
-from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal
+import re
+from ...errors import (
+    InvalidAttribute,
+    InvalidNonterminal,
+    InvalidTerminal,
+    UndefinedNonterminal,
+    DuplicateAttribute,
+    InvalidSeparator
+)
 from ...structs import (
+    RepeatingSyntacticRule,
+    RhsNonTerminal,
+    Terminal,
+    CapturingSymbol,
     SyntacticSpec
 )
-from ...errors import (
-    InvalidRhsSeparatorTypeError
-)
-import re
 
 
 def validate_rhs(syntacticSpec: SyntacticSpec):
@@ -32,6 +39,7 @@ class SyntacticRhsValidator:
                     self._validateNonTerminal(s, rule)
                 if isinstance(s, Terminal):
                     self._validateTerminal(s, rule)
+            self._validateNoDuplicateRhsSymbols(rule)
         return self.errorList
 
     def _validateTerminal(self, s, rule):
@@ -49,25 +57,38 @@ class SyntacticRhsValidator:
     def _nonTerminalExists(self, non_terminal):
         return non_terminal.name in self.syntacticSpec.getNonTerminals()
 
-    def _validateNonTerminalAltName(self, alt_name: str, rule):
-        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", alt_name):
+    def _validateNonTerminalAltName(self, altName: str, rule):
+        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", altName):
             self._appendInvalidRhsAltNameError(rule)
+
+    def _validateNoDuplicateRhsSymbols(self, rule):
+        seen = set()
+        for symbol in rule.rhsSymbolList:
+            if isinstance(symbol, CapturingSymbol):
+                symbolName = symbol.getAttributeName()
+                if symbolName in seen:
+                    self._appendDuplicateRhsSymbolNameError(rule, symbolName)
+                else:
+                    seen.add(symbolName)
 
     def _validateSeparatorIsTerminal(self, rule):
         if not re.match(r"^[A-Z][A-Z0-9_]+$", rule.separator.name):
             self._appendInvalidRhsSeparatorTypeError(rule)
 
     def _appendInvalidRhsSeparatorTypeError(self, rule):
-        self.errorList.append(InvalidRhsSeparatorTypeError(rule))
+        self.errorList.append(InvalidSeparator(rule))
 
     def _appendInvalidRhsError(self, rule):
-        self.errorList.append(InvalidRhsNameError(rule))
+        self.errorList.append(InvalidNonterminal(rule))
 
     def _appendInvalidRhsAltNameError(self, rule):
-        self.errorList.append(InvalidRhsAltNameError(rule))
+        self.errorList.append(InvalidAttribute(rule))
 
     def _appendInvalidRhsTerminalError(self, rule):
-        self.errorList.append(InvalidRhsTerminalError(rule))
+        self.errorList.append(InvalidTerminal(rule))
+
+    def _appendDuplicateRhsSymbolNameError(self, rule, symbolName):
+        self.errorList.append(DuplicateAttribute(rule, symbolName))
 
     def _appendMissingNonTerminalError(self, rule):
-        self.errorList.append(MissingNonTerminalError(rule))
+        self.errorList.append(UndefinedNonterminal(rule))

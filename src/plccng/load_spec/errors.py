@@ -1,4 +1,4 @@
-from plccng.load_spec.structs import Line, SyntacticRule
+from plccng.load_spec.structs import Line
 
 
 from dataclasses import dataclass
@@ -88,7 +88,7 @@ class DuplicateLhsError(ValidationError):
 
 
 @dataclass
-class InvalidRhsNameError(ValidationError):
+class InvalidNonterminal(ValidationError):
     def __init__(self, rule):
         super().__init__(
             line=rule.line,
@@ -97,7 +97,7 @@ class InvalidRhsNameError(ValidationError):
 
 
 @dataclass
-class InvalidRhsAltNameError(ValidationError):
+class InvalidAttribute(ValidationError):
     def __init__(self, rule):
         super().__init__(
             line=rule.line,
@@ -106,7 +106,7 @@ class InvalidRhsAltNameError(ValidationError):
 
 
 @dataclass
-class InvalidRhsTerminalError(ValidationError):
+class InvalidTerminal(ValidationError):
     def __init__(self, rule):
         super().__init__(
             line=rule.line,
@@ -124,7 +124,7 @@ class UndefinedTerminalError(ValidationError):
 
 
 @dataclass
-class InvalidRhsSeparatorTypeError(ValidationError):
+class InvalidSeparator(ValidationError):
     def __init__(self, rule):
         super().__init__(
             line=rule.line,
@@ -133,7 +133,7 @@ class InvalidRhsSeparatorTypeError(ValidationError):
 
 
 @dataclass
-class MissingNonTerminalError(ValidationError):
+class UndefinedNonterminal(ValidationError):
     def __init__(self, rule):
         super().__init__(
         line=rule.line,
@@ -161,3 +161,10 @@ class InvalidSymbolException(Exception):
         super().__init__(rule)
         self.message = f"Invalid Symbol: '{rule}' (must be a Symbol object)"
 
+@dataclass
+class DuplicateAttribute(ValidationError):
+    def __init__(self, rule, symbolName):
+        super().__init__(
+            line=rule.line,
+            message=f"Duplicate RHS symbol name: '{symbolName}', for rule: '{rule.line.string}', on line: {rule.line.number}. All RHS symbols must have unique names."
+        )
