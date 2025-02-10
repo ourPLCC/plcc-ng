@@ -1,12 +1,19 @@
-from ...errors import InvalidAttribute, InvalidNonterminal, InvalidTerminal, UndefinedNonterminal, DuplicateAttribute
-from ...structs import RepeatingSyntacticRule, RhsNonTerminal, Terminal, CapturingSymbol
-from ...structs import (
-    SyntacticSpec
-)
+import re
 from ...errors import (
+    InvalidAttribute,
+    InvalidNonterminal,
+    InvalidTerminal,
+    UndefinedNonterminal,
+    DuplicateAttribute,
     InvalidSeparator
 )
-import re
+from ...structs import (
+    RepeatingSyntacticRule,
+    RhsNonTerminal,
+    Terminal,
+    CapturingSymbol,
+    SyntacticSpec
+)
 
 
 def validate_rhs(syntacticSpec: SyntacticSpec):

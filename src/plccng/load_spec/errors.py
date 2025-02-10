@@ -1,4 +1,4 @@
-from plccng.load_spec.structs import Line, SyntacticRule
+from plccng.load_spec.structs import Line
 
 
 from dataclasses import dataclass
