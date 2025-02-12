@@ -1,4 +1,4 @@
-from .parse_rough import parse_rough
+from .parse_rough import from_string
 from ..structs import Line
 from ..structs import Block
 from ..structs import Divider
@@ -6,7 +6,7 @@ from ..structs import Include
 
 
 def test_():
-    assert list(parse_rough('''\
+    assert list(from_string('''\
 one
 %
 two

@@ -6,12 +6,9 @@ from ...errors import (
     InvalidNonterminal,
     DuplicateAttribute
 )
-from ...parse_spec import (
-    parse_rough,
-    parse_syntactic_spec
-)
+from ...parse_spec import parse_syntactic_spec
 from .validate_rhs import validate_rhs
-
+from ...load_rough import parse_rough
 
 def test_rhs_non_terminal_must_not_start_with_underscore():
     assertError(InvalidNonterminal, '''<sentence> ::= <_hello>''')
@@ -119,6 +116,6 @@ def validate(string):
 
 
 def parse(string):
-    rough = list(parse_rough(string))
+    rough = list(parse_rough.from_string(string))
     spec =  parse_syntactic_spec(rough)
     return spec

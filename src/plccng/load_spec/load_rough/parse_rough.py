@@ -4,8 +4,17 @@ from .parse_dividers import parse_dividers
 from .parse_includes import parse_includes
 
 
-def parse_rough(string, file=None):
+def from_file(file):
+    lines = parse_lines.from_file(file)
+    return from_lines(lines)
+
+
+def from_string(string, file=None):
     lines = parse_lines.from_string(string, file=file)
+    return from_lines(lines)
+
+
+def from_lines(lines):
     blocks = parse_blocks(lines)
     includes = parse_includes(blocks)
     dividers = parse_dividers(includes)

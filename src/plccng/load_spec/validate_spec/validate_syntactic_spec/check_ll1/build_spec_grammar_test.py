@@ -1,6 +1,6 @@
 from pytest import raises
 from ....errors import InvalidSyntacticSpecException
-from plccng.load_spec.load_rough_spec.parse_dividers import parse_dividers
+from plccng.load_spec.load_rough.parse_dividers import parse_dividers
 from plccng.load_spec.structs import Line
 from .LL1Wrapper import wrap_ll1
 from .build_spec_grammar import build_spec_grammar

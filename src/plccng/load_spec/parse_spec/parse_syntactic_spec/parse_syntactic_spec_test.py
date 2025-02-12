@@ -1,13 +1,20 @@
-from pytest import raises, mark, fixture
+from pytest import raises
 from typing import List
 
-from plccng.load_spec.structs import CapturingTerminal, Divider, LhsNonTerminal, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol, Terminal
+from ...structs import (
+    Line,
+    CapturingTerminal,
+    LhsNonTerminal,
+    RepeatingSyntacticRule,
+    RhsNonTerminal,
+    StandardSyntacticRule,
+    Symbol,
+    Terminal)
 from .parse_syntactic_spec import parse_syntactic_spec
 from ...errors import (
     MalformedBNFError,
 )
-from plccng.load_spec.structs import Line
-from plccng.load_spec.load_rough_spec.parse_dividers import parse_dividers
+from ...load_rough import parse_rough
 
 
 def test_None_yields_nothing():
@@ -367,7 +374,7 @@ def test_malformed_bnf_raises():
 
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    return parse_dividers([makeLine(string, lineNumber, file)])
+    return list(parse_rough.from_lines([makeLine(string, lineNumber, file)]))[0]
 
 
 def makeLine(string, lineNumber=0, file: str = ""):

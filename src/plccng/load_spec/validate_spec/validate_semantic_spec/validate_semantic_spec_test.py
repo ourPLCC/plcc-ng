@@ -1,10 +1,9 @@
 from ...errors import InvalidClassNameError, UndefinedBlockError, UndefinedTargetLocatorError
 from .validate_semantic_spec import validate_semantic_spec
 
-from ...parse_spec import (
-    parse_rough,
-    parse_semantic_spec
-)
+from ...parse_spec import parse_semantic_spec
+from ...load_rough import parse_rough
+
 
 def test_no_code_fragments_no_errors():
     spec = parse('%')
@@ -100,6 +99,6 @@ def assertInvalidClassName(name: str):
     assert isinstance(errors[0], InvalidClassNameError)
 
 def parse(string):
-    rough = list(parse_rough(string))
+    rough = list(parse_rough.from_string(string))
     spec =  parse_semantic_spec(rough)
     return spec
