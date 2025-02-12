@@ -11,34 +11,35 @@ def from_string(string, file=None, startLineNumber=1):
 
 
 def from_lines(lines):
-    return LexicalParser(lines).parseLexicalSpec()
+    return LexicalParser().parse(lines)
 
 
 class LexicalParser():
-    def __init__(self, lines):
-        self.lines = lines
+    def __init__(self):
+        self.lines = None
         self.patterns = {
             'skipToken' : re.compile(r'^\s*skip\s+(?P<Name>\S+)\s+(?P<Pattern>((\'\S+\')|(\"\S+\")))\s*(?:#.*)*$'),
             'tokenToken' : re.compile(r'^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<Pattern>((\'\S+\')|(\"\S+\")))\s*(?:#.*)*$')
         }
-        self.spec = LexicalSpec([])
+        self.rules = []
 
-    def parseLexicalSpec(self):
+    def parse(self, lines):
+        self.lines = lines
         if not self.lines:
-            return self.spec
-        for part in self.lines:
-            if self._isBlankOrComment(part):
+            return LexicalSpec(self.rules)
+        for line in self.lines:
+            if self._isBlankOrComment(line):
                 continue
             else:
-                self._processLine(part)
-        return self.spec
+                self._processLine(line)
+        return LexicalSpec(self.rules)
 
     def _processLine(self, line):
             lineIsSkipToken, lineIsRegularToken = self._matchToken(line.string)
             if lineIsSkipToken or lineIsRegularToken:
-                self.spec.ruleList.append(self._generateTokenRule(line, lineIsSkipToken, lineIsRegularToken))
+                self.rules.append(self._generateTokenRule(line, lineIsSkipToken, lineIsRegularToken))
             else:
-                self.spec.ruleList.append(line)
+                self.rules.append(line)
 
     def _generateTokenRule(self, line: Line, lineIsSkipToken: Match[str], lineIsRegularToken: Match[str]) -> LexicalRule:
         if lineIsSkipToken:
