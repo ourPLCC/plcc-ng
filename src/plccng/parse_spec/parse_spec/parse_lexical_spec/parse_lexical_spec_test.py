@@ -1,4 +1,3 @@
-import pytest
 from .parse_lexical_spec import from_string
 from ...structs import Line
 
