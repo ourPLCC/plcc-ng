@@ -33,6 +33,11 @@ def test_skip_rule():
         pattern=','
     )
 
+def test_pattern_may_have_whitespace():
+    assertIsRule("skip WHITESPACE ' '",
+                 isSkip=True,
+                 name="WHITESPACE",
+                 pattern=' ')
 
 def test_token_rule():
     assertIsRule("token MINUS '\\-'",

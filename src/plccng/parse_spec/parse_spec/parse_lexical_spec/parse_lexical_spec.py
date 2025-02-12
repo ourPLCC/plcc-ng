@@ -1,7 +1,5 @@
 import re
-from re import Match
-
-from plccng.parse_spec.structs import LexicalRule, LexicalSpec, Line
+from ...structs import LexicalRule, LexicalSpec
 from ...parse_rough import parse_rough
 
 
@@ -17,10 +15,7 @@ def from_lines(lines):
 class LexicalParser():
     def __init__(self):
         self.lines = None
-        self.patterns = {
-            'skipToken' : re.compile(r'^\s*skip\s+(?P<Name>\S+)\s+(?P<Pattern>((\'\S+\')|(\"\S+\")))\s*(?:#.*)*$'),
-            'tokenToken' : re.compile(r'^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<Pattern>((\'\S+\')|(\"\S+\")))\s*(?:#.*)*$')
-        }
+        self.pattern = re.compile(r'^\s*(?:(?P<Type>(skip|token))\s+)?(?P<Name>\S+)\s+(?P<Pattern>((\'[^\']*\')|("[^"]*")))\s*(?:#.*)*$')
         self.rules = []
 
     def parse(self, lines):
@@ -30,42 +25,28 @@ class LexicalParser():
         for line in self.lines:
             if self._isBlankOrComment(line):
                 continue
-            else:
-                self._processLine(line)
+            result = self._parseLine(line)
+            self.rules.append(result)
         return LexicalSpec(self.rules)
 
-    def _processLine(self, line):
-            lineIsSkipToken, lineIsRegularToken = self._matchToken(line.string)
-            if lineIsSkipToken or lineIsRegularToken:
-                self.rules.append(self._generateTokenRule(line, lineIsSkipToken, lineIsRegularToken))
-            else:
-                self.rules.append(line)
-
-    def _generateTokenRule(self, line: Line, lineIsSkipToken: Match[str], lineIsRegularToken: Match[str]) -> LexicalRule:
-        if lineIsSkipToken:
-            return self._generateSkipToken(line, lineIsSkipToken['Name'], lineIsSkipToken['Pattern'])
-        else: # must be a lineIsRegularToken
-            return self._generateRegularToken(line, lineIsRegularToken['Name'], lineIsRegularToken['Pattern'])
-
-    def _isBlankOrComment(self, line: Line) -> bool:
+    def _isBlankOrComment(self, line):
         return not line.string.strip() or line.string.strip().startswith("#")
 
-    def _matchToken(self, lineStr: str) -> tuple[Match[str] | None, Match[str] | None]:
-        isSkipToken = re.match(self.patterns['skipToken'], lineStr)
-        isRegularToken = re.match(self.patterns['tokenToken'], lineStr)
-        return isSkipToken, isRegularToken
+    def _parseLine(self, line):
+        m = self.pattern.match(line.string)
+        if m:
+            name = m['Name']
+            pattern = m['Pattern']
+            isSkip = (m['Type'] == 'skip')
+            return self._makeRule(line, name, pattern, isSkip)
+        return line
 
-    def _generateSkipToken(self, line: Line, name: str, pattern: str) -> LexicalRule:
+    def _makeRule(self, line, name, pattern, isSkip):
         pattern = self._stripQuotes(pattern)
-        newSkipRule = LexicalRule(line=line, isSkip=True, name=name, pattern=pattern)
+        newSkipRule = LexicalRule(line=line, isSkip=isSkip, name=name, pattern=pattern)
         return newSkipRule
 
-    def _generateRegularToken(self, line: Line, name: str, pattern: str) -> LexicalRule:
-        pattern = self._stripQuotes(pattern)
-        newTokenRule = LexicalRule(line=line, isSkip=False, name=name, pattern=pattern)
-        return newTokenRule
-
-    def _stripQuotes(self, pattern: str) -> str:
+    def _stripQuotes(self, pattern):
         pattern = pattern.strip('\'')
         pattern = pattern.strip('\"')
         return pattern
