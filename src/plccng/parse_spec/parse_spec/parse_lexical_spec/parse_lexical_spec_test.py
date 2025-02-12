@@ -1,6 +1,5 @@
-from pytest import fixture, raises, mark
 from .parse_lexical_spec import parse_lexical_spec
-from ..structs import LexicalRule, LexicalSpec, Line
+from ...structs import LexicalRule, Line
 
 def test_empty_yields_nothing():
     lexical_spec = parse_lexical_spec([])

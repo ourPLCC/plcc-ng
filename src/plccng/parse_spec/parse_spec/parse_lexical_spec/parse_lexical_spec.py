@@ -3,7 +3,7 @@ from re import Match
 
 from plccng.parse_spec.structs import LexicalRule
 from plccng.parse_spec.structs import LexicalSpec
-from ..structs import Line
+from ...structs import Line
 
 def parse_lexical_spec(lines: list[Line]) -> LexicalSpec:
     return LexicalParser(lines).parseLexicalSpec()
