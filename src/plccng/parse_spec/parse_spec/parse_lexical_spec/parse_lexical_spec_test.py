@@ -1,5 +1,6 @@
-from .parse_lexical_spec import from_lines, from_string
-from ...structs import LexicalRule, Line
+import pytest
+from .parse_lexical_spec import from_string
+from ...structs import Line
 
 
 def test_None_yields_nothing():
@@ -33,11 +34,6 @@ def test_skip_rule():
         pattern=','
     )
 
-def test_pattern_may_have_whitespace():
-    assertIsRule("skip WHITESPACE ' '",
-                 isSkip=True,
-                 name="WHITESPACE",
-                 pattern=' ')
 
 def test_token_rule():
     assertIsRule("token MINUS '\\-'",
@@ -61,6 +57,13 @@ def test_trailing_comment():
         name='MINUS',
         pattern='\\-'
     )
+
+
+def test_pattern_may_have_whitespace():
+    assertIsRule("skip WHITESPACE ' '",
+                 isSkip=True,
+                 name="WHITESPACE",
+                 pattern=' ')
 
 
 def test_non_rules_are_passed_through():
