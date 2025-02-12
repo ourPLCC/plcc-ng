@@ -1,5 +1,5 @@
 from ..structs import Block, Include, Line
-from .parse_lines import parse_lines
+from . import parse_lines
 from .parse_blocks import parse_blocks
 from .parse_includes import parse_includes
 
@@ -13,7 +13,7 @@ def test_empty_yields_nothing():
 
 
 def test_non_includes_pass_through():
-    lines = list(parse_blocks(parse_lines('''\
+    lines = list(parse_blocks(parse_lines.from_string('''\
 one
 %%%
 two
@@ -24,7 +24,7 @@ three
 
 
 def test_include():
-    lines = list(parse_lines('''\
+    lines = list(parse_lines.from_string('''\
 %include file
 '''))
     assert list(parse_includes(lines)) == [
@@ -36,7 +36,7 @@ def test_include():
 
 
 def test_ignores_includes_in_blocks():
-    lines = list(parse_blocks(parse_lines('''\
+    lines = list(parse_blocks(parse_lines.from_string('''\
 %%%
 %include file
 %%%

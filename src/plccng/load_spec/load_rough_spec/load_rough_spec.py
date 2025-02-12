@@ -3,13 +3,11 @@ from pathlib import Path
 
 from .parse_rough import parse_rough
 from ..structs import Include
-from .split_rough_spec import split_rough_spec
 
 
 def load_rough_spec(file):
     rough_spec = load_rough_spec_without_processing_includes(file)
     rough_spec = process_includes(rough_spec)
-    rough_spec = split_rough_spec(rough_spec)
     return rough_spec
 
 

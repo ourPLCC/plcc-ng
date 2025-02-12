@@ -9,7 +9,6 @@ from ...parse_spec.parse_syntactic_spec import (
 from ...errors import (
     DuplicateLhsError,
 )
-from ...load_rough_spec.parse_lines import parse_lines
 from ...load_rough_spec.parse_includes import parse_includes
 from ...load_rough_spec.parse_dividers import parse_dividers
 from ...load_rough_spec.parse_rough import parse_rough

@@ -2,7 +2,6 @@ from pytest import raises
 
 from plccng.load_spec.structs import Line, TargetLocator
 from .parse_target_locator import parse_target_locator, InvalidTargetLocatorError
-from plccng.load_spec.load_rough_spec.parse_lines import parse_lines
 
 def test_ignore_EOL_comments():
     line = make_line('Class:init #comment')

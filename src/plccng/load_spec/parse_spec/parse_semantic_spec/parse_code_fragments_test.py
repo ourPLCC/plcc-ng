@@ -2,7 +2,7 @@ from pytest import raises
 from .parse_code_fragments import parse_code_fragments
 from .parse_target_locator import InvalidTargetLocatorError
 from plccng.load_spec.structs import Block, CodeFragment, Line, TargetLocator
-from plccng.load_spec.load_rough_spec.parse_lines import parse_lines
+from plccng.load_spec.load_rough_spec import parse_lines
 
 def test_basic():
     lines_and_blocks = [make_line('Class:init'), make_block()]
@@ -69,7 +69,7 @@ def make_target_locator(line, className, modifier):
     return TargetLocator(line, className, modifier)
 
 def make_block():
-    return  Block(list(parse_lines('''\
+    return  Block(list(parse_lines.from_string('''\
 %%%
 block
 %%%

@@ -1,6 +1,6 @@
 from pytest import raises
 from ..structs import Block, Line
-from .parse_lines import parse_lines
+from . import parse_lines
 from .parse_blocks import parse_blocks, UnclosedBlockError
 
 
@@ -13,20 +13,20 @@ def test_empty_yields_nothing():
 
 
 def test_non_block_lines_are_passed_through():
-    lines = list(parse_lines('one\ntwo'))
+    lines = list(parse_lines.from_string('one\ntwo'))
     assert list(parse_blocks(lines)) == lines
 
 
 def test_unclosed_block_is_an_error():
     OPEN = '%%%'
     with raises(UnclosedBlockError) as info:
-        list(parse_blocks(parse_lines(OPEN)))
+        list(parse_blocks(parse_lines.from_string(OPEN)))
     exception = info.value
     assert exception.line == Line('%%%', 1, None)
 
 
 def test_tripple_percent_block():
-    lines = list(parse_lines('''\
+    lines = list(parse_lines.from_string('''\
 %%%
 block
 %%%
@@ -35,7 +35,7 @@ block
 
 
 def test_curly_percent_block():
-    lines = list(parse_lines('''\
+    lines = list(parse_lines.from_string('''\
 %%{
 block
 %%}
@@ -44,7 +44,7 @@ block
 
 
 def test_nested_blocks_produce_single_block():
-    lines = list(parse_lines('''\
+    lines = list(parse_lines.from_string('''\
 %%{
 what
 %%%
@@ -57,7 +57,7 @@ ever
 
 
 def test_mixed():
-    lines = list(parse_lines('''\
+    lines = list(parse_lines.from_string('''\
 
 %%%
 one
@@ -72,8 +72,8 @@ three
 
     assert list(parse_blocks(lines)) == [
         Line('', 1, None),
-        Block(list(parse_lines('%%%\none\ntwo\n%%%', startNumber=2))),
+        Block(list(parse_lines.from_string('%%%\none\ntwo\n%%%', startNumber=2))),
         Line('', 6, None),
-        Block(list(parse_lines('%%{\nthree\n%%}', startNumber=7))),
+        Block(list(parse_lines.from_string('%%{\nthree\n%%}', startNumber=7))),
         Line('', 10, None),
     ]

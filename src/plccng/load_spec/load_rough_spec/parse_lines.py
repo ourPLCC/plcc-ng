@@ -1,16 +1,17 @@
 from plccng.load_spec.structs import Line
 
 
-def parse_lines(string, startNumber=1, file=None):
-    '''
-    Yield Lines in string. Newlines are not preserved.
-
-        string: The string from which Lines are parsed.
-        start: Starting number for Line numbering (default=1).
-        file: File stored in each Line.
-        Line: Line constructor. Called like: Line(string=s, number=i, file=file)
-    '''
+def from_string(string, file=None, startNumber=1):
     if string is None:
-        return
-    for i, s in enumerate(string.splitlines(), start=startNumber):
-        yield Line(string=s, number=i, file=file)
+        return []
+    return from_strings(string.splitlines(), file=file, startNumber=startNumber)
+
+
+def from_file(file, startNumber=1):
+    with open(file) as f:
+        yield from from_strings(f, file=file, startNumber=startNumber)
+
+
+def from_strings(strings, file=None, startNumber=1):
+    for i, string in enumerate(strings, start=startNumber):
+        yield Line(string=string, file=file, number=i)

@@ -1,6 +1,6 @@
 from pytest import raises
 from .parse_semantic_spec import parse_semantic_spec, parse_code_fragments
-from plccng.load_spec.load_rough_spec.parse_lines import parse_lines
+from plccng.load_spec.load_rough_spec import parse_lines
 from plccng.load_spec.structs import Block, Line
 from plccng.load_spec.structs import Divider
 
@@ -21,7 +21,7 @@ def test_no_CodeFragments():
     assert semantic_spec.language, semantic_spec.tool == 'Java'
 
 def make_block():
-    return  Block(list(parse_lines('''\
+    return  Block(list(parse_lines.from_string('''\
 %%%
 block
 %%%

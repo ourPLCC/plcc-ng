@@ -1,8 +1,7 @@
+import re
 from ...errors import InvalidClassNameError, UndefinedBlockError, UndefinedTargetLocatorError
 from ...structs import CodeFragment
-from ...load_rough_spec.parse_lines import parse_lines
 from ...structs import SemanticSpec
-import re
 
 def validate_semantic_spec(semanticSpec: SemanticSpec):
     return SemanticValidator(semanticSpec).validate()
