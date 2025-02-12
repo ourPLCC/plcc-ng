@@ -4,13 +4,13 @@ from .parse_dividers import parse_dividers
 from .parse_includes import parse_includes
 
 
-def from_file(file):
-    lines = parse_lines.from_file(file)
+def from_file(file, startNumber=1):
+    lines = parse_lines.from_file(file, startNumber=startNumber)
     return from_lines(lines)
 
 
-def from_string(string, file=None):
-    lines = parse_lines.from_string(string, file=file)
+def from_string(string, file=None, startNumber=1):
+    lines = parse_lines.from_string(string, file=file, startNumber=startNumber)
     return from_lines(lines)
 
 
