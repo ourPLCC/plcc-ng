@@ -72,8 +72,8 @@ three
 
     assert list(parse_blocks(lines)) == [
         Line('', 1, None),
-        Block(list(parse_lines.from_string('%%%\none\ntwo\n%%%', startNumber=2))),
+        Block(list(parse_lines.from_string('%%%\none\ntwo\n%%%', startLineNumber=2))),
         Line('', 6, None),
-        Block(list(parse_lines.from_string('%%{\nthree\n%%}', startNumber=7))),
+        Block(list(parse_lines.from_string('%%{\nthree\n%%}', startLineNumber=7))),
         Line('', 10, None),
     ]

@@ -27,7 +27,7 @@ def test_multiple_lines():
 
 
 def test_set_start_of_numbering():
-    assert list(parse_lines.from_string('one\ntwo', startNumber=3)) == [Line('one', 3, None), Line('two', 4, None)]
+    assert list(parse_lines.from_string('one\ntwo', startLineNumber=3)) == [Line('one', 3, None), Line('two', 4, None)]
 
 
 def test_set_file():
