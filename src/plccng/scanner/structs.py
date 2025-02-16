@@ -17,4 +17,4 @@ class Token:
 
 @dataclass
 class Skip:
-    column: int
+    lexeme: str

@@ -22,6 +22,12 @@ def test_match_first_rule():
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="113")
 
+def test_match_skip_rule():
+    matcher = make_matcher()
+    line = Line(text="   123", file=None, number=1)
+    result = matcher.match(line=line, index=0)
+    assert result == Skip(lexeme="   ")
+
 
 #helper methods
 
