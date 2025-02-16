@@ -10,41 +10,22 @@ class Line:
 class Source:
     def __init__(self, files):
         self.files = files
-        self.index = 0
-        self.lines = []
         self.line_index = 0
-        if files is not None:
-            self._readLines()
-
 
     def __iter__(self):
-        return self
+        if self.files == None:
+            return None
+        yield from self._readAll()
 
-    def __next__(self):
-        if self.index >= len(self.lines):
-            raise StopIteration
-        value = self.lines[self.index]
-        self.index += 1
-        return value
-
-    def _readLines(self):
-        for fname in self.files:
-            if fname == "-":
-                self._stdin()
-                continue
-            with open(fname, 'r') as file:
-                for line in file:
-                    if line.strip():
-                        self.line_index += 1
-                        self.lines.append(Line(line.strip(), self.line_index, file.name))
+    def _readAll(self):
+        for name in self.files:
+            yield from self._readLines(sys.stdin.readlines(), name) if name == "-" else self._readLines(open(name, 'r'), name)
             self.line_index = 0
 
-    def _stdin(self):
-        input = sys.stdin.readlines()
+    def _readLines(self, input, name):
         for line in input:
             if line.strip():
                 self.line_index += 1
-                self.lines.append(Line(line.strip(), self.line_index, "-"))
+                yield Line(line.strip(), self.line_index, name)
         self.line_index = 0
-
 

@@ -5,10 +5,10 @@ from source import (
     )
 
 def test_none_returns_empty():
-    assert Source(None).lines == []
+    assert list(Source(None)) == []
 
 def test_empty_returns_empty():
-    assert Source([]).lines == []
+    assert list(Source([])) == []
 
 def test_one_line_reads(fs):
     fs.create_file("./word", contents="<hello> ::= WORLD")
