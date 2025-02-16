@@ -16,7 +16,11 @@ def test_match_rule():
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="-")
 
-
+def test_match_first_rule():
+    matcher = make_matcher()
+    line = Line(text="113--", file=None, number=1)
+    result = matcher.match(line=line, index=0)
+    assert result == Token(lexeme="113")
 
 
 #helper methods

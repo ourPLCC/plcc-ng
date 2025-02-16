@@ -8,9 +8,11 @@ class Matcher:
     def match(self, line, index):
         patterns = self.compile_regex()
         for pattern in patterns:
-            test_match = re.search(pattern, line.text)
+            test_match = re.match(pattern, line.text)
             if(test_match):
                 return Token(lexeme = test_match.group())
+            else:
+                continue
         return LexError(line=line, column=1)
 
     def compile_regex(self):
