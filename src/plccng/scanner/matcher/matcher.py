@@ -9,14 +9,10 @@ class Matcher:
         patterns = self.compile_regex()
         for pattern in patterns:
             test_match = re.match(pattern[0], line.text)
-            if(test_match and pattern[1] == "Token"):
-                return Token(lexeme = test_match.group())
-            else:
-                continue
-        for pattern in patterns:
-            test_match = re.match(pattern[0], line.text)
             if(test_match and pattern[1] == "Skip"):
-                return Skip(lexeme=test_match.group())
+                return Skip(lexeme = test_match.group())
+            elif(test_match and pattern[1] == "Token"):
+                return Token(lexeme=test_match.group())
             else:
                 continue
         return LexError(line=line, column=1)
@@ -25,6 +21,6 @@ class Matcher:
         patterns = []
         for object in self.spec:
             pattern = re.compile(object["regex"])
-            patterns.append([pattern, object["type"]])
+            patterns.append([pattern, object["type"], object["name"]])
         return patterns
 

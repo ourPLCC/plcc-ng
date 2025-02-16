@@ -24,9 +24,15 @@ def test_match_first_rule():
 
 def test_match_skip_rule():
     matcher = make_matcher()
-    line = Line(text="   123", file=None, number=1)
+    line = Line(text="   555", file=None, number=1)
     result = matcher.match(line=line, index=0)
     assert result == Skip(lexeme="   ")
+
+def test_match_longest_rule():
+    matcher = make_matcher()
+    line = Line(text="1235564", file=None, number=1)
+    result = matcher.match(line=line, index=0)
+    assert result == Token(lexeme="12355564")
 
 
 #helper methods
@@ -44,7 +50,11 @@ def make_matcher():
             "name": "WHITESPACE",
             "regex": "\\s+"
         },
-
+        {
+            "type": "Token",
+            "name": "ONETWOTHREE",
+            "regex": "123"
+        },
         {
             "type": "Token",
             "name": "NUMBER",
@@ -53,3 +63,4 @@ def make_matcher():
     ]
     my_matcher = matcher.Matcher(spec)
     return my_matcher
+
