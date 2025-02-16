@@ -32,7 +32,7 @@ def test_match_longest_rule():
     matcher = make_matcher()
     line = Line(text="1235564", file=None, number=1)
     result = matcher.match(line=line, index=0)
-    assert result == Token(lexeme="12355564")
+    assert result == Token(lexeme="1235564")
 
 
 #helper methods
