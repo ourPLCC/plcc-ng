@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import sys
 
 @dataclass(frozen=True)
 class Line:
@@ -28,10 +29,22 @@ class Source:
 
     def _readLines(self):
         for fname in self.files:
+            if fname == "-":
+                self._stdin()
+                continue
             with open(fname, 'r') as file:
                 for line in file:
                     if line.strip():
                         self.line_index += 1
                         self.lines.append(Line(line.strip(), self.line_index, file.name))
             self.line_index = 0
+
+    def _stdin(self):
+        input = sys.stdin.readlines()
+        for line in input:
+            if line.strip():
+                self.line_index += 1
+                self.lines.append(Line(line.strip(), self.line_index, "-"))
+        self.line_index = 0
+
 
