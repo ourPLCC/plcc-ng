@@ -1,14 +1,20 @@
 import io
-from source import (
-    Source,
-    Line
-    )
+import pytest
+from ..load_spec.structs import Line
+
+from .source import Source
+
 
 def test_none_returns_empty():
     assert list(Source(None)) == []
 
 def test_empty_returns_empty():
     assert list(Source([])) == []
+
+def test_random_file_throws(fs):
+    with pytest.raises(OSError):
+        s = Source(['whereami'])
+        assert list(s) == []
 
 def test_one_line_reads(fs):
     fs.create_file("./word", contents="<hello> ::= WORLD")
@@ -65,7 +71,7 @@ def test_stdin_works_last(monkeypatch, fs):
                             Line("<clang> ::= SEGFAULT",1,"world"),
                             Line("<hello> ::= FROM STDIN",1,"-")]
 
-def test_stdin_works_last(monkeypatch, fs):
+def test_multi_line_stdin(monkeypatch, fs):
     monkeypatch.setattr('sys.stdin', io.StringIO('''
                                     <stda> ::= HELLO
                                     <stdb> ::= FROM STDIN
@@ -83,3 +89,14 @@ def test_stdin_escapes(monkeypatch, fs):
     assert list(source) == [Line("<hello> ::= WORLD",1,"hello"),
                             Line("<stda> ::= HELLO",1,"-"),
                             Line("<stdb> ::= FROM STDIN",2,"-")]
+
+def test_next_iterates(monkeypatch, fs):
+    monkeypatch.setattr('sys.stdin', io.StringIO('''
+                                    <stda> ::= HELLO
+                                    <stdb> ::= FROM STDIN
+                                    '''))
+    fs.create_file("./hello", contents="<hello> ::= WORLD")
+    source = Source(["hello", "-"])
+    assert next(source) ==  Line("<hello> ::= WORLD",1,"hello")
+    assert next(source) ==  Line("<stda> ::= HELLO",1,"-")
+    assert next(source) ==  Line("<stdb> ::= FROM STDIN",2,"-")
