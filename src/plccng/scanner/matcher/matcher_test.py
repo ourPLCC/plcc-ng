@@ -10,6 +10,15 @@ def test_empty_line():
     result = matcher.match(line = line, index = 0)
     assert result == LexError(line=line, column = 1)
 
+def test_match_rule():
+    matcher = make_matcher()
+    line = Line(text="-", file=None, number=1)
+    result = matcher.match(line=line, index=0)
+    assert result == Token(lexeme="-")
+
+
+
+
 #helper methods
 
 def make_matcher():
