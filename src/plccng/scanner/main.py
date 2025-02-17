@@ -25,7 +25,7 @@ class Main:
             print(helpMessage)
 
         if args["--specfile"]:
-            self. _buildMatcherSpecFromSpecfile(args)
+            self._buildMatcherSpecFromSpecfile(args)
 
     def _buildMatcherSpecFromSpecfile(self, args):
         with open(args["--specfile"], "r") as file:

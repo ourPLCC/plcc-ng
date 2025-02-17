@@ -19,15 +19,21 @@ def test_read_specfile_and_build_matcher_spec(tmp_path):
 
     assert len(main.scanner.matcher.spec) == 4
     assert main.scanner.matcher.spec[0]['type'] == 'Token'
-    assert main.scanner.matcher.spec[0]['name'] == 'MINUS'
-
     assert main.scanner.matcher.spec[1]['regex'] == '\\s+'
+    assert main.scanner.matcher.spec[2]['name'] == 'ONETWOTHREE'
 
-# def test_scan_from_given_stdin():
+def test_read_input_file_and_pass_to_source(tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = [f'--specfile={specfile}', 'input1', 'input2']
+
+    main = Main(build_scanner(), Source(["input1", "input2"]))
+    main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    assert main.source.files == ["input1", "input2"]
+
 
 def build_specfile(tmp_path):
-    specfile = tmp_path / "test.json"
-    spec_content = """
+    specfile = tmp_path / "specfile.json"
+    file_content = """
     [
         {
             "type": "Token",
@@ -52,7 +58,7 @@ def build_specfile(tmp_path):
     ]
     """
     with open(specfile, 'w') as f:
-        f.write(spec_content)
+        f.write(file_content)
 
     return specfile
 
@@ -77,7 +83,5 @@ class Matcher:
         pass
 
 class Source:
-    def __init__(self, matcher):
-        self.matcher = matcher
-
-
+    def __init__(self, files):
+        self.files = files
