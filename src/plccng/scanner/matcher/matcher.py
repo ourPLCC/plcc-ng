@@ -13,7 +13,7 @@ class Matcher:
             if(test_match and pattern[1] == "Skip"):
                 return Skip(lexeme = test_match.group())
             elif(test_match and pattern[1] == "Token"):
-                matches.append(Token(lexeme=test_match.group()))
+                matches.append(Token(lexeme=test_match.group(), name=pattern[2]))
             else:
                 continue
 

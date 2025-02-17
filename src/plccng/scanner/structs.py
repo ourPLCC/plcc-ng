@@ -14,6 +14,7 @@ class LexError:
 @dataclass
 class Token:
     lexeme: str
+    name: str
 
 @dataclass
 class Skip:
