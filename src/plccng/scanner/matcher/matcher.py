@@ -18,18 +18,22 @@ class Matcher:
                 continue
 
         if matches:
-            longest = matches[0]
-            for i in range(1, len(matches)):
-                if (len(matches[i].lexeme) > len(longest.lexeme)):
-                    longest = matches[i]
-            return longest
+            return self.get_longest_match(matches)
+        else:
+            return LexError(line=line, column=1)
 
-        return LexError(line=line, column=1)
-
+    #Helper methods
     def compile_regex(self):
         patterns = []
         for object in self.spec:
             pattern = re.compile(object["regex"])
             patterns.append([pattern, object["type"], object["name"]])
         return patterns
+
+    def get_longest_match(self, match_list):
+            longest = match_list[0]
+            for i in range(1, len(match_list)):
+                if (len(match_list[i].lexeme) > len(longest.lexeme)):
+                    longest = match_list[i]
+            return longest
 
