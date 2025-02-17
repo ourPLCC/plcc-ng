@@ -1,14 +1,18 @@
 """
 Usage:
+    scanner --specfile=<specfile> [<file> ...]
     scanner (-h | --help)
 
 Options:
     -h --help  Show this screen.
+    --specfile=<specfile>
+
 """
 
 from docopt import docopt
 from .main_help_message import helpMessage
 import sys
+import json
 
 class Main:
     def __init__(self, scanner, source):
@@ -20,9 +24,12 @@ class Main:
         if args["--help"]:
             print(helpMessage)
 
+        if args["--specfile"]:
+            self. _buildMatcherSpecFromSpecfile(args)
 
-# if __name__ == "__main__":
-#     scanner = Main(None, None)
-#     scanner.run(None, None, None, argv=sys.argv[1:])
-#     # print(sys.argv[1:])
+    def _buildMatcherSpecFromSpecfile(self, args):
+        with open(args["--specfile"], "r") as file:
+                data = json.load(file)
+                self.scanner.matcher.spec = data
+
 

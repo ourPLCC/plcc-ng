@@ -1,17 +1,83 @@
 import pytest
 from .main import Main
 from .main_help_message import helpMessage
-
+import json
 
 def test_help_command(capfd):
     argv = ["-h"]
-    main = Main(None, None)
+    main = Main(build_scanner(), None)
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
     assert captured.out == helpMessage + "\n"
 
-class StubScanner:
-    pass
+def test_read_specfile_and_build_matcher_spec(tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = [f'--specfile={specfile}']
 
-class StubSource:
-    pass
+    main = Main(build_scanner(), None)
+    main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+
+    assert len(main.scanner.matcher.spec) == 4
+    assert main.scanner.matcher.spec[0]['type'] == 'Token'
+    assert main.scanner.matcher.spec[0]['name'] == 'MINUS'
+
+    assert main.scanner.matcher.spec[1]['regex'] == '\\s+'
+
+# def test_scan_from_given_stdin():
+
+def build_specfile(tmp_path):
+    specfile = tmp_path / "test.json"
+    spec_content = """
+    [
+        {
+            "type": "Token",
+            "name": "MINUS",
+            "regex": "-"
+        },
+        {
+            "type": "Skip",
+            "name": "WHITESPACE",
+            "regex": "\\\\s+"
+        },
+        {
+            "type": "Token",
+            "name": "ONETWOTHREE",
+            "regex": "123"
+        },
+        {
+            "type": "Token",
+            "name": "NUMBER",
+            "regex": "\\\\d+"
+        }
+    ]
+    """
+    with open(specfile, 'w') as f:
+        f.write(spec_content)
+
+    return specfile
+
+def build_scanner():
+    matcher = Matcher(None)
+    return Scanner(matcher)
+
+
+class Scanner:
+    def __init__(self, matcher):
+        self.matcher = matcher
+        self.scanned = False
+
+    def scan(self, lines):
+        self.scanned = True
+
+class Matcher:
+    def __init__(self, spec):
+        self.spec = spec
+
+    def match(string):
+        pass
+
+class Source:
+    def __init__(self, matcher):
+        self.matcher = matcher
+
+
