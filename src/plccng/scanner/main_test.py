@@ -1,7 +1,7 @@
 import pytest
 from .main import Main
 from .main_help_message import helpMessage
-import json
+import io
 
 def test_help_command(capfd):
     argv = ["-h"]
@@ -26,10 +26,25 @@ def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--specfile={specfile}', 'input1', 'input2']
 
-    main = Main(build_scanner(), Source(["input1", "input2"]))
+    main = Main(build_scanner(), Source([]))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ["input1", "input2"]
 
+def test_stdin_pass_to_source(tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = [f'--specfile={specfile}']
+    stdin = io.StringIO('123      45')
+    main = Main(build_scanner(), Source([]))
+    main.run(stdin, stdout=None, stderr=None, argv=argv)
+    assert main.source.files == ['-']
+
+def test_stdin_pass_to_source_after_input_file(tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = [f'--specfile={specfile}', 'input1', 'input2']
+    stdin = io.StringIO('123      45')
+    main = Main(build_scanner(), Source([]))
+    main.run(stdin, stdout=None, stderr=None, argv=argv)
+    assert main.source.files == ["input1", "input2", '-']
 
 def build_specfile(tmp_path):
     specfile = tmp_path / "specfile.json"
