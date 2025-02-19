@@ -29,3 +29,12 @@ def test_circular_include_errors(fs):
     fs.create_file('/f', contents='%include /f')
     with raises(CircularIncludeError):
         list(resolve_includes(parse_includes(parse_lines.from_string('%include /f'))))
+
+def test_relative_path(fs):
+    fs.create_file('/a/f', contents='%include ../b/g')
+    fs.create_file('/b/g', contents='%include c/h')
+    fs.create_file('/b/c/h', contents='hi')
+    result = list(resolve_includes(parse_includes(parse_lines.from_string('%include /a/f'))))
+    assert result == [
+        Line('hi', 1, '/b/c/h')
+    ]
