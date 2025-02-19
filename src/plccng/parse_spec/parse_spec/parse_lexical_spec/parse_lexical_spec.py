@@ -24,8 +24,6 @@ class LexicalParser():
         self.spec = LexicalSpec([])
 
     def parseLexicalSpec(self):
-        if not self.lines:
-            return self.spec
         for part in self.lines:
             if self._isBlankOrComment(part):
                 continue

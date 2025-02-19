@@ -1,19 +1,18 @@
-from .parse_rough import from_string
+from . import parse_rough
 from ..structs import Line
 from ..structs import Block
 from ..structs import Divider
-from ..structs import Include
 
 
-def test_():
-    assert list(from_string('''\
+def test_from_string():
+    assert list(parse_rough.from_string('''\
 one
 %
 two
 % java
-%include /A.java
+three
 % python
-%include /B.py
+four
 % c++
 %%%
 %include nope
@@ -24,9 +23,9 @@ two
     Divider(tool='Java', language='Java', line=Line('%', 2, None)),
     Line('two', 3, None),
     Divider(tool='java', language='java', line=Line('% java', 4, None)),
-    Include(file='/A.java', line=Line('%include /A.java', 5, None)),
+    Line('three', 5, None),
     Divider(tool='python', language='python', line=Line('% python', 6, None)),
-    Include(file='/B.py', line=Line('%include /B.py', 7, None)),
+    Line('four', 7, None),
     Divider(tool='c++', language='c++', line=Line('% c++', 8, None)),
     Block([
         Line('%%%', 9, None),
@@ -35,3 +34,14 @@ two
         Line('%%%', 12, None)
     ])
 ]
+
+
+def test_from_file(fs):
+    fs.create_file('/f', contents='''f''')
+    assert list(parse_rough.from_file('/f')) == [Line('f', 1, '/f')]
+
+
+def test_from_lines():
+    assert list(parse_rough.from_lines([Line('%', 1, None)])) == [
+        Divider(tool='Java', language='Java', line=Line('%', 1, None))
+    ]

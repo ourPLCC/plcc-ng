@@ -2,6 +2,7 @@ from pathlib import Path
 
 
 from . import parse_rough
+from .parse_includes import parse_includes
 from ..structs import Include
 
 
@@ -16,7 +17,7 @@ class IncludeResolver():
     def resolveIncludes(self, rough):
         if rough is None:
             return []
-        for part in rough:
+        for part in parse_includes(rough):
             yield from self._process_part(part)
 
     def _process_part(self, part):
@@ -43,7 +44,7 @@ class IncludeResolver():
 
     def _include_file(self, file):
         self._files_seen.add(file)
-        rough = parse_rough.from_file(file)
+        rough = parse_rough.from_file_unresolved(file)
         yield from self.resolveIncludes(rough)
         self._files_seen.remove(file)
 
