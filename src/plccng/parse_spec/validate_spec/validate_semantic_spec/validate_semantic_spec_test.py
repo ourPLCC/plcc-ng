@@ -1,7 +1,7 @@
 from ...errors import InvalidClassNameError, UndefinedBlockError, UndefinedTargetLocatorError
 from .validate_semantic_spec import validate_semantic_spec
 
-from ...parse_spec import parse_semantic_spec
+from ...parse_spec.parse_semantic_spec.parse_semantic_spec import parse_semantic_spec
 from ...parse_rough import parse_rough
 
 

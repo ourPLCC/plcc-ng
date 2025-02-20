@@ -6,7 +6,7 @@ from ...errors import (
     InvalidNonterminal,
     DuplicateAttribute
 )
-from ...parse_spec import parse_syntactic_spec
+from ...parse_spec.parse_syntactic_spec.parse_syntactic_spec import parse_syntactic_spec
 from .validate_rhs import validate_rhs
 from ...parse_rough import parse_rough
 
