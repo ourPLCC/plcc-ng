@@ -8,95 +8,131 @@ from .source import Source
 def test_none_returns_empty():
     assert list(Source(None)) == []
 
+
 def test_empty_returns_empty():
     assert list(Source([])) == []
+
 
 def test_random_file_throws(fs):
     with pytest.raises(OSError):
         s = Source(['whereami'])
         assert list(s) == []
 
+
 def test_one_line_reads(fs):
-    fs.create_file("./word", contents="<hello> ::= WORLD")
-    source = Source(["word"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"word")]
+    createFile(fs)
+    source = Source(["main"])
+    assert list(source) == [createLine()]
+
 
 def test_two_lines_read(fs):
-    fs.create_file("./word", contents='''
-                   <hello> ::= WORLD
-                   <clang> ::= SEGFAULT
-                   ''')
+    createFile(fs, contents='''
+               <hello> ::= WORLD
+               <plcc> ::= NEXTGEN
+               ''')
 
-    source = Source(["word"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"word"),
-                            Line("<clang> ::= SEGFAULT",2,"word")]
+    source = Source(["main"])
+    assert list(source) == [createLine(),
+                            createLine(string="<plcc> ::= NEXTGEN", number=2)]
+
 
 def test_two_files_read(fs):
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    fs.create_file("./world", contents="<clang> ::= SEGFAULT")
+    createFile(fs)
+    createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
 
-    source = Source(["hello", "world"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"hello"),
-                            Line("<clang> ::= SEGFAULT",1,"world")]
+    source = Source(["main", "helper"])
+    assert list(source) == [createLine(),
+                            createLine(string="<plcc> ::= NEXTGEN", file="helper")]
+
 
 def test_stdin_works(monkeypatch):
-    monkeypatch.setattr('sys.stdin', io.StringIO('<hello> ::= FROM STDIN'))
+    createStdin(monkeypatch)
     source = Source(["-"])
-    assert list(source) == [Line("<hello> ::= FROM STDIN",1,"-")]
+    assert list(source) == [createStdinLine()]
+
 
 def test_stdin_works_nestled(monkeypatch, fs):
-    monkeypatch.setattr('sys.stdin', io.StringIO('<hello> ::= FROM STDIN'))
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    fs.create_file("./world", contents="<clang> ::= SEGFAULT")
-    source = Source(["hello","-","world"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"hello"),
-                            Line("<hello> ::= FROM STDIN",1,"-"),
-                            Line("<clang> ::= SEGFAULT",1,"world")]
+    createFile(fs)
+    createStdin(monkeypatch)
+    createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
+
+    source = Source(["main", "-", "helper"])
+    assert list(source) == [createLine(),
+                            createStdinLine(),
+                            createLine(string="<plcc> ::= NEXTGEN", file="helper")]
+
 
 def test_stdin_works_first(monkeypatch, fs):
-    monkeypatch.setattr('sys.stdin', io.StringIO('<hello> ::= FROM STDIN'))
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    fs.create_file("./world", contents="<clang> ::= SEGFAULT")
-    source = Source(["-","hello","world"])
-    assert list(source) == [Line("<hello> ::= FROM STDIN",1,"-"),
-                            Line("<hello> ::= WORLD",1,"hello"),
-                            Line("<clang> ::= SEGFAULT",1,"world")]
+    createStdin(monkeypatch)
+    createFile(fs)
+    createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
+
+    source = Source(["-", "main", "helper"])
+    assert list(source) == [createStdinLine(),
+                            createLine(),
+                            createLine(string="<plcc> ::= NEXTGEN", file="helper")]
+
 
 def test_stdin_works_last(monkeypatch, fs):
-    monkeypatch.setattr('sys.stdin', io.StringIO('<hello> ::= FROM STDIN'))
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    fs.create_file("./world", contents="<clang> ::= SEGFAULT")
-    source = Source(["hello","world", "-"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"hello"),
-                            Line("<clang> ::= SEGFAULT",1,"world"),
-                            Line("<hello> ::= FROM STDIN",1,"-")]
+    createFile(fs)
+    createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
+    createStdin(monkeypatch)
 
-def test_multi_line_stdin(monkeypatch, fs):
-    monkeypatch.setattr('sys.stdin', io.StringIO('''
-                                    <stda> ::= HELLO
-                                    <stdb> ::= FROM STDIN
-                                    '''))
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    source = Source(["hello", "-"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"hello"),
-                            Line("<stda> ::= HELLO",1,"-"),
-                            Line("<stdb> ::= FROM STDIN",2,"-")]
+    source = Source(["main", "helper", "-"])
+    assert list(source) == [createLine(),
+                            createLine(string="<plcc> ::= NEXTGEN",
+                                       file="helper"),
+                            createStdinLine()]
 
-def test_stdin_escapes(monkeypatch, fs):
-    monkeypatch.setattr('sys.stdin', io.StringIO('''<stda> ::= HELLO\n<stdb> ::= FROM STDIN'''))
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    source = Source(["hello", "-"])
-    assert list(source) == [Line("<hello> ::= WORLD",1,"hello"),
-                            Line("<stda> ::= HELLO",1,"-"),
-                            Line("<stdb> ::= FROM STDIN",2,"-")]
+
+def test_multi_line_stdin(monkeypatch):
+    createStdin(monkeypatch, '''
+                <stda> ::= HELLO
+                <stdb> ::= FROM STDIN
+                ''')
+
+    source = Source(["-"])
+    assert list(source) == [createStdinLine(string="<stda> ::= HELLO", number=1),
+                            createStdinLine(string="<stdb> ::= FROM STDIN", number=2)]
+
+
+def test_stdin_escapes(monkeypatch):
+    createStdin(monkeypatch, "<stda> ::= HELLO\n<stdb> ::= FROM STDIN")
+
+    source = Source(["-"])
+    assert list(source) == [createStdinLine(string="<stda> ::= HELLO", number=1),
+                            createStdinLine(string="<stdb> ::= FROM STDIN", number=2)]
+
 
 def test_next_iterates(monkeypatch, fs):
-    monkeypatch.setattr('sys.stdin', io.StringIO('''
-                                    <stda> ::= HELLO
-                                    <stdb> ::= FROM STDIN
-                                    '''))
-    fs.create_file("./hello", contents="<hello> ::= WORLD")
-    source = Source(["hello", "-"])
-    assert next(source) ==  Line("<hello> ::= WORLD",1,"hello")
-    assert next(source) ==  Line("<stda> ::= HELLO",1,"-")
-    assert next(source) ==  Line("<stdb> ::= FROM STDIN",2,"-")
+    createFile(fs)
+    createStdin(monkeypatch, '''
+                <stda> ::= HELLO
+                <stdb> ::= FROM STDIN
+                ''')
+
+    source = Source(["main", "-"])
+    assert next(source) == createLine()
+    assert next(source) == createStdinLine(string="<stda> ::= HELLO", number=1)
+    assert next(source) == createStdinLine(
+        string="<stdb> ::= FROM STDIN", number=2)
+
+
+def createFile(fs, name="./main", contents="<hello> ::= WORLD"):
+    fs.create_file(name, contents=contents)
+
+
+def createStdin(monkeypatch, contents="<hello> ::= FROM STDIN"):
+    monkeypatch.setattr('sys.stdin', io.StringIO(contents))
+
+
+def createLine(string="<hello> ::= WORLD", number=1, file="main"):
+    return Line(string=string,
+                number=number,
+                file=file)
+
+
+def createStdinLine(string="<hello> ::= FROM STDIN", number=1):
+    return createLine(string=string,
+                      number=number,
+                      file="-")
