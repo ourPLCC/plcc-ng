@@ -1,4 +1,4 @@
-from pytest import raises
+import pytest
 from ..structs import Line
 from . import parse_rough
 from .parse_includes import parse_includes
@@ -27,8 +27,22 @@ def test_include(fs):
 
 def test_circular_include_errors(fs):
     fs.create_file('/f', contents='%include /f')
-    with raises(CircularIncludeError):
-        list(resolve_includes(parse_rough.from_string_unresolved('%include /f')))
+    result = list(resolve_includes(parse_rough.from_string_unresolved('%include /f')))
+    assert result == [
+        CircularIncludeError(Line('%include /f', 1, '/f'))
+    ]
+
+
+def test_circular_include_does_not_stop_parsing(fs):
+    fs.create_file('/f', contents='''one
+%include /f
+three''')
+    result = list(resolve_includes(parse_rough.from_string_unresolved('%include /f')))
+    assert result == [
+        Line('one', 1, '/f'),
+        CircularIncludeError(Line('%include /f', 2, '/f')),
+        Line('three', 3, '/f')
+    ]
 
 
 def test_relative_path(fs):
