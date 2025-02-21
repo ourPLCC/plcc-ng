@@ -1,9 +1,8 @@
 from pathlib import Path
-
-
+from ..errors import CircularIncludeError
+from ..structs import Include
 from . import parse_rough
 from .parse_includes import parse_includes
-from ..structs import Include
 
 
 def resolve_includes(rough):
@@ -45,12 +44,3 @@ class IncludeResolver():
         rough = parse_rough.from_file_unresolved(file)
         yield from self.resolveIncludes(rough)
         self._files_seen.remove(file)
-
-
-from dataclasses import dataclass
-from ..structs import Line
-
-@dataclass(frozen=True)
-class CircularIncludeError(Exception):
-    line: Line
-

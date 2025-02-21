@@ -1,8 +1,7 @@
-import pytest
+from ..errors import CircularIncludeError
 from ..structs import Line
 from . import parse_rough
-from .parse_includes import parse_includes
-from .resolve_includes import resolve_includes, CircularIncludeError
+from .resolve_includes import resolve_includes
 
 
 def test_None_yields_nothing():
