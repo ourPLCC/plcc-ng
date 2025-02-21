@@ -32,3 +32,16 @@ def from_lines_unresolved(lines):
     includes = parse_includes(blocks)
     dividers = parse_dividers(includes)
     return dividers
+
+
+def raise_exceptions(rough):
+    '''
+    Yields each thing from rough.
+    However, if the thing is an Exception,
+    it is raised and iteration halts.
+    '''
+    for thing in rough:
+        if isinstance(thing, Exception):
+            raise thing
+        else:
+            yield thing

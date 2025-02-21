@@ -1,3 +1,5 @@
+import pytest
+
 from . import parse_rough
 from ..structs import Line
 from ..structs import Block
@@ -45,3 +47,18 @@ def test_from_lines():
     assert list(parse_rough.from_lines([Line('%', 1, None)])) == [
         Divider(tool='Java', language='Java', line=Line('%', 1, None))
     ]
+
+
+def test_raise_exceptions():
+    seen = []
+    with pytest.raises(Exception):
+        for thing in parse_rough.raise_exceptions(['one', Exception(), 'two']):
+            seen.append(thing)
+    assert seen == ['one']
+
+
+def test_rases_excptions_no_exception():
+    seen = []
+    for thing in parse_rough.raise_exceptions(['one', 'two']):
+        seen.append(thing)
+    assert seen == ['one', 'two']
