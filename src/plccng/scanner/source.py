@@ -3,17 +3,15 @@ from ..load_spec.structs import Line
 
 class Source:
     def __init__(self, files):
-        self.files = files
-        self.line_index = 0
-        self.FileReader = iter(FileReader(files))
+        self.sourceIterator = iter(SourceIterator(files))
 
     def __iter__(self):
-        return self.FileReader
+        return self.sourceIterator
 
     def __next__(self):
-        return next(self.FileReader)
+        return next(self.sourceIterator)
 
-class FileReader:
+class SourceIterator:
     def __init__(self, files):
         self.files = files
         self.line_index = 0
