@@ -1,8 +1,8 @@
 from plccng import lines as lines_
-from plccng.spec.roughs.parse_blocks import parse_blocks
-from plccng.spec.roughs.parse_dividers import parse_dividers
-from plccng.spec.roughs.parse_includes import parse_includes
-from plccng.spec.roughs.resolve_includes import resolve_includes
+from .parse_blocks import parse_blocks
+from .parse_dividers import parse_dividers
+from .parse_includes import parse_includes
+from .resolve_includes import resolve_includes
 
 
 def from_lines_unresolved(lines):

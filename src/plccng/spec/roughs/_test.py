@@ -1,4 +1,4 @@
-import plccng.spec.roughs as roughs
+from plccng.spec import roughs
 from plccng.lines import Line
 from plccng.spec.structs import Block, Divider
 

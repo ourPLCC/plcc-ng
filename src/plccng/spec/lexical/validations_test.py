@@ -1,13 +1,13 @@
 from pytest import raises, mark, fixture
 
-from ....lines import Line
+from ...lines import Line
 
-from ...errors import DuplicateNameError, InvalidNameFormatError, InvalidPatternError, ValidationError
+from ..errors import DuplicateNameError, InvalidNameFormatError, InvalidPatternError, ValidationError
 
-from ...structs import LexicalRule
-from .validate_lexical_spec import validate_lexical_spec
-from ...structs import LexicalSpec
-from ...errors import InvalidRuleError
+from ..structs import LexicalRule
+from .validations import validate_lexical_spec
+from ..structs import LexicalSpec
+from ..errors import InvalidRuleError
 
 def test_empty_no_errors():
     lexicalSpec = makeLexicalSpec([])

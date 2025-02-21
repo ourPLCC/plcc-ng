@@ -1,5 +1,5 @@
-from ...errors import InvalidClassNameError, UndefinedBlockError, UndefinedTargetLocatorError
-from .validate_semantic_spec import validate_semantic_spec
+from ..errors import InvalidClassNameError, UndefinedBlockError, UndefinedTargetLocatorError
+from .validation import validate_semantic_spec
 
 from plccng.spec.semantic.parse_semantic_spec import parse_semantic_spec
 from plccng.spec import roughs

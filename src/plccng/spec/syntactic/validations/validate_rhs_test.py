@@ -8,7 +8,7 @@ from ...errors import (
 )
 from plccng.spec.syntactic.parse_syntactic_spec import parse_syntactic_spec
 from .validate_rhs import validate_rhs
-from plccng.spec import roughs
+import plccng.spec.roughs as roughs
 
 def test_rhs_non_terminal_must_not_start_with_underscore():
     assertError(InvalidNonterminal, '''<sentence> ::= <_hello>''')
