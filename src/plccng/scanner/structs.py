@@ -15,7 +15,10 @@ class LexError:
 class Token:
     lexeme: str
     name: str
+    column: int
 
 @dataclass
 class Skip:
     lexeme: str
+    name: str
+    column: int

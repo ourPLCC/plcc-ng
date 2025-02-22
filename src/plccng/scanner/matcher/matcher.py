@@ -11,9 +11,9 @@ class Matcher:
         for pattern in patterns:
             test_match = re.match(pattern[0], line.text)
             if(test_match and pattern[1] == "Skip"):
-                return Skip(lexeme = test_match.group())
+                return Skip(lexeme = test_match.group(), name=pattern[2], column=test_match.end()+1)
             elif(test_match and pattern[1] == "Token"):
-                matches.append(Token(lexeme=test_match.group(), name=pattern[2]))
+                matches.append(Token(lexeme=test_match.group(), name=pattern[2], column=test_match.end()))
             else:
                 continue
 
