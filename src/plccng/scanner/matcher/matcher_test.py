@@ -102,6 +102,23 @@ def test_match_first_longest_rule():
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="123", name = "ONETWOTHREE", column=3)
 
+def test_match_later_index():
+    matcher = make_matcher(spec=[
+        {
+            "type": "Token",
+            "name": "ONETWOTHREE",
+            "regex": "123"
+        },
+        {
+            "type": "Token",
+            "name": "NUMBER",
+            "regex": "\\d+"
+        }
+    ])
+    line = Line(text="123456789", file=None, number=1)
+    result = matcher.match(line=line, index=3)
+    assert result == Token(lexeme="456789", name = "NUMBER", column=9)
+
 
 
 #helper methods

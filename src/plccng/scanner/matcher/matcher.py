@@ -9,11 +9,11 @@ class Matcher:
         patterns = self.compile_regex()
         matches = []
         for pattern in patterns:
-            test_match = re.match(pattern[0], line.text)
+            test_match = re.match(pattern[0], line.text[index: ])
             if(test_match and pattern[1] == "Skip"):
                 return Skip(lexeme = test_match.group(), name=pattern[2], column=test_match.end()+1)
             elif(test_match and pattern[1] == "Token"):
-                matches.append(Token(lexeme=test_match.group(), name=pattern[2], column=test_match.end()))
+                matches.append(Token(lexeme=test_match.group(), name=pattern[2], column=test_match.end()+index))
             else:
                 continue
 
