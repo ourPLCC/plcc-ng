@@ -1,6 +1,6 @@
 from pytest import raises, mark, fixture
 
-from ...lines import Line
+from ...lineparse import Line
 
 from ..errors import DuplicateNameError, InvalidNameFormatError, InvalidPatternError, ValidationError
 

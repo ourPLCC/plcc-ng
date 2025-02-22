@@ -1,6 +1,7 @@
-from plccng.lines import Line
-import plccng.lines as lines_
-from plccng.spec.structs import Block, Divider
+from plccng.lineparse import Line
+import plccng.lineparse as lines_
+from plccng.roughparse.structs import Divider
+from plccng.roughparse.structs import Block
 from .parse_blocks import parse_blocks
 from .parse_dividers import parse_dividers
 

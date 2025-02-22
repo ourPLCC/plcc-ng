@@ -1,9 +1,9 @@
 from pytest import raises
 
-from plccng.lines import Line
+from plccng.lineparse import Line
 from .parse_semantic_spec import parse_semantic_spec, parse_code_fragments
-from plccng.spec import roughs
-from plccng.spec.structs import Divider
+from plccng.roughparse import fromstring
+from plccng.roughparse.structs import Divider
 
 def test_basic():
     lines_divider_and_blocks = [make_divider('Java', 'Java', make_line('%')), make_line('Class:init'), make_block()]
@@ -29,7 +29,7 @@ def test_no_CodeFragments():
 # ''')))
 
 def make_block():
-    return  list(roughs.from_string('''\
+    return  list(fromstring('''\
 %%%
 block
 %%%

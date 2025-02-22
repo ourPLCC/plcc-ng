@@ -1,7 +1,7 @@
 import re
 
-from plccng.lines import Line
-from plccng.spec.structs import Divider
+from plccng.lineparse import Line
+from .structs import Divider
 
 
 def parse_dividers(lines):

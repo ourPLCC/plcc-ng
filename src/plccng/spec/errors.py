@@ -1,4 +1,4 @@
-from plccng.lines import Line
+from plccng.lineparse import Line
 
 
 from dataclasses import dataclass

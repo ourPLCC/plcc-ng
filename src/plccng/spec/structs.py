@@ -1,7 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
 
-from plccng.lines import Line
+from plccng.lineparse import Line
+from plccng.roughparse.structs import Block
 
 
 @dataclass
@@ -15,31 +16,6 @@ class LexicalRule:
     isSkip: bool
     name: str
     pattern: str
-
-
-@dataclass
-class RoughSpec:
-    lexicalSection: list[Line]
-    syntacticSection: list[Line | Divider]
-    semanticSectionList: list[list[Line | Divider | Block]]
-
-
-@dataclass
-class Divider:
-    tool: str
-    language: str
-    line: Line
-
-
-@dataclass
-class Block:
-    lines: list[Line]
-
-
-@dataclass(frozen=True)
-class Include:
-    file: str
-    line: Line
 
 
 @dataclass

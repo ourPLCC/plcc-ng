@@ -1,6 +1,6 @@
 from typing import List
 
-from ....lines import Line
+from ....lineparse import Line
 
 from ...errors import InvalidLhsAltNameError, InvalidLhsNameError
 from ...structs import LhsNonTerminal, Symbol, SyntacticRule, Terminal

@@ -1,9 +1,10 @@
 from pytest import raises
 
-from plccng.lines import Line
-from plccng.spec.structs import Block
-import plccng.lines as lines_
-from .parse_blocks import parse_blocks, UnclosedBlockError
+from plccng.lineparse import Line
+from plccng.roughparse.structs import Block
+import plccng.lineparse as lines_
+from .structs import UnclosedBlockError
+from .parse_blocks import parse_blocks
 
 
 def test_None_yields_nothing():

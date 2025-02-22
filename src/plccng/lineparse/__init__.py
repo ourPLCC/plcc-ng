@@ -1,6 +1,13 @@
 from dataclasses import dataclass
 
 
+@dataclass(frozen=True)
+class Line:
+    string: str
+    number: int
+    file: str = None
+
+
 def fromFile(file, startLineNumber=1):
     with open(file) as f:
         yield from fromStrings(f, file=file, startLineNumber=startLineNumber)
@@ -15,10 +22,3 @@ def fromString(string, file=None, startLineNumber=1):
 def fromStrings(strings, file=None, startLineNumber=1):
     for i, string in enumerate(strings, start=startLineNumber):
         yield Line(string=string, file=file, number=i)
-
-
-@dataclass(frozen=True)
-class Line:
-    string: str
-    number: int
-    file: str = None

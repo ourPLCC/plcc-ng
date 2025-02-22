@@ -1,10 +1,10 @@
-from plccng.spec import roughs
-from plccng.lines import Line
-from plccng.spec.structs import Block, Divider
+from plccng.lineparse import Line
+from .fromstring import fromstring
+from .structs import Divider, Block
 
 
-def test_from_string():
-    assert list(roughs.from_string('''\
+def test_fromstring():
+    assert list(fromstring('''\
 one
 %
 two
@@ -33,14 +33,3 @@ four
         Line('%%%', 12, None)
     ])
 ]
-
-
-def test_from_file(fs):
-    fs.create_file('/f', contents='''f''')
-    assert list(roughs.from_file('/f')) == [Line('f', 1, '/f')]
-
-
-def test_from_lines():
-    assert list(roughs.from_lines([Line('%', 1, None)])) == [
-        Divider(tool='Java', language='Java', line=Line('%', 1, None))
-    ]

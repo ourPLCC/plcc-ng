@@ -1,7 +1,7 @@
 from plccng.spec.structs import CodeFragment
 from plccng.spec.structs import TargetLocator
-from plccng.lines import Line
-from plccng.spec.structs import Block
+from plccng.lineparse import Line
+from plccng.roughparse.structs import Block
 from .parse_target_locator import parse_target_locator
 
 def parse_code_fragments(lines_and_blocks):

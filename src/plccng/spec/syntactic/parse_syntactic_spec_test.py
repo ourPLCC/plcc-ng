@@ -1,7 +1,7 @@
 from pytest import raises
 from typing import List
 
-from plccng.lines import Line
+from plccng.lineparse import Line
 
 from plccng.spec.structs import (
     CapturingTerminal,
@@ -15,7 +15,7 @@ from .parse_syntactic_spec import parse_syntactic_spec
 from plccng.spec.errors import (
     MalformedBNFError,
 )
-from plccng.spec import roughs
+from plccng.roughparse import fromlines
 
 
 def test_None_yields_nothing():
@@ -375,7 +375,7 @@ def test_malformed_bnf_raises():
 
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    return list(roughs.from_lines([makeLine(string, lineNumber, file)]))[0]
+    return list(fromlines([makeLine(string, lineNumber, file)]))[0]
 
 
 def makeLine(string, lineNumber=0, file: str = ""):

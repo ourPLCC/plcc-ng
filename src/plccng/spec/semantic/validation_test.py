@@ -2,7 +2,7 @@ from ..errors import InvalidClassNameError, UndefinedBlockError, UndefinedTarget
 from .validation import validate_semantic_spec
 
 from plccng.spec.semantic.parse_semantic_spec import parse_semantic_spec
-from plccng.spec import roughs
+from plccng.roughparse import fromstring
 
 
 def test_no_code_fragments_no_errors():
@@ -99,6 +99,6 @@ def assertInvalidClassName(name: str):
     assert isinstance(errors[0], InvalidClassNameError)
 
 def parse(string):
-    rough = list(roughs.from_string(string))
+    rough = list(fromstring(string))
     spec =  parse_semantic_spec(rough)
     return spec

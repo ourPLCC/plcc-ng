@@ -1,5 +1,6 @@
 import re
-from plccng.spec.structs import Block
+
+from .structs import Block, UnclosedBlockError
 
 
 def parse_blocks(lines):
@@ -13,11 +14,6 @@ def parse_blocks(lines):
         PPLC: PPRC
     }
     return BlockParser(brackets).parse(lines)
-
-
-class UnclosedBlockError(Exception):
-    def __init__(self, line):
-        self.line = line
 
 
 class BlockParser():

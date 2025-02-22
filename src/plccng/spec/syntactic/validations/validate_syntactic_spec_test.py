@@ -1,6 +1,6 @@
 from typing import List
 
-from ....lines import Line
+from ....lineparse import Line
 from ...structs import LexicalRule, LhsNonTerminal, Symbol, SyntacticRule, Terminal
 from .validate_syntactic_spec import validate_syntactic_spec
 from ...structs import LexicalSpec

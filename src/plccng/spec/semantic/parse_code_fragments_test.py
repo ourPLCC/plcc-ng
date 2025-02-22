@@ -1,9 +1,9 @@
 from pytest import raises
 
-from plccng.lines import Line
+from plccng.lineparse import Line
 from .parse_code_fragments import parse_code_fragments
 from plccng.spec.structs import CodeFragment, TargetLocator
-from plccng.spec import roughs
+from plccng.roughparse import fromstring
 
 def test_basic():
     lines_and_blocks = [make_line('Class:init'), make_block()]
@@ -70,7 +70,7 @@ def make_target_locator(line, className, modifier):
     return TargetLocator(line, className, modifier)
 
 def make_block():
-    return  list(roughs.from_string('''\
+    return  list(fromstring('''\
 %%%
 block
 %%%

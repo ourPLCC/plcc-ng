@@ -1,13 +1,13 @@
 import re
 from re import Match
 
-from plccng.lines import Line
+from plccng.lineparse import Line
 from plccng.spec.structs import LexicalRule, LexicalSpec
-from plccng.spec import roughs
+from plccng.roughparse import fromstring
 
 
 def from_string(string, file=None, startLineNumber=1):
-    rough = roughs.from_string(string, file=file, startLineNumber=startLineNumber)
+    rough = fromstring(string, file=file, startLineNumber=startLineNumber)
     return from_lines(rough)
 
 

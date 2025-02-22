@@ -1,7 +1,7 @@
 from typing import List
 
 # Dependencies
-from plccng.lines import Line
+from plccng.lineparse import Line
 from plccng.spec.structs import (
     CapturingTerminal,
     LexicalRule,

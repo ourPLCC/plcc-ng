@@ -1,7 +1,7 @@
 from pytest import raises
 from ....errors import InvalidSyntacticSpecException
-from plccng.spec import roughs
-from plccng.lines import Line
+from plccng.roughparse import fromlines
+from plccng.lineparse import Line
 from .LL1Wrapper import wrap_ll1
 from .build_spec_grammar import build_spec_grammar
 from plccng.spec.syntactic.parse_syntactic_spec import parse_syntactic_spec
@@ -92,7 +92,7 @@ def createGrammarWithSpec(lines):
     return makeSpecGrammar(syntacticSpec)
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    return roughs.from_lines([makeLine(string, lineNumber, file)])
+    return fromlines([makeLine(string, lineNumber, file)])
 
 def makeLine(string, lineNumber=0, file=""):
     return Line(string, lineNumber, file)

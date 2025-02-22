@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import re
 
-from ...lines import Line
+from ...lineparse import Line
 
 from ..errors import DuplicateNameError, InvalidNameFormatError, InvalidPatternError, ValidationError
 from ..structs import LexicalRule

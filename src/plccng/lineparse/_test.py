@@ -1,5 +1,5 @@
 from . import Line
-from .. import lines as lines_
+from .. import lineparse as lines_
 
 
 def test_None_yields_nothing():

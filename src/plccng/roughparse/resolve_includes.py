@@ -1,13 +1,26 @@
 from pathlib import Path
-
-
-from .. import roughs
+from plccng import lineparse
+from plccng.roughparse.structs import lineparse
+from .parse_dividers import parse_dividers
+from .parse_blocks import parse_blocks
 from .parse_includes import parse_includes
-from plccng.spec.structs import Include
+from .structs import CircularIncludeError, Include
 
 
 def resolve_includes(rough):
     return IncludeResolver().resolveIncludes(rough)
+
+
+def from_lines_unresolved(lines):
+    blocks = parse_blocks(lines)
+    includes = parse_includes(blocks)
+    dividers = parse_dividers(includes)
+    return dividers
+
+
+def from_file_unresolved(file, startLineNumber=1):
+    lines = lineparse.fromFile(file, startLineNumber=startLineNumber)
+    return from_lines_unresolved(lines)
 
 
 class IncludeResolver():
@@ -44,11 +57,11 @@ class IncludeResolver():
 
     def _include_file(self, file):
         self._files_seen.add(file)
-        rough = roughs.from_file_unresolved(file)
+        rough = from_file_unresolved(file)
         yield from self.resolveIncludes(rough)
         self._files_seen.remove(file)
 
 
-class CircularIncludeError(Exception):
-    def __init__(self, line):
-        self.line = line
+def from_string_unresolved(string, file=None, startLineNumber=1):
+    lines = lineparse.fromString(string, file=file, startLineNumber=startLineNumber)
+    return from_lines_unresolved(lines)

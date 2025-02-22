@@ -1,5 +1,6 @@
 import re
-from plccng.spec.structs import Include
+
+from .structs import Include
 
 
 def parse_includes(lines):
