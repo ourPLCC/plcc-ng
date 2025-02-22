@@ -3,18 +3,19 @@ import re
 from re import Match
 
 from plccng.lineparse.Line import Line
-from plccng.spec.structs import (
-    CapturingSymbol,
-    CapturingTerminal,
-    LhsNonTerminal,
-    RepeatingSyntacticRule,
-    RhsNonTerminal,
-    StandardSyntacticRule,
-    Symbol, SyntacticRule,
-    SyntacticSpec,
-    Terminal
+from plccng.spec.CapturingSymbol import CapturingSymbol
+from plccng.spec.CapturingTerminal import CapturingTerminal
+from plccng.spec.LhsNonTerminal import LhsNonTerminal
+from plccng.spec.RepeatingSyntacticRule import RepeatingSyntacticRule
+from plccng.spec.RhsNonTerminal import RhsNonTerminal
+from plccng.spec.StandardSyntacticRule import StandardSyntacticRule
+from plccng.spec.Symbol import Symbol
+from plccng.spec.SyntacticRule import SyntacticRule
+from plccng.spec.Terminal import Terminal
+from plccng.spec.SyntacticSpec import (
+    SyntacticSpec
 )
-from plccng.spec.errors import (
+from plccng.spec.MalformedBNFError import (
     MalformedBNFError,
 )
 

@@ -1,10 +1,14 @@
 import re
 
-from ...errors import InvalidLhsAltNameError, InvalidLhsNameError, ValidationError
-from ...structs import (
+from ...InvalidLhsNameError import InvalidLhsNameError
+
+from ....ValidationError import ValidationError
+
+from ...InvalidLhsAltNameError import InvalidLhsAltNameError
+from ...SyntacticSpec import (
     SyntacticSpec,
 )
-from ...errors import (
+from ...DuplicateLhsError import (
     DuplicateLhsError,
 )
 

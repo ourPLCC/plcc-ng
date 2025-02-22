@@ -1,5 +1,5 @@
-from plccng.spec.structs import CodeFragment
-from plccng.spec.structs import TargetLocator
+from plccng.spec.CodeFragment import CodeFragment
+from plccng.spec.TargetLocator import TargetLocator
 from plccng.lineparse.Line import Line
 from plccng.roughparse.Block import Block
 from .parse_target_locator import parse_target_locator

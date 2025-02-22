@@ -2,19 +2,19 @@ from typing import List
 
 # Dependencies
 from plccng.lineparse.Line import Line
-from plccng.spec.structs import (
-    CapturingTerminal,
-    LexicalRule,
-    LhsNonTerminal,
-    Symbol,
-    SyntacticRule,
-    Terminal,
-    LexicalSpec,
-    SyntacticSpec,
-    RepeatingSyntacticRule
+from plccng.spec.CapturingTerminal import CapturingTerminal
+from plccng.lexicalspecparse.LexicalRule import LexicalRule
+from plccng.lexicalspecparse.LexicalSpec import LexicalSpec
+from plccng.spec.LhsNonTerminal import LhsNonTerminal
+from plccng.spec.RepeatingSyntacticRule import RepeatingSyntacticRule
+from plccng.spec.Symbol import Symbol
+from plccng.spec.SyntacticRule import SyntacticRule
+from plccng.spec.Terminal import Terminal
+from plccng.spec.SyntacticSpec import (
+    SyntacticSpec
 )
 from .validate_terminals_defined import validate_terminals_defined
-from plccng.spec.errors import UndefinedTerminalError
+from plccng.spec.UndefinedTerminalError import UndefinedTerminalError
 
 def test_undefined_terminal_error():
     lexicalSpec = makeLexicalSpec([])

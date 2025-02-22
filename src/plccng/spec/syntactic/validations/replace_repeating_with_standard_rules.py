@@ -1,7 +1,11 @@
 from typing import List
 from plccng.lineparse.Line import Line
-from plccng.spec.structs import LhsNonTerminal, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol
-from plccng.spec.structs import (
+from plccng.spec.LhsNonTerminal import LhsNonTerminal
+from plccng.spec.RhsNonTerminal import RhsNonTerminal
+from plccng.spec.StandardSyntacticRule import StandardSyntacticRule
+from plccng.spec.Symbol import Symbol
+from plccng.spec.RepeatingSyntacticRule import RepeatingSyntacticRule
+from plccng.spec.SyntacticSpec import (
     SyntacticSpec,
 )
 

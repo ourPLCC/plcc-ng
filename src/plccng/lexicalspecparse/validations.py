@@ -1,12 +1,15 @@
-from dataclasses import dataclass
 import re
 
-from ...lineparse.Line import Line
+from .DuplicateNameError import DuplicateNameError
 
-from ..errors import DuplicateNameError, InvalidNameFormatError, InvalidPatternError, ValidationError
-from ..structs import LexicalRule
-from ..structs import LexicalSpec
-from ..errors import InvalidRuleError
+from .InvalidNameFormatError import InvalidNameFormatError
+
+from ..lineparse.Line import Line
+
+from .InvalidPatternError import InvalidPatternError
+from .LexicalRule import LexicalRule
+from .LexicalSpec import LexicalSpec
+from .InvalidRuleError import InvalidRuleError
 
 def validate_lexical_spec(lexicalSpec: LexicalSpec):
     return LexicalValidator(lexicalSpec).validate()

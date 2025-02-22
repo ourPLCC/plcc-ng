@@ -1,5 +1,5 @@
 
-from plccng.spec.structs import SemanticSpec
+from plccng.spec.SemanticSpec import SemanticSpec
 from .parse_code_fragments import parse_code_fragments
 from plccng.lineparse.Line import Line
 from plccng.roughparse.Block import Block

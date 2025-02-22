@@ -1,9 +1,9 @@
-from ...errors import (
-    InvalidSeparator,
-    InvalidAttribute,
-    InvalidTerminal,
-    UndefinedNonterminal,
-    InvalidNonterminal,
+from ...UndefinedNonterminal import UndefinedNonterminal
+from ...InvalidSeparator import InvalidSeparator
+from ...InvalidTerminal import InvalidTerminal
+from ...InvalidAttribute import InvalidAttribute
+from ...InvalidNonterminal import InvalidNonterminal
+from ...DuplicateAttribute import (
     DuplicateAttribute
 )
 from plccng.spec.syntactic.parse_syntactic_spec import parse_syntactic_spec

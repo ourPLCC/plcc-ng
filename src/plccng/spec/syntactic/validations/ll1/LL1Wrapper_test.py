@@ -1,8 +1,10 @@
 from pytest import fixture
 
-from plccng.spec.structs import CapturingTerminal, LhsNonTerminal, Terminal
+from plccng.spec.CapturingTerminal import CapturingTerminal
+from plccng.spec.Terminal import Terminal
+from plccng.spec.LhsNonTerminal import LhsNonTerminal
 from .LL1Wrapper import wrap_ll1
-from plccng.spec.structs import (
+from plccng.spec.RhsNonTerminal import (
     RhsNonTerminal
 )
 

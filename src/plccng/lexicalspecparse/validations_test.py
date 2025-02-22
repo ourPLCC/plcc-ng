@@ -1,13 +1,13 @@
-from pytest import raises, mark, fixture
+from plccng.lineparse import Line
 
-from ...lineparse.Line import Line
-
-from ..errors import DuplicateNameError, InvalidNameFormatError, InvalidPatternError, ValidationError
-
-from ..structs import LexicalRule
+from .DuplicateNameError import DuplicateNameError
+from .InvalidNameFormatError import InvalidNameFormatError
+from .InvalidPatternError import InvalidPatternError
+from .LexicalRule import LexicalRule
 from .validations import validate_lexical_spec
-from ..structs import LexicalSpec
-from ..errors import InvalidRuleError
+from .LexicalSpec import LexicalSpec
+
+from .InvalidRuleError import InvalidRuleError
 
 def test_empty_no_errors():
     lexicalSpec = makeLexicalSpec([])

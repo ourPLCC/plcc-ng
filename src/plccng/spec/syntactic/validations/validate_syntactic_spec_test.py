@@ -1,10 +1,18 @@
 from typing import List
 
+from ...LhsNonTerminal import LhsNonTerminal
+
+from ...Terminal import Terminal
+
+from ...Symbol import Symbol
+
+from plccng.lexicalspecparse.LexicalRule import LexicalRule
+from plccng.lexicalspecparse.LexicalSpec import LexicalSpec
+
 from ....lineparse.Line import Line
-from ...structs import LexicalRule, LhsNonTerminal, Symbol, SyntacticRule, Terminal
+from ...SyntacticRule import SyntacticRule
 from .validate_syntactic_spec import validate_syntactic_spec
-from ...structs import LexicalSpec
-from ...structs import (
+from ...SyntacticSpec import (
     SyntacticSpec,
 )
 

@@ -1,7 +1,8 @@
-from ...structs import (
+from plccng.lexicalspecparse.LexicalSpec import LexicalSpec
+from ...SyntacticSpec import (
     SyntacticSpec,
 )
-from ...structs import LexicalSpec, SyntacticRule
+from ...SyntacticRule import SyntacticRule
 from .validate_lhs import validate_lhs
 from .validate_rhs import validate_rhs
 from .validate_terminals_defined import validate_terminals_defined

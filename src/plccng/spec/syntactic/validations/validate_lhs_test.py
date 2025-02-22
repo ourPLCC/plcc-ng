@@ -1,13 +1,21 @@
 from typing import List
 
+from ...LhsNonTerminal import LhsNonTerminal
+
+from ...Terminal import Terminal
+
+from ...Symbol import Symbol
+
+from ...InvalidLhsNameError import InvalidLhsNameError
+
 from ....lineparse.Line import Line
 
-from ...errors import InvalidLhsAltNameError, InvalidLhsNameError
-from ...structs import LhsNonTerminal, Symbol, SyntacticRule, Terminal
-from ...structs import (
+from ...InvalidLhsAltNameError import InvalidLhsAltNameError
+from ...SyntacticRule import SyntacticRule
+from ...SyntacticSpec import (
     SyntacticSpec,
 )
-from ...errors import (
+from ...DuplicateLhsError import (
     DuplicateLhsError
 )
 from .validate_lhs import validate_lhs

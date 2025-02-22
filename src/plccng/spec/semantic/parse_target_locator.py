@@ -1,6 +1,6 @@
 import re
 
-from plccng.spec.structs import TargetLocator
+from plccng.spec.TargetLocator import TargetLocator
 
 def parse_target_locator(line):
     regex=r'^(.+?)(?::([a-z]+))?\s*(?:#.*)?$'

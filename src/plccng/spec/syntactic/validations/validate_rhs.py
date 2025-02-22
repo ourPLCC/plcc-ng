@@ -1,17 +1,26 @@
 import re
-from ...errors import (
-    InvalidAttribute,
-    InvalidNonterminal,
-    InvalidTerminal,
-    UndefinedNonterminal,
-    DuplicateAttribute,
-    InvalidSeparator
+
+from ...RepeatingSyntacticRule import RepeatingSyntacticRule
+
+from ...RhsNonTerminal import RhsNonTerminal
+
+from ...CapturingSymbol import CapturingSymbol
+
+from ...Terminal import Terminal
+
+from ...UndefinedNonterminal import UndefinedNonterminal
+
+from ...InvalidSeparator import InvalidSeparator
+
+from ...InvalidTerminal import InvalidTerminal
+
+from ...InvalidAttribute import InvalidAttribute
+
+from ...InvalidNonterminal import InvalidNonterminal
+from ...DuplicateAttribute import (
+    DuplicateAttribute
 )
-from ...structs import (
-    RepeatingSyntacticRule,
-    RhsNonTerminal,
-    Terminal,
-    CapturingSymbol,
+from ...SyntacticSpec import (
     SyntacticSpec
 )
 

@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from plccng.spec.errors import LL1Error
+from plccng.spec.LL1Error import LL1Error
 from .build_parsing_table import Table
 
 

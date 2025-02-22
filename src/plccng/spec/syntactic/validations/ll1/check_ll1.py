@@ -1,5 +1,5 @@
 from .Grammar import Grammar
-from ....errors import ValidationError
+from .....ValidationError import ValidationError
 from .build_first_sets import build_first_sets
 from .build_follow_sets import build_follow_sets
 from .build_parsing_table import build_parsing_table

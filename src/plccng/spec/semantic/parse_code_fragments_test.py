@@ -1,8 +1,9 @@
 from pytest import raises
 
 from plccng.lineparse.Line import Line
+from plccng.spec.TargetLocator import TargetLocator
 from .parse_code_fragments import parse_code_fragments
-from plccng.spec.structs import CodeFragment, TargetLocator
+from plccng.spec.CodeFragment import CodeFragment
 from plccng.roughparse import fromstring
 
 def test_basic():

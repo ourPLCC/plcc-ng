@@ -1,13 +1,14 @@
 import re
-from re import Match
 
 from plccng.lineparse.Line import Line
-from plccng.spec.structs import LexicalRule, LexicalSpec
-from plccng.roughparse import fromstring
+import plccng.roughparse as roughparse
+
+from .LexicalSpec import LexicalSpec
+from .LexicalRule import LexicalRule
 
 
 def from_string(string, file=None, startLineNumber=1):
-    rough = fromstring(string, file=file, startLineNumber=startLineNumber)
+    rough = roughparse.fromstring(string, file=file, startLineNumber=startLineNumber)
     return from_lines(rough)
 
 
@@ -39,7 +40,7 @@ class LexicalParser():
             else:
                 self.spec.ruleList.append(line)
 
-    def _generateTokenRule(self, line: Line, lineIsSkipToken: Match[str], lineIsRegularToken: Match[str]) -> LexicalRule:
+    def _generateTokenRule(self, line: Line, lineIsSkipToken: re.Match[str], lineIsRegularToken: re.Match[str]) -> LexicalRule:
         if lineIsSkipToken:
             return self._generateSkipToken(line, lineIsSkipToken['Name'], lineIsSkipToken['Pattern'])
         else: # must be a lineIsRegularToken
@@ -48,7 +49,7 @@ class LexicalParser():
     def _isBlankOrComment(self, line: Line) -> bool:
         return not line.string.strip() or line.string.strip().startswith("#")
 
-    def _matchToken(self, lineStr: str) -> tuple[Match[str] | None, Match[str] | None]:
+    def _matchToken(self, lineStr: str) -> tuple[re.Match[str] | None, re.Match[str] | None]:
         isSkipToken = re.match(self.patterns['skipToken'], lineStr)
         isRegularToken = re.match(self.patterns['tokenToken'], lineStr)
         return isSkipToken, isRegularToken
