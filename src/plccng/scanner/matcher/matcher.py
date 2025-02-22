@@ -20,7 +20,7 @@ class Matcher:
         if matches:
             return self.get_longest_match(matches)
         else:
-            return LexError(line=line, column=1)
+            return LexError(line=line, column=index+1)
 
     #Helper methods
     def compile_regex(self):
