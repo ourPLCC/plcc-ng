@@ -1,4 +1,4 @@
-from plccng.lineparse.Line import Line
+from plccng.lineparse import Line
 from .parse_lexical_spec import from_string
 
 

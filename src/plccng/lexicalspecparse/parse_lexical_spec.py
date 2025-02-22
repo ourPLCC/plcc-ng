@@ -1,6 +1,6 @@
 import re
 
-from plccng.lineparse.Line import Line
+from plccng.lineparse import Line
 import plccng.roughparse as roughparse
 
 from .LexicalSpec import LexicalSpec

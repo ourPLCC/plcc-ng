@@ -1,14 +1,12 @@
 import re
 
-from .DuplicateNameError import DuplicateNameError
+from plccng.lineparse import Line
 
-from .InvalidNameFormatError import InvalidNameFormatError
-
-from ..lineparse.Line import Line
-
-from .InvalidPatternError import InvalidPatternError
 from .LexicalRule import LexicalRule
 from .LexicalSpec import LexicalSpec
+from .DuplicateNameError import DuplicateNameError
+from .InvalidNameFormatError import InvalidNameFormatError
+from .InvalidPatternError import InvalidPatternError
 from .InvalidRuleError import InvalidRuleError
 
 def validate_lexical_spec(lexicalSpec: LexicalSpec):
