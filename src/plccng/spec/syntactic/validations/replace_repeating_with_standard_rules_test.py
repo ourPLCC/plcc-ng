@@ -1,7 +1,7 @@
 from pytest import raises, mark, fixture
 from typing import List
 
-from ....lineparse import Line
+from ....lineparse.Line import Line
 from plccng.spec.structs import (
     RepeatingSyntacticRule,
 )

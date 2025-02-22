@@ -1,6 +1,6 @@
 import re
 
-from .structs import Include
+from .Include import Include
 
 
 def parse_includes(lines):

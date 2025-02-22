@@ -1,6 +1,6 @@
 from pytest import raises
-from plccng.lineparse import Line
-from .structs import CircularIncludeError
+from plccng.lineparse.Line import Line
+from .CircularIncludeError import CircularIncludeError
 from .resolve_includes import resolve_includes, from_string_unresolved
 
 

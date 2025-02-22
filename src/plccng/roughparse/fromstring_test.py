@@ -1,6 +1,7 @@
-from plccng.lineparse import Line
+from plccng.lineparse.Line import Line
+from .Block import Block
 from .fromstring import fromstring
-from .structs import Divider, Block
+from .Divider import Divider
 
 
 def test_fromstring():

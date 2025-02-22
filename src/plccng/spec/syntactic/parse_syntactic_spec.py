@@ -2,7 +2,7 @@ from typing import List
 import re
 from re import Match
 
-from plccng.lineparse import Line
+from plccng.lineparse.Line import Line
 from plccng.spec.structs import (
     CapturingSymbol,
     CapturingTerminal,

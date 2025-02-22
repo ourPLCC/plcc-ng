@@ -1,5 +1,5 @@
 from typing import List
-from plccng.lineparse import Line
+from plccng.lineparse.Line import Line
 from plccng.spec.structs import LhsNonTerminal, RepeatingSyntacticRule, RhsNonTerminal, StandardSyntacticRule, Symbol
 from plccng.spec.structs import (
     SyntacticSpec,

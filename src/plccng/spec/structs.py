@@ -1,8 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
 
-from plccng.lineparse import Line
-from plccng.roughparse.structs import Block
+from plccng.lineparse.Line import Line
+from plccng.roughparse.Block import Block
 
 
 @dataclass

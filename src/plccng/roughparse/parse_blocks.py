@@ -1,6 +1,8 @@
 import re
 
-from .structs import Block, UnclosedBlockError
+from .Block import Block
+
+from .UnclosedBlockError import UnclosedBlockError
 
 
 def parse_blocks(lines):

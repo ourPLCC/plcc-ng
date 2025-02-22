@@ -1,10 +1,10 @@
 from pathlib import Path
-from plccng import lineparse
-from plccng.roughparse.structs import lineparse
+import plccng.lineparse as lineparse
+from .Include import Include
 from .parse_dividers import parse_dividers
 from .parse_blocks import parse_blocks
 from .parse_includes import parse_includes
-from .structs import CircularIncludeError, Include
+from .CircularIncludeError import CircularIncludeError
 
 
 def resolve_includes(rough):
@@ -19,7 +19,7 @@ def from_lines_unresolved(lines):
 
 
 def from_file_unresolved(file, startLineNumber=1):
-    lines = lineparse.fromFile(file, startLineNumber=startLineNumber)
+    lines = lineparse.fromfile(file, startLineNumber=startLineNumber)
     return from_lines_unresolved(lines)
 
 
@@ -63,5 +63,5 @@ class IncludeResolver():
 
 
 def from_string_unresolved(string, file=None, startLineNumber=1):
-    lines = lineparse.fromString(string, file=file, startLineNumber=startLineNumber)
+    lines = lineparse.fromstring(string, file=file, startLineNumber=startLineNumber)
     return from_lines_unresolved(lines)

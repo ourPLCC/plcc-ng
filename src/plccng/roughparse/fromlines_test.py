@@ -1,6 +1,6 @@
-from plccng.lineparse import Line
+from plccng.lineparse.Line import Line
 from .fromlines import fromlines
-from .structs import Divider
+from .Divider import Divider
 
 
 def test_from_lines():

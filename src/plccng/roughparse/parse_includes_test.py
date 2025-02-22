@@ -1,7 +1,7 @@
-from plccng.lineparse import Line
-import plccng.lineparse as lines_
-from plccng.roughparse.structs import Block
-from plccng.roughparse.structs import Include
+import plccng.lineparse as lineparse
+
+from plccng.roughparse.Block import Block
+from plccng.roughparse.Include import Include
 from .parse_blocks import parse_blocks
 from .parse_includes import parse_includes
 
@@ -15,7 +15,7 @@ def test_empty_yields_nothing():
 
 
 def test_non_includes_pass_through():
-    lines = list(parse_blocks(lines_.fromString('''\
+    lines = list(parse_blocks(lineparse.fromstring('''\
 one
 %%%
 two
@@ -26,19 +26,19 @@ three
 
 
 def test_include():
-    lines = list(lines_.fromString('''\
+    lines = list(lineparse.fromstring('''\
 %include file
 '''))
     assert list(parse_includes(lines)) == [
         Include(
             file='file',
-            line=Line('%include file', 1, None)
+            line=lineparse.Line('%include file', 1, None)
         )
     ]
 
 
 def test_ignores_includes_in_blocks():
-    lines = list(parse_blocks(lines_.fromString('''\
+    lines = list(parse_blocks(lineparse.fromstring('''\
 %%%
 %include file
 %%%
@@ -46,9 +46,9 @@ def test_ignores_includes_in_blocks():
     assert list(parse_includes(lines)) == [
         Block(
             [
-                Line('%%%', 1, None),
-                Line('%include file', 2, None),
-                Line('%%%', 3, None)
+                lineparse.Line('%%%', 1, None),
+                lineparse.Line('%include file', 2, None),
+                lineparse.Line('%%%', 3, None)
             ]
         )
     ]
