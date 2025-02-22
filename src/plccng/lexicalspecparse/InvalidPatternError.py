@@ -1,7 +1,5 @@
-from plccng.ValidationError import ValidationError
-
-
 from dataclasses import dataclass
+from plccng.ValidationError import ValidationError
 
 
 @dataclass
