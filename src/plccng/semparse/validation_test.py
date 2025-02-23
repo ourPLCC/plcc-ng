@@ -3,7 +3,7 @@ from .InvalidClassNameError import InvalidClassNameError
 from .UndefinedTargetLocatorError import UndefinedTargetLocatorError
 from .validation import validate_semantic_spec
 
-from plccng.semanticspecparse.parse_semantic_spec import parse_semantic_spec
+from plccng.semparse.parse_semantic_spec import parse_semantic_spec
 from plccng.roughparse import fromstring
 
 

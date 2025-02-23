@@ -1,4 +1,4 @@
-from plccng.lexicalspecparse import LexicalSpec
+from plccng.lexparse import LexicalSpec
 
 from ..CapturingTerminal import CapturingTerminal
 from ..RepeatingSyntacticRule import RepeatingSyntacticRule

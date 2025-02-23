@@ -1,4 +1,4 @@
-from plccng.lexicalspecparse import LexicalSpec
+from plccng.lexparse import LexicalSpec
 
 from ..SyntacticSpec import SyntacticSpec
 from ..SyntacticRule import SyntacticRule

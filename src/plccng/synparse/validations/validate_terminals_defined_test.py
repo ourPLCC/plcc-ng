@@ -2,7 +2,7 @@ from typing import List
 
 from plccng.lineparse import Line
 
-from ...lexicalspecparse import LexicalRule, LexicalSpec
+from ...lexparse import LexicalRule, LexicalSpec
 
 from ..CapturingTerminal import CapturingTerminal
 from ..LhsNonTerminal import LhsNonTerminal
