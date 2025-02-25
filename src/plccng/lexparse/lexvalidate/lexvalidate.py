@@ -28,6 +28,6 @@ class LexicalValidator:
 
     def _runValidators(self, rule_or_line):
         for v in self.validators:
-            e = v.check(rule_or_line)
+            e = v.validate(rule_or_line)
             if e:
                 self.errorList.append(e)

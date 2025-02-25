@@ -11,7 +11,7 @@ class InvalidPattern(ValidationError):
 
 
 class PatternValidator():
-    def check(self, rule):
+    def validate(self, rule):
         if isinstance(rule, LexicalRule):
             if "\'" in rule.pattern or "\"" in rule.pattern or rule.pattern == '':
                 return InvalidPattern(rule=rule)

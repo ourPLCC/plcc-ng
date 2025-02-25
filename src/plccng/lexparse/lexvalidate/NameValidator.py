@@ -15,6 +15,6 @@ class InvalidName(ValidationError):
 class NameValidator():
     pattern = re.compile(r'^[A-Z_][A-Z0-9_]*$')
 
-    def check(self, rule):
+    def validate(self, rule):
         if isinstance(rule, LexicalRule) and not self.pattern.match(rule.name):
             return InvalidName(rule=rule)

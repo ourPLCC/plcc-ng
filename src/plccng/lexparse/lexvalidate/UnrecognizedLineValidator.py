@@ -11,6 +11,6 @@ class UnrecognizedLine(ValidationError):
 
 
 class UnrecognizedLineValidator():
-    def check(self, line):
+    def validate(self, line):
         if isinstance(line, Line):
             return UnrecognizedLine(line)
