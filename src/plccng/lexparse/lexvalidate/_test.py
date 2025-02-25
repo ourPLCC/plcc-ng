@@ -3,21 +3,21 @@ from plccng.lineparse import Line
 from ..LexicalRule import LexicalRule
 from ..LexicalSpec import LexicalSpec
 
-from .DuplicateRuleName import DuplicateRuleName
-from .InvalidRuleName import InvalidRuleName
-from .InvalidRulePattern import InvalidRulePattern
-from .InvalidRule import InvalidRule
+from .UniqueNameValidator import DuplicateName
+from .NameValidator import InvalidName
+from .PatternValidator import InvalidPattern
+from .UnrecognizedLineValidator import UnrecognizedLine
 
-from .validations import validate_lexical_spec
+from .lexvalidate import lexvalidate
 
 def test_empty_no_errors():
     lexicalSpec = makeLexicalSpec([])
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 0
 
 def test_None_no_errors():
     lexicalSpec = makeLexicalSpec(None)
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 0
 
 def test_lowercase_name_format_error():
@@ -73,7 +73,7 @@ def test_multiple_errors_all_counted():
     line = makeLine("no rules here")
     invalidPattern = makeLexicalRule(pattern="+\"+")
     lexicalSpec = makeLexicalSpec([validName, invalidName, duplicateName, line, invalidPattern])
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 4
 
     assert errors[0] == makeInvalidNameFormatError(invalidName)
@@ -102,48 +102,48 @@ def makeLexicalSpecWithTwoTokenRules(name1, name2):
     return lexicalSpec
 
 def makeInvalidNameFormatError(rule):
-    return InvalidRuleName(rule=rule)
+    return InvalidName(rule=rule)
 
 def makeDuplicateNameError(rule):
-    return DuplicateRuleName(rule=rule)
+    return DuplicateName(rule=rule)
 
 def makeInvalidPatternError(rule):
-    return InvalidRulePattern(rule=rule)
+    return InvalidPattern(rule=rule)
 
 def makeInvalidRuleError(line):
-    return InvalidRule(line=line)
+    return UnrecognizedLine(line=line)
 
 def assertInvalidName(givenName: str):
     lexicalSpec = makeLexicalSpecWithOneTokenRule(name=givenName)
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 1
     assert errors[0] == makeInvalidNameFormatError(lexicalSpec.ruleList[0])
 
 def assertValidName(givenName: str):
     lexicalSpec = makeLexicalSpecWithOneTokenRule(name=givenName)
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 0
 
 def assertInvalidPattern(givenPattern: str):
     lexicalSpec = makeLexicalSpecWithOneTokenRule(pattern=givenPattern)
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 1
     assert errors[0] == makeInvalidPatternError(lexicalSpec.ruleList[0])
 
 def assertInvalidRule(lineStr: str):
     line = makeLine(lineStr)
     lexicalSpec = makeLexicalSpec([line])
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 1
     assert errors[0] == makeInvalidRuleError(line)
 
 def assertDuplicationError(givenName1: str, givenName2: str):
     lexicalSpec = makeLexicalSpecWithTwoTokenRules(name1=givenName1, name2=givenName2)
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 1
     assert errors[0] == makeDuplicateNameError(lexicalSpec.ruleList[0])
 
 def assertNoDuplicationError(givenName1: str, givenName2: str):
     lexicalSpec = makeLexicalSpecWithTwoTokenRules(name1=givenName1, name2=givenName2)
-    errors = validate_lexical_spec(lexicalSpec)
+    errors = lexvalidate(lexicalSpec)
     assert len(errors) == 0

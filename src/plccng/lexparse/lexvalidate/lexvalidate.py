@@ -1,11 +1,11 @@
 from ..LexicalSpec import LexicalSpec
 
-from .RuleNameValidator import RuleNameValidator
-from .UniqueRuleNameValidator import UniqueRuleNameValidator
+from .NameValidator import NameValidator
+from .UniqueNameValidator import UniqueNameValidator
 from .PatternValidator import PatternValidator
 from .UnrecognizedLineValidator import UnrecognizedLineValidator
 
-def validate_lexical_spec(lexicalSpec: LexicalSpec):
+def lexvalidate(lexicalSpec: LexicalSpec):
     return LexicalValidator(lexicalSpec).validate()
 
 class LexicalValidator:
@@ -13,8 +13,8 @@ class LexicalValidator:
         self.lexicalSpec = lexicalSpec
         self.errorList = []
         self.validators = [
-            UniqueRuleNameValidator(),
-            RuleNameValidator(),
+            UniqueNameValidator(),
+            NameValidator(),
             PatternValidator(),
             UnrecognizedLineValidator(),
         ]
