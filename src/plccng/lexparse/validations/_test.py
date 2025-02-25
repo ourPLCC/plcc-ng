@@ -1,13 +1,14 @@
 from plccng.lineparse import Line
 
-from .DuplicateNameError import DuplicateNameError
-from .InvalidNameFormatError import InvalidNameFormatError
-from .InvalidPatternError import InvalidPatternError
-from .LexicalRule import LexicalRule
-from .validations import validate_lexical_spec
-from .LexicalSpec import LexicalSpec
+from ..LexicalRule import LexicalRule
+from ..LexicalSpec import LexicalSpec
 
-from .InvalidRuleError import InvalidRuleError
+from .DuplicateRuleName import DuplicateRuleName
+from .InvalidRuleName import InvalidRuleName
+from .InvalidRulePattern import InvalidRulePattern
+from .InvalidRule import InvalidRule
+
+from .validations import validate_lexical_spec
 
 def test_empty_no_errors():
     lexicalSpec = makeLexicalSpec([])
@@ -74,6 +75,7 @@ def test_multiple_errors_all_counted():
     lexicalSpec = makeLexicalSpec([validName, invalidName, duplicateName, line, invalidPattern])
     errors = validate_lexical_spec(lexicalSpec)
     assert len(errors) == 4
+
     assert errors[0] == makeInvalidNameFormatError(invalidName)
     assert errors[1] == makeDuplicateNameError(duplicateName)
     assert errors[2] == makeInvalidRuleError(line)
@@ -100,16 +102,16 @@ def makeLexicalSpecWithTwoTokenRules(name1, name2):
     return lexicalSpec
 
 def makeInvalidNameFormatError(rule):
-    return InvalidNameFormatError(rule=rule)
+    return InvalidRuleName(rule=rule)
 
 def makeDuplicateNameError(rule):
-    return DuplicateNameError(rule=rule)
+    return DuplicateRuleName(rule=rule)
 
 def makeInvalidPatternError(rule):
-    return InvalidPatternError(rule=rule)
+    return InvalidRulePattern(rule=rule)
 
 def makeInvalidRuleError(line):
-    return InvalidRuleError(line=line)
+    return InvalidRule(line=line)
 
 def assertInvalidName(givenName: str):
     lexicalSpec = makeLexicalSpecWithOneTokenRule(name=givenName)
