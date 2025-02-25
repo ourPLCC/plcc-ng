@@ -7,12 +7,12 @@ from .LexicalSpec import LexicalSpec
 from .LexicalRule import LexicalRule
 
 
-def from_string(string, file=None, startLineNumber=1):
+def fromstring(string, file=None, startLineNumber=1):
     rough = roughparse.fromstring(string, file=file, startLineNumber=startLineNumber)
-    return from_lines(rough)
+    return fromlines(rough)
 
 
-def from_lines(lines):
+def fromlines(lines):
     return LexicalParser(lines).parseLexicalSpec()
 
 

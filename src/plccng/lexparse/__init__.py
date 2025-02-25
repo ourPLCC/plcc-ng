@@ -6,5 +6,5 @@ from .LexicalRule import LexicalRule
 from .lexvalidate.UnrecognizedLineValidator import (
     UnrecognizedLine,
 )
-from .parse_lexical_spec import from_string
-from .parse_lexical_spec import from_lines
+from .lexparse import fromstring
+from .lexparse import fromlines

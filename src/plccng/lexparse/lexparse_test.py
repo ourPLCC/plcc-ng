@@ -1,5 +1,5 @@
 from plccng.lineparse import Line
-from .parse_lexical_spec import from_string
+from .lexparse import fromstring
 
 
 def test_None_yields_nothing():
@@ -77,12 +77,12 @@ def test_starting_whitespace_is_ignored():
 
 
 def assertIsEmpty(string):
-    lexical_spec = from_string(string)
+    lexical_spec = fromstring(string)
     assert lexical_spec.ruleList == []
 
 
 def assertIsRule(string, isSkip, name, pattern):
-    spec = from_string(string)
+    spec = fromstring(string)
     rule = spec.ruleList[0]
     assert rule.line is not None
     assert rule.isSkip == isSkip
@@ -91,4 +91,4 @@ def assertIsRule(string, isSkip, name, pattern):
 
 
 def assertIsLine(string):
-    assert isinstance(from_string(string).ruleList[0], Line)
+    assert isinstance(fromstring(string).ruleList[0], Line)

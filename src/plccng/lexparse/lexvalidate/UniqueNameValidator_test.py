@@ -1,5 +1,5 @@
 from types import NoneType
-from .. import parse_lexical_spec
+from .. import lexparse
 from .UniqueNameValidator import UniqueNameValidator, DuplicateName
 
 
@@ -87,7 +87,7 @@ def assertDetectsDuplicate(string):
 
 
 def assertResults(string, expectedResults):
-    spec = parse_lexical_spec.from_string(string)
+    spec = lexparse.fromstring(string)
     assert len(spec.ruleList) == len(expectedResults)
     pairs = zip(spec.ruleList, expectedResults)
     v = UniqueNameValidator()
