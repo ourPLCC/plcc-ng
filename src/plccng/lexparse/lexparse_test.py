@@ -1,5 +1,5 @@
 from plccng.lineparse import Line
-from .lexparse import fromstring
+from .lexparse import fromstring, LexicalRule
 
 
 def test_None_yields_nothing():
@@ -58,6 +58,14 @@ def test_trailing_comment():
     )
 
 
+def test_pattern_may_contain_space():
+    assertIsRule("MINUS ' '",
+        isSkip=False,
+        name='MINUS',
+        pattern=' '
+    )
+
+
 def test_non_rules_are_passed_through():
     assertIsLine('This line is complete gibberish please ignore')
 
@@ -84,6 +92,7 @@ def assertIsEmpty(string):
 def assertIsRule(string, isSkip, name, pattern):
     spec = fromstring(string)
     rule = spec.ruleList[0]
+    assert isinstance(rule, LexicalRule)
     assert rule.line is not None
     assert rule.isSkip == isSkip
     assert rule.name == name

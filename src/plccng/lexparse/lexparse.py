@@ -20,9 +20,10 @@ class LexicalParser():
     def __init__(self, lines):
         self.lines = lines
         self.patterns = {
-            'skipToken' : re.compile(r'^\s*skip\s+(?P<Name>\S+)\s+(?P<Pattern>((\'\S+\')|(\"\S+\")))\s*(?:#.*)*$'),
-            'tokenToken' : re.compile(r'^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<Pattern>((\'\S+\')|(\"\S+\")))\s*(?:#.*)*$')
+            'skipToken' : re.compile(r'''^\s*skip\s+(?P<Name>\S+)\s+(?P<Pattern>((?:'(?:\\.|[^'\\])*')|(?:"(?:\\.|[^"\\])*")))\s*(?:#.*)*$'''),
+            'tokenToken' : re.compile(r'''^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<Pattern>((?:'(?:\\.|[^'\\])*')|(?:"(?:\\.|[^"\\])*")))\s*(?:#.*)*$''')
         }
+
         self.spec = LexicalSpec([])
 
     def parseLexicalSpec(self):
@@ -65,6 +66,4 @@ class LexicalParser():
         return newTokenRule
 
     def _stripQuotes(self, pattern: str) -> str:
-        pattern = pattern.strip('\'')
-        pattern = pattern.strip('\"')
-        return pattern
+        return pattern[1:-1]
