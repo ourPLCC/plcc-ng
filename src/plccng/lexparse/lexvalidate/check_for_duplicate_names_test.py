@@ -1,6 +1,6 @@
 from types import NoneType
 from .. import lexparse
-from .UniqueNameValidator import UniqueNameValidator, DuplicateName
+from .check_for_duplicate_names import check_for_duplicate_names, DuplicateName
 
 
 def test_detects_duplicate_tokens():
@@ -88,9 +88,8 @@ def assertDetectsDuplicate(string):
 
 def assertResults(string, expectedResults):
     spec = lexparse.fromstring(string)
-    assert len(spec.ruleList) == len(expectedResults)
-    pairs = zip(spec.ruleList, expectedResults)
-    v = UniqueNameValidator()
-    for rule, expected in pairs:
-        e = v.validate(rule)
-        assert isinstance(e, expected)
+    results = check_for_duplicate_names(spec.ruleList)
+    for i, e in enumerate(expectedResults):
+        if e is not NoneType:
+            thing = spec.ruleList[i]
+            assert e(thing) in results

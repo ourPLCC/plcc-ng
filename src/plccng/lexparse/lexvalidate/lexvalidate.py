@@ -1,33 +1,17 @@
 from ..LexicalSpec import LexicalSpec
 
-from .NameValidator import NameValidator
-from .UniqueNameValidator import UniqueNameValidator
-from .PatternValidator import PatternValidator
-from .UnrecognizedLineValidator import UnrecognizedLineValidator
+from .check_for_duplicate_names import check_for_duplicate_names
+from .check_for_unrecognized_lines import check_for_unrecognized_lines
+from .check_format_of_names import check_format_of_names
+from .check_format_of_patterns import check_format_of_patterns
+
 
 def lexvalidate(lexicalSpec: LexicalSpec):
-    return LexicalValidator(lexicalSpec).validate()
-
-class LexicalValidator:
-    def __init__(self, lexicalSpec: LexicalSpec):
-        self.lexicalSpec = lexicalSpec
-        self.errorList = []
-        self.validators = [
-            UniqueNameValidator(),
-            NameValidator(),
-            PatternValidator(),
-            UnrecognizedLineValidator(),
-        ]
-
-    def validate(self) -> list:
-        if not self.lexicalSpec.ruleList:
-            return []
-        for rule in self.lexicalSpec.ruleList:
-            self._runValidators(rule)
-        return self.errorList
-
-    def _runValidators(self, rule_or_line):
-        for v in self.validators:
-            e = v.validate(rule_or_line)
-            if e:
-                self.errorList.append(e)
+    if not lexicalSpec.ruleList:
+        return []
+    errors = []
+    errors.extend(check_for_duplicate_names(lexicalSpec.ruleList))
+    errors.extend(check_format_of_names(lexicalSpec.ruleList))
+    errors.extend(check_format_of_patterns(lexicalSpec.ruleList))
+    errors.extend(check_for_unrecognized_lines(lexicalSpec.ruleList))
+    return errors

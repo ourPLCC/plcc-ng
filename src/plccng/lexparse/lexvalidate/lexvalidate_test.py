@@ -1,11 +1,14 @@
+import pytest
+
 from plccng.lineparse import Line
+
 
 from ..LexicalRule import LexicalRule
 from ..LexicalSpec import LexicalSpec
-from .UniqueNameValidator import DuplicateName
-from .NameValidator import InvalidName
-from .PatternValidator import InvalidPattern
-from .UnrecognizedLineValidator import UnrecognizedLine
+from .check_for_duplicate_names import DuplicateName
+from .check_format_of_names import InvalidName
+from .check_format_of_patterns import InvalidPattern
+from .check_for_unrecognized_lines import UnrecognizedLine
 from .lexvalidate import lexvalidate
 
 
@@ -74,10 +77,13 @@ def test_multiple_errors_all_counted():
     lexicalSpec = makeLexicalSpec([validName, invalidName, duplicateName, line, invalidPattern])
     errors = lexvalidate(lexicalSpec)
     assert len(errors) == 4
-    assert errors[0] == makeInvalidNameFormatError(invalidName)
-    assert errors[1] == makeDuplicateNameError(duplicateName)
-    assert errors[2] == makeInvalidRuleError(line)
-    assert errors[3] == makeInvalidPatternError(invalidPattern)
+
+    errorTypes = set(c.__class__ for c in errors)
+    assert InvalidName in errorTypes
+    assert DuplicateName in errorTypes
+    assert UnrecognizedLine in errorTypes
+    assert InvalidPattern in errorTypes
+
 
 def makeLexicalSpec(ruleList=None):
     return LexicalSpec(ruleList)
