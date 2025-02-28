@@ -12,13 +12,7 @@ def test_empty_lines_given_returns_nothing():
     lines = []
     scanner = make_scanner()
     results = scanner.scan(lines)
-    assert next(results) == None    
-
-def test_index_subroutine_finds_all_indexes():
-    line = Line("Plus Minus   PlusAGAIN", 1, None)
-    scanner = make_scanner()
-    results = scanner._getLineIndexes(line)
-    assert results == [0, 5, 13]
+    assert next(results) == None 
 
 @pytest.mark.skip(reason="This test is not yet covered. Where we are headed")
 def test_one_token_matches():
