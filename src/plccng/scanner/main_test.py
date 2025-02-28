@@ -3,10 +3,19 @@ from .main import Main
 from .main_help_message import helpMessage
 import io
 
-def test_help_command(capfd):
+def test_help_command_short_option_prints_and_exits(capfd):
     argv = ["-h"]
     main = Main(build_scanner(), None)
-    main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == helpMessage + "\n"
+
+def test_help_command_long_option_prints_and_exits(capfd):
+    argv = ["--help"]
+    main = Main(build_scanner(), None)
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
     assert captured.out == helpMessage + "\n"
 
@@ -25,7 +34,6 @@ def test_read_specfile_and_build_matcher_spec(tmp_path):
 def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', 'input1', 'input2']
-
     main = Main(build_scanner(), Source([]))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ["input1", "input2"]
@@ -45,6 +53,15 @@ def test_stdin_pass_to_source_after_input_file(tmp_path):
     main = Main(build_scanner(), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ["input1", "input2", '-']
+
+def test_help_command_exits_before_matcher_spec_is_built(capfd, tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = ["--help", f'--spec={specfile}']
+    main = Main(build_scanner(), Source([]))
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == helpMessage + "\n"
 
 def build_specfile(tmp_path):
     specfile = tmp_path / "specfile.json"
