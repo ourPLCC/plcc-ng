@@ -12,7 +12,7 @@ def test_help_command(capfd):
 
 def test_read_specfile_and_build_matcher_spec(tmp_path):
     specfile = build_specfile(tmp_path)
-    argv = [f'--specfile={specfile}']
+    argv = [f'--spec={specfile}']
 
     main = Main(build_scanner(), None)
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
@@ -24,7 +24,7 @@ def test_read_specfile_and_build_matcher_spec(tmp_path):
 
 def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
-    argv = [f'--specfile={specfile}', 'input1', 'input2']
+    argv = [f'--spec={specfile}', 'input1', 'input2']
 
     main = Main(build_scanner(), Source([]))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
@@ -32,7 +32,7 @@ def test_read_input_file_and_pass_to_source(tmp_path):
 
 def test_stdin_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
-    argv = [f'--specfile={specfile}']
+    argv = [f'--spec={specfile}']
     stdin = io.StringIO('123      45')
     main = Main(build_scanner(), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)
@@ -40,7 +40,7 @@ def test_stdin_pass_to_source(tmp_path):
 
 def test_stdin_pass_to_source_after_input_file(tmp_path):
     specfile = build_specfile(tmp_path)
-    argv = [f'--specfile={specfile}', 'input1', 'input2']
+    argv = [f'--spec={specfile}', 'input1', 'input2']
     stdin = io.StringIO('123      45')
     main = Main(build_scanner(), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)

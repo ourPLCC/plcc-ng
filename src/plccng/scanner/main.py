@@ -1,11 +1,11 @@
 """
 Usage:
-    scanner --specfile=<specfile> [<file> ...]
+    scanner --spec=<specfile> [<file> ...]
     scanner (-h | --help)
 
 Options:
     -h --help  Show this screen.
-    --specfile=<specfile>
+    --spec=<specfile>
 
 """
 
@@ -24,7 +24,7 @@ class Main:
         if args["--help"]:
             print(helpMessage)
 
-        if args["--specfile"]:
+        if args["--spec"]:
             self._buildMatcherSpecFromSpecfile(args)
 
         if args["<file>"]:
@@ -36,7 +36,7 @@ class Main:
             self._addStdinInputFileNameToSourceFiles()
 
     def _buildMatcherSpecFromSpecfile(self, args):
-        with open(args["--specfile"], "r") as file:
+        with open(args["--spec"], "r") as file:
                 data = json.load(file)
                 self.scanner.matcher.spec = data
 
