@@ -1,3 +1,5 @@
+import pytest
+
 from plccng.lineparse import Line
 from .lexparse import fromstring, LexicalRule
 
@@ -26,6 +28,7 @@ def test_comment_only_lines_skipped():
     )
 
 
+@pytest.mark.focus
 def test_skip_rule():
     assertIsRule("skip WHITESPACE ','",
         isSkip=True,

@@ -20,8 +20,8 @@ class LexicalParser():
     def __init__(self, lines):
         self.lines = lines
         self.patterns = {
-            'skipToken' : re.compile(r'''^\s*skip\s+(?P<Name>\S+)\s+(?P<Pattern>((?:'(?:\\.|[^'\\])*')|(?:"(?:\\.|[^"\\])*")))\s*(?:#.*)*$'''),
-            'tokenToken' : re.compile(r'''^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<Pattern>((?:'(?:\\.|[^'\\])*')|(?:"(?:\\.|[^"\\])*")))\s*(?:#.*)*$''')
+            'skipToken' : re.compile(r'''^\s*skip\s+(?P<Name>\S+)\s+(?P<q>\S)(?P<Pattern>(?:(?!=q).)*)(?P=q)\s*(?:#.*)*$'''),
+            'tokenToken' : re.compile(r'''^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<q>\S)(?P<Pattern>(?:(?!=q).)*)(?P=q)\s*(?:#.*)*$''')
         }
 
         self.spec = LexicalSpec([])
@@ -56,14 +56,9 @@ class LexicalParser():
         return isSkipToken, isRegularToken
 
     def _generateSkipToken(self, line: Line, name: str, pattern: str) -> LexicalRule:
-        pattern = self._stripQuotes(pattern)
         newSkipRule = LexicalRule(line=line, isSkip=True, name=name, pattern=pattern)
         return newSkipRule
 
     def _generateRegularToken(self, line: Line, name: str, pattern: str) -> LexicalRule:
-        pattern = self._stripQuotes(pattern)
         newTokenRule = LexicalRule(line=line, isSkip=False, name=name, pattern=pattern)
         return newTokenRule
-
-    def _stripQuotes(self, pattern: str) -> str:
-        return pattern[1:-1]
