@@ -1,7 +1,8 @@
 import pytest
 
 from plccng.lineparse import Line
-from .lexparse import fromstring, LexicalRule
+from .LexicalRule import LexicalRule
+from .lexparse import from_string
 
 
 def test_None_yields_nothing():
@@ -88,12 +89,12 @@ def test_starting_whitespace_is_ignored():
 
 
 def assertIsEmpty(string):
-    lexical_spec = fromstring(string)
-    assert lexical_spec.ruleList == []
+    spec, errors = from_string(string)
+    assert spec.ruleList == []
 
 
 def assertIsRule(string, isSkip, name, pattern):
-    spec = fromstring(string)
+    spec, errors = from_string(string)
     rule = spec.ruleList[0]
     assert isinstance(rule, LexicalRule)
     assert rule.line is not None
@@ -103,4 +104,5 @@ def assertIsRule(string, isSkip, name, pattern):
 
 
 def assertIsLine(string):
-    assert isinstance(fromstring(string).ruleList[0], Line)
+    spec, errors = from_string(string)
+    assert isinstance(spec.ruleList[0], Line)

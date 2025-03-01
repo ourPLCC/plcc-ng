@@ -1,7 +1,4 @@
-from plccng.lineparse import Line
-
 from .. import lexparse
-from ..LexicalRule import LexicalRule
 from ..LexicalSpec import LexicalSpec
 from .check_for_duplicate_names import DuplicateName
 from .check_format_of_names import InvalidName
@@ -23,7 +20,7 @@ def test_None_no_errors():
 
 
 def test_multiple_errors_all_counted():
-    spec = lexparse.fromstring('''
+    spec = lexparse._from_string_without_validation('''
 
         token NAME          '\w+'   # Valid rule.
         token BAD-NAME      '\w+'   # Invalid name: hyphens not allowed.
