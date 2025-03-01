@@ -1,4 +1,3 @@
-from types import NoneType
 from .. import lexparse
 from .check_format_of_names import check_format_of_names, InvalidName
 
