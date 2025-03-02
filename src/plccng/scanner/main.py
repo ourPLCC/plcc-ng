@@ -27,7 +27,7 @@ class Main:
             sys.exit(0)
 
         if args["--spec"]:
-            self._buildMatcherSpecFromSpecfile(args)
+            self._buildMatcherSpecFromSpecfile(args["--spec"])
 
         if args["<file>"]:
             for file in args["<file>"]:
@@ -41,10 +41,10 @@ class Main:
             # self._makeFileForStdinContents(stdin)
 
 
-    def _buildMatcherSpecFromSpecfile(self, args):
-        with open(args["--spec"], "r") as file:
-                data = json.load(file)
-                self.scanner.matcher.spec = data
+    def _buildMatcherSpecFromSpecfile(self, filePath):
+        with open(filePath, "r") as file:
+            data = json.load(file)
+            self.scanner.matcher.spec = data
 
     # def _makeFileForStdinContents(self, stdin):
     #     contents = stdin.read()
