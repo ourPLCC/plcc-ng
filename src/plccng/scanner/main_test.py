@@ -5,7 +5,7 @@ import io
 
 def test_help_command_short_option_prints_and_exits(capfd):
     argv = ["-h"]
-    main = Main(build_scanner(), None)
+    main = Main(Scanner(Matcher(None)), None)
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
@@ -13,7 +13,7 @@ def test_help_command_short_option_prints_and_exits(capfd):
 
 def test_help_command_long_option_prints_and_exits(capfd):
     argv = ["--help"]
-    main = Main(build_scanner(), None)
+    main = Main(Scanner(Matcher(None)), None)
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
@@ -23,7 +23,7 @@ def test_read_specfile_and_build_matcher_spec(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}']
 
-    main = Main(build_scanner(), None)
+    main = Main(Scanner(Matcher(None)), None)
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
 
     assert len(main.scanner.matcher.spec) == 4
@@ -33,7 +33,7 @@ def test_read_specfile_and_build_matcher_spec(tmp_path):
 
 def test_missing_specfile_argument_prints_error_message_and_exits(capfd):
     argv = ['f1', 'f2']
-    main = Main(build_scanner(), None)
+    main = Main(Scanner(Matcher(None)), None)
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
@@ -41,7 +41,7 @@ def test_missing_specfile_argument_prints_error_message_and_exits(capfd):
 
 def test_no_arguments_prints_error_message_and_exits(capfd):
     argv = []
-    main = Main(build_scanner(), None)
+    main = Main(Scanner(Matcher(None)), None)
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
@@ -50,7 +50,7 @@ def test_no_arguments_prints_error_message_and_exits(capfd):
 def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', 'f1', 'f2']
-    main = Main(build_scanner(), Source([]))
+    main = Main(Scanner(Matcher(None)), Source([]))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ['f1', 'f2']
 
@@ -58,7 +58,7 @@ def test_stdin_pass_to_source(tmp_path): #TODO: make sure main.source.files read
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', '-']
     stdin = io.StringIO('123      45')
-    main = Main(build_scanner(), Source([]))
+    main = Main(Scanner(Matcher(None)), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ['-']
 
@@ -66,14 +66,14 @@ def test_stdin_pass_to_source_after_input_file(tmp_path): #TODO: make sure main.
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', 'f1', 'f2', '-']
     stdin = io.StringIO('123      45')
-    main = Main(build_scanner(), Source([]))
+    main = Main(Scanner(Matcher(None)), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ['f1', 'f2', '-']
 
 def test_help_command_prints_and_exits_before_matcher_spec_is_built(capfd, tmp_path):
     specfile = build_specfile(tmp_path)
     argv = ["--help", f'--spec={specfile}']
-    main = Main(build_scanner(), Source([]))
+    main = Main(Scanner(Matcher(None)), Source([]))
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
@@ -82,7 +82,7 @@ def test_help_command_prints_and_exits_before_matcher_spec_is_built(capfd, tmp_p
 
 def test_help_command_prints_and_exits_before_source_files_added(capfd):
     argv = ["--help", 'f1']
-    main = Main(build_scanner(), Source([]))
+    main = Main(Scanner(Matcher(None)), Source([]))
     stdin = io.StringIO('123      45')
     with pytest.raises(SystemExit):
         main.run(stdin=stdin, stdout=None, stderr=None, argv=argv)
@@ -120,11 +120,6 @@ def build_specfile(tmp_path):
         f.write(file_content)
 
     return specfile
-
-def build_scanner():
-    matcher = Matcher(None)
-    return Scanner(matcher)
-
 
 class Scanner:
     def __init__(self, matcher):
