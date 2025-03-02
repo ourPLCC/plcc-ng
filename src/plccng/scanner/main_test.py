@@ -31,6 +31,14 @@ def test_read_specfile_and_build_matcher_spec(tmp_path):
     assert main.scanner.matcher.spec[1]['regex'] == '\\s+'
     assert main.scanner.matcher.spec[2]['name'] == 'ONETWOTHREE'
 
+def test_missing_specfile_argument_prints_error_message_and_exits(capfd):
+    argv = []
+    main = Main(build_scanner(), None)
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == "Missing --spec argument\n"
+
 def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', 'input1', 'input2']
@@ -38,23 +46,23 @@ def test_read_input_file_and_pass_to_source(tmp_path):
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ["input1", "input2"]
 
-def test_stdin_pass_to_source(tmp_path):
+def test_stdin_pass_to_source(tmp_path): #TODO: make sure main.source.files reads in order specified in argv
     specfile = build_specfile(tmp_path)
-    argv = [f'--spec={specfile}']
+    argv = [f'--spec={specfile}', '-']
     stdin = io.StringIO('123      45')
     main = Main(build_scanner(), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ['-']
 
-def test_stdin_pass_to_source_after_input_file(tmp_path):
+def test_stdin_pass_to_source_after_input_file(tmp_path): #TODO: make sure main.source.files reads in order specified in argv
     specfile = build_specfile(tmp_path)
-    argv = [f'--spec={specfile}', 'input1', 'input2']
+    argv = [f'--spec={specfile}', 'input1', 'input2', '-']
     stdin = io.StringIO('123      45')
     main = Main(build_scanner(), Source([]))
     main.run(stdin, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ["input1", "input2", '-']
 
-def test_help_command_exits_before_matcher_spec_is_built(capfd, tmp_path):
+def test_help_command_prints_and_exits_before_matcher_spec_is_built(capfd, tmp_path):
     specfile = build_specfile(tmp_path)
     argv = ["--help", f'--spec={specfile}']
     main = Main(build_scanner(), Source([]))
@@ -62,6 +70,17 @@ def test_help_command_exits_before_matcher_spec_is_built(capfd, tmp_path):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
     assert captured.out == helpMessage + "\n"
+    assert main.scanner.matcher.spec == None
+
+def test_help_command_prints_and_exits_before_source_files_added(capfd):
+    argv = ["--help", 'input1']
+    main = Main(build_scanner(), Source([]))
+    stdin = io.StringIO('123      45')
+    with pytest.raises(SystemExit):
+        main.run(stdin=stdin, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == helpMessage + "\n"
+    assert main.source.files == []
 
 def build_specfile(tmp_path):
     specfile = tmp_path / "specfile.json"

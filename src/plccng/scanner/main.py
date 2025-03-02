@@ -2,7 +2,8 @@
 Usage:
     scanner --spec=<specfile> [<file> ...]
     scanner (-h | --help)
-    scanner (-h | --help) --spec=<specfile> [<file> ...]
+    scanner (-h | --help) [--spec=<specfile>] [<file> ...]
+    scanner [--spec=<specfile>] [<file> ...]
 
 Options:
     -h --help  Show this screen.
@@ -24,19 +25,17 @@ class Main:
         args = docopt(__doc__, argv, default_help=False)
         if args["--help"]:
             print(helpMessage)
-            sys.exit(0)
+            sys.exit()
 
         if args["--spec"]:
             self._buildMatcherSpecFromSpecfile(args["--spec"])
 
-        if args["<file>"]:
-            for file in args["<file>"]:
-                self.source.files.append(file)
-
-        if stdin:
-            self._addStdinInputFileNameToSourceFiles()
-
-
+            if args["<file>"]:
+                for file in args["<file>"]:
+                    self.source.files.append(file)
+        else:
+            print("Missing --spec argument")
+            sys.exit()
 
             # self._makeFileForStdinContents(stdin)
 
@@ -51,7 +50,5 @@ class Main:
     #     with open("-", "w") as file:
     #         file.write(contents)
 
-    def _addStdinInputFileNameToSourceFiles(self):
-        self.source.files.append("-")
 
 
