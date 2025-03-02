@@ -19,17 +19,23 @@ def test_help_command_long_option_prints_and_exits(capfd):
     captured = capfd.readouterr()
     assert captured.out == helpMessage + "\n"
 
-def test_read_specfile_and_build_matcher_spec(tmp_path):
+def test_read_specfile_builds_matcher_spec(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}']
-
-    main = Main(Scanner(Matcher(None)), None)
+    main = Main(Scanner(Matcher(None)), Source([]))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
 
     assert len(main.scanner.matcher.spec) == 4
     assert main.scanner.matcher.spec[0]['type'] == 'Token'
     assert main.scanner.matcher.spec[1]['regex'] == '\\s+'
     assert main.scanner.matcher.spec[2]['name'] == 'ONETWOTHREE'
+
+def test_read_specfile_adds_stdin_file_path_to_source(tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = [f'--spec={specfile}']
+    main = Main(Scanner(Matcher(None)), Source([]))
+    main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    assert main.source.files == ["-"]
 
 def test_missing_specfile_argument_prints_error_message_and_exits(capfd):
     argv = ['f1', 'f2']
@@ -54,7 +60,7 @@ def test_read_input_file_and_pass_to_source(tmp_path):
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ['f1', 'f2']
 
-def test_stdin_pass_to_source(tmp_path): #TODO: make sure main.source.files reads in order specified in argv
+def test_stdin_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', '-']
     stdin = io.StringIO('123      45')
@@ -62,7 +68,7 @@ def test_stdin_pass_to_source(tmp_path): #TODO: make sure main.source.files read
     main.run(stdin, stdout=None, stderr=None, argv=argv)
     assert main.source.files == ['-']
 
-def test_stdin_pass_to_source_after_input_file(tmp_path): #TODO: make sure main.source.files reads in order specified in argv
+def test_stdin_pass_to_source_after_input_file(tmp_path):
     specfile = build_specfile(tmp_path)
     argv = [f'--spec={specfile}', 'f1', 'f2', '-']
     stdin = io.StringIO('123      45')

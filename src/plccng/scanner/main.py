@@ -31,8 +31,10 @@ class Main:
             self._buildMatcherSpecFromSpecfile(args["--spec"])
 
             if args["<file>"]:
-                for file in args["<file>"]:
-                    self.source.files.append(file)
+                self._appendSourceFiles(args["<file>"])
+            else:
+                self.source.files.append("-")
+
         else:
             print("Missing --spec argument")
             sys.exit()
@@ -44,6 +46,10 @@ class Main:
         with open(filePath, "r") as file:
             data = json.load(file)
             self.scanner.matcher.spec = data
+
+    def _appendSourceFiles(self, filePaths):
+        for filePath in filePaths:
+            self.source.files.append(filePath)
 
     # def _makeFileForStdinContents(self, stdin):
     #     contents = stdin.read()
