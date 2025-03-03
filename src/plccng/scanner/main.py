@@ -39,8 +39,7 @@ class Main:
             print("Missing --spec argument")
             sys.exit()
 
-            # self._makeFileForStdinContents(stdin)
-
+        self.scanner.scan(list(self.source))
 
     def _buildMatcherSpecFromSpecfile(self, filePath):
         with open(filePath, "r") as file:
@@ -50,11 +49,3 @@ class Main:
     def _appendSourceFiles(self, filePaths):
         for filePath in filePaths:
             self.source.files.append(filePath)
-
-    # def _makeFileForStdinContents(self, stdin):
-    #     contents = stdin.read()
-    #     with open("-", "w") as file:
-    #         file.write(contents)
-
-
-
