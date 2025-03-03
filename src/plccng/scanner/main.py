@@ -2,8 +2,6 @@
 Usage:
     scanner --spec=<specfile> [<file> ...]
     scanner (-h | --help)
-    scanner (-h | --help) [--spec=<specfile>] [<file> ...]
-    scanner [--spec=<specfile>] [<file> ...]
 
 Options:
     -h --help  Show this screen.
@@ -65,7 +63,7 @@ LexError Format:
     }
 """
 
-from docopt import docopt
+from docopt import docopt, DocoptExit
 import sys
 import json
 
@@ -75,8 +73,11 @@ class Main:
         self.source = source
 
     def run(self, stdin, stdout, stderr, argv):
-        args = docopt(__doc__, argv)
-
+        try:
+            args = docopt(__doc__, argv)
+        except DocoptExit as e:
+            print("Missing --spec argument")
+            sys.exit()
 
         if args["--spec"]:
             self._buildMatcherSpecFromSpecfile(args["--spec"])
@@ -85,10 +86,6 @@ class Main:
                 self._appendSourceFiles(args["<file>"])
             else:
                 self.source.files.append("-")
-
-        else:
-            print("Missing --spec argument")
-            sys.exit()
 
         self.scanner.scan(list(self.source))
 
