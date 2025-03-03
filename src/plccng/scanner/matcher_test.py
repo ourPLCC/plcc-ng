@@ -1,7 +1,9 @@
+from plccng.lineparse import Line
+from .Skip import Skip
+from .Token import Token
+from .LexError import LexError
 
-from ..structs import Line, LexError, Skip, Token
-
-from plccng.scanner.matcher import matcher
+from . import matcher
 
 
 def test_empty_line():
@@ -12,13 +14,13 @@ def test_empty_line():
             "regex": "-"
         }
     ])
-    line = Line(text="", file=None, number = 1)
+    line = Line(string="", file=None, number = 1)
     result = matcher.match(line = line, index = 0)
     assert result == LexError(line=line, column = 1)
 
 def test_empty_spec():
     matcher = make_matcher(spec = [])
-    line = Line(text="This is a test", file=None, number=1)
+    line = Line(string="This is a test", file=None, number=1)
     result = matcher.match(line = line, index = 0)
     assert result == LexError(line=line, column=1)
 
@@ -30,7 +32,7 @@ def test_match_rule():
             "regex": "-"
         }
     ])
-    line = Line(text="-", file=None, number=1)
+    line = Line(string="-", file=None, number=1)
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="-", name="MINUS", column=1)
 
@@ -47,7 +49,7 @@ def test_match_first_rule():
             "regex": "\\d+"
         }
     ])
-    line = Line(text="113--", file=None, number=1)
+    line = Line(string="113--", file=None, number=1)
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="113", name="NUMBER", column=3)
 
@@ -64,7 +66,7 @@ def test_match_skip_rule():
             "regex": "\\s+"
         }
     ])
-    line = Line(text="   555", file=None, number=1)
+    line = Line(string="   555", file=None, number=1)
     result = matcher.match(line=line, index=0)
     assert result == Skip(lexeme="   ", name="WHITESPACE", column=4)
 
@@ -81,7 +83,7 @@ def test_match_longest_rule():
             "regex": "123"
         }
     ])
-    line = Line(text="1235564", file=None, number=1)
+    line = Line(string="1235564", file=None, number=1)
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="1235564", name="NUMBER", column=7)
 
@@ -98,7 +100,7 @@ def test_match_first_longest_rule():
             "regex": "\\d+"
         }
     ])
-    line = Line(text="123", file=None, number=1)
+    line = Line(string="123", file=None, number=1)
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="123", name = "ONETWOTHREE", column=3)
 
@@ -115,7 +117,7 @@ def test_match_later_index():
             "regex": "\\d+"
         }
     ])
-    line = Line(text="123456789", file=None, number=1)
+    line = Line(string="123456789", file=None, number=1)
     result = matcher.match(line=line, index=3)
     assert result == Token(lexeme="456789", name = "NUMBER", column=9)
 
@@ -126,4 +128,3 @@ def test_match_later_index():
 def make_matcher(spec):
     my_matcher = matcher.Matcher(spec)
     return my_matcher
-

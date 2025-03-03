@@ -1,4 +1,6 @@
-from ..structs import LexError, Skip, Token
+from .Token import Token
+from .LexError import LexError
+from .Skip import Skip
 import re
 
 class Matcher:
@@ -9,7 +11,7 @@ class Matcher:
         patterns = self.compile_regex()
         matches = []
         for pattern in patterns:
-            test_match = re.match(pattern[0], line.text[index: ])
+            test_match = re.match(pattern[0], line.string[index: ])
             if(test_match and pattern[1] == "Skip"):
                 return Skip(lexeme = test_match.group(), name=pattern[2], column=test_match.end()+1)
             elif(test_match and pattern[1] == "Token"):
@@ -36,4 +38,3 @@ class Matcher:
                 if (len(match_list[i].lexeme) > len(longest.lexeme)):
                     longest = match_list[i]
             return longest
-
