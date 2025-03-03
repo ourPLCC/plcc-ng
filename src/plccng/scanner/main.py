@@ -75,7 +75,7 @@ class Main:
     def run(self, stdin, stdout, stderr, argv):
         try:
             args = docopt(__doc__, argv)
-        except DocoptExit as e:
+        except DocoptExit:
             print("Missing --spec argument")
             sys.exit()
 
