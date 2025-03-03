@@ -1,6 +1,6 @@
 import pytest
 from .main import Main
-from .main_help_message import helpMessage
+from .main import __doc__ as helpMessage
 import io
 
 def test_help_command_short_option_prints_and_exits(capfd):
@@ -9,7 +9,7 @@ def test_help_command_short_option_prints_and_exits(capfd):
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
-    assert captured.out == helpMessage + "\n"
+    assert captured.out.strip() == helpMessage.strip()
 
 def test_help_command_long_option_prints_and_exits(capfd):
     argv = ["--help"]
@@ -17,7 +17,7 @@ def test_help_command_long_option_prints_and_exits(capfd):
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
-    assert captured.out == helpMessage + "\n"
+    assert captured.out.strip() == helpMessage.strip()
 
 def test_read_specfile_builds_matcher_spec(tmp_path):
     specfile = build_specfile(tmp_path)
@@ -83,7 +83,7 @@ def test_help_command_prints_and_exits_before_matcher_spec_is_built(capfd, tmp_p
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
-    assert captured.out == helpMessage + "\n"
+    assert captured.out.strip() == helpMessage.strip()
     assert main.scanner.matcher.spec == None
 
 def test_help_command_prints_and_exits_before_source_files_added(capfd):
@@ -92,7 +92,7 @@ def test_help_command_prints_and_exits_before_source_files_added(capfd):
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
-    assert captured.out == helpMessage + "\n"
+    assert captured.out.strip() == helpMessage.strip()
     assert main.source.files == []
 
 def test_scan_source_stdin(tmp_path):
