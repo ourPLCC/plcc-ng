@@ -82,10 +82,7 @@ class Main:
         if args["--spec"]:
             self._buildMatcherSpecFromSpecfile(args["--spec"])
 
-            if args["<file>"]:
-                self._appendSourceFiles(args["<file>"])
-            else:
-                self.source.files.append("-")
+            self._configureSourceFiles(args["<file>"])
 
         self.scanner.scan(list(self.source))
 
@@ -93,6 +90,12 @@ class Main:
         with open(filePath, "r") as file:
             data = json.load(file)
             self.scanner.matcher.spec = data
+
+    def _configureSourceFiles(self, filePaths):
+        if filePaths:
+            self._appendSourceFiles(filePaths)
+        else:
+            self.source.files.append("-")
 
     def _appendSourceFiles(self, filePaths):
         for filePath in filePaths:
