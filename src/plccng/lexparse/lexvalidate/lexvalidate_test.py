@@ -20,7 +20,7 @@ def test_None_no_errors():
 
 
 def test_multiple_errors_all_counted():
-    spec = lexparse._from_string_without_validation('''
+    spec = lexparse._from_string_without_validation(r'''
 
         token NAME          '\w+'   # Valid rule.
         token BAD-NAME      '\w+'   # Invalid name: hyphens not allowed.
