@@ -1,7 +1,6 @@
-from plccng.lineparse import Line
-
-
 from dataclasses import dataclass
+
+from ..specparse import Line
 
 
 @dataclass

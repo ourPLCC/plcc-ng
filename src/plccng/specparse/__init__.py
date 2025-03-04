@@ -1,3 +1,6 @@
+from .lineparse import (
+    Line
+)
 from .lexparse import (
     DuplicateName,
     InvalidName,

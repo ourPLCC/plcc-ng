@@ -1,4 +1,4 @@
-from plccng.lineparse import Line
+from ..specparse import Line
 from .Skip import Skip
 from .Token import Token
 from .LexError import LexError
