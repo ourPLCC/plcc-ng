@@ -18,7 +18,10 @@
 					"."
 				],
 				"python.testing.unittestEnabled": false,
-				"python.testing.pytestEnabled": true
+				"python.testing.pytestEnabled": true,
+				"python.analysis.extraPaths": [
+  					"/workspaces/plcc-ng/.venv/lib/python3.13/site-packages"
+			]
 			}
 		}
 	}
