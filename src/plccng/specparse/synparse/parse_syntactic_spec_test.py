@@ -2,8 +2,7 @@ from typing import List
 
 from pytest import raises
 
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from ..roughparse import fromlines
 from .CapturingTerminal import CapturingTerminal
 from .LhsNonTerminal import LhsNonTerminal

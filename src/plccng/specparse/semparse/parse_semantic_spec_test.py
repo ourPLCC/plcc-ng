@@ -1,9 +1,7 @@
 from pytest import raises
 
-from plccng.lineparse.Line import Line
-from ..roughparse import fromstring
-from ..roughparse import Divider
-
+from ..lineparse.Line import Line
+from ..roughparse import Divider, fromstring
 from .parse_semantic_spec import parse_code_fragments, parse_semantic_spec
 
 

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from ..roughparse import Block
-
 from .TargetLocator import TargetLocator
 
 
