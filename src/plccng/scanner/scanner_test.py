@@ -23,6 +23,15 @@ def test_Lex_Error_moves_on_to_next_line():
     check = next(results)
     assert isinstance(check, LexError) and check.line.text == 'this is a new line'
 
+def test_one_skip_matches():
+    lines = [Line(" ", 1, None)]
+    scanner = make_scanner()
+    results = scanner.scan(lines)
+    assert isinstance(next(results), Skip)
+
+#I am leaving these tests as skipped since I don't know how to write the tests for scanner without some Matcher.
+#Scanner shouldn't care about Matchers algorithm, but I think it matters in testing somewhat.
+#If I write these tests now with some placeholder, dummy algorithm I think I will have to rewrite them once Matcher is implemented.
 @pytest.mark.skip(reason="Old test, not sure if it is correctly written")
 def test_one_token_matches():
     lines = [Line("-", 1, None)]
@@ -31,15 +40,7 @@ def test_one_token_matches():
     assert isinstance(next(results), Token)
 
 @pytest.mark.skip(reason="Old test, not sure if it is correctly written")
-def test_one_skip_matches():
-    lines = [Line(" ", 1, None)]
-    scanner = make_scanner()
-    results = scanner.scan(lines)
-    assert isinstance(next(results), Skip)
-
-@pytest.mark.skip(reason="Old test, not sure if it is correctly written")
 def test_one_skip_and_one_token_yielded_in_correct_order():
-    #a is defined as token in scanner.py Matcher and " " after it is defined as a skip
     lines = [Line("a ", 1, None)]
     scanner = make_scanner()
     results = scanner.scan(lines)
@@ -52,10 +53,12 @@ def make_scanner():
     return scanner
 
 def make_matcher():
-    mock_speck = make_mock_spec
+    mock_speck = make_mock_spec()
     matcher = Matcher(mock_speck)
     return matcher
 
+#This mock speck is currently not in use, I am just passing a dummy spec for now
+#In the future it will be used in testing when a Matcher is implemented 
 def make_mock_spec():
     spec = [
         {
@@ -76,3 +79,14 @@ def makeLines(lines):
         line_objects.append(Line(text=line, file=None, number=1))
     return line_objects
 
+#Placeholder Matcher "algorithm" since Scanner does not care about the algorithm, it just cares that a LexError, Skip, or Token
+#is thrown. Scanner does not care about algorithm, but it does care about results.
+class Matcher:
+    def __init__(self, spec):
+        self.spec = spec
+    
+    def match(self, line, index):
+        if line.text[index] == " ":
+            return Skip(name="whitespace", lexeme=" ", line=line, column=index)
+        else:
+            return LexError(line=line, column=index)
