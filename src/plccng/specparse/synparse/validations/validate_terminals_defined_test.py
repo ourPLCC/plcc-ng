@@ -1,8 +1,7 @@
 from typing import List
 
-from plccng.lineparse import Line
-
 from ...lexparse import LexicalRule, LexicalSpec
+from ...lineparse import Line
 from ..CapturingTerminal import CapturingTerminal
 from ..LhsNonTerminal import LhsNonTerminal
 from ..RepeatingSyntacticRule import RepeatingSyntacticRule

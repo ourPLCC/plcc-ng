@@ -1,7 +1,6 @@
 import pytest
 
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from .LexicalRule import LexicalRule
 from .lexparse import from_string
 

@@ -1,7 +1,6 @@
 import re
 
 from ...ValidationError import ValidationError
-
 from ..DuplicateLhsError import DuplicateLhsError
 from ..InvalidLhsAltNameError import InvalidLhsAltNameError
 from ..InvalidLhsNameError import InvalidLhsNameError

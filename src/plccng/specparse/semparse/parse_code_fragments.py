@@ -1,5 +1,4 @@
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from ..roughparse import Block
 from .CodeFragment import CodeFragment
 from .parse_target_locator import parse_target_locator

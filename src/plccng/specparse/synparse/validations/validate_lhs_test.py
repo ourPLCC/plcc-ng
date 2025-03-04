@@ -1,7 +1,6 @@
 from typing import List
 
-from plccng.lineparse import Line
-
+from ...lineparse import Line
 from ..DuplicateLhsError import DuplicateLhsError
 from ..InvalidLhsAltNameError import InvalidLhsAltNameError
 from ..InvalidLhsNameError import InvalidLhsNameError

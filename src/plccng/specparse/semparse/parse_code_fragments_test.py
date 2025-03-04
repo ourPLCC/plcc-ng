@@ -1,8 +1,7 @@
 from pytest import raises
 
-from plccng.lineparse import Line
+from ..lineparse import Line
 from ..roughparse import fromstring
-
 from .CodeFragment import CodeFragment
 from .parse_code_fragments import parse_code_fragments
 from .TargetLocator import TargetLocator

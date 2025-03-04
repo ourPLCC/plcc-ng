@@ -2,8 +2,7 @@ import re
 from re import Match
 from typing import List
 
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from .CapturingSymbol import CapturingSymbol
 from .CapturingTerminal import CapturingTerminal
 from .LhsNonTerminal import LhsNonTerminal

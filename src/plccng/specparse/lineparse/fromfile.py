@@ -1,4 +1,4 @@
-from plccng.lineparse.fromstrings import fromstrings
+from ..lineparse.fromstrings import fromstrings
 
 
 def fromfile(file, startLineNumber=1):
