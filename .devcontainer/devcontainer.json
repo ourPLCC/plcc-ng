@@ -22,7 +22,15 @@
 				"python.analysis.extraPaths": [
   					"/workspaces/plcc-ng/.venv/lib/python3.13/site-packages"
 			]
-			}
+			},
+			"extensions": [
+				"charliermarsh.ruff",
+				"streetsidesoftware.code-spell-checker",
+				"ms-python.vscode-pylance",
+				"ms-python.python",
+				"ms-python.debugpy",
+				"DavidAnson.vscode-markdownlint"
+			]
 		}
 	}
 
