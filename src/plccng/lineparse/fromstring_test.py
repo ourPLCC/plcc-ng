@@ -1,5 +1,5 @@
-from .Line import Line
 from .fromstring import fromstring
+from .Line import Line
 
 
 def test_None_yields_nothing():
