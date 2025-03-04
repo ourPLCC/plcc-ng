@@ -1,7 +1,6 @@
-import plccng.lineparse as lineparse
+from .. import lineparse
 from .Block import Block
 from .Divider import Divider
-
 from .parse_blocks import parse_blocks
 from .parse_dividers import parse_dividers
 

@@ -1,7 +1,7 @@
 from pytest import raises
 
-from plccng.lineparse import Line
-from plccng.specparse.roughparse import fromlines
+from ....lineparse import Line
+from ....roughparse import fromlines
 
 from ...InvalidSymbolException import InvalidSymbolException
 from ...InvalidSyntacticSpecException import InvalidSyntacticSpecException

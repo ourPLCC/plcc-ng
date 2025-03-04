@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from .LhsNonTerminal import LhsNonTerminal
 from .Symbol import Symbol
 

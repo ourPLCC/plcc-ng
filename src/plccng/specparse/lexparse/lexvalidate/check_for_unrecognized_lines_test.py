@@ -1,5 +1,4 @@
-import plccng.lineparse as lineparse
-
+from ... import lineparse
 from .check_for_unrecognized_lines import UnrecognizedLine, check_for_unrecognized_lines
 
 
@@ -12,3 +11,4 @@ def test_a_residual_line_is_unrecognized():
 def test_ignores_any_non_line():
     e = check_for_unrecognized_lines([3])
     assert e == []
+

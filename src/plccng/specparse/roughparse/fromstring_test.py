@@ -1,5 +1,4 @@
-from plccng.lineparse.Line import Line
-
+from ..lineparse.Line import Line
 from .Block import Block
 from .Divider import Divider
 from .fromstring import fromstring

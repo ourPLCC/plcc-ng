@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
-from plccng.specparse.ValidationError import ValidationError
-
+from ...ValidationError import ValidationError
 from ..LexicalRule import LexicalRule
 
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from plccng.lineparse import Line
-from plccng.specparse.ValidationError import ValidationError
+from ...lineparse import Line
+from ...ValidationError import ValidationError
 
 
 def check_for_unrecognized_lines(rulesOrLines):

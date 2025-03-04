@@ -1,7 +1,6 @@
 import re
 
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from .LexicalRule import LexicalRule
 from .LexicalSpec import LexicalSpec
 

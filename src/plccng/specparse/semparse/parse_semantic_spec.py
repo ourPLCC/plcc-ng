@@ -1,5 +1,4 @@
-from plccng.lineparse import Line
-
+from ..lineparse import Line
 from ..roughparse import Block, Divider
 from .parse_code_fragments import parse_code_fragments
 from .SemanticSpec import SemanticSpec
