@@ -1,4 +1,5 @@
-from ..specparse import Line
+from ..spec import parse_lexical_from_string
+from ..spec import Line
 from .Skip import Skip
 from .Token import Token
 from .LexError import LexError
