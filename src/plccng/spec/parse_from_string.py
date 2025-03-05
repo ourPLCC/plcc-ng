@@ -9,4 +9,4 @@ def parse_from_string(string):
     lex_ = lexical.parse_from_lines(rough_lex)
     syn_ = syntax.parse_syntactic_spec(rough_syn)
     sems_ = [semantics.parse_semantic_spec(rs) for rs in rough_sems]
-    return Spec(lex=lex_, syn=syn_, sems=sems_)
+    return Spec(lexical=lex_, syntax=syn_, semantics=sems_)

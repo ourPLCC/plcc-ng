@@ -5,6 +5,6 @@ from ..spec import lexical, semantics, syntax
 
 @dataclass
 class Spec:
-    lex: lexical.LexicalSpec
-    syn: syntax.SyntacticSpec
-    sems: list[semantics.SemanticSpec]
+    lexical: lexical.LexicalSpec
+    syntax: syntax.SyntacticSpec
+    semantics: list[semantics.SemanticSpec]
