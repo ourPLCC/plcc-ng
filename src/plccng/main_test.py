@@ -5,7 +5,7 @@ import io
 
 def test_help_command_short_option_prints_and_exits(capfd):
     argv = ["-h"]
-    main = Main(Scanner(Matcher(None)), Source([]))
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
@@ -13,105 +13,66 @@ def test_help_command_short_option_prints_and_exits(capfd):
 
 def test_help_command_long_option_prints_and_exits(capfd):
     argv = ["--help"]
-    main = Main(Scanner(Matcher(None)), Source([]))
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
     with pytest.raises(SystemExit):
         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     captured = capfd.readouterr()
     assert captured.out.strip() == __doc__.strip()
 
-def test_specfile_argument_pass_to_scanner(tmp_path):
+def test_pass_specfile_to_scanner(tmp_path):
     specfilePath = str(tmp_path / "specfile.json")
     argv = ['scan', f'--spec={specfilePath}']
-    main = Main(Scanner(Matcher(None)), Source([]))
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.scannerMain.args == {
         '--spec' : specfilePath,
-        '<file>' : []
+        '<file>' : ['-']
     }
 
-# def test_file_argument_pass_to_scanner(tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = ['scan', f'--spec={specfile}', 'f1', 'f2']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     assert main.scannerMain.args == {
-#         '--spec' : tmp_path,
-#         '<file>' : ['f1', 'f2']
-#     }
+def test_pass_file_arguments_to_scanner(tmp_path):
+    specfilePath = str(tmp_path / "specfile.json")
+    argv = ['scan', f'--spec={specfilePath}', 'f1', '-', 'f2']
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
+    main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    assert main.scannerMain.args == {
+        '--spec' : specfilePath,
+        '<file>' : ['f1','-','f2']
+    }
+
+def test_scan_missing_specfile_prints_error_and_exits(capfd):
+    argv = ['scan']
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == "Invalid arguments, Enter 'plccng -h' for help.\n"
 
 
+def test_no_arguments_prints_error_message_and_exits(capfd):
+    argv = []
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == "Invalid arguments, Enter 'plccng -h' for help.\n"
 
-# def test_read_specfile_adds_stdin_file_path_to_source(tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = [f'--spec={specfile}']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     assert main.source.files == ["-"]
+def test_incorrect_arguments_prints_error_message_and_exits(capfd):
+    argv = ['blahblah']
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out == "Invalid arguments, Enter 'plccng -h' for help.\n"
 
-# def test_missing_specfile_argument_prints_error_message_and_exits(capfd):
-#     argv = ['f1', 'f2']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     with pytest.raises(SystemExit):
-#         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     captured = capfd.readouterr()
-#     assert captured.out == "Missing --spec argument\n"
-
-# def test_no_arguments_prints_error_message_and_exits(capfd):
-#     argv = []
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     with pytest.raises(SystemExit):
-#         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     captured = capfd.readouterr()
-#     assert captured.out == "Missing --spec argument\n"
-
-# def test_read_input_file_and_pass_to_source(tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = [f'--spec={specfile}', 'f1', 'f2']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     assert main.source.files == ['f1', 'f2']
-
-# def test_stdin_pass_to_source(tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = [f'--spec={specfile}', '-']
-#     stdin = io.StringIO('123      45')
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     main.run(stdin, stdout=None, stderr=None, argv=argv)
-#     assert main.source.files == ['-']
-
-# def test_stdin_pass_to_source_after_input_file(tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = [f'--spec={specfile}', 'f1', 'f2', '-']
-#     stdin = io.StringIO('123      45')
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     main.run(stdin=stdin, stdout=None, stderr=None, argv=argv)
-#     assert main.source.files == ['f1', 'f2', '-']
-
-# def test_help_command_prints_and_exits_before_matcher_spec_is_built(capfd, tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = ["--help", f'--spec={specfile}']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     with pytest.raises(SystemExit):
-#         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     captured = capfd.readouterr()
-#     assert captured.out.strip() == __doc__.strip()
-#     assert main.scanner.matcher.spec == None
-
-# def test_help_command_prints_and_exits_before_source_files_added(capfd):
-#     argv = ["--help", 'f1']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     with pytest.raises(SystemExit):
-#         main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     captured = capfd.readouterr()
-#     assert captured.out.strip() == __doc__.strip()
-#     assert main.source.files == []
-
-# def test_scan_source_stdin(tmp_path):
-#     specfile = build_specfile(tmp_path)
-#     argv = [f'--spec={specfile}']
-#     main = Main(Scanner(Matcher(None)), Source([]))
-#     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
-#     assert main.scanner.scanned == ["-"]
+def test_help_command_prints_and_exits_before_scan(capfd, tmp_path):
+    specfile = build_specfile(tmp_path)
+    argv = ["--help", "scan", f'--spec={specfile}']
+    main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
+    with pytest.raises(SystemExit):
+        main.run(stdin=None, stdout=None, stderr=None, argv=argv)
+    captured = capfd.readouterr()
+    assert captured.out.strip() == __doc__.strip()
+    assert main.scannerMain.args == None
 
 def build_specfile(tmp_path):
     specfile = tmp_path / "specfile.json"

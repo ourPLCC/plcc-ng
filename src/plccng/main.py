@@ -67,26 +67,25 @@ from .scanner.main import Main as ScannerMain
 import sys
 
 class Main:
-    def __init__(self, scanner, source):
-        self.scanner = scanner
-        self.source = source
+    def __init__(self, scannerMain):
+        self.scannerMain = scannerMain
 
     def run(self, stdin, stdout, stderr, argv):
         try:
             args = docopt(__doc__, argv)
         except DocoptExit:
-            print("Invalid arguments: Enter 'plccng -h' for help.")
+            print("Invalid arguments, Enter 'plccng -h' for help.")
             sys.exit()
 
         if args['scan']:
-            self.scannerMain = ScannerMain(self.scanner, self.source, self._getRequiredArgumentsForScannerMain(args))
+            self.scannerMain.args = self._buildRequiredArgumentsForScannerMain(args)
 
             # self.scannerMain.run()
 
-    def _getRequiredArgumentsForScannerMain(self, args):
+    def _buildRequiredArgumentsForScannerMain(self, args):
         newDict = {}
         newDict['--spec'] = args['--spec']
-        newDict['<file>'] = args['<file>']
+        newDict['<file>'] = args['<file>'] if len(args['<file>']) > 0 else ['-']
         return newDict
 
 
