@@ -63,7 +63,6 @@ LexError Format:
     }
 """
 from docopt import docopt, DocoptExit
-from .scanner.main import Main as ScannerMain
 import sys
 
 class Main:
@@ -79,8 +78,7 @@ class Main:
 
         if args['scan']:
             self.scannerMain.args = self._buildRequiredArgumentsForScannerMain(args)
-
-            # self.scannerMain.run()
+            self.scannerMain.run()
 
     def _buildRequiredArgumentsForScannerMain(self, args):
         newDict = {}

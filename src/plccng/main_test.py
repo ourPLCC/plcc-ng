@@ -20,22 +20,22 @@ def test_help_command_long_option_prints_and_exits(capfd):
     assert captured.out.strip() == __doc__.strip()
 
 def test_pass_specfile_to_scanner(tmp_path):
-    specfilePath = str(tmp_path / "specfile.json")
+    specfilePath = build_specfile(tmp_path)
     argv = ['scan', f'--spec={specfilePath}']
     main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.scannerMain.args == {
-        '--spec' : specfilePath,
+        '--spec' : str(specfilePath),
         '<file>' : ['-']
     }
 
 def test_pass_file_arguments_to_scanner(tmp_path):
-    specfilePath = str(tmp_path / "specfile.json")
+    specfilePath = build_specfile(tmp_path)
     argv = ['scan', f'--spec={specfilePath}', 'f1', '-', 'f2']
     main = Main(ScannerMain(Scanner(Matcher(None)), Source([]), None))
     main.run(stdin=None, stdout=None, stderr=None, argv=argv)
     assert main.scannerMain.args == {
-        '--spec' : specfilePath,
+        '--spec' : str(specfilePath),
         '<file>' : ['f1','-','f2']
     }
 
@@ -108,7 +108,6 @@ def build_specfile(tmp_path):
 class Scanner:
     def __init__(self, matcher):
         self.matcher = matcher
-        self.scanned = None # for testing what is passed into Scanner.scan()
 
     def scan(self, lines):
         self.scanned = lines
@@ -116,9 +115,6 @@ class Scanner:
 class Matcher:
     def __init__(self, spec):
         self.spec = spec
-
-    def match(string):
-        pass
 
 class Source:
     def __init__(self, files):
