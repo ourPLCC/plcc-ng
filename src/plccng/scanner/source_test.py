@@ -15,7 +15,7 @@ def test_empty_returns_empty():
 
 def test_random_file_throws(fs):
     with pytest.raises(OSError):
-        s = Source(['whereami'])
+        s = Source(["whereami"])
         assert list(s) == []
 
 
@@ -26,14 +26,19 @@ def test_one_line_reads(fs):
 
 
 def test_two_lines_read(fs):
-    createFile(fs, contents='''
+    createFile(
+        fs,
+        contents="""
                <hello> ::= WORLD
                <plcc> ::= NEXTGEN
-               ''')
+               """,
+    )
 
     source = Source(["main"])
-    assert list(source) == [createLine(),
-                            createLine(string="<plcc> ::= NEXTGEN", number=2)]
+    assert list(source) == [
+        createLine(),
+        createLine(string="<plcc> ::= NEXTGEN", number=2),
+    ]
 
 
 def test_two_files_read(fs):
@@ -41,8 +46,10 @@ def test_two_files_read(fs):
     createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
 
     source = Source(["main", "helper"])
-    assert list(source) == [createLine(),
-                            createLine(string="<plcc> ::= NEXTGEN", file="helper")]
+    assert list(source) == [
+        createLine(),
+        createLine(string="<plcc> ::= NEXTGEN", file="helper"),
+    ]
 
 
 def test_stdin_works(monkeypatch):
@@ -57,9 +64,11 @@ def test_stdin_works_nestled(monkeypatch, fs):
     createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
 
     source = Source(["main", "-", "helper"])
-    assert list(source) == [createLine(),
-                            createStdinLine(),
-                            createLine(string="<plcc> ::= NEXTGEN", file="helper")]
+    assert list(source) == [
+        createLine(),
+        createStdinLine(),
+        createLine(string="<plcc> ::= NEXTGEN", file="helper"),
+    ]
 
 
 def test_stdin_works_first(monkeypatch, fs):
@@ -68,9 +77,11 @@ def test_stdin_works_first(monkeypatch, fs):
     createFile(fs, name="./helper", contents="<plcc> ::= NEXTGEN")
 
     source = Source(["-", "main", "helper"])
-    assert list(source) == [createStdinLine(),
-                            createLine(),
-                            createLine(string="<plcc> ::= NEXTGEN", file="helper")]
+    assert list(source) == [
+        createStdinLine(),
+        createLine(),
+        createLine(string="<plcc> ::= NEXTGEN", file="helper"),
+    ]
 
 
 def test_stdin_works_last(monkeypatch, fs):
@@ -79,43 +90,53 @@ def test_stdin_works_last(monkeypatch, fs):
     createStdin(monkeypatch)
 
     source = Source(["main", "helper", "-"])
-    assert list(source) == [createLine(),
-                            createLine(string="<plcc> ::= NEXTGEN",
-                                       file="helper"),
-                            createStdinLine()]
+    assert list(source) == [
+        createLine(),
+        createLine(string="<plcc> ::= NEXTGEN", file="helper"),
+        createStdinLine(),
+    ]
 
 
 def test_multi_line_stdin(monkeypatch):
-    createStdin(monkeypatch, '''
+    createStdin(
+        monkeypatch,
+        """
                 <stda> ::= HELLO
                 <stdb> ::= FROM STDIN
-                ''')
+                """,
+    )
 
     source = Source(["-"])
-    assert list(source) == [createStdinLine(string="<stda> ::= HELLO", number=1),
-                            createStdinLine(string="<stdb> ::= FROM STDIN", number=2)]
+    assert list(source) == [
+        createStdinLine(string="<stda> ::= HELLO", number=1),
+        createStdinLine(string="<stdb> ::= FROM STDIN", number=2),
+    ]
 
 
 def test_stdin_escapes(monkeypatch):
     createStdin(monkeypatch, "<stda> ::= HELLO\n<stdb> ::= FROM STDIN")
 
     source = Source(["-"])
-    assert list(source) == [createStdinLine(string="<stda> ::= HELLO", number=1),
-                            createStdinLine(string="<stdb> ::= FROM STDIN", number=2)]
+    assert list(source) == [
+        createStdinLine(string="<stda> ::= HELLO", number=1),
+        createStdinLine(string="<stdb> ::= FROM STDIN", number=2),
+    ]
 
 
 def test_next_iterates(monkeypatch, fs):
     createFile(fs)
-    createStdin(monkeypatch, '''
+    createStdin(
+        monkeypatch,
+        """
                 <stda> ::= HELLO
                 <stdb> ::= FROM STDIN
-                ''')
+                """,
+    )
 
-    source = Source(["main", "-"])
+    source = iter(Source(["main", "-"]))
     assert next(source) == createLine()
     assert next(source) == createStdinLine(string="<stda> ::= HELLO", number=1)
-    assert next(source) == createStdinLine(
-        string="<stdb> ::= FROM STDIN", number=2)
+    assert next(source) == createStdinLine(string="<stdb> ::= FROM STDIN", number=2)
 
 
 def createFile(fs, name="./main", contents="<hello> ::= WORLD"):
@@ -123,16 +144,12 @@ def createFile(fs, name="./main", contents="<hello> ::= WORLD"):
 
 
 def createStdin(monkeypatch, contents="<hello> ::= FROM STDIN"):
-    monkeypatch.setattr('sys.stdin', io.StringIO(contents))
+    monkeypatch.setattr("sys.stdin", io.StringIO(contents))
 
 
 def createLine(string="<hello> ::= WORLD", number=1, file="main"):
-    return Line(string=string,
-                number=number,
-                file=file)
+    return Line(string=string, number=number, file=file)
 
 
 def createStdinLine(string="<hello> ::= FROM STDIN", number=1):
-    return createLine(string=string,
-                      number=number,
-                      file="-")
+    return createLine(string=string, number=number, file="-")
