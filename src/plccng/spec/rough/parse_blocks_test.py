@@ -27,7 +27,16 @@ def test_unclosed_block_is_an_error():
     assert exception.line == lines.Line('%%%', 1, None)
 
 
-def test_tripple_percent_block():
+def test_handler():
+    def ignore(_):
+        pass
+    OPEN = '%%%'
+    results = list(parse_blocks(lines.parse_from_string(OPEN), handler=ignore))
+    assert results[0].__class__ == Block    # A Block was produced.
+    assert len(results[0].lines) == 2       # A closing line was added.
+
+
+def test_triple_percent_block():
     lines_ = list(lines.parse_from_string('''\
 %%%
 block
