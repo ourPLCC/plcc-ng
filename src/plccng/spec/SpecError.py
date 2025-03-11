@@ -3,7 +3,7 @@ from .ValidationError import ValidationError
 
 
 @dataclass
-class ValidationError2(ValidationError):
+class SpecError(Exception, ValidationError):
     column: int
 
     def __str__(self):
