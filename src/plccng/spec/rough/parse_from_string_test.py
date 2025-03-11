@@ -4,7 +4,7 @@ from .Divider import Divider
 from .parse_from_string import parse_from_string
 
 
-def test_fromstring():
+def test_parse_from_string():
     assert list(parse_from_string('''\
 one
 %
@@ -34,3 +34,22 @@ four
         Line('%%%', 12, None)
     ])
 ]
+
+
+def test_parse_from_string_with_handler(fs):
+    errors = 0
+    def count(_):
+        nonlocal errors
+        errors += 1
+
+    fs.create_file('/contains_circular_include', contents='%include /contains_circular_include')
+
+    results = list(parse_from_string(handler=count, string='''\
+%include /contains_circular_include
+%%%
+missing
+closing
+'''))
+
+    assert errors == 2
+    assert results[0].__class__ == Block

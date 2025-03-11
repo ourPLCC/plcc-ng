@@ -13,16 +13,16 @@ def resolve_includes(rough, handler=raise_handler):
     return IncludeResolver(handler=handler).resolveIncludes(rough)
 
 
-def from_lines_unresolved(lines):
-    blocks = parse_blocks(lines)
+def from_lines_unresolved(lines, handler=raise_handler):
+    blocks = parse_blocks(lines, handler=handler)
     includes = parse_includes(blocks)
     dividers = parse_dividers(includes)
     return dividers
 
 
-def from_file_unresolved(file, startLineNumber=1):
+def from_file_unresolved(file, startLineNumber=1, handler=raise_handler):
     lines_ = lines.parse_from_file(file, startLineNumber=startLineNumber)
-    return from_lines_unresolved(lines_)
+    return from_lines_unresolved(lines_, handler=handler)
 
 
 class IncludeResolver():
@@ -59,11 +59,11 @@ class IncludeResolver():
         return p
 
     def _include_file(self, file):
-        rough = from_file_unresolved(file)
+        rough = from_file_unresolved(file, handler=self._handler)
         yield from self.resolveIncludes(rough)
         self._files_seen.remove(file)
 
 
-def from_string_unresolved(string, file=None, startLineNumber=1):
+def from_string_unresolved(string, file=None, startLineNumber=1, handler=raise_handler):
     lines_ = lines.parse_from_string(string, file=file, startLineNumber=startLineNumber)
-    return from_lines_unresolved(lines_)
+    return from_lines_unresolved(lines_, handler=handler)
