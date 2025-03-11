@@ -115,6 +115,6 @@ def validate(string):
 
 
 def parse(string):
-    rough_ = list(rough.parse_from_string(string))
+    rough_, errors = rough.parse_rough(string)
     spec =  parse_syntactic_spec(rough_)
     return spec
