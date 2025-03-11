@@ -1,7 +1,7 @@
 from pytest import raises
 
+from .. import rough
 from ..lines import Line
-from ..rough import parse_from_string
 from .CodeFragment import CodeFragment
 from .parse_code_fragments import parse_code_fragments
 from .TargetLocator import TargetLocator
@@ -72,11 +72,12 @@ def make_target_locator(line, className, modifier):
     return TargetLocator(line, className, modifier)
 
 def make_block():
-    return  list(parse_from_string('''\
+    rough_, errors = rough.parse_rough('''\
 %%%
 block
 %%%
-'''))[0]
+''')
+    return  rough_[0]
 
 def make_line(string, number=1, file=None):
     return Line(string, number, file)
