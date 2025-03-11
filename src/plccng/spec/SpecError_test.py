@@ -1,6 +1,5 @@
 
 from .lines import Line
-
 from .SpecError import ValidationError2
 
 
