@@ -45,7 +45,7 @@ class IncludeResolver():
     def _resolve_include(self, include):
         file = self._get_absolute_path_to_include_file(include)
         if file in self._files_seen:
-            self._handler(CircularIncludeError(include.line))
+            self._handler(CircularIncludeError(line=include.line, column=1, message=f"Already included: {file}"))
             # Don't yield anything, and let processing continue to next line.
         else:
             self._files_seen.add(file)

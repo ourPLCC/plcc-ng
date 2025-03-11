@@ -1,12 +1,12 @@
 
 from .lines import Line
-from .SpecError import ValidationError2
+from .SpecError import SpecError
 
 
 def test_basic():
-    e = ValidationError2(line=Line("hi", 1, "example.plcc"), message="This is an example.", column=1)
+    e = SpecError(line=Line("hi", 1, "example.plcc"), message="This is an example.", column=1)
     assert str(e) == '''\
-ValidationError2: example.plcc:1:1
+SpecError: example.plcc:1:1
 hi
 ^
 This is an example.
@@ -14,7 +14,7 @@ This is an example.
 
 
 def test_inheritance():
-    class Hi(ValidationError2):
+    class Hi(SpecError):
         ...
 
     e = Hi(line=Line("hi", 1, "example.plcc"), message="This is an example.", column=1)
@@ -27,9 +27,9 @@ This is an example.
 
 
 def test_no_message():
-    e = ValidationError2(line=Line("hi", 1, "example.plcc"), message=None, column=1)
+    e = SpecError(line=Line("hi", 1, "example.plcc"), message=None, column=1)
     assert str(e) == '''\
-ValidationError2: example.plcc:1:1
+SpecError: example.plcc:1:1
 hi
 ^
 '''
