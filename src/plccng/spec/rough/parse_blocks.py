@@ -48,7 +48,7 @@ class BlockParser():
                 yield Block(blockLines)
                 return
         # No closing found.
-        self.handler(UnclosedBlockError(line))
+        self.handler(UnclosedBlockError(line=line, column=len(blockLines[-1].string)+1, message='Start of block: {blockLines[0].file}:{blockLines[0].number}'))
         # Add a closing line to be consistent (since blocks contain their closing)
         closing = lines.Line(string='%%%', number=blockLines[-1].number+1, file=blockLines[-1].file)
         blockLines.append(closing)
