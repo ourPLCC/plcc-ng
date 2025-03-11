@@ -6,10 +6,11 @@ from .Include import Include
 from .parse_blocks import parse_blocks
 from .parse_dividers import parse_dividers
 from .parse_includes import parse_includes
+from .raise_handler import raise_handler
 
 
-def resolve_includes(rough):
-    return IncludeResolver().resolveIncludes(rough)
+def resolve_includes(rough, handler=raise_handler):
+    return IncludeResolver(handler=handler).resolveIncludes(rough)
 
 
 def from_lines_unresolved(lines):
@@ -25,8 +26,9 @@ def from_file_unresolved(file, startLineNumber=1):
 
 
 class IncludeResolver():
-    def __init__(self):
+    def __init__(self, handler=raise_handler):
         self._files_seen = set()
+        self._handler = handler
 
     def resolveIncludes(self, rough):
         if rough is None:
@@ -42,8 +44,12 @@ class IncludeResolver():
 
     def _resolve_include(self, include):
         file = self._get_absolute_path_to_include_file(include)
-        self._assert_file_has_not_been_included(include, file)
-        yield from self._include_file(file)
+        if file in self._files_seen:
+            self._handler(CircularIncludeError(include.line))
+            # Don't yield anything, and let processing continue to next line.
+        else:
+            self._files_seen.add(file)
+            yield from self._include_file(file)
 
     def _get_absolute_path_to_include_file(self, include):
         p = Path(include.file)
@@ -52,12 +58,7 @@ class IncludeResolver():
         p = str(p)
         return p
 
-    def _assert_file_has_not_been_included(self, include, p):
-        if p in self._files_seen:
-            raise CircularIncludeError(include.line)
-
     def _include_file(self, file):
-        self._files_seen.add(file)
         rough = from_file_unresolved(file)
         yield from self.resolveIncludes(rough)
         self._files_seen.remove(file)
