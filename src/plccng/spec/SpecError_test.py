@@ -1,7 +1,7 @@
 
 from .lines import Line
 
-from .ValidationError2 import ValidationError2
+from .SpecError import ValidationError2
 
 
 def test_basic():
