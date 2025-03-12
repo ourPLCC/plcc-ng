@@ -1,5 +1,5 @@
-from plccng.spec.lexical import validate
-from plccng.spec.lexical.parse_from_lines_without_validation import parse_from_lines_without_validation
+from . import validate
+from .parse_from_lines_without_validation import parse_from_lines_without_validation
 
 
 def parse_from_lines(lines):
