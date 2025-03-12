@@ -6,8 +6,9 @@ from .LexicalSpec import LexicalSpec
 
 
 class LexicalParser():
-    def __init__(self, lines):
-        self.lines = lines
+    def __init__(self):
+        self.lines = None
+        self.errors = []
         self.patterns = {
             'skipToken' : re.compile(r'''^\s*skip\s+(?P<Name>\S+)\s+(?P<q>\S)(?P<Pattern>(?:(?!=q).)*)(?P=q)\s*(?:#.*)*$'''),
             'tokenToken' : re.compile(r'''^\s*(?:token\s+)?(?P<Name>\S+)\s+(?P<q>\S)(?P<Pattern>(?:(?!=q).)*)(?P=q)\s*(?:#.*)*$''')
@@ -15,13 +16,14 @@ class LexicalParser():
 
         self.spec = LexicalSpec([])
 
-    def parseLexicalSpec(self):
+    def parseLexicalSpec(self, lines):
+        self.lines = lines
         for part in self.lines:
             if self._isBlankOrComment(part):
                 continue
             else:
                 self._processLine(part)
-        return self.spec
+        return self.spec, self.errors
 
     def _processLine(self, line):
             lineIsSkipToken, lineIsRegularToken = self._matchToken(line.string)

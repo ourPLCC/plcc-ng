@@ -2,4 +2,4 @@ from .LexicalParser import LexicalParser
 
 
 def parse_from_lines_without_validation(lines):
-    return LexicalParser(lines).parseLexicalSpec()
+    return LexicalParser().parseLexicalSpec(lines)

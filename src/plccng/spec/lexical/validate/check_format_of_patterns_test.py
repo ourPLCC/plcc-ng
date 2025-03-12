@@ -4,7 +4,7 @@ from .check_format_of_patterns import InvalidPattern, check_format_of_patterns
 
 
 def test_single_quotes():
-    spec = parse_from_string_without_validation.parse_from_string_without_validation("""
+    spec, errors = parse_from_string_without_validation.parse_from_string_without_validation("""
                             token NAME 'single quotes'
                         """)
     errors = check_format_of_patterns(spec.ruleList)
@@ -12,7 +12,7 @@ def test_single_quotes():
 
 
 def test_double_quotes():
-    spec = parse_from_string_without_validation.parse_from_string_without_validation("""
+    spec, errors = parse_from_string_without_validation.parse_from_string_without_validation("""
                             token NAME "double quotes"
                         """)
     errors = check_format_of_patterns(spec.ruleList)
@@ -20,7 +20,7 @@ def test_double_quotes():
 
 
 def test_other_delimiter():
-    spec = parse_from_string_without_validation.parse_from_string_without_validation("""
+    spec, erros = parse_from_string_without_validation.parse_from_string_without_validation("""
                             token NAME [square quotes[
                         """)
     errors = check_format_of_patterns(spec.ruleList)
@@ -28,7 +28,7 @@ def test_other_delimiter():
 
 
 def test_missmatch_delimiters_is_invalid_line():
-    spec = parse_from_string_without_validation.parse_from_string_without_validation("""
+    spec, errors = parse_from_string_without_validation.parse_from_string_without_validation("""
                             token NAME [square quotes]
                         """)
     errors = check_format_of_patterns(spec.ruleList)
@@ -38,7 +38,7 @@ def test_missmatch_delimiters_is_invalid_line():
 
 
 def test_bad_re_syntax():
-    spec = parse_from_string_without_validation.parse_from_string_without_validation("""
+    spec, errors = parse_from_string_without_validation.parse_from_string_without_validation("""
                             token NAME '(missing closing paren'
                         """)
     errors = check_format_of_patterns(spec.ruleList)

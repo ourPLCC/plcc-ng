@@ -88,7 +88,7 @@ def assertDetectsDuplicate(string):
 
 
 def assertResults(string, expectedResults):
-    spec = parse_from_string_without_validation.parse_from_string_without_validation(string)
+    spec, errors = parse_from_string_without_validation.parse_from_string_without_validation(string)
     results = check_for_duplicate_names(spec.ruleList)
     for i, e in enumerate(expectedResults):
         if e is not NoneType:
