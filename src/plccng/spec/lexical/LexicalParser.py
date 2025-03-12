@@ -30,24 +30,24 @@ class LexicalParser():
             else:
                 self.spec.ruleList.append(line)
 
-    def _generateTokenRule(self, line: Line, lineIsSkipToken: re.Match[str], lineIsRegularToken: re.Match[str]) -> LexicalRule:
+    def _generateTokenRule(self, line, lineIsSkipToken, lineIsRegularToken):
         if lineIsSkipToken:
             return self._generateSkipToken(line, lineIsSkipToken['Name'], lineIsSkipToken['Pattern'])
         else: # must be a lineIsRegularToken
             return self._generateRegularToken(line, lineIsRegularToken['Name'], lineIsRegularToken['Pattern'])
 
-    def _isBlankOrComment(self, line: Line) -> bool:
+    def _isBlankOrComment(self, line):
         return not line.string.strip() or line.string.strip().startswith("#")
 
-    def _matchToken(self, lineStr: str) -> tuple[re.Match[str] | None, re.Match[str] | None]:
+    def _matchToken(self, lineStr):
         isSkipToken = re.match(self.patterns['skipToken'], lineStr)
         isRegularToken = re.match(self.patterns['tokenToken'], lineStr)
         return isSkipToken, isRegularToken
 
-    def _generateSkipToken(self, line: Line, name: str, pattern: str) -> LexicalRule:
+    def _generateSkipToken(self, line, name, pattern):
         newSkipRule = LexicalRule(line=line, isSkip=True, name=name, pattern=pattern)
         return newSkipRule
 
-    def _generateRegularToken(self, line: Line, name: str, pattern: str) -> LexicalRule:
+    def _generateRegularToken(self, line, name, pattern):
         newTokenRule = LexicalRule(line=line, isSkip=False, name=name, pattern=pattern)
         return newTokenRule
