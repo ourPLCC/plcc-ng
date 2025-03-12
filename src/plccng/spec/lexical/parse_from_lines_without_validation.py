@@ -1,4 +1,4 @@
-from plccng.spec.lexical.LexicalParser import LexicalParser
+from .LexicalParser import LexicalParser
 
 
 def parse_from_lines_without_validation(lines):
