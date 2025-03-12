@@ -2,7 +2,12 @@ import pytest
 
 from ..lines import Line
 from .LexicalRule import LexicalRule
-from .parse_from_string import parse_from_string
+from .parse_lexical import parse_lexical
+
+
+def test_TypeError():
+    with pytest.raises(TypeError):
+        parse_lexical(3)
 
 
 def test_None_yields_nothing():
@@ -89,12 +94,12 @@ def test_starting_whitespace_is_ignored():
 
 
 def assertIsEmpty(string):
-    spec, errors = parse_from_string(string)
+    spec, errors = parse_lexical(string)
     assert spec.ruleList == []
 
 
 def assertIsRule(string, isSkip, name, pattern):
-    spec, errors = parse_from_string(string)
+    spec, errors = parse_lexical(string)
     rule = spec.ruleList[0]
     assert isinstance(rule, LexicalRule)
     assert rule.line is not None
@@ -104,5 +109,5 @@ def assertIsRule(string, isSkip, name, pattern):
 
 
 def assertIsLine(string):
-    spec, errors = parse_from_string(string)
+    spec, errors = parse_lexical(string)
     assert isinstance(spec.ruleList[0], Line)
