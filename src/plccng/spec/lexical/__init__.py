@@ -1,4 +1,10 @@
+from .DuplicateName import DuplicateName
 from .LexicalRule import LexicalRule
 from .LexicalSpec import LexicalSpec
-from .parse_lexical import parse_lexical
-from .validate import DuplicateName, InvalidName, InvalidPattern, UnrecognizedLine
+from .LexicalSpecError import LexicalSpecError
+from .NameExpected import NameExpected
+from .parseLexicalSpec import parseLexicalSpec
+from .PatternCompilationError import PatternCompilationError
+from .PatternDelimiterExpected import PatternDelimiterExpected
+from .PatternExpected import PatternExpected
+from .UnexpectedContent import UnexpectedContent

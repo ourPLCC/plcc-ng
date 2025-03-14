@@ -1,27 +1,27 @@
 from .lexical import (
     DuplicateName,
-    InvalidName,
-    InvalidPattern,
-    LexicalParser,
     LexicalRule,
     LexicalSpec,
-    UnrecognizedLine,
-    parse_from_string as parse_lexical_from_string
+    LexicalSpecError,
+    NameExpected,
+    Parser,
+    PatternCompilationError,
+    PatternDelimiterExpected,
+    PatternExpected,
+    parseLexicalSpec,
 )
-from .rough import (
-    Block,
-    CircularIncludeError,
-    Divider,
-    Include,
-    UnclosedBlockError
-)
+from .lexical import parse_from_string as parse_lexical_from_string
+from .lines import Line
+from .lines import parse_from_string as parse_lines_from_string
+from .parse_from_string import parse_from_string
+from .rough import Block, CircularIncludeError, Divider, Include, UnclosedBlockError
 from .semantics import (
     CodeFragment,
     InvalidClassNameError,
     SemanticSpec,
     TargetLocator,
     UndefinedBlockError,
-    UndefinedTargetLocatorError
+    UndefinedTargetLocatorError,
 )
 from .syntax import (
     CapturingSymbol,
@@ -50,8 +50,3 @@ from .syntax import (
     UndefinedNonterminal,
     UndefinedTerminalError,
 )
-from .lines import (
-    Line,
-    parse_from_string as parse_lines_from_string
-)
-from .parse_from_string import parse_from_string
