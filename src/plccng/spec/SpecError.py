@@ -1,10 +1,10 @@
-from dataclasses import dataclass
 from .ValidationError import ValidationError
 
 
-@dataclass
-class SpecError(Exception, ValidationError):
-    column: int
+class SpecError(ValidationError):
+    def __init__(self, line=None, message=None, column=None, index=None):
+        self.column = column if column is not None else index + 1
+        ValidationError.__init__(self, line=line, message=message)
 
     def __str__(self):
         m = f'\n{self.message}' if self.message else ''
