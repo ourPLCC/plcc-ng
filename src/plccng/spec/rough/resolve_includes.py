@@ -21,7 +21,7 @@ def from_lines_unresolved(lines, handler=raise_handler):
 
 
 def from_file_unresolved(file, startLineNumber=1, handler=raise_handler):
-    lines_ = lines.parse_from_file(file, startLineNumber=startLineNumber)
+    lines_ = lines.parseLines(file=file, startLineNumber=startLineNumber)
     return from_lines_unresolved(lines_, handler=handler)
 
 
@@ -65,5 +65,5 @@ class IncludeResolver():
 
 
 def from_string_unresolved(string, file=None, startLineNumber=1, handler=raise_handler):
-    lines_ = lines.parse_from_string(string, file=file, startLineNumber=startLineNumber)
+    lines_ = lines.parseLines(string, file=file, startLineNumber=startLineNumber)
     return from_lines_unresolved(lines_, handler=handler)

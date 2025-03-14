@@ -12,7 +12,7 @@ from .lexical import (
 )
 from .lexical import parse_from_string as parse_lexical_from_string
 from .lines import Line
-from .lines import parse_from_string as parse_lines_from_string
+from .lines import parseLines
 from .parse_from_string import parse_from_string
 from .rough import Block, CircularIncludeError, Divider, Include, UnclosedBlockError
 from .semantics import (
