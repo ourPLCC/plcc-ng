@@ -72,7 +72,7 @@ def make_target_locator(line, className, modifier):
     return TargetLocator(line, className, modifier)
 
 def make_block():
-    rough_, errors = rough.parse_rough('''\
+    rough_, errors = rough.parseRough('''\
 %%%
 block
 %%%

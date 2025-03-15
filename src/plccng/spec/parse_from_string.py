@@ -4,7 +4,7 @@ from . import lexical, rough, semantics, syntax
 
 
 def parse_from_string(string):
-    rough_, errors = rough.parse_rough(string)
+    rough_, errors = rough.parseRough(string)
     rough_ = iter(rough_)
     rough_lex, rough_syn, rough_sems = split_rough(rough_)
     lex_, errors = lexical.parseLexicalSpec(rough_lex)

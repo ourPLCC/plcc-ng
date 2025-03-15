@@ -372,7 +372,7 @@ def test_malformed_bnf_raises():
 
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    rough_, errors = rough.parse_rough([makeLine(string, lineNumber, file)])
+    rough_, errors = rough.parseRough([makeLine(string, lineNumber, file)])
     return rough_[0]
 
 

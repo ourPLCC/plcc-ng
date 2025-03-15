@@ -94,7 +94,7 @@ def createGrammarWithSpec(lines):
     return makeSpecGrammar(syntacticSpec)
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    return rough.parse_rough([makeLine(string, lineNumber, file)])[0]
+    return rough.parseRough([makeLine(string, lineNumber, file)])[0]
 
 def makeLine(string, lineNumber=0, file=""):
     return Line(string, lineNumber, file)

@@ -3,31 +3,31 @@ import pytest
 from ..lines.Line import Line
 from .Block import Block
 from .Divider import Divider
-from .parse_rough import parse_rough
+from .parseRough import parseRough
 
 
 def test_TypeError():
     with pytest.raises(TypeError):
-        parse_rough(3)
+        parseRough(3)
 
 
 def test_parse_empty_list():
-    rough_, errors = parse_rough([])
+    rough_, errors = parseRough([])
     assert rough_ == []
 
 
 def test_parse_None():
-    rough_, errors = parse_rough(None)
+    rough_, errors = parseRough(None)
     assert rough_ == []
 
 
 def test_parse_empty_string():
-    rough_, errors = parse_rough('')
+    rough_, errors = parseRough('')
     assert rough_ == []
 
 
 def test_parse_happy():
-    rough_, errors = parse_rough('''\
+    rough_, errors = parseRough('''\
 one
 %
 two
@@ -62,7 +62,7 @@ four
 def test_parse_from_string_with_handler(fs):
     fs.create_file('/contains_circular_include', contents='%include /contains_circular_include')
 
-    rough_, errors = parse_rough('''\
+    rough_, errors = parseRough('''\
 %include /contains_circular_include
 %%%
 missing
