@@ -77,10 +77,10 @@ class Main:
             sys.exit()
 
         if args['scan']:
-            self.scannerMain.args = self._buildRequiredArgumentsForScannerMain(args)
+            self.scannerMain.args = self._getRequiredArgumentsForScannerMain(args)
             self.scannerMain.run()
 
-    def _buildRequiredArgumentsForScannerMain(self, args):
+    def _getRequiredArgumentsForScannerMain(self, args):
         newDict = {}
         newDict['--spec'] = args['--spec']
         newDict['<file>'] = args['<file>'] if len(args['<file>']) > 0 else ['-']
