@@ -29,7 +29,7 @@ def test_no_CodeFragments():
 # ''')))
 
 def make_block():
-    rough_, errors = rough.parse_rough('''\
+    rough_, errors = rough.parseRough('''\
 %%%
 block
 %%%

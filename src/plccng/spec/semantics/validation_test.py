@@ -100,6 +100,6 @@ def assertInvalidClassName(name: str):
     assert isinstance(errors[0], InvalidClassNameError)
 
 def parse(string):
-    rough_, errors = rough.parse_rough(string)
+    rough_, errors = rough.parseRough(string)
     spec =  parse_semantic_spec(rough_)
     return spec

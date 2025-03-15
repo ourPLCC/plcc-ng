@@ -1,7 +1,7 @@
 from .iterate_rough import iterate_rough
 
 
-def parse_rough(thing, file=None, startLineNumber=1):
+def parseRough(thing, file=None, startLineNumber=1):
     errors = []
     def collect(error):
         nonlocal errors
