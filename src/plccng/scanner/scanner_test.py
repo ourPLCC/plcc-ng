@@ -1,5 +1,5 @@
 import pytest
-from .scanner import Scanner, Matcher
+from .scanner import Scanner
 from .structs import Line, Match, Token, Skip, LexError
 
 def test_no_lines_given_returns_nothing():
@@ -35,25 +35,9 @@ def make_scanner():
     return scanner
 
 def make_matcher():
-    mock_speck = make_mock_spec()
+    mock_speck = []
     matcher = Matcher(mock_speck)
     return matcher
-
-#This mock speck is currently not in use, I am just passing a dummy spec for now
-#In the future it will be used in testing when a Matcher is implemented 
-def make_mock_spec():
-    spec = [
-        {
-            "type": "Token",
-            "name": "MINUS",
-            "regex": "-"
-        },
-        {
-            "type": "Token",
-            "name": "ADDING",
-            "regex": "+"
-        }
-    ]
 
 def makeLines(lines):
     line_objects=[]
@@ -61,8 +45,6 @@ def makeLines(lines):
         line_objects.append(Line(text=line, file=None, number=1))
     return line_objects
 
-#Placeholder Matcher "algorithm" since Scanner does not care about the algorithm, it just cares that a LexError, Skip, or Token
-#is thrown. Scanner does not care about algorithm, but it does care about results.
 class Matcher:
     def __init__(self, spec):
         self.spec = spec
