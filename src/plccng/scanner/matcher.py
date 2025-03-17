@@ -8,14 +8,16 @@ class Matcher:
         self.spec = spec
 
     def match(self, line, index):
-        patterns = self.compile_regex()
+        compiled_patterns = self.compile_regex()
         matches = []
-        for pattern in patterns:
-            test_match = re.match(pattern[0], line.string[index: ])
-            if(test_match and pattern[1] == "Skip"):
-                return Skip(lexeme = test_match.group(), name=pattern[2], column=test_match.end()+1)
-            elif(test_match and pattern[1] == "Token"):
-                matches.append(Token(lexeme=test_match.group(), name=pattern[2], column=test_match.end()+index))
+        ruleIndex = -1
+        for pattern in compiled_patterns:
+            ruleIndex += 1
+            test_match = re.match(pattern, line.string[index: ])
+            if(test_match and self.spec[ruleIndex].isSkip):
+                return Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+1)
+            elif(test_match and not self.spec[ruleIndex].isSkip):
+                matches.append(Token(lexeme=test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+index))
             else:
                 continue
 
@@ -26,11 +28,11 @@ class Matcher:
 
     #Helper methods
     def compile_regex(self):
-        patterns = []
-        for object in self.spec:
-            pattern = re.compile(object["regex"])
-            patterns.append([pattern, object["type"], object["name"]])
-        return patterns
+        compiled_patterns = []
+        for rule in self.spec:
+            pattern = re.compile(rule.pattern)
+            compiled_patterns.append(pattern)
+        return compiled_patterns
 
     def get_longest_match(self, match_list):
             longest = match_list[0]
