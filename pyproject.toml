@@ -25,13 +25,12 @@ distribution = true
 source = "scm"
 
 
-[tool.pdm.dev-dependencies]
+[tool.pdm.scripts]
+test = "pytest -vv -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
+
+[dependency-groups]
 dev = [
     "pytest>=8.2.0",
     "pyfakefs>=5.4.1",
-    "mypy>=1.10.0",
     "pytest-cov>=5.0.0",
 ]
-
-[tool.pdm.scripts]
-test = "pytest -vv -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
