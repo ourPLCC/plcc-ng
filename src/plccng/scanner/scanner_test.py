@@ -29,24 +29,6 @@ def test_one_skip_matches():
     results = scanner.scan(lines)
     assert isinstance(next(results), Skip)
 
-#I am leaving these tests as skipped since I don't know how to write the tests for scanner without some Matcher.
-#Scanner shouldn't care about Matchers algorithm, but I think it matters in testing somewhat.
-#If I write these tests now with some placeholder, dummy algorithm I think I will have to rewrite them once Matcher is implemented.
-@pytest.mark.skip(reason="Old test, not sure if it is correctly written")
-def test_one_token_matches():
-    lines = [Line("-", 1, None)]
-    scanner = make_scanner()
-    results = scanner.scan(lines)
-    assert isinstance(next(results), Token)
-
-@pytest.mark.skip(reason="Old test, not sure if it is correctly written")
-def test_one_skip_and_one_token_yielded_in_correct_order():
-    lines = [Line("a ", 1, None)]
-    scanner = make_scanner()
-    results = scanner.scan(lines)
-    assert isinstance(next(results), Token)
-    assert isinstance(next(results), Skip)
-
 def make_scanner():
     matcher = make_matcher()
     scanner = Scanner(matcher)
