@@ -1,21 +1,25 @@
 import json
 
 class Main:
-    def __init__(self, scanner, source, args):
-        self.scanner = scanner
-        self.source = source
-        self.args = args
+    def __init__(self, Scanner, Source):
+        self.Scanner = Scanner
+        self.Source = Source
 
-    def run(self):
-        self._buildMatcherSpecFromSpecfile(self.args["--spec"])
-        self._addSourceFiles(self.args["<file>"])
-        self.scanner.scan(list(self.source))
+    def run(self, args):
+        self.Scanner = self._buildScanner(args["--spec"])
+        self.Source = self._buildSource(args["<file>"])
 
-    def _buildMatcherSpecFromSpecfile(self, filePath):
+        self.Scanner.scan(list(self.Source))
+
+    def _buildScanner(self, filePath):
         with open(filePath, "r") as file:
             data = json.load(file)
-            self.scanner.matcher.spec = data
+            return self.Scanner(data)
 
-    def _addSourceFiles(self, filePaths):
-        for filePath in filePaths:
-            self.source.files.append(filePath)
+    def _buildSource(self, files):
+        return self.Source(files)
+
+    # def _addSourceFiles(self, filePaths):
+    #     return self.Source(filePaths)
+        # for filePath in filePaths:
+        #     self.source.files.append(filePath)

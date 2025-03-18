@@ -9,13 +9,13 @@ def test_read_specfile_builds_matcher_spec(tmp_path):
         '--spec' : specfile,
         '<file>' : ['-']
     }
-    main = Main(Scanner(Matcher(None)), Source([]), args)
-    main.run()
+    main = Main(Scanner, Source)
+    main.run(args)
 
-    assert len(main.scanner.matcher.spec) == 4
-    assert main.scanner.matcher.spec[0]['type'] == 'Token'
-    assert main.scanner.matcher.spec[1]['regex'] == '\\s+'
-    assert main.scanner.matcher.spec[2]['name'] == 'ONETWOTHREE'
+    assert len(main.Scanner.matcher.spec) == 4
+    assert main.Scanner.matcher.spec[0]['type'] == 'Token'
+    assert main.Scanner.matcher.spec[1]['regex'] == '\\s+'
+    assert main.Scanner.matcher.spec[2]['name'] == 'ONETWOTHREE'
 
 def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
@@ -23,9 +23,9 @@ def test_read_input_file_and_pass_to_source(tmp_path):
         '--spec' : specfile,
         '<file>' : ['f1','-','f2']
     }
-    main = Main(Scanner(Matcher(None)), Source([]), args)
-    main.run()
-    assert main.source.files == ['f1','-', 'f2']
+    main = Main(Scanner, Source)
+    main.run(args)
+    assert main.Source.files == ['f1','-', 'f2']
 
 def test_scan_source_stdin(tmp_path):
     specfile = build_specfile(tmp_path)
@@ -33,9 +33,9 @@ def test_scan_source_stdin(tmp_path):
         '--spec' : specfile,
         '<file>' : ['-']
     }
-    main = Main(Scanner(Matcher(None)), Source([]), args)
-    main.run()
-    assert main.scanner.scanned == ["-"]
+    main = Main(Scanner, Source)
+    main.run(args)
+    assert main.Scanner.scanned == ["-"]
 
 def build_specfile(tmp_path):
     specfile = tmp_path / "specfile.json"
@@ -89,3 +89,6 @@ class Source:
 
     def __iter__(self):
         return iter(self.files)
+
+    def __next__(self):
+        return 'line'
