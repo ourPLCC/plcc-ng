@@ -6,8 +6,8 @@ class Scanner:
         self.matcher = matcher
 
     def scan(self, lines):
-        if not lines or lines == []:
-            yield None
+        if lines is None:
+            return StopIteration
         for line in lines:
             index = 0
             while index < len(line.text):
