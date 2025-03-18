@@ -1,6 +1,6 @@
 import re
 
-from .. import lines
+from ... import lines
 from .Block import Block
 from .raise_handler import raise_handler
 from .UnclosedBlockError import UnclosedBlockError

@@ -1,6 +1,6 @@
 from typing import List
 
-from ...lines import Line
+from ....lines import Line
 from ..DuplicateLhsError import DuplicateLhsError
 from ..InvalidLhsAltNameError import InvalidLhsAltNameError
 from ..InvalidLhsNameError import InvalidLhsNameError

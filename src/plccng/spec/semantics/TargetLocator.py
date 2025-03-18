@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ..lines.Line import Line
+from ...lines import Line
 
 
 @dataclass

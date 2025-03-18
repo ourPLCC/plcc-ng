@@ -1,6 +1,6 @@
 from pytest import raises
 
-from .. import lines
+from ... import lines
 from .Block import Block
 from .parse_blocks import parse_blocks
 from .UnclosedBlockError import UnclosedBlockError
