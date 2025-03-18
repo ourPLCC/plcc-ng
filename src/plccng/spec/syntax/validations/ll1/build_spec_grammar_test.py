@@ -1,6 +1,6 @@
 from pytest import raises
 
-from ....lines import Line
+from .....lines import Line
 from .... import rough
 
 from ...InvalidSymbolException import InvalidSymbolException

@@ -1,5 +1,4 @@
-
-from .lines import Line
+from ..lines import Line
 from .SpecError import SpecError
 
 

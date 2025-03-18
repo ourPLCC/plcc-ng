@@ -1,4 +1,4 @@
-from .parse_from_string import parse_from_string
+from .parseSpec import parseSpec
 
 
 def test_lex_only():
@@ -6,7 +6,7 @@ def test_lex_only():
 token A 'a'
 skip B 'b'
 '''
-    spec = parse_from_string(s)
+    spec, errors = parseSpec(s)
     assert len(spec.lexical) == 2
     assert len(spec.syntax) == 0
     assert len(spec.semantics) == 0
@@ -20,7 +20,7 @@ skip B 'b'
 <a> ::= A <b>
 <b> ::= B
 '''
-    spec = parse_from_string(s)
+    spec, errors = parseSpec(s)
     assert len(spec.lexical) == 2
     assert len(spec.syntax) == 2
     assert len(spec.semantics) == 0
@@ -44,7 +44,7 @@ A
 Bye
 %%%
 '''
-    spec = parse_from_string(s)
+    spec, errors = parseSpec(s)
     assert len(spec.lexical) == 2
     assert len(spec.syntax) == 2
     assert len(spec.semantics) == 2

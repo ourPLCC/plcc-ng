@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from .. import lines
+from ... import lines
 from .CircularIncludeError import CircularIncludeError
 from .Include import Include
 from .parse_blocks import parse_blocks

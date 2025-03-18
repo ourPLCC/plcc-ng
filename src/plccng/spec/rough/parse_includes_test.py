@@ -1,4 +1,4 @@
-from .. import lines
+from ... import lines
 from .Block import Block
 from .Include import Include
 from .parse_blocks import parse_blocks

@@ -1,6 +1,6 @@
 import re
 
-from ..lines.Line import Line
+from ...lines import Line
 from .Divider import Divider
 
 

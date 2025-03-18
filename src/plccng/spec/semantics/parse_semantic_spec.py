@@ -1,4 +1,4 @@
-from ..lines import Line
+from ...lines import Line
 from ..rough import Block, Divider
 from .parse_code_fragments import parse_code_fragments
 from .SemanticSpec import SemanticSpec
