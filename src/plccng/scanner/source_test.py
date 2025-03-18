@@ -1,6 +1,6 @@
 import io
 import pytest
-from ..load_spec.structs import Line
+from ..lines import Line
 
 from .source import Source
 

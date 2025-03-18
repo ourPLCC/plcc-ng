@@ -1,6 +1,6 @@
 import sys
 
-from ..load_spec.structs import Line
+from ..lines import Line
 
 
 class Source:
@@ -18,7 +18,7 @@ class Source:
             raise StopIteration
 
         if self.lines == []:
-            self.lines = self._getLines()
+            self.lines = self._getLinesFromFile()
             self.line_index = 0
 
         if self.line_index >= len(self.lines):
@@ -41,7 +41,7 @@ class Source:
             self.files[self.file_index],
         )
 
-    def _getLines(self):
+    def _getLinesFromFile(self):
         return self._removeEmptyLines(self._getInput(self.files[self.file_index]))
 
     def _removeEmptyLines(self, lst):
