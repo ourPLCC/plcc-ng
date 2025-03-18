@@ -1,6 +1,6 @@
 from pytest import raises
 
-from ..lines.Line import Line
+from ...lines import Line
 from .CircularIncludeError import CircularIncludeError
 from .resolve_includes import from_string_unresolved, resolve_includes
 
