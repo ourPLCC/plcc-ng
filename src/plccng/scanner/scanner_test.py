@@ -1,28 +1,50 @@
 import pytest
+
+from ..lines import parseLines
 from .scanner import Scanner
-from .structs import Line, Match, Token, Skip, LexError
+from .structs import LexError, Line, Skip, Token
+
+
+@pytest.fixture
+def errorRaisingMatcher():
+    class ErrorRaisingMatcher:
+        def match(self, line, index):
+            return LexError(line=line, column=index)
+
+    return ErrorRaisingMatcher()
+
 
 def test_no_lines_given_returns_nothing():
-    scanner = make_scanner_with_blank_matcher()
+    scanner = Scanner(matcher=None)
     results = scanner.scan(None)
-    with pytest.raises(StopIteration):
-        next(results)
+    assert list(results) == []
+
 
 def test_empty_lines_given_returns_nothing():
-    lines = []
-    scanner = make_scanner_with_blank_matcher()
-    results = scanner.scan(lines)
-    with pytest.raises(StopIteration):
-        next(results)
+    scanner = Scanner(matcher=None)
+    results = scanner.scan([])
+    assert list(results) == []
 
-def test_lex_Error_at_the_start_of_the_line_moves_on_to_next_line():
-    lines = makeLines(['blah blah blah', 'this is a new line'])
+
+def test_LexError(errorRaisingMatcher):
+    scanner = Scanner(errorRaisingMatcher)
+    oneLineWithError = parseLines('''\
+blah blah
+''')
+    result = list(scanner.scan(oneLineWithError))
+    assert isinstance(result[0], LexError)
+
+
+def test_LexError_at_the_start_of_the_line_moves_on_to_next_line(errorRaisingMatcher):
+    scanner = Scanner(errorRaisingMatcher)
+    twoLinesWithErrors = parseLines('''\
+blah blah
+next line
+''')
     scanner = make_scanner_with_blank_matcher()
-    results = scanner.scan(lines)
-    check = next(results)
-    assert isinstance(check, LexError) and check.line.text == 'blah blah blah'
-    check = next(results)
-    assert isinstance(check, LexError) and check.line.text == 'this is a new line'
+    results = list(scanner.scan(twoLinesWithErrors))
+    assert all(isinstance(item, LexError) for item in results)
+
 
 def test_lex_error_in_middle_of_the_line_moves_on_to_the_next_line():
     lines = makeLines([' this line should create a skip first', 'after the skip and lexerror this line should be up next'])
@@ -31,9 +53,9 @@ def test_lex_error_in_middle_of_the_line_moves_on_to_the_next_line():
     check1 = next(results)
     assert isinstance(check1, Skip) and check1.lexeme == ' '
     check2 = next(results)
-    assert isinstance(check2, LexError) and check2.line.text == ' this line should create a skip first'
+    assert isinstance(check2, LexError) and check2.line.string == ' this line should create a skip first'
     check3 = next(results)
-    assert isinstance(check3, LexError) and check3.line.text == 'after the skip and lexerror this line should be up next'
+    assert isinstance(check3, LexError) and check3.line.string == 'after the skip and lexerror this line should be up next'
 
 def test_once_whole_line_is_indexed_scanner_moves_on_to_next_line():
     lines = makeLines(['this whole line should be processed', 'then we move on to this line'])
@@ -42,7 +64,7 @@ def test_once_whole_line_is_indexed_scanner_moves_on_to_next_line():
     while True:
         try:
             check = next(results)
-            assert check.column < len(check.line.text)
+            assert check.column < len(check.line.string)
         except StopIteration:
             break
 
@@ -60,7 +82,7 @@ def test_iteration_stops_after_all_lines_scanned():
 def makeLines(lines):
     line_objects=[]
     for line in lines:
-        line_objects.append(Line(text=line, file=None, number=1))
+        line_objects.append(Line(string=line, file=None, number=1))
     return line_objects
 
 def make_scanner_with_blank_matcher():
@@ -82,7 +104,7 @@ def make_scanner_with_5_character_matcher():
 class BlankMatcher():
     def __init__(self):
         pass
-    
+
     def match(self, line, index):
         return LexError(line=line, column=index)
 
@@ -90,9 +112,9 @@ class BlankMatcher():
 class SingleWhiteSpaceMatcher():
     def __init__(self):
         pass
-    
+
     def match(self, line, index):
-        if line.text[index] == " ":
+        if line.string[index] == " ":
             return Skip(name="whitespace", lexeme=" ", line=line, column=index)
         else:
             return LexError(line=line, column=index)
@@ -101,10 +123,10 @@ class SingleWhiteSpaceMatcher():
 #??? Should the check for Final Index be in Matcher or Scanner ???
 class FiveCharacterMatcher():
     def __init__(self):
-        pass 
+        pass
 
     def match(self, line, index):
-        final_index = len(line.text) - 1
+        final_index = len(line.string) - 1
         if index+5 > final_index:
-            return Token(name="Token", lexeme=line.text[index:final_index], line=line, column=final_index)
-        return Token(name="Token", lexeme=line.text[index:index+5], line=line, column=index+5)
+            return Token(name="Token", lexeme=line.string[index:final_index], line=line, column=final_index)
+        return Token(name="Token", lexeme=line.string[index:index+5], line=line, column=index+5)

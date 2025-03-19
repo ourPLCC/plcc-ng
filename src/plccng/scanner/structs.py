@@ -1,10 +1,7 @@
 from dataclasses import dataclass
 
-@dataclass
-class Line:
-    text: str
-    number: int
-    file: str = None
+from ..lines import Line
+
 
 @dataclass
 class Match:
