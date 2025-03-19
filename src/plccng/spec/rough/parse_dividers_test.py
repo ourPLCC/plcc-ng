@@ -1,4 +1,4 @@
-from .. import lines
+from ... import lines
 from .Block import Block
 from .Divider import Divider
 from .parse_blocks import parse_blocks

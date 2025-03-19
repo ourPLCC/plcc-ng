@@ -1,6 +1,6 @@
 from pytest import raises
 
-from ..lines.Line import Line
+from ...lines import Line
 from .. import rough
 from .parse_semantic_spec import parse_code_fragments, parse_semantic_spec
 

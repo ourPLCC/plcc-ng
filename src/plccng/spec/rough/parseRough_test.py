@@ -1,6 +1,6 @@
 import pytest
 
-from ..lines.Line import Line
+from ...lines import Line
 from .Block import Block
 from .Divider import Divider
 from .parseRough import parseRough

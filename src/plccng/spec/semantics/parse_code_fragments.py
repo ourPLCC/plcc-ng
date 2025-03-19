@@ -1,4 +1,4 @@
-from ..lines import Line
+from ...lines import Line
 from ..rough import Block
 from .CodeFragment import CodeFragment
 from .parse_target_locator import parse_target_locator

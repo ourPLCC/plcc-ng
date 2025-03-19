@@ -8,11 +8,8 @@ from .lexical import (
     PatternCompilationError,
     PatternDelimiterExpected,
     PatternExpected,
-    parseLexicalSpec,
 )
-from .lexical import parse_from_string as parse_lexical_from_string
-from .lines import Line, parseLines
-from .parse_from_string import parse_from_string
+from .parseSpec import parseSpec
 from .rough import Block, CircularIncludeError, Divider, Include, UnclosedBlockError
 from .semantics import (
     CodeFragment,

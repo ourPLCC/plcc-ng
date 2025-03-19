@@ -3,7 +3,7 @@ from typing import List
 from pytest import raises
 
 from .. import rough
-from ..lines import Line
+from ...lines import Line
 from .CapturingTerminal import CapturingTerminal
 from .LhsNonTerminal import LhsNonTerminal
 from .MalformedBNFError import MalformedBNFError

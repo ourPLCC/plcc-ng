@@ -1,7 +1,7 @@
 from pytest import raises
 
 from .. import rough
-from ..lines import Line
+from ...lines import Line
 from .CodeFragment import CodeFragment
 from .parse_code_fragments import parse_code_fragments
 from .TargetLocator import TargetLocator
