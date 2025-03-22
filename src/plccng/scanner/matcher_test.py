@@ -26,19 +26,18 @@ def test_match_rule():
     result = matcher.match(line=line, index=0)
     assert result == Token(lexeme="-", name="MINUS", column=1)
 
-def test_match_first_rule():
+def test_match_first_rule_in_file():
     spec, errors = parse_lexical_from_string(string='''
         token MINUS '-'
         token NUMBER '\\d+'
     ''')
     matcher = make_matcher(spec=spec.ruleList)
-    line = list(parse_lines_from_string("113--"))[0]
+    line = list(parse_lines_from_string("11--"))[0]
     result = matcher.match(line=line, index=0)
-    assert result == Token(lexeme="113", name="NUMBER", column=3)
+    assert result == Token(lexeme="11", name="NUMBER", column=2)
 
 def test_match_skip_rule():
     spec, errors = parse_lexical_from_string(string='''
-        token NUMBER '\\d+'
         skip WHITESPACE '\\s+'
     ''')
     matcher = make_matcher(spec = spec.ruleList)
