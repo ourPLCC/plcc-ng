@@ -35,8 +35,4 @@ class Matcher:
         return compiled_patterns
 
     def get_longest_match(self, match_list):
-            longest = match_list[0]
-            for i in range(1, len(match_list)):
-                if (len(match_list[i].lexeme) > len(longest.lexeme)):
-                    longest = match_list[i]
-            return longest
+            return max(match_list, key=lambda m: len(m.lexeme))
