@@ -10,9 +10,7 @@ class Matcher:
     def match(self, line, index):
         compiled_patterns = self.compile_regex()
         matches = []
-        ruleIndex = -1
-        for pattern in compiled_patterns:
-            ruleIndex += 1
+        for ruleIndex, pattern in enumerate(compiled_patterns):
             test_match = re.match(pattern, line.string[index: ])
             if(test_match and self.spec[ruleIndex].isSkip):
                 return Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+1)
