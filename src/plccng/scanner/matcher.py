@@ -13,12 +13,14 @@ class Matcher:
         for ruleIndex, pattern in enumerate(compiled_patterns):
             test_match = re.match(pattern, line.string[index: ])
             if(test_match and self.spec[ruleIndex].isSkip):
-                return Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+1)
+                matches.append(Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+index))
             elif(test_match and not self.spec[ruleIndex].isSkip):
                 matches.append(Token(lexeme=test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+index))
             else:
                 continue
-        if matches:
+        if matches and matches[0].__class__ == Skip:
+            return matches[0]
+        elif matches:
             return self.get_longest_match(matches)
         else:
             return LexError(line=line, column=index+1)

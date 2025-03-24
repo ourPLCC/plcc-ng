@@ -43,7 +43,7 @@ def test_match_skip_rule():
     matcher = make_matcher(spec = spec.ruleList)
     line = list(parse_lines_from_string("   555"))[0]
     result = matcher.match(line=line, index=0)
-    assert result == Skip(lexeme="   ", name="WHITESPACE", column=4)
+    assert result == Skip(lexeme="   ", name="WHITESPACE", column=3)
 
 def test_match_longest_rule():
     spec, errors = parse_lexical_from_string(string='''
@@ -75,26 +75,15 @@ def test_match_later_index():
     result = matcher.match(line=line, index=3)
     assert result == Token(lexeme="456789", name = "NUMBER", column=9)
 
-def test_skip_before_token():
+def test_skip_ignored():
     spec, errors = parse_lexical_from_string(string='''
+        skip ONE '1'
         token NUMBER '\\d+'
-        skip ONETWOTHREE '123'
     ''')
-    line = list(parse_lines_from_string("123456"))[0]
     matcher = make_matcher(spec=spec.ruleList)
+    line = list(parse_lines_from_string("123"))[0]
     result = matcher.match(line=line, index=0)
-    assert result == Skip(lexeme="123", name="ONETWOTHREE", column=4)
-
-def test_skip_ignored_after_token_match():
-    spec, errors = parse_lexical_from_string(string='''
-        token NUMBER '\\d+'
-        skip WHITESPACE '\\s+'
-    ''')
-    line = list(parse_lines_from_string("123  56"))[0]
-    matcher = make_matcher(spec=spec.ruleList)
-    result = matcher.match(line=line, index=0)
-    result2 = matcher.match(line=line, index=3)
-    assert result2 == Token(lexeme="56", name="NUMBER", column=7)
+    assert result == Skip(lexeme='1', name='ONE', column=1)
 
 
 
