@@ -9,7 +9,7 @@ def test_read_specfile_builds_matcher_spec(tmp_path):
         '--spec' : specfile,
         '<file>' : ['-']
     }
-    main = Main(Scanner, Source)
+    main = Main(Scanner, Source, Matcher)
     main.run(args)
 
     assert len(main.Scanner.matcher.spec) == 4
@@ -23,7 +23,7 @@ def test_read_input_file_and_pass_to_source(tmp_path):
         '--spec' : specfile,
         '<file>' : ['f1','-','f2']
     }
-    main = Main(Scanner, Source)
+    main = Main(Scanner, Source, Matcher)
     main.run(args)
     assert main.Source.files == ['f1','-', 'f2']
 
@@ -33,7 +33,7 @@ def test_scan_source_stdin(tmp_path):
         '--spec' : specfile,
         '<file>' : ['-']
     }
-    main = Main(Scanner, Source)
+    main = Main(Scanner, Source, Matcher)
     main.run(args)
     assert main.Scanner.scanned == ["-"]
 
