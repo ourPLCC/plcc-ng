@@ -1,14 +1,18 @@
+"""
+Usage:
+    plccng scan --spec=<specfile> [<file> ...]
+"""
+
 import pytest
 from .main import Main
-from .main import __doc__ as helpMessage
 import io
+from docopt import docopt, DocoptExit
 
 def test_read_specfile_builds_matcher_spec(tmp_path):
     specfile = build_specfile(tmp_path)
-    args = {
-        '--spec' : specfile,
-        '<file>' : ['-']
-    }
+    string = f"scan --spec={specfile}"
+    args = docopt(__doc__, string)
+
     main = Main(Scanner, Source, Matcher)
     main.run(args)
 
@@ -19,20 +23,16 @@ def test_read_specfile_builds_matcher_spec(tmp_path):
 
 def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
-    args = {
-        '--spec' : specfile,
-        '<file>' : ['f1','-','f2']
-    }
+    string = f"scan --spec={specfile} f1 - f2"
+    args = docopt(__doc__, string)
     main = Main(Scanner, Source, Matcher)
     main.run(args)
     assert main.Source.files == ['f1','-', 'f2']
 
 def test_scan_source_stdin(tmp_path):
     specfile = build_specfile(tmp_path)
-    args = {
-        '--spec' : specfile,
-        '<file>' : ['-']
-    }
+    string = f"scan --spec={specfile}"
+    args = docopt(__doc__, string)
     main = Main(Scanner, Source, Matcher)
     main.run(args)
     assert main.Scanner.scanned == ["-"]

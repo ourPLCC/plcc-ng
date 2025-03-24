@@ -9,15 +9,17 @@ class Main:
     def run(self, args):
         self.Matcher = self._buildMatcher(args["--spec"])
         self.Scanner = self.Scanner(self.Matcher)
-        self.Source = self._buildSource(args["<file>"])
+        self.Source = self._buildSource(args)
 
         self.Scanner.scan(list(self.Source))
 
-    def _buildSource(self, files):
+    def _buildSource(self, args):
+        files = args['<file>'] if len(args['<file>']) > 0 else ['-']
         return self.Source(files)
+        # return self.Source(files)
 
     def _buildMatcher(self, filePath):
         with open(filePath, "r") as file:
             data = json.load(file)
-            return self.Matcher(filePath)
+            return self.Matcher(data)
 
