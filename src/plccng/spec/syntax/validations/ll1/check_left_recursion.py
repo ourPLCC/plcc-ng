@@ -9,13 +9,10 @@ class LeftRecursionChecker:
         self.grammar = grammar
         self.grammarCopy = copy.deepcopy(grammar)
         self.substitutions = {}
-        self.nonterminals = self.getNonterminalsInOrder()
-
-    def getNonterminalsInOrder(self):
-        return list(self.grammarCopy.getRules().keys())
+        self.nonterminalsInOrder = list(self.grammarCopy.getRules().keys())
 
     def check(self):
-        for n in self.nonterminals:
+        for n in self.nonterminalsInOrder:
             self._handleLeftRecursionSubstitutions(n)
             directLeftRecursiveRules = self._findDirectLeftRecursion(n)
             if directLeftRecursiveRules:
@@ -25,12 +22,12 @@ class LeftRecursionChecker:
     def _handleLeftRecursionSubstitutions(self, n):
         rulesDict = self.grammarCopy.getRules()
         currNontermRules = rulesDict[n]
-        for prevNonterm in self.nonterminals[:self.nonterminals.index(n)]:
-            rulesToRemove = []
+        for prevNonterm in self.nonterminalsInOrder[:self.nonterminalsInOrder.index(n)]:
+            rulesToRemove = set()
             newRules = []
             for r in currNontermRules:
-                if r and r[0] == prevNonterm:
-                    rulesToRemove.append(r)
+                if r[0] == prevNonterm:
+                    rulesToRemove.add(r)
                     for prevNontermRule in rulesDict[prevNonterm]:
                         newRule = prevNontermRule + r[1:]
                         newRules.append(newRule)
@@ -40,7 +37,7 @@ class LeftRecursionChecker:
             rulesDict[n].extend(newRules)
 
     def _findDirectLeftRecursion(self, n):
-        return [r for r in self.grammarCopy.getRules()[n] if r and r[0] == n]
+        return [r for r in self.grammarCopy.getRules()[n] if r[0] == n]
 
     def _traverseSubstitutionsForOriginal(self, startRule):
         rulesFromOriginal = []
@@ -59,7 +56,4 @@ class LeftRecursionChecker:
         return rulesFromOriginal if rulesFromOriginal else None
 
     def _ruleInOriginalGrammar(self, rule):
-        for rules in self.grammar.getRules().values():
-            if rule in rules:
-                return True
-        return False
+        return any(rule in rules for rules in self.grammar.getRules().values())
