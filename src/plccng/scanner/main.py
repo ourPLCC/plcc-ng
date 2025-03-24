@@ -16,7 +16,6 @@ class Main:
     def _buildSource(self, args):
         files = args['<file>'] if len(args['<file>']) > 0 else ['-']
         return self.Source(files)
-        # return self.Source(files)
 
     def _buildMatcher(self, filePath):
         with open(filePath, "r") as file:

@@ -3,17 +3,15 @@ Usage:
     plccng scan --spec=<specfile> [<file> ...]
 """
 
-import pytest
 from .main import Main
-import io
-from docopt import docopt, DocoptExit
+from docopt import docopt
 
 def test_read_specfile_builds_matcher_spec(tmp_path):
     specfile = build_specfile(tmp_path)
     string = f"scan --spec={specfile}"
     args = docopt(__doc__, string)
 
-    main = Main(Scanner, Source, Matcher)
+    main = Main(ScannerSpy, SourceMock, MatcherMock)
     main.run(args)
 
     assert len(main.Scanner.matcher.spec) == 4
@@ -25,7 +23,7 @@ def test_read_input_file_and_pass_to_source(tmp_path):
     specfile = build_specfile(tmp_path)
     string = f"scan --spec={specfile} f1 - f2"
     args = docopt(__doc__, string)
-    main = Main(Scanner, Source, Matcher)
+    main = Main(ScannerSpy, SourceMock, MatcherMock)
     main.run(args)
     assert main.Source.files == ['f1','-', 'f2']
 
@@ -33,7 +31,7 @@ def test_scan_source_stdin(tmp_path):
     specfile = build_specfile(tmp_path)
     string = f"scan --spec={specfile}"
     args = docopt(__doc__, string)
-    main = Main(Scanner, Source, Matcher)
+    main = Main(ScannerSpy, SourceMock, MatcherMock)
     main.run(args)
     assert main.Scanner.scanned == ["-"]
 
@@ -68,7 +66,7 @@ def build_specfile(tmp_path):
 
     return str(specfile)
 
-class Scanner:
+class ScannerSpy:
     def __init__(self, matcher):
         self.matcher = matcher
         self.scanned = None # for testing what lines are passed into Scanner.scan()
@@ -76,14 +74,14 @@ class Scanner:
     def scan(self, lines):
         self.scanned = lines
 
-class Matcher:
+class MatcherMock:
     def __init__(self, spec):
         self.spec = spec
 
     def match(string):
         pass
 
-class Source:
+class SourceMock:
     def __init__(self, files):
         self.files = files
 
