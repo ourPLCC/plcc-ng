@@ -1,9 +1,4 @@
-from dataclasses import dataclass
-
-from .lines import Line
-
-
-@dataclass
-class ValidationError:
-    line: Line
-    message: str
+class ValidationError(Exception):
+    def __init__(self, line=None, message=None):
+        self.line=line
+        self.message = message

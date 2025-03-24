@@ -1,7 +1,7 @@
 from typing import List
 
 from ...lexical import LexicalRule, LexicalSpec
-from ...lines import Line
+from ....lines import Line
 from ..LhsNonTerminal import LhsNonTerminal
 from ..Symbol import Symbol
 from ..SyntacticRule import SyntacticRule

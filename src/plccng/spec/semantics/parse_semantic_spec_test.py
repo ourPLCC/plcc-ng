@@ -1,7 +1,7 @@
 from pytest import raises
 
-from ..lines.Line import Line
-from ..rough import Divider, parse_from_string
+from ...lines import Line
+from .. import rough
 from .parse_semantic_spec import parse_code_fragments, parse_semantic_spec
 
 
@@ -29,15 +29,16 @@ def test_no_CodeFragments():
 # ''')))
 
 def make_block():
-    return  list(parse_from_string('''\
+    rough_, errors = rough.parseRough('''\
 %%%
 block
 %%%
-'''))[0]
+''')
+    return  rough_[0]
 
 
 def make_divider(tool, language, line):
-    return Divider(tool=tool, language=language, line=line)
+    return rough.Divider(tool=tool, language=language, line=line)
 
 def make_line(string, number=1, file=None):
     return Line(string, number, file)

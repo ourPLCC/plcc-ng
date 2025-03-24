@@ -13,6 +13,10 @@ readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
 
 
+[project.scripts]
+plccng = "plccng.cli:main"
+
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
@@ -21,6 +25,9 @@ build-backend = "pdm.backend"
 [tool.pdm]
 distribution = true
 
+
+[tool.pdm.build]
+package-dir = "src"
 
 [tool.pdm.version]
 source = "scm"

@@ -1,4 +1,4 @@
-from ..rough import parse_from_string
+from .. import rough
 from .InvalidClassNameError import InvalidClassNameError
 from .parse_semantic_spec import parse_semantic_spec
 from .UndefinedBlockError import UndefinedBlockError
@@ -100,6 +100,6 @@ def assertInvalidClassName(name: str):
     assert isinstance(errors[0], InvalidClassNameError)
 
 def parse(string):
-    rough = list(parse_from_string(string))
-    spec =  parse_semantic_spec(rough)
+    rough_, errors = rough.parseRough(string)
+    spec =  parse_semantic_spec(rough_)
     return spec

@@ -1,5 +1,5 @@
 from ..SpecError import SpecError
 
 
-class CircularIncludeError(SpecError):
+class LexicalSpecError(SpecError):
     ...

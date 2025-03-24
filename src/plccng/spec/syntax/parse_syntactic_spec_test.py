@@ -2,8 +2,8 @@ from typing import List
 
 from pytest import raises
 
-from ..lines import Line
-from ..rough import parse_from_lines
+from .. import rough
+from ...lines import Line
 from .CapturingTerminal import CapturingTerminal
 from .LhsNonTerminal import LhsNonTerminal
 from .MalformedBNFError import MalformedBNFError
@@ -372,7 +372,8 @@ def test_malformed_bnf_raises():
 
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    return list(parse_from_lines([makeLine(string, lineNumber, file)]))[0]
+    rough_, errors = rough.parseRough([makeLine(string, lineNumber, file)])
+    return rough_[0]
 
 
 def makeLine(string, lineNumber=0, file: str = ""):

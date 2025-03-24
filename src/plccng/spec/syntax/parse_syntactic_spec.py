@@ -2,7 +2,7 @@ import re
 from re import Match
 from typing import List
 
-from ..lines import Line
+from ...lines import Line
 from .CapturingSymbol import CapturingSymbol
 from .CapturingTerminal import CapturingTerminal
 from .LhsNonTerminal import LhsNonTerminal
