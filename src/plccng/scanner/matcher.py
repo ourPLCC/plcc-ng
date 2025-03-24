@@ -18,7 +18,6 @@ class Matcher:
                 matches.append(Token(lexeme=test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+index))
             else:
                 continue
-
         if matches:
             return self.get_longest_match(matches)
         else:
