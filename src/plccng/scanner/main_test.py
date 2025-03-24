@@ -6,65 +6,37 @@ Usage:
 from .main import Main
 from docopt import docopt
 
-def test_read_specfile_builds_matcher_spec(tmp_path):
-    specfile = build_specfile(tmp_path)
-    string = f"scan --spec={specfile}"
+def test_read_specfile_builds_matcher_spec(fs):
+    createFile(fs, contents= '''
+        skip WHITESPACE '\\s+'
+        token MINUS '-'
+    ''')
+    string = "scan --spec=specfile"
     args = docopt(__doc__, string)
-
     main = Main(ScannerSpy, SourceMock, MatcherMock)
     main.run(args)
+    assert len(main.Scanner.matcher.spec) == 2
+    assert main.Scanner.matcher.spec.ruleList[0].isSkip == True
+    assert main.Scanner.matcher.spec.ruleList[1].name == "MINUS"
 
-    assert len(main.Scanner.matcher.spec) == 4
-    assert main.Scanner.matcher.spec[0]['type'] == 'Token'
-    assert main.Scanner.matcher.spec[1]['regex'] == '\\s+'
-    assert main.Scanner.matcher.spec[2]['name'] == 'ONETWOTHREE'
-
-def test_read_input_file_and_pass_to_source(tmp_path):
-    specfile = build_specfile(tmp_path)
-    string = f"scan --spec={specfile} f1 - f2"
+def test_read_input_file_and_pass_to_source(fs):
+    createFile(fs)
+    string = "scan --spec=specfile f1 - f2"
     args = docopt(__doc__, string)
     main = Main(ScannerSpy, SourceMock, MatcherMock)
     main.run(args)
     assert main.Source.files == ['f1','-', 'f2']
 
-def test_scan_source_stdin(tmp_path):
-    specfile = build_specfile(tmp_path)
-    string = f"scan --spec={specfile}"
+def test_scan_stdin_when_input_files_not_specified(fs):
+    createFile(fs)
+    string = "scan --spec=specfile"
     args = docopt(__doc__, string)
     main = Main(ScannerSpy, SourceMock, MatcherMock)
     main.run(args)
-    assert main.Scanner.scanned == ["-"]
+    assert main.Source.files == ['-']
 
-def build_specfile(tmp_path):
-    specfile = tmp_path / "specfile.json"
-    file_content = """
-    [
-        {
-            "type": "Token",
-            "name": "MINUS",
-            "regex": "-"
-        },
-        {
-            "type": "Skip",
-            "name": "WHITESPACE",
-            "regex": "\\\\s+"
-        },
-        {
-            "type": "Token",
-            "name": "ONETWOTHREE",
-            "regex": "123"
-        },
-        {
-            "type": "Token",
-            "name": "NUMBER",
-            "regex": "\\\\d+"
-        }
-    ]
-    """
-    with open(specfile, 'w') as f:
-        f.write(file_content)
-
-    return str(specfile)
+def createFile(fs, name="./specfile", contents="token MINUS '-'"):
+    fs.create_file(name, contents=contents)
 
 class ScannerSpy:
     def __init__(self, matcher):

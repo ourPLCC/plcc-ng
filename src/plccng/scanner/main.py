@@ -1,4 +1,4 @@
-import json
+from plccng.spec import parseSpec
 
 class Main:
     def __init__(self, Scanner, Source, Matcher):
@@ -18,7 +18,8 @@ class Main:
         return self.Source(files)
 
     def _buildMatcher(self, filePath):
-        with open(filePath, "r") as file:
-            data = json.load(file)
-            return self.Matcher(data)
+        with open(filePath, "r") as f:
+            string = f.read()
+        spec, errors = parseSpec(string)
+        return self.Matcher(spec.lexical)
 
