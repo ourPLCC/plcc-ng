@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from ..spec import Line
+from ..lines import Line
 
 
 @dataclass
