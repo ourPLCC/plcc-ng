@@ -1,21 +1,22 @@
 import re
 
-from ..lines.Line import Line
+from ...lines import Line
 from .Divider import Divider
 
 
 def parse_dividers(lines):
-    return DividerParser(lines).parse()
+    return DividerParser().parse(lines)
 
 
 class DividerParser:
-    def __init__(self, lines):
-        self.lines = lines
+    def __init__(self):
+        self.lines = None
         self.defaultToolPath = "Java"
         self.defaultLanguage = "Java"
         self.patterns = self._compilePatternDictionary()
 
-    def parse(self):
+    def parse(self, lines):
+        self.lines = lines
         if not self.lines:
             return
         for line in self.lines:

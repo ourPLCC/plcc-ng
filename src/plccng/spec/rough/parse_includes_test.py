@@ -1,4 +1,4 @@
-from .. import lines
+from ... import lines
 from .Block import Block
 from .Include import Include
 from .parse_blocks import parse_blocks
@@ -14,7 +14,7 @@ def test_empty_yields_nothing():
 
 
 def test_non_includes_pass_through():
-    lines_ = list(parse_blocks(lines.parse_from_string('''\
+    lines_ = list(parse_blocks(lines.parseLines('''\
 one
 %%%
 two
@@ -25,7 +25,7 @@ three
 
 
 def test_include():
-    lines_ = list(lines.parse_from_string('''\
+    lines_ = list(lines.parseLines('''\
 %include file
 '''))
     assert list(parse_includes(lines_)) == [
@@ -37,7 +37,7 @@ def test_include():
 
 
 def test_ignores_includes_in_blocks():
-    lines_ = list(parse_blocks(lines.parse_from_string('''\
+    lines_ = list(parse_blocks(lines.parseLines('''\
 %%%
 %include file
 %%%

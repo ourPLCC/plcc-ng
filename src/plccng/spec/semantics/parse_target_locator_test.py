@@ -1,6 +1,6 @@
 from pytest import raises
 
-from ..lines import Line
+from ...lines import Line
 from .parse_target_locator import InvalidTargetLocatorError, parse_target_locator
 from .TargetLocator import TargetLocator
 

@@ -1,10 +1,12 @@
 import re
 
+from ... import lines
 from .Block import Block
+from .raise_handler import raise_handler
 from .UnclosedBlockError import UnclosedBlockError
 
 
-def parse_blocks(lines):
+def parse_blocks(lines, handler=raise_handler):
     if lines is None:
         return []
     PPP = re.compile(r'^%%%(?:\s*#.*)?$')
@@ -14,12 +16,13 @@ def parse_blocks(lines):
         PPP: PPP,
         PPLC: PPRC
     }
-    return BlockParser(brackets).parse(lines)
+    return BlockParser(brackets, handler).parse(lines)
 
 
 class BlockParser():
-    def __init__(self, brackets):
+    def __init__(self, brackets, handler):
         self.brackets = brackets
+        self.handler = handler
         self.closing = None
 
     def parse(self, lines):
@@ -44,7 +47,12 @@ class BlockParser():
             if self.isClosing(line):
                 yield Block(blockLines)
                 return
-        raise UnclosedBlockError(line)
+        # No closing found.
+        self.handler(UnclosedBlockError(line=line, column=len(blockLines[-1].string)+1, message='Start of block: {blockLines[0].file}:{blockLines[0].number}'))
+        # Add a closing line to be consistent (since blocks contain their closing)
+        closing = lines.Line(string='%%%', number=blockLines[-1].number+1, file=blockLines[-1].file)
+        blockLines.append(closing)
+        yield Block(blockLines)
 
     def setClosingFor(self, line):
         for b in self.brackets:

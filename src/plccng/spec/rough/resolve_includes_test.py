@@ -1,6 +1,6 @@
 from pytest import raises
 
-from ..lines.Line import Line
+from ...lines import Line
 from .CircularIncludeError import CircularIncludeError
 from .resolve_includes import from_string_unresolved, resolve_includes
 
@@ -39,3 +39,14 @@ def test_relative_path(fs):
     assert result == [
         Line('hi', 1, '/b/c/h')
     ]
+
+
+def test_handler(fs):
+    fs.create_file('/f', contents='%include /f')
+
+    # Handler to ignore errors.
+    def ignore(_):
+        pass
+
+    result = list(resolve_includes(from_string_unresolved('%include /f\nhi'), ignore))
+    assert result[0].string == 'hi'

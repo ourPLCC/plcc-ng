@@ -1,7 +1,7 @@
 from pytest import raises
 
-from ....lines import Line
-from ....rough import parse_from_lines
+from .....lines import Line
+from .... import rough
 
 from ...InvalidSymbolException import InvalidSymbolException
 from ...InvalidSyntacticSpecException import InvalidSyntacticSpecException
@@ -94,7 +94,7 @@ def createGrammarWithSpec(lines):
     return makeSpecGrammar(syntacticSpec)
 
 def makeDivider(string="%", lineNumber=0, file=""):
-    return parse_from_lines([makeLine(string, lineNumber, file)])
+    return rough.parseRough([makeLine(string, lineNumber, file)])[0]
 
 def makeLine(string, lineNumber=0, file=""):
     return Line(string, lineNumber, file)
