@@ -48,4 +48,7 @@ class Source:
         return [s for s in lst if s.strip()]
 
     def _getInput(self, name):
-        return sys.stdin.readlines() if name == "-" else open(name, "r").readlines()
+        if name == "-":
+            return sys.stdin.readlines()
+        with open(name, "r") as f:
+            return f.readlines()
