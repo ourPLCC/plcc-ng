@@ -9,12 +9,9 @@ class Main:
         self.Matcher = Matcher
 
     def run(self, args):
-
         self.Matcher = self._buildMatcher(args["--spec"])
-
         self.Scanner = self.Scanner(self.Matcher)
         self.Source = self._buildSource(args)
-
         results = list(self.Scanner.scan(list(self.Source)))
         self._printResults(results)
 

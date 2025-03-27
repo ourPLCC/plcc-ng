@@ -2,8 +2,9 @@ from .main import Main
 from docopt import docopt
 import pytest
 from .structs import HasLexErrors
+from ..spec import LexicalSpecError
 
-def test_read_specfile_builds_matcher_spec(fs):
+def test_read_specfile_builds_matcher_spec(fs, capsys):
     createFile(fs, contents= '''
         skip WHITESPACE '\\s+'
         token MINUS '-'
@@ -59,10 +60,10 @@ def test_raise_HasLexerros(fs):
     string = "scan --spec=specfile f1 - f2"
     args = docopt(getDocString(), string)
     main = Main(ScannerSpy, SourceMock, MatcherMock)
-
     with pytest.raises(HasLexErrors) as exc_info:
         main.run(args)
     assert len(exc_info.value.lexErrors) == 2
+    assert isinstance(exc_info.value.lexErrors[0], LexicalSpecError)
 
 def createFile(fs, name="specfile", contents="token MINUS '-'"):
     fs.create_file(name, contents=contents)
