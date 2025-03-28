@@ -32,7 +32,7 @@ def test_multiple_direct_left_recursion():
         "x x LEFT"
     ])
     res = check_left_recursion(g)
-    assert res == [[('x', ('x', 'RIGHT')), ('x', ('x', 'LEFT'))]]
+    assert res == [[('x', ('x', 'RIGHT'))], [('x', ('x', 'LEFT'))]]
 
 def test_multiple_indirect_left_recursion():
     g = setup([
@@ -41,7 +41,7 @@ def test_multiple_indirect_left_recursion():
         "y x C"
     ])
     res = check_left_recursion(g)
-    assert res == [[('y', ('x', 'C')), ('x', ('y', 'A')), ('x', ('y', 'B'))]]
+    assert res == [[('y', ('x', 'C')), ('x', ('y', 'A'))], [('y', ('x', 'C')), ('x', ('y', 'B'))]]
 
 def test_layered_indirect_left_recursion():
     g = setup([
