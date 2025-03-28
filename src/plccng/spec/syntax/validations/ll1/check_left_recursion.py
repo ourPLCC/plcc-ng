@@ -16,10 +16,8 @@ class LeftRecursionChecker:
         allLeftRecursionInstances = []
         for n in self.nonterminalsInOrder:
             self._handleLeftRecursionSubstitutions(n)
-            directLeftRecursiveRules = self._findDirectLeftRecursion(n)
-            if directLeftRecursiveRules:
-                for rule in self._findDirectLeftRecursion(n):
-                    allLeftRecursionInstances.append(self._traverseSubstitutionsForOriginal(n, rule))
+            for rule in self._findDirectLeftRecursion(n):
+                allLeftRecursionInstances.append(self._traverseSubstitutionsForOriginal(n, rule))
         return allLeftRecursionInstances if allLeftRecursionInstances else None
 
     def _handleLeftRecursionSubstitutions(self, n):
