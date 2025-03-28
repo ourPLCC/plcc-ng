@@ -38,7 +38,7 @@ def test_match_token_with_multiple_rules():
     ''')
     line = parseLine("11--")
     result = matcher.match(line, index=0)
-    assert result == Token(lexeme="11", name="NUMBER", column=2)
+    assert result == Token(lexeme="11", name="NUMBER", column=1)
 
 def test_match_longest_rule():
     matcher = makeMatcher(r'''
@@ -47,7 +47,7 @@ def test_match_longest_rule():
     ''')
     line = parseLine("1235564")
     result = matcher.match(line, index=0)
-    assert result == Token(lexeme="1235564", name="NUMBER", column=7)
+    assert result == Token(lexeme="1235564", name="NUMBER", column=1)
 
     # order should not matter
     matcher = makeMatcher(r'''
@@ -56,7 +56,7 @@ def test_match_longest_rule():
     ''')
     line = parseLine("1235564")
     result = matcher.match(line, index=0)
-    assert result == Token(lexeme="1235564", name="NUMBER", column=7)
+    assert result == Token(lexeme="1235564", name="NUMBER", column=1)
 
 def test_match_first_longest_rule():
     matcher = makeMatcher(r'''
@@ -65,7 +65,7 @@ def test_match_first_longest_rule():
     ''')
     line = parseLine("123")
     result = matcher.match(line, index=0)
-    assert result == Token(lexeme="123", name = "ONETWOTHREE", column=3)
+    assert result == Token(lexeme="123", name = "ONETWOTHREE", column=1)
 
     # order matters
     matcher = makeMatcher(r'''
@@ -74,7 +74,7 @@ def test_match_first_longest_rule():
     ''')
     line = parseLine("123")
     result = matcher.match(line, index=0)
-    assert result == Token(lexeme="123", name = "NUMBER", column=3)
+    assert result == Token(lexeme="123", name = "NUMBER", column=1)
 
 def test_skip_wins_if_it_matches_before_any_token_rules():
     matcher = makeMatcher(r'''

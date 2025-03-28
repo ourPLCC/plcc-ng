@@ -13,9 +13,9 @@ class Matcher:
         for ruleIndex, pattern in enumerate(compiled_patterns):
             test_match = re.match(pattern, line.string[index: ])
             if(test_match and self.spec[ruleIndex].isSkip):
-                matches.append(Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+index))
+                matches.append(Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column= 1+index))
             elif(test_match and not self.spec[ruleIndex].isSkip):
-                matches.append(Token(lexeme=test_match.group(), name=self.spec[ruleIndex].name, column=test_match.end()+index))
+                matches.append(Token(lexeme=test_match.group(), name=self.spec[ruleIndex].name, column= 1+index))
             else:
                 continue
         if matches and matches[0].__class__ == Skip:
