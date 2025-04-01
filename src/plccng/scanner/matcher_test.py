@@ -97,6 +97,18 @@ def test_skip_wins_if_it_matches_before_any_token_rules():
     assert result == Token(lexeme='123', name='NUMBER', column=1)
 
 
+def test_match_mid_string():
+    matcher = makeMatcher(r'''
+        skip ONE '1'
+        token NUMBER '\d+'
+    ''')
+    line = parseLine("hi 123")
+    result = matcher.match(line, index=3)
+    assert result == Skip(lexeme='1', name='ONE', column=4)
+    result = matcher.match(line, index=4)
+    assert result == Token(lexeme='23', name='NUMBER', column=5)
+
+
 #helper methods
 
 def makeMatcher(spec):
