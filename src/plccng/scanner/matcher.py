@@ -4,34 +4,52 @@ from .Skip import Skip
 import re
 
 class Matcher:
-    def __init__(self, spec):
-        self.spec = spec
+    def __init__(self, rules):
+        self._rules = rules
+        self._patterns = None
 
     def match(self, line, index):
-        compiled_patterns = self.compile_regex()
-        matches = []
-        for ruleIndex, pattern in enumerate(compiled_patterns):
-            test_match = re.match(pattern, line.string[index: ])
-            if(test_match and self.spec[ruleIndex].isSkip):
-                matches.append(Skip(lexeme = test_match.group(), name=self.spec[ruleIndex].name, column= 1+index))
-            elif(test_match and not self.spec[ruleIndex].isSkip):
-                matches.append(Token(lexeme=test_match.group(), name=self.spec[ruleIndex].name, column= 1+index))
-            else:
-                continue
-        if matches and matches[0].__class__ == Skip:
-            return matches[0]
-        elif matches:
-            return self.get_longest_match(matches)
-        else:
+        matches = self._getMatches(line, index)
+        if not matches:
             return LexError(line=line, column=index+1)
+        if isinstance(matches[0], Skip):
+            return matches[0]
+        return self._getLongestMatch(matches)
 
-    #Helper methods
-    def compile_regex(self):
+    def _getMatches(self, line, index):
+        patterns = self._getPatterns()
+        matches = []
+        for rule, pattern in zip(self._rules, patterns):
+            m = pattern.match(line.string, index)
+            if not m:
+                continue
+            sot = self._makeSkipOrToken(m, rule, index)
+            matches.append(sot)
+        return matches
+
+    def _getPatterns(self):
+        if not self._patterns:
+            self._compilePatterns()
+        return self._patterns
+
+    def _compilePatterns(self):
         compiled_patterns = []
-        for rule in self.spec:
+        for rule in self._rules:
             pattern = re.compile(rule.pattern)
             compiled_patterns.append(pattern)
-        return compiled_patterns
+        self._patterns = compiled_patterns
 
-    def get_longest_match(self, match_list):
-            return max(match_list, key=lambda m: len(m.lexeme))
+    def _makeSkipOrToken(self, match, rule, index):
+        if(rule.isSkip):
+            return self._makeSkip(match, rule, index)
+        else:
+            return self._makeToken(match, rule, index)
+
+    def _makeSkip(self, match, rule, index):
+        return Skip(lexeme=match.group(), name=rule.name, column=1+index)
+
+    def _makeToken(self, match, rule, index):
+        return Token(lexeme=match.group(), name=rule.name, column=1+index)
+
+    def _getLongestMatch(self, matches):
+            return max(matches, key=lambda m: len(m.lexeme))
