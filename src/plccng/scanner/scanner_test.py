@@ -29,10 +29,10 @@ def whiteSpaceSkipMatcher():
 def fiveCharacterMatcher():
     class FiveCharacterMatcher():
         def match(self, line, index):
-            final_index = len(line.string) - 1
+            final_index = len(line.string)
             if index+5 > final_index:
                 return Token(name="Token", lexeme=line.string[index:final_index], line=line, column=final_index)
-            return Token(name="Token", lexeme=line.string[index:index+5], line=line, column=index+5)
+            return Token(name="Token", lexeme=line.string[index:index+5], line=line, column=index)
     
     return FiveCharacterMatcher()
 
@@ -60,7 +60,7 @@ blah blah
     assert isinstance(result[0], LexError)
 
 
-def test_LexError_at_the_start_of_the_line_moves_on_to_next_line(errorRaisingMatcher):
+def test_LexError_at_start_moves_on_to_next_line(errorRaisingMatcher):
     scanner = Scanner(errorRaisingMatcher)
     twoLinesWithErrors = parseLines('''\
 blah blah
@@ -68,8 +68,8 @@ next line
 ''')
     scanner = Scanner(errorRaisingMatcher)
     results = list(scanner.scan(twoLinesWithErrors))
-    assert all(isinstance(item, LexError) for item in results)
-
+    assert isinstance(results[0], LexError)
+    assert results[1].line.string == 'next line'
 
 def test_lex_error_in_middle_of_the_line_moves_on_to_the_next_line(whiteSpaceSkipMatcher):
     lineWithErrorinTheMiddle = parseLines('''\
@@ -82,17 +82,25 @@ after the skip and lexerror this line should also be a lex error
     assert isinstance(results[1], LexError)
     assert results[2].line.string == 'after the skip and lexerror this line should also be a lex error'
 
+def test_indexes_are_correct_after_matches(fiveCharacterMatcher):
+    lines = parseLines('''\
+12345123451234512345
+''')
+    scanner = Scanner(fiveCharacterMatcher)
+    results = list(scanner.scan(lines))
+    for result in results:
+        assert result.lexeme[0] == '1'
 
-def test_once_whole_line_is_indexed_scanner_moves_on_to_next_line(fiveCharacterMatcher):
+def test_completely_correct_match_goes_through(fiveCharacterMatcher):
     linesThatWillPassCompletely = parseLines('''\
-this line should pass just fine
-this line is what we should move on to next
+12345123451234567
+123451234512345
 ''')
     scanner = Scanner(fiveCharacterMatcher)
     results = list(scanner.scan(linesThatWillPassCompletely))
-    for result in results:
-        assert result.column < len(result.line.string)
-
+    resultsWanted = ['12345', '12345', '12345', '67', '12345', '12345', '12345']
+    for i in range(len(results)):
+        assert results[i].lexeme == resultsWanted[i]
 
 def test_iteration_stops_after_all_lines_scanned(errorRaisingMatcher):
     lines = parseLines('''\

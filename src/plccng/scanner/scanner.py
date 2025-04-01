@@ -9,12 +9,14 @@ class Scanner:
         if lines is None:
             return StopIteration
         for line in lines:
-            index = 0
+            yield from self._lineScanner(line)
+
+    def _lineScanner(self, line):
+        index = 0
+        try:
             while index < len(line.string):
                 result = self.matcher.match(line, index)
-                if isinstance(result, LexError):
-                    yield result
-                    break           #If a LexError is given at any point, just move on to the next line
-                else:
-                    index = result.column + 1
-                    yield result
+                index = result.column + len(result.lexeme)
+                yield result
+        except:
+            yield result                    
