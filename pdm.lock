@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:43c1a70e3e3da41f3cc927c113a69380d63e9aea1b899d58292ecd98a73908a2"
+content_hash = "sha256:cfc6b6233040c9ab4b93daeb9f35b1116bd582fee88de5d8aa83425d37873902"
 
 [[metadata.targets]]
 requires_python = "~=3.10"
@@ -147,6 +147,17 @@ files = [
     {file = "coverage-7.6.3-cp313-cp313t-win_amd64.whl", hash = "sha256:23bb63ae3f4c645d2d82fa22697364b0046fbafb6261b258a58587441c5f7bd0"},
     {file = "coverage-7.6.3-pp39.pp310-none-any.whl", hash = "sha256:b9853509b4bf57ba7b1f99b9d866c422c9c5248799ab20e652bbb8a184a38181"},
     {file = "coverage-7.6.3.tar.gz", hash = "sha256:bb7d5fe92bd0dc235f63ebe9f8c6e0884f7360f88f3411bfed1350c872ef2054"},
+]
+
+[[package]]
+name = "docopt-ng"
+version = "0.9.0"
+requires_python = ">=3.7"
+summary = "Jazzband-maintained fork of docopt, the humane command line arguments parser."
+groups = ["default"]
+files = [
+    {file = "docopt_ng-0.9.0-py3-none-any.whl", hash = "sha256:bfe4c8b03f9fca424c24ee0b4ffa84bf7391cb18c29ce0f6a8227a3b01b81ff9"},
+    {file = "docopt_ng-0.9.0.tar.gz", hash = "sha256:91c6da10b5bb6f2e9e25345829fb8278c78af019f6fc40887ad49b060483b1d7"},
 ]
 
 [[package]]
