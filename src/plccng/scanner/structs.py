@@ -18,7 +18,7 @@ class Token(Match):
 class Skip(Match):
     pass
 
-class LexError(Exception):
+class LexError:
     def __init__(self, line, column):
         self.line=line
         self.column=column

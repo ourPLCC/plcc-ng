@@ -13,10 +13,10 @@ class Scanner:
 
     def _lineScanner(self, line):
         index = 0
-        try:
-            while index < len(line.string):
-                result = self.matcher.match(line, index)
-                index = result.column + len(result.lexeme)
+        while index < len(line.string):
+            result = self.matcher.match(line, index)
+            if isinstance(result, LexError):
                 yield result
-        except:
-            yield result                    
+                return
+            index += len(result.lexeme)
+            yield result

@@ -2,7 +2,7 @@ import pytest
 
 from ..lines import parseLines
 from .scanner import Scanner
-from .structs import LexError, Line, Skip, Token
+from .structs import LexError, Skip, Token
 
 
 @pytest.fixture
@@ -13,39 +13,35 @@ def errorRaisingMatcher():
 
     return ErrorRaisingMatcher()
 
+
 @pytest.fixture
-def whiteSpaceSkipMatcher():
-    class WhiteSpaceSkipMatcher():
+def tabSkipMatcher():
+    class TabSkipMatcher():
         def match(self, line, index):
-            if line.string[index] == " ":
-                return Skip(name="whitespace", lexeme=" ", line=line, column=index)
+            if line.string[index] == "\t":
+                return Skip(name="whitespace", lexeme="\t", line=line, column=index)
             else:
                 return LexError(line=line, column=index)
-    
-    return WhiteSpaceSkipMatcher()
 
-#Matches up to 5 of any characters (whitespace included) in a string
+    return TabSkipMatcher()
+
+
 @pytest.fixture
 def fiveCharacterMatcher():
     class FiveCharacterMatcher():
         def match(self, line, index):
-            final_index = len(line.string)
-            if index+5 > final_index:
-                return Token(name="Token", lexeme=line.string[index:final_index], line=line, column=final_index)
             return Token(name="Token", lexeme=line.string[index:index+5], line=line, column=index)
-    
+
     return FiveCharacterMatcher()
 
-    
 
-
-def test_no_lines_given_returns_nothing():
+def test_None_returns_empty():
     scanner = Scanner(matcher=None)
     results = scanner.scan(None)
     assert list(results) == []
 
 
-def test_empty_lines_given_returns_nothing():
+def test_empty_returns_empty():
     scanner = Scanner(matcher=None)
     results = scanner.scan([])
     assert list(results) == []
@@ -60,55 +56,34 @@ blah blah
     assert isinstance(result[0], LexError)
 
 
-def test_LexError_at_start_moves_on_to_next_line(errorRaisingMatcher):
+def test_LexError_at_start(errorRaisingMatcher):
     scanner = Scanner(errorRaisingMatcher)
     twoLinesWithErrors = parseLines('''\
-blah blah
-next line
+first line
+second line
 ''')
     scanner = Scanner(errorRaisingMatcher)
     results = list(scanner.scan(twoLinesWithErrors))
-    assert isinstance(results[0], LexError)
-    assert results[1].line.string == 'next line'
+    assert isinstance(results[0], LexError) and results[0].line.string == 'first line'
+    assert isinstance(results[1], LexError) and results[1].line.string == 'second line'
 
-def test_lex_error_in_middle_of_the_line_moves_on_to_the_next_line(whiteSpaceSkipMatcher):
-    lineWithErrorinTheMiddle = parseLines('''\
- this line should create a skip first
-after the skip and lexerror this line should also be a lex error
+def test_lex_error_in_middle(tabSkipMatcher):
+    twoLines = parseLines('''\
+\tfirst line
+second line
 ''')
-    scanner = Scanner(whiteSpaceSkipMatcher)
-    results = list(scanner.scan(lineWithErrorinTheMiddle))
-    assert isinstance(results[0], Skip)
-    assert isinstance(results[1], LexError)
-    assert results[2].line.string == 'after the skip and lexerror this line should also be a lex error'
+    scanner = Scanner(tabSkipMatcher)
+    results = list(scanner.scan(twoLines))
+    assert isinstance(results[0], Skip) and results[0].line.string == '\tfirst line'
+    assert isinstance(results[1], LexError) and results[1].line.string == '\tfirst line'
+    assert isinstance(results[2], LexError) and results[2].line.string == 'second line'
 
-def test_indexes_are_correct_after_matches(fiveCharacterMatcher):
+
+def test_can_match_multiple_tokens(fiveCharacterMatcher):
     lines = parseLines('''\
 12345123451234512345
+1234512345
 ''')
     scanner = Scanner(fiveCharacterMatcher)
     results = list(scanner.scan(lines))
-    for result in results:
-        assert result.lexeme[0] == '1'
-
-def test_completely_correct_match_goes_through(fiveCharacterMatcher):
-    linesThatWillPassCompletely = parseLines('''\
-12345123451234567
-123451234512345
-''')
-    scanner = Scanner(fiveCharacterMatcher)
-    results = list(scanner.scan(linesThatWillPassCompletely))
-    resultsWanted = ['12345', '12345', '12345', '67', '12345', '12345', '12345']
-    for i in range(len(results)):
-        assert results[i].lexeme == resultsWanted[i]
-
-def test_iteration_stops_after_all_lines_scanned(errorRaisingMatcher):
-    lines = parseLines('''\
-this line is a lex error
- 
-the line before this one should be good
-this line is a mixed bag
-''')
-    scanner = Scanner(errorRaisingMatcher)
-    results = list(scanner.scan(lines))
-    assert len(results) == 4
+    assert len(results) == 6
