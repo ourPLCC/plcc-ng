@@ -2,7 +2,7 @@ from .Grammar import Grammar
 import copy
 
 def check_left_recursion(grammar: Grammar):
-    return LeftRecursionChecker(grammar).check()
+    return LeftRecursionChecker(grammar).findLeftRecursion()
 
 class LeftRecursionChecker:
     def __init__(self, grammar: Grammar):
@@ -11,57 +11,76 @@ class LeftRecursionChecker:
         self.substitutions = {}
         self.nonterminalsInOrder = list(self.grammarCopy.getRules().keys())
         self.rulesDict = self.grammarCopy.getRules()
+        self.rulesFromOriginal = []
+        self.rulesToTraverse = []
+        self.visited = set()
 
-    def check(self):
+    def findLeftRecursion(self):
         allLeftRecursionInstances = []
-        for n in self.nonterminalsInOrder:
-            self._handleLeftRecursionSubstitutions(n)
-            for rule in self._findDirectLeftRecursion(n):
-                allLeftRecursionInstances.append(self._traverseSubstitutionsForOriginal(n, rule))
+        for nt in self.nonterminalsInOrder:
+            self._expandIndirectLeftRecursionRules(nt)
+            for rule in self._findDirectLeftRecursionInstances(nt):
+                allLeftRecursionInstances.append(self._getRulesFromOriginalAfterTraversal(nt, rule))
         return allLeftRecursionInstances if allLeftRecursionInstances else None
 
-    def _handleLeftRecursionSubstitutions(self, n):
-        currNontermRules = self.rulesDict[n]
-        for prevNonterm in self.nonterminalsInOrder[:self.nonterminalsInOrder.index(n)]:
-            self._substitute(currNontermRules, prevNonterm)
+    def _expandIndirectLeftRecursionRules(self, nt):
+        currNontermRules = self.rulesDict[nt]
+        for prevNonterm in self.nonterminalsInOrder[:self.nonterminalsInOrder.index(nt)]:
+            self._createNewRuleAndSubstitute(currNontermRules, prevNonterm)
 
-    def _substitute(self, currNontermRules, prevNonterm):
+    def _createNewRuleAndSubstitute(self, currNontermRules, prevNonterm):
+        rulesToRemove = self._getRulesToRemove(currNontermRules, prevNonterm)
+        newRules = self._makeReplacementRules(rulesToRemove, prevNonterm)
+        self._removeRules(currNontermRules, rulesToRemove)
+        self._addRules(newRules, currNontermRules)
+
+    def _getRulesToRemove(self, currNontermRules, prevNonterm):
         rulesToRemove = set()
-        newRules = []
         for r in currNontermRules:
             if r[0] == prevNonterm:
                 rulesToRemove.add(r)
-                for prevNontermRule in self.rulesDict[prevNonterm]:
-                    newRule = prevNontermRule + r[1:]
-                    newRules.append(newRule)
-                    self.substitutions[newRule] = (r, prevNontermRule, prevNonterm)
-        for r in rulesToRemove:
-            currNontermRules.remove(r)
+        return rulesToRemove
+
+    def _makeReplacementRules(self, rulesToRemove, prevNonterm):
+        newRules = []
+        for rule in rulesToRemove:
+            for prevNontermRule in self.rulesDict[prevNonterm]:
+                newRule = prevNontermRule + rule[1:]
+                newRules.append(newRule)
+                self.substitutions[newRule] = (rule, prevNontermRule, prevNonterm)
+        return newRules
+
+    def _removeRules(self, currNontermRules, rulesToRemove):
+        for rule in rulesToRemove:
+            currNontermRules.remove(rule)
+
+    def _addRules(self, newRules, currNontermRules):
         currNontermRules.extend(newRules)
 
-    def _findDirectLeftRecursion(self, n):
-        return [r for r in self.grammarCopy.getRules()[n] if r[0] == n]
+    def _findDirectLeftRecursionInstances(self, nt):
+        return [r for r in self.grammarCopy.getRules()[nt] if r[0] == nt]
 
-    def _traverseSubstitutionsForOriginal(self, n, startRule):
-        rulesFromOriginal = []
-        rulesToTraverse = [(n, startRule)]
-        visited = set()
-        while rulesToTraverse:
-            rulesFromOriginal, rulesToTraverse, visited = self._traverse(rulesFromOriginal, rulesToTraverse, visited)
-        return rulesFromOriginal
+    def _getRulesFromOriginalAfterTraversal(self, nt, startRule):
+        self.rulesFromOriginal = []
+        self.rulesToTraverse = [(nt, startRule)]
+        self.visited = set()
+        while self.rulesToTraverse:
+            self._traverseRule()
+        return self.rulesFromOriginal
 
-    def _traverse(self, rulesFromOriginal, rulesToTraverse, visited):
-        lhs, rhs = rulesToTraverse.pop(0)
+    def _traverseRule(self):
+        lhs, rhs = self.rulesToTraverse.pop(0)
         rule = (lhs, rhs)
-        if rule not in visited:
-            visited.add(rule)
-            if self._ruleInOriginalGrammar(lhs, rhs):
-                rulesFromOriginal.append(rule)
-            if rhs in self.substitutions:
-                origRuleR, origRuleS, origNontermForS = self.substitutions[rhs]
-                rulesToTraverse.append((lhs, origRuleR))
-                rulesToTraverse.append((origNontermForS, origRuleS))
-        return rulesFromOriginal, rulesToTraverse, visited
+        if rule not in self.visited:
+            self.visited.add(rule)
+            self._checkSubstitutionsForOriginalRules(lhs, rhs)
+
+    def _checkSubstitutionsForOriginalRules(self, lhs, rhs):
+        if self._ruleInOriginalGrammar(lhs, rhs):
+            self.rulesFromOriginal.append((lhs, rhs))
+        if rhs in self.substitutions:
+            origRuleR, origRuleS, origNontermForS = self.substitutions[rhs]
+            self.rulesToTraverse.extend([(lhs, origRuleR), (origNontermForS, origRuleS)])
 
     def _ruleInOriginalGrammar(self, lhs, rhs):
         return rhs in self.grammar.getRules().get(lhs, [])
