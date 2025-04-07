@@ -5,7 +5,7 @@ def test_no_left_recursion():
     g = setup([
         "x Y RIGHT",
         "x z RIGHT",
-        "Z YUP"
+        "z YUP"
     ])
     res = check_left_recursion(g)
     assert res is None
