@@ -16,23 +16,27 @@ class LeftRecursionChecker:
         self.visited = set()
 
     def findLeftRecursion(self):
-        allLeftRecursionInstances = []
+        leftRecursion = []
+        seen = []
         for nt in self.nonterminalsInOrder:
-            self._expandIndirectLeftRecursionRules(nt)
-            for rule in self._findDirectLeftRecursionInstances(nt):
-                allLeftRecursionInstances.append(self._getRulesFromOriginalAfterTraversal(nt, rule))
-        return allLeftRecursionInstances if allLeftRecursionInstances else None
+            leftRecursion += self._getLeftRecursion(nt, seen)
+            seen.append(nt)
+        return leftRecursion
 
-    def _expandIndirectLeftRecursionRules(self, nt):
+    def _substituteRules(self, nt, seen):
         currNontermRules = self.rulesDict[nt]
-        for prevNonterm in self.nonterminalsInOrder[:self.nonterminalsInOrder.index(nt)]:
-            self._createNewRuleAndSubstitute(currNontermRules, prevNonterm)
+        for prevNonterm in seen:
+            rulesToRemove = self._getRulesToRemove(currNontermRules, prevNonterm)
+            newRules = self._makeReplacementRules(rulesToRemove, prevNonterm)
+            self._removeRules(currNontermRules, rulesToRemove)
+            self._addRules(newRules, currNontermRules)
 
-    def _createNewRuleAndSubstitute(self, currNontermRules, prevNonterm):
-        rulesToRemove = self._getRulesToRemove(currNontermRules, prevNonterm)
-        newRules = self._makeReplacementRules(rulesToRemove, prevNonterm)
-        self._removeRules(currNontermRules, rulesToRemove)
-        self._addRules(newRules, currNontermRules)
+    def _getLeftRecursion(self, nt, seen):
+        instances = []
+        self._substituteRules(nt, seen)
+        for rule in self._findDirectLeftRecursionInstances(nt):
+            instances.append(self._getRulesFromOriginalAfterTraversal(nt, rule))
+        return instances
 
     def _getRulesToRemove(self, currNontermRules, prevNonterm):
         rulesToRemove = set()

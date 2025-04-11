@@ -10,7 +10,7 @@ def test_no_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res is None
+    assert not res
 
 def test_direct_left_recursion():
     g = setup("""
