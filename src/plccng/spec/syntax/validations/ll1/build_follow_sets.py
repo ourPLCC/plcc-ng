@@ -28,12 +28,12 @@ class FollowSetBuilder:
             self._updateNonterminals()
 
     def _updateNonterminals(self):
-        for nonterminal in self.grammar.getNonterminals():
+        for nonterminal in self.grammar.getNonterminalSet():
             self._updateNonterminal(nonterminal)
 
     def _updateNonterminal(self, nonterminal):
-        for lhs, rules in self.grammar.getRules().items():
-            for production in rules:
+        for lhs in self.grammar.getNonterminalSet():
+            for production in self.grammar.getForms(lhs):
                 self._updateWithEachOccuranceOfNonterminalInProduction(nonterminal, lhs, production)
 
     def _updateWithEachOccuranceOfNonterminalInProduction(self, nonterminal, lhs, production):
@@ -75,5 +75,5 @@ class FollowSetBuilder:
         return False
 
     def _allRulesCanDeriveEmpty(self, symbol):
-        if all(self._canDeriveEmptyString(rule) for rule in self.grammar.getRules()[symbol][0]):
+        if all(self._canDeriveEmptyString(rule) for rule in self.grammar.getForms(symbol)[0]):
             return True

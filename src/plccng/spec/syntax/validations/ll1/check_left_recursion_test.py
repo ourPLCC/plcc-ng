@@ -90,10 +90,10 @@ def test_layered_indirect_left_recursion():
     res = check_left_recursion(g)
     assert res == [
         [
-            ('z', ('a', 'THERE')),
             ('y', ('z', 'LEFT')),
+            ('x', ('y', 'RIGHT')),
+            ('z', ('a', 'THERE')),
             ('a', ('x', 'HA')),
-            ('x', ('y', 'RIGHT'))
         ]
     ]
 
