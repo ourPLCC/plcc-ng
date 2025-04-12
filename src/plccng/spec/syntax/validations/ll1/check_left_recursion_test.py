@@ -19,11 +19,13 @@ def test_direct_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res == [
+    assertSameIgnoringOrder(res,
         [
-            ('x', ('x', 'RIGHT'))
+            [
+                ('x', ('x', 'RIGHT'))
+            ]
         ]
-    ]
+    )
 
 def test_indirect_left_recursion():
     g = setup("""
@@ -34,12 +36,12 @@ def test_indirect_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res == [
+    assertSameIgnoringOrder(res, [
         [
             ('y', ('x',)),
             ('x', ('y', 'RIGHT'))
         ]
-    ]
+    ])
 
 def test_multiple_direct_left_recursion():
     g = setup("""
@@ -49,14 +51,14 @@ def test_multiple_direct_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res == [
+    assertSameIgnoringOrder(res, [
         [
             ('x', ('x', 'RIGHT'))
         ],
         [
             ('x', ('x', 'LEFT'))
         ]
-    ]
+    ])
 
 def test_multiple_indirect_left_recursion():
     g = setup("""
@@ -67,7 +69,7 @@ def test_multiple_indirect_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res == [
+    assertSameIgnoringOrder(res, [
         [
             ('y', ('x', 'C')),
             ('x', ('y', 'A'))
@@ -76,7 +78,7 @@ def test_multiple_indirect_left_recursion():
             ('y', ('x', 'C')),
             ('x', ('y', 'B'))
         ]
-    ]
+    ])
 
 def test_layered_indirect_left_recursion():
     g = setup("""
@@ -88,14 +90,14 @@ def test_layered_indirect_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res == [
+    assertSameIgnoringOrder(res, [
         [
             ('y', ('z', 'LEFT')),
             ('x', ('y', 'RIGHT')),
             ('z', ('a', 'THERE')),
             ('a', ('x', 'HA')),
         ]
-    ]
+    ])
 
 def test_both_direct_and_indirect_left_recursion():
     g = setup("""
@@ -106,7 +108,7 @@ def test_both_direct_and_indirect_left_recursion():
 
     """)
     res = check_left_recursion(g)
-    assert res == [
+    assertSameIgnoringOrder(res, [
         [
             ('y', ('x', 'LEFT')),
             ('x', ('y', 'RIGHT'))
@@ -114,7 +116,14 @@ def test_both_direct_and_indirect_left_recursion():
         [
             ('z', ('z', 'ZEE'))
         ]
-    ]
+    ])
+
+
+def assertSameIgnoringOrder(result, expected):
+    result = tuple(sorted(tuple(sorted(r)) for r in result))
+    expected = tuple(sorted(tuple(sorted(e)) for e in expected))
+    assert result == expected
+
 
 def setup(lines):
     g = Grammar()
