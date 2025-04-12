@@ -23,12 +23,13 @@ class LeftRecursionChecker:
 
     def _getLeftRecursion(self, nonterm, seen):
         instances = []
-        self._substituteForms(nonterm, seen)
+        self._substituteFormsThatStartWithNontermInSeen(nonterm, seen)
         for rule in self._getDirectLeftRecursion(nonterm):
-            instances.append(self._getRulesFromOriginal(nonterm, rule))
+            offendingRules = self._getOriginalGrammarRules(nonterm, rule)
+            instances.append(offendingRules)
         return instances
 
-    def _substituteForms(self, nonterm, seen):
+    def _substituteFormsThatStartWithNontermInSeen(self, nonterm, seen):
         forms = self._getForms(nonterm)
         for nt in seen:
             formsToRemove = self._getFormsThatStartWith(forms, nt)
@@ -41,11 +42,12 @@ class LeftRecursionChecker:
 
     def _makeReplacementForms(self, formsToRemove, startingNonterm):
         forms = []
-        for formToReplace in formsToRemove:
-            for statingNontermForm in self._getForms(startingNonterm):
-                newForm = statingNontermForm + formToReplace[1:]
+        for original in formsToRemove:
+            for expandedNonterm in self._getForms(startingNonterm):
+                originalWithoutFirstTerm = original[1:]
+                newForm = expandedNonterm + originalWithoutFirstTerm
                 forms.append(newForm)
-                self.substitutions[newForm] = (formToReplace, statingNontermForm, startingNonterm)
+                self.substitutions[newForm] = (original, expandedNonterm, startingNonterm)
         return forms
 
     def _removeRules(self, nt, forms):
@@ -59,7 +61,7 @@ class LeftRecursionChecker:
     def _getDirectLeftRecursion(self, nt):
         return [r for r in self.grammarCopy.getForms(nt) if r[0] == nt]
 
-    def _getRulesFromOriginal(self, nt, startRule):
+    def _getOriginalGrammarRules(self, nt, startRule):
         self.rulesFromOriginal = []
         self.rulesToTraverse = [(nt, startRule)]
         self.visited = set()
