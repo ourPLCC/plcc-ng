@@ -1,22 +1,21 @@
 from .Grammar import Grammar
 import copy
 
+
 def check_left_recursion(grammar: Grammar):
     return LeftRecursionChecker(grammar).getLeftRecursion()
 
+
 class LeftRecursionChecker:
     def __init__(self, grammar: Grammar):
-        self.grammar = grammar
-        self.grammarCopy = copy.deepcopy(grammar)
-        self.substitutions = {}
-        self.rulesFromOriginal = []
-        self.rulesToTraverse = []
-        self.visited = set()
+        self.grammar = copy.deepcopy(grammar)
+        self.nonterminals = grammar.getNonterminalList()
+        self.tracker = Tracker(grammar)
 
     def getLeftRecursion(self):
         leftRecursion = []
         seen = []
-        for nt in self._getNonterminals():
+        for nt in self.nonterminals:
             leftRecursion += self._getLeftRecursion(nt, seen)
             seen.append(nt)
         return leftRecursion
@@ -42,44 +41,56 @@ class LeftRecursionChecker:
         return [f for f in self._getForms(definedNonterm) if f[0] == firstNonterm]
 
     def _recordExpansion(self, new, original, expandedNonterm):
-        self.substitutions[new] = (original, expandedNonterm)
-
-    def _getDirectLeftRecursion(self, nt):
-        return [r for r in self.grammarCopy.getForms(nt) if r[0] == nt]
+        self.tracker.record(original, new, expandedNonterm)
 
     def _getOriginalGrammarRules(self, nt, startRule):
-        self.rulesFromOriginal = []
-        self.rulesToTraverse = [(nt, startRule)]
-        self.visited = set()
-        while self.rulesToTraverse:
+        return self.tracker.getOriginalGrammarRules(nt, startRule)
+
+    def _getDirectLeftRecursion(self, nt):
+        return [r for r in self.grammar.getForms(nt) if r[0] == nt]
+
+    def _getForms(self, lhs):
+        return self.grammar.getForms(lhs)
+
+    def _removeRule(self, nt, form):
+        self.grammar.removeRule(nt, form)
+
+    def _addRule(self, nt, form):
+        self.grammar.addRule(nt, form)
+
+
+class Tracker:
+    def __init__(self, originalGrammar):
+        self._substitutions = {}
+        self._rulesFromOriginal = []
+        self._visited = set()
+        self._rulesToTraverse = []
+        self._originalGrammar = originalGrammar
+
+    def record(self, originalForm, newForm, expandedNonterminal):
+        self._substitutions[newForm] = (originalForm, expandedNonterminal)
+
+    def getOriginalGrammarRules(self, nt, startRule):
+        self._rulesFromOriginal = []
+        self._rulesToTraverse = [(nt, startRule)]
+        self._visited = set()
+        while self._rulesToTraverse:
             self._traverseRule()
-        return self.rulesFromOriginal
+        return self._rulesFromOriginal
 
     def _traverseRule(self):
-        lhs, rhs = self.rulesToTraverse.pop(0)
+        lhs, rhs = self._rulesToTraverse.pop(0)
         rule = (lhs, rhs)
-        if rule not in self.visited:
-            self.visited.add(rule)
+        if rule not in self._visited:
+            self._visited.add(rule)
             self._checkSubstitutionsForOriginalRules(lhs, rhs)
 
     def _checkSubstitutionsForOriginalRules(self, lhs, rhs):
-        if self._ruleInOriginalGrammar(lhs, rhs):
-            self.rulesFromOriginal.append((lhs, rhs))
-        if rhs in self.substitutions:
-            origRuleR, origRuleS = self.substitutions[rhs]
-            self.rulesToTraverse.extend([(lhs, origRuleR), (origRuleR[0], origRuleS)])
+        if self._isRuleInOriginalGrammar(lhs, rhs):
+            self._rulesFromOriginal.append((lhs, rhs))
+        if rhs in self._substitutions:
+            origRuleR, origRuleS = self._substitutions[rhs]
+            self._rulesToTraverse.extend([(lhs, origRuleR), (origRuleR[0], origRuleS)])
 
-    def _ruleInOriginalGrammar(self, lhs, rhs):
-        return rhs in self.grammar.getForms(lhs)
-
-    def _getForms(self, lhs):
-        return self.grammarCopy.getForms(lhs)
-
-    def _getNonterminals(self):
-        return self.grammar.getNonterminalList()
-
-    def _removeRule(self, nt, form):
-        self.grammarCopy.removeRule(nt, form)
-
-    def _addRule(self, nt, form):
-        self.grammarCopy.addRule(nt, form)
+    def _isRuleInOriginalGrammar(self, lhs, rhs):
+        return rhs in self._originalGrammar.getForms(lhs)
