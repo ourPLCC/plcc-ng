@@ -38,7 +38,7 @@ class LeftRecursionChecker:
                     self._recordExpansion(new, original, expandedFirstNonterm)
 
     def _getFormsStartingWithNonterm(self, definedNonterm, firstNonterm):
-        return [f for f in self._getForms(definedNonterm) if f[0] == firstNonterm]
+        return [form for form in self._getForms(definedNonterm) if form[0] == firstNonterm]
 
     def _recordExpansion(self, new, original, expandedNonterm):
         self.tracker.record(original, new, expandedNonterm)
@@ -47,7 +47,7 @@ class LeftRecursionChecker:
         return self.tracker.getOriginalGrammarRules(nt, startRule)
 
     def _getDirectLeftRecursion(self, nt):
-        return [r for r in self.grammar.getForms(nt) if r[0] == nt]
+        return [form for form in self.grammar.getForms(nt) if form[0] == nt]
 
     def _getForms(self, lhs):
         return self.grammar.getForms(lhs)
