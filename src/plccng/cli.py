@@ -1,25 +1,38 @@
-from docopt import docopt
-from . import scanner
+"""plccng
+
+Usage:
+  plccng scan [OPTIONS ...]
+  plccng (-h | --help)
+
+Arguments:
+  -h | --help      Show this screen.
+
+Commands:
+  scan    Scan input and print tokens as JSON objects.
+"""
 
 import sys
 
-"""
-Usage:
-  plccng scan --spec=<specfile> [<file> ...]
-  plccng (-h | --help)
+from docopt import docopt
 
-Options:
-  -h --help     Show this screen.
+from plccng.scanner import cli as scanner_cli
 
-Commands:
-  scan    Scan the given file.
-"""
+
+def cli(argv):
+    Cli().run(argv)
+
+
+class Cli:
+    def __init__(self):
+        ...
+
+    def run(self, argv):
+        if argv and argv[0] == 'scan':
+            scanner_cli(argv[1:])
+        else:
+            doc = sys.modules[Cli.__module__].__doc__
+            print(doc)
 
 
 def main():
-    args = docopt(__doc__)
-
-    if args["scan"]:
-        scanner.run(args)
-    else:
-        print("Invalid Command, Enter 'plccng -h' for help")
+    cli(sys.argv[1:])
