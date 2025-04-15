@@ -1,1 +1,1 @@
-from .run import run
+from .cli import cli

@@ -14,7 +14,7 @@ license = {text = "GPL-3.0-or-later"}
 
 
 [project.scripts]
-plccng = "plccng:main"
+plccng = "plccng.cli:main"
 
 
 [build-system]
