@@ -16,12 +16,13 @@ def terminal():
     return 'TERMINAL'
 
 def test_empty_grammar(grammar):
-    assert len(grammar.getRules()) == 0
+    assert len(grammar.getNonterminalSet()) == 0
+    assert len(grammar.getTerminals()) == 0
     assert grammar.getStartSymbol() == None
 
 def test_add_rule(grammar, nonterminal, terminal):
     grammar.addRule(nonterminal, [terminal])
-    assert grammar.getRules() == {nonterminal: [tuple([terminal])]}
+    assert grammar.getForms(nonterminal) == [tuple([terminal])]
 
 def test_is_terminal(grammar, terminal):
     grammar.addRule('', [terminal])
@@ -43,23 +44,25 @@ def test_get_start_symbol(grammar, nonterminal):
 def test_multiple_rules_one_nonterminal(grammar, nonterminal, terminal):
     grammar.addRule(nonterminal, [terminal])
     grammar.addRule(nonterminal, [])
-    assert grammar.getRules() == {nonterminal: [tuple([terminal]), tuple([])]}
+    assert grammar.getForms(nonterminal) == [tuple([terminal]), tuple([])]
 
 def test_add_multiple_nonterminals(grammar, nonterminal, terminal):
     grammar.addRule(nonterminal, [terminal])
     anotherNonterminal = getanotherNonterminal()
     grammar.addRule(anotherNonterminal, [])
-    assert grammar.getRules() == {nonterminal: [tuple([terminal])], anotherNonterminal: [tuple([])]}
+    assert grammar.getForms(nonterminal) == [tuple([terminal])]
+    assert grammar.getForms(anotherNonterminal) == [tuple([])]
 
 def test_add_terminal_and_nonterminal_to_sets(grammar, nonterminal, terminal):
     anotherNonterminal = getanotherNonterminal()
     grammar.addRule(anotherNonterminal, [])
     grammar.addRule(nonterminal, [terminal, anotherNonterminal])
-    assert grammar.getRules() == {anotherNonterminal: [tuple([])], nonterminal: [tuple([terminal, anotherNonterminal])]}
-    assert len(grammar.getNonterminals()) == 2
+    assert grammar.getForms(anotherNonterminal) == [tuple([])]
+    assert grammar.getForms(nonterminal) == [tuple([terminal, anotherNonterminal])]
+    assert len(grammar.getNonterminalSet()) == 2
     assert len(grammar.getTerminals()) == 1
-    assert nonterminal in grammar.getNonterminals()
-    assert anotherNonterminal in grammar.getNonterminals()
+    assert nonterminal in grammar.getNonterminalSet()
+    assert anotherNonterminal in grammar.getNonterminalSet()
     assert terminal in grammar.getTerminals()
 
 def test_no_duplicate_terminals(grammar, nonterminal, terminal):
@@ -71,8 +74,8 @@ def test_no_duplicate_terminals(grammar, nonterminal, terminal):
 def test_no_duplicate_nonterminals(grammar, nonterminal, terminal):
     grammar.addRule(nonterminal, [terminal])
     grammar.addRule(nonterminal, [terminal])
-    assert len(grammar.getNonterminals()) == 1
-    assert nonterminal in grammar.getNonterminals()
+    assert len(grammar.getNonterminalSet()) == 1
+    assert nonterminal in grammar.getNonterminalSet()
 
 def test_set_incompatible_nonterminal_raises_TypeError(grammar, terminal):
     with raises(TypeError):
@@ -98,13 +101,13 @@ def test_convert_terminals_to_nonterminals(grammar):
 
 def assertNonterminal(g: Grammar, nt):
     assert nt not in g.getTerminals()
-    assert nt in g.getNonterminals()
+    assert nt in g.getNonterminalSet()
     assert not g.isTerminal(nt)
     assert g.isNonterminal(nt)
 
 def assertTerminal(g: Grammar, t):
     assert t in g.getTerminals()
-    assert t not in g.getNonterminals()
+    assert t not in g.getNonterminalSet()
     assert g.isTerminal(t)
     assert not g.isNonterminal(t)
 

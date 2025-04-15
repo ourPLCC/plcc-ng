@@ -3,7 +3,7 @@ from collections import defaultdict
 
 class Grammar:
     def __init__(self):
-        self._rules = defaultdict(list)
+        self._forms = defaultdict(list)
         self._startSymbol = None
         self._terminals = set()
         self._eof = object()
@@ -16,12 +16,15 @@ class Grammar:
         self._removeFromTerminals(nonterminal)
         self._addTerminals(f)
 
+    def removeRule(self, nonterminal, form):
+        self._forms[nonterminal].remove(form)
+
     def _updateStartSymbol(self, nonterminal):
         if self._startSymbol is None:
             self._startSymbol = nonterminal
 
     def _addForm(self, nonterminal, form):
-        self._rules[nonterminal].append(form)
+        self._forms[nonterminal].append(form)
 
     def _removeFromTerminals(self, nonterminal):
         if nonterminal in self._terminals:
@@ -29,7 +32,7 @@ class Grammar:
 
     def _addTerminals(self, form):
         for symbol in form:
-            if symbol not in self._rules:
+            if symbol not in self._forms:
                 self._terminals.add(symbol)
 
     def getStartSymbol(self) -> object:
@@ -39,21 +42,24 @@ class Grammar:
         return object in self._terminals
 
     def isNonterminal(self, object: object) -> bool:
-        return object in self._rules
+        return object in self._forms
 
-    def getRules(self) -> dict[object, list[tuple[object]]]:
-        return self._rules
+    def getForms(self, symbol):
+        return self._forms[symbol]
 
     def getRulesIterator(self):
-        for X, A in self._rules.items():
+        for X, A in self._forms.items():
             for a in A:
                 yield (X, a)
 
     def getTerminals(self) -> set[object]:
         return self._terminals
 
-    def getNonterminals(self) -> set[object]:
-        return set(self._rules.keys())
+    def getNonterminalSet(self) -> set[object]:
+        return set(self._forms.keys())
+
+    def getNonterminalList(self):
+        return list(sorted(self.getNonterminalSet()))
 
     def getEpsilon(self):
         return self._epsilon

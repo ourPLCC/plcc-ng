@@ -49,11 +49,11 @@ def test_get_duplicate_terminals():
 
 def test_get_nonterminals():
     grammar = createGrammarWithSpec(["<noun> ::= WORD", "<test> ::= TERM <free>"])
-    assert len(grammar.getNonterminals()) == 3
+    assert len(grammar.getNonterminalSet()) == 3
 
 def test_get_duplicate_nonterminals():
     grammar = createGrammarWithSpec(["<noun> ::= WORD", "<test> ::= TERM <free>", "<free> ::= "])
-    assert len(grammar.getNonterminals()) == 3
+    assert len(grammar.getNonterminalSet()) == 3
 
 def test_invalid_form_parameter():
     grammar = createGrammarWithSpec(["<noun> ::= WORD"])
