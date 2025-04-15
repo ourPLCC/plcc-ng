@@ -5,11 +5,12 @@ from .LexError import LexError
 from ..lines import Line
 
 class Formatter:
-    def __init__(self, tokensSkipsOrLexErrors):
-        self.tokensSkipsOrLexErrors = tokensSkipsOrLexErrors
+    def __init__(self):
         self.json = "["
 
-    def format(self):
+    def format(self, tokensSkipsOrLexErrors):
+        self.tokensSkipsOrLexErrors = tokensSkipsOrLexErrors
+
         for obj in self.tokensSkipsOrLexErrors:
             self._formatAccordingToType(obj)
 
