@@ -6,15 +6,14 @@ from ..lines import Line
 
 class Formatter:
     def __init__(self):
-        self.json = "["
+        self.json = ''
 
     def format(self, tokensSkipsOrLexErrors):
-        self.tokensSkipsOrLexErrors = tokensSkipsOrLexErrors
 
-        for obj in self.tokensSkipsOrLexErrors:
+        for obj in tokensSkipsOrLexErrors:
             self._formatAccordingToType(obj)
 
-        return self.json + "\n]"
+        return self.json
 
     def _formatAccordingToType(self, obj):
         if isinstance(obj, Token):
@@ -26,31 +25,32 @@ class Formatter:
 
     def _formatToken(self, token):
         self.json += f'''
-\t{{
-\t\t"Type": "Token",
-\t\t"Name": "{token.name}",
-\t\t"Lexeme": "{token.lexeme}",
-\t\t"Line": {token.line.number},
-\t\t"Column": {token.column}
-\t}},
+{{
+  "Type": "Token",
+  "Name": "{token.name}",
+  "Lexeme": "{token.lexeme}",
+  "Line": {token.line.number},
+  "Column": {token.column}
+}}
 '''
 
     def _formatSkip(self, skip):
         self.json += f'''
-\t{{
-\t\t"Type": "Skip",
-\t\t"Name": "{skip.name}",
-\t\t"Lexeme": "{skip.lexeme}",
-\t\t"Column": {skip.column}
-\t}},
+{{
+  "Type": "Skip",
+  "Name": "{skip.name}",
+  "Lexeme": "{skip.lexeme}",
+  "Column": {skip.column}
+}}
 '''
 
     def _formatLexError(self, lexError):
         self.json += f'''
-\t{{
-\t\t"Type": "LexError",
-\t\t"Line": "{lexError.line.string}",
-\t\t"Column": {lexError.column}
-\t}},'''
+{{
+  "Type": "LexError",
+  "Line": "{lexError.line.string}",
+  "Column": {lexError.column}
+}}
+'''
 
 
