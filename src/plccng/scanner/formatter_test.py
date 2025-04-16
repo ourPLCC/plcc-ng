@@ -1,6 +1,7 @@
 from .structs import Token
 from .LexError import LexError
 from ..lines import Line
+from .Skip import Skip
 from .formatter import Formatter
 import json
 
@@ -28,6 +29,15 @@ def test_single_lexError():
 {"Type": "LexError",
 "File": "-",
 "Line": 1,
+"Column": 3}''')
+
+def test_single_Skip():
+    formatter = Formatter(showSkips=True)
+    strings = formatter.format(iter([Skip("lexeme", "name", 3)]))
+    assert json.loads(next(strings)) == json.loads('''
+{"Type": "Skip",
+"Name": "name",
+"Lexeme": "lexeme",
 "Column": 3}''')
 
 def test_consecutive():
