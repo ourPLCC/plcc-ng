@@ -11,20 +11,18 @@ class Formatter:
     def format(self, tokensSkipsOrLexErrors):
 
         for obj in tokensSkipsOrLexErrors:
-            self._formatAccordingToType(obj)
-
-        return self.json
+            yield self._formatAccordingToType(obj)
 
     def _formatAccordingToType(self, obj):
         if isinstance(obj, Token):
-            self._formatToken(obj)
+            return self._formatToken(obj)
         elif isinstance(obj, Skip):
-            self._formatSkip(obj)
+            return self._formatSkip(obj)
         elif isinstance(obj, LexError):
-            self._formatLexError(obj)
+            return self._formatLexError(obj)
 
     def _formatToken(self, token):
-        self.json += f'''
+        return f'''
 {{
   "Type": "Token",
   "Name": "{token.name}",
@@ -35,7 +33,7 @@ class Formatter:
 '''
 
     def _formatSkip(self, skip):
-        self.json += f'''
+        return f'''
 {{
   "Type": "Skip",
   "Name": "{skip.name}",
@@ -45,10 +43,10 @@ class Formatter:
 '''
 
     def _formatLexError(self, lexError):
-        self.json += f'''
+        return f'''
 {{
   "Type": "LexError",
-  "Line": "{lexError.line.string}",
+  "Line": {lexError.line.number},
   "Column": {lexError.column}
 }}
 '''
