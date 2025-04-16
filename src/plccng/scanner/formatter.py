@@ -4,8 +4,8 @@ from ..lines import Line
 from .Skip import Skip
 
 class Formatter:
-    def __init__(self, showSkips=False):
-        self.showSkips = showSkips
+    def __init__(self):
+        pass
 
     def format(self, tokensSkipsOrLexErrors):
         for obj in tokensSkipsOrLexErrors:
@@ -16,8 +16,6 @@ class Formatter:
             return self._formatToken(obj)
         elif isinstance(obj, LexError):
             return self._formatLexError(obj)
-        elif isinstance(obj, Skip) and self.showSkips:
-            return self._formatSkip(obj)
 
     def _formatToken(self, token):
         return f'''
@@ -41,14 +39,5 @@ class Formatter:
 }}
 '''
 
-    def _formatSkip(self, skip):
-        return f'''
-{{
-"Type": "Skip",
-"Name": "{skip.name}",
-"Lexeme": "{skip.lexeme}",
-"Column": {skip.column}
-}}
-'''
 
 

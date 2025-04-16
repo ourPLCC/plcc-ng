@@ -31,15 +31,6 @@ def test_single_lexError():
 "Line": 1,
 "Column": 3}''')
 
-def test_single_Skip():
-    formatter = Formatter(showSkips=True)
-    strings = formatter.format(iter([Skip("lexeme", "name", 3)]))
-    assert json.loads(next(strings)) == json.loads('''
-{"Type": "Skip",
-"Name": "name",
-"Lexeme": "lexeme",
-"Column": 3}''')
-
 def test_consecutive():
     formatter = Formatter()
     strings = formatter.format(iter([LexError(makeLine("string", 1, "fileName"), 3), LexError(makeLine("string2", 2, "-"), 4)]))
