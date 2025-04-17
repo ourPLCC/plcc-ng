@@ -11,9 +11,8 @@ class Formatter:
     def format(self, tokensSkipsOrLexErrors):
         for obj in tokensSkipsOrLexErrors:
             string = self._formatAccordingToType(obj)
-            if string: 
+            if string:
                 yield string
-
 
     def _formatAccordingToType(self, obj):
         if isinstance(obj, Token):

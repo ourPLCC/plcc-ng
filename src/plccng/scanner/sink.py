@@ -1,15 +1,12 @@
 
-from .structs import Token
-from .Skip import Skip
-from .LexError import LexError
-from ..lines import Line
 from .formatter import Formatter
 
 class Sink:
-    def __init__(self):
-        self.formatter = Formatter()
+    def __init__(self, tokensSkipsOrLexErrors):
+        formatter = Formatter()
+        self.strings = formatter.format(tokensSkipsOrLexErrors)
 
+    def write(self):
+        print(next(self.strings))
 
-    def write(self, tokensSkipsOrLexErrors):
-        print(self.formatter.format(tokensSkipsOrLexErrors))
 

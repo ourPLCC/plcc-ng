@@ -13,7 +13,7 @@ def test_empty():
 
 def test_invalid_type():
     formatter = Formatter()
-    strings = formatter.format(iter(["only tokens, LexErrors or skips"]))
+    strings = formatter.format(iter(["invalid"]))
     assert len(list(strings)) == 0
 
 def test_single_Token():
