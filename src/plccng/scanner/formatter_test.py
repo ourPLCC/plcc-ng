@@ -11,6 +11,11 @@ def test_empty():
     strings = formatter.format(iter([]))
     assert len(list(strings)) == 0
 
+def test_invalid_type():
+    formatter = Formatter()
+    strings = formatter.format(iter(["only tokens, LexErrors or skips"]))
+    assert len(list(strings)) == 0
+
 def test_single_Token():
     formatter = Formatter()
     strings = formatter.format(iter([Token("lexeme", "name", makeLine("string", 1, "fileName"),column=3)]))
@@ -30,6 +35,20 @@ def test_single_lexError():
 "File": "-",
 "Line": 1,
 "Column": 3}''')
+
+def test_yield_skip_true():
+    formatter = Formatter(yieldSkips=True)
+    strings = formatter.format(iter([Skip("lexeme", "name", 3)]))
+    assert json.loads(next(strings)) == json.loads('''
+{"Type": "Skip",
+"Name": "name",
+"Lexeme": "lexeme",
+"Column": 3}''')
+
+def test_yield_skip_false():
+    formatter = Formatter(yieldSkips=False)
+    strings = formatter.format(iter([Skip("lexeme", "name", 3)]))
+    assert len(list(strings)) == 0
 
 def test_consecutive():
     formatter = Formatter()
