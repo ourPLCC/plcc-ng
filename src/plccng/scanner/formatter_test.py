@@ -4,6 +4,7 @@ from ..lines import Line
 from .Skip import Skip
 from .formatter import Formatter
 import json
+import pytest
 
 
 def test_empty():
@@ -13,8 +14,10 @@ def test_empty():
 
 def test_invalid_type():
     formatter = Formatter()
-    strings = formatter.format(iter(["invalid"]))
-    assert len(list(strings)) == 0
+    with pytest.raises(TypeError):
+        strings = formatter.format(iter(["invalid"]))
+        next(strings)
+
 
 def test_single_Token():
     formatter = Formatter()
@@ -47,8 +50,9 @@ def test_yield_skip_true():
 
 def test_yield_skip_false():
     formatter = Formatter(yieldSkips=False)
-    strings = formatter.format(iter([Skip("lexeme", "name", 3)]))
-    assert len(list(strings)) == 0
+    with pytest.raises(TypeError):
+        strings = formatter.format(iter([Skip("lexeme", "name", 3)]))
+        next(strings)
 
 def test_consecutive():
     formatter = Formatter()

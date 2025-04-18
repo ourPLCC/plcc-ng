@@ -22,31 +22,36 @@ class Formatter:
         elif isinstance(obj, Skip) and self.yieldSkips:
             return self._formatSkip(obj)
 
+        raise TypeError("Error: Can only format Tokens, Skips, or LexErrors.")
+
     def _formatToken(self, token):
-        return json.dumps({
-"Type": "Token",
-"Name": token.name,
-"Lexeme": token.lexeme,
-"File": token.line.file,
-"Line": token.line.number,
-"Column": token.column
-}, sort_keys=True, indent=2)
+        return f'''
+{{
+  "Type": "Token",
+  "Name": "{token.name}",
+  "Lexeme": "{token.lexeme}",
+  "File": "{token.line.file}",
+  "Line": {token.line.number},
+  "Column": {token.column}
+}}
+'''
 
     def _formatLexError(self, lexError):
-        return json.dumps({
-"Type": "LexError",
-"File": lexError.line.file,
-"Line": lexError.line.number,
-"Column": lexError.column
-}, sort_keys=True, indent=2)
+        return f'''
+{{
+  "Type": "LexError",
+  "File": "{lexError.line.file}",
+  "Line": {lexError.line.number},
+  "Column": {lexError.column}
+}}'''
 
 
     def _formatSkip(self, skip):
-        return json.dumps(
-{
-"Type": "Skip",
-"Name": skip.name,
-"Lexeme": skip.lexeme,
-"Column": skip.column
-}, sort_keys=True, indent=2)
-
+        return f'''
+{{
+  "Type": "Skip",
+  "Name": "{skip.name}",
+  "Lexeme": "{skip.lexeme}",
+  "Column": {skip.column}
+}}
+'''
