@@ -62,6 +62,7 @@ def test_consecutive():
 "File": "fileName",
 "Line": 1,
 "Column": 3}''')
+    
     assert json.loads(next(strings)) == json.loads('''
 {"Type": "LexError",
 "File": "-",

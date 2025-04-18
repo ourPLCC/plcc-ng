@@ -10,9 +10,7 @@ class Formatter:
 
     def format(self, tokensSkipsOrLexErrors):
         for obj in tokensSkipsOrLexErrors:
-            string = self._formatAccordingToType(obj)
-            if string:
-                yield string
+            yield self._formatAccordingToType(obj)
 
     def _formatAccordingToType(self, obj):
         if isinstance(obj, Token):
