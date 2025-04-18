@@ -91,7 +91,7 @@ class SpecGrammar(Grammar):
     def getStartSymbol(self) -> LL1Wrapper:
         return self.startSymbol
 
-    def getNonterminals(self) -> set[LL1Wrapper]:
+    def getNonterminalSet(self) -> set[LL1Wrapper]:
         return self.nonterminals
 
     def getTerminals(self) -> set[LL1Wrapper]:

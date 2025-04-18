@@ -30,18 +30,19 @@ class FirstSetBuilder:
         change = True
         while change:
             change = False
-            for symbol in self.grammar.getNonterminals():
+            for symbol in self.grammar.getNonterminalSet():
                 N = len(self.firstSets[symbol])
                 self._updateNonterminal(symbol)
                 if N != len(self.firstSets[symbol]):
                     change = True
 
     def _updateNonterminal(self, symbol):
-        productions = self.grammar.getRules()[symbol]
-        self._update(productions, symbol)
+        forms = self.grammar.getForms(symbol)
+        self._update(forms, symbol)
 
     def _addProductions(self):
-        for nonterminal, productions in self.grammar.getRules().items():
+        for nonterminal in self.grammar.getNonterminalSet():
+            productions = self.grammar.getForms(nonterminal)
             self._update(productions)
         return self.firstSets
 
