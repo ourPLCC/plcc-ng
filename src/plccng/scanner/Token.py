@@ -7,4 +7,3 @@ class Token:
     name: str
     line: Line
     column: int
-    file: str = None
