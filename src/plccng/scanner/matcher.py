@@ -23,7 +23,7 @@ class Matcher:
             m = pattern.match(line.string, index)
             if not m:
                 continue
-            sot = self._makeSkipOrToken(m, rule, index)
+            sot = self._makeSkipOrToken(m, rule, line, index)
             matches.append(sot)
         return matches
 
@@ -39,17 +39,17 @@ class Matcher:
             compiled_patterns.append(pattern)
         self._patterns = compiled_patterns
 
-    def _makeSkipOrToken(self, match, rule, index):
+    def _makeSkipOrToken(self, match, rule, line, index):
         if(rule.isSkip):
-            return self._makeSkip(match, rule, index)
+            return self._makeSkip(match, rule, line, index)
         else:
-            return self._makeToken(match, rule, index)
+            return self._makeToken(match, rule, line, index)
 
-    def _makeSkip(self, match, rule, index):
-        return Skip(lexeme=match.group(), name=rule.name, column=1+index)
+    def _makeSkip(self, match, rule, line, index):
+        return Skip(lexeme=match.group(), name=rule.name, line=line, column=1+index)
 
-    def _makeToken(self, match, rule, index):
-        return Token(lexeme=match.group(), name=rule.name, column=1+index)
+    def _makeToken(self, match, rule, line, index):
+        return Token(lexeme=match.group(), name=rule.name, line=line, column=1+index)
 
     def _getLongestMatch(self, matches):
             return max(matches, key=lambda m: len(m.lexeme))
