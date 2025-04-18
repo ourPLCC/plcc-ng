@@ -7,4 +7,4 @@ class Skip:
     name: str
     line: Line
     column: int
-    file: str = ""
+    file: str = None
