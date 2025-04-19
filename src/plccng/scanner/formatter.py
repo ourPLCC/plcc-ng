@@ -10,14 +10,16 @@ class Formatter:
 
     def format(self, tokensSkipsOrLexErrors):
         for obj in tokensSkipsOrLexErrors:
-            yield self._formatAccordingToType(obj)
+            string = self._formatAccordingToType(obj)
+            if string:
+                yield string
 
     def _formatAccordingToType(self, obj):
         if isinstance(obj, Token):
             return self._formatToken(obj)
         elif isinstance(obj, LexError):
             return self._formatLexError(obj)
-        elif isinstance(obj, Skip) and self.yieldSkips:
+        elif isinstance(obj, Skip):
             return self._formatSkip(obj)
 
         raise TypeError("Error: Can only format Tokens, Skips, or LexErrors.")
@@ -43,13 +45,18 @@ class Formatter:
   "Column": {lexError.column}
 }}'''
 
-
     def _formatSkip(self, skip):
-        return f'''
+        if self.yieldSkips:
+            return f'''
 {{
   "Type": "Skip",
   "Name": "{skip.name}",
   "Lexeme": "{skip.lexeme}",
+  "File": "{skip.line.file}",
+  "Line": {skip.line.number},
   "Column": {skip.column}
 }}
 '''
+        else:
+            return None
+
