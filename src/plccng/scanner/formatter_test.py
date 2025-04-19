@@ -24,34 +24,43 @@ def test_single_Token():
     iterable = iter([makeToken()])
     strings = formatter.format(iterable)
     assertNextJsonStringIsCorrect(strings, '''
-{"Type": "Token",
-"Name": "name",
-"Lexeme": "lexeme",
-"File": "fileName",
-"Line": 1,
-"Column": 2}''')
+        {
+            "Type": "Token",
+            "Name": "name",
+            "Lexeme": "lexeme",
+            "File": "fileName",
+            "Line": 1,
+            "Column": 2
+        }
+    ''')
 
 def test_single_lexError():
     formatter = Formatter()
     iterable = iter([makeLexError()])
     strings = formatter.format(iterable)
     assertNextJsonStringIsCorrect(strings, '''
-{"Type": "LexError",
-"File": "fileName",
-"Line": 1,
-"Column": 2}''')
+        {
+            "Type": "LexError",
+            "File": "fileName",
+            "Line": 1,
+            "Column": 2
+        }
+    ''')
 
 def test_yield_skip_true():
     formatter = Formatter(yieldSkips=True)
     iterable = iter([makeSkip()])
     strings = formatter.format(iterable)
     assertNextJsonStringIsCorrect(strings, '''
-{"Type": "Skip",
-"Name": "name",
-"Lexeme": "lexeme",
-"File": "fileName",
-"Line": 1,
-"Column": 2}''')
+        {
+            "Type": "Skip",
+            "Name": "name",
+            "Lexeme": "lexeme",
+            "File": "fileName",
+            "Line": 1,
+            "Column": 2
+        }
+    ''')
 
 def test_yield_skip_false():
     formatter = Formatter(yieldSkips=False)
@@ -64,16 +73,22 @@ def test_consecutive():
     iterable = iter([makeLexError(column=1), makeLexError(column=2)])
     strings = formatter.format(iterable)
     assertNextJsonStringIsCorrect(strings, '''
-{"Type": "LexError",
-"File": "fileName",
-"Line": 1,
-"Column": 1}''')
+        {
+            "Type": "LexError",
+            "File": "fileName",
+            "Line": 1,
+            "Column": 1
+        }
+    ''')
 
     assertNextJsonStringIsCorrect(strings, '''
-{"Type": "LexError",
-"File": "fileName",
-"Line": 1,
-"Column": 2}''')
+        {
+            "Type": "LexError",
+            "File": "fileName",
+            "Line": 1,
+            "Column": 2
+        }
+    ''')
 
 def assertNextJsonStringIsCorrect(strings, expected):
     jsonString = next(strings)
