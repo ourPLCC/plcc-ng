@@ -25,6 +25,7 @@ class SyntacticRhsValidator:
         syntacticSpec: SyntacticSpec
     ):
         self.syntacticSpec = syntacticSpec
+        self._nonTerminalSet = None
         self.errorList = []
 
     def validate(self):
@@ -52,7 +53,14 @@ class SyntacticRhsValidator:
             self._appendMissingNonTerminalError(rule)
 
     def _nonTerminalExists(self, non_terminal):
-        return non_terminal.name in self.syntacticSpec.getNonTerminals()
+        return non_terminal.name in self._getNonTerminals()
+
+    def _getNonTerminals(self):
+        if self._nonTerminalSet is None:
+            self._nonTerminalSet = set()
+            for rule in self.syntacticSpec:
+                self._nonTerminalSet.add(rule.lhs.name)
+        return self._nonTerminalSet
 
     def _validateNonTerminalAltName(self, altName: str, rule):
         if not re.match(r"^[a-z][a-zA-Z0-9_]+$", altName):

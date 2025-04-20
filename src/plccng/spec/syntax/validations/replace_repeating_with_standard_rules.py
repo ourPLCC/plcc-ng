@@ -10,7 +10,7 @@ from ..SyntacticSpec import SyntacticSpec
 
 
 def replace_repeating_with_standard_rules(spec: SyntacticSpec):
-    return SyntacticSpecResolver(SyntacticSpec(spec.copy())).resolve()
+    return SyntacticSpecResolver(spec.copy()).resolve()
 
 
 class SyntacticSpecResolver:
@@ -25,7 +25,7 @@ class SyntacticSpecResolver:
         while len(self.oldSpec) > 0:
             self.rule = self.oldSpec.pop(0)
             self._resolveCurrent()
-        return self.newSpec
+        return SyntacticSpec(self.newSpec)
 
     def _resolveCurrent(self):
         if isinstance(self.rule, RepeatingSyntacticRule):
