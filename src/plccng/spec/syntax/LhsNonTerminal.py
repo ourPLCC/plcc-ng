@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, KW_ONLY
 
 from .NonTerminal import NonTerminal
 
@@ -6,4 +6,5 @@ from .NonTerminal import NonTerminal
 @dataclass(frozen=True)
 class LhsNonTerminal(NonTerminal):
     altName: str | None = None
-    pass
+    _: KW_ONLY
+    isCapturing: bool = False
