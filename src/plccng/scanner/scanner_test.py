@@ -54,16 +54,28 @@ blah blah
     result = list(scanner.scan(oneLineWithError))
     assert isinstance(result[0], LexError)
 
-def test_LexError_at_start_goes_through_whole_line(errorRaisingMatcher):
+def test_LexError_at_start_goes_through_whole_line_one_character_at_a_time(errorRaisingMatcher):
     scanner = Scanner(errorRaisingMatcher)
     twoLinesWithErrors = parseLines('''\
-first line
-second line
+0123456789
+0123456789
 ''')
     scanner = Scanner(errorRaisingMatcher)
     results = list(scanner.scan(twoLinesWithErrors))
-    assert isinstance(results[0], LexError) and results[0].line.string == 'first line'
-    assert isinstance(results[10], LexError) and results[10].line.string == 'second line'
+    assertResultIsLexErrorAtLineNumberAndColumn(results[0], number=1, column=1)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[1], number=1, column=2)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[2], number=1, column=3)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[3], number=1, column=4)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[4], number=1, column=5)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[5], number=1, column=6)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[6], number=1, column=7)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[7], number=1, column=8)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[8], number=1, column=9)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[9], number=1, column=10)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[10], number=2, column=0)
+
+def assertResultIsLexErrorAtLineNumberAndColumn(result, number, column):
+    assert isinstance(result, LexError) and result.line.number == number and result.column == column
 
 def test_lex_error_in_middle(tabSkipMatcher):
     twoLines = parseLines('''\
