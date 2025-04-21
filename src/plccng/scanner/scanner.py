@@ -17,6 +17,7 @@ class Scanner:
             result = self.matcher.match(line, index)
             if isinstance(result, LexError):
                 yield result
-                return
-            index += len(result.lexeme)
-            yield result
+                index += 1
+            else:
+                index += len(result.lexeme)
+                yield result

@@ -46,7 +46,6 @@ def test_empty_returns_empty():
     results = scanner.scan([])
     assert list(results) == []
 
-
 def test_LexError(errorRaisingMatcher):
     scanner = Scanner(errorRaisingMatcher)
     oneLineWithError = parseLines('''\
@@ -55,8 +54,7 @@ blah blah
     result = list(scanner.scan(oneLineWithError))
     assert isinstance(result[0], LexError)
 
-
-def test_LexError_at_start(errorRaisingMatcher):
+def test_LexError_at_start_goes_through_whole_line(errorRaisingMatcher):
     scanner = Scanner(errorRaisingMatcher)
     twoLinesWithErrors = parseLines('''\
 first line
@@ -65,19 +63,18 @@ second line
     scanner = Scanner(errorRaisingMatcher)
     results = list(scanner.scan(twoLinesWithErrors))
     assert isinstance(results[0], LexError) and results[0].line.string == 'first line'
-    assert isinstance(results[1], LexError) and results[1].line.string == 'second line'
+    assert isinstance(results[10], LexError) and results[10].line.string == 'second line'
 
 def test_lex_error_in_middle(tabSkipMatcher):
     twoLines = parseLines('''\
-\tfirst line
-second line
+\terrors\tmore
 ''')
     scanner = Scanner(tabSkipMatcher)
     results = list(scanner.scan(twoLines))
-    assert isinstance(results[0], Skip) and results[0].line.string == '\tfirst line'
-    assert isinstance(results[1], LexError) and results[1].line.string == '\tfirst line'
-    assert isinstance(results[2], LexError) and results[2].line.string == 'second line'
-
+    assert isinstance(results[0], Skip)
+    assert isinstance(results[1], LexError) and results[1].line.string[results[1].column] == 'e'
+    assert isinstance(results[7], Skip)
+    assert isinstance(results[8], LexError) and results[8].line.string[results[8].column] == 'm'
 
 def test_can_match_multiple_tokens(fiveCharacterMatcher):
     lines = parseLines('''\
