@@ -3,9 +3,13 @@ from .Skip import Skip
 from .structs import Token
 
 
+def format(obj):
+    return Formatter().format(obj)
+
+
 class Formatter:
     def __init__(self):
-        pass # Couldn't this just be a function like format()?
+        pass
 
     def format(self, obj):
         if isinstance(obj, Token):

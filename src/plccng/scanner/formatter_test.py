@@ -3,22 +3,20 @@ import json
 import pytest
 
 from ..lines import Line
-from .formatter import Formatter
+from .formatter import format
 from .LexError import LexError
 from .Skip import Skip
 from .structs import Token
 
 
 def test_invalid_type():
-    formatter = Formatter()
     with pytest.raises(TypeError):
-        string = formatter.format("invalid")
+        string = format("invalid")
         next(string)
 
 
 def test_token():
-    formatter = Formatter()
-    string = formatter.format(makeToken())
+    string = format(makeToken())
     assertJsonStringIsCorrect(string, '''
         {
             "Type": "Token",
@@ -32,8 +30,7 @@ def test_token():
 
 
 def test_lexError():
-    formatter = Formatter()
-    string = formatter.format(makeLexError())
+    string = format(makeLexError())
     assertJsonStringIsCorrect(string, '''
         {
             "Type": "LexError",
@@ -44,8 +41,7 @@ def test_lexError():
     ''')
 
 def test_skip():
-    formatter = Formatter()
-    string = formatter.format(makeSkip())
+    string = format(makeSkip())
     assertJsonStringIsCorrect(string, '''
         {
             "Type": "Skip",

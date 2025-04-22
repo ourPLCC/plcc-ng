@@ -1,13 +1,12 @@
-from .formatter import Formatter
+from .formatter import format
 from .Skip import Skip
 
 
 class Sink:
     def __init__(self, printSkips):
         self.printSkips = printSkips
-        self.formatter = Formatter()
 
     def write(self, obj):
         if not isinstance(obj, Skip) or self.printSkips:
-            string = self.formatter.format(obj)
+            string = format(obj)
             print(string)
