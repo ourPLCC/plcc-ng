@@ -62,19 +62,16 @@ def test_LexError_at_start_goes_through_whole_line_one_character_at_a_time(error
 ''')
     scanner = Scanner(errorRaisingMatcher)
     results = list(scanner.scan(twoLinesWithErrors))
-    assertResultIsLexErrorAtLineNumberAndColumn(results[0], number=1, column=1)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[1], number=1, column=2)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[2], number=1, column=3)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[3], number=1, column=4)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[4], number=1, column=5)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[5], number=1, column=6)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[6], number=1, column=7)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[7], number=1, column=8)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[8], number=1, column=9)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[9], number=1, column=10)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[10], number=2, column=1)
+    assertLexErrorsOnLine(results[0:10], lineNumber=1, startColumn=1)
+    assertLexErrorsOnLine(results[10:11], lineNumber=2, startColumn=1)
 
-def assertResultIsLexErrorAtLineNumberAndColumn(result, number, column):
+def assertLexErrorsOnLine(results, lineNumber, startColumn):
+    c = startColumn
+    for r in results:
+        assertLexErrorAtLineNumberAndColumn(r, lineNumber, c)
+        c += 1
+
+def assertLexErrorAtLineNumberAndColumn(result, number, column):
     assert isinstance(result, LexError)
     assert result.line.number == number
     assert result.column == column
