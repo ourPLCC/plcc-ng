@@ -9,9 +9,9 @@ class Scanner:
         if lines is None:
             return StopIteration
         for line in lines:
-            yield from self._lineScanner(line)
+            yield from self._scanLine(line)
 
-    def _lineScanner(self, line):
+    def _scanLine(self, line):
         index = 0
         while index < len(line.string):
             result = self.matcher.match(line, index)
