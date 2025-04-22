@@ -9,7 +9,7 @@ from .structs import LexError, Skip, Token
 def errorRaisingMatcher():
     class ErrorRaisingMatcher:
         def match(self, line, index):
-            return LexError(line=line, column=index)
+            return LexError(line=line, column=index+1)
 
     return ErrorRaisingMatcher()
 
@@ -19,9 +19,9 @@ def tabSkipMatcher():
     class TabSkipMatcher():
         def match(self, line, index):
             if line.string[index] == "\t":
-                return Skip(name="whitespace", lexeme="\t", line=line, column=index)
+                return Skip(name="whitespace", lexeme="\t", line=line, column=index+1)
             else:
-                return LexError(line=line, column=index)
+                return LexError(line=line, column=index+1)
 
     return TabSkipMatcher()
 
@@ -30,7 +30,7 @@ def tabSkipMatcher():
 def fiveCharacterMatcher():
     class FiveCharacterMatcher():
         def match(self, line, index):
-            return Token(name="Token", lexeme=line.string[index:index+5], line=line, column=index)
+            return Token(name="Token", lexeme=line.string[index:index+5], line=line, column=index+1)
 
     return FiveCharacterMatcher()
 
@@ -72,10 +72,12 @@ def test_LexError_at_start_goes_through_whole_line_one_character_at_a_time(error
     assertResultIsLexErrorAtLineNumberAndColumn(results[7], number=1, column=8)
     assertResultIsLexErrorAtLineNumberAndColumn(results[8], number=1, column=9)
     assertResultIsLexErrorAtLineNumberAndColumn(results[9], number=1, column=10)
-    assertResultIsLexErrorAtLineNumberAndColumn(results[10], number=2, column=0)
+    assertResultIsLexErrorAtLineNumberAndColumn(results[10], number=2, column=1)
 
 def assertResultIsLexErrorAtLineNumberAndColumn(result, number, column):
-    assert isinstance(result, LexError) and result.line.number == number and result.column == column
+    assert isinstance(result, LexError)
+    assert result.line.number == number
+    assert result.column == column
 
 def test_lex_error_in_middle(tabSkipMatcher):
     twoLines = parseLines('''\
@@ -84,9 +86,9 @@ def test_lex_error_in_middle(tabSkipMatcher):
     scanner = Scanner(tabSkipMatcher)
     results = list(scanner.scan(twoLines))
     assert isinstance(results[0], Skip)
-    assert isinstance(results[1], LexError) and results[1].line.string[results[1].column] == 'e'
+    assert isinstance(results[1], LexError) and results[1].line.string[results[1].column-1] == 'e'
     assert isinstance(results[7], Skip)
-    assert isinstance(results[8], LexError) and results[8].line.string[results[8].column] == 'm'
+    assert isinstance(results[8], LexError) and results[8].line.string[results[8].column-1] == 'm'
 
 def test_can_match_multiple_tokens(fiveCharacterMatcher):
     lines = parseLines('''\
