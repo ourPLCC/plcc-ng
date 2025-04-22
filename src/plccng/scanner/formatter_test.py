@@ -11,8 +11,7 @@ from .structs import Token
 
 def test_invalid_type():
     with pytest.raises(TypeError):
-        string = format("invalid")
-        next(string)
+        format("invalid")
 
 
 def test_token():
