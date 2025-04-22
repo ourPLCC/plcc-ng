@@ -1,3 +1,5 @@
+import pytest
+
 from ... import rough
 from ..DuplicateAttribute import DuplicateAttribute
 from ..InvalidAttribute import InvalidAttribute

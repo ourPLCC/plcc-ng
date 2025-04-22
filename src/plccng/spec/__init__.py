@@ -46,3 +46,4 @@ from .syntax import (
     UndefinedNonterminal,
     UndefinedTerminalError,
 )
+from . import cli

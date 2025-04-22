@@ -1,3 +1,5 @@
+import pytest
+
 from typing import List
 
 from ....lines import Line
@@ -22,8 +24,8 @@ def test_standard_unaffected():
         [makeTerminal("WORD")],
     )
 
-    oldSpec = [rule_1, rule_2]
-    newSpec = replace_repeating_with_standard_rules(SyntacticSpec(oldSpec))
+    oldSpec = SyntacticSpec([rule_1, rule_2])
+    newSpec = replace_repeating_with_standard_rules(oldSpec)
     assert oldSpec == newSpec
 
 
@@ -33,17 +35,17 @@ def test_no_separator():
         "name",
         [makeTerminal("WORD")],
     )
-    expectedSpec = [
+    expectedSpec = SyntacticSpec([
         rule_1,
         makeStandardSyntacticRule(
             "name",
             [makeTerminal("WORD"), makeRhsNonTerminal("name")],
         ),
         makeStandardSyntacticRule("name:void", []),
-    ]
+    ])
 
-    oldSpec = [rule_1, rule_2]
-    resolvedSpec = replace_repeating_with_standard_rules(SyntacticSpec(oldSpec))
+    oldSpec = SyntacticSpec([rule_1, rule_2])
+    resolvedSpec = replace_repeating_with_standard_rules(oldSpec)
     assert resolvedSpec == expectedSpec
 
 
@@ -58,7 +60,7 @@ def test_with_separator():
         separator=Terminal("SEP"),
     )
 
-    expectedSpec = [
+    expectedSpec = SyntacticSpec([
         rule_1,
         makeStandardSyntacticRule(
             "name",
@@ -70,10 +72,10 @@ def test_with_separator():
             [makeTerminal("SEP"), makeTerminal("WORD"), makeRhsNonTerminal("name#")],
         ),
         makeStandardSyntacticRule("name#:void", []),
-    ]
+    ])
 
-    oldSpec = [rule_1, rule_2]
-    resolvedSpec = replace_repeating_with_standard_rules(SyntacticSpec(oldSpec))
+    oldSpec = SyntacticSpec([rule_1, rule_2])
+    resolvedSpec = replace_repeating_with_standard_rules(oldSpec)
     assert resolvedSpec == expectedSpec
 
 
