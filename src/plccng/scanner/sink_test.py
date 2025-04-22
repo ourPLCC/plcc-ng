@@ -12,12 +12,14 @@ def test_token(capfd):
     assert '"Type": "Token"' in out
     assert err == ''
 
+
 def test_lexError(capfd):
     sink = Sink(printSkips=False)
     sink.write(makeLexError())
     out, err = capfd.readouterr()
     assert '"Type": "LexError"' in out
     assert err == ''
+
 
 def test_print_skip(capfd):
     sink = Sink(printSkips=True)
@@ -26,12 +28,14 @@ def test_print_skip(capfd):
     assert '"Type": "Skip"' in out
     assert err == ''
 
+
 def test_do_not_print_skip(capfd):
     sink = Sink(printSkips=False)
     sink.write(makeSkip())
     out, err = capfd.readouterr()
     assert out == ''
     assert err == ''
+
 
 def test_consecutive(capfd):
     sink = Sink(printSkips=False)
@@ -48,9 +52,9 @@ def test_consecutive(capfd):
 def makeToken(lexeme="lexeme", name="name", column=3):
     return Token(lexeme, name, makeLine(), column)
 
+
 def makeLexError(column=3):
     return LexError(makeLine(), column)
-
 
 
 def makeLine(string="string", number=1, file="fileName"):
