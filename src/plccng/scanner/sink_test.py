@@ -1,8 +1,9 @@
-from .structs import Token
-from .Skip import Skip
-from .LexError import LexError
 from ..lines import Line
+from .LexError import LexError
 from .sink import Sink
+from .Skip import Skip
+from .structs import Token
+
 
 def test_token(capfd):
     sink = Sink(printSkips=False)

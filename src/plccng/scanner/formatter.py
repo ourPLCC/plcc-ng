@@ -1,8 +1,7 @@
-from .structs import Token
 from .LexError import LexError
-from ..lines import Line
 from .Skip import Skip
-import json
+from .structs import Token
+
 
 class Formatter:
     def __init__(self):

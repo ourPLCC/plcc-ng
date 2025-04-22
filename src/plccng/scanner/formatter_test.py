@@ -8,6 +8,7 @@ from .LexError import LexError
 from .Skip import Skip
 from .structs import Token
 
+
 def test_invalid_type():
     formatter = Formatter()
     with pytest.raises(TypeError):

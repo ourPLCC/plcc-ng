@@ -1,5 +1,6 @@
-from .Skip import Skip
 from .formatter import Formatter
+from .Skip import Skip
+
 
 class Sink:
     def __init__(self, printSkips):
