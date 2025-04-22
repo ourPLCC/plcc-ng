@@ -40,6 +40,8 @@ def validate(syntacticSpec: SyntacticSpec, lexicalSpec: LexicalSpec = []):
 
 
 def makeSyntacticSpec(ruleList=None):
+    if ruleList is None:
+        ruleList = []
     return SyntacticSpec(ruleList)
 
 

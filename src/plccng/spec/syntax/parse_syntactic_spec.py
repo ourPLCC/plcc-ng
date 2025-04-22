@@ -92,7 +92,7 @@ class SyntacticLineParser:
         terminal = re.match(r"[A-Z][A-Z_]+", name)
         altName = altName.strip(":") if altName is not None else altName
         return (
-            CapturingTerminal(name, altName)
+            CapturingTerminal(name=name, altName=altName)
             if terminal
             else RhsNonTerminal(name, altName)
         )
