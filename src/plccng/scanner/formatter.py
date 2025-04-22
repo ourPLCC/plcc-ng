@@ -5,24 +5,18 @@ from .Skip import Skip
 import json
 
 class Formatter:
-    def __init__(self, yieldSkips=False):
-        self.yieldSkips = yieldSkips
+    def __init__(self):
+        pass # Couldn't this just be a function like format()?
 
-    def format(self, tokensSkipsOrLexErrors):
-        for obj in tokensSkipsOrLexErrors:
-            string = self._formatAccordingToType(obj)
-            if string:
-                yield string
-
-    def _formatAccordingToType(self, obj):
+    def format(self, obj):
         if isinstance(obj, Token):
             return self._formatToken(obj)
         elif isinstance(obj, LexError):
             return self._formatLexError(obj)
         elif isinstance(obj, Skip):
             return self._formatSkip(obj)
-
-        raise TypeError("Error: Can only format Tokens, Skips, or LexErrors.")
+        else:
+            raise TypeError("Error: Can only format Tokens, Skips, or LexErrors.")
 
     def _formatToken(self, token):
         return f'''
@@ -46,8 +40,7 @@ class Formatter:
 }}'''
 
     def _formatSkip(self, skip):
-        if self.yieldSkips:
-            return f'''
+        return f'''
 {{
   "Type": "Skip",
   "Name": "{skip.name}",
@@ -57,6 +50,4 @@ class Formatter:
   "Column": {skip.column}
 }}
 '''
-        else:
-            return None
 
