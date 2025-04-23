@@ -1,12 +1,13 @@
 '''plccng spec
-    Verify a PLCC spec file, and print it as a JSON string.
+    Verify a PLCC spec, and print it as JSON.
 
 Usage:
     plccng spec [FILE]
+    plccng spec (-h|--help)
 
 Options:
-    FILE
-        The spec file. If none is given, read from stdin.
+    FILE        File containing the spec. Default: stdin.
+    -h|--help   Display this message
 '''
 
 from dataclasses import asdict
@@ -18,7 +19,7 @@ from docopt import docopt
 from . import parseSpec
 
 
-def run(argv):
+def cli(argv):
     Cli().run(argv[1:])
 
 class Cli:
