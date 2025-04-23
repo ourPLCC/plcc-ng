@@ -1,10 +1,14 @@
 """plccng scan
+    Print token in JSON given PLCC specification and input files.
 
 Usage:
-  plccng scan
+    plccng scan --spec=SPEC [FILE ...]
+    plccng scan (-h|--help)
 
 Arguments:
-  -h      Show this screen.
+    --spec=SPEC     Path to a PLCC specification file.
+    FILE            A sequence of input files. If none are given, stdin is used.
+                    If '-' is given for a file, stdin is used.
 """
 
 import sys
@@ -19,3 +23,4 @@ class Cli:
     def run(self, argv):
         doc = sys.modules[Cli.__module__].__doc__
         args = docopt(doc, argv)
+        print(args)

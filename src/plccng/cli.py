@@ -1,14 +1,20 @@
-"""plccng
+"""plccng: Programming Languages Compiler Compiler - Next Generation
 
 Usage:
-  plccng scan --spec=SPEC [FILE ...]
-  plccng spec [FILE]
-  plccng (-h | --help)
+    plccng COMMAND [OPTION ...] [ARGUMENT ...]
+    plccng (-h|--help)
+
+Commands:
+    scan
+        Print JSON tokens given PLCC spec and code.
+    spec
+        Print JSON representation of PLCC spec.
 """
 
-from plccng.scanner import cli as scanner_cli
 import sys
+from docopt import docopt
 
+from . import scanner
 
 def main():
     cli(sys.argv)
@@ -23,9 +29,11 @@ class Cli:
         ...
 
     def run(self, argv):
-        if argv and argv[0] == 'scan':
-            scanner_cli(argv[1:])
+        doc = sys.modules[Cli.__module__].__doc__
+        args = docopt(docstring=doc, argv=argv[1:], options_first=True)
+        if args['COMMAND'] == 'scan':
+            scanner.cli(argv[1:])
         else:
-            doc = sys.modules[Cli.__module__].__doc__
+            print(f"Unrecognized command: {args['COMMAND']}")
+            print()
             print(doc)
-
