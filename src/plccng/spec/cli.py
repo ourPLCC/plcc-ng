@@ -1,13 +1,17 @@
-'''plccng spec
+'''spec
     Verify a PLCC spec, and print it as JSON.
 
 Usage:
-    plccng spec [FILE]
-    plccng spec (-h|--help)
+    spec [--] FILE
+    spec (-h|--help)
+
+Arguments:
+    FILE        File containing the spec. Use - to read from stdin.
+                If -- is given before FILE, then - is the name of the file.
 
 Options:
-    FILE        File containing the spec. Default: stdin.
     -h|--help   Display this message
+    --          Treat - for FILE as a filename, not stdin.
 '''
 
 from dataclasses import asdict
@@ -20,13 +24,15 @@ from . import parseSpec
 
 
 def cli(argv):
-    Cli().run(argv[1:])
+    argv = argv[1:]     # remove command name
+    Cli().run(argv)
+
 
 class Cli:
     def run(self, argv):
         doc = sys.modules[Cli.__module__].__doc__
-        args = docopt(doc, argv)
-        if 'FILE' not in args or not args['FILE']:
+        args = docopt(doc, argv, options_first=True)
+        if args['FILE'] == '-':
             source = sys.stdin
             spec, errors = parseSpec(source.read(), '-')
         else:

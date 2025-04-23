@@ -32,7 +32,7 @@ def test_unrecognized_command_displays_usage(capsys, monkeypatch):
 
 
 def test_spec(capsys, monkeypatch):
-    with pytest.raises(docopt.DocoptExit, match=r'plccng spec'):
+    with pytest.raises(docopt.DocoptExit, match=r'spec'):
         run(monkeypatch, 'plccng spec')
     out, err = capsys.readouterr()
 

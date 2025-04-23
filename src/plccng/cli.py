@@ -25,15 +25,16 @@ def main():
 
 
 def cli(argv):
+    argv = argv[1:]     # remove command name
     Cli().run(argv)
 
 
 class Cli:
     def run(self, argv):
         doc = sys.modules[Cli.__module__].__doc__
-        args = docopt(docstring=doc, argv=argv[1:], options_first=True)
+        args = docopt(docstring=doc, argv=argv, options_first=True)
         if args['COMMAND'] in 'spec scan'.split():
-            self._dispatchCommand(args['COMMAND'], argv[1:])
+            self._dispatchCommand(args['COMMAND'], argv)
         else:
             print(f"Unrecognized command: {args['COMMAND']}")
             print()
