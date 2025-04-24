@@ -2,6 +2,7 @@ import sys
 
 import docopt
 import pytest
+import json
 
 from .cli import cli
 
@@ -25,3 +26,13 @@ def test_help_prints_usage(capsys, fs):
     assert 'Usage' in out
 
 
+def test_spec_from_file(capsys, fs):
+    fs.create_file("/spec.plcc", contents='''\
+
+            A 'a'
+
+    ''')
+    cli('spec /spec.plcc'.split())
+    out, err = capsys.readouterr()
+    result = json.loads(out)
+    assert len(result['lexical']['ruleList']) == 1
