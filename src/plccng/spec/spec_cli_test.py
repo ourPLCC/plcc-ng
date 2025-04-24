@@ -4,23 +4,23 @@ import json
 import docopt
 import pytest
 
-from .cli import cli
+from .spec_cli import run
 
 
 def test_no_args_prints_usage():
     with pytest.raises(docopt.DocoptExit, match=r'Usage'):
-        cli(['spec'])
+        run(['spec'])
 
 
 def test_h_prints_usage(capsys):
     with pytest.raises(SystemExit):
-        cli('spec -h'.split())
+        run('spec -h'.split())
     assertStdoutContains(capsys, 'Usage')
 
 
 def test_help_prints_usage(capsys):
     with pytest.raises(SystemExit):
-        cli('spec --help'.split())
+        run('spec --help'.split())
     assertStdoutContains(capsys, 'Usage')
 
 
@@ -31,19 +31,19 @@ def assertStdoutContains(capsys, string):
 
 def test_spec_from_file(capsys, fs, oneRuleSpec):
     file = createFile(fs, oneRuleSpec)
-    cli(f'spec {file}'.split())
+    run(f'spec {file}'.split())
     assertStdoutContainsJsonSpec(capsys, ruleCount=1)
 
 
 def test_spec_from_stdin(monkeypatch, capsys, oneRuleSpec):
     setStdin(monkeypatch, oneRuleSpec)
-    cli('spec -'.split())
+    run('spec -'.split())
     assertStdoutContainsJsonSpec(capsys, ruleCount=1)
 
 
 def test_spec_with_one_error(capsys, fs, specWithNameExpectedError):
     file = createFile(fs, specWithNameExpectedError)
-    cli(f'spec {file}'.split())
+    run(f'spec {file}'.split())
     assertStdoutContains(capsys, 'NameExpected')
 
 

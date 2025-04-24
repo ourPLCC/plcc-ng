@@ -46,4 +46,4 @@ from .syntax import (
     UndefinedNonterminal,
     UndefinedTerminalError,
 )
-from .cli import cli
+from .spec_cli import run

@@ -3,7 +3,7 @@ import sys
 import docopt
 import pytest
 
-from .cli import cli, main
+from .plccng_cli import run, main
 
 
 def test_no_args_displays_usage(monkeypatch):

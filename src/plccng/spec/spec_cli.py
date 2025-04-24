@@ -23,23 +23,31 @@ from docopt import docopt
 from . import parseSpec
 
 
-def cli(argv):
+def run(argv):
     argv = argv[1:]     # remove command name
-    Cli().run(argv)
+    SpecCli().run(argv)
 
 
-class Cli:
+class SpecCli:
     def run(self, argv):
-        doc = sys.modules[Cli.__module__].__doc__
+        doc = sys.modules[SpecCli.__module__].__doc__
         args = docopt(doc, argv, options_first=True)
         if args['FILE'] == '-':
-            source = sys.stdin
-            spec, errors = parseSpec(source.read(), '-')
+            spec, errors = self._parseFromStdin()
         else:
-            with open(args['FILE'], 'r') as source:
-                spec, errors = parseSpec(source.read(), args['FILE'])
+            spec, errors = self._parseFromFile(args['FILE'])
         if errors:
             for e in errors:
                 print(e)
         else:
             print(json.dumps(asdict(spec), indent=2))
+
+    def _parseFromFile(self, file):
+        with open(file, 'r') as source:
+            spec, errors = parseSpec(source.read(), file)
+        return spec,errors
+
+    def _parseFromStdin(self):
+        source = sys.stdin
+        spec, errors = parseSpec(source.read(), '-')
+        return spec, errors

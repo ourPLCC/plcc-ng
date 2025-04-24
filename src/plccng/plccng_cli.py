@@ -21,17 +21,17 @@ from . import spec
 
 
 def main():
-    cli(sys.argv)
+    run(sys.argv)
 
 
-def cli(argv):
+def run(argv):
     argv = argv[1:]     # remove command name
-    Cli().run(argv)
+    PlccngCli().run(argv)
 
 
-class Cli:
+class PlccngCli:
     def run(self, argv):
-        doc = sys.modules[Cli.__module__].__doc__
+        doc = sys.modules[PlccngCli.__module__].__doc__
         args = docopt(docstring=doc, argv=argv, options_first=True)
         if args['COMMAND'] in 'spec scan'.split():
             self._dispatchCommand(args['COMMAND'], argv)
@@ -41,4 +41,4 @@ class Cli:
             print(doc)
 
     def _dispatchCommand(self, command, argv):
-        globals()[command].cli(argv)
+        globals()[command].run(argv)
