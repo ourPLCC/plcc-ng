@@ -16,7 +16,7 @@ Options:
 import sys
 from docopt import docopt
 
-from . import scanner
+from . import scan
 from . import spec
 
 

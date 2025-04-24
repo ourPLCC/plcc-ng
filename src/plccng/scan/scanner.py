@@ -1,4 +1,4 @@
-from .structs import LexError
+from .LexError import LexError
 
 
 class Scanner:

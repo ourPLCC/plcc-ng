@@ -2,7 +2,9 @@ import pytest
 
 from ..lines import parseLines
 from .scanner import Scanner
-from .structs import LexError, Skip, Token
+from .LexError import LexError
+from .Skip import Skip
+from .Token import Token
 
 
 @pytest.fixture
