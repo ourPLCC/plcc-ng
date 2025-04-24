@@ -34,7 +34,7 @@ source = "scm"
 
 
 [tool.pdm.scripts]
-test = "pytest -vv -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
+test = "pytest -qq -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
 
 [dependency-groups]
 dev = [
