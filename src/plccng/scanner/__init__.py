@@ -1,1 +1,1 @@
-from .cli import cli
+from .scan_cli import run
