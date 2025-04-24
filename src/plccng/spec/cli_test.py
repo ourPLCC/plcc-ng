@@ -41,6 +41,12 @@ def test_spec_from_stdin(monkeypatch, capsys, oneRuleSpec):
     assertStdoutContainsJsonSpec(capsys, ruleCount=1)
 
 
+def test_spec_with_one_error(capsys, fs, specWithNameExpectedError):
+    file = createFile(fs, specWithNameExpectedError)
+    cli(f'spec {file}'.split())
+    assertStdoutContains(capsys, 'NameExpected')
+
+
 def createFile(fs, oneRuleSpec):
     fs.create_file("/spec.plcc", contents=oneRuleSpec)
     return "/spec.plcc"
@@ -56,10 +62,19 @@ def assertStdoutContainsJsonSpec(capsys, ruleCount):
     assert len(result['lexical']['ruleList']) == ruleCount
 
 
+
 @pytest.fixture
 def oneRuleSpec():
     return '''
 
             A 'a'
+
+    '''
+
+@pytest.fixture
+def specWithNameExpectedError():
+    return '''
+
+            a 'a'
 
     '''
