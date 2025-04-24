@@ -35,10 +35,12 @@ source = "scm"
 
 [tool.pdm.scripts]
 test = "pytest -qq -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
+ctest = "pytest-watch --runner \"bin/test/units.bash\""
 
 [dependency-groups]
 dev = [
     "pytest>=8.2.0",
     "pyfakefs>=5.4.1",
     "pytest-cov>=5.0.0",
+    "pytest-watch>=4.2.0",
 ]
