@@ -80,8 +80,4 @@ class Parser():
 
     def _getLengthOfLeadingWhitespace(self, string, index):
         ws = re.compile(r'\s*').match(string, index)
-        if ws:
-            wsl = len(ws[0])
-        else:
-            wsl = 0
-        return wsl
+        return len(ws[0])
