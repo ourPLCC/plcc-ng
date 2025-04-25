@@ -1,17 +1,18 @@
 '''spec
-    Verify a PLCC spec, and print it as JSON.
+    Verify a PLCC spec.
 
 Usage:
-    spec [--] FILE
+    spec [--json] [--] FILE
     spec (-h|--help)
 
 Arguments:
     FILE        File containing the spec. Use - to read from stdin.
-                If -- is given before FILE, then - is the name of the file.
+                If -- is given before FILE, then the path may start with a -.
 
 Options:
+    --json      Print spec in JSON.
     -h|--help   Display this message
-    --          Treat - for FILE as a filename, not stdin.
+    --          Treat leading - in the path as part of the file name.
 '''
 
 from dataclasses import asdict
@@ -40,7 +41,8 @@ class SpecCli:
             for e in errors:
                 print(e)
         else:
-            print(json.dumps(asdict(spec), indent=2))
+            if args['--json']:
+                print(json.dumps(asdict(spec), indent=2))
 
     def _parseFromFile(self, file):
         with open(file, 'r') as source:
