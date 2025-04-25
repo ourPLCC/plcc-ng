@@ -1,6 +1,6 @@
 from .LexError import LexError
 from .Skip import Skip
-from .structs import Token
+from .Token import Token
 
 
 def format(obj):
@@ -19,10 +19,10 @@ class Formatter:
         elif isinstance(obj, Skip):
             return self._formatSkip(obj)
         else:
-            raise TypeError("Error: Can only format Tokens, Skips, or LexErrors.")
+            raise TypeError(f"Unrecognized type: {type(obj)}")
 
     def _formatToken(self, token):
-        return f'''
+        return f'''\
 {{
   "Type": "Token",
   "Name": "{token.name}",
@@ -30,11 +30,10 @@ class Formatter:
   "File": "{token.line.file}",
   "Line": {token.line.number},
   "Column": {token.column}
-}}
-'''
+}}'''
 
     def _formatLexError(self, lexError):
-        return f'''
+        return f'''\
 {{
   "Type": "LexError",
   "File": "{lexError.line.file}",
@@ -43,7 +42,7 @@ class Formatter:
 }}'''
 
     def _formatSkip(self, skip):
-        return f'''
+        return f'''\
 {{
   "Type": "Skip",
   "Name": "{skip.name}",
@@ -51,6 +50,5 @@ class Formatter:
   "File": "{skip.line.file}",
   "Line": {skip.line.number},
   "Column": {skip.column}
-}}
-'''
+}}'''
 

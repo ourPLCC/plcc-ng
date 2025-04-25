@@ -6,7 +6,7 @@ from ..lines import Line
 from .formatter import format
 from .LexError import LexError
 from .Skip import Skip
-from .structs import Token
+from .Token import Token
 
 
 def test_invalid_type():
@@ -62,12 +62,12 @@ def makeLine(string="string", number=1, file="fileName"):
 
 
 def makeToken(name="name", lexeme="lexeme", line=makeLine(), column=2):
-    return Token(name, lexeme, line, column)
+    return Token(name=name, lexeme=lexeme, line=line, column=column)
 
 
 def makeSkip(lexeme="lexeme", name="name", line=makeLine(), column=2):
-    return Skip(lexeme, name, line, column)
+    return Skip(lexeme=lexeme, name=name, line=line, column=column)
 
 
 def makeLexError(line=makeLine(), column=2):
-    return LexError(line, column)
+    return LexError(line=line, column=column)

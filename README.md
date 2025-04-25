@@ -24,7 +24,8 @@ Developers license contributions under [AGPL-3.0-or-later](LICENSES/AGPL-3.0-or-
 - Clean code
 - TDD
 - Open Source Values
-- Running unit tests
-  ```
-  bin/test/units.bash
-  ```
+- Continuously run unit tests (^C to stop)
+
+    ```bash
+    pdm ctest
+    ```

@@ -2,7 +2,7 @@ from ..lines import Line
 from .LexError import LexError
 from .sink import Sink
 from .Skip import Skip
-from .structs import Token
+from .Token import Token
 
 
 def test_token(capfd):

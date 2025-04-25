@@ -4,7 +4,6 @@ from .parseLexicalSpec import parseLexicalSpec
 from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent
 from .check_for_duplicate_names import DuplicateName
 
-
 def test_TypeError():
     with pytest.raises(TypeError):
         parseLexicalSpec(3)
