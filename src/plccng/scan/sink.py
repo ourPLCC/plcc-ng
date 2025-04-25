@@ -9,4 +9,4 @@ class Sink:
     def write(self, obj):
         if not isinstance(obj, Skip) or self.printSkips:
             string = format(obj)
-            print(string)
+            print(string, flush=True)

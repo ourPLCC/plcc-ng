@@ -3,52 +3,23 @@ import sys
 from ..lines import Line
 
 
-class Source:
-    def __init__(self, files):
-        self.files = files
-        self.file_index = 0
-        self.lines = []
-        self.line_index = 0
+def Source(files):
+    if files is None:
+        return iter([])
+    for file in files:
+        yield from _yieldLinesFromFile(file)
 
-    def __iter__(self):
-        return self
 
-    def __next__(self):
-        if not self._isFileValid():
-            raise StopIteration
+def _yieldLinesFromFile(file):
+    if file == '-':
+        yield from _yieldLines(sys.stdin, file)
+    else:
+        with open(file, 'r') as f:
+            yield from _yieldLines(f, file)
 
-        if self.lines == []:
-            self.lines = self._getLinesFromFile()
-            self.line_index = 0
 
-        if self.line_index >= len(self.lines):
-            self.file_index += 1
-            self.lines = []
-            return next(self)
-
-        line = self._makeLine()
-        self.line_index += 1
-
-        return line
-
-    def _isFileValid(self):
-        return self.files is not None and self.file_index < len(self.files)
-
-    def _makeLine(self):
-        return Line(
-            self.lines[self.line_index].strip(),
-            self.line_index + 1,
-            self.files[self.file_index],
-        )
-
-    def _getLinesFromFile(self):
-        return self._removeEmptyLines(self._getInput(self.files[self.file_index]))
-
-    def _removeEmptyLines(self, lst):
-        return [s for s in lst if s.strip()]
-
-    def _getInput(self, name):
-        if name == "-":
-            return sys.stdin.readlines()
-        with open(name, "r") as f:
-            return f.readlines()
+def _yieldLines(inf, file):
+    lineNumber = 1
+    for line in inf:
+        yield Line(string=line.strip(), number=lineNumber, file=file)
+        lineNumber += 1
