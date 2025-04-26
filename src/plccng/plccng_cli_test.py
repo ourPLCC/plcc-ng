@@ -7,7 +7,7 @@ from .plccng_cli import run, main
 
 
 def test_no_args_displays_usage(monkeypatch):
-    with pytest.raises(docopt.DocoptExit, match='Usage:'):
+    with pytest.raises(docopt.DocoptExit, match="Usage"):
         run(monkeypatch, 'plccng')
 
 
