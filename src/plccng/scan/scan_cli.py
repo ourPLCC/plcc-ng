@@ -2,16 +2,16 @@
     Print tokens in input string given PLCC specification.
 
 Usage:
-    scan [--json] SPEC [FILE ...]
+    scan [options] SPEC [FILE ...]
     scan (-h|--help)
 
 Arguments:
-    SPEC    File containing PLCC spec.
-    FILE    A sequence of input files. If none are given, stdin is used.
-            If '-' is given for a file, stdin is used.
+    SPEC    PLCC spec file.
+    FILE    Input files. '-' is stdin.
 
 Options:
-    --json  Format tokens and errors in JSON format.
+    --json      Format output in JSON.
+    --skips     Show skips.
 """
 
 import sys
@@ -40,8 +40,12 @@ class ScanCli:
         if errors:
             self._printErrors(errors)
         else:
-            f = formatText if not args['--json'] else formatJson
-            self._scan(spec, args['FILE'], f)
+            self._scan(
+                spec=spec,
+                sourceFile=args['FILE'],
+                format_fn=formatText if not args['--json'] else formatJson,
+                showSkips=args['--skips']
+            )
 
     def _loadSpec(self, file):
         with open(file, 'r') as f:
@@ -53,9 +57,9 @@ class ScanCli:
         for e in errors:
             print(e)
 
-    def _scan(self, spec, sourceFile, format_fn):
+    def _scan(self, spec, sourceFile, format_fn, showSkips):
         source = Source(sourceFile)
-        sink = Sink(printSkips=False, format_fn=format_fn)
+        sink = Sink(printSkips=showSkips, format_fn=format_fn)
         matcher = Matcher(spec.lexical.ruleList)
         scanner = Scanner(matcher)
         for thing in scanner.scan(source):
