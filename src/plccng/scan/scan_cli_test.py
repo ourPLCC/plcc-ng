@@ -28,7 +28,7 @@ def test_happy_path(capsys, fs):
                                 A 'a'
                           ''')
     fs.create_file('/code', contents='a')
-    run('scan /spec /code'.split())
+    run('scan --json /spec /code'.split())
     out, err = capsys.readouterr()
     result = json.loads(out)
     assert result == {
@@ -46,7 +46,7 @@ def test_spec_with_error(capsys, fs):
                                 a 'a'
                           ''')
     fs.create_file('/code', contents='a')
-    run('scan /spec /code'.split())
+    run('scan --json /spec /code'.split())
     out, err = capsys.readouterr()
     assert 'NameExpected' in out
 
