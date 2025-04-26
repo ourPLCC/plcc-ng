@@ -3,7 +3,7 @@ import json
 import pytest
 
 from ..lines import Line
-from .formatter import format
+from .json_formatter import format
 from .LexError import LexError
 from .Skip import Skip
 from .Token import Token
