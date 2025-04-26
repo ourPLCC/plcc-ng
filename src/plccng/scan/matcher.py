@@ -3,10 +3,12 @@ from .LexError import LexError
 from .Skip import Skip
 import re
 
+
 class Matcher:
     def __init__(self, rules):
         self._rules = rules
         self._patterns = None
+        self._log = []
 
     def match(self, line, index):
         matches = self._getMatches(line, index)
@@ -14,6 +16,7 @@ class Matcher:
             return LexError(line=line, column=index+1)
         if isinstance(matches[0], Skip):
             return matches[0]
+        matches = self._removeSkips(matches)
         return self._getLongestMatch(matches)
 
     def _getMatches(self, line, index):
@@ -50,6 +53,9 @@ class Matcher:
 
     def _makeToken(self, match, rule, line, index):
         return Token(lexeme=match.group(), name=rule.name, line=line, column=1+index)
+
+    def _removeSkips(self, matches):
+        return list(filter(lambda sot: isinstance(sot, Token), matches))
 
     def _getLongestMatch(self, matches):
             return max(matches, key=lambda m: len(m.lexeme))

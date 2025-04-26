@@ -85,11 +85,14 @@ def test_skip_wins_if_it_matches_before_any_token_rules():
     result = matcher.match(line, index=0)
     assert result == Skip(lexeme='1', name='ONE', line = line, column=1)
 
-    # Now token ONETWO matches before skip ONE, so skip is ignored.
-    # But then token NUMBER wins because it matches longest.
+
+def test_once_a_token_matches_subsequent_skip_are_ignored():
+    # ONETWOTHREE cannot win, even though it is the longest match,
+    # because there is at least one matching token rule earlier than
+    # the skip rule in the spec.
     matcher = makeMatcher(r'''
         token ONETWO '12'
-        skip ONE '1'
+        skip ONETWOTHREE '123'
         token NUMBER '\d+'
     ''')
     line = parseLine("123")
