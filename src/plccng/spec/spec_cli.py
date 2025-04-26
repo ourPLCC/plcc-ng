@@ -1,23 +1,21 @@
-'''spec
-    Verify a PLCC spec.
+'''plccng spec
+    Parse, validate, and print PLCC spec as a JSON structure.
 
 Usage:
-    spec [--json] [--] FILE
-    spec (-h|--help)
+    plccng spec [options] FILE
 
 Arguments:
-    FILE        File containing the spec. Use - to read from stdin.
-                If -- is given before FILE, then the path may start with a -.
+    FILE    PLCC spec file. Use - to read from stdin.
 
 Options:
-    --json      Print spec in JSON.
-    -h|--help   Display this message
-    --          Treat leading - in the path as part of the file name.
+    --no-json       Do not display JSON structure to stdout.
+    --no-status     Do not display status to stderr.
+    -h|--help       Display this message
 '''
 
-from dataclasses import asdict
 import json
 import sys
+from dataclasses import asdict
 
 from docopt import docopt
 
@@ -25,24 +23,47 @@ from . import parseSpec
 
 
 def run(argv):
-    argv = argv[1:]     # remove command name
     SpecCli().run(argv)
 
 
 class SpecCli:
+    def __init__(self):
+        self._isStatusEnabled = False
+
     def run(self, argv):
+        args = self._parseCommandLine(argv)
+        if not args['--no-status']:
+            self._enableStatus()
+        spec, errors = self._loadSpec(args['FILE'])
+        if errors:
+            self._reportErrorsAndExit(errors)
+        elif not args['--no-json']:
+            print(json.dumps(asdict(spec), indent=2))
+        self._status('No errors.')
+
+    def _parseCommandLine(self, argv):
         doc = sys.modules[SpecCli.__module__].__doc__
-        args = docopt(doc, argv, options_first=True)
-        if args['FILE'] == '-':
+        args = docopt(doc, argv)
+        return args
+
+    def _enableStatus(self):
+        self._isStatusEnabled = True
+
+    def _reportErrorsAndExit(self, errors):
+        errors = list(errors)
+        for e in errors:
+            print(e, file=sys.stderr)
+        self._status(f'{len(errors)} error(s).')
+        sys.exit(1)
+
+    def _loadSpec(self, file):
+        if file == '-':
+            self._status('Reading spec from stdin. Press ^D when finished.')
             spec, errors = self._parseFromStdin()
         else:
-            spec, errors = self._parseFromFile(args['FILE'])
-        if errors:
-            for e in errors:
-                print(e)
-        else:
-            if args['--json']:
-                print(json.dumps(asdict(spec), indent=2))
+            self._status(f'Reading spec from {file}')
+            spec, errors = self._parseFromFile(file)
+        return spec,errors
 
     def _parseFromFile(self, file):
         with open(file, 'r') as source:
@@ -53,3 +74,8 @@ class SpecCli:
         source = sys.stdin
         spec, errors = parseSpec(source.read(), '-')
         return spec, errors
+
+    def _status(self, m):
+        if self._isStatusEnabled:
+            print(m, file=sys.stderr)
+

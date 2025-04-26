@@ -25,8 +25,7 @@ def main():
 
 
 def run(argv):
-    argv = argv[1:]     # remove command name
-    PlccngCli().run(argv)
+    PlccngCli().run(argv[1:])
 
 
 class PlccngCli:
