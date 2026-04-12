@@ -3,7 +3,6 @@
 **Date:** 2026-04-12
 **Status:** Draft — pending review
 **Target release:** PLCC v9.0.0
-**Branch:** `multi-lang` (to be created)
 
 ## 1. Goal
 
@@ -21,9 +20,9 @@ Make PLCC adoptable by faculty whose students do not know Java, by refactoring P
 
 PLCC is an educational compiler-compiler used to teach programming language concepts. As of v8.0.2 it generates only Java, which limits adoption to courses and institutions where students already know Java. Faculty at institutions that teach Python, TypeScript, or other languages as their primary language cannot adopt PLCC without imposing a language-learning burden on their students.
 
-A parallel project, `plcc-ng`, is a clean-room rewrite in Python by students using TDD. It has completed spec parsing (lexical, syntactic, and semantic sections), a working scanner, LL(1) validation, and CLIs for `spec` and `scan`. It has not built the parser runtime or code generator. plcc-ng shares a common git ancestor with plcc and contains 282 commits of student work since divergence.
+A parallel project, `plcc-ng`, is a clean-room rewrite in Python by students using TDD. It has completed spec parsing (lexical, syntactic, and semantic sections), a working scanner, LL(1) validation, and CLIs for `spec` and `scan`. It has not built the parser runtime or code generator. plcc-ng has accumulated 282 commits of student work.
 
-This design builds on plcc-ng's foundation rather than starting over, preserves student contributions from both lineages in a unified git history, and refactors the result into a pipeline architecture that supports multiple target languages through a plugin system.
+This design builds on plcc-ng's foundation rather than starting over, preserves the student contributions from plcc-ng's history, and refactors the result into a pipeline architecture that supports multiple target languages through a plugin system.
 
 ## 4. Architecture Overview
 
@@ -41,24 +40,24 @@ Level 1 (intermediate compositions) is deliberately unoccupied in v9. It may eme
                      └───────────────────┬──────────────────────────┘
                                          │ orchestrates
                                          ▼
-         ┌────────────┬──────────────┬─────────────┬────────────┬──────────┐
-         │ plcc-spec  │ plcc-tokens  │ plcc-tree   │ plcc-model │plcc-emit │
-         │            │              │             │            │          │
-         │ grammar    │ text stream  │ token JSONL │ spec JSON  │model JSON│
-         │   ↓        │   ↓          │   ↓         │   ↓        │   ↓      │
-         │ spec JSON  │ token JSONL  │ tree JSONL  │ model JSON │ files    │
-         └────────────┴──────────────┴─────────────┴────────────┴──────────┘
+         ┌────────────┬──────────────┬─────────────┬────────────┬───────────────┐
+         │ plcc-spec  │ plcc-tokens  │ plcc-tree   │ plcc-model │plcc-lang-emit │
+         │            │              │             │            │               │
+         │ grammar    │ text stream  │ token JSONL │ spec JSON  │ model JSON    │
+         │   ↓        │   ↓          │   ↓         │   ↓        │   ↓           │
+         │ spec JSON  │ token JSONL  │ tree JSONL  │ model JSON │ files         │
+         └────────────┴──────────────┴─────────────┴────────────┴───────────────┘
                                                                    │
                                                                    ▼
                                                   ┌──────────────────────────┐
-                                                  │  Emitter plugin registry │
-                                                  │  plcc.emitters entry pts │
+                                                  │  Language plugin commands │
+                                                  │  plcc-<lang>-emit (PATH) │
                                                   └──────────────────────────┘
 ```
 
 ## 5. Level 0 Primitives
 
-Each primitive is a pip console-script entry point provided by the `plcc` package. All are pure JSON filters except `plcc-emit`, which writes files to disk.
+Each primitive is a pip console-script entry point provided by the `plcc` package. The four pure JSON filters are named after their output. The `plcc-lang-*` commands form a separate tier that manages and dispatches to language plugins (see §10).
 
 | Command | Input | Output | Role |
 |---|---|---|---|
@@ -66,9 +65,11 @@ Each primitive is a pip console-script entry point provided by the `plcc` packag
 | `plcc-tokens` | text stream (stdin) + spec JSON path | token JSONL (stdout) | Tokenize a character stream into a line-delimited JSON stream of tokens. Streaming; stateless; runs until EOF. |
 | `plcc-tree` | token JSONL (stdin) + spec JSON path | tree JSONL (stdout) | Parse tokens into abstract syntax trees. Knows program boundaries from the grammar's start symbol. Long-running; emits one JSON tree per line, one per completed program. |
 | `plcc-model` | spec JSON (stdin or path) | model JSON (stdout) | Transform a language spec into a language-neutral OO code model: classes, inheritance, attributes, constructors, method slots, and opaque semantic blocks. One-shot; single JSON document. |
-| `plcc-emit` | model JSON (stdin or path) + `--target=<lang>` + `--output=<dir>` | source files in `<dir>` | Dispatch to an emitter plugin. The plugin writes generated source files and copies its bundled runtime into `<dir>`. The only primitive with side effects other than stdout. |
+| `plcc-lang-emit` | model JSON (stdin) + `--target=<lang>` + `--output=<dir>` | source files in `<dir>` | Dispatcher: constructs `plcc-<lang>-emit` and execs it via PATH. The plugin writes generated source files and copies its bundled runtime into `<dir>`. |
+| `plcc-lang-build` | `--target=<lang>` + `--output=<dir>` | compiled artifacts in `<dir>` | Dispatcher: constructs `plcc-<lang>-build` and execs it via PATH if present. Exits 0 silently if no build command is installed for that language. |
+| `plcc-lang-list` | — | language names (stdout) | Scans PATH for commands matching `plcc-*-emit`; prints one language name per line. |
 
-Naming rationale: the four pure filters (`spec`, `tokens`, `tree`, `model`) are named after their output. `emit` is a verb because it is the one primitive that writes files — the asymmetry is a signal, not a bug. `tree` is preferred over `ast` because it is approachable without jargon; `tokens` is preferred over `lex` or `tokenize` because it is a noun and matches the output. `model` is preferred over `code-model` for brevity and because `plcc-code` would be confusable with `plcc-emit`.
+Naming rationale: the four pure filters (`spec`, `tokens`, `tree`, `model`) are named after their output. The `plcc-lang-*` commands are named after the layer they manage (language plugins) — they form the boundary between the core pipeline and the plugin ecosystem. `tree` is preferred over `ast` because it is approachable without jargon; `tokens` is preferred over `lex` or `tokenize` because it is a noun and matches the output. `model` is preferred over `code-model` for brevity.
 
 ## 6. Level 2 Commands
 
@@ -96,11 +97,11 @@ This section describes the shape of data flowing between stages at a high level.
 - `plcc-tokens` — token JSONL
 - `plcc-tree` — tree JSONL
 
-The other three primitives run once per invocation and produce a single JSON document (or, for `plcc-emit`, files on disk):
+The other three primitives run once per invocation and produce a single JSON document (or, for `plcc-lang-emit`, files on disk):
 
 - `plcc-spec` — spec JSON (single document)
 - `plcc-model` — model JSON (single document)
-- `plcc-emit` — files
+- `plcc-lang-emit` — files
 
 The distinction matters for the REPL: tokens and trees flow through the pipe continuously as the student types programs, while spec and model are built once at `plcc-make` time and reused.
 
@@ -153,10 +154,10 @@ Downstream stages pass error records through unchanged unless they consume them 
 build/
 ├── spec.json         # output of plcc-spec
 ├── model.json        # output of plcc-model
-├── Java/             # output of plcc-emit for the first semantic section
+├── Java/             # output of plcc-lang-emit for the first semantic section
 │   ├── <generated .java files>
 │   └── runtime/      # runtime library copied from the Java emitter plugin
-├── py/               # output of plcc-emit for a second semantic section
+├── py/               # output of plcc-lang-emit for a second semantic section
 │   ├── <generated .py files>
 │   └── runtime/      # runtime library copied from the Python emitter plugin
 └── ...
@@ -167,7 +168,7 @@ Key properties:
 - **Single directory to clean.** `plcc-make` always runs `rm -rf build/` before rebuilding. There is no `-c` flag in v9; clean-and-rebuild is the default and only behavior. (A future option to skip cleaning can be added if a concrete need arises.)
 - **Single `.gitignore` line.** `build/` in the project's `.gitignore` excludes every generated artifact.
 - **Intermediate files are visible.** `spec.json` and `model.json` live at the top of `build/` where students can `cat` them. This supports the pedagogy: the pipeline is inspectable, not magical.
-- **One output subdirectory per semantic section.** Each `% <tool> <language>` divider in the grammar produces one subdirectory named `<tool>`, emitted by the plugin for `<language>`.
+- **One output subdirectory per semantic section.** Each `% <tool> <language>` divider in the grammar produces one subdirectory named `<tool>`, emitted by the plugin for `<language>`. The name is taken verbatim from the grammar; `plcc-make` does not normalize casing. A divider written as `% Java Java` produces `build/Java/`; one written as `% java Java` produces `build/java/`. Learning materials should standardize on a casing convention.
 - **Generated output is disposable.** Students are expected to regenerate frequently. Source (the grammar file) is what persists; `build/` is ephemeral.
 
 `plcc-make` phase sequence:
@@ -175,94 +176,101 @@ Key properties:
 1. **Clean:** `rm -rf build/`
 2. **Spec:** `plcc-spec grammar > build/spec.json`
 3. **Model:** `plcc-model build/spec.json > build/model.json`
-4. **Emit:** for each semantic section, look up the emitter plugin for that section's language, call `emit()` to produce files in `build/<tool>/`, and copy the plugin's bundled runtime into `build/<tool>/runtime/`.
-5. **Build:** for each semantic section, if the emitter plugin defines a `build()` hook, call it to compile or prepare the emitted code (e.g. run `javac` for Java).
+4. **Emit:** for each semantic section, `plcc-lang-emit --target=<lang> --output=build/<tool>/ < build/model.json`
+5. **Build:** for each semantic section, `plcc-lang-build --target=<lang> --output=build/<tool>/` (silently skipped if no build command is installed for that language)
 
 If any phase fails, `plcc-make` reports the error and stops; subsequent phases do not run.
 
-## 10. Emitter Plugin System
+## 10. Language Plugin System
 
-Emitters are discovered at runtime through Python's `importlib.metadata` entry-point mechanism. The `plcc` package declares a plugin group `plcc.emitters`. Each emitter package registers itself under that group.
+Language plugins are discovered via PATH. A plugin is any executable named `plcc-<lang>-emit` present on the user's PATH. No entry point group, no registry, no Python packaging machinery is required beyond `pip install` placing the command on PATH.
 
 ### 10.1 Plugin Contract
 
-An emitter plugin is a Python package exposing two callables:
+A language plugin consists of one required command and one optional command:
 
-```python
-def emit(code_model: dict, options: dict) -> dict[str, str]:
-    """
-    Transform a code model into target-language source files.
+**`plcc-<lang>-emit` (required)**
 
-    Returns a mapping of {relative_path: file_contents}.
-    The caller writes these files into the output directory.
-    """
+- Reads model JSON from stdin
+- Accepts `--output=<dir>` (required) and `--semantics=hide|note|comment|body` (optional, default `body`)
+- Writes generated source files into `<dir>`
+- Copies its bundled runtime into `<dir>/runtime/`
+- Exits 0 on success; exits nonzero and writes to stderr on failure
+- A malformed model is a tool failure (nonzero exit), not an in-band error record
 
-def build(output_dir: Path, options: dict) -> None:
-    """
-    Optional. Compile or prepare the emitted code.
-    Called after files are written and the runtime is copied in.
-    Omit this function if the target language needs no build step.
-    """
-```
+**`plcc-<lang>-build` (optional)**
 
-`options` carries presentation flags such as `--semantics=hide|note|comment|body`, which control how semantic `%%%` blocks appear in the emitted output. PlantUML and similar diagram emitters use `--semantics=note` or `--semantics=hide`; interpreter emitters use `--semantics=body`.
+- Accepts `--output=<dir>` (required)
+- Compiles or prepares files already in `<dir>` (e.g. runs `javac`)
+- Exits 0 on success; exits nonzero and writes to stderr on failure
+- Absence from PATH means no build step for that language — not an error
+
+The `--semantics` flag controls how semantic `%%%` blocks appear in emitted output. PlantUML and similar diagram emitters use `--semantics=note` or `--semantics=hide`; interpreter emitters use `--semantics=body`. The mechanism by which the user specifies `--semantics` (as a flag to `plcc-make` or embedded in the grammar file) is left to the Phase 1 design document.
+
+Because the contract is stdin/stdout/exit codes, a plugin does not need to be a Python package. `pip install` is the conventional delivery mechanism, but the runtime contract has no Python dependency.
 
 ### 10.2 Plugin Package Layout
 
-Each emitter plugin package bundles its own runtime library. A reference layout:
+Each language plugin package bundles its own runtime library. A reference layout for a third-party plugin (e.g. `plcc-rust`):
 
 ```
-plcc_emit_python/
-├── __init__.py          # defines emit() and optionally build()
+plcc_rust/
+├── __main__.py          # entry point for plcc-rust-emit console script
 ├── templates/           # generation templates (Jinja or equivalent)
 └── runtime/             # copied verbatim into build/<tool>/runtime/
-    ├── __init__.py
-    ├── token.py
-    ├── node.py
-    └── parser.py
+    └── ...              # target-language runtime files
+```
+
+Declared in `pyproject.toml` as:
+
+```toml
+[project.scripts]
+plcc-rust-emit = "plcc_rust:emit_main"
 ```
 
 The runtime lives inside the plugin so that:
 
 - **Plugin authors own their runtime.** A plugin for a new language defines both the generated code shape and the base classes those generated classes inherit from. No coordination with plcc core required.
 - **Output is self-contained.** A student running `cd build/py && python main.py` needs nothing beyond their target language's interpreter. No separate runtime package on PyPI, no Maven Central lookup, no crates.io.
-- **One install per language.** `pip install plcc-emit-rust` brings in emission logic, templates, and runtime in a single unit. Runtime bugs are fixed by releasing a new version of the plugin package.
+- **One install per language.** `pip install plcc-rust` brings in emission logic, templates, and runtime in a single unit. Runtime bugs are fixed by releasing a new version of the plugin package.
 - **Regeneration is cheap.** Students regenerate frequently (source is what persists, `build/` is disposable), so "runtime is copied into every rebuild" is not a cost.
 
 ### 10.3 Discovery
 
-`plcc-emit --target=<lang>` loads emitters via:
+`plcc-lang-emit --target=<lang>` constructs the command name `plcc-<lang>-emit` and execs it as a subprocess. Discovery is PATH-based: if the command exists on PATH, the plugin is installed; if not, `plcc-lang-emit` exits nonzero with:
 
-```python
-from importlib.metadata import entry_points
-for ep in entry_points(group="plcc.emitters"):
-    if ep.name == target_lang:
-        emitter = ep.load()
+```text
+No emitter found for '<lang>'. Is plcc-<lang>-emit installed?
+Run plcc-lang-list to see what is available.
 ```
 
-If no plugin is found for a requested target, `plcc-emit` exits nonzero with a helpful error listing installed emitters.
+`plcc-lang-list` scans PATH for executables matching `plcc-*-emit`, strips the prefix and suffix, and prints one language name per line.
 
 ### 10.4 Built-in Emitters
 
-The `plcc` core package ships with three emitter plugins installed as dependencies:
+The `plcc` core package ships with three built-in language plugins, declared as console scripts in `plcc`'s own `pyproject.toml`:
 
-- `plcc-emit-java` — generates a Java interpreter; `build()` runs `javac`.
-- `plcc-emit-python` — generates a Python interpreter; no `build()`.
-- `plcc-emit-plantuml` — generates a PlantUML class diagram; no `build()`.
+```toml
+[project.scripts]
+plcc-plantuml-emit = "plcc.lang.plantuml:emit_main"
+plcc-python-emit   = "plcc.lang.python:emit_main"
+plcc-java-emit     = "plcc.lang.java:emit_main"
+plcc-java-build    = "plcc.lang.java:build_main"
+```
 
-A plain `pip install plcc` gets a user all three out of the box, supporting a standard PLCC course setup with zero additional installs.
+A plain `pip install plcc` installs all three out of the box. No separate packages, no entry point groups.
 
-Third-party emitters (`plcc-emit-rust`, `plcc-emit-typescript`, etc.) are published as independent PyPI packages. Installing one adds its target to `plcc-emit`'s discovery automatically.
+Third-party plugins (`plcc-rust`, `plcc-typescript`, etc.) are published as independent PyPI packages following the naming convention `plcc-<lang>`. Installing one places `plcc-<lang>-emit` (and optionally `plcc-<lang>-build`) on PATH, making the language immediately available to `plcc-lang-emit`.
 
 ## 11. First Non-Java Target: Python
 
-The primary proof point for the retargeting architecture in v9 is `plcc-emit-python`. Python is chosen because:
+The primary proof point for the retargeting architecture in v9 is `plcc-python-emit`. Python is chosen because:
 
 - It is the highest-leverage adoption win. Many institutions teach Python as their primary language; their faculty cannot currently adopt PLCC.
 - Its dynamic typing puts pressure on the code model abstraction. A code model that survives emission to Python without Java-ism leaks is much more likely to also survive emission to TypeScript, C#, or Rust later.
 - Students in most CS curricula already know some Python, so the emitted interpreter is immediately readable to them.
 
-`plcc-emit-python` must round-trip through the `languages` test repository (§13) in both its emitted code and its embedded runtime.
+`plcc-python-emit` must round-trip through the `languages` test repository (§13) in both its emitted code and its embedded runtime.
 
 ## 12. Distribution and Packaging
 
@@ -274,62 +282,15 @@ pip install plcc
 
 Cross-platform by construction. No shell scripts, no environment variable setup, no OS-specific installers. The command a student or instructor runs to get a working PLCC is the same on Windows, macOS, and Linux.
 
-Third-party emitters are separate PyPI packages following the naming convention `plcc-emit-<lang>`. They depend on `plcc` and register themselves under the `plcc.emitters` entry-point group.
+Third-party language plugins are separate PyPI packages following the naming convention `plcc-<lang>`. Installing one places `plcc-<lang>-emit` (and optionally `plcc-<lang>-build`) on PATH.
 
-```
-pip install plcc plcc-emit-rust
+```sh
+pip install plcc plcc-rust
 ```
 
 This distribution model replaces the v8 model, which required cloning the repo and configuring environment variables — an adoption barrier that disproportionately affects students on Windows and instructors supporting multiple operating systems.
 
-## 13. Repository Unification and Cutover
-
-### 13.1 The current state
-
-Two git repositories exist:
-
-- `github.com/ourPLCC/plcc` — the canonical v8 repository. Current release: v8.0.2. 14 commits on `main` since the divergence point.
-- `github.com/ourPLCC/plcc-ng` — the student-built Python rewrite. 282 commits on `main` since the divergence point.
-
-Both repositories share a common ancestor: commit `fe08748` "build: prepare to unit test" (2024-05-01). They share the same root commit `b863951`. This means they can be unified with a normal `git merge`, without `--allow-unrelated-histories` or subtree tricks.
-
-### 13.2 Unification procedure
-
-All v9 development happens on a new `multi-lang` branch inside the `plcc` repository. The branch is created by merging plcc-ng's history into plcc:
-
-```bash
-cd plcc
-git remote add ng https://github.com/ourPLCC/plcc-ng.git
-git fetch ng
-git checkout -b multi-lang
-git merge ng/main
-# resolve conflicts on README, devcontainer, license, etc.
-```
-
-Before the merge, plcc-ng's experimental version tags (`0.0.1` through `0.0.5`) are deleted from the local ref store so they do not enter the unified tag namespace. Only the commit history is preserved.
-
-After the merge, `multi-lang` contains both lineages' files side by side. The refactor work happens on this branch: the new pipeline architecture grows, plcc-ng's existing spec-parsing and scan code is re-homed into Level 0 primitives, and legacy v8 code is progressively replaced.
-
-### 13.3 Parallel release during transition
-
-While `multi-lang` is under development, `main` remains the v8 release line. Faculty using existing learning materials see no disruption.
-
-`multi-lang` publishes to PyPI as **prereleases** (`plcc==9.0.0a1`, `a2`, …, `rc1`). Early adopters who want to pilot the new architecture install with `pip install --pre plcc`. This surfaces real adoption feedback before cutover without committing anyone to the new version.
-
-The `languages` test repository runs in CI against `multi-lang` throughout development, providing a continuous backwards-compatibility signal (§14).
-
-### 13.4 Cutover
-
-When `multi-lang` is ready and learning materials have been updated to match:
-
-1. Tag `main` with `v8-final` so the pre-cutover state is recoverable forever.
-2. Merge `multi-lang` → `main` through a normal `git merge` (or PR-based equivalent).
-3. Publish `plcc==9.0.0` stable to PyPI from the merged `main`.
-4. Archive the `plcc-ng` repository with a README pointing to the unified history in `plcc`.
-
-The cutover is a single coordinated step, not a rename-and-archive choreography. All student contributions from both lineages remain visible in `git log` on the new `main`.
-
-## 14. Backwards Compatibility
+## 13. Backwards Compatibility
 
 v9 provides **semantic backwards compatibility** for v8 grammar files, not bit-exact compatibility. A grammar file written against v8 passed to v9's `plcc-make` produces a working Java interpreter with the same runtime behavior. Generated class names, method signatures, and file layout may differ from v8's output; faculty tests of student programs continue to pass; faculty who inspected generated Java source may see differences.
 
@@ -339,11 +300,11 @@ Backwards compatibility is not an aspiration in v9. It is a runnable, concrete s
 
 **v9 is considered backwards compatible when the full `languages` test suite passes against it.**
 
-This test suite becomes part of v9's acceptance criteria. It runs in CI against `multi-lang` throughout development to catch regressions early rather than at the end. The Java emitter plugin (`plcc-emit-java`) is designed and tested against this suite.
+This test suite becomes part of v9's acceptance criteria. It runs in CI throughout development to catch regressions early rather than at the end. The Java language plugin (`plcc-java-emit`) is designed and tested against this suite.
 
 The suite is not comprehensive — its coverage of runtime behavior is shallow — but it is concrete, already written, and exercises the full pipeline end to end against realistic grammars.
 
-## 15. Revisions to Prior Brainstorming Decisions
+## 14. Revisions to Prior Brainstorming Decisions
 
 This spec adjusts three decisions from earlier brainstorming sessions in light of the PyPI distribution commitment:
 
@@ -353,7 +314,7 @@ This spec adjusts three decisions from earlier brainstorming sessions in light o
 
 These revisions preserve the spirit of the original decisions (single-responsibility primitives, honest Unix composition, responsive interactive mode) while removing machinery that existed only to work around limitations the new distribution model eliminates.
 
-## 16. Deferred and Out of Scope
+## 15. Deferred and Out of Scope
 
 - **Pluggable verifiers.** Future extension; no work in v9.
 - **Pluggable scanners and parsers.** The Level 0 primitives `plcc-tokens` and `plcc-tree` remain the only implementations in v9.
@@ -361,10 +322,33 @@ These revisions preserve the spirit of the original decisions (single-responsibi
 - **Non-OO target languages.** Retargeting in v9 is limited to modern OO languages.
 - **Exact JSON schemas.** This spec establishes contracts and error-record discipline; schema details are the implementation plan's responsibility.
 - **Migration of existing PLCC users to v9 on a timeline.** The cutover strategy supports parallel operation; the decision of when individual faculty migrate is their own.
+- **Integration of plcc-ng into the plcc repository.** Deferred until v9 is complete and has demonstrated buy-in. Development of v9 happens entirely within the plcc-ng repository.
 
-## 17. Open Risks
+## 16. Open Risks
 
 - **Code model generality.** The code model is the retargeting pivot. If it accidentally encodes Java-isms, emission to Python will surface them, but late-discovered abstraction leaks could require rework of every emitter. Mitigation: emit to Python as early in the implementation plan as possible, before investing in the Java emitter's polish.
 - **Runtime library drift across languages.** Each emitter plugin owns its runtime, so different languages' interpreters can drift in behavior. Mitigation: the `languages` test suite exercises Java runtime behavior; a parallel language-agnostic test suite should exercise Python runtime behavior as the Python emitter matures.
 - **plcc-ng code that does not fit the pipeline shape.** plcc-ng's 282 commits include spec parsing and a scanner, but its internal structure shares dataclasses across package boundaries. Re-homing that code into Level 0 primitives with JSON contracts may reveal coupling that requires restructuring, not just relocation. Mitigation: the implementation plan begins with extracting `plcc-spec` as a standalone primitive to surface these issues early.
-- **Learning materials lag.** The cutover gate is "learning materials have been updated." If this gate is held open indefinitely, the v8/v9 parallel window extends indefinitely. Mitigation: name a specific maintainer responsible for the learning materials update, with a review checkpoint after the Python emitter lands.
+- **Learning materials lag.** Learning materials need to be updated to match v9's commands and behavior before v9 can be widely adopted. Mitigation: name a specific maintainer responsible for the learning materials update, with a review checkpoint after the Python emitter lands.
+
+## 17. Architectural Amendments
+
+### 17.1 Amends §10.4: Built-in emitter packaging (from roadmap review, 2026-04-12)
+
+**Original §10.4** described the three built-in emitters as "installed as dependencies" of the `plcc` core package, implying separate PyPI packages (`plcc-emit-java`, `plcc-emit-python`, `plcc-emit-plantuml`).
+
+**Amendment:** superseded by §17.2. The built-in emitters are bundled inside the `plcc` package and exposed as console scripts, not as entry point group members. See §17.2 for the full decision.
+
+### 17.2 Amends §10: Language plugin command contract (from brainstorming, 2026-04-12)
+
+**Original §10** defined the plugin contract as Python callables (`emit()`, `build()`), discovered via `importlib.metadata` entry points under a `plcc.emitters` group.
+
+**Amendment:** the plugin contract is redefined as CLI commands. `§10` has been rewritten in place to reflect this. The key decisions:
+
+- The plugin obligation is to provide `plcc-<lang>-emit` on PATH (required) and optionally `plcc-<lang>-build`.
+- Discovery is PATH-based: `plcc-lang-emit --target=<lang>` constructs `plcc-<lang>-emit` and execs it. No entry point group, no registry.
+- `plcc-emit` is retired. The dispatchers are `plcc-lang-emit`, `plcc-lang-build`, and `plcc-lang-list`.
+- Built-in plugins are console scripts declared in `plcc`'s `pyproject.toml` (§10.4). The `plcc.emitters` entry point group is eliminated entirely.
+- Third-party plugins follow the naming convention `plcc-<lang>` (package) / `plcc-<lang>-emit` (command).
+
+**Rationale:** the callable contract ran plugin code inside `plcc-emit`'s own process, collapsing the boundary the pipeline architecture was designed to enforce. Commands run in isolated subprocesses, honour the same stdin/stdout/exit-code contract as every other Level 0 primitive, and do not require plugins to be Python packages.
