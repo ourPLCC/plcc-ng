@@ -46,7 +46,7 @@ NUM '\d+'
 <program> ::= <NUM>
 
 %% semantic rules
-% plantuml PlantUML
+% diagram PlantUML
 ```
 
 - Produces a `Program` class with a `num` field of type `Token`

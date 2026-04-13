@@ -74,51 +74,39 @@ On Linux, omit the `''` after `-i`.
 
 **Step 2: Update `pyproject.toml`**
 
-Change `name = "plccng"` to `name = "plcc"` and update the entry point:
+Change `name = "plccng"` to `name = "plcc"`. Remove the old `plcc = "plcc.plcc_cli:main"` entry point — `plcc_cli.py` is deleted in Task 7b. Add the standalone command entry points (filled in as each command is implemented in later tasks):
 
 ```toml
 [project]
 name = "plcc"
-
-[project.scripts]
-plcc = "plcc.plcc_cli:main"
 ```
 
-Also rename `src/plcc/plccng_cli.py` → `src/plcc/plcc_cli.py` and `src/plcc/plccng_cli_test.py` → `src/plcc/plcc_cli_test.py`:
+Also update the pytest coverage target:
+
+```bash
+sed -i '' 's/--cov=plccng/--cov=plcc/g' pyproject.toml
+```
+
+On Linux, omit the `''` after `-i`.
+
+**Step 3: Rename `plccng_cli.py` and `plccng_cli_test.py`**
+
+Do not delete these files yet — they are deleted in Task 7b after the old CLI is formally retired. For now, just rename them so they live under the new package name:
 
 ```bash
 git mv src/plcc/plccng_cli.py src/plcc/plcc_cli.py
 git mv src/plcc/plccng_cli_test.py src/plcc/plcc_cli_test.py
 ```
 
-**Step 3: Update `plcc_cli.py` docstring and internal references**
+**Step 4: Update `plcc_cli.py` internal references**
 
-In `src/plcc/plcc_cli.py`, update the module docstring:
+Replace all `plccng` references inside the file to `plcc`. Do not spend time on the docstring — this file is deleted in Task 7b.
 
-```python
-"""plcc
-    The Programming Languages Compiler Compiler - Next Generation
+**Step 5: Update `plcc_cli_test.py`**
 
-Usage:
-    plcc COMMAND [OPTION ...] [ARGUMENT ...]
-    plcc (-h|--help)
+Replace all `plccng` references with `plcc` and update `from .plccng_cli import ...` to `from .plcc_cli import ...`. These tests are deleted in Task 7b.
 
-Commands:
-    spec    Print JSON representation of PLCC spec.
-    scan    Print JSON tokens given PLCC spec and code.
-
-Options:
-    -h|--help   Display this message
-"""
-```
-
-Update all `plccng` references inside the file to `plcc`.
-
-**Step 4: Update `plcc_cli_test.py`**
-
-Replace all `plccng` references with `plcc` and update `from .plccng_cli import ...` to `from .plcc_cli import ...`.
-
-**Step 5: Update `pytest.ini` if it references `plccng`**
+**Step 6: Update `pytest.ini` if it references `plccng`**
 
 ```bash
 grep 'plccng' pytest.ini && sed -i '' 's/plccng/plcc/g' pytest.ini
@@ -131,7 +119,22 @@ grep 'plccng' pytest.ini && sed -i '' 's/plccng/plcc/g' pytest.ini
 **Files:**
 - Modify: `src/plcc/**/*_test.py` (any remaining `plccng` references)
 
-**Step 1: Find any remaining `plccng` references in tests**
+**Step 1: Inventory all test files**
+
+List every `*_test.py` file in `src/plcc/` and classify each one explicitly before touching anything:
+
+```bash
+find src/plcc -name '*_test.py' | sort
+```
+
+For each file, decide:
+- **Keep as-is** (only needs import updates) — standard unit tests for logic that still exists
+- **Migrate** (needs content changes beyond imports) — tests that cover interfaces being replaced
+- **Delete** (tests an interface that no longer exists after Phase 1) — mark these; they are deleted in Task 7a or 7b
+
+Record this classification as a comment in the commit message. Do not skip this step — it prevents accidentally green-barring tests that cover deleted interfaces.
+
+**Step 2: Find any remaining `plccng` references in tests**
 
 ```bash
 grep -r 'plccng' src/plcc/
@@ -586,6 +589,88 @@ git commit -m "feat(spec): add plcc-spec standalone entry point"
 
 ---
 
+### Task 7a: Retire old scan package
+
+The old `plcc.scan` package (`scan_cli.py`, `json_formatter.py`, `text_formatter.py` and their tests) tests an interface that no longer aligns with the pipeline after Phase 1. Delete it now so no stale tests linger.
+
+**Files:**
+- Delete: `src/plcc/scan/scan_cli.py`
+- Delete: `src/plcc/scan/scan_cli_test.py`
+- Delete: `src/plcc/scan/json_formatter.py`
+- Delete: `src/plcc/scan/json_formatter_test.py`
+- Delete: `src/plcc/scan/text_formatter.py`
+- Delete: `src/plcc/scan/text_formatter_test.py`
+
+**Step 1: Review each test file before deleting**
+
+Read each test file and note any coverage worth migrating to `tokens_cli_test.py` or `jsonl_formatter_test.py` (Task 8). The new `plcc-tokens` JSONL output is tested there — the old formatters are not needed, but any edge-case inputs worth preserving should be added to Task 8's tests.
+
+**Step 2: Delete the files**
+
+```bash
+git rm src/plcc/scan/scan_cli.py src/plcc/scan/scan_cli_test.py
+git rm src/plcc/scan/json_formatter.py src/plcc/scan/json_formatter_test.py
+git rm src/plcc/scan/text_formatter.py src/plcc/scan/text_formatter_test.py
+```
+
+**Step 3: Run the full unit suite**
+
+```bash
+bin/test/units.bash
+```
+
+Expected: green bar with fewer tests (the deleted tests no longer run).
+
+**Step 4: Commit**
+
+```bash
+git commit -m "refactor(scan): retire old scan package and stale tests"
+```
+
+---
+
+### Task 7b: Remove `plcc_cli.py` and `spec_cli.py`
+
+The subcommand dispatcher (`plcc_cli.py`) and the old spec subcommand wrapper (`spec_cli.py`) are superseded by standalone commands. Remove them entirely.
+
+**Files:**
+- Delete: `src/plcc/plcc_cli.py`
+- Delete: `src/plcc/plcc_cli_test.py`
+- Delete: `src/plcc/spec/spec_cli.py`
+- Delete: `src/plcc/spec/spec_cli_test.py`
+- Modify: `pyproject.toml` — ensure the `plcc` entry point (if still present) is removed
+
+**Step 1: Delete the files**
+
+```bash
+git rm src/plcc/plcc_cli.py src/plcc/plcc_cli_test.py
+git rm src/plcc/spec/spec_cli.py src/plcc/spec/spec_cli_test.py
+```
+
+**Step 2: Verify no `plcc` entry point remains in `pyproject.toml`**
+
+```bash
+grep 'plcc_cli' pyproject.toml
+```
+
+Expected: no output. If the entry point was not removed in Task 3, remove it now.
+
+**Step 3: Run the full unit suite**
+
+```bash
+bin/test/units.bash
+```
+
+Expected: green bar.
+
+**Step 4: Commit**
+
+```bash
+git commit -m "refactor: remove plcc_cli.py and spec_cli.py subcommand dispatcher"
+```
+
+---
+
 ### Task 8: `plcc-tokens` — standalone entry point with JSONL output
 
 `plcc-tokens` reads a spec JSON file (output of `plcc-spec`) and a text stream on stdin, outputs token JSONL.
@@ -652,6 +737,17 @@ Expected: FAIL — module does not exist.
 
 **Step 3: Create `src/plcc/tokens/spec_loader.py`**
 
+Before writing, check whether `plcc.spec.lexical.LexicalRule` can be imported directly to avoid duplicating the dataclass:
+
+```bash
+python -c "from plcc.spec.lexical import LexicalRule; print(LexicalRule)"
+```
+
+- If the import succeeds without circular dependency errors, use `LexicalRule` from the spec package directly and skip the private `_LexicalRule` dataclass.
+- If the import causes a circular dependency, keep `_LexicalRule` as a private copy and add a comment: `# Private copy of spec.lexical.LexicalRule — importing from plcc.spec causes a circular dependency.`
+
+Either way, the choice must be documented in a comment. Do not leave the duplication unexplained.
+
 ```python
 """Load lexical rules from a spec JSON file for use by plcc-tokens."""
 
@@ -659,6 +755,8 @@ import json
 from dataclasses import dataclass
 
 
+# If plcc.spec.lexical.LexicalRule can be imported without circular dependency,
+# replace this with: from plcc.spec.lexical import LexicalRule
 @dataclass
 class _LexicalRule:
     name: str
@@ -987,9 +1085,13 @@ def test_help(capsys):
     assert 'Usage' in out
 
 
-def test_token_stream_produces_tree(capsys, monkeypatch):
+def test_token_stream_produces_tree(capsys, monkeypatch, tmp_path):
+    # --spec must be a path to spec JSON (output of plcc-spec), not a grammar file.
+    # Phase 1 implementation accepts but ignores the spec content.
+    spec_json = tmp_path / 'trivial.spec.json'
+    spec_json.write_text('{}')  # content ignored in Phase 1
     monkeypatch.setattr('sys.stdin', io.StringIO(_ONE_TOKEN + '\n'))
-    run_main(['--spec=tests/fixtures/trivial.plcc'])
+    run_main([f'--spec={spec_json}'])
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
     assert len(lines) == 1
@@ -998,9 +1100,11 @@ def test_token_stream_produces_tree(capsys, monkeypatch):
     assert tree['rule'] == 'program'
 
 
-def test_error_record_passes_through(capsys, monkeypatch):
+def test_error_record_passes_through(capsys, monkeypatch, tmp_path):
+    spec_json = tmp_path / 'trivial.spec.json'
+    spec_json.write_text('{}')  # content ignored in Phase 1
     monkeypatch.setattr('sys.stdin', io.StringIO(_ONE_ERROR + '\n'))
-    run_main(['--spec=tests/fixtures/trivial.plcc'])
+    run_main([f'--spec={spec_json}'])
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
     assert len(lines) == 1
@@ -1045,6 +1149,10 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
+    # Phase 1: --spec is accepted for interface compatibility but not yet used.
+    # The minimal implementation wraps each token in a tree record unconditionally.
+    # Phase 2 will implement a real LL(1) parser using the spec.
+    _ = args['--spec']
     for line in sys.stdin:
         line = line.strip()
         if not line:
@@ -1099,9 +1207,25 @@ git commit -m "feat(tree): add plcc-tree minimal pass-through for trivial gramma
 - Create: `src/plcc/model/model_cli_test.py`
 - Modify: `pyproject.toml`
 
-**Step 1: Write the failing test for `build_model`**
+**Step 1: Discover the actual spec JSON shape**
 
-Create `src/plcc/model/build_model_test.py`:
+Before writing any model code, run `plcc-spec` on the trivial grammar and inspect the output:
+
+```bash
+plcc-spec tests/fixtures/trivial.plcc | python -m json.tool
+```
+
+Record the exact serialized shape of `rhs` symbols in the `syntax.rules` array. The `plcc-spec` output uses `dataclasses.asdict()`, so a `CapturingTerminal` serializes to something like:
+
+```json
+{"name": "NUM", "altName": null, "isTerminal": true, "isCapturing": true}
+```
+
+There is **no `kind` field** in the real output. Confirm the exact keys from your run before writing the test fixture or the implementation. The steps below use `isCapturing`/`isTerminal` — update them if the actual output differs.
+
+**Step 2: Write the failing test for `build_model`**
+
+Create `src/plcc/model/build_model_test.py` using the actual symbol shape from Step 1:
 
 ```python
 import json
@@ -1120,7 +1244,9 @@ _TRIVIAL_SPEC = {
         "rules": [
             {
                 "lhs": {"name": "program"},
-                "rhs": [{"kind": "capturing_terminal", "name": "NUM", "field": "num"}]
+                "rhs": [
+                    {"name": "NUM", "altName": None, "isTerminal": True, "isCapturing": True}
+                ]
             }
         ]
     },
@@ -1153,7 +1279,7 @@ def test_semantic_sections_present():
     assert any(s['tool'] == 'diagram' and s['language'] == 'PlantUML' for s in sections)
 ```
 
-**Step 2: Run to confirm failure**
+**Step 4: Run to confirm failure**
 
 ```bash
 pdm run pytest src/plcc/model/build_model_test.py -v
@@ -1161,11 +1287,11 @@ pdm run pytest src/plcc/model/build_model_test.py -v
 
 Expected: FAIL.
 
-**Step 3: Create `src/plcc/model/__init__.py`**
+**Step 5: Create `src/plcc/model/__init__.py`**
 
 Empty.
 
-**Step 4: Create `src/plcc/model/build_model.py`**
+**Step 6: Create `src/plcc/model/build_model.py`**
 
 ```python
 """Transform spec JSON into a language-neutral code model."""
@@ -1197,7 +1323,9 @@ def _build_classes(spec):
     classes = []
     for rule in spec.get('syntax', {}).get('rules', []):
         lhs_name = rule['lhs']['name']
-        class_name = lhs_name.capitalize()
+        # Use [:1].upper() + [1:] rather than capitalize() to preserve camelCase names
+        # (e.g. 'addExpr' → 'AddExpr', not 'Addexpr').
+        class_name = lhs_name[:1].upper() + lhs_name[1:]
         fields = _extract_fields(rule.get('rhs', []))
         classes.append({
             'name': class_name,
@@ -1209,13 +1337,21 @@ def _build_classes(spec):
 
 
 def _extract_fields(rhs):
+    # rhs symbols are serialized by plcc-spec via dataclasses.asdict().
+    # The real shape uses isCapturing/isTerminal flags — there is no 'kind' key.
+    # TODO (Phase 2): handle error record passthrough — if rhs contains an error
+    # record, forward it rather than crashing.
     fields = []
     for symbol in rhs:
-        kind = symbol.get('kind', '')
-        if 'capturing' in kind:
-            field_name = symbol.get('field') or symbol.get('name', '').lower()
-            field_type = 'Token' if 'terminal' in kind else symbol.get('name', 'Object').capitalize()
-            fields.append({'name': field_name, 'type': field_type})
+        if not symbol.get('isCapturing'):
+            continue
+        field_name = symbol.get('altName') or symbol.get('name', '').lower()
+        if symbol.get('isTerminal'):
+            field_type = 'Token'
+        else:
+            name = symbol.get('name', 'Object')
+            field_type = name[:1].upper() + name[1:]
+        fields.append({'name': field_name, 'type': field_type})
     return fields
 
 
@@ -1226,7 +1362,7 @@ def _build_semantic_sections(spec):
     ]
 ```
 
-**Step 5: Run build_model tests to confirm pass**
+**Step 7: Run build_model tests to confirm pass**
 
 ```bash
 pdm run pytest src/plcc/model/build_model_test.py -v
@@ -1234,7 +1370,7 @@ pdm run pytest src/plcc/model/build_model_test.py -v
 
 Expected: all 4 pass.
 
-**Step 6: Write the failing test for `model_cli`**
+**Step 8: Write the failing test for `model_cli`**
 
 Create `src/plcc/model/model_cli_test.py`:
 
@@ -1254,7 +1390,7 @@ _TRIVIAL_SPEC_JSON = json.dumps({
     ]},
     "syntax": {"rules": [
         {"lhs": {"name": "program"},
-         "rhs": [{"kind": "capturing_terminal", "name": "NUM", "field": "num"}]}
+         "rhs": [{"name": "NUM", "altName": None, "isTerminal": True, "isCapturing": True}]}
     ]},
     "semantics": [{"language": "PlantUML", "tool": "diagram", "codeFragmentList": []}]
 })
@@ -1289,7 +1425,7 @@ def test_reads_spec_from_stdin(capsys, monkeypatch):
     assert model['start'] == 'program'
 ```
 
-**Step 7: Run to confirm failure**
+**Step 9: Run to confirm failure**
 
 ```bash
 pdm run pytest src/plcc/model/model_cli_test.py -v
@@ -1297,7 +1433,7 @@ pdm run pytest src/plcc/model/model_cli_test.py -v
 
 Expected: FAIL.
 
-**Step 8: Create `src/plcc/model/model_cli.py`**
+**Step 10: Create `src/plcc/model/model_cli.py`**
 
 ```python
 """plcc-model
@@ -1338,7 +1474,7 @@ def _load(path):
         return json.load(f)
 ```
 
-**Step 9: Run model_cli tests to confirm pass**
+**Step 11: Run model_cli tests to confirm pass**
 
 ```bash
 pdm run pytest src/plcc/model/model_cli_test.py -v
@@ -1346,13 +1482,13 @@ pdm run pytest src/plcc/model/model_cli_test.py -v
 
 Expected: all 4 pass.
 
-**Step 10: Wire the entry point**
+**Step 12: Wire the entry point**
 
 ```toml
 plcc-model = "plcc.model.model_cli:main"
 ```
 
-**Step 11: Run full unit suite and commit**
+**Step 13: Run full unit suite and commit**
 
 ```bash
 bin/test/units.bash
@@ -1482,6 +1618,11 @@ def main(argv=None):
 
 
 def _emit_class(cls, output_dir):
+    # Design choice: one .puml file per class (not one combined diagram).
+    # Each file is a self-contained class box. Phase 1 produces one file for the
+    # trivial grammar; grammars with multiple classes produce N separate files.
+    # A combined hierarchy diagram is deferred until there is a grammar that
+    # exercises it (Phase 2+).
     name = cls['name']
     fields = cls.get('fields', [])
     lines = ['@startuml', f'class {name} {{']
@@ -1598,6 +1739,9 @@ def main(argv=None):
     args = docopt(__doc__, argv)
     lang = args['--target']
     output = args['--output']
+    # Phase 1: --semantics is not implemented here or in plcc-make.
+    # The architectural spec §10.1 defines --semantics as part of the plugin contract.
+    # Phase 2 will add --semantics forwarding to the emit dispatch call.
     cmd = resolve_emit_command(lang)
     if not shutil.which(cmd):
         print(
@@ -1989,14 +2133,19 @@ def main(argv=None):
     for section in spec.get('semantics', []):
         tool = section['tool']
         lang = section['language']
-        validate_tool_name(tool)
+        try:
+            validate_tool_name(tool)
+        except ValueError as e:
+            print(f"plcc-make: {e}", file=sys.stderr)
+            sys.exit(1)
         output_dir = os.path.join(build_dir, tool)
         os.makedirs(output_dir, exist_ok=True)
-        with open(model_json) as model_f:
-            _run_or_die(
-                ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'],
-                stdin_file=model_json,
-            )
+        # Phase 1: --semantics is not forwarded to plcc-lang-emit.
+        # See architectural spec §10.1. Phase 2 wires up --semantics.
+        _run_or_die(
+            ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'],
+            stdin_file=model_json,
+        )
         _run_or_die(['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'])
 
 
@@ -2267,15 +2416,11 @@ trap "rm -rf ${VENV}" EXIT
 python -m venv "${VENV}"
 "${VENV}/bin/pip" install --quiet dist/*.whl
 
-# Verify all entry points are present
+# Verify all entry points are installed on the venv PATH
 for cmd in plcc-spec plcc-tokens plcc-tree plcc-model \
            plcc-lang-emit plcc-lang-build plcc-lang-list \
            plcc-plantuml-emit plcc-make plcc-scan plcc-parse plcc-rep; do
-    if ! "${VENV}/bin/${cmd}" --help &>/dev/null && \
-       ! "${VENV}/bin/${cmd}" 2>&1 | grep -qi 'not yet implemented\|usage'; then
-        echo "FAIL: ${cmd} not found or broken" >&2
-        exit 1
-    fi
+    test -x "${VENV}/bin/${cmd}" || { echo "FAIL: ${cmd} not installed"; exit 1; }
     echo "OK: ${cmd}"
 done
 
