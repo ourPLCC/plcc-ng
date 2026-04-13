@@ -1,5 +1,5 @@
 [project]
-name = "plccng"
+name = "plcc"
 dynamic = ["version"]
 description = "Programming Languages Compiler Compiler"
 authors = [
@@ -11,10 +11,6 @@ dependencies = [
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
-
-
-[project.scripts]
-plccng = "plccng.plccng_cli:main"
 
 
 [build-system]
@@ -34,7 +30,7 @@ source = "scm"
 
 
 [tool.pdm.scripts]
-test = "pytest -qq -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
+test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
 ctest = "pytest-watch --runner \"bin/test/units.bash\""
 
 [dependency-groups]

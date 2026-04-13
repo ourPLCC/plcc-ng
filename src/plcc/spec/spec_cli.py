@@ -1,8 +1,8 @@
-'''plccng spec
+'''plcc spec
     Parse, validate, and print PLCC spec as a JSON structure.
 
 Usage:
-    plccng spec [options] FILE
+    plcc spec [options] FILE
 
 Arguments:
     FILE    PLCC spec file. Use - to read from stdin.

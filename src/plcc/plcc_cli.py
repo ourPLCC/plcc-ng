@@ -1,9 +1,9 @@
-"""plccng
+"""plcc
     The Programming Languages Compiler Compiler - Next Generation
 
 Usage:
-    plccng COMMAND [OPTION ...] [ARGUMENT ...]
-    plccng (-h|--help)
+    plcc COMMAND [OPTION ...] [ARGUMENT ...]
+    plcc (-h|--help)
 
 Commands:
     spec    Print JSON representation of PLCC spec.
@@ -25,12 +25,12 @@ def main():
 
 
 def run(argv):
-    PlccngCli().run(argv[1:])
+    PlccCli().run(argv[1:])
 
 
-class PlccngCli:
+class PlccCli:
     def run(self, argv):
-        doc = sys.modules[PlccngCli.__module__].__doc__
+        doc = sys.modules[PlccCli.__module__].__doc__
         args = docopt(docstring=doc, argv=argv, options_first=True)
         if args['COMMAND'] in 'spec scan'.split():
             self._dispatchCommand(args['COMMAND'], argv)
