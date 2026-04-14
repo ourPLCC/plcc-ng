@@ -36,6 +36,7 @@ plcc-tree = "plcc.tree.tree_cli:main"
 plcc-model = "plcc.model.model_cli:main"
 plcc-plantuml-emit = "plcc.lang.ext.plantuml.emit:main"
 plcc-lang-emit = "plcc.lang.emit:main"
+plcc-lang-build = "plcc.lang.build:main"
 
 [tool.pdm.scripts]
 test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
