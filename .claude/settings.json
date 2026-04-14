@@ -1,4 +1,25 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(bin/test/units.bash)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git show:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git checkout:*)",
+      "Bash(git commit:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(python3 -m pytest:*)",
+      "Bash(python3 -m json.tool:*)",
+      "Bash(pdm run:*)",
+      "Bash(pdm install:*)",
+      "Bash(pdm test:*)"
+    ]
+  },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true
   }
