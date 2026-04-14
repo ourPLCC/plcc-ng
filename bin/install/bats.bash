@@ -11,7 +11,7 @@ fi
 
 mkdir -p "${INSTALL_DIR}" "${BIN_DIR}"
 TMPDIR=$(mktemp -d)
-trap "rm -rf ${TMPDIR}" EXIT
+trap 'rm -rf "${TMPDIR}"' EXIT
 
 git clone --depth 1 --branch "v${BATS_VERSION}" \
     https://github.com/bats-core/bats-core.git "${TMPDIR}/bats"

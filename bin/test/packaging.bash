@@ -6,7 +6,7 @@ PROJECT_ROOT="$( cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd )"
 cd "${PROJECT_ROOT}"
 
 VENV=$(mktemp -d)
-trap "rm -rf ${VENV}" EXIT
+trap 'rm -rf "${VENV}"' EXIT
 
 python -m venv "${VENV}"
 "${VENV}/bin/pip" install --quiet dist/*.whl
