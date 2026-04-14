@@ -33,6 +33,7 @@ source = "scm"
 plcc-spec = "plcc.spec.plcc_spec_cli:main"
 plcc-tokens = "plcc.tokens.tokens_cli:main"
 plcc-tree = "plcc.tree.tree_cli:main"
+plcc-model = "plcc.model.model_cli:main"
 
 [tool.pdm.scripts]
 test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
