@@ -1,8 +1,5 @@
-%% lexical rules
-NUM '\d+'
-
-%% syntactic rules
-<program> ::= <NUM>
-
-%% semantic rules
+token NUM '\d+'
+%
+<program> ::= NUM
+%
 % diagram PlantUML
