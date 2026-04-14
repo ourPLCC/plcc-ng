@@ -14,7 +14,14 @@ def test_extract_ignores_non_matching():
 
 def test_find_languages_returns_list(monkeypatch):
     monkeypatch.setenv('PATH', '/fake/bin')
-    import os, pathlib
     # Not testing actual PATH scan here — just that function is callable
     result = find_languages()
     assert isinstance(result, list)
+
+
+def test_main_prints_sorted_languages(capsys, monkeypatch):
+    from .list import main
+    monkeypatch.setattr('plcc.lang.list.find_languages', lambda: ['java', 'plantuml'])
+    main([])
+    out, _ = capsys.readouterr()
+    assert out.splitlines() == ['java', 'plantuml']

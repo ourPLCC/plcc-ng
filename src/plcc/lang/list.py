@@ -10,7 +10,6 @@ Options:
 
 import os
 import re
-import shutil
 import sys
 
 from docopt import docopt
