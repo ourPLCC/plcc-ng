@@ -7,7 +7,7 @@
 @test "plcc-scan exits nonzero with not-implemented message" {
     run plcc-scan
     [ "$status" -ne 0 ]
-    [[ "${output}${stderr}" =~ [Nn]ot.*[Ii]mplemented ]]
+    [[ "$output" =~ [Nn]ot.*[Ii]mplemented ]]
 }
 
 @test "plcc-parse exits nonzero" {

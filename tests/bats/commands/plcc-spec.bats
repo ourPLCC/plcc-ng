@@ -5,6 +5,11 @@ bats_require_minimum_version 1.5.0
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/spec.schema.json"
+    BAD_SPEC="$(mktemp --suffix=.plcc)"
+}
+
+teardown() {
+    rm -f "${BAD_SPEC}"
 }
 
 @test "plcc-spec is on PATH" {
@@ -35,8 +40,8 @@ setup() {
 }
 
 @test "plcc-spec bad grammar exits nonzero and writes to stderr" {
-    echo "num 'bad'" > /tmp/bad.plcc
-    run --separate-stderr plcc-spec /tmp/bad.plcc
+    echo "num 'bad'" > "${BAD_SPEC}"
+    run --separate-stderr plcc-spec "${BAD_SPEC}"
     [ "$status" -ne 0 ]
     [ -n "$stderr" ]
 }

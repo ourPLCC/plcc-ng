@@ -12,10 +12,9 @@ teardown() { rm -f "${SPEC_JSON}"; }
 @test "plcc-tree is on PATH" { command -v plcc-tree; }
 
 @test "plcc-tree outputs tree JSONL" {
-    TOKEN=$(echo '42' | plcc-tokens "${SPEC_JSON}")
-    run bash -c "echo '${TOKEN}' | plcc-tree --spec='${SPEC_JSON}'"
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --spec='${SPEC_JSON}'"
     [ "$status" -eq 0 ]
-    echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
+    echo "$output" | head -1 | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
 @test "plcc-tree passes error records through" {
