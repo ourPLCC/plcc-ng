@@ -1,9 +1,8 @@
 from .Skip import Skip
-from .json_formatter import format
 
 
 class Sink:
-    def __init__(self, printSkips, format_fn=format):
+    def __init__(self, printSkips, format_fn):
         self.printSkips = printSkips
         self.format = format_fn
 

@@ -1,10 +1,53 @@
+import json
+
 from ..lines import Line
 from .LexError import LexError
 from .sink import Sink
 from .Skip import Skip
 from .Token import Token
-from .json_formatter import format as formatJson
-from .text_formatter import format as formatText
+
+
+def formatJson(obj):
+    """Format Token, Skip, or LexError as JSON."""
+    if isinstance(obj, Token):
+        return json.dumps({
+            "Type": "Token",
+            "Name": obj.name,
+            "Lexeme": obj.lexeme,
+            "File": obj.line.file,
+            "Line": obj.line.number,
+            "Column": obj.column,
+        })
+    elif isinstance(obj, Skip):
+        return json.dumps({
+            "Type": "Skip",
+            "Name": obj.name,
+            "Lexeme": obj.lexeme,
+            "File": obj.line.file,
+            "Line": obj.line.number,
+            "Column": obj.column,
+        })
+    elif isinstance(obj, LexError):
+        return json.dumps({
+            "Type": "LexError",
+            "File": obj.line.file,
+            "Line": obj.line.number,
+            "Column": obj.column,
+        })
+    else:
+        raise TypeError(f"Cannot format {type(obj)}")
+
+
+def formatText(obj):
+    """Format Token, Skip, or LexError as text."""
+    if isinstance(obj, Token):
+        return f"{obj.line.file}:{obj.line.number}:{obj.column}:Token {obj.name} '{obj.lexeme}'"
+    elif isinstance(obj, Skip):
+        return f"{obj.line.file}:{obj.line.number}:{obj.column}:Skip {obj.name} '{obj.lexeme}'"
+    elif isinstance(obj, LexError):
+        return f"{obj.line.file}:{obj.line.number}:{obj.column}:LexError 't'"
+    else:
+        raise TypeError(f"Cannot format {type(obj)}")
 
 
 def test_json_token(capfd):

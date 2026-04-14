@@ -7,7 +7,6 @@ Usage:
 
 Commands:
     spec    Print JSON representation of PLCC spec.
-    scan    Print JSON tokens given PLCC spec and code.
 
 Options:
     -h|--help   Display this message
@@ -16,7 +15,6 @@ Options:
 import sys
 from docopt import docopt
 
-from . import scan
 from . import spec
 
 
@@ -32,7 +30,7 @@ class PlccCli:
     def run(self, argv):
         doc = sys.modules[PlccCli.__module__].__doc__
         args = docopt(docstring=doc, argv=argv, options_first=True)
-        if args['COMMAND'] in 'spec scan'.split():
+        if args['COMMAND'] in 'spec'.split():
             self._dispatchCommand(args['COMMAND'], argv)
         else:
             print(f"Unrecognized command: {args['COMMAND']}")
