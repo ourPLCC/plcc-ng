@@ -39,4 +39,5 @@ dev = [
     "pyfakefs>=5.4.1",
     "pytest-cov>=5.0.0",
     "pytest-watch>=4.2.0",
+    "check-jsonschema>=0.29.0",
 ]

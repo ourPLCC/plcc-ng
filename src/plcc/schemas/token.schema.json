@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TokenRecord",
+  "description": "One JSONL record from plcc-tokens.",
+  "type": "object",
+  "required": ["kind"],
+  "oneOf": [
+    {
+      "description": "A successfully scanned token.",
+      "required": ["kind", "name", "lexeme", "source"],
+      "properties": {
+        "kind":   { "type": "string", "const": "token" },
+        "name":   { "type": "string" },
+        "lexeme": { "type": "string" },
+        "source": {
+          "type": "object",
+          "required": ["file", "line", "column"],
+          "properties": {
+            "file":   { "type": ["string", "null"] },
+            "line":   { "type": "integer", "minimum": 1 },
+            "column": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    {
+      "description": "A lex error (in-band).",
+      "required": ["kind", "stage", "source"],
+      "properties": {
+        "kind":  { "type": "string", "const": "error" },
+        "stage": { "type": "string" },
+        "source": {
+          "type": "object",
+          "required": ["file", "line", "column"],
+          "properties": {
+            "file":   { "type": ["string", "null"] },
+            "line":   { "type": "integer", "minimum": 1 },
+            "column": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    }
+  ]
+}
