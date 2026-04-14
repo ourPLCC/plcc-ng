@@ -5,6 +5,7 @@
 .pdm-python
 .pdm-build/
 
+
 # This is created by bin/test/languages.bash. But should not be committed.
 languages/
 
@@ -49,7 +50,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+/build/
 develop-eggs/
 dist/
 downloads/
