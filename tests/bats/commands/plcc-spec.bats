@@ -30,7 +30,7 @@ teardown() {
 @test "plcc-spec trivial grammar outputs valid JSON" {
     run plcc-spec "${FIXTURES}/trivial.plcc"
     [ "$status" -eq 0 ]
-    echo "$output" | python -m json.tool > /dev/null
+    echo "$output" | python3 -m json.tool > /dev/null
 }
 
 @test "plcc-spec trivial grammar output validates against spec schema" {

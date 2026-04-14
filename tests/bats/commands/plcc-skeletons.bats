@@ -1,5 +1,7 @@
 #!/usr/bin/env bats
 
+bats_require_minimum_version 1.5.0
+
 @test "plcc-scan is on PATH" { command -v plcc-scan; }
 @test "plcc-parse is on PATH" { command -v plcc-parse; }
 @test "plcc-rep is on PATH" { command -v plcc-rep; }

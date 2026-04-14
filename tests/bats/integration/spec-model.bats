@@ -13,7 +13,7 @@ setup() {
 
 @test "plcc-spec | plcc-model model has correct start symbol" {
     result=$(plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model -)
-    echo "$result" | python -c "
+    echo "$result" | python3 -c "
 import json, sys
 m = json.load(sys.stdin)
 assert m['start'] == 'program', f'Expected program, got {m[\"start\"]}'

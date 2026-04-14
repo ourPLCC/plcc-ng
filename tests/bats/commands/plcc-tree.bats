@@ -1,5 +1,7 @@
 #!/usr/bin/env bats
 
+bats_require_minimum_version 1.5.0
+
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/tree.schema.json"

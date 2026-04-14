@@ -16,5 +16,5 @@ teardown() { rm -f "${SPEC_JSON}"; }
 
 @test "lex error from tokens passes through tree unchanged" {
     result=$(echo 'xyz' | plcc-tokens "${SPEC_JSON}" | plcc-tree --spec="${SPEC_JSON}" 2>/dev/null)
-    echo "$result" | head -1 | python -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error'"
+    echo "$result" | head -1 | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error'"
 }
