@@ -11,6 +11,7 @@ Options:
     -h --help   Show this message.
 """
 
+import contextlib
 import json
 import os
 import re
@@ -75,15 +76,11 @@ def validate_tool_name(name):
 
 
 def _run_or_die(cmd, stdout_file=None, stdin_file=None):
-    stdin = open(stdin_file) if stdin_file else None
-    stdout = open(stdout_file, 'w') if stdout_file else None
-    try:
+    with contextlib.ExitStack() as stack:
+        stdin = stack.enter_context(open(stdin_file)) if stdin_file else None
+        stdout = stack.enter_context(open(stdout_file, 'w')) if stdout_file else None
+        # stderr passes through to terminal so the failing tool's message is visible
         result = subprocess.run(cmd, stdin=stdin, stdout=stdout)
-        if result.returncode != 0:
-            print(f"plcc-make: {cmd[0]} failed (exit {result.returncode})", file=sys.stderr)
-            sys.exit(result.returncode)
-    finally:
-        if stdin:
-            stdin.close()
-        if stdout:
-            stdout.close()
+    if result.returncode != 0:
+        print(f"plcc-make: {cmd[0]} failed (exit {result.returncode})", file=sys.stderr)
+        sys.exit(result.returncode)
