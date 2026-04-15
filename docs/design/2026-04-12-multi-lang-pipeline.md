@@ -352,3 +352,192 @@ These revisions preserve the spirit of the original decisions (single-responsibi
 - Third-party plugins follow the naming convention `plcc-<lang>` (package) / `plcc-<lang>-emit` (command).
 
 **Rationale:** the callable contract ran plugin code inside `plcc-emit`'s own process, collapsing the boundary the pipeline architecture was designed to enforce. Commands run in isolated subprocesses, honour the same stdin/stdout/exit-code contract as every other Level 0 primitive, and do not require plugins to be Python packages.
+
+### 17.3 Amends §5, §7.3: `plcc-tree` is one-shot, not long-running (from Phase 2 Part 1 brainstorm, 2026-04-15)
+
+**Original §5** and **§7.3** describe `plcc-tree` as a long-running stage that "emits one tree line and resumes reading tokens for the next program." That framing conflated pipeline-stage lifetime with session lifetime.
+
+**Amendment.** `plcc-tree` is a **one-shot** stage. It reads token JSONL on stdin until EOF, emits one parse-tree JSONL line per completed program (program boundaries are still derived from the grammar's start symbol), and exits. There is no long-running mode.
+
+Session-scope lifetime moves to the interpreter (§17.7). `plcc-rep` (and other Level 2 orchestrators) spawn fresh `plcc-tokens` and `plcc-tree` subprocesses per input chunk and pipe their combined output into the long-lived interpreter's stdin.
+
+**Rationale.** State lives in the interpreter — loaded libraries, definitions, runtime environment. Stages that hold no state are simpler as stateless one-shots spawned per input chunk than as long-running processes coordinating program-boundary framing with an upstream streaming tokenizer. Fork/exec cost for `plcc-tokens` and `plcc-tree` is imperceptible in interactive use and a one-time cost in batch use. The simplification applies to both `plcc-tree`'s implementation and the test matrix: there is exactly one mode, not a one-shot mode for build time and a long-running mode for REPL time.
+
+A file containing multiple programs still produces multiple parse-tree JSONL lines from a single `plcc-tree` invocation, because `plcc-tree` processes its token stream to EOF. Multi-program input is not what motivated the long-running framing and does not require it.
+
+The one-shot stdin/stdout/EOF I/O contract described here is inherited by any parser plugin dispatched from `plcc-tree` under §17.6: every `plcc-parser-<kind>` reads token JSONL until EOF and emits parse-tree JSONL until done. There is no long-running parser-plugin mode either.
+
+#### Revised §5 row for `plcc-tree`
+
+| Command | Input | Output | Role |
+|---|---|---|---|
+| `plcc-tree` | token JSONL (stdin), `--ll1 <path>` (required), `--parser=<kind>` (optional, default `table`) | parse-tree JSONL (stdout) | One-shot dispatcher (§17.6). Reads token JSONL to EOF, execs `plcc-parser-<kind>` forwarding `--ll1`, exits when the dispatched plugin exits. One parse-tree JSONL line per completed program. No long-running mode. |
+
+#### Revised §7.3
+
+> `plcc-tree` is a one-shot pipeline stage. It reads token JSONL on stdin until EOF and emits one parse-tree JSONL line per completed program. It does not stay resident across programs; session-scope lifetime is held by the interpreter (§17.7), and orchestrators spawn fresh `plcc-tokens | plcc-tree` subpipelines per input chunk.
+
+### 17.4 Amends §5, §9: Introduce `plcc-ll1` primitive for LL(1) analysis (from Phase 2 Part 1 brainstorm, 2026-04-15)
+
+**Original §5** lists `plcc-spec` as the stage that parses a grammar file and emits spec JSON, and folds LL(1) validation into `plcc-spec` implicitly (the plcc-ng implementation computes FIRST sets, FOLLOW sets, the parse table, and conflict reports inside `plcc-spec`, then discards them).
+
+**Amendment.** A new Level 0 primitive, `plcc-ll1`, is introduced between `plcc-spec` and `plcc-tree` / `plcc-model`. Its contract:
+
+| Command | Input | Output | Role |
+|---|---|---|---|
+| `plcc-ll1` | spec JSON (stdin or path) | LL(1) analysis JSON (stdout) | Perform LL(1) analysis on the grammar: compute FIRST, FOLLOW, and predict sets; build the parsing table; detect conflicts and left-recursion cycles. One-shot; single JSON document. Nonzero exit on non-LL(1) grammars with the diagnostic artifact still written to stdout so students can inspect the failure — a deliberate exception to the usual "nonzero exit means stdout is undefined" rule, justified by the pedagogical value of the diagnostic. |
+
+The emitted analysis JSON contains: FIRST sets, FOLLOW sets, predict sets, parse table, conflicts (empty on success), left-recursion report (empty on success), and a `human` rendering mode available via `--format=human` on the command (exact schema is a phase-design-doc decision).
+
+**`plcc-spec` stops running LL(1) validation.** It becomes what its name already suggests: a faithful translation of the `.plcc` grammar file into JSON, suitable as input for many tools — the LL(1) validator (now `plcc-ll1`), linters, pretty-printers, optimizers. Analysis moves downstream where it belongs.
+
+**`plcc-tree`** (per §17.6, a dispatcher over `plcc-parser-<kind>` plugins) requires a `--ll1 <path>` flag and forwards it to the dispatched parser plugin. The built-in `plcc-parser-table` consumes `ll1.json` directly and does not recompute FIRST/FOLLOW/etc. at runtime. Other parser plugins are free to use `ll1.json` as they see fit.
+
+**`plcc-make`** phase sequence gains a stage:
+
+1. Clean: `rm -rf build/`
+2. Spec: `plcc-spec grammar.plcc > build/spec.json`
+3. **LL(1): `plcc-ll1 build/spec.json > build/ll1.json`**
+4. Model: `plcc-model build/spec.json > build/model.json`
+5. Emit: for each semantic section, `plcc-lang-emit …`
+6. Build: for each semantic section, `plcc-lang-build …`
+
+If `plcc-ll1` exits nonzero (the grammar is not LL(1)), `plcc-make` stops after step 3 and surfaces the diagnostic artifact.
+
+**Rationale.** LL(1) analysis is a derived artifact, not a translation of the grammar file, so embedding it in `spec.json` would violate the philosophy that `spec.json` is a faithful parse tree of the `.plcc` file. Extracting the analysis into its own stage (a) preserves that philosophy, (b) exposes the analysis data as a first-class pedagogical artifact (the very thing PLCC exists to teach), (c) gives downstream consumers — `plcc-tree` today, future parse-tree-generator generators tomorrow — a stable JSON contract to consume, (d) factors the one-JSON-stage-per-responsibility architecture honestly. The data is already computed inside plcc-ng's existing validator; this amendment surfaces it rather than discarding it.
+
+**Pedagogical diagnostics in scope from day one.** FIRST, FOLLOW, predict, parse table, conflicts, and the left-recursion cycle report are all first-class outputs of `plcc-ll1`, not deferred features. Left-factoring candidate detection is deferred to a later phase because it requires new logic beyond what the validator currently computes.
+
+**`plcc-model` is unchanged.** It still consumes `spec.json` only and does not depend on `ll1.json`. Model construction is a translation of the spec into the canonical model representation; LL(1) analysis is a separate concern that flows to `plcc-tree` / parser plugins, not to `plcc-model`.
+
+#### Revised §5 rows
+
+| Command | Input | Output | Role |
+| --- | --- | --- | --- |
+| `plcc-spec` | `.plcc` grammar file (path or stdin) | spec JSON (stdout) | Faithful translation of the grammar file into JSON. **Does not** perform LL(1) analysis. One-shot; single JSON document. |
+| `plcc-ll1` | spec JSON (stdin or path) | LL(1) analysis JSON (stdout) | New in §17.4. Compute FIRST/FOLLOW/predict, build parse table, detect conflicts and left-recursion. One-shot; single JSON document. Nonzero exit on non-LL(1) grammars; diagnostic artifact still written. |
+
+### 17.5 Amends §9, §10, §11: Generated components are pipeline stages (from Phase 2 Part 1 brainstorm, 2026-04-15)
+
+**Original §9** shows `cd build/py && python main.py < program.txt` as a way to invoke the generated Python interpreter against raw source. **Original §10.1** describes the emitter plugin as producing generated source files plus a bundled runtime, with the implication (reinforced by §11) that the generated artifact is a standalone interpreter containing its own tokenizer, parser, and evaluator.
+
+**Amendment.** Every generated component is a **pipeline stage** that communicates via JSON on stdin/stdout, not a standalone program. Specifically:
+
+- A **generated interpreter** reads parse-tree JSONL on stdin, deserializes each tree into an object tree whose classes are the ones generated from the grammar, calls the root entry-point method (exact name TBD; see note below), and writes evaluation output (format TBD) on stdout. **It has no scanner and no parser.** To deserialize trees, it uses whatever off-the-shelf JSON library ships with its target language.
+- A **generated parse-tree-generator** (future, via parser pluggability in §17.6) reads token JSONL on stdin, deserializes each token, runs its parsing algorithm, and emits parse-tree JSONL on stdout. **It has no scanner.** To deserialize tokens, it uses its target language's JSON library.
+- A **generated tokenizer** is out of scope in v9 (§17.6 narrows §2's pluggability non-goal to leave scanners non-pluggable).
+
+**Consequences for §9.** `cd build/py && python main.py < program.txt` no longer works on raw source. To invoke a generated interpreter standalone, a student must compose the upstream stages:
+
+```sh
+plcc-tokens --spec build/spec.json < program.txt \
+  | plcc-tree --ll1 build/ll1.json \
+  | python build/py/main.py
+```
+
+`plcc-rep` automates this orchestration and is the primary way students interact with generated interpreters.
+
+**Consequences for §10.1.** The "bundled runtime" a language plugin copies into `<dir>/runtime/` is narrowed to: (a) base classes for the generated grammar classes, (b) JSON deserialization helpers for parse trees (and for tokens, if the plugin also emits a parse-tree-generator), (c) the entry-point orchestration that invokes the root method on each deserialized tree, (d) error-record rendering support per §8. It **does not** include a parser or a scanner. This is a simpler, narrower runtime than §10.1 originally implied.
+
+#### Revised §10.1 runtime contents
+
+> The runtime bundled by a language plugin into `<dir>/runtime/` consists of:
+>
+> 1. Base classes for the generated grammar classes (one base per nonterminal kind, plus token base classes).
+> 2. Parse-tree JSON deserialization helpers that reconstruct an object tree from parse-tree JSONL on stdin.
+> 3. Optional token JSON deserialization helpers, included only if the plugin also emits a parse-tree-generator.
+> 4. An entry-point harness that reads parse-tree JSONL from stdin, deserializes one tree per line, calls the root entry-point method on each, and writes evaluation records to stdout.
+> 5. Error-record rendering helpers per §8.
+>
+> The runtime explicitly does **not** include a tokenizer, a parser, or any code for reading raw program source. Generated components are pipeline stages and rely on upstream stages for tokenization and parsing.
+
+**Consequences for §11.** The Python emitter proof point stated in §11 still stands, but "round-trip through the `languages` test repository" now means "the generated Python interpreter pipeline stage correctly evaluates parse trees the upstream pipeline produces," not "the generated Python interpreter runs programs end-to-end standalone."
+
+**Entry-point method name.** `$run()` (the name used by v8) is not portable: Python, C#, Rust, Go, and Swift all reject `$` in identifiers. The portable name is deferred to the Phase 2 Part 2 brainstorm, which is the first phase that emits an interpreter and thus has to commit to a name.
+
+**Rationale.** Treating generated components as pipeline stages (rather than monolithic standalone programs) eliminates a two-layer mental model where the "parser inside `plcc-rep`" and the "parser inside the generated interpreter" appear to be different things. Under the pipeline-stage framing, there is one parse-tree-generator in use at a time, and it serves both the interactive Level 2 commands and the composition used when invoking generated interpreters. Students see one pipeline and one JSON contract. The generated artifact's responsibility narrows to "take trees, run trees," which is the pedagogical essence of an interpreter and eliminates the need for every emitter to independently reinvent tokenization and parsing in its target language.
+
+### 17.6 Amends §2, §5, §10, §15: Parsers are pluggable (from Phase 2 Part 1 brainstorm, 2026-04-15)
+
+**Original §2** lists "Pluggable scanners, parsers, or verifiers" among the v9 non-goals: "Only emitters are pluggable in v9."
+
+**Amendment.** The non-goal is narrowed. **Parsers (parse-tree-generators) are pluggable in v9.** Scanners and verifiers remain non-pluggable for v9.
+
+### 17.6.1 Revised §2 non-goal
+
+> Pluggable scanners and verifiers. Scanners and verifiers remain non-pluggable in v9. Parsers (parse-tree-generators) are pluggable; see §17.6 for the plugin contract.
+
+### 17.6.2 Plugin contract
+
+Parser plugins follow the same PATH-based discovery mechanism as language plugins (§17.2). A parser plugin is any executable named `plcc-parser-<kind>` on PATH whose contract is:
+
+- Reads token JSONL on stdin
+- Accepts `--ll1 <path>` (required)
+- Emits parse-tree JSONL on stdout
+- Exits 0 on success; exits nonzero and writes to stderr on tool failure
+- Syntax errors in the token stream are in-band error records (§8), not tool failures
+- Error-recovery strategy (panic-mode, phrase-level, etc.) is plugin-defined and not constrained by this contract; the Part 1 design doc commits `plcc-parser-table` to a specific strategy
+
+Symmetry with §10 / §17.2: same stdin/stdout/exit-code shape as every other Level 0 primitive; PATH-based discovery; language-agnostic (a parser plugin need not be a Python package).
+
+### 17.6.3 Dispatcher
+
+`plcc-tree` becomes a dispatcher. Its contract:
+
+- Accepts `--parser=<kind>` (optional, default `table`)
+- Accepts `--ll1 <path>` (required)
+- Reads token JSONL on stdin
+- Constructs `plcc-parser-<kind>` and execs it, forwarding `--ll1` and wiring stdin/stdout through
+- If `plcc-parser-<kind>` is not found on PATH, exits nonzero with a message naming the missing command and pointing at `plcc-parser-list`
+
+### 17.6.4 Built-in parser
+
+The `plcc` package declares one built-in parser plugin in its `pyproject.toml`:
+
+```toml
+[project.scripts]
+plcc-parser-table = "plcc.parser.table:main"
+```
+
+`plcc-parser-table` is the table-driven LL(1) parser that consumes `ll1.json` and produces parse-tree JSONL. It is the Phase 2 Part 1 deliverable. A plain `pip install plcc` makes it available and makes `plcc-tree --parser=table` (the default) work out of the box.
+
+### 17.6.5 `plcc-parser-list`
+
+Symmetric with `plcc-lang-list`. Walks PATH, collects executables matching `plcc-parser-*`, strips prefix/suffix, prints parser kind names one per line.
+
+### 17.6.6 Recursive-descent parser generation (forward-looking)
+
+A future Level 0 stage, working name `plcc-gen-parser` (named outside the `plcc-parser-*` glob to avoid being mistaken for a parser plugin by `plcc-tree` or `plcc-parser-list`), will generate parser source code in a target language from `ll1.json`. A built-in invocation always generates Python source, producing a parser plugin that can be installed alongside `plcc-parser-table` and selected via `--parser=`. Language plugins may optionally provide their own target-language parser generators (e.g. a Java parser generator emitted into `build/Java/`). The generated parser is itself a pipeline-stage parse-tree-generator under §17.5: token JSONL in, parse-tree JSONL out, no scanner. Recursive-descent generation is **not** Part 1 scope; the Part 1 design doc describes the intended shape as a forward-looking note so the later phase slides in without reshaping.
+
+### 17.6.7 Level 2 passthroughs
+
+`plcc-rep`, `plcc-scan`, `plcc-parse`, and `plcc-make` grow a `--parser=<kind>` flag that plumbs through to `plcc-tree`. The default is `table` everywhere. Part 1 ships only `plcc-parser-table` and `plcc-tree`'s dispatcher; the Level 2 passthroughs land in Part 2 and Phase 4.
+
+### 17.6.8 Rationale
+
+The one-role-per-stage reframing in §17.5 makes parser pluggability a natural fit rather than a carve-out. Under §17.5, the parse-tree-generator is already one pipeline stage regardless of whether it is the built-in Python table-driven parser, a generated Python recursive-descent parser, or a parser generated in a different target language — every variant reads token JSONL and emits parse-tree JSONL. The question is only how that stage is discovered and dispatched. PATH-based discovery (§17.2's pattern) is the cleanest answer: it reuses infrastructure Phase 1 has already built, composes with `pip install`, and matches the Unix-idiomatic pattern the architecture already uses for language plugins.
+
+PLCC's pedagogical context is programming languages courses, in which parser implementation strategies are part of the curriculum even when parsers are not student-written. Making parse-tree-generators visibly pluggable lets faculty show students a table-driven parser, a recursive-descent parser, and any other strategy side-by-side against the same grammar — the same pluggability axis that makes language-level retargeting work. Scanner and verifier pluggability remain out of scope because (a) lexical analysis in PLCC's context is a DFA-driven data problem rather than an algorithmic variation, (b) verifiers in v9 consist of exactly one implementation (`plcc-ll1` from §17.4) and pluggability is meaningless without multiple implementations. These constraints may loosen post-v9.
+
+### 17.6.9 §15 update
+
+The "Pluggable scanners and parsers" bullet in §15 is narrowed: pluggable scanners remain deferred; pluggable parsers are introduced in v9 per this amendment.
+
+### 17.7 Amends §9: Interpreters are long-lived, `plcc-tokens` and `plcc-tree` are spawned per chunk (from Phase 2 Part 1 brainstorm, 2026-04-15)
+
+**Original §9** does not explicitly describe the lifetime of pipeline subprocesses inside a `plcc-rep` session.
+
+**Amendment.** In any session-scoped Level 2 command that includes an interpreter (primarily `plcc-rep`):
+
+- The **interpreter** subprocess is **long-lived** for the duration of the session. It accepts parse-tree JSONL on stdin continuously, evaluates each tree as it arrives, and emits one evaluation record (also JSONL) per tree on stdout. The framing is line-delimited JSON in both directions, matching every other stdin/stdout contract in the pipeline; no out-of-band delimiter is needed.
+- `plcc-tokens` and `plcc-tree` (and any parser plugin dispatched from `plcc-tree`) are **one-shot per input chunk**. For each input chunk — a library file, the main program file, or an interactive REPL entry — the orchestrator spawns a fresh `plcc-tokens | plcc-tree` subpipeline, feeds the chunk through, reads the resulting parse-tree JSONL, and pipes it into the long-lived interpreter's stdin. Then the orchestrator waits for the interpreter's evaluation output before accepting the next chunk.
+- One evaluation record per parse tree. The exact schema of evaluation records (including how they represent printed output, errors, and multiple results per program) is a Phase 2 Part 2 design-doc decision.
+
+`plcc-rep` invocation forms, already described in §6, compose cleanly under this model:
+
+- `plcc-rep grammar.plcc` — interactive; prompts, reads chunks from tty, evaluates each.
+- `plcc-rep grammar.plcc < program.txt` — batch; feeds the file as a single chunk.
+- `plcc-rep grammar.plcc lib1.txt lib2.txt` — loads libraries as sequential chunks into the interpreter, then enters interactive mode. State from the libraries is visible to subsequent chunks because the interpreter is long-lived.
+- `plcc-rep grammar.plcc lib1.txt lib2.txt < program.txt` — loads libraries, then runs program.txt as the final chunk, then exits.
+
+**Rationale.** Only stages that hold state need to be long-lived. The interpreter holds state (loaded library definitions, runtime environment) and therefore must persist for the duration of the session. `plcc-tokens` and `plcc-tree` hold no state; spawning them per chunk is simpler than coordinating program-boundary framing across long-running streaming stages. The fork/exec/JSON-load cost per chunk is imperceptible in interactive use and negligible in batch use.
