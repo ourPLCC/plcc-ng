@@ -203,3 +203,37 @@ These are the acceptance criteria from the implementation plan (§4.4), interpre
 - CI runs `bin/test/functional.bash` and `bin/test/packaging.bash` on every push to `multi-lang`
 - All Level 0 command outputs validate against their JSON schemas
 - `bin/test/units.bash` is the TDD inner loop and runs in seconds
+
+## 11. Phase 1 Retro
+
+Captured 2026-04-15 after Phase 1 execution on `multi-lang`. Per roadmap §9.4, routine phase learnings live here, not in the architectural spec.
+
+### 11.1 Surprises
+
+- **The debug loop is slow.** Iterating on a pipeline stage required manual observation of intermediate JSON artifacts and hand-written reporting between stages. The work got done, but the cadence was noticeably slower than the unit-test inner loop. Opportunity: automate the observe/report step (a scripted smoke runner that diffs intermediate artifacts against expected fixtures and prints a focused failure summary).
+- **The trivial grammar carried a vestigial empty semantics section**, discovered only near the end of Phase 1. The grammar worked fine but the section served no purpose. Worth sanity-checking test fixtures for dead weight earlier.
+- **The retro itself is valuable.** The roadmap prescribes it, and doing it surfaced findings that would not have come up during Phase 2 brainstorm otherwise. Keep the phase retro as a standing ritual.
+
+### 11.2 Architectural decisions to revisit
+
+None. The architecture, naming, and module organization held up under Phase 1. No amendment to the architectural spec is warranted at this time. Cracks may still appear in Phase 2 as the skeleton fattens; if they do, they get handled per §2.1 then.
+
+### 11.3 What worked, worth repeating
+
+- **Upfront design and plan reviews before implementation.** The independent plan review caught bugs that would have been costlier to fix during execution. Keep this gate for every phase.
+- **Bottom-up primitive sequencing.** Building primitives before dispatchers before orchestrators kept each layer testable in isolation.
+- **Test classification into unit / bats-command / bats-integration / bats-e2e / packaging tiers** felt right and is worth preserving as the template for Phase 2.
+- **Fixture-driven smoke test** (trivial grammar → expected `build/` outputs) made the acceptance criterion mechanically checkable.
+
+### 11.4 Cross-phase gaps surfaced
+
+Two gaps surfaced in Phase 1 that are not Phase-2-scope architecturally but should be addressed alongside Phase 2 work:
+
+- **Developer documentation gap.** Code reviewer and development agents repeatedly wrote ad-hoc scripts instead of using the pre-built commands in [bin/](bin/). Proposed fix: a short [CONTRIBUTING.md](CONTRIBUTING.md) covering the common commands in [bin/](bin/), the TDD inner loop, and test tier conventions; plus a [CLAUDE.md](CLAUDE.md) at the repo root pointing to it (auto-loaded by Claude Code at session start, so the pointer is load-bearing, not aspirational). Keep it one page. Do not duplicate the architectural spec.
+- **No aggregated coverage reporting.** Unit tests produce coverage metrics; the bats tiers (command, integration, e2e) and packaging test do not. A single aggregated coverage report across all tiers would let us see the collective test coverage of a change rather than just the unit-test slice. Tooling investigation deferred; noted here so Phase 2 can decide whether to pick it up.
+
+### 11.5 Feed into Phase 2 brainstorm
+
+- Budget explicit time for automating the debug/observe loop; the pain scales with pipeline depth and Phase 2 adds stages.
+- Keep the design-review → plan-review → execute pattern.
+- Decide early in the Phase 2 brainstorm whether CONTRIBUTING.md and aggregated coverage land as Phase 2 work or as separate side tasks.
