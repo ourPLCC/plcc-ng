@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [multi-lang]
+  pull_request:
+    branches: [multi-lang]
+
+jobs:
+  test:
+    name: Functional tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Run functional tests
+        run: bin/test/functional.bash
+
+  package:
+    name: Packaging tests
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build package
+        run: bin/build/package.bash
+      - name: Run packaging tests
+        run: bin/test/packaging.bash
