@@ -61,7 +61,7 @@ class Parser():
 
         try:
             re.compile(regex)
-        except re.PatternError as e:
+        except re.error as e:
             self.errors.append(PatternCompilationError(line=line, index=index-len(m[0])+e.pos, error=e))
             return
 
