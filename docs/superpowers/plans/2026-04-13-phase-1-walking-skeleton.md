@@ -3149,7 +3149,10 @@ bin/build/package.bash
 bin/test/packaging.bash
 
 # 3. Manual smoke: end-to-end with trivial grammar
-plcc-make tests/fixtures/trivial.plcc
+# Note: use trivial-plantuml.plcc (not trivial.plcc) — trivial.plcc has an
+# implicit Java section (bare % defaults to Java) which fails in Phase 1
+# because plcc-java-emit is not installed.
+plcc-make tests/fixtures/trivial-plantuml.plcc
 cat build/spec.json | python -m json.tool > /dev/null && echo "spec.json: valid JSON"
 cat build/model.json | python -m json.tool > /dev/null && echo "model.json: valid JSON"
 cat build/diagram/*.puml && echo "diagram: present"
