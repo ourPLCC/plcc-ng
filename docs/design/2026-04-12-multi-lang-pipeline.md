@@ -357,25 +357,25 @@ These revisions preserve the spirit of the original decisions (single-responsibi
 
 **Original §5** and **§7.3** describe `plcc-tree` as a long-running stage that "emits one tree line and resumes reading tokens for the next program." That framing conflated pipeline-stage lifetime with session lifetime.
 
-**Amendment.** `plcc-tree` is a **one-shot** stage. It reads token JSONL on stdin until EOF, emits one parse-tree JSONL line per completed program (program boundaries are still derived from the grammar's start symbol), and exits. There is no long-running mode.
+**Amendment.** `plcc-tree` is a **one-shot** stage. It reads token JSONL on stdin until EOF, parses exactly one program, emits the resulting parse tree as a single newline-terminated JSON document on stdout, and exits. There is no long-running mode and no multi-program mode. Batch use parses multiple programs by spawning `plcc-tree` per program.
+
+The "single newline-terminated JSON document" framing is deliberately also a valid one-line JSONL stream: the same bytes compose cleanly with downstream consumers that expect JSONL (notably the long-lived interpreter under §17.7, which reads a stream of trees over the course of a session). No adapter is needed between `plcc-tree`'s output and the interpreter's input — the orchestrator simply pipes one into the other.
 
 Session-scope lifetime moves to the interpreter (§17.7). `plcc-rep` (and other Level 2 orchestrators) spawn fresh `plcc-tokens` and `plcc-tree` subprocesses per input chunk and pipe their combined output into the long-lived interpreter's stdin.
 
-**Rationale.** State lives in the interpreter — loaded libraries, definitions, runtime environment. Stages that hold no state are simpler as stateless one-shots spawned per input chunk than as long-running processes coordinating program-boundary framing with an upstream streaming tokenizer. Fork/exec cost for `plcc-tokens` and `plcc-tree` is imperceptible in interactive use and a one-time cost in batch use. The simplification applies to both `plcc-tree`'s implementation and the test matrix: there is exactly one mode, not a one-shot mode for build time and a long-running mode for REPL time.
+**Rationale.** State lives in the interpreter — loaded libraries, definitions, runtime environment. Stages that hold no state are simpler as stateless one-shots spawned per input chunk than as long-running processes coordinating program-boundary framing with an upstream streaming tokenizer. Fork/exec cost for `plcc-tokens` and `plcc-tree` is imperceptible in interactive use and a one-time cost in batch use. The simplification applies to `plcc-tree`'s implementation, the test matrix, and the output framing: there is exactly one mode, not a one-shot mode for build time and a long-running mode for REPL time, and there is exactly one tree per invocation rather than a stream of trees from a stream of programs.
 
-A file containing multiple programs still produces multiple parse-tree JSONL lines from a single `plcc-tree` invocation, because `plcc-tree` processes its token stream to EOF. Multi-program input is not what motivated the long-running framing and does not require it.
-
-The one-shot stdin/stdout/EOF I/O contract described here is inherited by any parser plugin dispatched from `plcc-tree` under §17.6: every `plcc-parser-<kind>` reads token JSONL until EOF and emits parse-tree JSONL until done. There is no long-running parser-plugin mode either.
+The one-shot stdin/stdout/EOF I/O contract described here is inherited by any parser plugin dispatched from `plcc-tree` under §17.6: every `plcc-parser-<kind>` reads token JSONL until EOF, parses one program, and emits one parse tree as a newline-terminated JSON document. There is no long-running parser-plugin mode and no multi-tree-per-invocation mode.
 
 #### Revised §5 row for `plcc-tree`
 
 | Command | Input | Output | Role |
-|---|---|---|---|
-| `plcc-tree` | token JSONL (stdin), `--ll1 <path>` (required), `--parser=<kind>` (optional, default `table`) | parse-tree JSONL (stdout) | One-shot dispatcher (§17.6). Reads token JSONL to EOF, execs `plcc-parser-<kind>` forwarding `--ll1`, exits when the dispatched plugin exits. One parse-tree JSONL line per completed program. No long-running mode. |
+| --- | --- | --- | --- |
+| `plcc-tree` | token JSONL (stdin), `--ll1 <path>` (required), `--parser=<kind>` (optional, default `table`) | parse tree as a single newline-terminated JSON document (stdout) | One-shot dispatcher (§17.6). Reads token JSONL to EOF, execs `plcc-parser-<kind>` forwarding `--ll1`, exits when the dispatched plugin exits. One parse tree per invocation. No long-running mode, no multi-program mode. Output is also a valid one-line JSONL stream so it composes directly with the long-lived interpreter under §17.7. |
 
 #### Revised §7.3
 
-> `plcc-tree` is a one-shot pipeline stage. It reads token JSONL on stdin until EOF and emits one parse-tree JSONL line per completed program. It does not stay resident across programs; session-scope lifetime is held by the interpreter (§17.7), and orchestrators spawn fresh `plcc-tokens | plcc-tree` subpipelines per input chunk.
+> `plcc-tree` is a one-shot pipeline stage. It reads token JSONL on stdin until EOF, parses one program, and emits that parse tree as a single newline-terminated JSON document. It does not stay resident across programs, and it does not parse multiple programs per invocation; session-scope lifetime is held by the interpreter (§17.7), and orchestrators spawn fresh `plcc-tokens | plcc-tree` subpipelines per input chunk. Because `plcc-tree`'s output is also a valid one-line JSONL stream, it composes directly with the interpreter's JSONL stdin without an adapter.
 
 ### 17.4 Amends §5, §9: Introduce `plcc-ll1` primitive for LL(1) analysis (from Phase 2 Part 1 brainstorm, 2026-04-15)
 
