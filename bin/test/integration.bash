@@ -7,5 +7,6 @@ cd "${PROJECT_ROOT}"
 
 "${PROJECT_ROOT}/bin/install/bats.bash"
 pdm install
+export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
 
 bats tests/bats/integration/
