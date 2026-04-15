@@ -20,7 +20,8 @@ for cmd in plcc-spec plcc-tokens plcc-tree plcc-model \
 done
 
 # Run end-to-end in the installed venv
-"${VENV}/bin/plcc-make" tests/fixtures/trivial.plcc
+export PATH="${VENV}/bin:${PATH}"
+plcc-make tests/fixtures/trivial.plcc
 test -f build/spec.json    || { echo "FAIL: build/spec.json missing"; exit 1; }
 test -f build/model.json   || { echo "FAIL: build/model.json missing"; exit 1; }
 ls build/diagram/*.puml    || { echo "FAIL: no .puml in build/diagram/"; exit 1; }
