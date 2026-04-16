@@ -19,3 +19,8 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
     plcc-java-emit --output="${WORK_DIR}" < "${MODEL_JSON}"
     [ -f "${WORK_DIR}/Main.java" ]
 }
+
+@test "plcc-java-emit accepts --verbose" {
+    run bash -c "plcc-java-emit --output='${WORK_DIR}' --verbose=1 < '${MODEL_JSON}'"
+    [ "$status" -eq 0 ]
+}

@@ -21,15 +21,15 @@ __doc__ = __doc__ + VERBOSE_OPTIONS
 
 
 class Events(enum.Enum):
-    STARTED = 'started'
-    FINISHED = 'finished'
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args('plcc-java-run', Events, args)
+    verbose = VerboseContext.from_args("plcc-java-run", Events, args)
     output_dir = args['--output']
     verbose.emit(Events.STARTED, message=f'running Main in {output_dir}')
     result = subprocess.run(
