@@ -27,7 +27,7 @@ Update the Phase 1 walking skeleton so that its command surface, wiring, and pro
 
 - `plcc-spec` keeps its LL(1) validation for now. Removing it is Phase 2 Part 1 work, done when `plcc-ll1` gets real implementation (see §7.2).
 - No new functionality beyond wiring. `plcc-ll1` emits a stub JSON, `plcc-parser-table` passes tokens through as a minimal tree, etc.
-- No new JSON schemas beyond what is needed for `ll1.json`.
+- A minimal `ll1.schema.json` is added to `src/plcc/schemas/` for the stub ll1.json output. It validates the stub shape (empty sets, empty table, empty conflicts). The schema grows as `plcc-ll1` gets real implementation in Phase 2 Part 1.
 
 ### Walking skeleton principle
 
@@ -40,7 +40,7 @@ Stubs should only exist at leaf components — components that do not call other
 | Command | Module | Input | Output (stub) |
 |---|---|---|---|
 | `plcc-ll1` | `plcc.ll1.ll1_cli` | spec JSON (stdin or path), `--format=human` (no-op in skeleton) | Minimal ll1.json with empty FIRST/FOLLOW/predict sets, empty parse table, empty conflicts, empty left-recursion report |
-| `plcc-parser-table` | `plcc.parser.table_cli` | token JSONL (stdin), `--ll1 <path>` | Minimal tree wrapping tokens (the Phase 1 `plcc-tree` pass-through logic moves here) |
+| `plcc-parser-table` | `plcc.parser.table_cli` | token JSONL (stdin), `--ll1 <path>` (required; exits nonzero if missing) | Minimal tree wrapping tokens (the Phase 1 `plcc-tree` pass-through logic moves here) |
 | `plcc-parser-list` | `plcc.parser.list_cli` | (none) | Parser kind names, one per line. Scans PATH for `plcc-parser-*`, symmetric with `plcc-lang-list`. |
 
 ### 2.2 New language plugin commands (leaf stubs)
@@ -63,15 +63,29 @@ All language plugin commands accept `--verbose`/`--verbose-format` per §17.8.10
 
 This follows the established dispatcher no-op pattern used by `plcc-lang-build`: if `plcc-<lang>-run` is not found on PATH, the dispatcher exits 0 silently. Plugins only ship the commands they need. PlantUML does not ship a run command; the dispatcher handles this as a no-op.
 
+**Note on dispatcher asymmetry:** Language dispatchers (`plcc-lang-run`, `plcc-lang-build`) treat a missing plugin command as a no-op (exit 0) because build and run are optional capabilities — not every language needs them. Parser dispatchers (`plcc-tree`) treat a missing plugin command as an error (exit nonzero) because parsing is required for correctness — the pipeline cannot proceed without a parser.
+
 ### 2.4 Changed commands (connected)
 
-| Command | Change |
-|---|---|
-| `plcc-tree` | Rewritten from pass-through to dispatcher. Accepts `--parser=<kind>` (default `table`), `--ll1 <path>`. Constructs `plcc-parser-<kind>`, execs it, forwards `--ll1`, `--verbose`, `--verbose-format`. |
-| `plcc-make` | Gains `plcc-ll1` step between spec and model (step 3 in the amended §17.4 sequence). Level 2 verbose propagation to all children. |
-| `plcc-scan` | Promoted from stub to connected skeleton. Runs `plcc-spec` then pipes source through `plcc-tokens`, prints tokens in human-readable format. Level 2 verbose propagation. |
-| `plcc-parse` | Promoted from stub to connected skeleton. Runs `plcc-spec` → `plcc-ll1` → `plcc-tokens | plcc-tree`, prints tree in human-readable format. Level 2 verbose propagation. |
-| `plcc-rep` | Promoted from stub to connected skeleton. Runs `plcc-spec` → `plcc-ll1` → `plcc-tokens | plcc-tree | plcc-lang-run`. Accepts `--tool=<name>` (default `Java`). Resolves tool name to language via spec.json semantics array. Level 2 verbose propagation. |
+**`plcc-tree`** — Rewritten from pass-through to dispatcher. Accepts `--parser=<kind>` (default `table`) and `--ll1 <path>`. Constructs `plcc-parser-<kind>`, execs it, forwards `--ll1`, `--verbose`, `--verbose-format`.
+
+**`plcc-make`** — Gains `plcc-ll1` step between spec and model (step 3 in the amended §17.4 sequence). Level 2 verbose propagation to all children.
+
+**`plcc-scan`** — Promoted from stub to connected skeleton. Writes spec.json to a temp file via `plcc-spec`, then pipes source through `plcc-tokens <spec.json path>`, prints tokens in human-readable format. Level 2 verbose propagation.
+
+**`plcc-parse`** — Promoted from stub to connected skeleton. Writes spec.json and ll1.json to temp files via `plcc-spec` and `plcc-ll1`, then pipes source through `plcc-tokens <spec.json path> | plcc-tree --ll1=<ll1.json path>`, prints tree in human-readable format. Level 2 verbose propagation.
+
+**`plcc-rep`** — Promoted from stub to connected skeleton. Same spec.json and ll1.json setup as `plcc-parse`, then pipes source through:
+
+```sh
+plcc-tokens <spec.json path>
+  | plcc-tree --ll1=<ll1.json path>
+  | plcc-lang-run --target=<lang> --output=<dir>
+```
+
+Accepts `--tool=<name>` (default `Java`). Resolves tool name to language via spec.json semantics array. Level 2 verbose propagation.
+
+**Not in this skeleton update:** Level 2 commands do not gain a `--parser=<kind>` flag in this update. §17.6.7 defers that to Part 2 / Phase 4. Level 2 commands always use the default parser (`table`) for now.
 
 ### 2.5 `plcc-rep --tool` semantics
 
@@ -81,6 +95,8 @@ This follows the established dispatcher no-op pattern used by `plcc-lang-build`:
 - If `--tool` is not provided, default to `Java` (backwards compatibility with v8).
 
 The grammar divider format is `% <tool> <language>`. When the divider omits the tool name, it defaults to the language name. For example, `% Java` means tool=Java, language=Java. `% diagram PlantUML` means tool=diagram, language=PlantUML.
+
+The tool→language mapping is carried in spec.json's `semantics` array. Each entry has both `tool` and `language` fields (already produced by `plcc-spec` today). `plcc-rep` reads spec.json, finds the entry whose `tool` matches `--tool`, and uses its `language` field to dispatch to `plcc-lang-run --target=<language>`.
 
 ### 2.6 New console scripts in `pyproject.toml`
 
@@ -96,6 +112,8 @@ plcc-java-build     = "plcc.lang.ext.java.build:main"
 plcc-java-run       = "plcc.lang.ext.java.run:main"
 ```
 
+**Module naming convention.** The `_cli` suffix (e.g., `ll1_cli.py`, `table_cli.py`) follows the existing codebase pattern (`plcc_spec_cli.py`, `tokens_cli.py`, `tree_cli.py`, `model_cli.py`). The architectural spec (§17.6.4) uses shorter names (`plcc.parser.table:main`); this design uses the `_cli` suffix for consistency with what is already in the code. The `lang/` dispatchers and plugin commands omit the suffix because they are single-purpose modules (e.g., `emit.py` is entirely the emit CLI).
+
 ### 2.7 Revised `plcc-make` phase sequence
 
 1. Clean: `rm -rf build/`
@@ -106,6 +124,8 @@ plcc-java-run       = "plcc.lang.ext.java.run:main"
 6. Build: for each semantic section, `plcc-lang-build --target=<lang> --output=build/<tool>/`
 
 If `plcc-ll1` exits nonzero, `plcc-make` stops after step 3 and surfaces the diagnostic artifact.
+
+`plcc-make` does **not** invoke `plcc-lang-run`. Make builds; it does not run. Running generated interpreters is the job of `plcc-rep` and manual command-line composition.
 
 ### 2.8 Noted deviation
 
@@ -162,10 +182,12 @@ A string constant for commands to include in their docstring:
 
 ```python
 VERBOSE_OPTIONS = """
-    -v --verbose=LEVEL      Verbosity level 0-3 [default: 0].
+    --verbose=LEVEL         Verbosity level 0-3 [default: 0].
     --verbose-format=FMT    Output format: text or json [default: text].
 """
 ```
+
+**Note on `-v` shorthand.** §17.8.1 describes `-v`, `-vv`, `-vvv` as count-style shorthands. Docopt does not support count-style flags with `=LEVEL` syntax. This design uses `--verbose=LEVEL` (explicit numeric) as the canonical form. The `-v`/`-vv`/`-vvv` shorthands from §17.8.1 are deferred — they can be added later via a thin CLI wrapper or by switching from docopt to argparse/Click for verbose parsing. The `VERBOSE_OPTIONS` constant is the single place to make that change.
 
 ### 3.4 Per-command event enums
 
@@ -289,8 +311,10 @@ One `.bats` file per new command:
 | `plcc-python-emit.bats` | Entry point is installed and executable, produces `main.py` in output dir |
 | `plcc-python-run.bats` | Entry point is installed and executable, execs generated `main.py`, parse-tree JSONL in → evaluation output |
 | `plcc-java-emit.bats` | Entry point is installed and executable, produces `Main.java` in output dir |
-| `plcc-java-build.bats` | Entry point is installed and executable, compiles generated `Main.java` |
-| `plcc-java-run.bats` | Entry point is installed and executable, execs compiled class, parse-tree JSONL in → evaluation output |
+| `plcc-java-build.bats` | Entry point is installed and executable, compiles generated `Main.java` (requires JDK) |
+| `plcc-java-run.bats` | Entry point is installed and executable, execs compiled class, parse-tree JSONL in → evaluation output (requires JDK) |
+
+Java plugin tests require a JDK on the test machine. The devcontainer and CI environment must include a JDK. Tests should skip gracefully if `javac`/`java` are not available.
 
 ### 5.2 Updated BATS command tests
 
@@ -386,4 +410,12 @@ This design introduces one new obligation on language plugins not present in the
 
 This follows the established `plcc-lang-*` dispatcher pattern (§17.2) and the dispatcher no-op convention from §2.3 of this design. `plcc-lang-run --target=<lang> --output=<dir>` constructs `plcc-<lang>-run` and execs it. If the command is not on PATH, the dispatcher exits 0.
 
-This amendment should be recorded as §17.9 in the architectural spec after this design is approved.
+This amendment should be recorded as §17.9 in the architectural spec after this design is approved. Proposed amendment text:
+
+> ### 17.9 Amends §10: Language plugins may provide a run command (from skeleton update, 2026-04-16)
+>
+> **Original §10.1** defines the plugin contract as one required command (`plcc-<lang>-emit`) and one optional command (`plcc-<lang>-build`).
+>
+> **Amendment.** A third optional command is added: **`plcc-<lang>-run`**. It accepts `--output=<dir>` (the build output directory containing generated and runtime files), reads parse-tree JSONL on stdin, and writes evaluation output on stdout. It accepts `--verbose`/`--verbose-format` per §17.8.10. Discovery and dispatch follow the same PATH-based pattern as `plcc-lang-emit` and `plcc-lang-build`: `plcc-lang-run --target=<lang>` constructs `plcc-<lang>-run` and execs it. If the command is not on PATH, the dispatcher exits 0 (the no-op pattern established by `plcc-lang-build`).
+>
+> **Rationale.** Generated interpreters are pipeline stages (§17.5), not standalone programs. How to invoke a pipeline stage in a specific target language is language-specific knowledge that belongs in the language plugin, not in the core pipeline or the Level 2 orchestrators. `plcc-rep` dispatches to `plcc-lang-run` to start the interpreter, keeping itself language-agnostic.
