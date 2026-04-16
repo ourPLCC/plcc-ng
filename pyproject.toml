@@ -45,6 +45,7 @@ plcc-parse = "plcc.cmd.parse:main"
 plcc-rep = "plcc.cmd.rep:main"
 plcc-ll1 = "plcc.ll1.ll1_cli:main"
 plcc-parser-table = "plcc.parser.table_cli:main"
+plcc-parser-list = "plcc.parser.list_cli:main"
 
 [tool.pdm.scripts]
 test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
