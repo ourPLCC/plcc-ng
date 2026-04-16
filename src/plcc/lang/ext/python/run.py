@@ -31,14 +31,14 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-python-run", Events, args)
-    output_dir = args["--output"]
-    main_py = os.path.join(output_dir, "main.py")
-    verbose.emit(Events.STARTED, message=f"running {main_py}")
+    output_dir = args['--output']
+    main_py = os.path.join(output_dir, 'main.py')
+    verbose.emit(Events.STARTED, message=f'running {main_py}')
     result = subprocess.run(
         [sys.executable, main_py],
         stdin=sys.stdin,
         stdout=sys.stdout,
         stderr=sys.stderr,
     )
-    verbose.emit(Events.FINISHED, message=f"exit {result.returncode}")
+    verbose.emit(Events.FINISHED, message=f'exit {result.returncode}')
     sys.exit(result.returncode)

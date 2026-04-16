@@ -20,5 +20,5 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
     TREE='{"kind":"tree","rule":"program","children":[]}'
     run bash -c "echo '${TREE}' | plcc-python-run --output='${WORK_DIR}'"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"evaluated"* ]]
+    [[ "$output" == *"evaluated: program (tree)"* ]]
 }

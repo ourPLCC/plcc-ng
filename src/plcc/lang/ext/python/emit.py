@@ -31,8 +31,8 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-python-emit", Events, args)
-    output_dir = args["--output"]
-    verbose.emit(Events.STARTED, message=f"emitting to {output_dir}")
+    output_dir = args['--output']
+    verbose.emit(Events.STARTED, message=f'emitting to {output_dir}')
     # Read and discard model JSON from stdin (required by contract)
     sys.stdin.read()
     os.makedirs(output_dir, exist_ok=True)
