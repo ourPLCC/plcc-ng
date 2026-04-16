@@ -11,6 +11,8 @@ languages/
 
 # PLCC places generated Java files in directories named Java. Ignore them.
 Java/
+# Re-include the Java language plugin source directory.
+!src/plcc/lang/ext/java/
 
 # PLCC places generated Python files in directories named Python. Ignore them.
 Python/
