@@ -1,41 +1,47 @@
-"""plcc-tree
-    Parse token JSONL from stdin into tree JSONL.
-
-Usage:
-    plcc-tree [options] --spec=SPEC_JSON
-
-Options:
-    --spec=SPEC_JSON   Path to spec JSON file (output of plcc-spec).
-    -h --help          Show this message.
-"""
-
-import json
+import enum
+import shutil
+import subprocess
 import sys
 
 from docopt import docopt
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-tree
+    Dispatch to a parser plugin. Reads token JSONL, emits a parse tree.
+
+Usage:
+    plcc-tree [options] --ll1=LL1_JSON
+
+Options:
+    --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
+    --parser=KIND           Parser plugin to use [default: table].
+    -h --help               Show this message.
+""" + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    # Phase 1: --spec is accepted for interface compatibility but not yet used.
-    # The minimal implementation wraps each token in a tree record unconditionally.
-    # Phase 2 will implement a real LL(1) parser using the spec.
-    _ = args['--spec']
-    for line in sys.stdin:
-        line = line.strip()
-        if not line:
-            continue
-        record = json.loads(line)
-        if record.get('kind') == 'error':
-            # Pass error records through unchanged
-            print(json.dumps(record), flush=True)
-        elif record.get('kind') == 'token':
-            # Wrap each token in a minimal tree record
-            tree = {
-                'kind': 'tree',
-                'rule': 'program',
-                'children': [record],
-            }
-            print(json.dumps(tree), flush=True)
+    verbose = VerboseContext.from_args("plcc-tree", Events, args)
+    ll1_path = args["--ll1"]
+    parser_kind = args["--parser"]
+    cmd = f"plcc-parser-{parser_kind}"
+    if not shutil.which(cmd):
+        print(
+            f"plcc-tree: parser plugin '{cmd}' not found on PATH.\n"
+            f"Run plcc-parser-list to see what is available.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    verbose.emit(Events.STARTED, message=f"dispatching to {cmd}")
+    child_cmd = [cmd, f"--ll1={ll1_path}"] + verbose.child_flags()
+    result = subprocess.run(child_cmd, stdin=sys.stdin)
+    verbose.emit(Events.FINISHED, message=f"exit {result.returncode}")
+    sys.exit(result.returncode)
