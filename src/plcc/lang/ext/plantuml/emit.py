@@ -1,4 +1,13 @@
-"""plcc-plantuml-emit
+import enum
+import json
+import os
+import sys
+
+from docopt import docopt
+
+from ....verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-plantuml-emit
     Emit PlantUML class diagram from model JSON.
 
 Usage:
@@ -7,19 +16,19 @@ Usage:
 Options:
     --output=DIR    Directory to write output files into.
     -h --help       Show this message.
-"""
+""" + VERBOSE_OPTIONS
 
-import json
-import os
-import sys
 
-from docopt import docopt
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-plantuml-emit", Events, args)
     output_dir = args['--output']
     os.makedirs(output_dir, exist_ok=True)
     model = json.load(sys.stdin)

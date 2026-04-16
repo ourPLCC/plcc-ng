@@ -1,4 +1,14 @@
-"""plcc-spec
+import enum
+import json
+import sys
+from dataclasses import asdict
+
+from docopt import docopt
+
+from . import parseSpec
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-spec
     Parse, validate, and print a PLCC grammar file as JSON.
 
 Usage:
@@ -10,21 +20,19 @@ Arguments:
 Options:
     --no-json       Do not print JSON to stdout.
     -h --help       Show this message.
-"""
+""" + VERBOSE_OPTIONS
 
-import json
-import sys
-from dataclasses import asdict
 
-from docopt import docopt
-
-from . import parseSpec
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-spec", Events, args)
     spec, errors = _load(args['FILE'])
     if errors:
         for e in errors:

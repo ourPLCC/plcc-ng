@@ -1,26 +1,35 @@
-"""plcc-lang-list
-    List installed language emitter plugins.
-
-Usage:
-    plcc-lang-list
-
-Options:
-    -h --help   Show this message.
-"""
-
+import enum
 import os
 import re
 import sys
 
 from docopt import docopt
 
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-lang-list
+    List installed language emitter plugins.
+
+Usage:
+    plcc-lang-list [options]
+
+Options:
+    -h --help   Show this message.
+""" + VERBOSE_OPTIONS
+
 _EMIT_PATTERN = re.compile(r'^plcc-(.+)-emit$')
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    docopt(__doc__, argv)
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-lang-list", Events, args)
     for lang in sorted(find_languages()):
         print(lang)
 

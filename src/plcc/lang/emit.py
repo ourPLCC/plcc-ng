@@ -1,4 +1,13 @@
-"""plcc-lang-emit
+import enum
+import shutil
+import subprocess
+import sys
+
+from docopt import docopt
+
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-lang-emit
     Dispatch to the appropriate plcc-<lang>-emit command.
 
 Usage:
@@ -8,19 +17,19 @@ Options:
     --target=LANG   Target language (e.g. PlantUML, Java, Python).
     --output=DIR    Directory to write output files into.
     -h --help       Show this message.
-"""
+""" + VERBOSE_OPTIONS
 
-import shutil
-import subprocess
-import sys
 
-from docopt import docopt
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-lang-emit", Events, args)
     lang = args['--target']
     output = args['--output']
     cmd = resolve_emit_command(lang)
@@ -32,7 +41,7 @@ def main(argv=None):
         )
         sys.exit(1)
     result = subprocess.run(
-        [cmd, f'--output={output}'],
+        [cmd, f'--output={output}'] + verbose.child_flags(),
         stdin=sys.stdin,
     )
     sys.exit(result.returncode)

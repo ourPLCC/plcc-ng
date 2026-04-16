@@ -1,16 +1,4 @@
-"""plcc-tokens
-    Tokenize stdin given a spec JSON file, output token JSONL.
-
-Usage:
-    plcc-tokens [options] SPEC_JSON
-
-Arguments:
-    SPEC_JSON   Path to spec JSON file (output of plcc-spec).
-
-Options:
-    -h --help   Show this message.
-"""
-
+import enum
 import sys
 
 from docopt import docopt
@@ -21,12 +9,32 @@ from ..scan.scanner import Scanner
 from ..scan.Skip import Skip
 from .spec_loader import load_lexical_rules
 from .jsonl_formatter import format_record
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-tokens
+    Tokenize stdin given a spec JSON file, output token JSONL.
+
+Usage:
+    plcc-tokens [options] SPEC_JSON
+
+Arguments:
+    SPEC_JSON   Path to spec JSON file (output of plcc-spec).
+
+Options:
+    -h --help   Show this message.
+""" + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-tokens", Events, args)
     rules = load_lexical_rules(args['SPEC_JSON'])
     matcher = Matcher(rules)
     scanner = Scanner(matcher)
