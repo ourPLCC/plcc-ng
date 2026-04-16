@@ -26,13 +26,14 @@ def main(argv=None):
 
 
 def find_parsers():
+    """Scan PATH for plcc-parser-* commands; return list of parser kinds."""
     parsers = []
     seen = set()
-    for directory in os.environ.get("PATH", "").split(os.pathsep):
+    for directory in _path_dirs():
         try:
             for entry in os.scandir(directory):
                 name = _extract_parser_kind(entry.name)
-                if name and name not in seen and entry.is_file() and os.access(entry.path, os.X_OK):
+                if name and name not in seen and _is_executable(entry):
                     parsers.append(name)
                     seen.add(name)
         except (PermissionError, FileNotFoundError):
@@ -47,3 +48,11 @@ def _extract_parser_kind(command_name):
         if kind != "list":
             return kind
     return None
+
+
+def _path_dirs():
+    return os.environ.get("PATH", "").split(os.pathsep)
+
+
+def _is_executable(entry):
+    return entry.is_file() and os.access(entry.path, os.X_OK)
