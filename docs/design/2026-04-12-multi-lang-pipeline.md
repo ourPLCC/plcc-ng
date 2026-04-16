@@ -541,3 +541,77 @@ The "Pluggable scanners and parsers" bullet in §15 is narrowed: pluggable scann
 - `plcc-rep grammar.plcc lib1.txt lib2.txt < program.txt` — loads libraries, then runs program.txt as the final chunk, then exits.
 
 **Rationale.** Only stages that hold state need to be long-lived. The interpreter holds state (loaded library definitions, runtime environment) and therefore must persist for the duration of the session. `plcc-tokens` and `plcc-tree` hold no state; spawning them per chunk is simpler than coordinating program-boundary framing across long-running streaming stages. The fork/exec/JSON-load cost per chunk is imperceptible in interactive use and negligible in batch use.
+
+### 17.8 Amends §5, §6, §10: Pipeline-wide verbose diagnostics via `--verbose` flag (from Phase 2 Part 1 brainstorm, 2026-04-16)
+
+**Original §5, §6, §10** describe per-stage contracts (inputs, outputs, flags, roles) but do not define a cross-cutting diagnostic mechanism. Debugging a pipeline — "what did each stage see, what decisions did each stage make" — has no first-class surface.
+
+**Amendment.** Every pipeline stage accepts a `--verbose` (`-v`) flag whose level controls how much human-readable informational output the stage writes to **stderr**. The protocol is uniform across Level 0 primitives, Level 2 orchestrators, parser plugins, language plugins, and generated components. It is part of the walking-skeleton baseline from Phase 1 onward: no stage is allowed to ship without `--verbose` support, because retrofitting diagnostic output later is exactly the cross-cutting change most disruptive to do after the fact.
+
+The output is **narrative text for human consumption**, not structured data. Stages that want to emit structured artifacts for tool consumption do so through their normal stdout contract; `--verbose` is explicitly not a data-interchange mechanism.
+
+#### 17.8.1 Flag syntax and semantics
+
+- `--verbose=0` or flag absent — silent (no informational output). **Default.**
+- `--verbose=1`, `--verbose`, or `-v` — level 1: milestones. One line per major phase boundary: "started parsing", "finished parsing with 3 errors", "loaded 2 library files", etc.
+- `--verbose=2` or `-vv` — level 2: per-event narration. Every shift, every expand, every token, every evaluation step — whichever are appropriate for the stage.
+- `--verbose=3` or `-vvv` — level 3: internal detail. Predict-set lookups, table entries consulted, recovery decisions, scanner-DFA transitions, etc.
+
+Higher levels are strictly supersets of lower ones: `-vv` emits everything `-v` emits plus more. Levels higher than a stage supports collapse silently to the highest it does support — asking for `-vvv` from a stage that only defines `-v` and `-vv` behavior is not an error, it just gets `-vv`.
+
+There is **no per-stage selection mechanism.** A single knob controls chattiness globally. If one stage is overwhelmingly verbose at `-vv` while others are quiet, the right fix is to recalibrate that stage's level definitions, not to filter it out at the orchestrator.
+
+#### 17.8.2 Propagation rule
+
+Every stage that accepts `--verbose` follows two rules:
+
+1. **Self-emit.** The stage writes informational output to its own stderr at or below the current verbosity level, using the output standards in §17.8.3.
+2. **Forward unchanged.** When the stage spawns any child subprocess, it forwards the current `--verbose=<level>` to the child exactly as received. Dispatchers (notably `plcc-tree` under §17.6) forward to the dispatched plugin. Orchestrators (§6) forward to every subprocess they spawn in the pipeline.
+
+Propagation is simple because there is no list to filter: the level value is a single integer that every stage can pass through unchanged.
+
+#### 17.8.3 Output standards
+
+Verbose output is written as plain text, one logical event per line, on the stage's own stderr. The following conventions are part of the contract:
+
+- **Stage-name prefix.** Every line begins with the stage's executable name followed by a colon and a space: `plcc-tree: expanding Expression -> left:Term op:Op right:Term`. In a pipeline, the orchestrator's stderr aggregates every stage's output interleaved in time order; the prefix is how the reader tells who said what.
+- **GNU-style source positions where relevant.** When a line corresponds to a source location in a user-supplied file, include the position in the standard `file:line:col:` form after the stage prefix: `plcc-tree: program.txt:4:12: shift IDENT 'foo'`. Editors and IDEs already parse this convention, so verbose lines become click-through in any reasonable tool.
+- **Present tense, active voice, one event per line.** "expanding Expression", not "Expression was expanded." "shift IDENT 'foo'", not "a shift occurred." Reads as narration, not a log dump.
+- **Line-atomic writes.** A stage must buffer an entire line before writing it to stderr. POSIX guarantees that writes smaller than `PIPE_BUF` (4096 bytes on Linux) are atomic, so the one-line-per-write discipline prevents interleaving with other stages' concurrent writes. Stages should never emit a partial line.
+- **No ANSI colors by default.** Colors break when stderr is redirected to a file or captured by a parent process. A future `--color=auto|always|never` flag can add colors opt-in; it is not part of Part 1.
+- **No timestamps by default.** Timestamps add noise for human consumption. If a future phase needs them, they can be added behind an opt-in flag.
+- **Errors remain distinguishable.** Real errors (the stage is failing) always go to stderr regardless of verbosity level, and they use a distinct marker — `plcc-tree: error: ...` — so they are not lost in verbose narration. `--verbose=0` suppresses informational output but does not suppress error output.
+- **Each stage's phase design doc defines its level-by-level content.** Level numbers set the volume; the specific events emitted at each level are stage-specific and specified in the relevant phase design doc. `plcc-parser-table`'s levels are defined in the Phase 2 Part 1 design doc; `plcc-tokens`'s levels are defined in the Phase 2 Part 1 design doc if we extend scanner output at the same time, otherwise in a later phase.
+
+#### 17.8.4 Walking-skeleton discipline
+
+`--verbose` is **not** a future enhancement layered on top of a non-verbose baseline. It is a property of the walking skeleton: every stage that ships, from Phase 1 onward, accepts the flag and forwards it correctly. What varies across phases is only **how much each stage has to say at each level**, not whether it participates in the protocol.
+
+Concretely:
+
+- **Accept-and-forward** is mandatory for every stage from day one. Adding the flag is a one-line argparse/Click definition plus a subprocess-argv pass-through; the cost of doing this up-front is negligible, and the cost of retrofitting it later is high because every stage's contract, every test that invokes a stage, and every subprocess-spawning call site would need to change at once.
+- **Emit** is expected for every stage that has meaningful milestones or events to describe, as soon as it has them. A stage that has nothing interesting to say at `-v` yet is allowed to emit nothing — that is not an error, it is the forward-compatible null case. As stages mature and have more to describe, they add content without any change to the protocol or to consumers.
+
+"We'll add verbose output later" is rejected as a valid plan item. The protocol itself must be present from day one; only the content fills in over time.
+
+#### 17.8.5 Revised §5 note
+
+> Every Level 0 primitive listed in §5 accepts a `--verbose`/`-v` flag per §17.8, forwards it to any subprocess it spawns, and emits stage-specific human-readable informational output on stderr as defined by its phase design doc. This is an unconditional part of every primitive's contract, not an optional feature.
+
+#### 17.8.6 Revised §6 note
+
+> Every Level 2 orchestrator listed in §6 accepts a `--verbose`/`-v` flag per §17.8 and forwards it unchanged to every subprocess it spawns in the pipeline (including dispatchers such as `plcc-tree`, which then forward to the dispatched parser plugin per §17.6). Orchestrators themselves may also emit informational output — for example, `plcc-rep` may describe chunk boundaries, subprocess lifecycles, and interpreter handshake events.
+
+#### 17.8.7 Revised §10 note
+
+> Language plugins must forward `--verbose` to any subprocess they spawn (for example, a language-plugin build step that invokes a target-language compiler should pass `--verbose` through if that compiler also participates in the protocol). Generated components produced by language plugins must accept `--verbose`, forward it, and emit informational output under their own executable name on stderr. A generated Python interpreter, for example, emits verbose lines prefixed with its own script name.
+
+#### 17.8.8 Rationale
+
+Diagnostic visibility is the single most-requested PLCC v8 feature among faculty using PLCC for teaching: "what is the parser doing, what is the scanner doing, why did this program behave that way." v8 offers a handful of ad-hoc `-t` flags on individual tools; the result is inconsistent, undiscoverable, and does not compose across a pipeline. A single cross-cutting flag with uniform semantics fixes all three problems.
+
+The output is deliberately **human-readable narrative**, not structured JSON. JSON's job in the pipeline is data interchange between tools; using it for human-consumption diagnostics would conflate those concerns and force readers to mentally parse JSON every time they wanted to see what the scanner was doing. Narrative text is what Unix tooling has used for `-v`/`--verbose` output for decades, and the reasons are the same here: the primary consumer is a human looking at a terminal, and optimizing for that consumer means optimizing for readability over machine-parseability.
+
+Baking `--verbose` support into the walking skeleton rather than adding it phase-by-phase is a deliberate cost trade. The alternative — "add it later when needed" — is the scenario in which every stage's flag surface, every test invocation, and every subprocess-spawning call site has to be touched at once. The one-line-per-stage cost of accepting and forwarding the flag up-front is an order of magnitude cheaper than any later retrofit.
+
+A single level dial was chosen over per-stage selection because the motivation for per-stage selection (filtering noise in a structured log grep) does not apply to narrative stderr. If one stage is overwhelmingly chatty at a given level, the correct fix is to recalibrate which events that stage emits at which level, not to filter the stage out at the orchestrator. Per-stage calibration is a stage-internal concern; the user-facing knob stays simple.
