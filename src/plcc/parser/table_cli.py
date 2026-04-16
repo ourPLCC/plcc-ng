@@ -38,10 +38,7 @@ def main(argv=None):
         if not line:
             continue
         record = json.loads(line)
-        if record.get("kind") == "error":
-            children.append(record)
-        else:
-            children.append(record)
+        children.append(record)
     tree = {
         "kind": "tree",
         "rule": "program",

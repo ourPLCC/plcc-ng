@@ -37,3 +37,8 @@ teardown() {
     run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}' --verbose=1"
     [ "$status" -eq 0 ]
 }
+
+@test "plcc-parser-table accepts --verbose-format without error" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}' --verbose=1 --verbose-format=json"
+    [ "$status" -eq 0 ]
+}
