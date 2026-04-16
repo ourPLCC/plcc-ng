@@ -16,7 +16,6 @@ Arguments:
     SPEC_JSON   Path to spec JSON file. Use - or omit to read from stdin.
 
 Options:
-    --format=FMT    Output format: json or human [default: json].
     -h --help       Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -32,6 +31,12 @@ def main(argv=None):
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-ll1", Events, args)
     verbose.emit(Events.STARTED, message="reading spec")
+    path = args['SPEC_JSON'] or '-'
+    if path == '-':
+        json.load(sys.stdin)
+    else:
+        with open(path) as f:
+            json.load(f)
     # Stub: emit minimal ll1.json with empty sets
     result = {
         "first_sets": {},
