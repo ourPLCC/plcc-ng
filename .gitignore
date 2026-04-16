@@ -14,6 +14,8 @@ Java/
 
 # PLCC places generated Python files in directories named Python. Ignore them.
 Python/
+# Re-include the Python language plugin source directory.
+!src/plcc/lang/ext/python/
 
 # Created by Docker environment
 .bash_history
