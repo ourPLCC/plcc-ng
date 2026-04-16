@@ -27,6 +27,7 @@ package-dir = "src"
 
 [tool.pdm.version]
 source = "scm"
+fallback_version = "0.0.0"
 
 
 [project.scripts]
@@ -42,6 +43,7 @@ plcc-make = "plcc.cmd.make:main"
 plcc-scan = "plcc.cmd.scan:main"
 plcc-parse = "plcc.cmd.parse:main"
 plcc-rep = "plcc.cmd.rep:main"
+plcc-ll1 = "plcc.ll1.ll1_cli:main"
 
 [tool.pdm.scripts]
 test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
