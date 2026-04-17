@@ -56,8 +56,12 @@ class VerboseContext:
         events = []
         for line in stderr_text.splitlines():
             line = line.strip()
-            if line:
+            if not line:
+                continue
+            try:
                 events.append(json.loads(line))
+            except json.JSONDecodeError:
+                print(line, file=sys.stderr, flush=True)
         return events
 
     def reformat_child_events(self, events):

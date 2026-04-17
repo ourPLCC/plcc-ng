@@ -31,3 +31,14 @@ teardown() {
     [ -f "${WORK_DIR}/build/model.json" ]
     ls "${WORK_DIR}/build/diagram/"*.puml
 }
+
+@test "plcc-make plantuml_only grammar produces ll1.json" {
+    run plcc-make "${FIXTURES}/plantuml_only.plcc"
+    [ "$status" -eq 0 ]
+    [ -f "${WORK_DIR}/build/ll1.json" ]
+}
+
+@test "plcc-make accepts --verbose" {
+    run plcc-make --verbose=1 "${FIXTURES}/plantuml_only.plcc"
+    [ "$status" -eq 0 ]
+}

@@ -43,3 +43,7 @@ teardown() {
     plcc-make "${FIXTURES}/plantuml_only.plcc"
     [ ! -f build/diagram/stale-marker.txt ]
 }
+
+@test "plcc-make produces build/ll1.json" {
+    [ -f build/ll1.json ]
+}

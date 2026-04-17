@@ -11,7 +11,7 @@ __doc__ = """plcc-lang-build
     Dispatch to the appropriate plcc-<lang>-build command if it exists.
 
 Usage:
-    plcc-lang-build --target=LANG --output=DIR
+    plcc-lang-build [options] --target=LANG --output=DIR
 
 Options:
     --target=LANG   Target language.
