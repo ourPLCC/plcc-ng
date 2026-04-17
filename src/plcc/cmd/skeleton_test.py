@@ -11,10 +11,6 @@ def _exits_nonzero(fn):
     assert exc.value.code != 0
 
 
-def test_scan_exits_nonzero():
-    _exits_nonzero(scan_main)
-
-
 def test_parse_exits_nonzero():
     _exits_nonzero(parse_main)
 

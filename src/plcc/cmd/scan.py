@@ -44,11 +44,12 @@ def main(argv=None):
         spec_path = f.name
     try:
         # plcc-spec grammar > spec.json
-        result = subprocess.run(
-            ["plcc-spec", grammar] + child_flags,
-            stdout=open(spec_path, "w"),
-            stderr=subprocess.PIPE,
-        )
+        with open(spec_path, "w") as spec_out:
+            result = subprocess.run(
+                ["plcc-spec", grammar] + child_flags,
+                stdout=spec_out,
+                stderr=subprocess.PIPE,
+            )
         if result.stderr:
             events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
             verbose.reformat_child_events(events)
