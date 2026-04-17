@@ -47,3 +47,15 @@ teardown() {
 @test "plcc-make produces build/ll1.json" {
     [ -f build/ll1.json ]
 }
+
+@test "plcc-make trivial-full produces build output for all three languages" {
+    if ! command -v javac &>/dev/null; then skip "JDK not available"; fi
+    FULL_DIR="$(mktemp -d)"
+    cd "${FULL_DIR}"
+    plcc-make "${FIXTURES}/trivial-full.plcc"
+    [ -f build/ll1.json ]
+    [ -d build/Java ]
+    [ -d build/py ]
+    [ -d build/diagram ]
+    rm -rf "${FULL_DIR}"
+}
