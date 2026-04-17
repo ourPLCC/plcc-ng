@@ -1,0 +1,32 @@
+#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+setup() {
+    FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
+}
+
+@test "plcc-scan is on PATH" { command -v plcc-scan; }
+
+@test "plcc-scan --help exits 0" {
+    run plcc-scan --help
+    [ "$status" -eq 0 ]
+}
+
+@test "plcc-scan tokenizes input" {
+    run bash -c "echo '42' | plcc-scan '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"NUM"* ]]
+    [[ "$output" == *"42"* ]]
+}
+
+@test "plcc-scan reads from source file" {
+    run plcc-scan "${FIXTURES}/trivial.plcc" "${FIXTURES}/trivial_input.txt"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"NUM"* ]]
+}
+
+@test "plcc-scan accepts --verbose" {
+    run bash -c "echo '42' | plcc-scan --verbose=1 '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+}

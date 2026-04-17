@@ -23,8 +23,3 @@ def test_rep_exits_nonzero():
     _exits_nonzero(rep_main)
 
 
-def test_scan_prints_not_implemented(capsys):
-    with pytest.raises(SystemExit):
-        scan_main([])
-    out, err = capsys.readouterr()
-    assert 'not yet implemented' in (out + err).lower()

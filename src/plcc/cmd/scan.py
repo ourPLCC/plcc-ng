@@ -1,5 +1,95 @@
+import enum
+import json
+import os
+import subprocess
 import sys
+import tempfile
+
+from docopt import docopt
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-scan
+    Tokenize source input and print tokens in human-readable format.
+
+Usage:
+    plcc-scan [options] GRAMMAR [SOURCE ...]
+
+Arguments:
+    GRAMMAR     Path to the PLCC grammar file.
+    SOURCE      Source files to tokenize. Reads stdin if none given.
+
+Options:
+    -h --help   Show this message.
+""" + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
+
 
 def main(argv=None):
-    print("plcc-scan: not yet implemented", file=sys.stderr)
-    sys.exit(1)
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-scan", Events, args)
+    grammar = args["GRAMMAR"]
+    sources = args["SOURCE"]
+
+    verbose.emit(Events.STARTED, message=f"scanning with {grammar}")
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+        spec_path = f.name
+    try:
+        # plcc-spec grammar > spec.json
+        result = subprocess.run(
+            ["plcc-spec", grammar] + child_flags,
+            stdout=open(spec_path, "w"),
+            stderr=subprocess.PIPE,
+        )
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
+            verbose.reformat_child_events(events)
+        if result.returncode != 0:
+            print(f"plcc-scan: plcc-spec failed (exit {result.returncode})", file=sys.stderr)
+            sys.exit(result.returncode)
+
+        # Build input: concatenate source files, then stdin
+        input_data = b""
+        for src in sources:
+            with open(src, "rb") as sf:
+                input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+
+        # plcc-tokens spec.json < input
+        result = subprocess.run(
+            ["plcc-tokens", spec_path] + child_flags,
+            input=input_data,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
+            verbose.reformat_child_events(events)
+        if result.returncode != 0:
+            print(f"plcc-scan: plcc-tokens failed (exit {result.returncode})", file=sys.stderr)
+            sys.exit(result.returncode)
+
+        # Print tokens in human-readable format
+        for line in result.stdout.decode("utf-8").splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("kind") == "token":
+                name = record.get("name", "?")
+                lexeme = record.get("lexeme", "?")
+                print(f"{name} '{lexeme}'")
+            elif record.get("kind") == "error":
+                print(f"ERROR: {record}")
+    finally:
+        os.unlink(spec_path)
+
+    verbose.emit(Events.FINISHED, message="done")
