@@ -1,5 +1,131 @@
+import enum
+import json
+import os
+import subprocess
 import sys
+import tempfile
+
+from docopt import docopt
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = """plcc-parse
+    Parse source input and print parse tree in human-readable format.
+
+Usage:
+    plcc-parse [options] GRAMMAR [SOURCE ...]
+
+Arguments:
+    GRAMMAR     Path to the PLCC grammar file.
+    SOURCE      Source files to parse. Reads stdin if none given.
+
+Options:
+    -h --help   Show this message.
+""" + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
+
 
 def main(argv=None):
-    print("plcc-parse: not yet implemented", file=sys.stderr)
-    sys.exit(1)
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args("plcc-parse", Events, args)
+    grammar = args["GRAMMAR"]
+    sources = args["SOURCE"]
+
+    verbose.emit(Events.STARTED, message=f"parsing with {grammar}")
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    spec_path = tempfile.mktemp(suffix=".json")
+    ll1_path = tempfile.mktemp(suffix=".json")
+    try:
+        # plcc-spec
+        _run_child(["plcc-spec", grammar] + child_flags, stdout_file=spec_path, verbose=verbose, label="plcc-spec")
+        # plcc-ll1
+        _run_child(["plcc-ll1", spec_path] + child_flags, stdout_file=ll1_path, verbose=verbose, label="plcc-ll1")
+
+        # Build input
+        input_data = b""
+        for src in sources:
+            with open(src, "rb") as sf:
+                input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+
+        # plcc-tokens | plcc-tree
+        tokens_proc = subprocess.Popen(
+            ["plcc-tokens", spec_path] + child_flags,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        tree_proc = subprocess.Popen(
+            ["plcc-tree", f"--ll1={ll1_path}"] + child_flags,
+            stdin=tokens_proc.stdout,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        tokens_proc.stdout.close()
+        tokens_proc.stdin.write(input_data)
+        tokens_proc.stdin.close()
+
+        tree_out, tree_err = tree_proc.communicate()
+        tokens_proc.wait()
+        tokens_err = tokens_proc.stderr.read()
+
+        # Reformat child verbose output
+        for stderr_bytes in (tokens_err, tree_err):
+            if stderr_bytes:
+                events = verbose.parse_child_events(stderr_bytes.decode("utf-8", errors="replace"))
+                verbose.reformat_child_events(events)
+
+        if tokens_proc.returncode != 0:
+            print(f"plcc-parse: plcc-tokens failed (exit {tokens_proc.returncode})", file=sys.stderr)
+            sys.exit(tokens_proc.returncode)
+        if tree_proc.returncode != 0:
+            print(f"plcc-parse: plcc-tree failed (exit {tree_proc.returncode})", file=sys.stderr)
+            sys.exit(tree_proc.returncode)
+
+        # Print tree in human-readable format
+        for line in tree_out.decode("utf-8").splitlines():
+            if not line.strip():
+                continue
+            tree = json.loads(line)
+            _print_tree(tree, indent=0)
+    finally:
+        for p in (spec_path, ll1_path):
+            if os.path.exists(p):
+                os.unlink(p)
+
+    verbose.emit(Events.FINISHED, message="done")
+
+
+def _run_child(cmd, stdout_file, verbose, label):
+    with open(stdout_file, "w") as out:
+        result = subprocess.run(cmd, stdout=out, stderr=subprocess.PIPE)
+    if result.stderr:
+        events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
+        verbose.reformat_child_events(events)
+    if result.returncode != 0:
+        print(f"plcc-parse: {label} failed (exit {result.returncode})", file=sys.stderr)
+        sys.exit(result.returncode)
+
+
+def _print_tree(node, indent):
+    prefix = "  " * indent
+    kind = node.get("kind", "?")
+    if kind == "tree":
+        rule = node.get("rule", "?")
+        print(f"{prefix}{rule}")
+        for child in node.get("children", []):
+            _print_tree(child, indent + 1)
+    elif kind == "token":
+        name = node.get("name", "?")
+        lexeme = node.get("lexeme", "?")
+        print(f"{prefix}{name} '{lexeme}'")
+    elif kind == "error":
+        print(f"{prefix}ERROR: {node}")
