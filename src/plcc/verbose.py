@@ -92,6 +92,16 @@ class VerboseContext:
         for ev in events:
             if self.fmt == "json":
                 print(json.dumps(ev), file=sys.stderr, flush=True)
+                continue
+            if ev.get("event") == "error":
+                stage = ev.get("stage", "unknown")
+                pos = ev.get("pos", {}) or {}
+                file = pos.get("file") or "<stdin>"
+                line = pos.get("line", 0)
+                col = pos.get("column", 0)
+                msg = ev.get("message", "")
+                print(f"{stage}: {file}:{line}:{col}: error: {msg}",
+                      file=sys.stderr, flush=True)
             else:
                 stage = ev.get("stage", "unknown")
                 event = ev.get("event", "unknown")

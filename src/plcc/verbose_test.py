@@ -165,6 +165,44 @@ def test_emit_error_ignores_verbose_level(capsys):
     assert "error: boom" in err
 
 
+def test_reformat_child_events_renders_error_with_position_text(capsys):
+    ctx = VerboseContext("plcc-parse", SampleEvents, level=0, fmt="text")
+    ctx.reformat_child_events([{
+        "stage": "plcc-tokens",
+        "event": "error",
+        "severity": "error",
+        "pos": {"file": "p.txt", "line": 4, "column": 12},
+        "message": "unrecognized character '$'",
+    }])
+    _, err = capsys.readouterr()
+    assert err == "plcc-tokens: p.txt:4:12: error: unrecognized character '$'\n"
+
+
+def test_reformat_child_events_renders_error_json_pass_through(capsys):
+    ctx = VerboseContext("plcc-parse", SampleEvents, level=0, fmt="json")
+    event = {
+        "stage": "plcc-tokens",
+        "event": "error",
+        "severity": "error",
+        "pos": {"file": "p.txt", "line": 4, "column": 12},
+        "message": "unrecognized character '$'",
+    }
+    ctx.reformat_child_events([event])
+    _, err = capsys.readouterr()
+    records = [json.loads(l) for l in err.strip().splitlines() if l.strip()]
+    assert records == [event]
+
+
+def test_reformat_child_events_non_error_unchanged(capsys):
+    # Ensure the error-path does not disturb existing rendering of non-error events.
+    ctx = VerboseContext("plcc-parse", SampleEvents, level=0, fmt="text")
+    ctx.reformat_child_events([{
+        "stage": "plcc-tokens", "event": "started", "message": "go",
+    }])
+    _, err = capsys.readouterr()
+    assert err == "plcc-tokens: started: go\n"
+
+
 def _dummy_proc(stderr_bytes, returncode):
     """Build a minimal Popen-like object for unit testing reap_pipeline."""
     class P:
