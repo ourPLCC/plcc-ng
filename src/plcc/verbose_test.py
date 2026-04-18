@@ -1,7 +1,7 @@
 import enum
 import json
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS, reap_pipeline
 
 
 class SampleEvents(enum.Enum):
@@ -163,11 +163,6 @@ def test_emit_error_ignores_verbose_level(capsys):
     )
     _, err = capsys.readouterr()
     assert "error: boom" in err
-
-
-import subprocess
-
-from plcc.verbose import reap_pipeline
 
 
 def _dummy_proc(stderr_bytes, returncode):
