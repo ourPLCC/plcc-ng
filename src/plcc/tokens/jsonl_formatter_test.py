@@ -1,4 +1,5 @@
 import json
+import pytest
 from ..lines import Line
 from ..scan.Token import Token
 from ..scan.LexError import LexError
@@ -20,12 +21,10 @@ def test_formats_token():
     assert record['source']['file'] == 'test.txt'
 
 
-def test_formats_lex_error():
-    e = LexError(line=_line(), column=5)
-    record = json.loads(format_record(e))
-    assert record['kind'] == 'error'
-    assert record['stage'] == 'plcc-tokens'
-    assert record['source']['column'] == 5
+def test_format_record_rejects_lex_error():
+    err = LexError(line=Line(string="abc", number=1, file=None), column=1)
+    with pytest.raises(TypeError):
+        format_record(err)
 
 
 def test_output_is_single_line():

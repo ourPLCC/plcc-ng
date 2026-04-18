@@ -7,6 +7,7 @@ from ..lines import Line
 from ..scan.matcher import Matcher
 from ..scan.scanner import Scanner
 from ..scan.Skip import Skip
+from ..scan.LexError import LexError
 from .spec_loader import load_lexical_rules
 from .jsonl_formatter import format_record
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
@@ -42,6 +43,16 @@ def main(argv=None):
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             continue
+        if isinstance(obj, LexError):
+            verbose.emit_error(
+                pos={
+                    "file": obj.line.file,
+                    "line": obj.line.number,
+                    "column": obj.column,
+                },
+                message="unrecognized character",
+            )
+            sys.exit(1)
         print(format_record(obj), flush=True)
 
 

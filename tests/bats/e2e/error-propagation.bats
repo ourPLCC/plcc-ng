@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 
-# Tests that in-band errors pass through the pipeline without breaking it.
+bats_require_minimum_version 1.5.0
+
+# Tests that lex errors cause plcc-tokens to exit nonzero and write to stderr.
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
@@ -12,20 +14,21 @@ setup() {
 
 teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
 
-@test "lex error flows in-band through tokens->tree without crashing" {
-    # 'abc' is not a valid NUM token — should produce an in-band error
-    result=$(echo 'abc' | plcc-tokens "${SPEC_JSON}" | plcc-tree --ll1="${LL1_JSON}" 2>/dev/null)
-    # Pipeline exit status should be 0 (error is in-band, not a tool failure)
-    echo "${result}" | head -1 | python3 -c "
-import json, sys
-line = sys.stdin.readline().strip()
-r = json.loads(line)
-assert 'error' in json.dumps(r), f'Expected error in output, got: {r}'
-print('OK: error present in-band')
-"
+@test "lex error causes plcc-tokens to exit nonzero" {
+    run bash -c "echo 'abc' | plcc-tokens '${SPEC_JSON}'"
+    [ "$status" -ne 0 ]
 }
 
-@test "lex error does not produce stderr output from pipeline" {
-    stderr_out=$(echo 'abc' | plcc-tokens "${SPEC_JSON}" 2>&1 1>/dev/null)
-    [ -z "${stderr_out}" ]
+@test "lex error writes error message to stderr" {
+    run --separate-stderr bash -c "echo 'abc' | plcc-tokens '${SPEC_JSON}'"
+    [[ "$stderr" == *"error"* ]]
+    [[ "$stderr" == *"plcc-tokens"* ]]
+}
+
+@test "lex error produces no error records on stdout" {
+    run --separate-stderr bash -c "echo 'abc' | plcc-tokens '${SPEC_JSON}'"
+    for line in $output; do
+        [ -z "$line" ] && continue
+        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='token', f\"unexpected kind={r['kind']} on stdout\""
+    done
 }

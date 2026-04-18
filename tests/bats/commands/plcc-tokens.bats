@@ -34,12 +34,15 @@ teardown() {
     echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='token', f\"expected kind=token, got {r['kind']}\""
 }
 
-@test "plcc-tokens lex error is in-band not stderr" {
-    # Error records appear in stdout, not stderr
+@test "plcc-tokens lex error exits nonzero and writes error to stderr" {
     run --separate-stderr bash -c "echo 'xyz' | plcc-tokens '${SPEC_JSON}'"
-    [ "$status" -eq 0 ]
-    [ -z "$stderr" ]
-    # Error is in stdout
-    first_record=$(echo "$output" | head -1)
-    echo "$first_record" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
+    [ "$status" -ne 0 ]
+    # stderr carries the error message
+    [[ "$stderr" == *"error"* ]]
+    [[ "$stderr" == *"plcc-tokens"* ]]
+    # stdout has no error records
+    for line in $output; do
+        [ -z "$line" ] && continue
+        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='token', f\"unexpected kind={r['kind']} on stdout\""
+    done
 }

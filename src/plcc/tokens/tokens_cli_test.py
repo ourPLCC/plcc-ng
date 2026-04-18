@@ -6,6 +6,16 @@ import docopt
 from .tokens_cli import main as run_main
 
 
+_SPEC = {
+    "lexical": {"ruleList": [
+        {"name": "NUM", "pattern": "\\d+", "isSkip": False,
+         "line": {"string": "", "number": 1, "file": None}}
+    ]},
+    "syntax": {"rules": []},
+    "semantics": []
+}
+
+
 def test_no_args_prints_usage():
     with pytest.raises((docopt.DocoptExit, SystemExit)):
         run_main([])
@@ -19,16 +29,7 @@ def test_help(capsys):
 
 
 def test_outputs_token_jsonl(capsys, monkeypatch, fs):
-    spec = {
-        "lexical": {"ruleList": [
-            {"name": "NUM", "pattern": "\\d+", "isSkip": False,
-             "line": {"string": "", "number": 1, "file": None}}
-        ]},
-        "syntax": {"rules": []},
-        "semantics": []
-    }
-    import json as _json
-    fs.create_file('/spec.json', contents=_json.dumps(spec))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json'])
     out, err = capsys.readouterr()
@@ -40,21 +41,33 @@ def test_outputs_token_jsonl(capsys, monkeypatch, fs):
     assert record['lexeme'] == '42'
 
 
-def test_lex_error_is_inband(capsys, monkeypatch, fs):
-    spec = {
-        "lexical": {"ruleList": [
-            {"name": "NUM", "pattern": "\\d+", "isSkip": False,
-             "line": {"string": "", "number": 1, "file": None}}
-        ]},
-        "syntax": {"rules": []},
-        "semantics": []
-    }
-    import json as _json
-    fs.create_file('/spec.json', contents=_json.dumps(spec))
+def test_lex_error_goes_to_stderr_and_exits_nonzero(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
     monkeypatch.setattr('sys.stdin', io.StringIO('abc\n'))  # not a NUM
-    run_main(['/spec.json'])
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json'])
+    assert excinfo.value.code != 0
     out, err = capsys.readouterr()
-    lines = [l for l in out.strip().splitlines() if l]
-    assert any(json.loads(l)['kind'] == 'error' for l in lines)
-    # stderr must be empty — errors are in-band
-    assert err == ''
+    # stdout may contain zero or more token lines but no error records
+    for line in out.strip().splitlines():
+        if not line:
+            continue
+        record = json.loads(line)
+        assert record['kind'] == 'token'
+    # stderr carries the error
+    assert 'error' in err
+    assert 'plcc-tokens' in err
+
+
+def test_lex_error_json_format(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('abc\n'))
+    with pytest.raises(SystemExit):
+        run_main(['/spec.json', '--verbose-format=json'])
+    _, err = capsys.readouterr()
+    records = [json.loads(l) for l in err.strip().splitlines() if l.strip()]
+    error_records = [r for r in records if r.get('event') == 'error']
+    assert len(error_records) >= 1
+    assert error_records[0]['stage'] == 'plcc-tokens'
+    assert error_records[0]['severity'] == 'error'
+    assert 'pos' in error_records[0]
