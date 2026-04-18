@@ -59,6 +59,11 @@ def main(argv=None):
     verbose.emit(Events.PHASE, message="ll1")
     ll1_json = os.path.join(build_dir, 'll1.json')
     _run_or_die(['plcc-ll1', spec_json] + child_flags, stdout_file=ll1_json, verbose=verbose)
+    with open(ll1_json) as f:
+        ll1 = json.load(f)
+    if not ll1.get("is_ll1", True):
+        _report_ll1_failure(ll1, ll1_json, verbose)
+        sys.exit(1)
 
     # 4. Model
     verbose.emit(Events.PHASE, message="model")
@@ -98,6 +103,26 @@ def validate_tool_name(name):
         raise ValueError(
             f"Invalid tool name '{name}'. "
             "Tool names must match [a-zA-Z0-9_-]+ to prevent path traversal."
+        )
+
+
+def _report_ll1_failure(ll1, path, verbose):
+    print(
+        f"plcc-make: error: grammar is not LL(1); see {path}",
+        file=sys.stderr,
+    )
+    for conflict in ll1.get("conflicts", []):
+        print(
+            f"plcc-make: error: conflict at "
+            f"{conflict.get('nonterminal', '?')} on "
+            f"{conflict.get('lookahead', '?')}: "
+            f"{conflict.get('competing', [])}",
+            file=sys.stderr,
+        )
+    for cycle in ll1.get("left_recursion", []):
+        print(
+            f"plcc-make: error: left-recursion cycle: {' -> '.join(cycle)}",
+            file=sys.stderr,
         )
 
 

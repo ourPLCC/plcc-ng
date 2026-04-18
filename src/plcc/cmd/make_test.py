@@ -1,7 +1,7 @@
 import pytest
 import docopt
 
-from .make import main as run_main, validate_tool_name
+from .make import main as run_main, validate_tool_name, _report_ll1_failure
 
 
 def test_no_args_prints_usage():
@@ -35,3 +35,19 @@ def test_validate_tool_name_rejects_path_traversal():
 def test_validate_tool_name_rejects_empty():
     with pytest.raises(ValueError):
         validate_tool_name('')
+
+
+def test_report_ll1_failure_prints_error_and_conflicts(capsys):
+    ll1 = {
+        "is_ll1": False,
+        "conflicts": [
+            {"nonterminal": "E", "lookahead": "+", "competing": ["E + T", "E"]}
+        ],
+        "left_recursion": [],
+    }
+    _report_ll1_failure(ll1, "build/ll1.json", verbose=None)
+    _, err = capsys.readouterr()
+    assert "plcc-make: error:" in err
+    assert "build/ll1.json" in err
+    assert "E" in err
+    assert "+" in err
