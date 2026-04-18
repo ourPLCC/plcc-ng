@@ -112,3 +112,54 @@ def test_parity_both_renderers_handle_all_events(capsys):
             ctx.emit(event, message="test")
         captured = capsys.readouterr()
         assert captured.err != ""
+
+
+def test_emit_error_text_format(capsys):
+    ctx = VerboseContext("plcc-tokens", SampleEvents, level=0, fmt="text")
+    ctx.emit_error(
+        pos={"file": "prog.txt", "line": 4, "column": 12},
+        message="unrecognized character '$'",
+    )
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert err == "plcc-tokens: prog.txt:4:12: error: unrecognized character '$'\n"
+
+
+def test_emit_error_text_format_no_file(capsys):
+    ctx = VerboseContext("plcc-tokens", SampleEvents, level=0, fmt="text")
+    ctx.emit_error(
+        pos={"file": None, "line": 1, "column": 1},
+        message="unrecognized character",
+    )
+    _, err = capsys.readouterr()
+    assert err == "plcc-tokens: <stdin>:1:1: error: unrecognized character\n"
+
+
+def test_emit_error_json_format(capsys):
+    ctx = VerboseContext("plcc-tokens", SampleEvents, level=0, fmt="json")
+    ctx.emit_error(
+        pos={"file": "prog.txt", "line": 4, "column": 12},
+        message="unrecognized character '$'",
+        codepoint=36,
+    )
+    out, err = capsys.readouterr()
+    assert out == ""
+    lines = err.strip().splitlines()
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record["stage"] == "plcc-tokens"
+    assert record["event"] == "error"
+    assert record["severity"] == "error"
+    assert record["pos"] == {"file": "prog.txt", "line": 4, "column": 12}
+    assert record["message"] == "unrecognized character '$'"
+    assert record["codepoint"] == 36
+
+
+def test_emit_error_ignores_verbose_level(capsys):
+    ctx = VerboseContext("plcc-tokens", SampleEvents, level=0, fmt="text")
+    ctx.emit_error(
+        pos={"file": "prog.txt", "line": 1, "column": 1},
+        message="boom",
+    )
+    _, err = capsys.readouterr()
+    assert "error: boom" in err

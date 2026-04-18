@@ -45,6 +45,28 @@ class VerboseContext:
             msg = payload.get("message", "")
             print(f"{self.stage}: {event.value}: {msg}", file=sys.stderr, flush=True)
 
+    def emit_error(self, pos, message, **fields):
+        if self.fmt == "json":
+            record = {
+                "stage": self.stage,
+                "time": time.monotonic_ns(),
+                "event": "error",
+                "severity": "error",
+                "pos": pos,
+                "message": message,
+                **fields,
+            }
+            print(json.dumps(record), file=sys.stderr, flush=True)
+        else:
+            filename = pos.get("file") or "<stdin>"
+            line = pos.get("line", 0)
+            col = pos.get("column", 0)
+            print(
+                f"{self.stage}: {filename}:{line}:{col}: error: {message}",
+                file=sys.stderr,
+                flush=True,
+            )
+
     def child_flags(self):
         return [f"--verbose={self.level}", f"--verbose-format={self.fmt}"]
 
