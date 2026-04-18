@@ -13,7 +13,7 @@
         "type": "object",
         "required": ["kind"],
         "properties": {
-          "kind": { "type": "string", "enum": ["token", "tree", "error"] }
+          "kind": { "type": "string", "enum": ["token", "tree"] }
         }
       }
     }
