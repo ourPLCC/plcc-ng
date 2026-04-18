@@ -39,3 +39,9 @@ teardown() { rm -f "${SPEC_JSON}"; }
     run plcc-ll1 --verbose=1 --verbose-format=json "${SPEC_JSON}"
     [ "$status" -eq 0 ]
 }
+
+@test "plcc-ll1 stub: is_ll1 is true for empty spec" {
+    run bash -c "echo '{\"lexical\":{\"ruleList\":[]},\"syntax\":{\"rules\":[]},\"semantics\":[]}' | plcc-ll1 -"
+    [ "$status" -eq 0 ]
+    echo "$output" | grep -q '"is_ll1"'
+}

@@ -38,13 +38,16 @@ def main(argv=None):
         with open(path) as f:
             json.load(f)
     # Stub: emit minimal ll1.json with empty sets
+    conflicts = []
+    left_recursion = []
     result = {
+        "is_ll1": not (conflicts or left_recursion),
         "first_sets": {},
         "follow_sets": {},
         "predict_sets": {},
         "parse_table": {},
-        "conflicts": [],
-        "left_recursion": [],
+        "conflicts": conflicts,
+        "left_recursion": left_recursion,
     }
     print(json.dumps(result, indent=2))
     verbose.emit(Events.FINISHED, message="done")

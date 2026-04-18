@@ -3,8 +3,9 @@
   "title": "LL1Analysis",
   "description": "Output of plcc-ll1: LL(1) analysis of a grammar.",
   "type": "object",
-  "required": ["first_sets", "follow_sets", "predict_sets", "parse_table", "conflicts", "left_recursion"],
+  "required": ["is_ll1", "first_sets", "follow_sets", "predict_sets", "parse_table", "conflicts", "left_recursion"],
   "properties": {
+    "is_ll1":         { "type": "boolean" },
     "first_sets":     { "type": "object" },
     "follow_sets":    { "type": "object" },
     "predict_sets":   { "type": "object" },
