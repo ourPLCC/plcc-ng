@@ -90,7 +90,7 @@ Students or instructors who want to run the primitives by hand from a Unix shell
 
 ## 7. JSON Contracts
 
-This section describes the shape of data flowing between stages at a high level. Exact schemas are the implementation plan's responsibility; this spec establishes only the contract and the error-record discipline.
+This section describes the shape of data flowing between stages at a high level. Exact schemas are the implementation plan's responsibility; this spec establishes only the contract. The error model is specified in §17.9.
 
 **One-shot vs. streaming.** Two of the primitives run as streaming pipeline stages and use JSONL (one JSON document per line) so they can emit output incrementally as input arrives:
 
@@ -111,7 +111,7 @@ Output of `plcc-spec`. Contains lexical rules, syntactic rules, semantic section
 
 ### 7.2 Token JSONL
 
-Output of `plcc-tokens`. One JSON object per line, each describing a single token: kind, lexeme, source position. A final line marks end-of-stream. Error tokens are in-band records per §8.
+Output of `plcc-tokens`. One JSON object per line, each describing a single token: kind, lexeme, source position. A final line marks end-of-stream. Lexical errors are reported on stderr with nonzero exit per §17.9.
 
 ### 7.3 Tree JSONL
 
@@ -135,16 +135,7 @@ See §8.
 
 ## 8. Error Handling
 
-Errors travel through the pipeline as in-band JSON records. Every JSON filter in the pipeline knows how to recognize, pass through, and (where appropriate) emit a record of the form:
-
-```json
-{ "kind": "error", "stage": "plcc-tree", "severity": "error",
-  "message": "expected ';' after expression", "source": { ... } }
-```
-
-Downstream stages pass error records through unchanged unless they consume them (e.g. an interpreter renders the error to the user and resumes reading the next program). This keeps the REPL robust by construction: a single malformed program produces an error record, the interpreter prints it, and the pipeline continues serving subsequent programs. No stage restarts, no pipe teardown.
-
-`stderr` and nonzero exit codes are reserved for **tool failures**, not input errors. A missing spec file, an internal bug, an I/O error, or a plugin-discovery failure writes to stderr and exits nonzero. A syntax error in a student's program is an in-band error record and does not affect exit status.
+Superseded by §17.9. Errors are reported via stderr and nonzero exit codes. Every stage that fails emits a structured error on stderr (GNU-style under `--verbose-format=text`, JSONL with `"event": "error"` under `--verbose-format=json`) and exits nonzero. `plcc-ll1` is a pure filter and does not fail on non-LL(1) grammars; see §17.9 for the full model.
 
 ## 9. Build Output Layout
 
@@ -196,7 +187,7 @@ A language plugin consists of one required command and one optional command:
 - Writes generated source files into `<dir>`
 - Copies its bundled runtime into `<dir>/runtime/`
 - Exits 0 on success; exits nonzero and writes to stderr on failure
-- A malformed model is a tool failure (nonzero exit), not an in-band error record
+- A malformed model is a tool failure: stderr + nonzero exit per §17.9
 
 **`plcc-<lang>-build` (optional)**
 
@@ -320,7 +311,7 @@ These revisions preserve the spirit of the original decisions (single-responsibi
 - **Pluggable scanners and parsers.** The Level 0 primitives `plcc-tokens` and `plcc-tree` remain the only implementations in v9.
 - **Level 1 intermediate compositions.** Deferred until a pedagogical use case emerges.
 - **Non-OO target languages.** Retargeting in v9 is limited to modern OO languages.
-- **Exact JSON schemas.** This spec establishes contracts and error-record discipline; schema details are the implementation plan's responsibility.
+- **Exact JSON schemas.** This spec establishes contracts and the error model (§17.9); schema details are the implementation plan's responsibility.
 - **Migration of existing PLCC users to v9 on a timeline.** The cutover strategy supports parallel operation; the decision of when individual faculty migrate is their own.
 - **Integration of plcc-ng into the plcc repository.** Deferred until v9 is complete and has demonstrated buy-in. Development of v9 happens entirely within the plcc-ng repository.
 
@@ -664,3 +655,38 @@ Diagnostic visibility is the single most-requested PLCC v8 feature among faculty
 **A single level dial** was chosen over per-stage selection because the primary consumer of verbose output is a human looking at a terminal. Per-stage selection is a solution to noise in structured-log grep results, which is a machine concern, not a human concern. If one stage is overwhelmingly chatty at a given level, the correct fix is to recalibrate which events that stage emits at which level. Per-stage calibration is a stage-internal concern; the user-facing knob stays simple.
 
 Baking both flags into the walking skeleton rather than adding them phase-by-phase is a deliberate cost trade. The alternative — "add it later when needed" — is the scenario in which every stage's flag surface, every test invocation, and every subprocess-spawning call site has to be touched at once. The few-line-per-stage cost of accepting and propagating both flags up-front is an order of magnitude cheaper than any later retrofit.
+
+### 17.9 Amends §8, §17.4: Retire in-band error records; adopt stderr + exit-code error model (from brainstorm, 2026-04-17)
+
+**Original §8** defined errors as in-band JSON records that flow through the pipeline alongside normal output. Every stage recognized, passed through, and sometimes emitted records of the form `{"kind": "error", "stage": ..., "severity": ..., ...}`. The motivation was pipeline robustness across multiple programs in a long-running streaming pipeline.
+
+**Original §17.4** specified that `plcc-ll1` exits nonzero on non-LL(1) grammars with the diagnostic artifact still written to stdout — a deliberate exception to the usual stdout contract.
+
+**Amendment.** Both are superseded.
+
+With `plcc-tree` one-shot (§17.3) and the orchestrator controlling per-chunk lifetimes (§17.7), and with no plans for parser error recovery, every error terminates its stage. The uniform contract across all Level 0 stages is:
+
+- **Success:** valid output on stdout, exit 0.
+- **Failure:** error on stderr, exit nonzero, stdout undefined.
+
+Error rendering uses the verbose infrastructure (§17.8): GNU-style text on stderr when `--verbose-format=text`, a JSONL record with `"event": "error"` when `--verbose-format=json`. Errors are always emitted regardless of `--verbose` level (§17.8.4).
+
+Orchestrators detect failures by checking child returncodes in pipeline order (upstream first), capture the structured JSONL stderr their children produce (children are always spawned with `--verbose-format=json` per §17.8.3), and report the first failing stage's error. In interpreter sessions (§17.7), per-chunk subpipeline failures do not kill the long-lived interpreter; the orchestrator reports the error and continues.
+
+**`plcc-ll1` becomes a pure filter.** It always exits 0 (barring tool failures such as missing input or malformed spec JSON). A non-LL(1) grammar is a result, not a failure. Its stdout carries the same analysis JSON in every case, with top-level fields `is_ll1` (boolean), `conflicts` (array, empty on success), and `left_recursion` (array, empty on success) signaling the result. `plcc-make` redirects stdout to `build/ll1.json`, reads the file back, checks `is_ll1`, and decides whether subsequent phases run.
+
+**Interpreter runtime errors** are the interpreter's own stdout schema, not a revival of in-band errors. Because the interpreter is long-lived (§17.7), runtime errors in student code are emitted as one kind of evaluation record on stdout. Exit stays 0; stderr is reserved for interpreter-level tool failures. The exact record shape is a Phase 2 Part 2 design-doc decision.
+
+**Rationale.** The original §8 served a streaming multi-program pipeline that no longer exists. Under the one-shot + orchestrator architecture, every stage either produces its output and exits cleanly, or stops and reports. The Unix `stderr + nonzero exit` convention fits this exactly: simpler contract, no "error record pass-through" discipline across every stage, no dual-schema stdout, editor-friendly error messages for free, and a single rendering system shared with verbose diagnostics.
+
+The `plcc-ll1` change aligns the tool with the rest of the pipeline rather than treating it as an exception. A grammar being non-LL(1) is a property of the grammar — the analyzer completed its analysis. `grep` exits 1 on no matches, which is widely considered a design mistake that makes scripting harder; `jq` exits 0 on `null` results, which is preferred. `plcc-ll1` joins the latter camp.
+
+#### Revised §5 row for `plcc-ll1`
+
+| Command | Input | Output | Role |
+| --- | --- | --- | --- |
+| `plcc-ll1` | spec JSON (stdin or path) | LL(1) analysis JSON (stdout) | One-shot; single JSON document. Exits 0 on any grammar that parses as spec JSON; result is signaled by top-level `is_ll1` field. Nonzero exit is reserved for tool failures (missing input, malformed spec JSON). |
+
+#### Revised §9 phase-failure behaviour
+
+> If `plcc-ll1` reports `is_ll1: false` in its output, `plcc-make` writes the output to `build/ll1.json`, prints a human-readable summary of `conflicts` and `left_recursion` on stderr, and exits nonzero. If any other phase exits nonzero, `plcc-make` reports the error and stops; subsequent phases do not run.
