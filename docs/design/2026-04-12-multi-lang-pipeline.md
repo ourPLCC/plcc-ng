@@ -656,7 +656,7 @@ Diagnostic visibility is the single most-requested PLCC v8 feature among faculty
 
 Baking both flags into the walking skeleton rather than adding them phase-by-phase is a deliberate cost trade. The alternative — "add it later when needed" — is the scenario in which every stage's flag surface, every test invocation, and every subprocess-spawning call site has to be touched at once. The few-line-per-stage cost of accepting and propagating both flags up-front is an order of magnitude cheaper than any later retrofit.
 
-### 17.9 Amends §8, §17.4: Retire in-band error records; adopt stderr + exit-code error model (from brainstorm, 2026-04-17)
+### 17.9 Amends §8, §17.4, §17.6.2: Retire in-band error records; adopt stderr + exit-code error model (from brainstorm, 2026-04-17)
 
 **Original §8** defined errors as in-band JSON records that flow through the pipeline alongside normal output. Every stage recognized, passed through, and sometimes emitted records of the form `{"kind": "error", "stage": ..., "severity": ..., ...}`. The motivation was pipeline robustness across multiple programs in a long-running streaming pipeline.
 
@@ -690,3 +690,12 @@ The `plcc-ll1` change aligns the tool with the rest of the pipeline rather than 
 #### Revised §9 phase-failure behaviour
 
 > If `plcc-ll1` reports `is_ll1: false` in its output, `plcc-make` writes the output to `build/ll1.json`, prints a human-readable summary of `conflicts` and `left_recursion` on stderr, and exits nonzero. If any other phase exits nonzero, `plcc-make` reports the error and stops; subsequent phases do not run.
+
+#### Revised §17.6.2 parser-plugin contract
+
+Two bullets of §17.6.2 described parser-plugin error handling under the retired in-band-record model. They are superseded. The revised bullets:
+
+> - On a syntax error in the token stream, emit a structured error on stderr per this section and exit nonzero. No in-band error records; no Error nodes in the parse tree.
+> - No error recovery. A parser plugin terminates on the first syntax error and does not emit a partial tree. Should a future amendment reintroduce recovery, it will be specified there.
+
+The remainder of §17.6.2 (stdin/stdout/exit-code shape, `--ll1` handling, PATH-based discovery, language-agnosticism) stands unchanged.
