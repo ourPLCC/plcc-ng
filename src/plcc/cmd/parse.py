@@ -7,7 +7,7 @@ import tempfile
 
 from docopt import docopt
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS, reap_pipeline
 
 __doc__ = """plcc-parse
     Parse source input and print parse tree in human-readable format.
@@ -74,21 +74,18 @@ def main(argv=None):
         tokens_proc.stdin.close()
 
         tree_out, tree_err = tree_proc.communicate()
-        tokens_proc.wait()
         tokens_err = tokens_proc.stderr.read()
+        tokens_proc.wait()
+        tokens_proc.stderr_captured = tokens_err
+        tree_proc.stderr_captured = tree_err
 
-        # Reformat child verbose output
-        for stderr_bytes in (tokens_err, tree_err):
-            if stderr_bytes:
-                events = verbose.parse_child_events(stderr_bytes.decode("utf-8", errors="replace"))
-                verbose.reformat_child_events(events)
-
-        if tokens_proc.returncode != 0:
-            print(f"plcc-parse: plcc-tokens failed (exit {tokens_proc.returncode})", file=sys.stderr)
-            sys.exit(tokens_proc.returncode)
-        if tree_proc.returncode != 0:
-            print(f"plcc-parse: plcc-tree failed (exit {tree_proc.returncode})", file=sys.stderr)
-            sys.exit(tree_proc.returncode)
+        result = reap_pipeline([
+            (tokens_proc, "plcc-tokens"),
+            (tree_proc, "plcc-tree"),
+        ])
+        verbose.reformat_child_events(result.events_to_render)
+        if result.failed_stage:
+            sys.exit(result.exit_code)
 
         # Print tree in human-readable format
         for line in tree_out.decode("utf-8").splitlines():
@@ -127,5 +124,3 @@ def _print_tree(node, indent):
         name = node.get("name", "?")
         lexeme = node.get("lexeme", "?")
         print(f"{prefix}{name} '{lexeme}'")
-    elif kind == "error":
-        print(f"{prefix}ERROR: {node}")
