@@ -163,3 +163,72 @@ def test_emit_error_ignores_verbose_level(capsys):
     )
     _, err = capsys.readouterr()
     assert "error: boom" in err
+
+
+import subprocess
+
+from plcc.verbose import reap_pipeline
+
+
+def _dummy_proc(stderr_bytes, returncode):
+    """Build a minimal Popen-like object for unit testing reap_pipeline."""
+    class P:
+        pass
+    p = P()
+    p.returncode = returncode
+    p.stderr_captured = stderr_bytes
+    return p
+
+
+def test_reap_pipeline_all_success():
+    tokens_stderr = b'{"stage":"plcc-tokens","event":"started"}\n'
+    tree_stderr = b'{"stage":"plcc-tree","event":"started"}\n'
+    stages = [
+        (_dummy_proc(tokens_stderr, 0), "plcc-tokens"),
+        (_dummy_proc(tree_stderr, 0), "plcc-tree"),
+    ]
+    result = reap_pipeline(stages)
+    assert result.failed_stage is None
+    assert result.exit_code == 0
+    # All non-error events are kept for reformatting
+    assert len(result.events_to_render) == 2
+
+
+def test_reap_pipeline_upstream_failure_suppresses_downstream():
+    tokens_err = (
+        b'{"stage":"plcc-tokens","event":"error","severity":"error",'
+        b'"pos":{"file":"p.txt","line":1,"column":3},'
+        b'"message":"unrecognized character"}\n'
+    )
+    tree_err = (
+        b'{"stage":"plcc-tree","event":"error","severity":"error",'
+        b'"pos":{"file":"p.txt","line":1,"column":0},'
+        b'"message":"unexpected end of input"}\n'
+    )
+    stages = [
+        (_dummy_proc(tokens_err, 1), "plcc-tokens"),
+        (_dummy_proc(tree_err, 1), "plcc-tree"),
+    ]
+    result = reap_pipeline(stages)
+    assert result.failed_stage == "plcc-tokens"
+    assert result.exit_code == 1
+    # Only the upstream-failing stage's error events render
+    rendered_stages = {ev["stage"] for ev in result.events_to_render}
+    assert rendered_stages == {"plcc-tokens"}
+
+
+def test_reap_pipeline_downstream_failure_reports_downstream():
+    # Upstream succeeded; downstream failed (e.g. parser hit a syntax error)
+    tokens_ok = b'{"stage":"plcc-tokens","event":"finished"}\n'
+    parser_err = (
+        b'{"stage":"plcc-parser-table","event":"error","severity":"error",'
+        b'"pos":{"file":"p.txt","line":4,"column":12},'
+        b'"message":"expected IDENT"}\n'
+    )
+    stages = [
+        (_dummy_proc(tokens_ok, 0), "plcc-tokens"),
+        (_dummy_proc(parser_err, 2), "plcc-tree"),
+    ]
+    result = reap_pipeline(stages)
+    assert result.failed_stage == "plcc-tree"
+    assert result.exit_code == 2

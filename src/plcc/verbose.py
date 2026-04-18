@@ -7,6 +7,8 @@ the VerboseContext object and the VERBOSE_OPTIONS docopt fragment.
 import json
 import sys
 import time
+from dataclasses import dataclass, field
+from typing import List, Optional
 
 
 VERBOSE_OPTIONS = """
@@ -95,3 +97,75 @@ class VerboseContext:
                 event = ev.get("event", "unknown")
                 msg = ev.get("message", "")
                 print(f"{stage}: {event}: {msg}", file=sys.stderr, flush=True)
+
+
+@dataclass
+class PipelineResult:
+    failed_stage: Optional[str]   # label of first failing stage, or None
+    exit_code: int                # returncode of first failing stage, or 0
+    events_to_render: List[dict] = field(default_factory=list)
+
+
+def reap_pipeline(stages):
+    """Wait for all pipeline stages, attribute failure upstream-first,
+    and suppress downstream cascades.
+
+    Arguments:
+        stages: list of (Popen-or-dummy, label) pairs in upstream-to-downstream
+                order. Each proc must have .returncode set and either
+                .stderr_captured (bytes) already set, or a .stderr attribute
+                that can be .read().
+
+    Returns:
+        PipelineResult with:
+          - failed_stage: label of first failing stage, or None
+          - exit_code: returncode of the first failing stage, or 0
+          - events_to_render: JSONL events to be reformatted.
+            If any stage failed, events from downstream-of-failure are dropped.
+    """
+    # Collect stderr bytes for every stage, parse JSONL.
+    per_stage_events = []
+    for proc, label in stages:
+        stderr_bytes = getattr(proc, "stderr_captured", None)
+        if stderr_bytes is None and getattr(proc, "stderr", None) is not None:
+            stderr_bytes = proc.stderr.read()
+        text = (stderr_bytes or b"").decode("utf-8", errors="replace")
+        events = _parse_jsonl_events(text)
+        per_stage_events.append(events)
+
+    # Find first failing stage.
+    failed_index = None
+    for i, (proc, _label) in enumerate(stages):
+        if proc.returncode != 0:
+            failed_index = i
+            break
+
+    if failed_index is None:
+        all_events = [e for stage_events in per_stage_events for e in stage_events]
+        return PipelineResult(failed_stage=None, exit_code=0, events_to_render=all_events)
+
+    # Keep events from stages 0..failed_index inclusive; drop everything downstream.
+    kept = []
+    for events in per_stage_events[: failed_index + 1]:
+        kept.extend(events)
+
+    return PipelineResult(
+        failed_stage=stages[failed_index][1],
+        exit_code=stages[failed_index][0].returncode,
+        events_to_render=kept,
+    )
+
+
+def _parse_jsonl_events(text):
+    events = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            events.append(json.loads(line))
+        except json.JSONDecodeError:
+            # Non-JSON line (e.g. a child that wrote text to stderr despite
+            # --verbose-format=json). Preserve it as an opaque record.
+            events.append({"stage": "unknown", "event": "raw", "message": line})
+    return events
