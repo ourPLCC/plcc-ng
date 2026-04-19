@@ -8,6 +8,7 @@ from docopt import docopt
 from . import parseSpec
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
+# No LL(1) analysis here; see plcc-ll1.
 __doc__ = """plcc-spec
     Parse, validate, and print a PLCC grammar file as JSON.
 
