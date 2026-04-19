@@ -1,20 +1,33 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "TreeRecord",
-  "description": "One JSONL record from plcc-tree: one complete parse tree.",
+  "description": "Output of plcc-parser-*: one complete parse tree.",
   "type": "object",
-  "required": ["kind", "rule"],
+  "required": ["kind", "rule", "source"],
   "properties": {
-    "kind":     { "type": "string", "const": "tree" },
-    "rule":     { "type": "string" },
+    "kind":   { "type": "string", "const": "tree" },
+    "rule":   { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["file", "line", "column", "endLine", "endColumn"],
+      "properties": {
+        "file":      { "type": "string" },
+        "line":      { "type": "integer" },
+        "column":    { "type": "integer" },
+        "endLine":   { "type": "integer" },
+        "endColumn": { "type": "integer" }
+      }
+    },
     "children": {
       "type": "array",
       "items": {
-        "type": "object",
-        "required": ["kind"],
-        "properties": {
-          "kind": { "type": "string", "enum": ["token", "tree"] }
-        }
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+          { "type": "string" },
+          { "type": "object", "required": ["kind"] }
+        ]
       }
     }
   }
