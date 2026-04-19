@@ -54,7 +54,7 @@ def main(argv=None):
         # plcc-spec
         _run_child(["plcc-spec", grammar] + child_flags, stdout_file=spec_path, verbose=verbose, label="plcc-spec")
         # plcc-ll1
-        _run_child(["plcc-ll1", spec_path] + child_flags, stdout_file=ll1_path, verbose=verbose, label="plcc-ll1")
+        _run_child_with_stdin(["plcc-ll1"] + child_flags, stdin_file=spec_path, verbose=verbose, label="plcc-ll1", stdout_file=ll1_path)
         # plcc-model
         _run_child(["plcc-model", spec_path] + child_flags, stdout_file=model_path, verbose=verbose, label="plcc-model")
 
@@ -153,9 +153,13 @@ def _run_child(cmd, stdout_file, verbose, label):
         sys.exit(result.returncode)
 
 
-def _run_child_with_stdin(cmd, stdin_file, verbose, label):
+def _run_child_with_stdin(cmd, stdin_file, verbose, label, stdout_file=None):
     with open(stdin_file) as f:
-        result = subprocess.run(cmd, stdin=f, stderr=subprocess.PIPE)
+        if stdout_file is not None:
+            with open(stdout_file, "w") as out:
+                result = subprocess.run(cmd, stdin=f, stdout=out, stderr=subprocess.PIPE)
+        else:
+            result = subprocess.run(cmd, stdin=f, stderr=subprocess.PIPE)
     if result.stderr:
         events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
         verbose.reformat_child_events(events)

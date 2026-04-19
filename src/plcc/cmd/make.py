@@ -58,7 +58,7 @@ def main(argv=None):
     # 3. LL(1)
     verbose.emit(Events.PHASE, message="ll1")
     ll1_json = os.path.join(build_dir, 'll1.json')
-    _run_or_die(['plcc-ll1', spec_json] + child_flags, stdout_file=ll1_json, verbose=verbose)
+    _run_or_die(['plcc-ll1'] + child_flags, stdin_file=spec_json, stdout_file=ll1_json, verbose=verbose)
     with open(ll1_json) as f:
         ll1 = json.load(f)
     if not ll1.get("is_ll1", True):

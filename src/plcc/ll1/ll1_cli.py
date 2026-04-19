@@ -5,15 +5,14 @@ import sys
 from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .spec_json_decoder import decode
+from .ll1_result_builder import build_ll1_result
 
 __doc__ = """plcc-ll1
     Perform LL(1) analysis on a grammar spec.
 
 Usage:
-    plcc-ll1 [options] [SPEC_JSON]
-
-Arguments:
-    SPEC_JSON   Path to spec JSON file. Use - or omit to read from stdin.
+    plcc-ll1 [options]
 
 Options:
     -h --help       Show this message.
@@ -23,6 +22,12 @@ Options:
 class Events(enum.Enum):
     STARTED = "started"
     FINISHED = "finished"
+    FIRST_SET = "first-set"
+    FOLLOW_SET = "follow-set"
+    PREDICT_SET = "predict-set"
+    CONFLICT = "conflict"
+    LEFT_RECURSION = "left-recursion"
+    FIXPOINT_STEP = "fixpoint-step"
 
 
 def main(argv=None):
@@ -30,24 +35,30 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-ll1", Events, args)
-    verbose.emit(Events.STARTED, message="reading spec")
-    path = args['SPEC_JSON'] or '-'
-    if path == '-':
-        json.load(sys.stdin)
-    else:
-        with open(path) as f:
-            json.load(f)
-    # Stub: emit minimal ll1.json with empty sets
-    conflicts = []
-    left_recursion = []
-    result = {
-        "is_ll1": not (conflicts or left_recursion),
-        "first_sets": {},
-        "follow_sets": {},
-        "predict_sets": {},
-        "parse_table": {},
-        "conflicts": conflicts,
-        "left_recursion": left_recursion,
-    }
+    verbose.emit(Events.STARTED)
+    try:
+        spec = json.load(sys.stdin)
+    except (json.JSONDecodeError, ValueError) as e:
+        verbose.emit_error({}, f"malformed spec JSON: {e}")
+        sys.exit(1)
+    grammar, field_map = decode(spec)
+    result = build_ll1_result(grammar, field_map)
+    for nt, terminals in result["first_sets"].items():
+        verbose.emit(Events.FIRST_SET, level=2, nonterminal=nt, first=terminals)
+    for nt, terminals in result["follow_sets"].items():
+        verbose.emit(Events.FOLLOW_SET, level=2, nonterminal=nt, follow=terminals)
+    for nt, predicts in result["predict_sets"].items():
+        verbose.emit(Events.PREDICT_SET, level=2, nonterminal=nt, predict=predicts)
+    for conflict in result["conflicts"]:
+        verbose.emit(Events.CONFLICT, level=2, **conflict)
+    for lr in result["left_recursion"]:
+        verbose.emit(Events.LEFT_RECURSION, level=2, **lr)
+    n_c = len(result["conflicts"])
+    n_lr = len(result["left_recursion"])
+    summary = (
+        "is_ll1: true"
+        if result["is_ll1"]
+        else f"{n_c} conflicts, {n_lr} left-recursion cycles"
+    )
+    verbose.emit(Events.FINISHED, message=summary)
     print(json.dumps(result, indent=2))
-    verbose.emit(Events.FINISHED, message="done")

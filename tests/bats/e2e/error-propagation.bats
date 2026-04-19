@@ -9,7 +9,7 @@ setup() {
     SPEC_JSON="$(mktemp)"
     LL1_JSON="$(mktemp)"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
-    plcc-ll1 "${SPEC_JSON}" > "${LL1_JSON}"
+    plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
 }
 
 teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }

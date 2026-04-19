@@ -46,7 +46,7 @@ def main(argv=None):
         # plcc-spec
         _run_child(["plcc-spec", grammar] + child_flags, stdout_file=spec_path, verbose=verbose, label="plcc-spec")
         # plcc-ll1
-        _run_child(["plcc-ll1", spec_path] + child_flags, stdout_file=ll1_path, verbose=verbose, label="plcc-ll1")
+        _run_child(["plcc-ll1"] + child_flags, stdin_file=spec_path, stdout_file=ll1_path, verbose=verbose, label="plcc-ll1")
 
         # Build input
         input_data = b""
@@ -101,9 +101,12 @@ def main(argv=None):
     verbose.emit(Events.FINISHED, message="done")
 
 
-def _run_child(cmd, stdout_file, verbose, label):
+def _run_child(cmd, stdout_file, verbose, label, stdin_file=None):
     with open(stdout_file, "w") as out:
-        result = subprocess.run(cmd, stdout=out, stderr=subprocess.PIPE)
+        stdin = open(stdin_file) if stdin_file else None
+        result = subprocess.run(cmd, stdin=stdin, stdout=out, stderr=subprocess.PIPE)
+        if stdin:
+            stdin.close()
     if result.stderr:
         events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
         verbose.reformat_child_events(events)

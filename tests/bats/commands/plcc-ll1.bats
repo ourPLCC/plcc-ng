@@ -19,29 +19,41 @@ teardown() { rm -f "${SPEC_JSON}"; }
 }
 
 @test "plcc-ll1 produces schema-valid output" {
-    run plcc-ll1 "${SPEC_JSON}"
+    run bash -c "plcc-ll1 < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
-@test "plcc-ll1 reads from stdin" {
+@test "plcc-ll1 reads from stdin via pipe" {
     run bash -c "cat '${SPEC_JSON}' | plcc-ll1"
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
 @test "plcc-ll1 accepts --verbose without error" {
-    run plcc-ll1 --verbose=1 "${SPEC_JSON}"
+    run bash -c "plcc-ll1 --verbose=1 < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
 }
 
 @test "plcc-ll1 accepts --verbose-format without error" {
-    run plcc-ll1 --verbose=1 --verbose-format=json "${SPEC_JSON}"
+    run bash -c "plcc-ll1 --verbose=1 --verbose-format=json < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-ll1 stub: is_ll1 is true for empty spec" {
-    run bash -c "echo '{\"lexical\":{\"ruleList\":[]},\"syntax\":{\"rules\":[]},\"semantics\":[]}' | plcc-ll1 -"
+@test "plcc-ll1: is_ll1 is true for empty spec" {
+    run bash -c "echo '{\"lexical\":{\"ruleList\":[]},\"syntax\":{\"rules\":[]},\"semantics\":[]}' | plcc-ll1"
     [ "$status" -eq 0 ]
     echo "$output" | grep -q '"is_ll1"'
+}
+
+@test "plcc-ll1 emits start_symbol for trivial grammar" {
+    run bash -c "plcc-ll1 < '${SPEC_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['start_symbol'] == 'program', r['start_symbol']"
+}
+
+@test "plcc-ll1 populates first_sets for trivial grammar" {
+    run bash -c "plcc-ll1 < '${SPEC_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['first_sets']['program'] == ['NUM'], r['first_sets']"
 }
