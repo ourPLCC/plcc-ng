@@ -42,3 +42,32 @@ teardown() {
     run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}' --verbose=1 --verbose-format=json"
     [ "$status" -eq 0 ]
 }
+
+@test "plcc-parser-table output has kind=tree" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='tree', r['kind']"
+}
+
+@test "plcc-parser-table output has rule=program" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['rule']=='program', r['rule']"
+}
+
+@test "plcc-parser-table output has source span" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | python3 -c "
+import json,sys
+r=json.load(sys.stdin)
+src=r['source']
+assert 'line' in src and 'endLine' in src, src
+"
+}
+
+@test "plcc-parser-table exits nonzero for lex error input" {
+    run bash -c "echo 'not_a_num' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+    # plcc-tokens exits nonzero; plcc-parser-table either doesn't run or also exits nonzero
+    [ "$status" -ne 0 ]
+}
