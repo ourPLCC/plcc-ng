@@ -3,14 +3,63 @@
   "title": "LL1Analysis",
   "description": "Output of plcc-ll1: LL(1) analysis of a grammar.",
   "type": "object",
-  "required": ["is_ll1", "first_sets", "follow_sets", "predict_sets", "parse_table", "conflicts", "left_recursion"],
+  "required": ["is_ll1", "start_symbol", "first_sets", "follow_sets", "predict_sets", "parse_table", "conflicts", "left_recursion"],
   "properties": {
     "is_ll1":         { "type": "boolean" },
-    "first_sets":     { "type": "object" },
-    "follow_sets":    { "type": "object" },
-    "predict_sets":   { "type": "object" },
-    "parse_table":    { "type": "object" },
-    "conflicts":      { "type": "array" },
-    "left_recursion": { "type": "array" }
+    "start_symbol":   { "type": "string" },
+    "first_sets":     {
+      "type": "object",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    },
+    "follow_sets":    {
+      "type": "object",
+      "additionalProperties": { "type": "array", "items": { "type": "string" } }
+    },
+    "predict_sets":   {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "parse_table":    {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["symbol", "field"],
+            "properties": {
+              "symbol": { "type": "string" },
+              "field":  { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["nonterminal", "lookahead", "productions"],
+        "properties": {
+          "nonterminal": { "type": "string" },
+          "lookahead":   { "type": "string" },
+          "productions": { "type": "array" }
+        }
+      }
+    },
+    "left_recursion": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cycle"],
+        "properties": {
+          "cycle": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
   }
 }
