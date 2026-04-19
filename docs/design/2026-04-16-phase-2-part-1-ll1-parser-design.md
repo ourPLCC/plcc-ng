@@ -1,113 +1,198 @@
 # Phase 2 Part 1: LL(1) Table-Driven Parser — Design
 
-**Date:** 2026-04-16
-**Status:** DRAFT — This design was produced during the Phase 2 Part 1 brainstorm but has not been through the full approval cycle. It needs to be revisited after the walking skeleton is updated to reflect architectural amendments §17.3–§17.9. Several decisions captured here (parse tree schema, error shape, verbose protocol) are load-bearing and settled; the implementation scope and sequencing are not yet committed. The error shape is now settled per §17.9 (stderr + exit code; no tree-embedded errors).
-**Companion architectural spec:** [2026-04-12-multi-lang-pipeline.md](2026-04-12-multi-lang-pipeline.md) (especially §17.3–§17.8)
+**Date:** 2026-04-16 (finalized 2026-04-19)
+**Status:** APPROVED
+**Companion architectural spec:** [2026-04-12-multi-lang-pipeline.md](2026-04-12-multi-lang-pipeline.md) (especially §7–§9, §13)
 **Roadmap reference:** [2026-04-12-multi-lang-implementation-plan.md](2026-04-12-multi-lang-implementation-plan.md) §5
 
 ## 1. Goal
 
-Ship a complete, tested, table-driven LL(1) parser as a pipeline stage. Three new commands (`plcc-ll1`, `plcc-parser-table`, `plcc-parser-list`) plus a `plcc-tree` rewrite from pass-through to dispatcher. After Part 1, `plcc-tokens < program.txt | plcc-tree --ll1 ll1.json` produces a parse tree for any LL(1) grammar.
+Ship a complete, tested, table-driven LL(1) parser as a pipeline stage. After Part 1, `plcc-tokens < program.txt | plcc-tree --ll1 build/ll1.json` produces a parse tree for any LL(1) grammar.
 
-## 2. New and changed commands
+## 2. Scope
 
-### New Level 0 primitives
-
-| Command | In | Out | Role |
-| --- | --- | --- | --- |
-| `plcc-ll1` | spec.json | ll1.json | LL(1) analysis: FIRST, FOLLOW, predict sets, parse table, conflict/left-recursion diagnostics. Pure filter per §17.9: always exits 0 on well-formed spec JSON; non-LL(1) is signaled by top-level `is_ll1: false` in the output, not by exit code. |
-| `plcc-parser-table` | token JSONL (stdin), `--ll1 <path>` | parse tree JSON (stdout) | Table-driven LL(1) parser. Consumes the parse table from ll1.json, drives the parse, emits one parse tree. |
-| `plcc-parser-list` | (none) | parser kind names, one per line | Walks PATH, collects `plcc-parser-*` executables, strips prefix. Symmetric with `plcc-lang-list`. |
-
-### Changed commands
+Four changes ship in Part 1:
 
 | Command | Change |
 | --- | --- |
-| `plcc-tree` | Rewritten from Phase 1 pass-through to dispatcher. Accepts `--parser=<kind>` (default `table`), execs `plcc-parser-<kind>`, forwards `--ll1`, `--verbose`, `--verbose-format`. |
-| `plcc-spec` | Stops performing LL(1) validation. Becomes a faithful grammar-to-JSON translator only. |
+| `plcc-ll1` | Replace stub with real FIRST/FOLLOW/predict/parse-table computation, wiring up the existing plcc-ng LL(1) code |
+| `plcc-parser-table` | Replace stub with real table-driven predictive parser consuming `ll1.json` |
+| `plcc-spec` | Verify (or make) it a faithful translator only — remove any remaining LL(1) analysis call sites |
+| `plcc-parser-list` | New command: scan PATH for `plcc-parser-*`, print one kind per line |
 
-### Not in Part 1 scope
+`plcc-tree` is already a complete dispatcher; no changes.
 
-Level 2 passthroughs (`--parser=` on `plcc-rep`, `plcc-parse`, `plcc-make`), `plcc-gen-parser`, interpreter, Python emitter. Those are Part 2 / Phase 3+.
+**Not in Part 1 scope:** Level 2 `--parser=` passthroughs, `plcc-gen-parser`, interpreter, Python emitter, `--format=human` on `plcc-ll1`.
 
-## 3. Parse tree schema (A′)
+## 3. `plcc-ll1`
 
-One parse-tree schema used by both `plcc-tree` and `plcc-spec`.
+### 3.1 Interface
+
+- **Stdin:** spec JSON (stdin only). Callers redirect: `plcc-ll1 < build/spec.json`.
+- **Stdout:** single `ll1.json` document (see §4).
+- **Stderr:** errors via `VerboseContext.emit_error`; verbose events per §3.3. Errors are emitted regardless of verbose level.
+- **Exit 0:** always, for any well-formed spec JSON input — including non-LL(1) grammars. A non-LL(1) result is signalled by `is_ll1: false` in the output, not by exit code.
+- **Exit nonzero:** tool failures only — stdin not readable, malformed/unparseable spec JSON.
+
+### 3.2 Implementation
+
+Wire up the existing plcc-ng LL(1) computation code: FIRST set computation, FOLLOW set computation, predict set construction, parse table construction, conflict detection, and left-recursion cycle detection. **Do not delete or rewrite this code.** It is well-tested, student-produced work. Remove any LL(1) analysis call sites remaining in `plcc-spec`; preserve the implementation. If files must be relocated, use `git mv` to keep git history intact.
+
+### 3.3 Verbose events
+
+- **Level 0 (default):** silent — no stderr output on success.
+- **`-v`:** `started`, `finished` with one-line summary (`is_ll1: true` or `N conflicts, M left-recursion cycles`).
+- **`-vv`:** per-nonterminal FIRST, FOLLOW, and predict sets; each conflict with its competing productions named; each left-recursion cycle.
+- **`-vvv`:** individual fixpoint iteration steps for FIRST/FOLLOW closure.
+
+### 3.4 `--format=human` (deferred)
+
+Human-readable rendering of `ll1.json` is deferred. The intended future shape is a separate tool (e.g. `plcc-ll1-human`) that reads `ll1.json` from stdin and renders it as readable tables, callable directly by a student or by a Level 2 orchestrator. `plcc-ll1` may later add `--format=human` as a flag that delegates to that tool. No work in Part 1.
+
+## 4. `ll1.json` schema
+
+Output of `plcc-ll1`. A single JSON document:
+
+```json
+{
+  "is_ll1": true,
+  "start_symbol": "Expr",
+  "first_sets": {
+    "Expr": ["NUM", "LPAREN"]
+  },
+  "follow_sets": {
+    "Expr": ["RPAREN", "$"]
+  },
+  "predict_sets": {
+    "Expr": [["NUM", "LPAREN"], ["MINUS"]]
+  },
+  "parse_table": {
+    "Expr": {
+      "NUM": [{"symbol": "Term", "field": "t"}, {"symbol": "ExprRest", "field": "r"}],
+      "LPAREN": [{"symbol": "LPAREN", "field": null}, {"symbol": "Expr", "field": "e"}, {"symbol": "RPAREN", "field": null}]
+    }
+  },
+  "conflicts": [
+    {
+      "nonterminal": "Expr",
+      "lookahead": "PLUS",
+      "productions": [
+        [{"symbol": "PLUS", "field": null}, {"symbol": "Expr", "field": "right"}],
+        []
+      ]
+    }
+  ],
+  "left_recursion": [
+    {"cycle": ["A", "B", "A"]}
+  ]
+}
+```
+
+### Field definitions
+
+- **`is_ll1`** — boolean. True iff `conflicts` and `left_recursion` are both empty.
+- **`start_symbol`** — string. The grammar's start symbol; used by `plcc-parser-table` to initialise the parse stack.
+- **`first_sets`** — nonterminal → list of terminal names. The empty string `""` represents ε.
+- **`follow_sets`** — nonterminal → list of terminal names. `"$"` is the end-of-input marker (conventional notation; not a valid token name).
+- **`predict_sets`** — nonterminal → list of predict sets, one per alternative in grammar order. Each predict set is a list of terminals that select that alternative. A conflict is visible here when the same terminal appears in two inner lists.
+- **`parse_table`** — nonterminal → lookahead → single production. Each production is a list of `{"symbol": <name>, "field": <string|null>}` objects. `field: null` means the symbol is elided from the parse tree; a non-null string is the child's field name. The parse table is only authoritative when `is_ll1` is true; conflicting cells are omitted or contain an arbitrary one of the competing productions.
+- **`conflicts`** — array; empty when `is_ll1` is true. Each entry: `{"nonterminal": ..., "lookahead": ..., "productions": [[...], [...]]}`. The `productions` field is the self-contained diagnostic — it lists all competing productions in full so the reader can diagnose the conflict without scanning the parse table.
+- **`left_recursion`** — array; empty when no left recursion is detected. Each entry: `{"cycle": [...]}` — the list of nonterminals forming the left-recursive cycle.
+
+## 5. `plcc-parser-table`
+
+### 5.1 Interface
+
+- **Stdin:** token JSONL (reads to EOF).
+- **`--ll1=<path>`:** required; path to `ll1.json`.
+- **Stdout:** single newline-terminated parse tree JSON document (see §6).
+- **Stderr:** errors via `VerboseContext.emit_error`; verbose events per §5.3. Errors emitted regardless of verbose level.
+- **Exit 0:** successful parse.
+- **Exit nonzero:** syntax error in the token stream, or tool failure (missing/malformed `ll1.json`, malformed token JSONL). No partial tree emitted.
+
+### 5.2 Algorithm
+
+Standard predictive-parsing loop:
+
+1. Load `ll1.json`. Check `is_ll1`; exit with an error if false — a non-LL(1) grammar cannot be parsed by this stage.
+2. Read all token JSONL from stdin.
+3. Push the grammar's start symbol. Maintain a parse stack and a position cursor into the token stream.
+4. At each step:
+   - If top-of-stack is a terminal: match against the current token (shift). If mismatch, emit error and exit nonzero.
+   - If top-of-stack is a nonterminal: look up `parse_table[nonterminal][lookahead]` (expand). If no entry, emit error and exit nonzero.
+5. On successful parse: emit the tree and exit 0.
+
+**AST elision:** Only symbols with `field` non-null in the production entry become children in the tree. Symbols with `field: null` are consumed from the token stream but not included as children.
+
+**Span computation:** Internal node `source` spans the full extent of the production — from the first token consumed to the last, including elided tokens. Computed before elision so positions are correct even when punctuation is dropped.
+
+**Error handling:** On any syntax error, emit one structured error via `VerboseContext.emit_error` with the unexpected token's `source` position and a message naming the unexpected token and what was expected. Exit nonzero immediately. No error recovery; no partial tree.
+
+### 5.3 Verbose events
+
+- **Level 0 (default):** silent — no stderr output on success.
+- **`-v`:** `started`, `finished` (with token count and rule count).
+- **`-vv`:** `expand` (nonterminal being expanded + production RHS), `shift` (token name, lexeme, position), `complete` (nonterminal name). Together these three event types give a Level 2 orchestrator enough information to reconstruct a full nested, indented parse trace.
+- **`-vvv`:** `predict-lookup` (nonterminal + lookahead + parse table entry consulted).
+
+## 6. Parse tree schema
+
+Output of `plcc-parser-table` (and transitively of any `plcc-parser-<kind>` plugin).
 
 ### Internal node
 
 ```json
 {
-  "kind": "Expression",
-  "pos": {"file": "program.txt", "line": 4, "col": 12, "endLine": 4, "endCol": 25},
+  "kind": "tree",
+  "rule": "Expr",
+  "source": {
+    "file": "prog.txt",
+    "line": 4,
+    "column": 12,
+    "endLine": 4,
+    "endColumn": 25
+  },
   "children": [
-    ["left", { "kind": "Term", "pos": "...", "children": "..." }],
-    ["op", { "kind": "PLUS", "lexeme": "+", "pos": "..." }],
-    ["right", { "kind": "Term", "pos": "...", "children": "..." }]
+    ["left", {"kind": "tree", "rule": "Term", "source": {...}, "children": [...]}],
+    ["op",   {"kind": "token", "name": "PLUS", "lexeme": "+", "source": {...}}],
+    ["right",{"kind": "tree", "rule": "Term", "source": {...}, "children": [...]}]
   ]
 }
 ```
 
 ### Token leaf
 
-Exactly the record `plcc-tokens` emits. No wrapper. Distinguished from internal nodes by absence of `children`.
+Placed unchanged from `plcc-tokens` output — no wrapper, no modification:
 
-### Design principles
+```json
+{"kind": "token", "name": "NUM", "lexeme": "42", "source": {"file": "prog.txt", "line": 4, "column": 12}}
+```
 
-- **Framing.** `plcc-tree` and `plcc-spec` each emit a single newline-terminated JSON document per invocation (also a valid one-line JSONL stream, composing directly with the interpreter under §17.7).
-- **Positions.** Stored explicitly on every node (internal and leaf). Internal-node spans are computed at parse time from the full token stream before elision, not reconstructed from surviving leaves, because the tree is an AST with dropped tokens.
-- **One token schema.** `plcc-tokens`' output contract is defined such that a token record is self-sufficient as a tree leaf. One schema across the pipeline; `plcc-tree` places tokens unchanged at leaves.
-- **One parse-tree schema.** `plcc-spec` and `plcc-tree` both emit trees in this schema. Different `kind` vocabularies (meta-grammar kinds vs. user-grammar kinds), same structural shape. Enables a future PLCC-for-PLCC bootstrap.
+### Design rules
 
-## 4. LL(1) analysis JSON (ll1.json)
+- **`children`** is a list of `[field_name, node]` pairs. Only named (non-elided) symbols appear; elided symbols are absent.
+- **`source` on internal nodes** spans the full production extent including elided tokens, computed before elision. Fields: `file`, `line`, `column`, `endLine`, `endColumn`.
+- **`source` on token leaves** is the token's own position as emitted by `plcc-tokens`. Fields: `file`, `line`, `column` (no end position — token extent is derivable from `lexeme` length).
+- **Discriminator:** `kind: "tree"` vs `kind: "token"`. Internal nodes always have `children`; token leaves never do.
 
-`plcc-ll1` emits a single JSON document containing:
+## 7. `plcc-spec` changes
 
-- **FIRST sets** — per nonterminal
-- **FOLLOW sets** — per nonterminal
-- **Predict sets** — per production alternative
-- **Parse table** — indexed by (nonterminal, lookahead) → production
-- **Conflicts** — empty on success; on failure, each conflict names the nonterminal, the lookahead, and the competing productions
-- **Left-recursion report** — empty on success; on failure, lists the cycles
-- **`--format=human`** — alternative output mode that renders the same data as readable tables for student inspection
+Remove any LL(1) analysis call sites remaining inside `plcc-spec`. The implementation of FIRST/FOLLOW/predict/parse-table computation is preserved — only calls to it from `plcc-spec` are removed. `plcc-spec` becomes a faithful grammar-to-JSON translator with no analysis. If the walking skeleton already reflects this separation, verify and document; no further change required.
 
-Exact field names and nesting are design-doc details to be finalized when this draft is promoted.
+## 8. `plcc-parser-list`
 
-## 5. `plcc-parser-table` internals
+New command. Scans PATH for executables matching `plcc-parser-*`, strips the `plcc-parser-` prefix, and prints one parser kind per line. Symmetric with `plcc-lang-list`. No required arguments. Accepts `--verbose`/`--verbose-format` (nothing to emit at any level).
 
-- **Input:** token JSONL on stdin (reads to EOF), ll1.json via `--ll1 <path>`.
-- **Algorithm:** Standard predictive-parsing loop. Push start symbol. At each step: if top-of-stack is a terminal, match against current token (shift); if nonterminal, consult parse table with (nonterminal, lookahead) to select production (expand). Build the A′ tree as it goes.
-- **On error:** emit structured error via the §17.8 verbose infrastructure per §17.9; return immediately with a nonzero exit code. No tree is produced.
-- **AST elision:** Tokens present in the grammar rule but not assigned a field name (e.g. punctuation like `(`, `)`, `;`) are consumed during parsing but not included as children in the tree. Internal-node spans are computed before elision so positions remain correct.
-- **Output:** Single newline-terminated JSON document on stdout.
-- **Verbose output (§17.8):** Accepts `--verbose`/`--verbose-format`. At `-vv`, emits shift/expand/complete events with rule-stack depth, enabling Level 2 reformatting into v8-style indented parse traces.
-
-## 6. `plcc-spec` changes
-
-`plcc-spec` currently computes FIRST sets, FOLLOW sets, the parse table, and conflict reports internally, then discards them. Part 1:
-
-1. **Removes LL(1) validation** from `plcc-spec`. It becomes a faithful translator: `.plcc` → spec.json. No analysis, no conflict checking.
-2. **Verifies spec.json output** against the unified parse-tree schema (A′ shape, positions on every node, single JSON document framing). If it already matches, document it. If it doesn't, migrate it.
-3. **The LL(1) computation code** currently inside `plcc-spec` is extracted and repackaged as the core of `plcc-ll1`.
-
-## 7. Cross-cutting concerns
-
-**`--verbose` / `--verbose-format` (§17.8):** Every new and changed command accepts both flags from day one. Accept-and-forward is mandatory. `plcc-parser-table` ships with actual emission at all three levels. Other commands emit at least `-v` milestones.
-
-**Error contract (§17.9):** Every Level 0 stage follows the uniform stderr + exit-code error model. When `plcc-tokens` cannot tokenize its input, it emits a structured error on stderr and exits nonzero; `plcc-parser-table` does the same when it hits a syntax error in its token stream. Neither emits error records into the token stream or Error nodes into the parse tree. Orchestrators that drive the pipeline (`plcc-rep`, `plcc-parse`) detect upstream-first failure, capture the JSONL stderr from children (always spawned with `--verbose-format=json`), and report the first failing stage's error.
-
-**`plcc-make` phase sequence update:** Gains the `plcc-ll1` step between spec and model (step 3 in the amended §17.4 sequence). Per §17.9, `plcc-make` captures `plcc-ll1`'s stdout to `build/ll1.json`, reads back `is_ll1`, and on `false` prints a human-readable summary of the conflicts and left-recursion report on stderr and exits nonzero.
-
-## 8. Deferred items
+## 9. Deferred items
 
 | Item | Deferred to |
 | --- | --- |
+| `--format=human` on `plcc-ll1` | Future phase; will delegate to a separate `plcc-ll1-human` tool |
 | Level 2 `--parser=` passthroughs | Part 2 / Phase 4 |
 | `plcc-gen-parser` (recursive-descent generation) | Phase 3+ |
 | `plcc-parse` human-friendly UX (v8-style trace) | Part 2 |
 | Interpreter, Python emitter, REPL | Part 2 |
 | Entry-point method name (`$run()` replacement) | Part 2 |
-| Parse-tree JSONL schema for evaluation records | Part 2 |
 | Left-factoring candidate detection in `plcc-ll1` | Phase 3+ |
 | Scanner pluggability | Post-v9 |
 | Dynamic verbosity mid-session | Future amendment |
