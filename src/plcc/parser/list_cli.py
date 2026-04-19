@@ -1,26 +1,35 @@
-"""plcc-parser-list
-    List installed parser plugins.
-
-Usage:
-    plcc-parser-list
-
-Options:
-    -h --help   Show this message.
-"""
-
+import enum
 import os
 import re
 import sys
 
 from docopt import docopt
 
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
 _PARSER_PATTERN = re.compile(r"^plcc-parser-(.+)$")
+
+__doc__ = """plcc-parser-list
+    List installed parser plugins.
+
+Usage:
+    plcc-parser-list [options]
+
+Options:
+    -h --help   Show this message.
+""" + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    docopt(__doc__, argv)
+    args = docopt(__doc__, argv)
+    VerboseContext.from_args("plcc-parser-list", Events, args)
     for kind in sorted(find_parsers()):
         print(kind)
 
