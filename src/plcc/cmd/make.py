@@ -116,10 +116,11 @@ def _report_ll1_failure(ll1, path, verbose):
             f"plcc-make: error: conflict at "
             f"{conflict.get('nonterminal', '?')} on "
             f"{conflict.get('lookahead', '?')}: "
-            f"{conflict.get('competing', [])}",
+            f"{conflict.get('productions', [])}",
             file=sys.stderr,
         )
-    for cycle in ll1.get("left_recursion", []):
+    for entry in ll1.get("left_recursion", []):
+        cycle = entry.get("cycle", [])
         print(
             f"plcc-make: error: left-recursion cycle: {' -> '.join(cycle)}",
             file=sys.stderr,

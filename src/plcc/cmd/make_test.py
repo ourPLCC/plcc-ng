@@ -51,3 +51,24 @@ def test_report_ll1_failure_prints_error_and_conflicts(capsys):
     assert "build/ll1.json" in err
     assert "E" in err
     assert "+" in err
+
+
+def test_report_left_recursion_cycle(capsys):
+    ll1 = {
+        "conflicts": [],
+        "left_recursion": [{"cycle": ["A", "B", "A"]}],
+    }
+    _report_ll1_failure(ll1, "build/ll1.json", None)
+    _, err = capsys.readouterr()
+    assert "A -> B -> A" in err
+
+
+def test_report_conflict(capsys):
+    ll1 = {
+        "conflicts": [{"nonterminal": "E", "lookahead": "PLUS", "productions": []}],
+        "left_recursion": [],
+    }
+    _report_ll1_failure(ll1, "build/ll1.json", None)
+    _, err = capsys.readouterr()
+    assert "E" in err
+    assert "PLUS" in err
