@@ -53,6 +53,12 @@ teardown() {
     FULL_DIR="$(mktemp -d)"
     (
         cd "${FULL_DIR}"
+
+        # Debug
+        echo "${FULL_DIR}"
+        pwd
+        ls -R
+
         plcc-make "${FIXTURES}/trivial-full.plcc"
         [ -f build/ll1.json ]
         [ -d build/Java ]
