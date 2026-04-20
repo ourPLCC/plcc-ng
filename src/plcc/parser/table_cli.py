@@ -48,17 +48,26 @@ def main(argv=None):
         verbose.emit_error({}, "grammar is not LL(1); cannot parse")
         sys.exit(1)
 
-    # Read all tokens from stdin
+    # Read all records from stdin; pass error records through unchanged.
     tokens = []
+    error_record = None
     for line in sys.stdin:
         line = line.strip()
         if not line:
             continue
         try:
-            tokens.append(json.loads(line))
+            record = json.loads(line)
         except json.JSONDecodeError as e:
             verbose.emit_error({}, f"malformed token JSON: {e}")
             sys.exit(1)
+        if record.get("kind") == "error":
+            error_record = record
+        else:
+            tokens.append(record)
+
+    if error_record is not None:
+        print(json.dumps(error_record))
+        sys.exit(0)
 
     # Parse
     try:
