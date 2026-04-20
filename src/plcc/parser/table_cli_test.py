@@ -140,3 +140,22 @@ def test_nothing_written_to_stdout_on_error(capsys, monkeypatch):
         assert out.strip() == ""
     finally:
         os.unlink(ll1_file.name)
+
+
+def test_error_record_passes_through(capsys, monkeypatch):
+    error_record = {"kind": "error", "stage": "plcc-tokens",
+                    "source": {"file": None, "line": 1, "column": 1}}
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(error_record) + "\n"))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit as e:
+            assert e.code == 0
+        out, _ = capsys.readouterr()
+        assert json.loads(out)["kind"] == "error"
+    finally:
+        os.unlink(ll1_file.name)
