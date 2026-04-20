@@ -50,7 +50,7 @@ teardown() {
 
 @test "plcc-make trivial-full produces build output for all three languages" {
     if ! command -v javac &>/dev/null; then skip "JDK not available"; fi
-    FULL_DIR="$(mktemp -d)"
+    FULL_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t plcc)"
     (
         cd "${FULL_DIR}"
 
