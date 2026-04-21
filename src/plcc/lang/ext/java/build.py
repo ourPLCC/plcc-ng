@@ -33,6 +33,7 @@ def main(argv=None):
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-java-build", Events, args)
     output_dir = args['--output']
+    output_dir = os.path.abspath(output_dir)
     verbose.emit(Events.STARTED, message=f'compiling in {output_dir}')
     java_files = glob.glob(os.path.join(output_dir, '*.java'))
     if not java_files:
