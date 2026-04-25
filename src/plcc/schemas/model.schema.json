@@ -10,10 +10,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "fields"],
+        "required": ["name", "abstract", "fields"],
         "properties": {
-          "name":    { "type": "string" },
-          "extends": { "type": ["string", "null"] },
+          "name":     { "type": "string" },
+          "abstract": { "type": "boolean" },
+          "extends":  { "type": ["string", "null"] },
           "fields": {
             "type": "array",
             "items": {
@@ -24,8 +25,7 @@
                 "type": { "type": "string" }
               }
             }
-          },
-          "methods": { "type": "array" }
+          }
         }
       }
     },
@@ -33,10 +33,25 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["tool", "language"],
+        "required": ["tool", "language", "fragments"],
         "properties": {
           "tool":     { "type": "string" },
-          "language": { "type": "string" }
+          "language": { "type": "string" },
+          "fragments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["class_name", "kind", "body"],
+              "properties": {
+                "class_name": { "type": "string" },
+                "kind": {
+                  "type": "string",
+                  "enum": ["top", "import", "class", "init", "body", "file"]
+                },
+                "body": { "type": "string" }
+              }
+            }
+          }
         }
       }
     }
