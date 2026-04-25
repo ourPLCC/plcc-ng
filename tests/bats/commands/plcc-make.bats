@@ -24,21 +24,20 @@ teardown() {
     [ "$status" -ne 0 ]
 }
 
-@test "plcc-make plantuml_only grammar produces build artifacts" {
-    run plcc-make "${FIXTURES}/plantuml_only.plcc"
+@test "plcc-make trivial-python grammar produces build artifacts" {
+    run plcc-make "${FIXTURES}/trivial-python.plcc"
     [ "$status" -eq 0 ]
     [ -f "${WORK_DIR}/build/spec.json" ]
     [ -f "${WORK_DIR}/build/model.json" ]
-    ls "${WORK_DIR}/build/diagram/"*.puml
 }
 
-@test "plcc-make plantuml_only grammar produces ll1.json" {
-    run plcc-make "${FIXTURES}/plantuml_only.plcc"
+@test "plcc-make trivial-python grammar produces ll1.json" {
+    run plcc-make "${FIXTURES}/trivial-python.plcc"
     [ "$status" -eq 0 ]
     [ -f "${WORK_DIR}/build/ll1.json" ]
 }
 
 @test "plcc-make accepts --verbose" {
-    run plcc-make --verbose=1 "${FIXTURES}/plantuml_only.plcc"
+    run plcc-make --verbose=1 "${FIXTURES}/trivial-python.plcc"
     [ "$status" -eq 0 ]
 }

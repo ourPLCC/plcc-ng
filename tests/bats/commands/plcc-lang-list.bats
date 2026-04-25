@@ -9,7 +9,3 @@ bats_require_minimum_version 1.5.0
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-lang-list finds plantuml" {
-    run plcc-lang-list
-    [[ "$output" == *"plantuml"* ]]
-}

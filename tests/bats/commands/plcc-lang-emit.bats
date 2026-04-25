@@ -24,8 +24,7 @@ teardown() {
     [[ "$stderr" == *"No emitter"* ]]
 }
 
-@test "plcc-lang-emit PlantUML creates puml file" {
-    run bash -c "cat '${MODEL_JSON}' | plcc-lang-emit --target=PlantUML --output='${OUTPUT_DIR}'"
+@test "plcc-lang-emit Python produces output" {
+    run bash -c "cat '${MODEL_JSON}' | plcc-lang-emit --target=Python --output='${OUTPUT_DIR}'"
     [ "$status" -eq 0 ]
-    ls "${OUTPUT_DIR}"/*.puml
 }

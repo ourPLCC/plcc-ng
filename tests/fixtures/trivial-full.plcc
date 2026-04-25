@@ -3,4 +3,3 @@ token NUM '\d+'
 <program> ::= NUM
 % Java Java
 % py Python
-% diagram PlantUML

@@ -2,4 +2,3 @@ token NUM '\d+'
 %
 <program> ::= NUM
 %
-% diagram PlantUML

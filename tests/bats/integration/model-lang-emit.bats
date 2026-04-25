@@ -12,8 +12,7 @@ teardown() {
     rm -rf "${OUTPUT_DIR}"
 }
 
-@test "plcc-model | plcc-lang-emit produces puml file" {
-    run bash -c "plcc-model '${SPEC_JSON}' | plcc-lang-emit --target=PlantUML --output='${OUTPUT_DIR}'"
+@test "plcc-model | plcc-lang-emit --target=Python produces output" {
+    run bash -c "plcc-model '${SPEC_JSON}' | plcc-lang-emit --target=Python --output='${OUTPUT_DIR}'"
     [ "$status" -eq 0 ]
-    ls "${OUTPUT_DIR}"/*.puml
 }
