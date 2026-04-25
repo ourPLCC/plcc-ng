@@ -2,12 +2,9 @@
 
 
 def build_model(spec):
-    """
-    Given a parsed spec dict (output of plcc-spec deserialized),
-    return a model dict ready for JSON serialization.
-    """
     classes = _build_classes(spec)
-    semantic_sections = _build_semantic_sections(spec)
+    known_class_names = {c['name'] for c in classes}
+    semantic_sections = _build_semantic_sections(spec, known_class_names)
     start = _find_start(spec)
     return {
         'start': start,
@@ -24,26 +21,51 @@ def _find_start(spec):
 
 
 def _build_classes(spec):
+    rules = spec.get('syntax', {}).get('rules', [])
+
+    groups = {}
+    order = []
+    for rule in rules:
+        name = rule['lhs']['name']
+        if name not in groups:
+            groups[name] = []
+            order.append(name)
+        groups[name].append(rule)
+
     classes = []
-    for rule in spec.get('syntax', {}).get('rules', []):
-        lhs_name = rule['lhs']['name']
-        # Use [:1].upper() + [1:] rather than capitalize() to preserve camelCase names
-        # (e.g. 'addExpr' -> 'AddExpr', not 'Addexpr').
-        class_name = lhs_name[:1].upper() + lhs_name[1:]
-        fields = _extract_fields(rule.get('rhsSymbolList', []))
-        classes.append({
-            'name': class_name,
-            'extends': None,
-            'fields': fields,
-            'methods': [],
-        })
+    for nt_name in order:
+        nt_rules = groups[nt_name]
+        class_name = nt_name[:1].upper() + nt_name[1:]
+        is_abstract = any(r['lhs'].get('altName') for r in nt_rules)
+
+        if is_abstract:
+            classes.append({
+                'name': class_name,
+                'abstract': True,
+                'extends': None,
+                'fields': [],
+            })
+            for rule in nt_rules:
+                alt_name = rule['lhs']['altName']
+                classes.append({
+                    'name': alt_name,
+                    'abstract': False,
+                    'extends': class_name,
+                    'fields': _extract_fields(rule.get('rhsSymbolList', [])),
+                })
+        else:
+            rule = nt_rules[0]
+            classes.append({
+                'name': class_name,
+                'abstract': False,
+                'extends': None,
+                'fields': _extract_fields(rule.get('rhsSymbolList', [])),
+            })
+
     return classes
 
 
 def _extract_fields(rhs_symbol_list):
-    # rhsSymbolList symbols are serialized by plcc-spec via dataclasses.asdict().
-    # The real shape uses isCapturing/isTerminal flags.
-    # Capturing symbols also have an optional altName field.
     fields = []
     for symbol in rhs_symbol_list:
         if not symbol.get('isCapturing'):
@@ -58,8 +80,46 @@ def _extract_fields(rhs_symbol_list):
     return fields
 
 
-def _build_semantic_sections(spec):
-    return [
-        {'tool': s['tool'], 'language': s['language']}
-        for s in spec.get('semantics', [])
-    ]
+def _build_semantic_sections(spec, known_class_names):
+    sections = []
+    for s in spec.get('semantics', []):
+        fragments = [
+            _build_fragment(frag, known_class_names)
+            for frag in s.get('codeFragmentList', [])
+        ]
+        sections.append({
+            'language': s['language'],
+            'tool': s['tool'],
+            'fragments': fragments,
+        })
+    return sections
+
+
+def _build_fragment(frag, known_class_names):
+    locator = frag.get('targetLocator') or {}
+    class_name = locator.get('className', '')
+    modifier = locator.get('modifier')
+    kind = _compute_kind(modifier, class_name, known_class_names)
+    body = _extract_body((frag.get('block') or {}).get('lines', []))
+    return {
+        'class_name': class_name,
+        'kind': kind,
+        'body': body,
+    }
+
+
+def _compute_kind(modifier, class_name, known_class_names):
+    if modifier in ('top', 'import', 'class', 'init'):
+        return modifier
+    if class_name in known_class_names:
+        return 'body'
+    return 'file'
+
+
+def _extract_body(lines):
+    strings = [line['string'] for line in lines]
+    if strings and strings[0] == '%%%':
+        strings = strings[1:]
+    if strings and strings[-1] == '%%%':
+        strings = strings[:-1]
+    return '\n'.join(strings)
