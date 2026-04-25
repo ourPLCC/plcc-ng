@@ -185,3 +185,139 @@ def test_arith_expr_extends_none():
     expr = next(c for c in model['classes'] if c['name'] == 'Expr')
     assert expr['extends'] is None
     assert expr['abstract'] == False
+
+
+_ARITH_SPEC_WITH_FRAGMENTS = {
+    "lexical": {"ruleList": []},
+    "syntax": {
+        "rules": [
+            {
+                "lhs": {"name": "program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": []
+            },
+            {
+                "lhs": {"name": "ExprRest", "altName": "AddRest", "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": []
+            }
+        ]
+    },
+    "semantics": [
+        {
+            "language": "Python",
+            "tool": "calculate",
+            "codeFragmentList": [
+                {
+                    "targetLocator": {"className": "AddRest", "modifier": None},
+                    "block": {"lines": [
+                        {"string": "%%%"},
+                        {"string": "def eval(self, acc):"},
+                        {"string": "    return acc"},
+                        {"string": "%%%"}
+                    ]}
+                },
+                {
+                    "targetLocator": {"className": "Helper", "modifier": None},
+                    "block": {"lines": [
+                        {"string": "%%%"},
+                        {"string": "class Helper: pass"},
+                        {"string": "%%%"}
+                    ]}
+                },
+                {
+                    "targetLocator": {"className": "AddRest", "modifier": "import"},
+                    "block": {"lines": [
+                        {"string": "%%%"},
+                        {"string": "import os"},
+                        {"string": "%%%"}
+                    ]}
+                },
+                {
+                    "targetLocator": {"className": "AddRest", "modifier": "top"},
+                    "block": {"lines": [{"string": "%%%"}, {"string": "# top"}, {"string": "%%%"}]}
+                },
+                {
+                    "targetLocator": {"className": "AddRest", "modifier": "class"},
+                    "block": {"lines": [{"string": "%%%"}, {"string": "(Mixin)"}, {"string": "%%%"}]}
+                },
+                {
+                    "targetLocator": {"className": "AddRest", "modifier": "init"},
+                    "block": {"lines": [{"string": "%%%"}, {"string": "self.x = 1"}, {"string": "%%%"}]}
+                }
+            ]
+        }
+    ]
+}
+
+
+def _get_fragments(spec=_ARITH_SPEC_WITH_FRAGMENTS, section_index=0):
+    model = build_model(spec)
+    return model['semantic_sections'][section_index]['fragments']
+
+
+def test_fragment_kind_body_for_known_class():
+    frags = _get_fragments()
+    addrest_body = next(f for f in frags if f['class_name'] == 'AddRest' and f['kind'] == 'body')
+    assert addrest_body['kind'] == 'body'
+
+
+def test_fragment_kind_file_for_unknown_class():
+    frags = _get_fragments()
+    helper = next(f for f in frags if f['class_name'] == 'Helper')
+    assert helper['kind'] == 'file'
+
+
+def test_fragment_kind_import_from_modifier():
+    frags = _get_fragments()
+    import_frag = next(f for f in frags if f['kind'] == 'import')
+    assert import_frag['class_name'] == 'AddRest'
+
+
+def test_fragment_kind_top_from_modifier():
+    frags = _get_fragments()
+    top_frag = next(f for f in frags if f['kind'] == 'top')
+    assert top_frag['class_name'] == 'AddRest'
+
+
+def test_fragment_kind_class_from_modifier():
+    frags = _get_fragments()
+    class_frag = next(f for f in frags if f['kind'] == 'class')
+    assert class_frag['class_name'] == 'AddRest'
+
+
+def test_fragment_kind_init_from_modifier():
+    frags = _get_fragments()
+    init_frag = next(f for f in frags if f['kind'] == 'init')
+    assert init_frag['class_name'] == 'AddRest'
+
+
+def test_fragment_body_strips_percent_markers():
+    frags = _get_fragments()
+    addrest_body = next(f for f in frags if f['class_name'] == 'AddRest' and f['kind'] == 'body')
+    assert addrest_body['body'] == 'def eval(self, acc):\n    return acc'
+
+
+def test_fragment_body_preserves_indentation():
+    frags = _get_fragments()
+    addrest_body = next(f for f in frags if f['class_name'] == 'AddRest' and f['kind'] == 'body')
+    assert '    return acc' in addrest_body['body']
+
+
+def test_fragment_class_name_passed_verbatim():
+    frags = _get_fragments()
+    helper = next(f for f in frags if f['class_name'] == 'Helper')
+    assert helper['class_name'] == 'Helper'
+
+
+def test_semantic_section_has_fragments_key():
+    model = build_model(_ARITH_SPEC_WITH_FRAGMENTS)
+    assert 'fragments' in model['semantic_sections'][0]
+
+
+def test_empty_codeFragmentList_gives_empty_fragments():
+    spec = {
+        "lexical": {"ruleList": []},
+        "syntax": {"rules": []},
+        "semantics": [{"language": "Java", "tool": "Java", "codeFragmentList": []}]
+    }
+    model = build_model(spec)
+    assert model['semantic_sections'][0]['fragments'] == []
