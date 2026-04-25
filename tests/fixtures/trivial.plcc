@@ -1,4 +1,3 @@
 token NUM '\d+'
 %
 <program> ::= NUM
-%

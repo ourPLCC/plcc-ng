@@ -6,7 +6,7 @@ setup() {
     MODEL_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/model.schema.json"
     WORK_DIR="$(mktemp -d)"
     cd "${WORK_DIR}"
-    plcc-make "${FIXTURES}/plantuml_only.plcc"
+    plcc-make "${FIXTURES}/trivial.plcc"
 }
 
 teardown() {
@@ -29,41 +29,45 @@ teardown() {
     check-jsonschema --schemafile "${MODEL_SCHEMA}" build/model.json
 }
 
-@test "plcc-make produces at least one .puml file in build/diagram/" {
-    ls build/diagram/*.puml
-}
-
-@test "plcc-lang-list finds plantuml after install" {
-    run plcc-lang-list
-    [[ "$output" == *"plantuml"* ]]
-}
-
-@test "plcc-make cleans build/ on rebuild" {
-    touch build/diagram/stale-marker.txt
-    plcc-make "${FIXTURES}/plantuml_only.plcc"
-    [ ! -f build/diagram/stale-marker.txt ]
-}
-
 @test "plcc-make produces build/ll1.json" {
     [ -f build/ll1.json ]
 }
 
-@test "plcc-make trivial-full produces build output for all three languages" {
+@test "plcc-make cleans build/ on rebuild" {
+    touch build/stale-marker.txt
+    plcc-make "${FIXTURES}/trivial.plcc"
+    [ ! -f build/stale-marker.txt ]
+}
+
+@test "plcc-spec | plcc-model | plcc-diagram produces diagram.puml" {
+    DIAGRAM_DIR="$(mktemp -d)"
+    trap "rm -rf '${DIAGRAM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-diagram --output="${DIAGRAM_DIR}"
+    [ -f "${DIAGRAM_DIR}/diagram.puml" ]
+}
+
+@test "diagram.puml contains expected classes" {
+    DIAGRAM_DIR="$(mktemp -d)"
+    trap "rm -rf '${DIAGRAM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-diagram --output="${DIAGRAM_DIR}"
+    grep 'ExprRest' "${DIAGRAM_DIR}/diagram.puml"
+    grep 'AddRest --|> ExprRest' "${DIAGRAM_DIR}/diagram.puml"
+}
+
+@test "plcc-diagram-list finds plantuml" {
+    run plcc-diagram-list
+    [[ "$output" == *"plantuml"* ]]
+}
+
+@test "plcc-make trivial-full produces build output for Java and Python" {
     if ! command -v javac &>/dev/null; then skip "JDK not available"; fi
-    FULL_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t plcc)"
+    FULL_DIR="$(mktemp -d)"
     (
         cd "${FULL_DIR}"
-
-        # Debug
-        echo "${FULL_DIR}"
-        pwd
-        ls -R
-
         plcc-make "${FIXTURES}/trivial-full.plcc"
         [ -f build/ll1.json ]
         [ -d build/Java ]
         [ -d build/py ]
-        [ -d build/diagram ]
     )
     rm -rf "${FULL_DIR}"
 }
