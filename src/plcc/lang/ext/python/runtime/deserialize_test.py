@@ -1,0 +1,73 @@
+from .deserialize import deserialize
+from .registry import Registry
+from .base import Node, Token
+
+
+class FakeProgram(Node):
+    _rule_name = 'program'
+    _fields = ['num']
+
+    def __init__(self, num):
+        self.num = num
+
+
+class FakeExprRest(Node):
+    _rule_name = 'ExprRest'
+    _fields = ['term', 'rest']
+
+    def __init__(self, term, rest):
+        self.term = term
+        self.rest = rest
+
+
+class FakeNilRest(Node):
+    _rule_name = 'ExprRest'
+    _fields = []
+
+    def __init__(self):
+        pass
+
+
+def _make_registry():
+    reg = Registry()
+    reg.register(FakeProgram, FakeExprRest, FakeNilRest)
+    return reg
+
+
+def test_deserialize_token_node():
+    tree = {"kind": "token", "name": "NUM", "lexeme": "42"}
+    reg = _make_registry()
+    result = deserialize(tree, reg)
+    assert isinstance(result, Token)
+    assert result.kind == 'NUM'
+    assert result.lexeme == '42'
+
+
+def test_deserialize_leaf_nonterminal():
+    tree = {"kind": "tree", "rule": "program", "children": [
+        ["num", {"kind": "token", "name": "NUM", "lexeme": "7"}]
+    ]}
+    reg = _make_registry()
+    result = deserialize(tree, reg)
+    assert isinstance(result, FakeProgram)
+    assert isinstance(result.num, Token)
+    assert result.num.lexeme == '7'
+
+
+def test_deserialize_empty_children_nonterminal():
+    tree = {"kind": "tree", "rule": "ExprRest", "children": []}
+    reg = _make_registry()
+    result = deserialize(tree, reg)
+    assert isinstance(result, FakeNilRest)
+
+
+def test_deserialize_nested():
+    tree = {"kind": "tree", "rule": "ExprRest", "children": [
+        ["term", {"kind": "token", "name": "NUM", "lexeme": "1"}],
+        ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}],
+    ]}
+    reg = _make_registry()
+    result = deserialize(tree, reg)
+    assert isinstance(result, FakeExprRest)
+    assert isinstance(result.term, Token)
+    assert isinstance(result.rest, FakeNilRest)
