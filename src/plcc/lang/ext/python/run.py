@@ -35,7 +35,7 @@ def main(argv=None):
     main_py = os.path.join(output_dir, 'main.py')
     verbose.emit(Events.STARTED, message=f'running {main_py}')
     result = subprocess.run(
-        [sys.executable, main_py],
+        [sys.executable, '-u', main_py],
         stdin=sys.stdin,
         stdout=sys.stdout,
         stderr=sys.stderr,
