@@ -321,3 +321,51 @@ def test_empty_codeFragmentList_gives_empty_fragments():
     }
     model = build_model(spec)
     assert model['semantic_sections'][0]['fragments'] == []
+
+
+# ---- entry_point pass-through ----
+
+def test_semantic_section_entry_point_null_when_absent():
+    model = build_model(_TRIVIAL_SPEC)
+    assert model['semantic_sections'][0].get('entry_point') is None
+
+
+def test_semantic_section_entry_point_when_present():
+    spec = {
+        "lexical": {"ruleList": []},
+        "syntax": {"rules": []},
+        "semantics": [{"language": "Python", "tool": "calc", "entry_point": "_run", "codeFragmentList": []}]
+    }
+    model = build_model(spec)
+    assert model['semantic_sections'][0]['entry_point'] == '_run'
+
+
+# ---- rule_name on classes ----
+
+def test_trivial_class_has_rule_name():
+    model = build_model(_TRIVIAL_SPEC)
+    assert model['classes'][0]['rule_name'] == 'program'
+
+
+def test_arith_abstract_class_has_rule_name():
+    model = build_model(_ARITH_SPEC)
+    exprrest = next(c for c in model['classes'] if c['name'] == 'ExprRest')
+    assert exprrest['rule_name'] == 'ExprRest'
+
+
+def test_arith_concrete_subclass_has_parent_rule_name():
+    model = build_model(_ARITH_SPEC)
+    addrest = next(c for c in model['classes'] if c['name'] == 'AddRest')
+    assert addrest['rule_name'] == 'ExprRest'
+
+
+def test_arith_nilrest_has_parent_rule_name():
+    model = build_model(_ARITH_SPEC)
+    nilrest = next(c for c in model['classes'] if c['name'] == 'NilRest')
+    assert nilrest['rule_name'] == 'ExprRest'
+
+
+def test_arith_expr_has_rule_name():
+    model = build_model(_ARITH_SPEC)
+    expr = next(c for c in model['classes'] if c['name'] == 'Expr')
+    assert expr['rule_name'] == 'Expr'

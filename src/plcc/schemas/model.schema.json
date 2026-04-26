@@ -10,11 +10,12 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "abstract", "fields"],
+        "required": ["name", "abstract", "fields", "rule_name"],
         "properties": {
-          "name":     { "type": "string" },
-          "abstract": { "type": "boolean" },
-          "extends":  { "type": ["string", "null"] },
+          "name":      { "type": "string" },
+          "abstract":  { "type": "boolean" },
+          "extends":   { "type": ["string", "null"] },
+          "rule_name": { "type": "string" },
           "fields": {
             "type": "array",
             "items": {
@@ -35,8 +36,9 @@
         "type": "object",
         "required": ["tool", "language", "fragments"],
         "properties": {
-          "tool":     { "type": "string" },
-          "language": { "type": "string" },
+          "tool":        { "type": "string" },
+          "language":    { "type": "string" },
+          "entry_point": { "type": ["string", "null"] },
           "fragments": {
             "type": "array",
             "items": {

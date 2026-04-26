@@ -44,6 +44,7 @@ def _build_classes(spec):
                 'abstract': True,
                 'extends': None,
                 'fields': [],
+                'rule_name': nt_name,
             })
             for rule in nt_rules:
                 alt_name = rule['lhs']['altName']
@@ -52,6 +53,7 @@ def _build_classes(spec):
                     'abstract': False,
                     'extends': class_name,
                     'fields': _extract_fields(rule.get('rhsSymbolList', [])),
+                    'rule_name': nt_name,
                 })
         else:
             rule = nt_rules[0]
@@ -60,6 +62,7 @@ def _build_classes(spec):
                 'abstract': False,
                 'extends': None,
                 'fields': _extract_fields(rule.get('rhsSymbolList', [])),
+                'rule_name': nt_name,
             })
 
     return classes
@@ -90,6 +93,7 @@ def _build_semantic_sections(spec, known_class_names):
         sections.append({
             'language': s['language'],
             'tool': s['tool'],
+            'entry_point': s.get('entry_point'),
             'fragments': fragments,
         })
     return sections
