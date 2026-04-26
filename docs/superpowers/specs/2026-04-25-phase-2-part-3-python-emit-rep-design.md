@@ -137,18 +137,28 @@ becomes:
 % calculate Python _run
 ```
 
-### 6.2 New `Program` semantic fragment
+### 6.2 New semantic fragments
 
 ```
 Program
 %%%
 def _run(self):
-    return self.expr.eval(0)
+    return self.expr.eval()
+%%%
+Expr
+%%%
+def eval(self):
+    return self.rest.eval(self.term.eval())
 %%%
 ```
 
-`Program._run()` seeds the accumulator at `0` and delegates to `Expr.eval()`.
-The existing fragments for `AddRest`, `NilRest`, and `Term` are unchanged.
+`Expr.eval()` evaluates the first term then passes it as the initial accumulator
+to `ExprRest.eval()`. `Program._run()` delegates to `Expr.eval()`. The existing
+fragments for `AddRest`, `NilRest`, and `Term` are unchanged.
+
+Evaluation of `1 + 2`:
+- `Term.eval()` → `1`
+- `AddRest.eval(1)` → `self.rest.eval(1 + 2)` → `NilRest.eval(3)` → `3`
 
 The fixture remains LL(1) and all existing Part 2 tests continue to pass — the
 semantic section change is invisible to `plcc-model`'s class derivation and diagram
@@ -217,8 +227,11 @@ Applied once per class in `model.classes`. Handles all fragment kinds in order:
 {# top fragments — module-level code before imports #}
 {% for frag in top_fragments %}{{ frag.body }}
 {% endfor %}
-{# import fragments #}
+{# runtime and parent class imports — auto-generated #}
 import runtime.base as _plcc
+{% if cls.extends %}from {{ cls.extends }} import {{ cls.extends }}
+{% endif %}
+{# user import fragments #}
 {% for frag in import_fragments %}{{ frag.body }}
 {% endfor %}
 
