@@ -8,7 +8,17 @@ skip  SPACE '\s+'
 <ExprRest>:NilRest     ::=
 <Term>                 ::= <NUM>num
 %
-% calculate Python
+% calculate Python _run
+Program
+%%%
+def _run(self):
+    return self.expr.eval()
+%%%
+Expr
+%%%
+def eval(self):
+    return self.rest.eval(self.term.eval())
+%%%
 AddRest
 %%%
 def eval(self, acc):
