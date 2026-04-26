@@ -36,8 +36,9 @@
         "type": "object",
         "required": ["language", "tool"],
         "properties": {
-          "language": { "type": "string" },
-          "tool":     { "type": "string" }
+          "language":    { "type": "string" },
+          "tool":        { "type": "string" },
+          "entry_point": { "type": ["string", "null"] }
         }
       }
     }
