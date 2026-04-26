@@ -52,10 +52,17 @@ def test_one_divider_with_different_but_same_language_tool():
     ]
 
 
-def test_one_divider_only_takes_first_two_lines():
+def test_one_divider_with_entry_point():
     lines_ = list(lines.parseLines('% java python c++'))
     assert list(parse_dividers(lines_)) == [
-        make_divider(tool='java', language='python', line=lines_[0])
+        make_divider(tool='java', language='python', line=lines_[0], entry_point='c++')
+    ]
+
+
+def test_one_divider_without_entry_point_has_null():
+    lines_ = list(lines.parseLines('% java python'))
+    assert list(parse_dividers(lines_)) == [
+        make_divider(tool='java', language='python', line=lines_[0], entry_point=None)
     ]
 
 
@@ -77,5 +84,5 @@ def test_blocks_mask_dividers():
     ]
 
 
-def make_divider(tool, language, line):
-    return Divider(tool=tool, language=language, line=line)
+def make_divider(tool, language, line, entry_point=None):
+    return Divider(tool=tool, language=language, line=line, entry_point=entry_point)

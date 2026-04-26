@@ -8,3 +8,4 @@ class Divider:
     tool: str
     language: str
     line: Line
+    entry_point: str | None = None

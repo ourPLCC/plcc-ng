@@ -25,12 +25,13 @@ class DividerParser:
             else:
                 yield line
 
-    def _parseDivider(self,line):
+    def _parseDivider(self, line):
         matchToolLanguage = self._matchToolLanguage(line.string)
         matchToolOnly = self._matchToolOnly(line.string)
         tool = self._getTool(matchToolLanguage, matchToolOnly)
         language = self._getLanguage(matchToolLanguage, matchToolOnly)
-        return self._createDivider(tool, language, line)
+        entry_point = self._getEntryPoint(matchToolLanguage)
+        return self._createDivider(tool, language, entry_point, line)
 
     def _getTool(self, matchToolLanguage, matchToolOnly):
         if matchToolLanguage:
@@ -60,12 +61,17 @@ class DividerParser:
     def _matchToolOnly(self, string):
         return self.patterns['toolOnly'].match(string)
 
-    def _createDivider(self, toolName, languageName, line):
-        return Divider(tool=toolName, language=languageName, line=line)
+    def _getEntryPoint(self, matchToolLanguage):
+        if matchToolLanguage:
+            return matchToolLanguage['entry_point']  # None when group absent
+        return None
+
+    def _createDivider(self, toolName, languageName, entry_point, line):
+        return Divider(tool=toolName, language=languageName, line=line, entry_point=entry_point)
 
     def _compilePatternDictionary(self):
         return {
             'divider': re.compile(r'^%(?:\s.*)?$'),
-            'toolLanguage': re.compile(r'^%\s*(?P<tool>\S+)\s(?P<language>\S+).*$'),
+            'toolLanguage': re.compile(r'^%\s*(?P<tool>\S+)\s+(?P<language>\S+)(?:\s+(?P<entry_point>\S+))?.*$'),
             'toolOnly': re.compile(r'^%\s*(?P<tool>\S+)\s*$')
         }
