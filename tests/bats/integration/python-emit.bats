@@ -5,17 +5,15 @@ bats_require_minimum_version 1.5.0
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SPEC_JSON="$(mktemp)"
-    LL1_JSON="$(mktemp)"
     MODEL_JSON="$(mktemp)"
     WORK_DIR="$(mktemp -d)"
     plcc-spec "${FIXTURES}/arith.plcc" > "${SPEC_JSON}"
-    plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
     plcc-model "${SPEC_JSON}" > "${MODEL_JSON}"
     plcc-python-emit --output="${WORK_DIR}" < "${MODEL_JSON}"
 }
 
 teardown() {
-    rm -f "${SPEC_JSON}" "${LL1_JSON}" "${MODEL_JSON}"
+    rm -f "${SPEC_JSON}" "${MODEL_JSON}"
     rm -rf "${WORK_DIR}"
 }
 
@@ -36,8 +34,12 @@ teardown() {
 }
 
 @test "main.py evaluates 1+2 to 3 via plcc-python-run" {
-    TREE_JSON="$(echo '1 + 2' | plcc-tokens "${SPEC_JSON}" | plcc-tree "--ll1=${LL1_JSON}")"
-    run bash -c "echo '${TREE_JSON}' | plcc-python-run --output='${WORK_DIR}'"
+    LL1_JSON="$(mktemp)"
+    TREE_FILE="$(mktemp)"
+    trap "rm -f '${LL1_JSON}' '${TREE_FILE}'" EXIT
+    plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
+    echo '1 + 2' | plcc-tokens "${SPEC_JSON}" | plcc-tree "--ll1=${LL1_JSON}" > "${TREE_FILE}"
+    run plcc-python-run --output="${WORK_DIR}" < "${TREE_FILE}"
     [ "$status" -eq 0 ]
     [[ "$output" == *'"value"'* ]]
     [[ "$output" == *'3'* ]]
@@ -50,6 +52,7 @@ teardown() {
 
 @test "null entry_point in model generates main.py calling _run" {
     NULL_DIR="$(mktemp -d)"
+    trap "rm -rf '${NULL_DIR}'" EXIT
     python3 -c "
 import json, sys
 with open('${MODEL_JSON}') as f:
@@ -59,5 +62,4 @@ for s in m.get('semantics', []):
 print(json.dumps(m))
 " | plcc-python-emit --output="${NULL_DIR}"
     grep '_run' "${NULL_DIR}/main.py"
-    rm -rf "${NULL_DIR}"
 }

@@ -9,7 +9,7 @@ setup() {
     mkdir -p build
     plcc-spec "${FIXTURES}/arith.plcc" > build/spec.json
     plcc-ll1 < build/spec.json > build/ll1.json
-    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-python-emit --output=build/calculate
+    plcc-model build/spec.json | plcc-python-emit --output=build/calculate
 }
 
 teardown() {
@@ -62,9 +62,9 @@ teardown() {
 
 @test "plcc-rep exits non-zero without build/" {
     EMPTY_DIR="$(mktemp -d)"
+    trap "rm -rf '${EMPTY_DIR}'" EXIT
     run bash -c "cd '${EMPTY_DIR}' && plcc-rep --tool=calculate '${FIXTURES}/arith.plcc'"
     [ "$status" -ne 0 ]
-    rm -rf "${EMPTY_DIR}"
 }
 
 @test "standalone invocation: plcc-tokens | plcc-tree | python main.py" {
