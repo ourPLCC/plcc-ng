@@ -1,0 +1,49 @@
+#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+setup() {
+    FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
+    SPEC_JSON="$(mktemp)"
+    LL1_JSON="$(mktemp)"
+    MODEL_JSON="$(mktemp)"
+    WORK_DIR="$(mktemp -d)"
+    plcc-spec "${FIXTURES}/arith.plcc" > "${SPEC_JSON}"
+    plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
+    plcc-model "${SPEC_JSON}" > "${MODEL_JSON}"
+    plcc-python-emit --output="${WORK_DIR}" < "${MODEL_JSON}"
+}
+
+teardown() {
+    rm -f "${SPEC_JSON}" "${LL1_JSON}" "${MODEL_JSON}"
+    rm -rf "${WORK_DIR}"
+}
+
+@test "emit produces one py file per class" {
+    for name in Program Expr ExprRest AddRest NilRest Term; do
+        [ -f "${WORK_DIR}/${name}.py" ]
+    done
+}
+
+@test "emit produces main.py" {
+    [ -f "${WORK_DIR}/main.py" ]
+}
+
+@test "emit copies runtime directory" {
+    [ -f "${WORK_DIR}/runtime/base.py" ]
+    [ -f "${WORK_DIR}/runtime/registry.py" ]
+    [ -f "${WORK_DIR}/runtime/deserialize.py" ]
+}
+
+@test "main.py evaluates 1+2 to 3 via plcc-python-run" {
+    TREE_JSON="$(echo '1 + 2' | plcc-tokens "${SPEC_JSON}" | plcc-tree "--ll1=${LL1_JSON}")"
+    run bash -c "echo '${TREE_JSON}' | plcc-python-run --output='${WORK_DIR}'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *'"value"'* ]]
+    [[ "$output" == *'3'* ]]
+}
+
+@test "main.py is runnable standalone" {
+    run python3 "${WORK_DIR}/main.py" <<< ""
+    [ "$status" -eq 0 ]
+}
