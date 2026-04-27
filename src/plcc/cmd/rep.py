@@ -15,12 +15,11 @@ Usage:
     plcc-rep [options] GRAMMAR [SOURCE ...]
 
 Arguments:
-    GRAMMAR     Path to the PLCC grammar file (used to locate build/).
+    GRAMMAR     Path to the PLCC grammar file (build/ is resolved from the current directory).
     SOURCE      Source files to evaluate before entering interactive mode.
 
 Options:
     --tool=NAME         Semantic section to run (inferred if only one exists).
-    --verbose-format=FMT  Output format: text or json [default: text].
     -h --help           Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -133,11 +132,14 @@ def _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format):
     tokens_proc.stdin.write(chunk)
     tokens_proc.stdin.close()
 
-    tree_out, _ = tree_proc.communicate()
+    tree_out, tree_err = tree_proc.communicate()
+    tokens_err = tokens_proc.stderr.read()
     tokens_proc.wait()
 
     if tokens_proc.returncode != 0 or tree_proc.returncode != 0:
-        print('plcc-rep: parse error', file=sys.stderr)
+        for msg in [tokens_err, tree_err]:
+            if msg:
+                sys.stderr.buffer.write(msg)
         return
 
     tree_line = tree_out.strip()
