@@ -47,3 +47,17 @@ teardown() {
     run python3 "${WORK_DIR}/main.py" <<< ""
     [ "$status" -eq 0 ]
 }
+
+@test "null entry_point in model generates main.py calling _run" {
+    NULL_DIR="$(mktemp -d)"
+    python3 -c "
+import json, sys
+with open('${MODEL_JSON}') as f:
+    m = json.load(f)
+for s in m.get('semantics', []):
+    s['entry_point'] = None
+print(json.dumps(m))
+" | plcc-python-emit --output="${NULL_DIR}"
+    grep '_run' "${NULL_DIR}/main.py"
+    rm -rf "${NULL_DIR}"
+}

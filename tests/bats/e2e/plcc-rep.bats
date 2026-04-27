@@ -44,6 +44,14 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
+@test "plcc-rep session continues after parse error in file argument" {
+    echo '1 + 2' > good.txt
+    echo 'bad input here' > bad.txt
+    run plcc-rep --tool=calculate "${FIXTURES}/arith.plcc" good.txt bad.txt
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"3"* ]]
+}
+
 @test "plcc-rep emits json eval record with --verbose-format=json" {
     run bash -c "echo '1 + 2' | plcc-rep --tool=calculate --verbose-format=json '${FIXTURES}/arith.plcc'"
     [ "$status" -eq 0 ]
