@@ -107,6 +107,10 @@ def _resolve_tool(spec, tool_name):
         print(f"plcc-rep: no semantic section with tool '{tool_name}'", file=sys.stderr)
         sys.exit(1)
 
+    if len(sections) == 0:
+        print("plcc-rep: no semantic sections found. Run plcc-make first.", file=sys.stderr)
+        sys.exit(1)
+
     if len(sections) == 1:
         return sections[0]['tool'], sections[0]['language']
 
@@ -146,8 +150,12 @@ def _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format):
     if not tree_line:
         return
 
-    interpreter.stdin.write(tree_line + b'\n')
-    interpreter.stdin.flush()
+    try:
+        interpreter.stdin.write(tree_line + b'\n')
+        interpreter.stdin.flush()
+    except BrokenPipeError:
+        print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+        sys.exit(1)
 
     _read_response(interpreter.stdout, verbose_format)
 
