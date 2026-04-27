@@ -22,10 +22,10 @@ teardown() { rm -f "${SPEC_JSON}" "${MODEL_JSON}"; rm -rf "${WORK_DIR}"; }
 }
 
 @test "plcc-lang-run dispatches to plcc-python-run" {
-    TREE='{"kind":"tree","rule":"program","children":[]}'
+    TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"42","source":{"file":"<stdin>","line":1,"column":1}}]]}'
     run bash -c "echo '${TREE}' | plcc-lang-run --target=Python --output='${WORK_DIR}'"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"evaluated"* ]]
+    [[ "$output" == *"result"* ]]
 }
 
 @test "plcc-lang-run exits 0 for missing runner (no-op)" {
