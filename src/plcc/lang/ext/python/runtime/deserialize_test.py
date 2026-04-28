@@ -28,6 +28,14 @@ class FakeNilRest(Node):
         pass
 
 
+class FakeRands(Node):
+    _rule_name = 'rands'
+    _fields = ['exprList']
+
+    def __init__(self, exprList):
+        self.exprList = exprList
+
+
 def _make_registry():
     reg = Registry()
     reg.register(FakeProgram, FakeExprRest, FakeNilRest)
@@ -71,3 +79,37 @@ def test_deserialize_nested():
     assert isinstance(result, FakeExprRest)
     assert isinstance(result.term, Token)
     assert isinstance(result.rest, FakeNilRest)
+
+
+def test_deserialize_list_field_of_tokens():
+    tree = {
+        "kind": "tree",
+        "rule": "rands",
+        "children": [
+            ["exprList", [
+                {"kind": "token", "name": "NUM", "lexeme": "1"},
+                {"kind": "token", "name": "NUM", "lexeme": "2"},
+            ]]
+        ]
+    }
+    reg = Registry()
+    reg.register(FakeRands)
+    result = deserialize(tree, reg)
+    assert isinstance(result, FakeRands)
+    assert len(result.exprList) == 2
+    assert isinstance(result.exprList[0], Token)
+    assert result.exprList[0].lexeme == '1'
+    assert isinstance(result.exprList[1], Token)
+    assert result.exprList[1].lexeme == '2'
+
+
+def test_deserialize_empty_list_field():
+    tree = {
+        "kind": "tree",
+        "rule": "rands",
+        "children": [["exprList", []]]
+    }
+    reg = Registry()
+    reg.register(FakeRands)
+    result = deserialize(tree, reg)
+    assert result.exprList == []
