@@ -369,3 +369,79 @@ def test_arith_expr_has_rule_name():
     model = build_model(_ARITH_SPEC)
     expr = next(c for c in model['classes'] if c['name'] == 'Expr')
     assert expr['rule_name'] == 'Expr'
+
+
+_ARBNO_SPEC = {
+    "lexical": {"ruleList": []},
+    "syntax": {
+        "rules": [
+            {
+                "lhs": {"name": "program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "rands", "isTerminal": False, "isCapturing": True, "altName": "rands"}
+                ]
+            },
+            {
+                "lhs": {"name": "rands", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "expr", "isTerminal": False, "isCapturing": True, "altName": "expr"}
+                ],
+                "separator": {"name": "COMMA", "isTerminal": True, "isCapturing": False}
+            },
+            {
+                "lhs": {"name": "expr", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "NUM", "isTerminal": True, "isCapturing": True, "altName": "num"}
+                ]
+            }
+        ]
+    },
+    "semantics": []
+}
+
+
+def test_arbno_class_field_has_is_list_true():
+    model = build_model(_ARBNO_SPEC)
+    rands = next(c for c in model['classes'] if c['name'] == 'Rands')
+    assert rands['fields'][0]['is_list'] is True
+
+
+def test_arbno_field_name_has_list_suffix():
+    model = build_model(_ARBNO_SPEC)
+    rands = next(c for c in model['classes'] if c['name'] == 'Rands')
+    assert rands['fields'][0]['name'] == 'exprList'
+
+
+def test_arbno_field_type_is_base_element_type():
+    model = build_model(_ARBNO_SPEC)
+    rands = next(c for c in model['classes'] if c['name'] == 'Rands')
+    assert rands['fields'][0]['type'] == 'Expr'
+
+
+def test_non_arbno_field_has_is_list_false():
+    model = build_model(_TRIVIAL_SPEC)
+    field = model['classes'][0]['fields'][0]
+    assert field['is_list'] is False
+
+
+def test_arbno_token_field_has_correct_type():
+    spec = {
+        "lexical": {"ruleList": []},
+        "syntax": {
+            "rules": [
+                {
+                    "lhs": {"name": "items", "altName": None, "isTerminal": False, "isCapturing": False},
+                    "rhsSymbolList": [
+                        {"name": "NUM", "isTerminal": True, "isCapturing": True, "altName": "num"}
+                    ],
+                    "separator": None
+                }
+            ]
+        },
+        "semantics": []
+    }
+    model = build_model(spec)
+    items = next(c for c in model['classes'] if c['name'] == 'Items')
+    assert items['fields'][0]['name'] == 'numList'
+    assert items['fields'][0]['type'] == 'Token'
+    assert items['fields'][0]['is_list'] is True

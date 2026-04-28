@@ -48,24 +48,50 @@ def _build_classes(spec):
             })
             for rule in nt_rules:
                 alt_name = rule['lhs']['altName']
+                fields = _extract_fields_for_rule(rule)
                 classes.append({
                     'name': alt_name,
                     'abstract': False,
                     'extends': class_name,
-                    'fields': _extract_fields(rule.get('rhsSymbolList', [])),
+                    'fields': fields,
                     'rule_name': nt_name,
                 })
         else:
             rule = nt_rules[0]
+            fields = _extract_fields_for_rule(rule)
             classes.append({
                 'name': class_name,
                 'abstract': False,
                 'extends': None,
-                'fields': _extract_fields(rule.get('rhsSymbolList', [])),
+                'fields': fields,
                 'rule_name': nt_name,
             })
 
     return classes
+
+
+def _extract_fields_for_rule(rule):
+    rhs = rule.get('rhsSymbolList', [])
+    if 'separator' in rule:
+        return _extract_arbno_fields(rhs)
+    return _extract_fields(rhs)
+
+
+def _extract_arbno_fields(rhs_symbol_list):
+    fields = []
+    for symbol in rhs_symbol_list:
+        if not symbol.get('isCapturing'):
+            continue
+        alt = symbol.get('altName')
+        name = symbol.get('name', '')
+        field_name = (alt if alt else name).lower() + 'List'
+        if symbol.get('isTerminal'):
+            field_type = 'Token'
+        else:
+            n = symbol.get('name', 'Object')
+            field_type = n[:1].upper() + n[1:]
+        fields.append({'name': field_name, 'type': field_type, 'is_list': True})
+    return fields
 
 
 def _extract_fields(rhs_symbol_list):
@@ -79,7 +105,7 @@ def _extract_fields(rhs_symbol_list):
         else:
             name = symbol.get('name', 'Object')
             field_type = name[:1].upper() + name[1:]
-        fields.append({'name': field_name, 'type': field_type})
+        fields.append({'name': field_name, 'type': field_type, 'is_list': False})
     return fields
 
 
