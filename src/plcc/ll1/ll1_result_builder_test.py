@@ -143,3 +143,83 @@ def test_capturing_symbol_field_in_parse_table():
     result = build_ll1_result(g, fm)
     entry = result["parse_table"]["E"]["NUM"]
     assert entry == [{"symbol": "NUM", "field": "num"}]
+
+
+def _arbno_grammar_and_rules():
+    """
+    Mimics <rands> **= <expr>expr +COMMA  with <expr> ::= NUM.
+    Grammar is expanded: rands→expr rands#|ε, rands#→COMMA expr rands#|ε, expr→NUM.
+    """
+    g = Grammar()
+    g.addRule("rands", ["expr", "rands#"])
+    g.addRule("rands", [])
+    g.addRule("rands#", ["COMMA", "expr", "rands#"])
+    g.addRule("rands#", [])
+    g.addRule("expr", ["NUM"])
+    fm = {
+        ("rands",  ("expr", "rands#")): [None, None],
+        ("rands",  ()):                 [],
+        ("rands#", ("COMMA", "expr", "rands#")): [None, None, None],
+        ("rands#", ()):                 [],
+        ("expr",   ("NUM",)):           [None],
+    }
+    arbno = {
+        "rands": {
+            "rhs": [{"field": "exprList", "symbol": "expr", "is_terminal": False}],
+            "separator": "COMMA",
+        }
+    }
+    return g, fm, arbno
+
+
+def test_arbno_section_present_in_result():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert "arbno" in result
+
+
+def test_arbno_nt_in_arbno_not_parse_table():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert "rands" in result["arbno"]
+    assert "rands" not in result["parse_table"]
+
+
+def test_arbno_internal_cont_not_in_parse_table():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert "rands#" not in result["parse_table"]
+
+
+def test_arbno_internal_nts_not_in_first_sets():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert "rands" not in result["first_sets"]
+    assert "rands#" not in result["first_sets"]
+
+
+def test_arbno_lookahead_computed_from_first_of_first_item():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert result["arbno"]["rands"]["lookahead"] == ["NUM"]
+
+
+def test_arbno_separator_preserved():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert result["arbno"]["rands"]["separator"] == "COMMA"
+
+
+def test_arbno_rhs_preserved():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert result["arbno"]["rands"]["rhs"] == [
+        {"field": "exprList", "symbol": "expr", "is_terminal": False}
+    ]
+
+
+def test_existing_grammar_unaffected_when_no_arbno():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result["is_ll1"] is True
+    assert result["arbno"] == {}

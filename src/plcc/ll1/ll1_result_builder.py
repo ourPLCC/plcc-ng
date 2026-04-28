@@ -6,9 +6,13 @@ from plcc.spec.syntax.validations.ll1.check_parsing_table_for_ll1 import check_p
 from plcc.spec.syntax.validations.ll1.check_left_recursion import check_left_recursion
 
 
-def build_ll1_result(grammar: Grammar, field_map: dict) -> dict:
+def build_ll1_result(grammar: Grammar, field_map: dict, arbno_rules: dict = None) -> dict:
+    if arbno_rules is None:
+        arbno_rules = {}
     eps = grammar.getEpsilon()
     eof = grammar.getEof()
+
+    internal_nts = set(arbno_rules) | {nt + "#" for nt in arbno_rules}
 
     try:
         lr_cycles = check_left_recursion(grammar)
@@ -26,7 +30,10 @@ def build_ll1_result(grammar: Grammar, field_map: dict) -> dict:
             return "$"
         return t
 
-    nts = sorted(grammar.getNonterminalSet())
+    nts = sorted(
+        nt for nt in grammar.getNonterminalSet()
+        if nt not in internal_nts
+    )
 
     first_sets = {nt: sorted(tok(t) for t in firsts[nt]) for nt in nts}
     follow_sets = {nt: sorted(tok(t) for t in follows[nt]) for nt in nts}
@@ -46,6 +53,8 @@ def build_ll1_result(grammar: Grammar, field_map: dict) -> dict:
 
     parse_table = {}
     for (nt, t) in table.getKeys():
+        if nt in internal_nts:
+            continue
         if (nt, t) in bad_cells:
             continue
         cell = table.getCell(nt, t)
@@ -56,13 +65,14 @@ def build_ll1_result(grammar: Grammar, field_map: dict) -> dict:
         parse_table.setdefault(nt, {})[lookahead] = _prod_entry(nt, prod, field_map, eps)
 
     conflicts = []
-    # Sort bad_cells carefully: eof sentinel can't be compared with strings directly
+
     def cell_sort_key(cell):
         nt, t = cell
-        t_str = tok(t)
-        return (nt, t_str)
+        return (nt, tok(t))
 
     for (nt, t) in sorted(bad_cells, key=cell_sort_key):
+        if nt in internal_nts:
+            continue
         prods = table.getCell(nt, t)
         lookahead = tok(t)
         productions = [
@@ -76,6 +86,20 @@ def build_ll1_result(grammar: Grammar, field_map: dict) -> dict:
         cycle = [rule[0] for rule in offending] + [offending[-1][1][0]]
         left_recursion.append({"cycle": cycle})
 
+    arbno_out = {}
+    for nt, entry in arbno_rules.items():
+        if entry["rhs"]:
+            first_item = entry["rhs"][0]
+            first_sym = first_item["symbol"]
+            if first_item["is_terminal"]:
+                lookahead = [first_sym]
+            else:
+                fset = firsts.get(first_sym, set())
+                lookahead = sorted(t for t in fset if t is not eps and t is not eof)
+        else:
+            lookahead = []
+        arbno_out[nt] = {**entry, "lookahead": lookahead}
+
     return {
         "is_ll1": not (conflicts or left_recursion),
         "start_symbol": grammar.getStartSymbol(),
@@ -85,6 +109,7 @@ def build_ll1_result(grammar: Grammar, field_map: dict) -> dict:
         "parse_table": parse_table,
         "conflicts": conflicts,
         "left_recursion": left_recursion,
+        "arbno": arbno_out,
     }
 
 

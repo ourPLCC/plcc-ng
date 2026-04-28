@@ -41,8 +41,8 @@ def main(argv=None):
     except (json.JSONDecodeError, ValueError) as e:
         verbose.emit_error({}, f"malformed spec JSON: {e}")
         sys.exit(1)
-    grammar, field_map = decode(spec)
-    result = build_ll1_result(grammar, field_map)
+    grammar, field_map, arbno_rules = decode(spec)
+    result = build_ll1_result(grammar, field_map, arbno_rules)
     for nt, terminals in result["first_sets"].items():
         verbose.emit(Events.FIRST_SET, level=2, nonterminal=nt, first=terminals)
     for nt, terminals in result["follow_sets"].items():
