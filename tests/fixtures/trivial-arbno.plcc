@@ -1,0 +1,26 @@
+token NUM   '\d+'
+token PLUS  '\+'
+token COMMA ','
+skip  SPACE '\s+'
+%
+<program>          ::= <rands>rands
+<rands>            **= <expr>expr +COMMA
+<expr>:LitExpr     ::= <NUM>num
+<expr>:AddExpr     ::= PLUS <rands>rands
+%
+% eval Python _run
+Program
+%%%
+def _run(self):
+    return [e.eval() for e in self.rands.exprList]
+%%%
+LitExpr
+%%%
+def eval(self):
+    return int(self.num.lexeme)
+%%%
+AddExpr
+%%%
+def eval(self):
+    return sum(e.eval() for e in self.rands.exprList)
+%%%
