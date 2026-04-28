@@ -82,6 +82,8 @@ def main(argv=None):
 
 def _count_rules(node):
     """Count internal (tree-kind) nodes in the parse tree."""
+    if isinstance(node, list):
+        return sum(_count_rules(item) for item in node)
     if node.get("kind") != "tree":
         return 0
     return 1 + sum(_count_rules(child[1]) for child in node.get("children", []))

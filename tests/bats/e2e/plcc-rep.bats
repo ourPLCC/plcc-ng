@@ -74,3 +74,33 @@ teardown() {
     | python3 -u build/calculate/main.py \
     | python3 -c "import json,sys; r=json.loads(sys.stdin.read()); assert r['value']=='3', r"
 }
+
+setup_arbno_build() {
+    ARBNO_DIR="$(mktemp -d)"
+    mkdir -p "${ARBNO_DIR}/build"
+    plcc-spec "${FIXTURES}/trivial-arbno.plcc" > "${ARBNO_DIR}/build/spec.json"
+    plcc-ll1 < "${ARBNO_DIR}/build/spec.json" > "${ARBNO_DIR}/build/ll1.json"
+    plcc-model "${ARBNO_DIR}/build/spec.json" | plcc-python-emit --output="${ARBNO_DIR}/build/eval"
+    cd "${ARBNO_DIR}"
+}
+
+@test "trivial-arbno: plcc-rep evaluates 1, 2, 3 to [1, 2, 3]" {
+    setup_arbno_build
+    run bash -c "echo '1, 2, 3' | plcc-rep --tool=eval '${FIXTURES}/trivial-arbno.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == "[1, 2, 3]" ]]
+}
+
+@test "trivial-arbno: plcc-rep evaluates empty input to []" {
+    setup_arbno_build
+    run bash -c "echo '' | plcc-rep --tool=eval '${FIXTURES}/trivial-arbno.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == "[]" ]]
+}
+
+@test "trivial-arbno: plcc-rep evaluates single item 42 to [42]" {
+    setup_arbno_build
+    run bash -c "echo '42' | plcc-rep --tool=eval '${FIXTURES}/trivial-arbno.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == "[42]" ]]
+}

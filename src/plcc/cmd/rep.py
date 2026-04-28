@@ -86,8 +86,7 @@ def main(argv=None):
                         break
             else:
                 chunk = sys.stdin.buffer.read()
-                if chunk.strip():
-                    _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
+                _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
     finally:
         try:
             interpreter.stdin.close()
