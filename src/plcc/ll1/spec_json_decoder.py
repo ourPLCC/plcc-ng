@@ -5,19 +5,20 @@ def decode(spec_dict: dict) -> tuple:
     """
     Build a Grammar from a spec JSON dict.
 
-    Returns (grammar, field_map) where:
-      grammar   — base Grammar with string symbol keys, compatible with all
-                  LL(1) algorithms (build_first_sets, build_follow_sets, etc.)
-      field_map — dict[(nt_name, prod_tuple)] -> list[str|None]
-                  Maps each production to its per-symbol field names.
-                  None means the symbol is elided from the parse tree.
+    Returns (grammar, field_map, arbno_rules) where:
+      grammar      — Grammar with both regular and internal arbno expansion rules
+      field_map    — dict[(nt_name, prod_tuple)] -> list[str|None]
+      arbno_rules  — dict[nt_name] -> {rhs, separator}
     """
     grammar = Grammar()
     field_map = {}
+    arbno_rules = {}
     for rule in spec_dict.get("syntax", {}).get("rules", []):
         nt = rule["lhs"]["name"]
         rhs = rule.get("rhsSymbolList", [])
-        if not rhs:
+        if "separator" in rule:
+            _handle_arbno(grammar, field_map, arbno_rules, nt, rhs, rule["separator"])
+        elif not rhs:
             grammar.addRule(nt, [])
             field_map[(nt, ())] = []
         else:
@@ -25,7 +26,39 @@ def decode(spec_dict: dict) -> tuple:
             fields = [_field(s) for s in rhs]
             grammar.addRule(nt, syms)
             field_map[(nt, tuple(syms))] = fields
-    return grammar, field_map
+    return grammar, field_map, arbno_rules
+
+
+def _handle_arbno(grammar, field_map, arbno_rules, nt, rhs, separator_entry):
+    separator = separator_entry["name"] if separator_entry else None
+    cont = nt + "#"
+    syms = [s["name"] for s in rhs]
+
+    # Expand into right-recursive internal rules for LL(1) analysis only.
+    grammar.addRule(nt, syms + [cont])
+    grammar.addRule(nt, [])
+    if separator:
+        grammar.addRule(cont, [separator] + syms + [cont])
+    else:
+        grammar.addRule(cont, syms + [cont])
+    grammar.addRule(cont, [])
+
+    arbno_rhs = [
+        {
+            "field": _arbno_field(s),
+            "symbol": s["name"],
+            "is_terminal": bool(s.get("isTerminal", False)),
+        }
+        for s in rhs
+        if s.get("isCapturing", False)
+    ]
+    arbno_rules[nt] = {"rhs": arbno_rhs, "separator": separator}
+
+
+def _arbno_field(sym: dict) -> str:
+    alt = sym.get("altName")
+    name = sym["name"]
+    return (alt if alt else name).lower() + "List"
 
 
 def _field(sym: dict) -> str | None:
