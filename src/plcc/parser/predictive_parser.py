@@ -5,7 +5,7 @@ class ParseError(Exception):
 class NodeBuilder:
     def __init__(self, rule):
         self.rule = rule
-        self.children = []      # [[field, node], ...]
+        self.children = []      # [[field, node_or_list], ...]
         self.first_tok = None
         self.last_tok = None
 
@@ -42,15 +42,16 @@ class NodeBuilder:
 
 def parse(ll1: dict, tokens: list) -> dict:
     """
-    Parse tokens against the LL(1) parse table.
+    Parse tokens against the LL(1) parse table and arbno section.
 
-    ll1    — dict with keys: start_symbol, parse_table
+    ll1    — dict with keys: start_symbol, parse_table, arbno (optional)
     tokens — list of token dicts from plcc-tokens (without $ sentinel)
 
     Returns the root parse tree dict.
     Raises ParseError on any syntax error.
     """
     parse_table = ll1["parse_table"]
+    arbno = ll1.get("arbno", {})
     start = ll1["start_symbol"]
     cursor = [0]
 
@@ -64,68 +65,88 @@ def parse(ll1: dict, tokens: list) -> dict:
         cursor[0] += 1
         return tok
 
-    result = [None]
+    def expect(sym):
+        tok = current()
+        if tok["name"] != sym:
+            raise ParseError(
+                f"expected {sym!r}, got {tok['name']!r} "
+                f"at {tok['source']}"
+            )
+        return advance()
 
-    # Stack: items are tuples. Kinds:
-    #   ("N", sym, field, parent_builder)
-    #   ("T", sym, field, parent_builder)
-    #   ("end", rule, field, builder, parent_builder)
-    stack = [("N", start, None, None)]
+    def is_nonterminal(sym):
+        return sym in parse_table or sym in arbno
 
-    while stack:
-        item = stack.pop()
-        kind = item[0]
+    def parse_nt(sym):
+        if sym in arbno:
+            return _parse_arbno(sym)
+        return _parse_regular(sym)
 
-        if kind == "T":
-            _, sym, field, builder = item
-            tok = current()
-            if tok["name"] != sym:
-                raise ParseError(
-                    f"expected {sym!r}, got {tok['name']!r} "
-                    f"at {tok['source']}"
-                )
-            tok = advance()
-            if builder is not None:
-                builder.note_token(tok)
-            if field is not None and builder is not None:
-                builder.children.append([field, tok])
-
-        elif kind == "N":
-            _, sym, field, parent_builder = item
-            lookahead = current()["name"]
-            nt_table = parse_table.get(sym)
-            if nt_table is None:
-                raise ParseError(f"no parse table entry for nonterminal {sym!r}")
-            production = nt_table.get(lookahead)
-            if production is None:
-                raise ParseError(
-                    f"unexpected {lookahead!r}, no production for {sym!r} "
-                    f"at {current()['source']}"
-                )
-            new_builder = NodeBuilder(sym)
-            stack.append(("end", sym, field, new_builder, parent_builder))
-            for entry in reversed(production):
-                s = entry["symbol"]
-                f = entry["field"]
-                if s in parse_table:
-                    stack.append(("N", s, f, new_builder))
-                else:
-                    stack.append(("T", s, f, new_builder))
-
-        elif kind == "end":
-            _, rule, field, builder, parent_builder = item
-            node = builder.to_node()
-            if parent_builder is not None:
-                parent_builder.note_span_from(builder)
-                if field is not None:
-                    parent_builder.children.append([field, node])
+    def _parse_regular(sym):
+        lookahead = current()["name"]
+        nt_table = parse_table.get(sym)
+        if nt_table is None:
+            raise ParseError(f"no parse table entry for nonterminal {sym!r}")
+        production = nt_table.get(lookahead)
+        if production is None:
+            raise ParseError(
+                f"unexpected {lookahead!r}, no production for {sym!r} "
+                f"at {current()['source']}"
+            )
+        builder = NodeBuilder(sym)
+        for entry in production:
+            s, f = entry["symbol"], entry["field"]
+            if is_nonterminal(s):
+                child_builder = parse_nt(s)
+                builder.note_span_from(child_builder)
+                if f is not None:
+                    builder.children.append([f, child_builder.to_node()])
             else:
-                result[0] = node
+                tok = expect(s)
+                builder.note_token(tok)
+                if f is not None:
+                    builder.children.append([f, tok])
+        return builder
 
+    def _parse_arbno(sym):
+        entry = arbno[sym]
+        lookahead_set = set(entry["lookahead"])
+        separator = entry["separator"]
+        rhs = entry["rhs"]
+        builder = NodeBuilder(sym)
+        list_fields = {item["field"]: [] for item in rhs}
+
+        def parse_iteration():
+            for item in rhs:
+                if item["is_terminal"]:
+                    tok = expect(item["symbol"])
+                    builder.note_token(tok)
+                    list_fields[item["field"]].append(tok)
+                else:
+                    child_builder = parse_nt(item["symbol"])
+                    builder.note_span_from(child_builder)
+                    list_fields[item["field"]].append(child_builder.to_node())
+
+        if current()["name"] in lookahead_set:
+            parse_iteration()
+            if separator:
+                while current()["name"] == separator:
+                    expect(separator)
+                    parse_iteration()
+            else:
+                while current()["name"] in lookahead_set:
+                    parse_iteration()
+
+        for field, values in list_fields.items():
+            builder.children.append([field, values])
+
+        return builder
+
+    root_builder = parse_nt(start)
     tok = current()
     if tok["name"] != "$":
         raise ParseError(
             f"unexpected token {tok['name']!r} after complete parse "
             f"at {tok['source']}"
         )
-    return result[0]
+    return root_builder.to_node()

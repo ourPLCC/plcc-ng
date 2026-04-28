@@ -166,3 +166,98 @@ def test_extra_tokens_after_parse_raises_parse_error():
 def test_empty_input_on_nonempty_grammar_raises_parse_error():
     with pytest.raises(ParseError):
         parse(_TRIVIAL_LL1, [])
+
+
+# ll1 dict for: rands **= expr +COMMA, expr → NUM
+_RANDS_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "rands",
+    "parse_table": {
+        "expr": {
+            "NUM": [{"symbol": "NUM", "field": "num"}]
+        }
+    },
+    "arbno": {
+        "rands": {
+            "rhs": [{"field": "exprList", "symbol": "expr", "is_terminal": False}],
+            "separator": "COMMA",
+            "lookahead": ["NUM"],
+        }
+    }
+}
+
+# ll1 dict for: cmds **= cmd (no separator), cmd → X
+_CMDS_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "cmds",
+    "parse_table": {
+        "cmd": {
+            "X": [{"symbol": "X", "field": "x"}]
+        }
+    },
+    "arbno": {
+        "cmds": {
+            "rhs": [{"field": "cmdList", "symbol": "cmd", "is_terminal": False}],
+            "separator": None,
+            "lookahead": ["X"],
+        }
+    }
+}
+
+
+def test_arbno_separator_two_items_produces_list():
+    result = parse(_RANDS_LL1, [
+        _tok("NUM", "1"),
+        _tok("COMMA", ","),
+        _tok("NUM", "2"),
+    ])
+    children_dict = dict(result["children"])
+    assert "exprList" in children_dict
+    assert isinstance(children_dict["exprList"], list)
+    assert len(children_dict["exprList"]) == 2
+
+
+def test_arbno_separator_list_items_are_tree_nodes():
+    result = parse(_RANDS_LL1, [
+        _tok("NUM", "1"),
+        _tok("COMMA", ","),
+        _tok("NUM", "2"),
+    ])
+    expr_list = dict(result["children"])["exprList"]
+    assert expr_list[0]["kind"] == "tree"
+    assert expr_list[0]["rule"] == "expr"
+    assert expr_list[1]["kind"] == "tree"
+
+
+def test_arbno_separator_zero_items_on_no_match():
+    result = parse(_RANDS_LL1, [])
+    children_dict = dict(result["children"])
+    assert children_dict["exprList"] == []
+
+
+def test_arbno_separator_one_item():
+    result = parse(_RANDS_LL1, [_tok("NUM", "42")])
+    children_dict = dict(result["children"])
+    assert len(children_dict["exprList"]) == 1
+
+
+def test_arbno_plain_multiple_items():
+    result = parse(_CMDS_LL1, [
+        _tok("X", "a"),
+        _tok("X", "b"),
+        _tok("X", "c"),
+    ])
+    children_dict = dict(result["children"])
+    assert len(children_dict["cmdList"]) == 3
+
+
+def test_arbno_plain_zero_items():
+    result = parse(_CMDS_LL1, [])
+    children_dict = dict(result["children"])
+    assert children_dict["cmdList"] == []
+
+
+def test_arbno_result_is_tree_kind():
+    result = parse(_RANDS_LL1, [_tok("NUM", "1")])
+    assert result["kind"] == "tree"
+    assert result["rule"] == "rands"
