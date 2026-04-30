@@ -2,3 +2,4 @@
 # One path per line, relative to $LANGUAGES_REPO_PATH
 # Format: src/<Name>/grammar
 src/V0/grammar
+src/V1/grammar
