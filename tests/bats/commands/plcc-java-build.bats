@@ -22,3 +22,9 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
     [ "$status" -eq 0 ]
     [ -f "${WORK_DIR}/Main.class" ]
 }
+
+@test "plcc-java-build compiles Program.class" {
+    run plcc-java-build --output="${WORK_DIR}"
+    [ "$status" -eq 0 ]
+    [ -f "${WORK_DIR}/Program.class" ]
+}
