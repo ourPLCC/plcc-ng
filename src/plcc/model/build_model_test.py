@@ -445,3 +445,16 @@ def test_arbno_token_field_has_correct_type():
     assert items['fields'][0]['name'] == 'numList'
     assert items['fields'][0]['type'] == 'Token'
     assert items['fields'][0]['is_list'] is True
+
+
+def test_extract_body_strips_percent_markers_with_trailing_newlines():
+    from .build_model import _extract_body
+    lines = [
+        {'string': '%%%\n'},
+        {'string': '    public void $run() {\n'},
+        {'string': '    }\n'},
+        {'string': '%%%\n'},
+    ]
+    result = _extract_body(lines)
+    assert '%%%' not in result
+    assert result == '    public void $run() {\n    }'
