@@ -13,3 +13,4 @@ src/LAMBDAQ/grammar
 src/NAME/grammar
 src/NEED/grammar
 src/LON/grammar
+src/LON2/grammar
