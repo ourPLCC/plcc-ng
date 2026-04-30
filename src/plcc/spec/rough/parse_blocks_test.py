@@ -45,6 +45,11 @@ block
     assert list(parse_blocks(lines_)) == [ Block(lines_) ]
 
 
+def test_triple_percent_with_trailing_space_is_block_delimiter():
+    lines_ = list(lines.parseLines('%%% \nblock\n%%% \n'))
+    assert list(parse_blocks(lines_)) == [Block(lines_)]
+
+
 def test_curly_percent_block():
     lines_ = list(lines.parseLines('''\
 %%{
