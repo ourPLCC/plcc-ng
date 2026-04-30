@@ -7,3 +7,4 @@ src/V2/grammar
 src/V3/grammar
 src/V4/grammar
 src/V5/grammar
+src/V6/grammar
