@@ -13,3 +13,9 @@ pdm install
 export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
 
 bats tests/bats/e2e/
+
+if command -v javac &>/dev/null && [ -n "${LANGUAGES_REPO_PATH:-}" ]; then
+    echo ""
+    echo "Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})"
+    bats tests/bats/e2e/languages-java.bats
+fi
