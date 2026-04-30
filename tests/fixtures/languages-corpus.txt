@@ -22,3 +22,4 @@ src/BF/grammar
 src/OBJ/grammar
 src/PROP/grammar
 src/SET/grammar
+src/TYPE0/grammar
