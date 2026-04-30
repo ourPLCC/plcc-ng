@@ -25,3 +25,4 @@ src/SET/grammar
 src/TYPE0/grammar
 src/TYPE1/grammar
 src/RANDSCONT/grammar
+src/REFCONT/grammar
