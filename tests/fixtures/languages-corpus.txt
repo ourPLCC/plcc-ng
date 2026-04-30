@@ -19,3 +19,4 @@ src/LIST/grammar
 src/INFIX/grammar
 src/ARRAY/grammar
 src/BF/grammar
+src/OBJ/grammar
