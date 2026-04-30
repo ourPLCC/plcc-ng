@@ -27,3 +27,4 @@ src/TYPE1/grammar
 src/RANDSCONT/grammar
 src/REFCONT/grammar
 src/THREADCONT/grammar
+src/HANDLER/grammar
