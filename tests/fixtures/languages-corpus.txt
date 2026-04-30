@@ -16,3 +16,4 @@ src/LON/grammar
 src/LON2/grammar
 src/LONN/grammar
 src/LIST/grammar
+src/INFIX/grammar
