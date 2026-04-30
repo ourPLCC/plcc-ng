@@ -10,8 +10,10 @@ Options:
 """
 
 import enum
+import os
 import subprocess
 import sys
+from pathlib import Path
 
 from docopt import docopt
 
@@ -30,10 +32,16 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-java-run", Events, args)
-    output_dir = args['--output']
+    output_dir = Path(args['--output']).resolve()
     verbose.emit(Events.STARTED, message=f'running Main in {output_dir}')
+    json_jars = list((output_dir / 'runtime').glob('org.json*.jar'))
+    if not json_jars:
+        print('plcc-java-run: org.json jar not found in runtime/', file=sys.stderr)
+        sys.exit(1)
+    json_jar = str(json_jars[0])
+    classpath = f"{output_dir}{os.pathsep}{json_jar}"
     result = subprocess.run(
-        ['java', '-cp', output_dir, 'Main'],
+        ['java', '-cp', classpath, 'Main'],
         stdin=sys.stdin,
         stdout=sys.stdout,
         stderr=sys.stderr,
