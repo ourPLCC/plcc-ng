@@ -1,4 +1,11 @@
 token NUM '\d+'
+skip SPACE '\s+'
 %
-<program> ::= NUM
+<program> ::= <NUM>num
 % Java Java
+Program
+%%%
+    public void $run() {
+        System.out.println(num.toString());
+    }
+%%%
