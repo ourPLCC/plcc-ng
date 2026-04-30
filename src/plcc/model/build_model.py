@@ -147,7 +147,7 @@ def _compute_kind(modifier, class_name, known_class_names):
 
 
 def _extract_body(lines):
-    strings = [line['string'] for line in lines]
+    strings = [line['string'].rstrip('\n') for line in lines]
     if strings and strings[0] == '%%%':
         strings = strings[1:]
     if strings and strings[-1] == '%%%':
