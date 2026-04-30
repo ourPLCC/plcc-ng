@@ -18,3 +18,4 @@ src/LONN/grammar
 src/LIST/grammar
 src/INFIX/grammar
 src/ARRAY/grammar
+src/BF/grammar
