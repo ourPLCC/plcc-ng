@@ -21,3 +21,4 @@ src/ARRAY/grammar
 src/BF/grammar
 src/OBJ/grammar
 src/PROP/grammar
+src/SET/grammar
