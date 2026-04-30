@@ -14,3 +14,4 @@ src/NAME/grammar
 src/NEED/grammar
 src/LON/grammar
 src/LON2/grammar
+src/LONN/grammar
