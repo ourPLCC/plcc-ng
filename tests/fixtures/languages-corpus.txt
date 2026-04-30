@@ -20,3 +20,4 @@ src/INFIX/grammar
 src/ARRAY/grammar
 src/BF/grammar
 src/OBJ/grammar
+src/PROP/grammar
