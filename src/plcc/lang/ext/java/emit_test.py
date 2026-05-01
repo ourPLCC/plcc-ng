@@ -58,6 +58,7 @@ def test_emit_copies_runtime_directory(tmp_path, monkeypatch):
     assert (tmp_path / 'runtime' / 'Registry.java').exists()
     assert (tmp_path / 'runtime' / 'Deserializer.java').exists()
     assert list((tmp_path / 'runtime').glob('org.json*.jar'))
+    assert not (tmp_path / 'runtime' / 'Main.java').exists()
 
 
 def test_abstract_class_generates_no_constructor(tmp_path, monkeypatch):
