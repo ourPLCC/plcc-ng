@@ -12,7 +12,7 @@ cd "${PROJECT_ROOT}"
 pdm install
 export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
 
-bats tests/bats/e2e/
+bats $(find tests/bats/e2e/ -name "*.bats" ! -name "languages-java.bats" | sort)
 
 if command -v javac &>/dev/null && [ -n "${LANGUAGES_REPO_PATH:-}" ]; then
     echo ""
