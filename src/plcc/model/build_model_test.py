@@ -458,3 +458,11 @@ def test_extract_body_strips_percent_markers_with_trailing_newlines():
     result = _extract_body(lines)
     assert '%%%' not in result
     assert result == '    public void $run() {\n    }'
+
+
+def test_extract_body_strips_percent_markers_with_trailing_spaces():
+    from .build_model import _extract_body
+    lines = [{'string': '%%% \n'}, {'string': '    body line\n'}, {'string': '%%% \n'}]
+    result = _extract_body(lines)
+    assert '%%%' not in result
+    assert result == '    body line'
