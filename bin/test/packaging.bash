@@ -11,7 +11,7 @@ cd "${PROJECT_ROOT}"
 VENV=$(mktemp -d)
 trap 'rm -rf "${VENV}"' EXIT
 
-python -m venv "${VENV}"
+"${PROJECT_ROOT}/.venv/bin/python" -m venv "${VENV}"
 "${VENV}/bin/pip" install --quiet dist/*.whl
 
 # Verify all entry points are installed on the venv PATH
