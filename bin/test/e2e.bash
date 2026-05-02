@@ -14,7 +14,8 @@ export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
 
 bats $(find tests/bats/e2e/ -name "*.bats" ! -name "languages-java.bats" | sort)
 
-if command -v javac &>/dev/null && [ -n "${LANGUAGES_REPO_PATH:-}" ]; then
+if [ -n "${LANGUAGES_REPO_PATH:-}" ]; then
+    "${PROJECT_ROOT}/bin/install/java.bash"
     echo ""
     echo "Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})"
     bats tests/bats/e2e/languages-java.bats
