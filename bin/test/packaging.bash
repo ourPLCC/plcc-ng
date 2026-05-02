@@ -23,8 +23,19 @@ for cmd in plcc-spec plcc-tokens plcc-tree plcc-model \
     echo "OK: ${cmd}"
 done
 
-# Run end-to-end in the installed venv
 export PATH="${VENV}/bin:${PATH}"
+
+# Verify language and diagram discovery
+LANG_LIST=$("${VENV}/bin/plcc-lang-list")
+echo "${LANG_LIST}" | grep -q "python" || { echo "FAIL: plcc-lang-list missing 'python'"; exit 1; }
+echo "${LANG_LIST}" | grep -q "java"   || { echo "FAIL: plcc-lang-list missing 'java'";   exit 1; }
+echo "OK: plcc-lang-list reports python and java"
+
+DIAGRAM_LIST=$("${VENV}/bin/plcc-diagram-list")
+echo "${DIAGRAM_LIST}" | grep -q "plantuml" || { echo "FAIL: plcc-diagram-list missing 'plantuml'"; exit 1; }
+echo "OK: plcc-diagram-list reports plantuml"
+
+# Run end-to-end in the installed venv
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "${VENV}" "${WORK_DIR}"' EXIT
 (
