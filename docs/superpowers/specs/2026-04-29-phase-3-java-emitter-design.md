@@ -440,3 +440,55 @@ in existing e2e tests with `if ! command -v javac &>/dev/null; then skip ...; fi
   deferred; addressed in Phase 3 retro
 - `plcc-scan` / `plcc-parse` visualizers — Phase 4
 - PyPI publication — Phase 4
+
+---
+
+## 11. Phase 3 Retro
+
+### What worked
+
+The upfront design paid off. The emitter and runtime, built against the Phase 3 spec, worked
+almost immediately — the 29-grammar corpus loop required only a one-character regex fix in
+`parse_blocks.py` and no changes to the emitter itself. Separating the `%%%` prerequisite bug
+fix as its own TDD task (failing test first, then fix) also worked well and caught a related
+`build_model.py` variant of the same class of bug.
+
+### What surprised us
+
+The `%%%` delimiter problem turned out to be two distinct bugs, not one. The design identified a
+trailing `\n` issue in `build_model.py:_extract_body`. During corpus iteration a second bug was
+discovered: `parse_blocks.py`'s regex rejected `%%%` with trailing whitespace, which some legacy
+grammars use. Both bugs share a root cause — line-string handling that assumed clean input — but
+they live in different layers and required separate fixes. A stub `runtime/Main.java` left over
+from Phase 1/2 scaffolding also conflicted with the generated `Main.java` and had to be deleted.
+
+### What was harder than expected
+
+Nothing in Phase 3 was harder than expected. The corpus loop was nearly mechanical — once the
+emitter was written, the 29 grammars fell in with minimal friction.
+
+### Architectural amendments needed
+
+None. The `Map<String, Object>` constructor pattern, the Registry/Deserializer split, and the
+classpath arrangement all held up across the full 29-grammar corpus without modification.
+
+### Lessons that should shape Phase 4
+
+**JDK in the devcontainer.** The devcontainer lacked JDK, so Java tests were silently skipped
+locally throughout Phase 3. Added `bin/install/java.bash` (idempotent, apt-based) called from
+`e2e.bash` when `LANGUAGES_REPO_PATH` is set. Phase 4's CI work should ensure the
+languages-corpus job installs Java the same way.
+
+**Corpus closure.** Six grammars from the plan's target list were not added to the corpus:
+
+| Grammar | Disposition |
+| ------- | ----------- |
+| `Env` | Library used by other languages, not a standalone language — excluded |
+| `Misc` | Not a language — excluded |
+| `Examples` | Collection of small snippets, not a language — excluded |
+| `Prog` | Does not exist in the `languages` repo — removed from target list |
+| `CONT` | No automated tests — deferred until tests exist |
+| `GINGER` | Overlooked during corpus iteration; verified and added at retro time ✓ |
+
+Final corpus count: **29 grammars** (CHAR and ABC remain explicitly deferred per the Phase 3
+design; all other in-scope grammars are in `tests/fixtures/languages-corpus.txt`).
