@@ -5,7 +5,16 @@ plcc-ng is a reimagining and reimplementation of PLCC.
 
 This is currently under development.
 
-## Licnesing
+## Install
+
+```bash
+pip install plcc-ng
+```
+
+> This package has a separate identity from the original `plcc` package.
+> `plcc-ng` is experimental — no compatibility guarantees with `plcc` until a stable 1.0 release.
+
+## Licensing
 
 Developers license contributions under [AGPL-3.0-or-later](LICENSES/AGPL-3.0-or-later.txt) and sign off on the
 [DCO-1.1](DCO-1.1.txt)
