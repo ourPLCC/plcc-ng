@@ -1,7 +1,7 @@
 [project]
-name = "plcc"
+name = "plcc-ng"
 dynamic = ["version"]
-description = "Programming Languages Compiler Compiler"
+description = "Programming Languages Compiler Compiler — experimental rewrite of PLCC"
 authors = [
     {name = "PLCC Community", email = "https://discord.gg/EVtNSxS9E2"},
 ]
@@ -11,7 +11,23 @@ dependencies = [
 ]
 requires-python = ">=3.12"
 readme = "README.md"
-license = {text = "GPL-3.0-or-later"}
+license = {text = "AGPL-3.0-or-later"}
+keywords = ["compiler", "parser", "education", "plcc", "teaching", "programming-languages"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Education",
+]
+
+[project.urls]
+Homepage = "https://github.com/ourPLCC/plcc-ng"
+Repository = "https://github.com/ourPLCC/plcc-ng"
+Issues = "https://github.com/ourPLCC/plcc-ng/issues"
 
 
 [build-system]
@@ -67,4 +83,12 @@ dev = [
     "pytest-cov>=5.0.0",
     "pytest-watch>=4.2.0",
     "check-jsonschema>=0.29.0",
+    "python-semantic-release>=9.0.0",
+    "twine>=5.0.0",
 ]
+
+[tool.semantic_release]
+tag_format = "v{version}"
+version_variables = []
+version_toml = []
+major_on_zero = false
