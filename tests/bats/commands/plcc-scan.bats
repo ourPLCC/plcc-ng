@@ -30,3 +30,15 @@ setup() {
     run bash -c "echo '42' | plcc-scan --verbose=1 '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
 }
+
+@test "plcc-scan includes line:col in token output" {
+    run bash -c "echo '42' | plcc-scan '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ ^1:1\ NUM\ \'42\'$ ]]
+}
+
+@test "plcc-scan exits 0 on lex error in source" {
+    run --separate-stderr bash -c "echo 'abc' | plcc-scan '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$stderr" =~ error ]]
+}

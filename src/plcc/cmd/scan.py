@@ -9,6 +9,16 @@ from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
+
+def _location_str(source):
+    file = source.get("file")
+    line = source.get("line", "?")
+    col = source.get("column", "?")
+    if file and file != "<stdin>":
+        return f"{file}:{line}:{col}"
+    return f"{line}:{col}"
+
+
 __doc__ = """plcc-scan
     Tokenize source input and print tokens in human-readable format.
 
@@ -76,20 +86,26 @@ def main(argv=None):
             events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
             verbose.reformat_child_events(events)
         if result.returncode != 0:
-            print(f"plcc-scan: plcc-tokens failed (exit {result.returncode})", file=sys.stderr)
-            sys.exit(result.returncode)
-
-        # Print tokens in human-readable format
-        for line in result.stdout.decode("utf-8").splitlines():
-            if not line.strip():
-                continue
-            record = json.loads(line)
-            if record.get("kind") == "token":
-                name = record.get("name", "?")
-                lexeme = record.get("lexeme", "?")
-                print(f"{name} '{lexeme}'")
-            elif record.get("kind") == "error":
-                print(f"ERROR: {record}")
+            # lex error: plcc-tokens already emitted the error to stderr via verbose;
+            # treat as non-fatal — pipeline completed with an error in-band
+            pass
+        else:
+            for line in result.stdout.decode("utf-8").splitlines():
+                if not line.strip():
+                    continue
+                record = json.loads(line)
+                if record.get("kind") == "token":
+                    name = record.get("name", "?")
+                    lexeme = record.get("lexeme", "?")
+                    source = record.get("source", {})
+                    loc = _location_str(source)
+                    print(f"{loc} {name} '{lexeme}'")
+                # forward-looking: plcc-tokens may emit error records inline in a future protocol
+                elif record.get("kind") == "error":
+                    source = record.get("source", {})
+                    loc = _location_str(source)
+                    message = record.get("message", "unknown error")
+                    print(f"{loc}: error: {message}")
     finally:
         os.unlink(spec_path)
 
