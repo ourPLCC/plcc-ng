@@ -1,32 +1,68 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    branches: [main]
 
 jobs:
-  test:
-    name: Functional tests
+  unit-and-integration:
+    name: Unit and integration tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
-      - name: Run functional tests
-        run: bin/test/functional.bash
+      - name: Install PDM
+        run: pip install pdm
+      - name: Run unit tests
+        run: bin/test/units.bash
+      - name: Run command tests
+        run: bin/test/commands.bash
+      - name: Run integration tests
+        run: bin/test/integration.bash
 
-  package:
-    name: Packaging tests
-    needs: test
+  languages-corpus:
+    name: Languages corpus (Java e2e)
+    needs: unit-and-integration
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
-      - name: Build package
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Clone languages repo at pinned commit
+        run: |
+          PIN=$(cat tests/fixtures/languages-pin.txt)
+          git clone https://github.com/ourPLCC/languages.git /tmp/languages
+          git -C /tmp/languages checkout "${PIN}"
+      - name: Run e2e corpus tests
+        env:
+          LANGUAGES_REPO_PATH: /tmp/languages
+        run: bin/test/e2e.bash
+
+  packaging:
+    name: Packaging
+    needs: unit-and-integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Build wheel
         run: bin/build/package.bash
-      - name: Run packaging tests
+      - name: Validate metadata and README
+        run: pip install twine && twine check dist/*
+      - name: Run packaging smoke test
         run: bin/test/packaging.bash
