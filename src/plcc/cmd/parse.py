@@ -29,6 +29,15 @@ class Events(enum.Enum):
     FINISHED = "finished"
 
 
+def _location_str(source):
+    file = source.get("file")
+    line = source.get("line", "?")
+    col = source.get("column", "?")
+    if file and file != "<stdin>":
+        return f"{file}:{line}:{col}"
+    return f"{line}:{col}"
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
@@ -121,9 +130,17 @@ def _print_tree(node, indent):
     if kind == "tree":
         rule = node.get("rule", "?")
         print(f"{prefix}{rule}")
-        for child in node.get("children", []):
+        for _field, child in node.get("children", []):
             _print_tree(child, indent + 1)
     elif kind == "token":
         name = node.get("name", "?")
         lexeme = node.get("lexeme", "?")
-        print(f"{prefix}{name} '{lexeme}'")
+        source = node.get("source", {})
+        loc = _location_str(source)
+        print(f"{prefix}{name} '{lexeme}' [{loc}]")
+    # forward-looking: plcc-tree may emit error records inline in a future protocol
+    elif kind == "error":
+        source = node.get("source", {})
+        loc = _location_str(source)
+        message = node.get("message", "unknown error")
+        print(f"{prefix}{loc}: error: {message}")

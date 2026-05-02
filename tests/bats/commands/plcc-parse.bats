@@ -29,3 +29,9 @@ setup() {
     run bash -c "echo '42' | plcc-parse --verbose=1 '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
 }
+
+@test "plcc-parse includes location on token leaves" {
+    run bash -c "echo '42' | plcc-parse '${FIXTURES}/arith.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ NUM\ \'42\'\ \[1:1\] ]]
+}
