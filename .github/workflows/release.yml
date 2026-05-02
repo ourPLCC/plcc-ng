@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  semantic-release:
+    name: Semantic release
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Python Semantic Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          push: "true"
+          commit: "false"
+          changelog: "false"
+
+  publish:
+    name: Publish to PyPI
+    needs: semantic-release
+    if: needs.semantic-release.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.semantic-release.outputs.version && format('v{0}', needs.semantic-release.outputs.version) || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Build wheel
+        run: bin/build/package.bash
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Smoke test TestPyPI install
+        run: |
+          VERSION="${{ needs.semantic-release.outputs.version }}"
+          python -m venv /tmp/smoke-venv
+          /tmp/smoke-venv/bin/pip install \
+            --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple/ \
+            "plcc-ng==${VERSION}"
+          WORK=$(mktemp -d)
+          /tmp/smoke-venv/bin/plcc-make "$(pwd)/tests/fixtures/trivial.plcc" --output="${WORK}"
+          test -f "${WORK}/spec.json" || { echo "FAIL: spec.json missing"; exit 1; }
+          echo "TestPyPI smoke test passed"
+
+      - name: Publish to PyPI
+        if: github.event_name != 'workflow_dispatch'
+        uses: pypa/gh-action-pypi-publish@release/v1
