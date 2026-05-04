@@ -3,9 +3,6 @@ import java.io.InputStreamReader;
 import org.json.JSONObject;
 import runtime.Deserializer;
 import runtime.Registry;
-{% for cls in concrete_classes %}
-import {{ cls.name }};
-{% endfor %}
 
 public class Main {
     public static void main(String[] args) throws Exception {

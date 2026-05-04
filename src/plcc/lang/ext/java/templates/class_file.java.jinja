@@ -2,6 +2,7 @@
 {% endfor %}
 import java.util.List;
 import java.util.Map;
+import runtime.Token;
 
 {% if cls.abstract %}
 public abstract class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
