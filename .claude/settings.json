@@ -1,4 +1,31 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(pdm run:*)",
+      "Bash(/workspaces/plcc-ng/bin/test/units.bash)",
+      "Bash(pdm install:*)",
+      "Bash(python -m pytest src/plcc/cmd/skeleton_test.py -v)",
+      "Bash(bats --version)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(plcc-spec:*)",
+      "Bash(plcc-model:*)",
+      "Bash(plcc-tree:*)",
+      "Bash(plcc-lang-list:*)",
+      "Bash(plcc-lang-build:*)",
+      "Bash(plcc-make:*)",
+      "Bash(plcc-scan:*)",
+      "Bash(plcc-parse:*)",
+      "Bash(plcc-rep:*)",
+      "Bash(plcc-lang-emit:*)",
+      "Bash(bin/test/commands.bash)",
+      "Bash(bash bin/test/commands.bash)",
+      "Bash(bin/test/integration.bash)",
+      "Bash(bin/test/e2e.bash)",
+      "Bash(bin/test/functional.bash)",
+      "Bash(check-jsonschema:*)"
+    ]
+  },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true
   }

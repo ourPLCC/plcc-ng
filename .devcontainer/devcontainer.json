@@ -3,6 +3,7 @@
 	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 	"features": {
 		"ghcr.io/devcontainers/features/python:1": {},
+		"ghcr.io/devcontainers/features/java:1": { "version": "17" },
 		"ghcr.io/devcontainers-extra/features/pdm:2": {},
 		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
 	},
@@ -30,7 +31,8 @@
 				"ms-python.vscode-pylance",
 				"ms-python.python",
 				"ms-python.debugpy",
-				"DavidAnson.vscode-markdownlint"
+				"DavidAnson.vscode-markdownlint",
+				"GitHub.copilot-chat"
 			]
 		}
 	},

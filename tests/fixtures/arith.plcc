@@ -1,0 +1,36 @@
+token NUM   '\d+'
+token PLUS  '\+'
+skip  SPACE '\s+'
+%
+<program>              ::= <Expr>expr
+<Expr>                 ::= <Term>term <ExprRest>rest
+<ExprRest>:AddRest     ::= PLUS <Term>term <ExprRest>rest
+<ExprRest>:NilRest     ::=
+<Term>                 ::= <NUM>num
+%
+% calculate Python _run
+Program
+%%%
+def _run(self):
+    return self.expr.eval()
+%%%
+Expr
+%%%
+def eval(self):
+    return self.rest.eval(self.term.eval())
+%%%
+AddRest
+%%%
+def eval(self, acc):
+    return self.rest.eval(acc + self.term.eval())
+%%%
+NilRest
+%%%
+def eval(self, acc):
+    return acc
+%%%
+Term
+%%%
+def eval(self):
+    return int(self.num.lexeme)
+%%%

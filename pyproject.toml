@@ -1,20 +1,33 @@
 [project]
-name = "plccng"
+name = "plcc-ng"
 dynamic = ["version"]
-description = "Programming Languages Compiler Compiler"
+description = "Programming Languages Compiler Compiler — experimental rewrite of PLCC"
 authors = [
     {name = "PLCC Community", email = "https://discord.gg/EVtNSxS9E2"},
 ]
 dependencies = [
-    "docopt-ng>=0.9.0"
+    "docopt-ng>=0.9.0",
+    "jinja2>=3.1.0",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 readme = "README.md"
-license = {text = "GPL-3.0-or-later"}
+license = {text = "AGPL-3.0-or-later"}
+keywords = ["compiler", "parser", "education", "plcc", "teaching", "programming-languages"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Education",
+]
 
-
-[project.scripts]
-plccng = "plccng.plccng_cli:main"
+[project.urls]
+Homepage = "https://github.com/ourPLCC/plcc-ng"
+Repository = "https://github.com/ourPLCC/plcc-ng"
+Issues = "https://github.com/ourPLCC/plcc-ng/issues"
 
 
 [build-system]
@@ -31,10 +44,36 @@ package-dir = "src"
 
 [tool.pdm.version]
 source = "scm"
+fallback_version = "0.0.0"
 
+
+[project.scripts]
+plcc-spec = "plcc.spec.plcc_spec_cli:main"
+plcc-tokens = "plcc.tokens.tokens_cli:main"
+plcc-tree = "plcc.tree.tree_cli:main"
+plcc-model = "plcc.model.model_cli:main"
+plcc-plantuml-diagram = "plcc.diagram.plantuml.emit:main"
+plcc-lang-emit = "plcc.lang.emit:main"
+plcc-diagram = "plcc.diagram.dispatch:main"
+plcc-lang-build = "plcc.lang.build:main"
+plcc-lang-list = "plcc.lang.list:main"
+plcc-diagram-list = "plcc.diagram.list:main"
+plcc-make = "plcc.cmd.make:main"
+plcc-scan = "plcc.cmd.scan:main"
+plcc-parse = "plcc.cmd.parse:main"
+plcc-rep = "plcc.cmd.rep:main"
+plcc-ll1 = "plcc.ll1.ll1_cli:main"
+plcc-parser-table = "plcc.parser.table_cli:main"
+plcc-parser-list = "plcc.parser.list_cli:main"
+plcc-python-emit = "plcc.lang.ext.python.emit:main"
+plcc-lang-run = "plcc.lang.run:main"
+plcc-python-run = "plcc.lang.ext.python.run:main"
+plcc-java-emit  = "plcc.lang.ext.java.emit:main"
+plcc-java-build = "plcc.lang.ext.java.build:main"
+plcc-java-run   = "plcc.lang.ext.java.run:main"
 
 [tool.pdm.scripts]
-test = "pytest -qq -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered"
+test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"
 ctest = "pytest-watch --runner \"bin/test/units.bash\""
 
 [dependency-groups]
@@ -43,4 +82,13 @@ dev = [
     "pyfakefs>=5.4.1",
     "pytest-cov>=5.0.0",
     "pytest-watch>=4.2.0",
+    "check-jsonschema>=0.29.0",
+    "python-semantic-release>=9.0.0",
+    "twine>=5.0.0",
 ]
+
+[tool.semantic_release]
+tag_format = "v{version}"
+version_variables = []
+version_toml = []
+major_on_zero = false

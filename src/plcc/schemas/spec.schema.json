@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Spec",
+  "description": "Output of plcc-spec: a parsed PLCC grammar.",
+  "type": "object",
+  "required": ["lexical", "syntax", "semantics"],
+  "properties": {
+    "lexical": {
+      "type": "object",
+      "required": ["ruleList"],
+      "properties": {
+        "ruleList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "pattern", "isSkip"],
+            "properties": {
+              "name":    { "type": "string" },
+              "pattern": { "type": "string" },
+              "isSkip":  { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "syntax": {
+      "type": "object",
+      "required": ["rules"],
+      "properties": {
+        "rules": { "type": "array" }
+      }
+    },
+    "semantics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["language", "tool"],
+        "properties": {
+          "language":    { "type": "string" },
+          "tool":        { "type": "string" },
+          "entry_point": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

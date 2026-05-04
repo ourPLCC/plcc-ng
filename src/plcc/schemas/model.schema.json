@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Model",
+  "description": "Output of plcc-model: language-neutral OO code model.",
+  "type": "object",
+  "required": ["start", "classes", "semantic_sections"],
+  "properties": {
+    "start": { "type": "string" },
+    "classes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "abstract", "fields", "rule_name"],
+        "properties": {
+          "name":      { "type": "string" },
+          "abstract":  { "type": "boolean" },
+          "extends":   { "type": ["string", "null"] },
+          "rule_name": { "type": "string" },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "semantic_sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool", "language", "fragments"],
+        "properties": {
+          "tool":        { "type": "string" },
+          "language":    { "type": "string" },
+          "entry_point": { "type": ["string", "null"] },
+          "fragments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["class_name", "kind", "body"],
+              "properties": {
+                "class_name": { "type": "string" },
+                "kind": {
+                  "type": "string",
+                  "enum": ["top", "import", "class", "init", "body", "file"]
+                },
+                "body": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

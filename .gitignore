@@ -1,17 +1,23 @@
 .claude/settings.local.json
+.worktrees/
 
 # See https://pdm-project.org/latest/usage/project/#working-with-version-control
 .pdm-python
 .pdm-build/
+
 
 # This is created by bin/test/languages.bash. But should not be committed.
 languages/
 
 # PLCC places generated Java files in directories named Java. Ignore them.
 Java/
+# Re-include the Java language plugin source directory.
+!src/plcc/lang/ext/java/
 
 # PLCC places generated Python files in directories named Python. Ignore them.
 Python/
+# Re-include the Python language plugin source directory.
+!src/plcc/lang/ext/python/
 
 # Created by Docker environment
 .bash_history
@@ -48,7 +54,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
+/build/
 develop-eggs/
 dist/
 downloads/

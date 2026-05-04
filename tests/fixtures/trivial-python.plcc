@@ -1,0 +1,9 @@
+token NUM '\d+'
+%
+<program> ::= <NUM>num
+% py Python _run
+Program
+%%%
+def _run(self):
+    return int(self.num.lexeme)
+%%%

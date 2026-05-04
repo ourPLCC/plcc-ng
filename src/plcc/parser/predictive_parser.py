@@ -1,0 +1,152 @@
+class ParseError(Exception):
+    pass
+
+
+class NodeBuilder:
+    def __init__(self, rule):
+        self.rule = rule
+        self.children = []      # [[field, node_or_list], ...]
+        self.first_tok = None
+        self.last_tok = None
+
+    def note_token(self, tok):
+        if self.first_tok is None:
+            self.first_tok = tok
+        self.last_tok = tok
+
+    def note_span_from(self, child_builder):
+        if child_builder.first_tok is not None:
+            if self.first_tok is None:
+                self.first_tok = child_builder.first_tok
+            self.last_tok = child_builder.last_tok
+
+    def to_node(self):
+        source = {}
+        if self.first_tok is not None and self.last_tok is not None:
+            fs = self.first_tok["source"]
+            ls = self.last_tok["source"]
+            source = {
+                "file": fs.get("file", ""),
+                "line": fs["line"],
+                "column": fs["column"],
+                "endLine": ls["line"],
+                "endColumn": ls["column"] + len(self.last_tok["lexeme"]) - 1,
+            }
+        return {
+            "kind": "tree",
+            "rule": self.rule,
+            "source": source,
+            "children": self.children,
+        }
+
+
+def parse(ll1: dict, tokens: list) -> dict:
+    """
+    Parse tokens against the LL(1) parse table and arbno section.
+
+    ll1    — dict with keys: start_symbol, parse_table, arbno (optional)
+    tokens — list of token dicts from plcc-tokens (without $ sentinel)
+
+    Returns the root parse tree dict.
+    Raises ParseError on any syntax error.
+    """
+    parse_table = ll1["parse_table"]
+    arbno = ll1.get("arbno", {})
+    start = ll1["start_symbol"]
+    cursor = [0]
+
+    SENTINEL = {"name": "$", "lexeme": "", "source": {"file": "", "line": 0, "column": 0}}
+
+    def current():
+        return tokens[cursor[0]] if cursor[0] < len(tokens) else SENTINEL
+
+    def advance():
+        tok = tokens[cursor[0]]
+        cursor[0] += 1
+        return tok
+
+    def expect(sym):
+        tok = current()
+        if tok["name"] != sym:
+            raise ParseError(
+                f"expected {sym!r}, got {tok['name']!r} "
+                f"at {tok['source']}"
+            )
+        return advance()
+
+    def is_nonterminal(sym):
+        return sym in parse_table or sym in arbno
+
+    def parse_nt(sym):
+        if sym in arbno:
+            return _parse_arbno(sym)
+        return _parse_regular(sym)
+
+    def _parse_regular(sym):
+        lookahead = current()["name"]
+        nt_table = parse_table.get(sym)
+        if nt_table is None:
+            raise ParseError(f"no parse table entry for nonterminal {sym!r}")
+        production = nt_table.get(lookahead)
+        if production is None:
+            raise ParseError(
+                f"unexpected {lookahead!r}, no production for {sym!r} "
+                f"at {current()['source']}"
+            )
+        builder = NodeBuilder(sym)
+        for entry in production:
+            s, f = entry["symbol"], entry["field"]
+            if is_nonterminal(s):
+                child_builder = parse_nt(s)
+                builder.note_span_from(child_builder)
+                if f is not None:
+                    builder.children.append([f, child_builder.to_node()])
+            else:
+                tok = expect(s)
+                builder.note_token(tok)
+                if f is not None:
+                    builder.children.append([f, tok])
+        return builder
+
+    def _parse_arbno(sym):
+        entry = arbno[sym]
+        lookahead_set = set(entry["lookahead"])
+        separator = entry["separator"]
+        rhs = entry["rhs"]
+        builder = NodeBuilder(sym)
+        list_fields = {item["field"]: [] for item in rhs}
+
+        def parse_iteration():
+            for item in rhs:
+                if item["is_terminal"]:
+                    tok = expect(item["symbol"])
+                    builder.note_token(tok)
+                    list_fields[item["field"]].append(tok)
+                else:
+                    child_builder = parse_nt(item["symbol"])
+                    builder.note_span_from(child_builder)
+                    list_fields[item["field"]].append(child_builder.to_node())
+
+        if current()["name"] in lookahead_set:
+            parse_iteration()
+            if separator:
+                while current()["name"] == separator:
+                    expect(separator)
+                    parse_iteration()
+            else:
+                while current()["name"] in lookahead_set:
+                    parse_iteration()
+
+        for field, values in list_fields.items():
+            builder.children.append([field, values])
+
+        return builder
+
+    root_builder = parse_nt(start)
+    tok = current()
+    if tok["name"] != "$":
+        raise ParseError(
+            f"unexpected token {tok['name']!r} after complete parse "
+            f"at {tok['source']}"
+        )
+    return root_builder.to_node()

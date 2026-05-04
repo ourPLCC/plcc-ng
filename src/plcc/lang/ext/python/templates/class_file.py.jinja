@@ -1,0 +1,21 @@
+{% for frag in top_fragments %}{{ frag.body }}
+{% endfor %}
+import runtime.base as _plcc
+{% if cls.extends %}from {{ cls.extends }} import {{ cls.extends }}
+{% endif %}
+{% for frag in import_fragments %}{{ frag.body }}
+{% endfor %}
+
+class {{ cls.name }}({% if cls.extends %}{{ cls.extends }}{% else %}_plcc.Node{% endif %}{% for frag in class_fragments %}, {{ frag.body }}{% endfor %}):
+
+    _rule_name = {{ cls.rule_name | tojson }}
+    _fields = [{% for field in cls.fields %}{{ field.name | tojson }}{% if not loop.last %}, {% endif %}{% endfor %}]
+
+    def __init__(self{% for field in cls.fields %}, {{ field.name }}{% endfor %}):
+        super().__init__()
+{% for field in cls.fields %}        self.{{ field.name }} = {{ field.name }}
+{% endfor %}{% for frag in init_fragments %}        {{ frag.body | indent(8) }}
+{% endfor %}
+{% for frag in body_fragments %}    {{ frag.body | indent(4) }}
+
+{% endfor %}

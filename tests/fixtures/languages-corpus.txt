@@ -1,0 +1,32 @@
+# languages corpus — grammars that pass end-to-end
+# One path per line, relative to $LANGUAGES_REPO_PATH
+# Format: src/<Name>/grammar
+src/V0/grammar
+src/V1/grammar
+src/V2/grammar
+src/V3/grammar
+src/V4/grammar
+src/V5/grammar
+src/V6/grammar
+src/LAMBDA/grammar
+src/LAMBDAQ/grammar
+src/NAME/grammar
+src/NEED/grammar
+src/LON/grammar
+src/LON2/grammar
+src/LONN/grammar
+src/LIST/grammar
+src/INFIX/grammar
+src/ARRAY/grammar
+src/BF/grammar
+src/OBJ/grammar
+src/PROP/grammar
+src/SET/grammar
+src/TYPE0/grammar
+src/TYPE1/grammar
+src/RANDSCONT/grammar
+src/REFCONT/grammar
+src/THREADCONT/grammar
+src/HANDLER/grammar
+src/REF/grammar
+src/GINGER/grammar

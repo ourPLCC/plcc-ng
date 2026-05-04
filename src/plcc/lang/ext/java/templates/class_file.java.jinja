@@ -1,0 +1,39 @@
+{% for frag in import_fragments %}{{ frag.body }}
+{% endfor %}
+import java.util.List;
+import java.util.Map;
+import runtime.Token;
+
+{% if cls.abstract %}
+public abstract class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
+}
+{% else %}
+public class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
+
+    public static final String _RULE_NAME = {{ cls.rule_name | tojson }};
+    public static final String[] _FIELDS = { {% for field in cls.fields %}{{ field.name | tojson }}{% if not loop.last %}, {% endif %}{% endfor %} };
+
+{% for field in cls.fields %}
+    public {% if field.is_list %}java.util.List<{{ field.type }}>{% else %}{{ field.type }}{% endif %} {{ field.name }};
+{% endfor %}
+
+    @SuppressWarnings("unchecked")
+    public {{ cls.name }}(java.util.Map<String, Object> fields) {
+{% for field in cls.fields %}
+{% if field.is_list %}
+        this.{{ field.name }} = (java.util.List<{{ field.type }}>) fields.get("{{ field.name }}");
+{% else %}
+        this.{{ field.name }} = ({{ field.type }}) fields.get("{{ field.name }}");
+{% endif %}
+{% endfor %}
+{% for frag in init_fragments %}
+        {{ frag.body | indent(8) }}
+{% endfor %}
+    }
+
+{% for frag in body_fragments %}
+{{ frag.body }}
+
+{% endfor %}
+}
+{% endif %}
