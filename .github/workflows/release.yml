@@ -31,6 +31,18 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           push: "true"
           changelog: "false"
+          vcs_release: "false"
+
+      - name: Create GitHub Release
+        if: steps.release.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          gh release create "v${VERSION}" \
+            --title "v${VERSION}" \
+            --target "${{ github.sha }}" \
+            --generate-notes
 
   publish:
     name: Publish to PyPI
