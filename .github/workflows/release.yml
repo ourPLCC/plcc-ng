@@ -49,6 +49,7 @@ jobs:
     needs: semantic-release
     if: needs.semantic-release.outputs.released == 'true'
     runs-on: ubuntu-latest
+    environment: pypi
     steps:
       - uses: actions/checkout@v4
         with:
