@@ -64,12 +64,16 @@ def main(argv=None):
         _run_child(["plcc-ll1"] + child_flags, stdin_file=spec_path, stdout_file=ll1_path, verbose=verbose, label="plcc-ll1")
 
         # Build input
-        input_data = b""
+        chunks = []
         for src in sources:
-            with open(src, "rb") as sf:
-                input_data += sf.read()
+            if src == '-':
+                chunks.append(sys.stdin.buffer.read())
+            else:
+                with open(src, "rb") as sf:
+                    chunks.append(sf.read())
         if not sources:
-            input_data = sys.stdin.buffer.read()
+            chunks.append(sys.stdin.buffer.read())
+        input_data = b"".join(chunks)
 
         # plcc-tokens | plcc-tree
         tokens_proc = subprocess.Popen(

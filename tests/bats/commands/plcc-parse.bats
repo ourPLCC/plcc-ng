@@ -40,3 +40,9 @@ setup() {
     run --separate-stderr plcc-parse
     [[ "$stderr" == *"--help"* ]]
 }
+
+@test "plcc-parse accepts '-' as stdin" {
+    run bash -c "echo '42' | plcc-parse '${FIXTURES}/trivial.plcc' -"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"program"* ]]
+}

@@ -47,3 +47,17 @@ setup() {
     run --separate-stderr plcc-scan
     [[ "$stderr" == *"--help"* ]]
 }
+
+@test "plcc-scan accepts '-' as stdin" {
+    run bash -c "echo '42' | plcc-scan '${FIXTURES}/trivial.plcc' -"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"NUM"* ]]
+    [[ "$output" == *"42"* ]]
+}
+
+@test "plcc-scan '-' interleaved with file reads both" {
+    run bash -c "echo '99' | plcc-scan '${FIXTURES}/trivial.plcc' '${FIXTURES}/trivial_input.txt' -"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"42"* ]]
+    [[ "$output" == *"99"* ]]
+}

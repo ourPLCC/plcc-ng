@@ -73,11 +73,14 @@ def main(argv=None):
             print(f"plcc-scan: plcc-spec failed (exit {result.returncode})", file=sys.stderr)
             sys.exit(result.returncode)
 
-        # Build input: concatenate source files, then stdin
+        # Build input: concatenate source files/stdin in order
         input_data = b""
         for src in sources:
-            with open(src, "rb") as sf:
-                input_data += sf.read()
+            if src == '-':
+                input_data += sys.stdin.buffer.read()
+            else:
+                with open(src, "rb") as sf:
+                    input_data += sf.read()
         if not sources:
             input_data = sys.stdin.buffer.read()
 
