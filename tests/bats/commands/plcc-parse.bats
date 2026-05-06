@@ -35,3 +35,8 @@ setup() {
     [ "$status" -eq 0 ]
     [[ "$output" =~ NUM\ \'42\'\ \[1:1\] ]]
 }
+
+@test "plcc-parse brief usage mentions --help" {
+    run --separate-stderr plcc-parse
+    [[ "$stderr" == *"--help"* ]]
+}

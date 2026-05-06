@@ -39,3 +39,8 @@ teardown() {
     run bash -c "echo '42' | plcc-rep --tool=py --verbose=1 '${FIXTURES}/trivial-python.plcc'"
     [ "$status" -eq 0 ]
 }
+
+@test "plcc-rep brief usage mentions --help" {
+    run --separate-stderr plcc-rep
+    [[ "$stderr" == *"--help"* ]]
+}
