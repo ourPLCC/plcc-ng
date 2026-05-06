@@ -5,7 +5,7 @@ import subprocess
 import sys
 import tempfile
 
-from docopt import docopt
+from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -42,7 +42,12 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print("Run 'plcc-scan --help' for more information.", file=sys.stderr)
+        sys.exit(1)
     verbose = VerboseContext.from_args("plcc-scan", Events, args)
     grammar = args["GRAMMAR"]
     sources = args["SOURCE"]

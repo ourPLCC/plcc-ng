@@ -42,3 +42,8 @@ setup() {
     [ "$status" -eq 0 ]
     [[ "$stderr" =~ error ]]
 }
+
+@test "plcc-scan brief usage mentions --help" {
+    run --separate-stderr plcc-scan
+    [[ "$stderr" == *"--help"* ]]
+}
