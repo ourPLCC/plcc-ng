@@ -1,0 +1,24 @@
+{
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {
+      "version": "1.0.5",
+      "resolved": "ghcr.io/anthropics/devcontainer-features/claude-code@sha256:cfc2e7d3e9fd3b9b01f8d5cb158508a884c8c0ede2e23ed10f32dea5d4ffe69a",
+      "integrity": "sha256:cfc2e7d3e9fd3b9b01f8d5cb158508a884c8c0ede2e23ed10f32dea5d4ffe69a"
+    },
+    "ghcr.io/devcontainers-extra/features/pdm:2": {
+      "version": "2.0.18",
+      "resolved": "ghcr.io/devcontainers-extra/features/pdm@sha256:545234c1abbee2b89e201328870c2ee1e3b1e1a80ccf78e85926f8175db6f26e",
+      "integrity": "sha256:545234c1abbee2b89e201328870c2ee1e3b1e1a80ccf78e85926f8175db6f26e"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "1.8.0",
+      "resolved": "ghcr.io/devcontainers/features/java@sha256:9663ce0219ff85786e87901ce5f0a59f488edd5f99b46015192cda48468b233a",
+      "integrity": "sha256:9663ce0219ff85786e87901ce5f0a59f488edd5f99b46015192cda48468b233a"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "1.8.0",
+      "resolved": "ghcr.io/devcontainers/features/python@sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511",
+      "integrity": "sha256:fbcad6955caeecc5ad3f7886baf652e25cba5225a6c4c2287c536de2e5607511"
+    }
+  }
+}
