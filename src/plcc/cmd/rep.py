@@ -36,7 +36,8 @@ def main(argv=None):
         args = docopt(__doc__, argv)
     except DocoptExit as e:
         print(str(e), file=sys.stderr)
-        print("\nRun 'plcc-rep --help' for more information.", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run 'plcc-rep --help' for more information.", file=sys.stderr)
         sys.exit(1)
     verbose = VerboseContext.from_args("plcc-rep", Events, args)
     sources = args['SOURCE']
