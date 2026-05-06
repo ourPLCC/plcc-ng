@@ -66,8 +66,11 @@ def main(argv=None):
         # Build input
         input_data = b""
         for src in sources:
-            with open(src, "rb") as sf:
-                input_data += sf.read()
+            if src == '-':
+                input_data += sys.stdin.buffer.read()
+            else:
+                with open(src, "rb") as sf:
+                    input_data += sf.read()
         if not sources:
             input_data = sys.stdin.buffer.read()
 
