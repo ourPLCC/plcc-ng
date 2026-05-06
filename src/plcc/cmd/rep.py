@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 
-from docopt import docopt
+from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -32,7 +32,12 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print("Run 'plcc-rep --help' for more information.", file=sys.stderr)
+        sys.exit(1)
     verbose = VerboseContext.from_args("plcc-rep", Events, args)
     sources = args['SOURCE']
     tool_name = args['--tool']
