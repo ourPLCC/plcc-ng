@@ -57,7 +57,7 @@ def test_lex_error_emits_error_record_to_stdout(capsys, monkeypatch, fs):
     assert record['stage'] == 'plcc-tokens'
     assert record['severity'] == 'error'
     assert record['lexeme'] == '@'
-    assert record['pos'] == {'file': '<stdin>', 'line': 1, 'column': 1}
+    assert record['pos'] == {'file': '-', 'line': 1, 'column': 1}
     assert record['message'] == 'unrecognized character'
     assert err == ''
 
@@ -73,3 +73,21 @@ def test_lex_error_and_token_appear_in_stream_order(capsys, monkeypatch, fs):
     assert json.loads(lines[0])['kind'] == 'error'
     assert json.loads(lines[1])['kind'] == 'token'
     assert json.loads(lines[1])['name'] == 'NUM'
+
+
+def test_stdin_labels_tokens_with_dash(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    record = json.loads(out.strip())
+    assert record['source']['file'] == '-'
+
+
+def test_named_file_arg_labels_tokens_with_filename(capsys, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/src.txt', contents='42\n')
+    run_main(['/spec.json', '/src.txt'])
+    out, _ = capsys.readouterr()
+    record = json.loads(out.strip())
+    assert record['source']['file'] == '/src.txt'

@@ -13,13 +13,14 @@ from .jsonl_formatter import format_record, format_error_record
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-tokens
-    Tokenize stdin given a spec JSON file, output token JSONL.
+    Tokenize source files given a spec JSON file, output token JSONL.
 
 Usage:
-    plcc-tokens [options] SPEC_JSON
+    plcc-tokens [options] SPEC_JSON [SOURCE ...]
 
 Arguments:
     SPEC_JSON   Path to spec JSON file (output of plcc-spec).
+    SOURCE      Source files to tokenize. Use '-' for stdin. Defaults to stdin.
 
 Options:
     -h --help               Show this message.
@@ -39,7 +40,8 @@ def main(argv=None):
     rules = load_lexical_rules(args['SPEC_JSON'])
     matcher = Matcher(rules)
     scanner = Scanner(matcher)
-    lines = _read_stdin_as_lines()
+    sources = args['SOURCE'] or ['-']
+    lines = _lines_from_sources(sources)
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             continue
@@ -49,6 +51,15 @@ def main(argv=None):
         print(format_record(obj), flush=True)
 
 
-def _read_stdin_as_lines():
-    for i, raw in enumerate(sys.stdin, start=1):
-        yield Line(string=raw.rstrip('\n'), number=i, file='<stdin>')
+def _lines_from_sources(sources):
+    for file in sources:
+        if file == '-':
+            yield from _lines_from_stream(sys.stdin, '-')
+        else:
+            with open(file, 'r') as f:
+                yield from _lines_from_stream(f, file)
+
+
+def _lines_from_stream(stream, file):
+    for i, raw in enumerate(stream, start=1):
+        yield Line(string=raw.rstrip('\n'), number=i, file=file)
