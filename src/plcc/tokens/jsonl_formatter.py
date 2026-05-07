@@ -18,3 +18,18 @@ def format_record(obj):
             },
         })
     raise TypeError(f'Unexpected type: {type(obj)}')
+
+
+def format_error_record(obj):
+    return json.dumps({
+        'kind': 'error',
+        'stage': 'plcc-tokens',
+        'severity': 'error',
+        'pos': {
+            'file': obj.line.file,
+            'line': obj.line.number,
+            'column': obj.column,
+        },
+        'lexeme': obj.line.string[obj.column - 1],
+        'message': 'unrecognized character',
+    })

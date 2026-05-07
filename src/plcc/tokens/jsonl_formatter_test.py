@@ -3,7 +3,7 @@ import pytest
 from ..lines import Line
 from ..scan.Token import Token
 from ..scan.LexError import LexError
-from .jsonl_formatter import format_record
+from .jsonl_formatter import format_record, format_error_record
 
 
 def _line(s='hello', n=1, f='test.txt'):
@@ -31,3 +31,15 @@ def test_output_is_single_line():
     t = Token(lexeme='x', name='A', line=_line(), column=1)
     output = format_record(t)
     assert '\n' not in output
+
+
+def test_formats_error_record():
+    line = Line(string='hello@world', number=3, file='src.txt')
+    lex_error = LexError(line=line, column=6)  # '@' is at index 5, column 6
+    result = json.loads(format_error_record(lex_error))
+    assert result['kind'] == 'error'
+    assert result['stage'] == 'plcc-tokens'
+    assert result['severity'] == 'error'
+    assert result['pos'] == {'file': 'src.txt', 'line': 3, 'column': 6}
+    assert result['lexeme'] == '@'
+    assert result['message'] == 'unrecognized character'
