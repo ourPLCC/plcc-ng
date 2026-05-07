@@ -131,7 +131,8 @@ def main(argv=None):
             elif record.get("kind") == "error":
                 loc = _location_str(record.get("pos", {}))
                 lexeme = record.get("lexeme", "?")
-                print(f"{loc}: error: unrecognized character '{lexeme}'", flush=True)
+                message = record.get("message", "unrecognized character")
+                print(f"{loc}: error: {message} '{lexeme}'", flush=True)
 
         stderr_thread.join()
         proc.wait()

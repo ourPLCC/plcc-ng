@@ -1,21 +1,47 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "TokenRecord",
-  "description": "One JSONL record from plcc-tokens.",
-  "type": "object",
-  "required": ["kind", "name", "lexeme", "source"],
-  "properties": {
-    "kind":   { "type": "string", "const": "token" },
-    "name":   { "type": "string" },
-    "lexeme": { "type": "string" },
-    "source": {
+  "title": "TokenStreamRecord",
+  "description": "One JSONL record from plcc-tokens stdout: either a token or a lex error.",
+  "oneOf": [
+    {
+      "title": "TokenRecord",
       "type": "object",
-      "required": ["file", "line", "column"],
+      "required": ["kind", "name", "lexeme", "source"],
       "properties": {
-        "file":   { "type": ["string", "null"] },
-        "line":   { "type": "integer", "minimum": 1 },
-        "column": { "type": "integer", "minimum": 1 }
+        "kind":   { "type": "string", "const": "token" },
+        "name":   { "type": "string" },
+        "lexeme": { "type": "string" },
+        "source": {
+          "type": "object",
+          "required": ["file", "line", "column"],
+          "properties": {
+            "file":   { "type": ["string", "null"] },
+            "line":   { "type": "integer", "minimum": 1 },
+            "column": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    {
+      "title": "ErrorRecord",
+      "type": "object",
+      "required": ["kind", "stage", "severity", "pos", "lexeme", "message"],
+      "properties": {
+        "kind":     { "type": "string", "const": "error" },
+        "stage":    { "type": "string" },
+        "severity": { "type": "string" },
+        "pos": {
+          "type": "object",
+          "required": ["file", "line", "column"],
+          "properties": {
+            "file":   { "type": ["string", "null"] },
+            "line":   { "type": "integer", "minimum": 1 },
+            "column": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "lexeme":  { "type": "string" },
+        "message": { "type": "string" }
       }
     }
-  }
+  ]
 }
