@@ -40,7 +40,7 @@ setup() {
 @test "plcc-scan exits 0 on lex error in source" {
     run --separate-stderr bash -c "echo 'abc' | plcc-scan '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$stderr" =~ error ]]
+    [[ "$output" == *"error"* ]]
 }
 
 @test "plcc-scan brief usage mentions --help" {
@@ -67,7 +67,7 @@ setup() {
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
     [[ "$output" == *"99"* ]]
-    [[ "$stderr" == *"error"* ]]
+    [[ "$output" == *"error"* ]]
 }
 
 @test "plcc-scan outputs tokens for multi-line input" {
