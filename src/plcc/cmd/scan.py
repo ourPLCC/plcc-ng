@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
 
 from docopt import docopt, DocoptExit
 
@@ -73,29 +74,52 @@ def main(argv=None):
             print(f"plcc-scan: plcc-spec failed (exit {result.returncode})", file=sys.stderr)
             sys.exit(result.returncode)
 
-        # Build input: concatenate source files/stdin in order
-        input_data = b""
-        for src in sources:
-            if src == '-':
-                input_data += sys.stdin.buffer.read()
-            else:
-                with open(src, "rb") as sf:
-                    input_data += sf.read()
-        if not sources:
-            input_data = sys.stdin.buffer.read()
-
-        # plcc-tokens spec.json < input
-        result = subprocess.run(
+        proc = subprocess.Popen(
             ["plcc-tokens", spec_path, "--continue-on-error"] + child_flags,
-            input=input_data,
+            stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        if result.stderr:
-            events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
-            verbose.reformat_child_events(events)
-        for line in result.stdout.decode("utf-8").splitlines():
-            if not line.strip():
+
+        stderr_chunks = []
+
+        def _drain_stderr():
+            stderr_chunks.append(proc.stderr.read())
+
+        stderr_thread = threading.Thread(target=_drain_stderr, daemon=True)
+        stderr_thread.start()
+
+        def _feed_input():
+            try:
+                if sources:
+                    for src in sources:
+                        if src == '-':
+                            for chunk in sys.stdin.buffer:
+                                proc.stdin.write(chunk)
+                                proc.stdin.flush()
+                        else:
+                            with open(src, "rb") as sf:
+                                for chunk in sf:
+                                    proc.stdin.write(chunk)
+                                    proc.stdin.flush()
+                else:
+                    for chunk in sys.stdin.buffer:
+                        proc.stdin.write(chunk)
+                        proc.stdin.flush()
+            except BrokenPipeError:
+                pass
+            finally:
+                try:
+                    proc.stdin.close()
+                except BrokenPipeError:
+                    pass
+
+        feed_thread = threading.Thread(target=_feed_input, daemon=True)
+        feed_thread.start()
+
+        for raw in proc.stdout:
+            line = raw.decode("utf-8").strip()
+            if not line:
                 continue
             record = json.loads(line)
             if record.get("kind") == "token":
@@ -103,7 +127,15 @@ def main(argv=None):
                 lexeme = record.get("lexeme", "?")
                 source = record.get("source", {})
                 loc = _location_str(source)
-                print(f"{loc} {name} '{lexeme}'")
+                print(f"{loc} {name} '{lexeme}'", flush=True)
+
+        stderr_thread.join()
+        proc.wait()
+
+        stderr_data = b"".join(stderr_chunks)
+        if stderr_data:
+            events = verbose.parse_child_events(stderr_data.decode("utf-8", errors="replace"))
+            verbose.reformat_child_events(events)
     finally:
         os.unlink(spec_path)
 
