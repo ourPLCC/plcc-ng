@@ -44,7 +44,11 @@ def test_outputs_token_jsonl(capsys, monkeypatch, fs):
 def test_lex_error_emits_error_record_to_stdout(capsys, monkeypatch, fs):
     fs.create_file('/spec.json', contents=json.dumps(_SPEC))
     monkeypatch.setattr('sys.stdin', io.StringIO('@\n'))
-    run_main(['/spec.json'])
+    # Verify it does not raise SystemExit (exits 0)
+    try:
+        run_main(['/spec.json'])
+    except SystemExit as e:
+        pytest.fail(f"run_main raised SystemExit({e.code}), expected normal return")
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
     assert len(lines) == 1
