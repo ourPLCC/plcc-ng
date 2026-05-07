@@ -66,8 +66,8 @@ assert 'line' in src and 'endLine' in src, src
 "
 }
 
-@test "plcc-parser-table exits nonzero for lex error input" {
+@test "plcc-parser-table passes lex error record through and exits 0" {
     run bash -c "echo 'not_a_num' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
-    # plcc-tokens exits nonzero; plcc-parser-table either doesn't run or also exits nonzero
-    [ "$status" -ne 0 ]
+    [ "$status" -eq 0 ]
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
 }
