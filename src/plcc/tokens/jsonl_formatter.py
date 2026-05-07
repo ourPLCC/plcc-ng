@@ -3,6 +3,7 @@
 import json
 
 from ..scan.Token import Token
+from ..scan.LexError import LexError
 
 
 def format_record(obj):
@@ -21,6 +22,8 @@ def format_record(obj):
 
 
 def format_error_record(obj):
+    if not isinstance(obj, LexError):
+        raise TypeError(f'Unexpected type: {type(obj)}')
     return json.dumps({
         'kind': 'error',
         'stage': 'plcc-tokens',

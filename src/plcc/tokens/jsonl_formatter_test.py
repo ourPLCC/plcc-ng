@@ -43,3 +43,9 @@ def test_formats_error_record():
     assert result['pos'] == {'file': 'src.txt', 'line': 3, 'column': 6}
     assert result['lexeme'] == '@'
     assert result['message'] == 'unrecognized character'
+
+
+def test_format_error_record_rejects_token():
+    token = Token(name='NUM', lexeme='42', line=Line(string='42', number=1, file='f'), column=1)
+    with pytest.raises(TypeError):
+        format_error_record(token)
