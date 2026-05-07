@@ -44,3 +44,18 @@ teardown() {
         echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
     done <<< "$output"
 }
+
+@test "plcc-tokens with no SOURCE args labels tokens with file=-" {
+    result=$(echo '42' | plcc-tokens "${SPEC_JSON}")
+    file_val=$(echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); print(r['source']['file'])")
+    [ "$file_val" = "-" ]
+}
+
+@test "plcc-tokens with SOURCE file arg labels tokens with that filename" {
+    tmp=$(mktemp)
+    echo "42" > "$tmp"
+    result=$(plcc-tokens "${SPEC_JSON}" "$tmp")
+    file_val=$(echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); print(r['source']['file'])")
+    [ "$file_val" = "$tmp" ]
+    rm -f "$tmp"
+}
