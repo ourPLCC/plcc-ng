@@ -75,7 +75,7 @@ def main(argv=None):
             sys.exit(result.returncode)
 
         proc = subprocess.Popen(
-            ["plcc-tokens", spec_path, "--continue-on-error"] + child_flags,
+            ["plcc-tokens", spec_path] + child_flags,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -128,6 +128,11 @@ def main(argv=None):
                 source = record.get("source", {})
                 loc = _location_str(source)
                 print(f"{loc} {name} '{lexeme}'", flush=True)
+            elif record.get("kind") == "error":
+                loc = _location_str(record.get("pos", {}))
+                lexeme = record.get("lexeme", "?")
+                message = record.get("message", "unrecognized character")
+                print(f"{loc}: error: {message} '{lexeme}'", flush=True)
 
         stderr_thread.join()
         proc.wait()
