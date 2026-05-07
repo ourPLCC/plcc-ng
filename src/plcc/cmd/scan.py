@@ -104,11 +104,6 @@ def main(argv=None):
                 source = record.get("source", {})
                 loc = _location_str(source)
                 print(f"{loc} {name} '{lexeme}'")
-            elif record.get("kind") == "error":
-                source = record.get("source", {})
-                loc = _location_str(source)
-                message = record.get("message", "unknown error")
-                print(f"{loc}: error: {message}")
     finally:
         os.unlink(spec_path)
 
