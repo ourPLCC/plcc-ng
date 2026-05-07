@@ -86,7 +86,7 @@ def main(argv=None):
 
         # plcc-tokens spec.json < input
         result = subprocess.run(
-            ["plcc-tokens", spec_path] + child_flags,
+            ["plcc-tokens", spec_path, "--continue-on-error"] + child_flags,
             input=input_data,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -94,27 +94,16 @@ def main(argv=None):
         if result.stderr:
             events = verbose.parse_child_events(result.stderr.decode("utf-8", errors="replace"))
             verbose.reformat_child_events(events)
-        if result.returncode != 0:
-            # lex error: plcc-tokens already emitted the error to stderr via verbose;
-            # treat as non-fatal — pipeline completed with an error in-band
-            pass
-        else:
-            for line in result.stdout.decode("utf-8").splitlines():
-                if not line.strip():
-                    continue
-                record = json.loads(line)
-                if record.get("kind") == "token":
-                    name = record.get("name", "?")
-                    lexeme = record.get("lexeme", "?")
-                    source = record.get("source", {})
-                    loc = _location_str(source)
-                    print(f"{loc} {name} '{lexeme}'")
-                # forward-looking: plcc-tokens may emit error records inline in a future protocol
-                elif record.get("kind") == "error":
-                    source = record.get("source", {})
-                    loc = _location_str(source)
-                    message = record.get("message", "unknown error")
-                    print(f"{loc}: error: {message}")
+        for line in result.stdout.decode("utf-8").splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("kind") == "token":
+                name = record.get("name", "?")
+                lexeme = record.get("lexeme", "?")
+                source = record.get("source", {})
+                loc = _location_str(source)
+                print(f"{loc} {name} '{lexeme}'")
     finally:
         os.unlink(spec_path)
 

@@ -71,3 +71,50 @@ def test_lex_error_json_format(capsys, monkeypatch, fs):
     assert error_records[0]['stage'] == 'plcc-tokens'
     assert error_records[0]['severity'] == 'error'
     assert 'pos' in error_records[0]
+
+
+def test_continue_on_error_continues_after_bad_char(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@ 42\n'))
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json', '--continue-on-error'])
+    assert excinfo.value.code != 0
+    out, err = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record['kind'] == 'token'
+    assert record['name'] == 'NUM'
+    assert record['lexeme'] == '42'
+    assert 'error' in err
+
+
+def test_continue_on_error_bad_char_only_exits_nonzero(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@\n'))
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json', '--continue-on-error'])
+    assert excinfo.value.code != 0
+    out, err = capsys.readouterr()
+    assert 'error' in err
+
+
+def test_default_still_exits_on_first_error(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@ 42\n'))
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json'])
+    assert excinfo.value.code != 0
+    out, _ = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    assert len(lines) == 0
+
+
+def test_continue_on_error_valid_input_exits_zero(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json', '--continue-on-error'])
+    out, _ = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    assert len(lines) == 1
+    assert json.loads(lines[0])['name'] == 'NUM'

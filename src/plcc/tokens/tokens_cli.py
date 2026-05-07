@@ -22,7 +22,8 @@ Arguments:
     SPEC_JSON   Path to spec JSON file (output of plcc-spec).
 
 Options:
-    -h --help   Show this message.
+    -h --help               Show this message.
+    --continue-on-error     Continue scanning after an unrecognized character.
 """ + VERBOSE_OPTIONS
 
 
@@ -40,6 +41,8 @@ def main(argv=None):
     matcher = Matcher(rules)
     scanner = Scanner(matcher)
     lines = _read_stdin_as_lines()
+    continue_on_error = args['--continue-on-error']
+    had_error = False
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             continue
@@ -52,8 +55,13 @@ def main(argv=None):
                 },
                 message="unrecognized character",
             )
+            if continue_on_error:
+                had_error = True
+                continue
             sys.exit(1)
         print(format_record(obj), flush=True)
+    if had_error:
+        sys.exit(1)
 
 
 def _read_stdin_as_lines():
