@@ -106,8 +106,13 @@ def main(argv=None):
                     for chunk in sys.stdin.buffer:
                         proc.stdin.write(chunk)
                         proc.stdin.flush()
+            except BrokenPipeError:
+                pass
             finally:
-                proc.stdin.close()
+                try:
+                    proc.stdin.close()
+                except BrokenPipeError:
+                    pass
 
         feed_thread = threading.Thread(target=_feed_input, daemon=True)
         feed_thread.start()
@@ -122,9 +127,8 @@ def main(argv=None):
                 lexeme = record.get("lexeme", "?")
                 source = record.get("source", {})
                 loc = _location_str(source)
-                print(f"{loc} {name} '{lexeme}'")
+                print(f"{loc} {name} '{lexeme}'", flush=True)
 
-        feed_thread.join()
         stderr_thread.join()
         proc.wait()
 
