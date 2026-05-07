@@ -26,12 +26,14 @@ plcc-tokens [options] SPEC_JSON [SOURCE ...]
 ```
 
 - If no SOURCE files are given, reads stdin and labels every line `file='-'`.
-- If SOURCE files are given, opens them in order using the existing
-  `scan.source.Source` class (which already handles `-` → stdin, multiple files,
-  and per-file line numbering).
+- If SOURCE files are given, opens them in order using two private helpers:
+  `_lines_from_sources` (iterates files, handling `-` as stdin) and
+  `_lines_from_stream` (enumerates lines from an open stream).
 
-The `_read_stdin_as_lines()` helper in `tokens_cli.py` is removed; `Source`
-replaces it.
+The `_read_stdin_as_lines()` helper in `tokens_cli.py` is removed and replaced
+by these helpers. `scan.source.Source` is intentionally **not** reused here:
+`Source` calls `line.strip()` which removes leading whitespace and would corrupt
+column numbers in source code.
 
 No changes to `jsonl_formatter.py` or the token JSON schema — both already emit
 and require `source.file` / `pos.file`.
