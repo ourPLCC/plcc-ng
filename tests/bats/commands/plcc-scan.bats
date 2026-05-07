@@ -31,10 +31,10 @@ setup() {
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-scan includes line:col in token output" {
+@test "plcc-scan includes file:line:col in token output" {
     run bash -c "echo '42' | plcc-scan '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ ^1:1\ NUM\ \'42\'$ ]]
+    [[ "$output" =~ ^-:1:1\ NUM\ \'42\'$ ]]
 }
 
 @test "plcc-scan exits 0 on lex error in source" {
@@ -75,4 +75,15 @@ setup() {
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
     [[ "$output" == *"99"* ]]
+}
+
+@test "plcc-scan includes source filename in token output for named file" {
+    run plcc-scan "${FIXTURES}/trivial.plcc" "${FIXTURES}/trivial_input.txt"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"trivial_input.txt"* ]]
+}
+
+@test "plcc-scan exits nonzero when source file does not exist" {
+    run --separate-stderr plcc-scan "${FIXTURES}/trivial.plcc" "/nonexistent/no-such-file.txt"
+    [ "$status" -ne 0 ]
 }

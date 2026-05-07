@@ -12,12 +12,10 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
 
 def _location_str(source):
-    file = source.get("file")
+    file = source.get("file", "?")
     line = source.get("line", "?")
     col = source.get("column", "?")
-    if file and file != "<stdin>":
-        return f"{file}:{line}:{col}"
-    return f"{line}:{col}"
+    return f"{file}:{line}:{col}"
 
 
 __doc__ = """plcc-scan
@@ -74,9 +72,9 @@ def main(argv=None):
             print(f"plcc-scan: plcc-spec failed (exit {result.returncode})", file=sys.stderr)
             sys.exit(result.returncode)
 
+        token_sources = sources if sources else ["-"]
         proc = subprocess.Popen(
-            ["plcc-tokens", spec_path] + child_flags,
-            stdin=subprocess.PIPE,
+            ["plcc-tokens", spec_path] + token_sources + child_flags,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
@@ -88,34 +86,6 @@ def main(argv=None):
 
         stderr_thread = threading.Thread(target=_drain_stderr, daemon=True)
         stderr_thread.start()
-
-        def _feed_input():
-            try:
-                if sources:
-                    for src in sources:
-                        if src == '-':
-                            for chunk in sys.stdin.buffer:
-                                proc.stdin.write(chunk)
-                                proc.stdin.flush()
-                        else:
-                            with open(src, "rb") as sf:
-                                for chunk in sf:
-                                    proc.stdin.write(chunk)
-                                    proc.stdin.flush()
-                else:
-                    for chunk in sys.stdin.buffer:
-                        proc.stdin.write(chunk)
-                        proc.stdin.flush()
-            except BrokenPipeError:
-                pass
-            finally:
-                try:
-                    proc.stdin.close()
-                except BrokenPipeError:
-                    pass
-
-        feed_thread = threading.Thread(target=_feed_input, daemon=True)
-        feed_thread.start()
 
         for raw in proc.stdout:
             line = raw.decode("utf-8").strip()
@@ -141,6 +111,10 @@ def main(argv=None):
         if stderr_data:
             events = verbose.parse_child_events(stderr_data.decode("utf-8", errors="replace"))
             verbose.reformat_child_events(events)
+
+        if proc.returncode != 0:
+            print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
+            sys.exit(proc.returncode)
     finally:
         os.unlink(spec_path)
 
