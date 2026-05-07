@@ -111,6 +111,10 @@ def main(argv=None):
         if stderr_data:
             events = verbose.parse_child_events(stderr_data.decode("utf-8", errors="replace"))
             verbose.reformat_child_events(events)
+
+        if proc.returncode != 0:
+            print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
+            sys.exit(proc.returncode)
     finally:
         os.unlink(spec_path)
 

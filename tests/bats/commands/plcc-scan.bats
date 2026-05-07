@@ -82,3 +82,8 @@ setup() {
     [ "$status" -eq 0 ]
     [[ "$output" == *"trivial_input.txt"* ]]
 }
+
+@test "plcc-scan exits nonzero when source file does not exist" {
+    run --separate-stderr plcc-scan "${FIXTURES}/trivial.plcc" "/nonexistent/no-such-file.txt"
+    [ "$status" -ne 0 ]
+}
