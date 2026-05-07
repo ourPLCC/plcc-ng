@@ -69,3 +69,10 @@ setup() {
     [[ "$output" == *"99"* ]]
     [[ "$stderr" == *"error"* ]]
 }
+
+@test "plcc-scan outputs tokens for multi-line input" {
+    run bash -c "printf '42\n99\n' | plcc-scan '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"42"* ]]
+    [[ "$output" == *"99"* ]]
+}
