@@ -9,7 +9,7 @@ from ..scan.scanner import Scanner
 from ..scan.Skip import Skip
 from ..scan.LexError import LexError
 from .spec_loader import load_lexical_rules
-from .jsonl_formatter import format_record
+from .jsonl_formatter import format_record, format_error_record
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-tokens
@@ -23,7 +23,6 @@ Arguments:
 
 Options:
     -h --help               Show this message.
-    --continue-on-error     Continue scanning after an unrecognized character.
 """ + VERBOSE_OPTIONS
 
 
@@ -41,27 +40,13 @@ def main(argv=None):
     matcher = Matcher(rules)
     scanner = Scanner(matcher)
     lines = _read_stdin_as_lines()
-    continue_on_error = args['--continue-on-error']
-    had_error = False
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             continue
         if isinstance(obj, LexError):
-            verbose.emit_error(
-                pos={
-                    "file": obj.line.file,
-                    "line": obj.line.number,
-                    "column": obj.column,
-                },
-                message="unrecognized character",
-            )
-            if continue_on_error:
-                had_error = True
-                continue
-            sys.exit(1)
+            print(format_error_record(obj), flush=True)
+            continue
         print(format_record(obj), flush=True)
-    if had_error:
-        sys.exit(1)
 
 
 def _read_stdin_as_lines():
