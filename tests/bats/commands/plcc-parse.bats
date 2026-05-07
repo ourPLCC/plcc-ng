@@ -33,7 +33,7 @@ setup() {
 @test "plcc-parse includes location on token leaves" {
     run bash -c "echo '42' | plcc-parse '${FIXTURES}/arith.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ NUM\ \'42\'\ \[1:1\] ]]
+    [[ "$output" =~ NUM\ \'42\'\ \[-:1:1\] ]]
 }
 
 @test "plcc-parse brief usage mentions --help" {
