@@ -111,6 +111,15 @@ def main(argv=None):
             if not line.strip():
                 continue
             tree = json.loads(line)
+            if tree.get("kind") == "error":
+                verbose.reformat_child_events([{
+                    "stage": tree.get("stage", "plcc-tokens"),
+                    "event": "error",
+                    "severity": "error",
+                    "pos": tree.get("pos", {}),
+                    "message": tree.get("message", "error"),
+                }])
+                sys.exit(1)
             _print_tree(tree, indent=0)
     finally:
         for p in (spec_path, ll1_path):
