@@ -61,3 +61,11 @@ setup() {
     [[ "$output" == *"42"* ]]
     [[ "$output" == *"99"* ]]
 }
+
+@test "plcc-scan prints tokens before and after a lex error" {
+    run --separate-stderr bash -c "printf '42 @ 99\n' | plcc-scan '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"42"* ]]
+    [[ "$output" == *"99"* ]]
+    [[ "$stderr" == *"error"* ]]
+}
