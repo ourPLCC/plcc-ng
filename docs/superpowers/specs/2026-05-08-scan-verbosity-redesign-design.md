@@ -5,10 +5,10 @@
 
 ## Problem
 
-`plcc-scan` accepts `--verbose=N` but levels 2 and 3 produce output identical to
+`plcc-scan` accepts `-v=N` but levels 2 and 3 produce output identical to
 level 1. The framed question — "what useful information should levels 2 and 3
 expose?" — turned out to be the wrong question. The real problem is that
-`--verbose` was being asked to do two unrelated jobs:
+`-v` was being asked to do two unrelated jobs:
 
 1. Control **stderr diagnostic noise** (process-level metadata: stage events,
    file events, hints).
@@ -30,25 +30,25 @@ Two independent controls with clearly separated responsibilities:
 
 | Concern | Stream | Controlled by |
 |---|---|---|
-| Process-level metadata (stage, per-file, TTY hint) | stderr | `--verbose=N` |
-| Token records (with `regex`) | stdout JSONL → text | always on |
-| Skip records | stdout JSONL → text | `--show-skips` |
-| Match-attempts trace | `attempts` field on records → indented lines | `--show-attempts` |
+| Process-level metadata (stage, per-file, TTY hint) | stderr | `-v=N` |
+| Token records (lean) | stdout JSONL → text | always on |
+| Skip records, regex, source line, attempts | stdout JSONL → text | `-v` enrichment flags on `plcc-scan` |
 | Lex errors | stdout JSONL → text | always on |
 
-- `--verbose=N` controls **only** stderr diagnostics.
-- `--show-skips` and `--show-attempts` are independent boolean flags. They are
-  composable; ordering between them is not implied.
-- The matched regex is **always** included in token records — it's part of the
-  basic level-0 output, not a verbosity addition.
+- `-v=N` controls **only** stderr diagnostics.
+- Output richness is controlled by dedicated feature flags on `plcc-scan`:
+  `--show-skips`, `--show-line`, `--show-regex`, `--show-attempts`, `--show-all`.
+- `plcc-tokens` has a single enrichment flag, `--show-all`, that causes it to
+  include the full record payload. `plcc-scan` passes this flag to `plcc-tokens`
+  whenever any of its own enrichment flags are set; `plcc-tokens` does not need
+  to know which specific things `plcc-scan` intends to render.
 
 ### Per-token verbose info travels in the stdout JSONL stream
 
-Per-token data (regex, skip records, rule attempts) is *associated with* the
-token it describes. Putting it on a different stream from the token forces
-synchronization. Putting it in the same record solves the synchronization
-problem structurally — the data is shipped together because it belongs
-together.
+Per-token data (regex, source line, skip records, rule attempts) is *associated
+with* the token it describes. Putting it on a different stream from the token
+forces synchronization. Putting it in the same record solves the synchronization
+problem structurally — the data is shipped together because it belongs together.
 
 Stderr is reserved for process-level metadata (stage start/finish, per-file
 "scanning <file>", TTY hint). These events are coarse-grained — not tied to
@@ -59,8 +59,8 @@ specific tokens — so any interleaving with stdout is harmless.
 `plcc-scan` runs `plcc-spec` and `plcc-tokens` with `stderr=None` (inherited).
 Each child writes its own stderr directly. `plcc-scan` does **not** parse,
 capture, or reformat child stderr. Verbose flags propagate down unchanged
-(`--verbose=N --verbose-format=FMT`); each command independently decides what
-it emits at each level.
+(`-v=N --verbose-format=FMT`); each command independently decides what it
+emits at each level.
 
 ### Verbose level content (scope: scan/tokens)
 
@@ -78,29 +78,91 @@ started/finished events.
 
 Three record kinds, all on stdout JSONL:
 
-- `kind: "token"` — required: `name`, `lexeme`, `regex`, `source`. Optional:
-  `attempts`.
-- `kind: "skip"` — same shape as token, only emitted when `--show-skips`.
+- `kind: "token"` — always present: `name`, `lexeme`, `source`. With
+  `--show-all`: also `regex`, `source_line`, and optionally `attempts`.
+- `kind: "skip"` — same shape as token, only emitted when `--show-all`.
 - `kind: "error"` — unchanged from current schema. Lex errors never carry
   `attempts`.
 
 `attempts` is a list of `{name, regex, lexeme, char_count, is_skip, winner}`
-entries — only matching rules are listed (per design choice; non-matching
-rules omitted to avoid log spam in real grammars). Exactly one entry has
-`winner: true`. The matcher's tie-breaking decides the winner; the formatter
-does not re-derive it.
+entries — only matching rules are listed (non-matching rules omitted to avoid
+log spam in real grammars). Exactly one entry has `winner: true`. The
+matcher's tie-breaking decides the winner; the formatter does not re-derive it.
+
+`source_line` is the raw text of the source line containing the token's start
+position. It is always present when `--show-all` is set.
+
+### `plcc-scan` enrichment flags
+
+All flags are independent and composable. `--show-all` is equivalent to setting
+all four.
+
+| Flag | Effect |
+|---|---|
+| `--show-skips` | Render skip records: `file:line:col NAME 'lexeme' SKIPPED` |
+| `--show-line` | Before each record, print the source line and a `^` cursor at the token's column |
+| `--show-attempts` | Before the token line (after cursor if present), print indented attempt lines |
+| `--show-regex` | Include matched regex in the token/skip line: `file:line:col NAME 'regex' 'lexeme'` |
+| `--show-all` | All of the above |
+
+When any enrichment flag is set, `plcc-scan` passes `--show-all` to
+`plcc-tokens`. When no enrichment flags are set, `plcc-tokens` produces lean
+JSONL and `plcc-scan` ignores any optional fields.
 
 ### `plcc-scan` rendering
 
-- Default: `file:line:col NAME 'regex' 'lexeme'`
-- Skip records (when present): `file:line:col (skip) NAME 'regex' 'lexeme'`
-- Records carrying `attempts`: indented lines under the record, e.g.
-  ```
-  -:1:1 NUM '\d+' '42'
-        INT '\d+' 2 chars '42'
-      * NUM '\d+' 2 chars '42'
-  ```
-  Winner prefix: `"    * "`. Loser prefix: `"      "`.
+**Default** (no enrichment flags):
+```
+-:1:1 NUM '42'
+```
+
+**`--show-regex`**:
+```
+-:1:1 NUM '\d+' '42'
+```
+
+**`--show-skips`**:
+```
+-:1:1 NUM '42'
+-:1:4 WS ' ' SKIPPED
+-:1:5 NUM '99'
+```
+
+**`--show-line`**:
+```
+42
+^
+-:1:1 NUM '42'
+```
+
+**`--show-attempts`** (on its own, `^` absent):
+```
+      INT '\d+' 2 chars '42'
+    * NUM '\d+' 2 chars '42'
+-:1:1 NUM '42'
+```
+Winner prefix: `"    * "`. Loser prefix: `"      "`.
+
+**`--show-all`** (all flags):
+```
+42 99
+^
+      INT '\d+' 2 chars '42'
+    * NUM '\d+' 2 chars '42'
+-:1:1 NUM '\d+' '42'
+42 99
+  ^
+    * WS '\s+' 1 chars ' '
+-:1:3 WS '\s+' ' ' SKIPPED
+42 99
+     ^
+      INT '\d+' 2 chars '99'
+    * NUM '\d+' 2 chars '99'
+-:1:5 NUM '\d+' '99'
+```
+
+The `^` cursor is placed at column − 1 spaces from the left (columns are
+1-indexed, so column 1 means zero leading spaces).
 
 ### Data flow
 
@@ -116,85 +178,110 @@ plcc-scan
 ```
 plcc-scan
   → spawns plcc-spec and plcc-tokens with stderr=None (inherited)
-  → reads stdout JSONL, renders records (token / skip / error + attempts)
+  → passes --show-all to plcc-tokens when any enrichment flag is set
+  → reads stdout JSONL, renders records (token / skip / error + line / attempts)
 plcc-tokens
   → writes stage / scanning / hint events to its own stderr
-  → writes token / skip / error JSONL records to its own stdout
+  → writes lean token / error JSONL records to its own stdout (default)
+  → with --show-all: includes regex, source_line, attempts; emits skip records
 ```
 
 ## File changes (summary)
 
 - `src/plcc/scan/Token.py`, `src/plcc/scan/Skip.py`: add
-  `pattern: str = field(default="", compare=False)` and
-  `attempts: list = field(default_factory=list, compare=False)`. `compare=False`
+  `pattern: str = field(default="", compare=False)`,
+  `attempts: list = field(default_factory=list, compare=False)`, and
+  `source_line: str = field(default="", compare=False)`. `compare=False`
   preserves existing `Token(...)` equality assertions in tests.
 - `src/plcc/scan/matcher.py`: add `record_attempts: bool = False` to
   `__init__`. Build attempts list in `_getMatches` (only matching rules).
   Always populate `Token.pattern`/`Skip.pattern`. Populate `attempts` only
   when enabled, including the skip-first-match short-circuit branch.
 - `src/plcc/scan/scanner.py`: no changes.
-- `src/plcc/tokens/jsonl_formatter.py`: handle `Token` and `Skip`. Emit
-  `regex` always; emit `attempts` array (with `winner` flags) when populated.
-- `src/plcc/tokens/tokens_cli.py`: add `--show-skips` / `--show-attempts`
-  options. New events `SCANNING_FILE`, `STDIN_HINT`. Per-file event from
-  `_lines_from_sources`. TTY hint at startup when applicable. Emit skip
-  records only when flag is on.
-- `src/plcc/cmd/scan.py`: add `--show-skips` / `--show-attempts` options.
-  Use `verbose.child_flags()` (no JSON override). `stderr=None` on both
-  child invocations. Append show-flags only to the `plcc-tokens` invocation.
-  Remove threading, stderr capture, `parse_child_events`/
-  `reformat_child_events` calls. Render `kind=token`/`kind=skip`/`kind=error`
-  + indented attempts lines.
+- `src/plcc/tokens/jsonl_formatter.py`: handle `Token` and `Skip`. Default
+  output: `name`, `lexeme`, `source` only. When `show_all=True`: also emit
+  `regex`, `source_line`, and `attempts` array (with `winner` flags) when
+  populated. Skip records get `kind=skip`.
+- `src/plcc/tokens/tokens_cli.py`: add `--show-all` option (single enrichment
+  flag). New events `SCANNING_FILE`, `STDIN_HINT`. Per-file event from
+  `_lines_from_sources`. TTY hint at startup when applicable. Attach
+  `source_line` to each record when `--show-all`. Construct
+  `Matcher(rules, record_attempts=args["--show-all"])`. Emit skip records only
+  when `--show-all`.
+- `src/plcc/cmd/scan.py`: add `--show-skips`, `--show-line`, `--show-regex`,
+  `--show-attempts`, `--show-all` options. Use `verbose.child_flags()` (no JSON
+  override). `stderr=None` on both child invocations. Pass `--show-all` to the
+  `plcc-tokens` invocation when any enrichment flag is set. Remove threading,
+  stderr capture, `parse_child_events`/`reformat_child_events` calls. Render
+  `kind=token`/`kind=skip`/`kind=error` with source line, cursor, attempts, and
+  regex according to active flags.
 - `src/plcc/verbose.py`: **no removals.** `parse_child_events`,
   `reformat_child_events`, `child_flags_for_orchestrator`, `reap_pipeline`,
   `PipelineResult` are still consumed by `plcc-parse` and `plcc-make`.
   Converting those to pass-through is a follow-up.
-- `src/plcc/schemas/token.schema.json`: add `SkipRecord` branch. Add required
-  `regex` to `TokenRecord` and `SkipRecord`. Add optional `attempts` array.
+- `src/plcc/schemas/token.schema.json`: add `SkipRecord` branch. `regex`,
+  `source_line`, and `attempts` are optional on `TokenRecord` and `SkipRecord`
+  (present only when `plcc-tokens --show-all`).
 
 ## Tests
 
 **Pytest (new):**
 - `matcher_test.py`: `record_attempts=True` populates `attempts`; default
   empty; skip-first-match still records attempts; `pattern` always set.
-- `jsonl_formatter_test.py`: token records always include `regex`; skip
-  records have `kind=skip`; `attempts` present and `winner: true` on exactly
-  one entry.
-- `tokens_cli_test.py`: `--show-skips` toggles skip records; `--show-attempts`
-  adds the field; per-file event emitted at `-v=1`; TTY hint with monkeypatched
-  `isatty`.
+- `jsonl_formatter_test.py`: lean token records omit `regex`/`source_line`/
+  `attempts`; enriched records include all three; skip records have
+  `kind=skip`; `attempts` has `winner: true` on exactly one entry.
+- `tokens_cli_test.py`: `--show-all` emits `kind=skip` records, `regex`,
+  `source_line`, and `attempts`; per-file event emitted at `-v=1`; TTY hint
+  with monkeypatched `isatty`.
 
 **Pytest (regression):** `compare=False` keeps existing matcher/scanner test
 assertions valid.
 
 **Bats (`plcc-scan.bats`):**
-- Update existing `file:line:col in token output` test for new regex-included
-  default format.
-- New: `--show-skips` adds `(skip)` lines.
-- New: `--show-attempts` produces indented attempt lines with one starred
-  winner.
+
+- Confirm existing `file:line:col in token output` test still matches lean
+  default format `^-:1:1 NUM '42'$` (no regex).
+- New: `--show-skips` adds `SKIPPED` lines.
+- New: `--show-line` shows source line and `^` cursor.
+- New: `--show-attempts` produces indented attempt lines with one starred winner.
+- New: `--show-regex` adds regex field to output line.
+- New: `--show-all` produces all of the above.
 - New: `-v=1` emits `started`/`finished`/`scanning`/hint on stderr
   (`--separate-stderr`).
 - New: `-v=2` and `-v=3` produce no more scan-emitted output than `-v=1`.
-- New: combined `--show-skips --show-attempts`.
 
 **Bats (`plcc-tokens.bats`):**
-- New: `--show-skips` emits `kind=skip` (validate updated schema).
-- Update: token records include `regex`.
-- New: `-v=1` emits per-file scanning event.
+
+- New: `--show-all` emits `kind=skip` records (validate updated schema).
+- New: `--show-all` token records include `regex` and `source_line`.
+- Confirm: default token records do not include `regex` or `source_line`.
+- New: `-v=1` emits per-file scanning events on stderr.
 
 ## Verification
 
 ```sh
-# Default output now includes regex
+cd .worktrees/003-scan-verbosity-levels
+
+# Default output: lean
 echo '42' | plcc-scan tests/fixtures/trivial.plcc
-# Expected: -:1:1 NUM '\d+' '42'
+# Expected: -:1:1 NUM '42'
 
 # Skips visible
 echo '42 99' | plcc-scan --show-skips tests/fixtures/trivial.plcc
 
+# Source line + cursor
+echo '42' | plcc-scan --show-line tests/fixtures/trivial.plcc
+
 # Attempts visible
 echo '42' | plcc-scan --show-attempts tests/fixtures/trivial.plcc
+
+# Regex in output
+echo '42' | plcc-scan --show-regex tests/fixtures/trivial.plcc
+# Expected: -:1:1 NUM '\d+' '42'
+
+# All flags at once
+echo '42 99' | plcc-scan --show-all tests/fixtures/trivial.plcc
 
 # Stderr at -v=1
 echo '42' | plcc-scan -v=1 tests/fixtures/trivial.plcc 2>&1 1>/dev/null
@@ -206,10 +293,10 @@ echo '42' | plcc-scan -v=3 tests/fixtures/trivial.plcc 2>&1 1>/dev/null
 bin/test
 ```
 
-`plcc-parse` and `plcc-tree` consume the same JSONL. Adding `regex` is
-additive and harmless. `kind=skip` records appear only when `--show-skips` is
-passed, which `plcc-parse` does not propagate, so downstream consumers are
-unaffected.
+`plcc-parse` and `plcc-tree` consume the same JSONL. The lean default record
+is unchanged from their perspective (`regex`, `source_line`, `attempts` are
+absent unless `--show-all` is passed to `plcc-tokens`, which `plcc-parse` does
+not do). Downstream consumers are unaffected.
 
 ## Out of scope (deferred follow-ups)
 
