@@ -33,7 +33,7 @@ Two independent controls with clearly separated responsibilities:
 |---|---|---|
 | Process-level metadata (stage, per-file, TTY hint) | stderr | `-v` (counting) |
 | Token records (lean) | stdout JSONL → text | always on |
-| Skip records, regex, source line, attempts | stdout JSONL → text | `-v` enrichment flags on `plcc-scan` |
+| Skip records, regex, source line, attempts | stdout JSONL → text | `--show-*` flags on `plcc-scan` |
 | Lex errors | stdout JSONL → text | always on |
 
 - `-v` (counting flag) controls **only** stderr diagnostics.
