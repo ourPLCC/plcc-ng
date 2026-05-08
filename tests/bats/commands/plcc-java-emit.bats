@@ -34,7 +34,7 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
     ls "${WORK_DIR}/runtime/org.json"*.jar
 }
 
-@test "plcc-java-emit accepts --verbose" {
-    run bash -c "plcc-java-emit --output='${WORK_DIR}' --verbose=1 < '${MODEL_JSON}'"
+@test "plcc-java-emit accepts -v" {
+    run bash -c "plcc-java-emit --output='${WORK_DIR}' -v < '${MODEL_JSON}'"
     [ "$status" -eq 0 ]
 }

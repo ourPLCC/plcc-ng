@@ -35,8 +35,8 @@ teardown() {
     [[ "$output" == *"no semantic section"* ]]
 }
 
-@test "plcc-rep accepts --verbose" {
-    run bash -c "echo '42' | plcc-rep --tool=py --verbose=1 '${FIXTURES}/trivial-python.plcc'"
+@test "plcc-rep accepts -v" {
+    run bash -c "echo '42' | plcc-rep --tool=py -v '${FIXTURES}/trivial-python.plcc'"
     [ "$status" -eq 0 ]
 }
 

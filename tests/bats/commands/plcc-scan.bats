@@ -26,8 +26,8 @@ setup() {
     [[ "$output" == *"NUM"* ]]
 }
 
-@test "plcc-scan accepts --verbose" {
-    run bash -c "echo '42' | plcc-scan --verbose=1 '${FIXTURES}/trivial.plcc'"
+@test "plcc-scan accepts -v" {
+    run bash -c "echo '42' | plcc-scan -v '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
 }
 

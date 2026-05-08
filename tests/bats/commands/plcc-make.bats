@@ -37,8 +37,8 @@ teardown() {
     [ -f "${WORK_DIR}/build/ll1.json" ]
 }
 
-@test "plcc-make accepts --verbose" {
-    run plcc-make --verbose=1 "${FIXTURES}/trivial-python.plcc"
+@test "plcc-make accepts -v" {
+    run plcc-make -v "${FIXTURES}/trivial-python.plcc"
     [ "$status" -eq 0 ]
 }
 

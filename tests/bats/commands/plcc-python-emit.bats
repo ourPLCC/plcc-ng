@@ -20,7 +20,7 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
     [ -f "${WORK_DIR}/main.py" ]
 }
 
-@test "plcc-python-emit accepts --verbose" {
-    run bash -c "plcc-python-emit --output='${WORK_DIR}' --verbose=1 < '${MODEL_JSON}'"
+@test "plcc-python-emit accepts -v" {
+    run bash -c "plcc-python-emit --output='${WORK_DIR}' -v < '${MODEL_JSON}'"
     [ "$status" -eq 0 ]
 }
