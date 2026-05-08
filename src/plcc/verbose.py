@@ -12,7 +12,7 @@ from typing import List, Optional
 
 
 VERBOSE_OPTIONS = """
-    --verbose=LEVEL         Verbosity level 0-3 [default: 0].
+    -v                      Increase verbosity (may repeat: -v, -vv, -vvv for levels 1-3).
     --verbose-format=FMT    Output format: text or json [default: text].
 """
 
@@ -28,7 +28,7 @@ class VerboseContext:
 
     @classmethod
     def from_args(cls, stage, events_enum, args):
-        level = int(args.get("--verbose") or 0)
+        level = int(args.get("-v") or 0)
         fmt = args.get("--verbose-format") or "text"
         return cls(stage, events_enum, level, fmt)
 
@@ -70,11 +70,11 @@ class VerboseContext:
             )
 
     def child_flags(self):
-        return [f"--verbose={self.level}", f"--verbose-format={self.fmt}"]
+        return ["-v"] * self.level + [f"--verbose-format={self.fmt}"]
 
     def child_flags_for_orchestrator(self, min_level=None):
         level = max(self.level, min_level or 0)
-        return [f"--verbose={level}", "--verbose-format=json"]
+        return ["-v"] * level + ["--verbose-format=json"]
 
     def parse_child_events(self, stderr_text):
         events = []
