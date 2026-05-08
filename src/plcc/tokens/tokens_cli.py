@@ -16,7 +16,7 @@ __doc__ = """plcc-tokens
     Tokenize source files given a spec JSON file, output token JSONL.
 
 Usage:
-    plcc-tokens [options] SPEC_JSON [SOURCE ...]
+    plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
 
 Arguments:
     SPEC_JSON   Path to spec JSON file (output of plcc-spec).

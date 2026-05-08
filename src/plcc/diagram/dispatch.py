@@ -11,7 +11,7 @@ __doc__ = """plcc-diagram
     Dispatch to the appropriate plcc-<fmt>-diagram command.
 
 Usage:
-    plcc-diagram --output=DIR [options]
+    plcc-diagram --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory to write diagram file(s) into.

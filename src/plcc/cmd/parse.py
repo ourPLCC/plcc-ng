@@ -13,7 +13,7 @@ __doc__ = """plcc-parse
     Parse source input and print parse tree in human-readable format.
 
 Usage:
-    plcc-parse [options] GRAMMAR [SOURCE ...]
+    plcc-parse [-v ...] [options] GRAMMAR [SOURCE ...]
 
 Arguments:
     GRAMMAR     Path to the PLCC grammar file.

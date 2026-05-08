@@ -11,7 +11,7 @@ __doc__ = """plcc-diagram-list
     List installed diagram plugins.
 
 Usage:
-    plcc-diagram-list [options]
+    plcc-diagram-list [-v ...] [options]
 
 Options:
     -h --help   Show this message.

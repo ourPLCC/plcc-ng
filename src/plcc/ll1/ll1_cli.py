@@ -12,7 +12,7 @@ __doc__ = """plcc-ll1
     Perform LL(1) analysis on a grammar spec.
 
 Usage:
-    plcc-ll1 [options]
+    plcc-ll1 [-v ...] [options]
 
 Options:
     -h --help       Show this message.

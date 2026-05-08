@@ -2,7 +2,7 @@
     Emit a Python interpreter from model JSON.
 
 Usage:
-    plcc-python-emit --output=DIR [options]
+    plcc-python-emit --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory to write output files into.

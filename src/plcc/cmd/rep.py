@@ -12,7 +12,7 @@ __doc__ = """plcc-rep
     REPL — read, eval, print loop for a PLCC grammar.
 
 Usage:
-    plcc-rep [options] GRAMMAR [SOURCE ...]
+    plcc-rep [-v ...] [options] GRAMMAR [SOURCE ...]
 
 Arguments:
     GRAMMAR     Path to the PLCC grammar file (build/ is resolved from the current directory).

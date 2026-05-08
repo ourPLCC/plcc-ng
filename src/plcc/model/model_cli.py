@@ -11,7 +11,7 @@ __doc__ = """plcc-model
     Transform spec JSON into a language-neutral code model.
 
 Usage:
-    plcc-model [options] [SPEC_JSON]
+    plcc-model [-v ...] [options] [SPEC_JSON]
 
 Arguments:
     SPEC_JSON   Path to spec JSON file. Use - or omit to read from stdin.

@@ -30,13 +30,13 @@ teardown() { rm -f "${SPEC_JSON}"; }
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
-@test "plcc-ll1 accepts --verbose without error" {
-    run bash -c "plcc-ll1 --verbose=1 < '${SPEC_JSON}'"
+@test "plcc-ll1 accepts -v without error" {
+    run bash -c "plcc-ll1 -v < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
 }
 
 @test "plcc-ll1 accepts --verbose-format without error" {
-    run bash -c "plcc-ll1 --verbose=1 --verbose-format=json < '${SPEC_JSON}'"
+    run bash -c "plcc-ll1 -v --verbose-format=json < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
 }
 

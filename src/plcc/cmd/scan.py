@@ -22,7 +22,7 @@ __doc__ = """plcc-scan
     Tokenize source input and print tokens in human-readable format.
 
 Usage:
-    plcc-scan [options] GRAMMAR [SOURCE ...]
+    plcc-scan [-v ...] [options] GRAMMAR [SOURCE ...]
 
 Arguments:
     GRAMMAR     Path to the PLCC grammar file.

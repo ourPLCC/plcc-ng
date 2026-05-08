@@ -2,7 +2,7 @@
     Run a compiled Java interpreter.
 
 Usage:
-    plcc-java-run --output=DIR [options]
+    plcc-java-run --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory containing compiled Java class files.

@@ -11,7 +11,7 @@ __doc__ = """plcc-tree
     Dispatch to a parser plugin. Reads token JSONL, emits a parse tree.
 
 Usage:
-    plcc-tree [options] --ll1=LL1_JSON
+    plcc-tree [-v ...] [options] --ll1=LL1_JSON
 
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).

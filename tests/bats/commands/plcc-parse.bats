@@ -25,8 +25,8 @@ setup() {
     [[ "$output" == *"program"* ]]
 }
 
-@test "plcc-parse accepts --verbose" {
-    run bash -c "echo '42' | plcc-parse --verbose=1 '${FIXTURES}/trivial.plcc'"
+@test "plcc-parse accepts -v" {
+    run bash -c "echo '42' | plcc-parse -v '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
 }
 

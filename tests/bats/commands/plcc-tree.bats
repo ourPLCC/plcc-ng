@@ -44,7 +44,7 @@ teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
     echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert 'error' in json.dumps(r)"
 }
 
-@test "plcc-tree accepts --verbose without error" {
-    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}' --verbose=1"
+@test "plcc-tree accepts -v without error" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}' -v"
     [ "$status" -eq 0 ]
 }

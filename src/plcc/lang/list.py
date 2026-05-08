@@ -11,7 +11,7 @@ __doc__ = """plcc-lang-list
     List installed language emitter plugins.
 
 Usage:
-    plcc-lang-list [options]
+    plcc-lang-list [-v ...] [options]
 
 Options:
     -h --help   Show this message.

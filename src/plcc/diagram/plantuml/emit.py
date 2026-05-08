@@ -11,7 +11,7 @@ __doc__ = """plcc-plantuml-diagram
     Emit a PlantUML class diagram from model JSON.
 
 Usage:
-    plcc-plantuml-diagram --output=DIR [options]
+    plcc-plantuml-diagram --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory to write diagram.puml into.
