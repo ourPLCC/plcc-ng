@@ -1,6 +1,6 @@
 """Shared verbose infrastructure for the PLCC pipeline.
 
-Every command accepts --verbose and --verbose-format. This module provides
+Every command accepts -v and --verbose-format. This module provides
 the VerboseContext object and the VERBOSE_OPTIONS docopt fragment.
 """
 
