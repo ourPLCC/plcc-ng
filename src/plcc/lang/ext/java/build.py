@@ -2,7 +2,7 @@
     Compile generated Java source files.
 
 Usage:
-    plcc-java-build --output=DIR [options]
+    plcc-java-build --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory containing generated Java files.

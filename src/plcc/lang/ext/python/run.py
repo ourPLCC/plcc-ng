@@ -2,7 +2,7 @@
     Run a generated Python interpreter.
 
 Usage:
-    plcc-python-run --output=DIR [options]
+    plcc-python-run --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory containing generated Python files.

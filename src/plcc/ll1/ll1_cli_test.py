@@ -71,7 +71,7 @@ def test_malformed_json_exits_nonzero(monkeypatch):
 
 def test_verbose_started_emitted(capsys, monkeypatch):
     monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(_trivial_spec())))
-    run_main(["--verbose=1", "--verbose-format=json"])
+    run_main(["-v", "--verbose-format=json"])
     _, err = capsys.readouterr()
     events = [json.loads(line) for line in err.strip().splitlines() if line]
     assert any(e["event"] == "started" for e in events)
@@ -79,7 +79,7 @@ def test_verbose_started_emitted(capsys, monkeypatch):
 
 def test_verbose_finished_emitted(capsys, monkeypatch):
     monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(_trivial_spec())))
-    run_main(["--verbose=1", "--verbose-format=json"])
+    run_main(["-v", "--verbose-format=json"])
     _, err = capsys.readouterr()
     events = [json.loads(line) for line in err.strip().splitlines() if line]
     assert any(e["event"] == "finished" for e in events)
@@ -87,7 +87,7 @@ def test_verbose_finished_emitted(capsys, monkeypatch):
 
 def test_verbose_level2_first_set_events(capsys, monkeypatch):
     monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(_trivial_spec())))
-    run_main(["--verbose=2", "--verbose-format=json"])
+    run_main(["-v", "-v", "--verbose-format=json"])
     _, err = capsys.readouterr()
     events = [json.loads(line) for line in err.strip().splitlines() if line]
     assert any(e["event"] == "first-set" for e in events)

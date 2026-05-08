@@ -2,7 +2,7 @@
     Dispatch to the appropriate plcc-<lang>-run command.
 
 Usage:
-    plcc-lang-run --target=LANG --output=DIR [options]
+    plcc-lang-run --target=LANG --output=DIR [-v ...] [options]
 
 Options:
     --target=LANG   Target language (e.g. Python, Java).

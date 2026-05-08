@@ -11,7 +11,7 @@ __doc__ = """plcc-lang-emit
     Dispatch to the appropriate plcc-<lang>-emit command.
 
 Usage:
-    plcc-lang-emit [options] --target=LANG --output=DIR
+    plcc-lang-emit [-v ...] [options] --target=LANG --output=DIR
 
 Options:
     --target=LANG   Target language (e.g. PlantUML, Java, Python).

@@ -13,7 +13,7 @@ __doc__ = """plcc-spec
     Parse, validate, and print a PLCC grammar file as JSON.
 
 Usage:
-    plcc-spec [options] FILE
+    plcc-spec [-v ...] [options] FILE
 
 Arguments:
     FILE    PLCC grammar file. Use - to read from stdin.

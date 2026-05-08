@@ -11,7 +11,7 @@ __doc__ = """plcc-parser-table
     Table-driven LL(1) parser. Reads token JSONL from stdin, emits a parse tree.
 
 Usage:
-    plcc-parser-table [options] --ll1=LL1_JSON
+    plcc-parser-table [-v ...] [options] --ll1=LL1_JSON
 
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).

@@ -2,7 +2,7 @@
     Emit a Java interpreter from model JSON.
 
 Usage:
-    plcc-java-emit --output=DIR [options]
+    plcc-java-emit --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory to write output files into.

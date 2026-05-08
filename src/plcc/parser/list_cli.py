@@ -13,7 +13,7 @@ __doc__ = """plcc-parser-list
     List installed parser plugins.
 
 Usage:
-    plcc-parser-list [options]
+    plcc-parser-list [-v ...] [options]
 
 Options:
     -h --help   Show this message.

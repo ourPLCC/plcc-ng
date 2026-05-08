@@ -15,7 +15,7 @@ __doc__ = """plcc-make
     Build a PLCC project from a grammar file.
 
 Usage:
-    plcc-make [options] GRAMMAR
+    plcc-make [-v ...] [options] GRAMMAR
 
 Arguments:
     GRAMMAR     Path to the PLCC grammar file.
