@@ -71,10 +71,12 @@ what it emits at each level.
 - `-vv`, `-vvv`: reserved framework-wide for other commands; `plcc-scan` and
   `plcc-tokens` emit nothing additional at these levels for now.
 
-Per-file events are emitted from `plcc-tokens` (the actual file reader).
-`plcc-scan` emits its own outer started/finished events. The TTY `^D` hint
-is emitted by `plcc-scan` to stdout as its first line of output, independent
-of `-v`.
+Per-file events are emitted from `plcc-tokens` (the actual source file reader).
+No per-file event is emitted for the grammar file passed to `plcc-spec` — the
+grammar file is not a source file and its processing is not visible at this
+verbosity level. `plcc-scan` emits its own outer started/finished events. The
+TTY `^D` hint (`"reading from stdin — press ^D to end input"`) is emitted by
+`plcc-scan` to stdout as its first line of output, independent of `-v`.
 
 ### Stdout schema (from `plcc-tokens`)
 
@@ -94,6 +96,12 @@ re-derive the winner. This means: when a skip wins (it is first in definition
 order), the list still includes any tokens that also matched; when a token wins,
 the list still includes any skips that matched but appeared after a token rule.
 
+Each entry: `{name, regex, lexeme, char_count, is_skip, winner}`. `char_count`
+is always `len(lexeme)` — included as a convenience for renderers so they do
+not need to recompute it. `is_skip` reflects whether the rule is a skip rule;
+it is not used by `plcc-scan`'s renderer but is carried in the JSONL for
+downstream consumers (e.g. a future `plcc-parse --show-all`).
+
 `source_line` is the raw text of the source line containing the token's start
 position, read from `obj.line.string`. It is always present when `--show-all`
 is set, and is passed through in the JSONL for downstream consumers such as
@@ -108,8 +116,8 @@ all four.
 |---|---|
 | `--show-skips` | Render skip records: `file:line:col NAME 'lexeme' SKIPPED` |
 | `--show-line` | Before each record, print the source line and a `^` cursor at the token's column |
-| `--show-attempts` | Before the token line (after cursor if present), print indented attempt lines |
-| `--show-regex` | Include matched regex in the token/skip line: `file:line:col NAME 'regex' 'lexeme'` |
+| `--show-attempts` | After the cursor line (if `--show-line` is active) and before the token/skip line, print indented attempt lines |
+| `--show-regex` | Include matched regex in the token/skip line: `file:line:col NAME 'regex' 'lexeme'` (applies to both token and skip lines) |
 | `--show-all` | All of the above |
 
 When any enrichment flag is set, `plcc-scan` passes `--show-all` to
@@ -131,8 +139,8 @@ JSONL and `plcc-scan` ignores any optional fields.
 **`--show-skips`**:
 ```
 -:1:1 NUM '42'
--:1:4 WS ' ' SKIPPED
--:1:5 NUM '99'
+-:1:3 WS ' ' SKIPPED
+-:1:4 NUM '99'
 ```
 
 **`--show-line`**:
@@ -162,10 +170,10 @@ Winner prefix: `"    * "`. Loser prefix: `"      "`.
     * WS '\s+' 1 chars ' '
 -:1:3 WS '\s+' ' ' SKIPPED
 42 99
-     ^
+   ^
       INT '\d+' 2 chars '99'
     * NUM '\d+' 2 chars '99'
--:1:5 NUM '\d+' '99'
+-:1:4 NUM '\d+' '99'
 ```
 
 The `^` cursor is placed at column − 1 spaces from the left (columns are
@@ -199,9 +207,10 @@ plcc-tokens
 - `src/plcc/scan/Token.py`, `src/plcc/scan/Skip.py`: add
   `pattern: str = field(default="", compare=False)` and
   `attempts: list = field(default_factory=list, compare=False)`. `compare=False`
-  preserves existing `Token(...)` equality assertions in tests. No `source_line`
-  field needed — `Token` and `Skip` already carry `line`, and `line.string` is
-  the raw source line text.
+  preserves existing `Token(...)` equality assertions in tests. The Python field
+  is named `pattern`; `jsonl_formatter` emits it under the JSON key `"regex"`.
+  No `source_line` field needed — `Token` and `Skip` already carry `line`, and
+  `line.string` is the raw source line text.
 - `src/plcc/scan/matcher.py`: add `record_attempts: bool = False` to
   `__init__`. When enabled, capture the full `_getMatches` result (all
   matching rules — both tokens and skips — in definition order) before any
@@ -230,9 +239,14 @@ plcc-tokens
   `reformat_child_events`, `child_flags_for_orchestrator`, `reap_pipeline`,
   `PipelineResult` are still consumed by `plcc-parse` and `plcc-make`.
   Converting those to pass-through is a follow-up.
-- `src/plcc/schemas/token.schema.json`: add `SkipRecord` branch. `regex`,
-  `source_line`, and `attempts` are optional on `TokenRecord` and `SkipRecord`
-  (present only when `plcc-tokens --show-all`).
+- `src/plcc/schemas/token.schema.json`: add a third branch to the `oneOf`
+  discriminator for `SkipRecord` (`kind: "skip"`). A `kind: "skip"` record
+  currently fails validation against the existing schema since neither existing
+  branch matches. `regex`, `source_line`, and `attempts` are optional on
+  `TokenRecord` and `SkipRecord` (present only when `plcc-tokens --show-all`).
+  Each `attempts` item has required fields: `name` (string), `regex` (string),
+  `lexeme` (string), `char_count` (integer), `is_skip` (boolean),
+  `winner` (boolean).
 
 ## Tests
 
@@ -244,8 +258,6 @@ plcc-tokens
   `kind=skip`; `attempts` has `winner: true` on exactly one entry.
 - `tokens_cli_test.py`: `--show-all` emits `kind=skip` records, `regex`,
   `source_line`, and `attempts`; per-file event emitted at `-v`.
-- `scan_cli_test.py` (or bats): TTY hint printed to stdout as first line when
-  stdin is a TTY (monkeypatch `isatty`); absent when stdin is not a TTY.
 
 **Pytest (regression):** `compare=False` keeps existing matcher/scanner test
 assertions valid.
@@ -311,6 +323,16 @@ bin/test
 is unchanged from their perspective (`regex`, `source_line`, `attempts` are
 absent unless `--show-all` is passed to `plcc-tokens`, which `plcc-parse` does
 not do). Downstream consumers are unaffected.
+
+### Note on `--show-all` flag name
+
+Both `plcc-scan` and `plcc-tokens` expose a `--show-all` flag, but they mean
+different things: `plcc-scan --show-all` enables all rendering flags; `plcc-tokens
+--show-all` causes it to emit the full enriched record payload. The identical
+name is intentional — both flags mean "give me everything" within their
+respective responsibilities. `plcc-tokens` is primarily an internal command;
+users interacting with `plcc-scan --show-all` will not normally invoke
+`plcc-tokens` directly.
 
 ## Out of scope (deferred follow-ups)
 
