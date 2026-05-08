@@ -12,7 +12,7 @@ The framed question — "what useful information should levels 2 and 3 expose?"
 being asked to do two unrelated jobs:
 
 1. Control **stderr diagnostic noise** (process-level metadata: stage events,
-   file events, hints).
+   file events).
 2. Control **stdout content richness** (per-token detail: matched regex,
    skips, rule-attempt traces).
 
@@ -31,7 +31,8 @@ Two independent controls with clearly separated responsibilities:
 
 | Concern | Stream | Controlled by |
 |---|---|---|
-| Process-level metadata (stage, per-file, TTY hint) | stderr | `-v` (counting) |
+| Process-level metadata (stage, per-file) | stderr | `-v` (counting) |
+| TTY `^D` hint | stdout (first line) | always on when stdin is a TTY |
 | Token records (lean) | stdout JSONL → text | always on |
 | Skip records, regex, source line, attempts | stdout JSONL → text | `--show-*` flags on `plcc-scan` |
 | Lex errors | stdout JSONL → text | always on |
@@ -52,8 +53,8 @@ forces synchronization. Putting it in the same record solves the synchronization
 problem structurally — the data is shipped together because it belongs together.
 
 Stderr is reserved for process-level metadata (stage start/finish, per-file
-"scanning <file>", TTY hint). These events are coarse-grained — not tied to
-specific tokens — so any interleaving with stdout is harmless.
+"scanning <file>"). These events are coarse-grained — not tied to specific
+tokens — so any interleaving with stdout is harmless.
 
 ### Pass-through stderr; no capture or reformat
 
@@ -66,14 +67,14 @@ what it emits at each level.
 ### Verbose level content (scope: scan/tokens)
 
 - no `-v` (default): silent.
-- `-v`: stage events (started/finished), per-file `scanning <file>` events,
-  stdin `^D` hint when stdin is a TTY.
+- `-v`: stage events (started/finished), per-file `scanning <file>` events.
 - `-vv`, `-vvv`: reserved framework-wide for other commands; `plcc-scan` and
   `plcc-tokens` emit nothing additional at these levels for now.
 
-The TTY hint and per-file events are emitted from `plcc-tokens` (the actual
-file reader), not `plcc-scan`. `plcc-scan` emits its own outer
-started/finished events.
+Per-file events are emitted from `plcc-tokens` (the actual file reader).
+`plcc-scan` emits its own outer started/finished events. The TTY `^D` hint
+is emitted by `plcc-scan` to stdout as its first line of output, independent
+of `-v`.
 
 ### Stdout schema (from `plcc-tokens`)
 
@@ -178,11 +179,12 @@ plcc-scan
 **After:**
 ```
 plcc-scan
+  → if stdin is a TTY, prints ^D hint to stdout first
   → spawns plcc-spec and plcc-tokens with stderr=None (inherited)
   → passes --show-all to plcc-tokens when any enrichment flag is set
   → reads stdout JSONL, renders records (token / skip / error + line / attempts)
 plcc-tokens
-  → writes stage / scanning / hint events to its own stderr
+  → writes stage / scanning events to its own stderr
   → writes lean token / error JSONL records to its own stdout (default)
   → with --show-all: includes regex, source_line, attempts; emits skip records
 ```
@@ -204,14 +206,14 @@ plcc-tokens
   `regex`, `source_line`, and `attempts` array (with `winner` flags) when
   populated. Skip records get `kind=skip`.
 - `src/plcc/tokens/tokens_cli.py`: add `--show-all` option (single enrichment
-  flag). New events `SCANNING_FILE`, `STDIN_HINT`. Per-file event from
-  `_lines_from_sources`. TTY hint at startup when applicable. Attach
-  `source_line` to each record when `--show-all`. Construct
+  flag). New event `SCANNING_FILE`. Per-file event from `_lines_from_sources`.
+  Attach `source_line` to each record when `--show-all`. Construct
   `Matcher(rules, record_attempts=args["--show-all"])`. Emit skip records only
   when `--show-all`.
 - `src/plcc/cmd/scan.py`: add `--show-skips`, `--show-line`, `--show-regex`,
   `--show-attempts`, `--show-all` options. Use `verbose.child_flags()` (no JSON
-  override). `stderr=None` on both child invocations. Pass `--show-all` to the
+  override). `stderr=None` on both child invocations. If stdin is a TTY, print
+  the `^D` hint to stdout before any token output. Pass `--show-all` to the
   `plcc-tokens` invocation when any enrichment flag is set. Remove threading,
   stderr capture, `parse_child_events`/`reformat_child_events` calls. Render
   `kind=token`/`kind=skip`/`kind=error` with source line, cursor, attempts, and
@@ -233,8 +235,9 @@ plcc-tokens
   `attempts`; enriched records include all three; skip records have
   `kind=skip`; `attempts` has `winner: true` on exactly one entry.
 - `tokens_cli_test.py`: `--show-all` emits `kind=skip` records, `regex`,
-  `source_line`, and `attempts`; per-file event emitted at `-v`; TTY hint
-  with monkeypatched `isatty`.
+  `source_line`, and `attempts`; per-file event emitted at `-v`.
+- `scan_cli_test.py` (or bats): TTY hint printed to stdout as first line when
+  stdin is a TTY (monkeypatch `isatty`); absent when stdin is not a TTY.
 
 **Pytest (regression):** `compare=False` keeps existing matcher/scanner test
 assertions valid.
@@ -248,8 +251,10 @@ assertions valid.
 - New: `--show-attempts` produces indented attempt lines with one starred winner.
 - New: `--show-regex` adds regex field to output line.
 - New: `--show-all` produces all of the above.
-- New: `-v` emits `started`/`finished`/`scanning`/hint on stderr
-  (`--separate-stderr`).
+- New: `-v` emits `started`/`finished`/`scanning` on stderr
+  (`--separate-stderr`); hint is absent from stderr.
+- New: TTY `^D` hint appears on stdout as first line when stdin is a TTY;
+  absent when stdin is not a TTY.
 - New: `-vv` and `-vvv` produce no more scan-emitted output than `-v`.
 
 **Bats (`plcc-tokens.bats`):**
