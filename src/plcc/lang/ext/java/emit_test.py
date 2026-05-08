@@ -177,4 +177,4 @@ def test_main_java_references_start_class(tmp_path, monkeypatch):
 
 def test_verbose_flag_accepted(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
-    run_main([f'--output={tmp_path}', '--verbose=1'])
+    run_main([f'--output={tmp_path}', '-v'])
