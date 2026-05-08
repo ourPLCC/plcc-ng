@@ -31,6 +31,11 @@ setup() {
     [ "$status" -eq 0 ]
 }
 
+@test "plcc-scan accepts -vv (bundled short flag)" {
+    run bash -c "echo '42' | plcc-scan -vv --verbose-format=json '${FIXTURES}/trivial.plcc'"
+    [ "$status" -eq 0 ]
+}
+
 @test "plcc-scan includes file:line:col in token output" {
     run bash -c "echo '42' | plcc-scan '${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
