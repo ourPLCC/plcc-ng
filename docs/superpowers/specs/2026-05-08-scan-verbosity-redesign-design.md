@@ -5,10 +5,11 @@
 
 ## Problem
 
-`plcc-scan` accepts `-v=N` but levels 2 and 3 produce output identical to
-level 1. The framed question — "what useful information should levels 2 and 3
-expose?" — turned out to be the wrong question. The real problem is that
-`-v` was being asked to do two unrelated jobs:
+`plcc-scan` accepts `-v` as a counting flag (`-v` = level 1, `-vv` = level 2,
+`-vvv` = level 3) but levels 2 and 3 produce output identical to level 1.
+The framed question — "what useful information should levels 2 and 3 expose?"
+— turned out to be the wrong question. The real problem is that `-v` was
+being asked to do two unrelated jobs:
 
 1. Control **stderr diagnostic noise** (process-level metadata: stage events,
    file events, hints).
@@ -30,12 +31,12 @@ Two independent controls with clearly separated responsibilities:
 
 | Concern | Stream | Controlled by |
 |---|---|---|
-| Process-level metadata (stage, per-file, TTY hint) | stderr | `-v=N` |
+| Process-level metadata (stage, per-file, TTY hint) | stderr | `-v` (counting) |
 | Token records (lean) | stdout JSONL → text | always on |
 | Skip records, regex, source line, attempts | stdout JSONL → text | `-v` enrichment flags on `plcc-scan` |
 | Lex errors | stdout JSONL → text | always on |
 
-- `-v=N` controls **only** stderr diagnostics.
+- `-v` (counting flag) controls **only** stderr diagnostics.
 - Output richness is controlled by dedicated feature flags on `plcc-scan`:
   `--show-skips`, `--show-line`, `--show-regex`, `--show-attempts`, `--show-all`.
 - `plcc-tokens` has a single enrichment flag, `--show-all`, that causes it to
@@ -59,15 +60,15 @@ specific tokens — so any interleaving with stdout is harmless.
 `plcc-scan` runs `plcc-spec` and `plcc-tokens` with `stderr=None` (inherited).
 Each child writes its own stderr directly. `plcc-scan` does **not** parse,
 capture, or reformat child stderr. Verbose flags propagate down unchanged
-(`-v=N --verbose-format=FMT`); each command independently decides what it
-emits at each level.
+(`-v [-v ...] --verbose-format=FMT`); each command independently decides
+what it emits at each level.
 
 ### Verbose level content (scope: scan/tokens)
 
-- `-v=0` (default): silent.
-- `-v=1`: stage events (started/finished), per-file `scanning <file>` events,
+- no `-v` (default): silent.
+- `-v`: stage events (started/finished), per-file `scanning <file>` events,
   stdin `^D` hint when stdin is a TTY.
-- `-v=2`, `-v=3`: reserved framework-wide for other commands; `plcc-scan` and
+- `-vv`, `-vvv`: reserved framework-wide for other commands; `plcc-scan` and
   `plcc-tokens` emit nothing additional at these levels for now.
 
 The TTY hint and per-file events are emitted from `plcc-tokens` (the actual
@@ -232,7 +233,7 @@ plcc-tokens
   `attempts`; enriched records include all three; skip records have
   `kind=skip`; `attempts` has `winner: true` on exactly one entry.
 - `tokens_cli_test.py`: `--show-all` emits `kind=skip` records, `regex`,
-  `source_line`, and `attempts`; per-file event emitted at `-v=1`; TTY hint
+  `source_line`, and `attempts`; per-file event emitted at `-v`; TTY hint
   with monkeypatched `isatty`.
 
 **Pytest (regression):** `compare=False` keeps existing matcher/scanner test
@@ -247,16 +248,16 @@ assertions valid.
 - New: `--show-attempts` produces indented attempt lines with one starred winner.
 - New: `--show-regex` adds regex field to output line.
 - New: `--show-all` produces all of the above.
-- New: `-v=1` emits `started`/`finished`/`scanning`/hint on stderr
+- New: `-v` emits `started`/`finished`/`scanning`/hint on stderr
   (`--separate-stderr`).
-- New: `-v=2` and `-v=3` produce no more scan-emitted output than `-v=1`.
+- New: `-vv` and `-vvv` produce no more scan-emitted output than `-v`.
 
 **Bats (`plcc-tokens.bats`):**
 
 - New: `--show-all` emits `kind=skip` records (validate updated schema).
 - New: `--show-all` token records include `regex` and `source_line`.
 - Confirm: default token records do not include `regex` or `source_line`.
-- New: `-v=1` emits per-file scanning events on stderr.
+- New: `-v` emits per-file scanning events on stderr.
 
 ## Verification
 
@@ -283,11 +284,11 @@ echo '42' | plcc-scan --show-regex tests/fixtures/trivial.plcc
 # All flags at once
 echo '42 99' | plcc-scan --show-all tests/fixtures/trivial.plcc
 
-# Stderr at -v=1
-echo '42' | plcc-scan -v=1 tests/fixtures/trivial.plcc 2>&1 1>/dev/null
+# Stderr at -v
+echo '42' | plcc-scan -v tests/fixtures/trivial.plcc 2>&1 1>/dev/null
 
-# Levels 2/3 don't add scan-specific content
-echo '42' | plcc-scan -v=3 tests/fixtures/trivial.plcc 2>&1 1>/dev/null
+# Levels -vv/-vvv don't add scan-specific content
+echo '42' | plcc-scan -vvv tests/fixtures/trivial.plcc 2>&1 1>/dev/null
 
 # Test suite
 bin/test
@@ -303,4 +304,4 @@ not do). Downstream consumers are unaffected.
 - Convert `plcc-parse` and `plcc-make` to the same stderr-inheritance model
   and remove `reformat_child_events` / `parse_child_events` /
   `reap_pipeline` once they have no consumers.
-- Whether `-v=2`/`-v=3` should ever have scan-specific content. Reserved.
+- Whether `-vv`/`-vvv` should ever have scan-specific content. Reserved.
