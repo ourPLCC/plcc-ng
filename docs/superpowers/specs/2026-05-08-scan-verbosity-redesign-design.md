@@ -86,13 +86,18 @@ Three record kinds, all on stdout JSONL:
 - `kind: "error"` — unchanged from current schema. Lex errors never carry
   `attempts`.
 
-`attempts` is a list of `{name, regex, lexeme, char_count, is_skip, winner}`
-entries — only matching rules are listed (non-matching rules omitted to avoid
-log spam in real grammars). Exactly one entry has `winner: true`. The
-matcher's tie-breaking decides the winner; the formatter does not re-derive it.
+`attempts` is the complete list of all rules that matched at the current
+position, in grammar definition order — both token and skip rules, regardless
+of which type wins. Non-matching rules are omitted. Exactly one entry has
+`winner: true`; it is the object returned by `match()`. The formatter does not
+re-derive the winner. This means: when a skip wins (it is first in definition
+order), the list still includes any tokens that also matched; when a token wins,
+the list still includes any skips that matched but appeared after a token rule.
 
 `source_line` is the raw text of the source line containing the token's start
-position. It is always present when `--show-all` is set.
+position, read from `obj.line.string`. It is always present when `--show-all`
+is set, and is passed through in the JSONL for downstream consumers such as
+`plcc-parse`.
 
 ### `plcc-scan` enrichment flags
 
@@ -192,24 +197,27 @@ plcc-tokens
 ## File changes (summary)
 
 - `src/plcc/scan/Token.py`, `src/plcc/scan/Skip.py`: add
-  `pattern: str = field(default="", compare=False)`,
-  `attempts: list = field(default_factory=list, compare=False)`, and
-  `source_line: str = field(default="", compare=False)`. `compare=False`
-  preserves existing `Token(...)` equality assertions in tests.
+  `pattern: str = field(default="", compare=False)` and
+  `attempts: list = field(default_factory=list, compare=False)`. `compare=False`
+  preserves existing `Token(...)` equality assertions in tests. No `source_line`
+  field needed — `Token` and `Skip` already carry `line`, and `line.string` is
+  the raw source line text.
 - `src/plcc/scan/matcher.py`: add `record_attempts: bool = False` to
-  `__init__`. Build attempts list in `_getMatches` (only matching rules).
-  Always populate `Token.pattern`/`Skip.pattern`. Populate `attempts` only
-  when enabled, including the skip-first-match short-circuit branch.
+  `__init__`. When enabled, capture the full `_getMatches` result (all
+  matching rules — both tokens and skips — in definition order) before any
+  filtering, and populate it as `attempts` on the returned object. Always
+  populate `Token.pattern`/`Skip.pattern`.
 - `src/plcc/scan/scanner.py`: no changes.
 - `src/plcc/tokens/jsonl_formatter.py`: handle `Token` and `Skip`. Default
   output: `name`, `lexeme`, `source` only. When `show_all=True`: also emit
-  `regex`, `source_line`, and `attempts` array (with `winner` flags) when
-  populated. Skip records get `kind=skip`.
+  `regex` (from `obj.pattern`), `source_line` (from `obj.line.string`), and
+  `attempts` array (with `winner` flags) when populated. `source_line` is
+  passed through in the JSONL for downstream consumers such as `plcc-parse`.
+  Skip records get `kind=skip`.
 - `src/plcc/tokens/tokens_cli.py`: add `--show-all` option (single enrichment
   flag). New event `SCANNING_FILE`. Per-file event from `_lines_from_sources`.
-  Attach `source_line` to each record when `--show-all`. Construct
-  `Matcher(rules, record_attempts=args["--show-all"])`. Emit skip records only
-  when `--show-all`.
+  Construct `Matcher(rules, record_attempts=args["--show-all"])`. Emit skip
+  records only when `--show-all`.
 - `src/plcc/cmd/scan.py`: add `--show-skips`, `--show-line`, `--show-regex`,
   `--show-attempts`, `--show-all` options. Use `verbose.child_flags()` (no JSON
   override). `stderr=None` on both child invocations. If stdin is a TTY, print
