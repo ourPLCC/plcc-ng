@@ -24,12 +24,14 @@ Arguments:
 
 Options:
     -h --help               Show this message.
+    -t --trace              Include regex, source_line, attempts; emit skip records.
 """ + VERBOSE_OPTIONS
 
 
 class Events(enum.Enum):
     STARTED = "started"
     FINISHED = "finished"
+    SCANNING_FILE = "scanning"
 
 
 def main(argv=None):
@@ -37,22 +39,28 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-tokens", Events, args)
+    trace = args['--trace']
     rules = load_lexical_rules(args['SPEC_JSON'])
-    matcher = Matcher(rules)
+    matcher = Matcher(rules, record_attempts=trace)
     scanner = Scanner(matcher)
     sources = args['SOURCE'] or ['-']
-    lines = _lines_from_sources(sources)
+    verbose.emit(Events.STARTED, message="tokenizing")
+    lines = _lines_from_sources(sources, verbose)
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
+            if trace:
+                print(format_record(obj, show_all=True), flush=True)
             continue
         if isinstance(obj, LexError):
             print(format_error_record(obj), flush=True)
             continue
-        print(format_record(obj), flush=True)
+        print(format_record(obj, show_all=trace), flush=True)
+    verbose.emit(Events.FINISHED, message="done")
 
 
-def _lines_from_sources(sources):
+def _lines_from_sources(sources, verbose):
     for file in sources:
+        verbose.emit(Events.SCANNING_FILE, level=1, message=f"scanning {file}")
         if file == '-':
             yield from _lines_from_stream(sys.stdin, '-')
         else:
