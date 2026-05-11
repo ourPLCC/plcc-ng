@@ -49,8 +49,8 @@ def main(argv=None):
         sys.exit(1)
 
     verbose = VerboseContext.from_args("plcc-make", Events, args)
-    grammar = args['--grammar-file'] or 'grammar.plcc'
-    through = args['--through'] or 'all'
+    grammar = args['--grammar-file']
+    through = args['--through']
     build_dir = Path('build')
 
     if not os.path.exists(grammar):
@@ -107,8 +107,7 @@ def main(argv=None):
         with open(ll1_json) as f:
             ll1 = json.load(f)
         if not ll1.get("is_ll1", True):
-            _report_ll1_failure(ll1, ll1_json, verbose)
-            delete_sentinel(build_dir)
+            _report_ll1_failure(ll1, ll1_json)
             sys.exit(1)
 
     if through == 'all':
@@ -153,7 +152,7 @@ def validate_tool_name(name):
         )
 
 
-def _report_ll1_failure(ll1, path, verbose):
+def _report_ll1_failure(ll1, path):
     print(f"plcc-make: error: grammar is not LL(1); see {path}", file=sys.stderr)
     for conflict in ll1.get("conflicts", []):
         print(

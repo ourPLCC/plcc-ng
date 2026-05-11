@@ -62,7 +62,7 @@ def test_report_ll1_failure_prints_error_and_conflicts(capsys):
         ],
         "left_recursion": [],
     }
-    _report_ll1_failure(ll1, "build/ll1.json", verbose=None)
+    _report_ll1_failure(ll1, "build/ll1.json")
     _, err = capsys.readouterr()
     assert "plcc-make: error:" in err
     assert "build/ll1.json" in err
@@ -75,6 +75,6 @@ def test_report_left_recursion_cycle(capsys):
         "conflicts": [],
         "left_recursion": [{"cycle": ["A", "B", "A"]}],
     }
-    _report_ll1_failure(ll1, "build/ll1.json", None)
+    _report_ll1_failure(ll1, "build/ll1.json")
     _, err = capsys.readouterr()
     assert "A -> B -> A" in err
