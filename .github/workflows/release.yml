@@ -82,7 +82,7 @@ jobs:
           WORK=$(mktemp -d)
           cd "${WORK}"
           export PATH="/tmp/smoke-venv/bin:${PATH}"
-          plcc-make "${GRAMMAR}"
+          plcc-make --grammar-file="${GRAMMAR}"
           test -f build/spec.json || { echo "FAIL: build/spec.json missing"; exit 1; }
           echo "TestPyPI smoke test passed"
 
