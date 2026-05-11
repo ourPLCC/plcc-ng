@@ -3,7 +3,6 @@ import json
 import os
 import subprocess
 import sys
-import tempfile
 
 from docopt import docopt, DocoptExit
 
@@ -21,19 +20,19 @@ __doc__ = """plcc-scan
     Tokenize source input and print tokens in human-readable format.
 
 Usage:
-    plcc-scan [-v ...] [options] GRAMMAR [SOURCE ...]
+    plcc-scan [-v ...] [options] [SOURCE ...]
 
 Arguments:
-    GRAMMAR     Path to the PLCC grammar file.
     SOURCE      Source files to tokenize. Reads stdin if none given.
 
 Options:
-    -h --help           Show this message.
-    --show-skips        Show skip records in output.
-    --show-line         Show source line and cursor before each token.
-    --show-attempts     Show rule match attempts before each token.
-    --show-regex        Show matched regex in each token line.
-    -t --trace          Enable all --show-* flags.
+    -h --help                   Show this message.
+    --grammar-file=<path>       Path to the PLCC grammar file [default: grammar.plcc].
+    --show-skips                Show skip records in output.
+    --show-line                 Show source line and cursor before each token.
+    --show-attempts             Show rule match attempts before each token.
+    --show-regex                Show matched regex in each token line.
+    -t --trace                  Enable all --show-* flags.
 """ + VERBOSE_OPTIONS
 
 
@@ -102,7 +101,7 @@ def main(argv=None):
         sys.exit(1)
 
     verbose = VerboseContext.from_args("plcc-scan", Events, args)
-    grammar = args["GRAMMAR"]
+    grammar_file = args["--grammar-file"]
     sources = args["SOURCE"]
 
     trace = args["--trace"]
@@ -112,48 +111,45 @@ def main(argv=None):
     show_attempts = args["--show-attempts"] or trace
     any_enrichment = show_skips or show_line or show_regex or show_attempts
 
-    if sys.stdin.isatty() and (not sources or "-" in sources):
-        print("reading from stdin — press ^D to end input", flush=True)
+    if not os.path.exists(grammar_file):
+        print(f"plcc-scan: grammar file not found: {grammar_file}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run 'plcc-scan --help' for more information.", file=sys.stderr)
+        sys.exit(1)
 
-    verbose.emit(Events.STARTED, message=f"scanning with {grammar}")
+    verbose.emit(Events.STARTED, message=f"scanning with {grammar_file}")
     child_flags = verbose.child_flags()
 
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        spec_path = f.name
-    try:
-        with open(spec_path, "w") as spec_out:
-            result = subprocess.run(
-                ["plcc-spec", grammar] + child_flags,
-                stdout=spec_out,
-                stderr=None,
-            )
-        if result.returncode != 0:
-            print(f"plcc-scan: plcc-spec failed (exit {result.returncode})", file=sys.stderr)
-            sys.exit(result.returncode)
+    # Ensure build/ is current for the scan level
+    make_result = subprocess.run(
+        ['plcc-make', '--through=scan', f'--grammar-file={grammar_file}'] + child_flags,
+        stderr=None,
+    )
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
 
-        token_sources = sources if sources else ["-"]
-        tokens_flags = child_flags + (["--trace"] if any_enrichment else [])
+    spec_path = os.path.join('build', 'spec.json')
 
-        proc = subprocess.Popen(
-            ["plcc-tokens", spec_path] + token_sources + tokens_flags,
-            stdout=subprocess.PIPE,
-            stderr=None,
-        )
+    token_sources = sources if sources else ["-"]
+    tokens_flags = child_flags + (["--trace"] if any_enrichment else [])
 
-        for raw in proc.stdout:
-            line = raw.decode("utf-8").strip()
-            if not line:
-                continue
-            record = json.loads(line)
-            _render_record(record, show_skips, show_line, show_regex, show_attempts)
+    proc = subprocess.Popen(
+        ["plcc-tokens", spec_path] + token_sources + tokens_flags,
+        stdout=subprocess.PIPE,
+        stderr=None,
+    )
 
-        proc.wait()
+    for raw in proc.stdout:
+        line = raw.decode("utf-8").strip()
+        if not line:
+            continue
+        record = json.loads(line)
+        _render_record(record, show_skips, show_line, show_regex, show_attempts)
 
-        if proc.returncode != 0:
-            print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
-            sys.exit(proc.returncode)
-    finally:
-        if os.path.exists(spec_path):
-            os.unlink(spec_path)
+    proc.wait()
+
+    if proc.returncode != 0:
+        print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
+        sys.exit(proc.returncode)
 
     verbose.emit(Events.FINISHED, message="done")

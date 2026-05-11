@@ -40,7 +40,8 @@ WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "${VENV}" "${WORK_DIR}"' EXIT
 (
     cd "${WORK_DIR}"
-    plcc-make "${PROJECT_ROOT}/tests/fixtures/trivial.plcc"
+    cp "${PROJECT_ROOT}/tests/fixtures/trivial.plcc" grammar.plcc
+    plcc-make
     test -f build/spec.json   || { echo "FAIL: build/spec.json missing"; exit 1; }
     test -f build/model.json  || { echo "FAIL: build/model.json missing"; exit 1; }
 )

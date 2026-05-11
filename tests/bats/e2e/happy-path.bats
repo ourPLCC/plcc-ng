@@ -6,7 +6,7 @@ setup() {
     MODEL_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/model.schema.json"
     WORK_DIR="$(mktemp -d)"
     cd "${WORK_DIR}"
-    plcc-make "${FIXTURES}/trivial.plcc"
+    plcc-make --grammar-file="${FIXTURES}/trivial.plcc"
 }
 
 teardown() {
@@ -33,10 +33,13 @@ teardown() {
     [ -f build/ll1.json ]
 }
 
-@test "plcc-make cleans build/ on rebuild" {
-    touch build/stale-marker.txt
-    plcc-make "${FIXTURES}/trivial.plcc"
-    [ ! -f build/stale-marker.txt ]
+@test "plcc-make updates spec.json and .spec-hash when grammar changes" {
+    first_hash=$(cat build/.spec-hash)
+    cp "${FIXTURES}/trivial-python.plcc" "${WORK_DIR}/grammar2.plcc"
+    run plcc-make --grammar-file="${WORK_DIR}/grammar2.plcc"
+    [ "$status" -eq 0 ]
+    second_hash=$(cat build/.spec-hash)
+    [ "$first_hash" != "$second_hash" ]
 }
 
 @test "plcc-spec | plcc-model | plcc-diagram produces diagram.puml" {
@@ -64,7 +67,7 @@ teardown() {
     FULL_DIR="$(mktemp -d)"
     (
         cd "${FULL_DIR}"
-        plcc-make "${FIXTURES}/trivial-full.plcc"
+        plcc-make --grammar-file="${FIXTURES}/trivial-full.plcc"
         [ -f build/ll1.json ]
         [ -d build/Java ]
         [ -d build/py ]

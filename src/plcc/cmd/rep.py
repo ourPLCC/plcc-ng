@@ -12,15 +12,15 @@ __doc__ = """plcc-rep
     REPL — read, eval, print loop for a PLCC grammar.
 
 Usage:
-    plcc-rep [-v ...] [options] GRAMMAR [SOURCE ...]
+    plcc-rep [-v ...] [options] [SOURCE ...]
 
 Arguments:
-    GRAMMAR     Path to the PLCC grammar file (build/ is resolved from the current directory).
     SOURCE      Source files to evaluate before entering interactive mode.
 
 Options:
-    --tool=NAME         Semantic section to run (inferred if only one exists).
-    -h --help           Show this message.
+    --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
+    --tool=NAME             Semantic section to run (inferred if only one exists).
+    -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
 
@@ -40,28 +40,39 @@ def main(argv=None):
         print("Run 'plcc-rep --help' for more information.", file=sys.stderr)
         sys.exit(1)
     verbose = VerboseContext.from_args("plcc-rep", Events, args)
+    grammar_file = args['--grammar-file']
     sources = args['SOURCE']
     tool_name = args['--tool']
     verbose_format = args['--verbose-format'] or 'text'
 
-    verbose.emit(Events.STARTED, message='starting rep')
+    if not os.path.exists(grammar_file):
+        print(f"plcc-rep: grammar file not found: {grammar_file}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run 'plcc-rep --help' for more information.", file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message=f'starting rep with {grammar_file}')
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    # Ensure full build is current
+    make_result = subprocess.run(
+        ['plcc-make', f'--grammar-file={grammar_file}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
 
     spec_path = os.path.join('build', 'spec.json')
     ll1_path = os.path.join('build', 'll1.json')
-
-    if not os.path.exists(spec_path) or not os.path.exists(ll1_path):
-        print('plcc-rep: build/ not found. Run plcc-make first.', file=sys.stderr)
-        sys.exit(1)
 
     with open(spec_path) as f:
         spec = json.load(f)
 
     tool_name, language = _resolve_tool(spec, tool_name)
     tool_dir = os.path.join('build', tool_name)
-
-    if not os.path.exists(tool_dir):
-        print(f'plcc-rep: build/{tool_name}/ not found. Run plcc-make first.', file=sys.stderr)
-        sys.exit(1)
 
     interpreter = subprocess.Popen(
         ['plcc-lang-run', f'--target={language}', f'--output={tool_dir}'],
@@ -113,7 +124,7 @@ def _resolve_tool(spec, tool_name):
         sys.exit(1)
 
     if len(sections) == 0:
-        print("plcc-rep: no semantic sections found. Run plcc-make first.", file=sys.stderr)
+        print("plcc-rep: no semantic sections found in grammar.", file=sys.stderr)
         sys.exit(1)
 
     if len(sections) == 1:
