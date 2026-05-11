@@ -6,7 +6,7 @@ setup() {
     MODEL_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/model.schema.json"
     WORK_DIR="$(mktemp -d)"
     cd "${WORK_DIR}"
-    plcc-make "${FIXTURES}/trivial.plcc"
+    plcc-make --grammar-file="${FIXTURES}/trivial.plcc"
 }
 
 teardown() {
@@ -35,7 +35,12 @@ teardown() {
 
 @test "plcc-make cleans build/ on rebuild" {
     touch build/stale-marker.txt
-    plcc-make "${FIXTURES}/trivial.plcc"
+    # Use the same grammar but from a copy with a whitespace difference to change hash
+    TMP_GRAMMAR="$(mktemp --suffix=.plcc)"
+    trap "rm -f '${TMP_GRAMMAR}'" EXIT
+    cp "${FIXTURES}/trivial.plcc" "${TMP_GRAMMAR}"
+    echo "" >> "${TMP_GRAMMAR}"
+    plcc-make --grammar-file="${TMP_GRAMMAR}"
     [ ! -f build/stale-marker.txt ]
 }
 
@@ -64,7 +69,7 @@ teardown() {
     FULL_DIR="$(mktemp -d)"
     (
         cd "${FULL_DIR}"
-        plcc-make "${FIXTURES}/trivial-full.plcc"
+        plcc-make --grammar-file="${FIXTURES}/trivial-full.plcc"
         [ -f build/ll1.json ]
         [ -d build/Java ]
         [ -d build/py ]

@@ -95,10 +95,12 @@ def main(argv=None):
         verbose.emit(Events.FINISHED, message="build is current")
         return
 
-    # Slow path: move spec into place, delete sentinel, run downstream steps
+    # Slow path: clean build/, move spec into place, run downstream steps
+    shutil.rmtree(build_dir, ignore_errors=True)
+    build_dir.mkdir(exist_ok=True)
     shutil.move(tmp_spec, build_dir / 'spec.json')
     spec_json = str(build_dir / 'spec.json')
-    delete_sentinel(build_dir)  # absent until final success write below
+    # sentinel is absent (we just cleaned); will be written on final success below
 
     if through in ('parse', 'all'):
         verbose.emit(Events.PHASE, message="ll1")
