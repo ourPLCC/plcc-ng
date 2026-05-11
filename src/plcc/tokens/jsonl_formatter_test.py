@@ -54,14 +54,12 @@ def test_format_error_record_rejects_token():
 
 def _skip(lexeme=' ', name='WS', line=None, column=3):
     l = line or _line(s='42 99', n=1, f='test.txt')
-    s = Skip(lexeme=lexeme, name=name, line=l, column=column)
-    s.pattern = r'\s+'
+    s = Skip(lexeme=lexeme, name=name, line=l, column=column, pattern=r'\s+')
     return s
 
 
 def _token_enriched():
-    t = Token(lexeme='42', name='NUM', line=_line(s='hello 42', n=2, f='src.txt'), column=7)
-    t.pattern = r'\d+'
+    t = Token(lexeme='42', name='NUM', line=_line(s='hello 42', n=2, f='src.txt'), column=7, pattern=r'\d+')
     return t
 
 
@@ -104,6 +102,13 @@ def test_skip_record_has_kind_skip():
     assert record['kind'] == 'skip'
     assert record['name'] == 'WS'
     assert record['lexeme'] == ' '
+
+
+def test_skip_record_show_all_includes_regex_and_source_line():
+    s = _skip()
+    record = json.loads(format_record(s, show_all=True))
+    assert record['regex'] == r'\s+'
+    assert record['source_line'] == '42 99'
 
 
 def test_skip_record_lean_not_emitted_without_show_all():
