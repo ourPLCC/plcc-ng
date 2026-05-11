@@ -59,3 +59,58 @@ teardown() {
     [ "$file_val" = "$tmp" ]
     rm -f "$tmp"
 }
+
+@test "plcc-tokens default token record omits regex and source_line" {
+    result=$(echo '42' | plcc-tokens "${SPEC_JSON}")
+    echo "$result" | python3 -c "
+import json, sys
+r = json.load(sys.stdin)
+assert 'regex' not in r, f'regex present in lean record: {r}'
+assert 'source_line' not in r, f'source_line present in lean record: {r}'
+"
+}
+
+@test "plcc-tokens --trace token record includes regex and source_line" {
+    result=$(echo '42' | plcc-tokens --trace "${SPEC_JSON}")
+    echo "$result" | python3 -c "
+import json, sys
+r = json.load(sys.stdin)
+assert 'regex' in r, f'regex missing from enriched record: {r}'
+assert 'source_line' in r, f'source_line missing from enriched record: {r}'
+assert r['source_line'] == '42', f'wrong source_line: {r}'
+"
+}
+
+@test "plcc-tokens --trace emits kind=skip records" {
+    VERBOSITY_SPEC_JSON="$(mktemp)"
+    plcc-spec "${FIXTURES}/scan-verbosity.plcc" > "${VERBOSITY_SPEC_JSON}"
+    result=$(echo '42 99' | plcc-tokens --trace "${VERBOSITY_SPEC_JSON}")
+    kinds=$(echo "$result" | python3 -c "
+import json, sys
+for line in sys.stdin:
+    line = line.strip()
+    if line:
+        r = json.loads(line)
+        print(r['kind'])
+")
+    [[ "$kinds" == *"skip"* ]]
+    rm -f "${VERBOSITY_SPEC_JSON}"
+}
+
+@test "plcc-tokens --trace skip records validate against schema" {
+    VERBOSITY_SPEC_JSON="$(mktemp)"
+    plcc-spec "${FIXTURES}/scan-verbosity.plcc" > "${VERBOSITY_SPEC_JSON}"
+    echo '42 99' | plcc-tokens --trace "${VERBOSITY_SPEC_JSON}" | while IFS= read -r line || [ -n "$line" ]; do
+        [ -z "$line" ] && continue
+        echo "$line" | check-jsonschema --schemafile "${SCHEMA}" -
+    done
+    rm -f "${VERBOSITY_SPEC_JSON}"
+}
+
+@test "plcc-tokens -v emits per-file scanning event on stderr" {
+    tmp=$(mktemp)
+    echo "42" > "$tmp"
+    run --separate-stderr plcc-tokens -v --verbose-format=text "${SPEC_JSON}" "$tmp"
+    [[ "$stderr" == *"scanning $tmp"* ]]
+    rm -f "$tmp"
+}
