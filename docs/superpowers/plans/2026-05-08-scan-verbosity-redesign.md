@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Split `-v` (stderr diagnostics) from new `--show-*` flags (stdout richness), eliminate `plcc-scan`'s stderr capture/reformat machinery, and add `--show-skips`, `--show-line`, `--show-regex`, `--show-attempts`, `--show-all` to `plcc-scan`.
+**Goal:** Split `-v` (stderr diagnostics) from new `--show-*` flags (stdout richness), eliminate `plcc-scan`'s stderr capture/reformat machinery, and add `--show-skips`, `--show-line`, `--show-regex`, `--show-attempts`, `--trace/-t` to `plcc-scan`.
 
-**Architecture:** `plcc-tokens --show-all` emits enriched JSONL records carrying `regex`, `source_line`, and `attempts`; `plcc-scan` passes that flag to `plcc-tokens` whenever any of its own enrichment flags are set, then selectively renders the richer fields. Children inherit stderr rather than having it captured, so `plcc-scan` no longer needs threading or the `parse_child_events`/`reformat_child_events` machinery.
+**Architecture:** `plcc-tokens --trace` emits enriched JSONL records carrying `regex`, `source_line`, and `attempts`; `plcc-scan` passes that flag to `plcc-tokens` whenever any of its own enrichment flags are set, then selectively renders the richer fields. Children inherit stderr rather than having it captured, so `plcc-scan` no longer needs threading or the `parse_child_events`/`reformat_child_events` machinery.
 
 **Tech Stack:** Python 3, dataclasses, docopt-ng, pytest, pyfakefs, bats
 
@@ -18,11 +18,11 @@
 | `src/plcc/scan/Skip.py` | Same as Token |
 | `src/plcc/scan/matcher.py` | Always set `pattern`; optionally build `attempts` |
 | `src/plcc/tokens/jsonl_formatter.py` | Handle Skip; emit enriched fields when `show_all=True` |
-| `src/plcc/tokens/tokens_cli.py` | Add `--show-all`, `SCANNING_FILE` event, per-file verbose, emit skips |
+| `src/plcc/tokens/tokens_cli.py` | Add `--trace`, `SCANNING_FILE` event, per-file verbose, emit skips |
 | `src/plcc/cmd/scan.py` | Remove stderr capture, add enrichment flags, new renderer, TTY hint |
 | `src/plcc/schemas/token.schema.json` | Add `SkipRecord` branch; optional enrichment fields |
 | `tests/fixtures/scan-verbosity.plcc` | New grammar fixture with two token rules and a skip rule |
-| `tests/bats/commands/plcc-tokens.bats` | New: `--show-all` enrichment, `-v` per-file events |
+| `tests/bats/commands/plcc-tokens.bats` | New: `--trace` enrichment, `-v` per-file events |
 | `tests/bats/commands/plcc-scan.bats` | New: all `--show-*` flags, verbose levels, TTY hint |
 
 **Tests live alongside source code** (`src/plcc/scan/matcher_test.py`, etc.) per repo convention.
@@ -482,14 +482,14 @@ git commit -m "feat(tokens): formatter handles Skip and emits enriched fields wh
 
 ---
 
-## Task 4: tokens_cli — `--show-all`, per-file verbose events, emit skips
+## Task 4: tokens_cli — `--trace`, per-file verbose events, emit skips
 
 **Files:**
 - Modify: `src/plcc/tokens/tokens_cli.py`
 - Modify: `src/plcc/tokens/tokens_cli_test.py`
 
 Changes:
-- Add `--show-all` to the docopt usage string.
+- Add `--trace` to the docopt usage string.
 - Add `SCANNING_FILE` to `Events`.
 - Emit `STARTED`, `FINISHED`, and per-file `SCANNING_FILE` verbose events.
 - Pass `record_attempts=show_all` to `Matcher`.
@@ -523,10 +523,10 @@ def test_default_omits_regex_and_source_line(capsys, monkeypatch, fs):
     assert 'source_line' not in record
 
 
-def test_show_all_includes_regex_and_source_line(capsys, monkeypatch, fs):
+def test_trace_includes_regex_and_source_line(capsys, monkeypatch, fs):
     fs.create_file('/spec.json', contents=json.dumps(_SPEC))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
-    run_main(['--show-all', '/spec.json'])
+    run_main(['--trace', '/spec.json'])
     out, _ = capsys.readouterr()
     record = json.loads(out.strip())
     assert record['regex'] == '\\d+'
@@ -543,10 +543,10 @@ def test_default_suppresses_skip_records(capsys, monkeypatch, fs):
     assert 'skip' not in kinds
 
 
-def test_show_all_emits_skip_records(capsys, monkeypatch, fs):
+def test_trace_emits_skip_records(capsys, monkeypatch, fs):
     fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     monkeypatch.setattr('sys.stdin', io.StringIO('42 99\n'))
-    run_main(['--show-all', '/spec.json'])
+    run_main(['--trace', '/spec.json'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
     kinds = [r['kind'] for r in records]
@@ -573,7 +573,7 @@ def test_verbose_started_finished_events(capsys, monkeypatch, fs):
 - [ ] **Step 2: Run to confirm failures**
 
 ```bash
-bin/test/units.bash src/plcc/tokens/tokens_cli_test.py -v -k "show_all or skip_records or verbose_scanning or verbose_started"
+bin/test/units.bash src/plcc/tokens/tokens_cli_test.py -v -k "trace or skip_records or verbose_scanning or verbose_started"
 ```
 Expected: FAIL.
 
@@ -608,7 +608,7 @@ Arguments:
 
 Options:
     -h --help               Show this message.
-    --show-all              Include regex, source_line, attempts; emit skip records.
+    -t --trace              Include regex, source_line, attempts; emit skip records.
 """ + VERBOSE_OPTIONS
 
 
@@ -623,22 +623,22 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-tokens", Events, args)
-    show_all = args['--show-all']
+    trace = args['--trace']
     rules = load_lexical_rules(args['SPEC_JSON'])
-    matcher = Matcher(rules, record_attempts=show_all)
+    matcher = Matcher(rules, record_attempts=trace)
     scanner = Scanner(matcher)
     sources = args['SOURCE'] or ['-']
     verbose.emit(Events.STARTED, message="tokenizing")
     lines = _lines_from_sources(sources, verbose)
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
-            if show_all:
+            if trace:
                 print(format_record(obj, show_all=True), flush=True)
             continue
         if isinstance(obj, LexError):
             print(format_error_record(obj), flush=True)
             continue
-        print(format_record(obj, show_all=show_all), flush=True)
+        print(format_record(obj, show_all=trace), flush=True)
     verbose.emit(Events.FINISHED, message="done")
 
 
@@ -668,7 +668,7 @@ Expected: all tests PASS.
 
 ```bash
 git add src/plcc/tokens/tokens_cli.py src/plcc/tokens/tokens_cli_test.py
-git commit -m "feat(tokens): add --show-all flag, SCANNING_FILE event, emit skips and enriched records"
+git commit -m "feat(tokens): add --trace flag, SCANNING_FILE event, emit skips and enriched records"
 ```
 
 ---
@@ -807,7 +807,7 @@ Adds:
 - Five `--show-*` flags in the docopt string
 - TTY `^D` hint on stdout when stdin is a TTY
 - `stderr=None` on both subprocess calls (inherited)
-- `--show-all` forwarded to `plcc-tokens` when any enrichment flag is active
+- `--trace` forwarded to `plcc-tokens` when any enrichment flag is active
 - A `_render_record` function with the full rendering logic
 
 No pytest unit tests exist for `scan.py` (it's an orchestrator; the bats tier covers it). Run the existing bats tests at the end to confirm nothing regresses.
@@ -850,7 +850,7 @@ Options:
     --show-line         Show source line and cursor before each token.
     --show-attempts     Show rule match attempts before each token.
     --show-regex        Show matched regex in each token line.
-    --show-all          Enable all --show-* flags.
+    -t --trace          Enable all --show-* flags.
 """ + VERBOSE_OPTIONS
 
 
@@ -922,11 +922,11 @@ def main(argv=None):
     grammar = args["GRAMMAR"]
     sources = args["SOURCE"]
 
-    show_all = args["--show-all"]
-    show_skips = args["--show-skips"] or show_all
-    show_line = args["--show-line"] or show_all
-    show_regex = args["--show-regex"] or show_all
-    show_attempts = args["--show-attempts"] or show_all
+    trace = args["--trace"]
+    show_skips = args["--show-skips"] or trace
+    show_line = args["--show-line"] or trace
+    show_regex = args["--show-regex"] or trace
+    show_attempts = args["--show-attempts"] or trace
     any_enrichment = show_skips or show_line or show_regex or show_attempts
 
     if sys.stdin.isatty() and (not sources or "-" in sources):
@@ -949,7 +949,7 @@ def main(argv=None):
             sys.exit(result.returncode)
 
         token_sources = sources if sources else ["-"]
-        tokens_flags = child_flags + (["--show-all"] if any_enrichment else [])
+        tokens_flags = child_flags + (["--trace"] if any_enrichment else [])
 
         proc = subprocess.Popen(
             ["plcc-tokens", spec_path] + token_sources + tokens_flags,
@@ -1032,8 +1032,8 @@ assert 'source_line' not in r, f'source_line present in lean record: {r}'
 "
 }
 
-@test "plcc-tokens --show-all token record includes regex and source_line" {
-    result=$(echo '42' | plcc-tokens --show-all "${SPEC_JSON}")
+@test "plcc-tokens --trace token record includes regex and source_line" {
+    result=$(echo '42' | plcc-tokens --trace "${SPEC_JSON}")
     echo "$result" | python3 -c "
 import json, sys
 r = json.load(sys.stdin)
@@ -1043,10 +1043,10 @@ assert r['source_line'] == '42', f'wrong source_line: {r}'
 "
 }
 
-@test "plcc-tokens --show-all emits kind=skip records" {
+@test "plcc-tokens --trace emits kind=skip records" {
     VERBOSITY_SPEC_JSON="$(mktemp)"
     plcc-spec "${FIXTURES}/scan-verbosity.plcc" > "${VERBOSITY_SPEC_JSON}"
-    result=$(echo '42 99' | plcc-tokens --show-all "${VERBOSITY_SPEC_JSON}")
+    result=$(echo '42 99' | plcc-tokens --trace "${VERBOSITY_SPEC_JSON}")
     kinds=$(echo "$result" | python3 -c "
 import json, sys
 for line in sys.stdin:
@@ -1059,10 +1059,10 @@ for line in sys.stdin:
     rm -f "${VERBOSITY_SPEC_JSON}"
 }
 
-@test "plcc-tokens --show-all skip records validate against schema" {
+@test "plcc-tokens --trace skip records validate against schema" {
     VERBOSITY_SPEC_JSON="$(mktemp)"
     plcc-spec "${FIXTURES}/scan-verbosity.plcc" > "${VERBOSITY_SPEC_JSON}"
-    echo '42 99' | plcc-tokens --show-all "${VERBOSITY_SPEC_JSON}" | while IFS= read -r line || [ -n "$line" ]; do
+    echo '42 99' | plcc-tokens --trace "${VERBOSITY_SPEC_JSON}" | while IFS= read -r line || [ -n "$line" ]; do
         [ -z "$line" ] && continue
         echo "$line" | check-jsonschema --schemafile "${SCHEMA}" -
     done
@@ -1089,7 +1089,7 @@ Expected: all tests PASS including the new ones.
 
 ```bash
 git add tests/fixtures/scan-verbosity.plcc tests/bats/commands/plcc-tokens.bats
-git commit -m "test(tokens): add --show-all enrichment and -v per-file event bats tests"
+git commit -m "test(tokens): add --trace enrichment and -v per-file event bats tests"
 ```
 
 ---
@@ -1156,8 +1156,8 @@ Add to `tests/bats/commands/plcc-scan.bats` (after the existing tests):
     [[ "$output" =~ ^-:1:1\ NUM\ \'\\\d\+\'\ \'42\'$ ]]
 }
 
-@test "plcc-scan --show-all produces source line, cursor, attempts, and token line" {
-    run bash -c "echo '42' | plcc-scan --show-all '${FIXTURES}/scan-verbosity.plcc'"
+@test "plcc-scan --trace produces source line, cursor, attempts, and token line" {
+    run bash -c "echo '42' | plcc-scan --trace '${FIXTURES}/scan-verbosity.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
     [[ "$output" == *"^"* ]]
@@ -1238,11 +1238,11 @@ git commit -m "test(scan): add --show-* flags, verbose levels, and TTY hint bats
 | `Token`/`Skip` gain `pattern` and `attempts` | Task 1 |
 | Matcher always sets `pattern`; builds `attempts` from full `_getMatches` | Task 2 |
 | Formatter handles Skip; emits `regex`, `source_line`, `attempts` when `show_all` | Task 3 |
-| `plcc-tokens --show-all` single enrichment flag; `SCANNING_FILE` event; emits skips | Task 4 |
+| `plcc-tokens --trace` single enrichment flag; `SCANNING_FILE` event; emits skips | Task 4 |
 | Schema: `SkipRecord` branch; optional enrichment fields; attempts item schema | Task 5 |
 | `scan.py` pass-through stderr; enrichment flags; TTY hint; new renderer | Task 6 |
-| Bats: `plcc-tokens --show-all`, schema validation, `-v` per-file event | Task 7 |
-| Bats: all `--show-*`, verbose levels `-v`/`-vv`/`-vvv`, TTY hint absence | Task 8 |
+| Bats: `plcc-tokens --trace`, schema validation, `-v` per-file event | Task 7 |
+| Bats: all `--show-*` and `--trace`, verbose levels `-v`/`-vv`/`-vvv`, TTY hint absence | Task 8 |
 | `compare=False` regression guard | Task 1 + verified in Task 2 |
 | Regex field → `obj.pattern` in formatter, emitted as JSON key `"regex"` | Task 3 |
 | `source_line` from `obj.line.string` | Task 3 |
