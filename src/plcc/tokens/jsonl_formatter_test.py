@@ -3,6 +3,7 @@ import pytest
 from ..lines import Line
 from ..scan.Token import Token
 from ..scan.LexError import LexError
+from ..scan.Skip import Skip
 from .jsonl_formatter import format_record, format_error_record
 
 
@@ -49,3 +50,79 @@ def test_format_error_record_rejects_token():
     token = Token(name='NUM', lexeme='42', line=Line(string='42', number=1, file='f'), column=1)
     with pytest.raises(TypeError):
         format_error_record(token)
+
+
+def _skip(lexeme=' ', name='WS', line=None, column=3):
+    l = line or _line(s='42 99', n=1, f='test.txt')
+    s = Skip(lexeme=lexeme, name=name, line=l, column=column)
+    s.pattern = r'\s+'
+    return s
+
+
+def _token_enriched():
+    t = Token(lexeme='42', name='NUM', line=_line(s='hello 42', n=2, f='src.txt'), column=7)
+    t.pattern = r'\d+'
+    return t
+
+
+def test_lean_record_omits_regex_source_line_attempts():
+    t = Token(lexeme='42', name='NUM', line=_line(), column=1)
+    record = json.loads(format_record(t))
+    assert 'regex' not in record
+    assert 'source_line' not in record
+    assert 'attempts' not in record
+
+
+def test_show_all_token_includes_regex_and_source_line():
+    t = _token_enriched()
+    record = json.loads(format_record(t, show_all=True))
+    assert record['kind'] == 'token'
+    assert record['regex'] == r'\d+'
+    assert record['source_line'] == 'hello 42'
+
+
+def test_show_all_token_omits_attempts_when_empty():
+    t = _token_enriched()
+    record = json.loads(format_record(t, show_all=True))
+    assert 'attempts' not in record
+
+
+def test_show_all_token_includes_attempts_when_present():
+    t = _token_enriched()
+    t.attempts = [
+        {'name': 'NUM', 'regex': r'\d+', 'lexeme': '42',
+         'char_count': 2, 'is_skip': False, 'winner': True},
+    ]
+    record = json.loads(format_record(t, show_all=True))
+    assert len(record['attempts']) == 1
+    assert record['attempts'][0]['winner'] is True
+
+
+def test_skip_record_has_kind_skip():
+    s = _skip()
+    record = json.loads(format_record(s, show_all=True))
+    assert record['kind'] == 'skip'
+    assert record['name'] == 'WS'
+    assert record['lexeme'] == ' '
+
+
+def test_skip_record_lean_not_emitted_without_show_all():
+    # format_record on a Skip without show_all should still work structurally
+    # (tokens_cli decides whether to print it, not the formatter)
+    s = _skip()
+    record = json.loads(format_record(s))
+    assert record['kind'] == 'skip'
+    assert 'regex' not in record
+
+
+def test_exactly_one_winner_in_attempts():
+    t = _token_enriched()
+    t.attempts = [
+        {'name': 'ONE', 'regex': r'\d', 'lexeme': '4',
+         'char_count': 1, 'is_skip': False, 'winner': False},
+        {'name': 'NUM', 'regex': r'\d+', 'lexeme': '42',
+         'char_count': 2, 'is_skip': False, 'winner': True},
+    ]
+    record = json.loads(format_record(t, show_all=True))
+    winners = [a for a in record['attempts'] if a['winner']]
+    assert len(winners) == 1
