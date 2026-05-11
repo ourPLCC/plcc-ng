@@ -6,7 +6,7 @@ _SENTINEL = ".spec-hash"
 _LEVELS = {"scan": 0, "parse": 1, "all": 2}
 
 
-def compute_hash(path) -> str:
+def compute_hash(path: Path | str) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
@@ -36,6 +36,11 @@ def is_current(sentinel: dict | None, new_hash: str, through: str) -> bool:
         return False
     if sentinel.get("hash") != new_hash:
         return False
+    # -1 sentinel: unknown level names are treated as below "scan" (level 0), so unknown
+    # level names will produce False (stale), which is the safe default.
     stored = _LEVELS.get(sentinel.get("through", ""), -1)
     requested = _LEVELS.get(through, -1)
+    # If either is unknown (-1), treat as stale (False)
+    if stored == -1 or requested == -1:
+        return False
     return stored >= requested

@@ -87,3 +87,8 @@ def test_is_current_parse_satisfies_scan_and_parse():
     assert is_current(s, "abc", "scan")
     assert is_current(s, "abc", "parse")
     assert not is_current(s, "abc", "all")
+
+
+def test_is_current_false_for_unknown_level():
+    s = {"hash": "abc", "through": "all"}
+    assert not is_current(s, "abc", "TYPO")
