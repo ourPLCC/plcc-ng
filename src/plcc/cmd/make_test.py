@@ -33,6 +33,21 @@ def test_grammar_file_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     assert exc.value.code != 0
 
 
+def test_invalid_through_value_exits_nonzero(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main(['--through=typo'])
+    assert exc.value.code != 0
+
+
+def test_invalid_through_value_prints_error(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main(['--through=typo'])
+    _, err = capsys.readouterr()
+    assert "invalid --through" in err
+
+
 def test_validate_tool_name_accepts_valid():
     validate_tool_name('diagram')
     validate_tool_name('Java')

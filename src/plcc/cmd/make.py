@@ -3,7 +3,6 @@ import enum
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -53,6 +52,10 @@ def main(argv=None):
     through = args['--through']
     build_dir = Path('build')
 
+    if through not in ('scan', 'parse', 'all'):
+        print(f"plcc-make: invalid --through value '{through}'; must be scan, parse, or all", file=sys.stderr)
+        sys.exit(1)
+
     if not os.path.exists(grammar):
         print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
         sys.exit(1)
@@ -62,9 +65,10 @@ def main(argv=None):
 
     build_dir.mkdir(exist_ok=True)
 
-    # Run plcc-spec into a temp file to avoid corrupting build/spec.json on failure
+    # Run plcc-spec into a temp file to avoid corrupting build/spec.json on failure.
+    # Temp file lives inside build/ so os.replace() is guaranteed atomic (same filesystem).
     verbose.emit(Events.PHASE, message="spec")
-    tmp_fd, tmp_spec = tempfile.mkstemp(suffix='.json')
+    tmp_fd, tmp_spec = tempfile.mkstemp(suffix='.json', dir=build_dir)
     os.close(tmp_fd)
     try:
         with open(tmp_spec, 'w') as spec_out:
@@ -95,8 +99,8 @@ def main(argv=None):
         verbose.emit(Events.FINISHED, message="build is current")
         return
 
-    # Slow path: move spec into place, delete sentinel, run downstream steps
-    shutil.move(tmp_spec, build_dir / 'spec.json')
+    # Slow path: replace spec atomically, delete sentinel, run downstream steps
+    os.replace(tmp_spec, build_dir / 'spec.json')
     spec_json = str(build_dir / 'spec.json')
     delete_sentinel(build_dir)  # absent until final success write below
 
