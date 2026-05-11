@@ -164,22 +164,17 @@ setup() {
 
 @test "plcc-scan -vv produces no more stderr output than -v" {
     run --separate-stderr bash -c "echo '42' | plcc-scan -v '${FIXTURES}/trivial.plcc'"
-    v1_stderr="$stderr"
+    v1_lines=$(echo "$stderr" | grep '^plcc-scan:' | wc -l)
     run --separate-stderr bash -c "echo '42' | plcc-scan -vv '${FIXTURES}/trivial.plcc'"
-    v2_stderr="$stderr"
-    # -vv should not add scan-specific lines beyond -v
-    v1_lines=$(echo "$v1_stderr" | wc -l)
-    v2_lines=$(echo "$v2_stderr" | wc -l)
+    v2_lines=$(echo "$stderr" | grep '^plcc-scan:' | wc -l)
     [ "$v2_lines" -le "$v1_lines" ]
 }
 
 @test "plcc-scan -vvv produces no more stderr output than -v" {
     run --separate-stderr bash -c "echo '42' | plcc-scan -v '${FIXTURES}/trivial.plcc'"
-    v1_stderr="$stderr"
+    v1_lines=$(echo "$stderr" | grep '^plcc-scan:' | wc -l)
     run --separate-stderr bash -c "echo '42' | plcc-scan -vvv '${FIXTURES}/trivial.plcc'"
-    v3_stderr="$stderr"
-    v1_lines=$(echo "$v1_stderr" | wc -l)
-    v3_lines=$(echo "$v3_stderr" | wc -l)
+    v3_lines=$(echo "$stderr" | grep '^plcc-scan:' | wc -l)
     [ "$v3_lines" -le "$v1_lines" ]
 }
 

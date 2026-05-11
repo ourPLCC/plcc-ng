@@ -23,17 +23,6 @@
         "is_skip":    { "type": "boolean" },
         "winner":     { "type": "boolean" }
       }
-    },
-    "TokenOrSkipProperties": {
-      "name":        { "type": "string" },
-      "lexeme":      { "type": "string" },
-      "source":      { "$ref": "#/definitions/SourcePosition" },
-      "regex":       { "type": "string" },
-      "source_line": { "type": "string" },
-      "attempts": {
-        "type": "array",
-        "items": { "$ref": "#/definitions/AttemptEntry" }
-      }
     }
   },
   "oneOf": [
