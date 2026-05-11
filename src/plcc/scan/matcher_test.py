@@ -112,14 +112,101 @@ def test_match_mid_string():
     assert result == Token(lexeme='23', name='NUMBER', line = line, column=5)
 
 
+def test_pattern_always_set_on_token():
+    m = makeMatcher(r"token NUM '\d+'")
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    assert isinstance(result, Token)
+    assert result.pattern == r'\d+'
+
+def test_pattern_always_set_on_skip():
+    m = makeMatcher(r"skip WS '\s+'")
+    line = parseLine(" ")
+    result = m.match(line, index=0)
+    assert isinstance(result, Skip)
+    assert result.pattern == r'\s+'
+
+def test_attempts_empty_by_default():
+    m = makeMatcher(r"token NUM '\d+'")
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    assert result.attempts == []
+
+def test_record_attempts_token_win():
+    m = makeMatcher(r"""
+        token ONE '\d'
+        token NUM '\d+'
+    """, record_attempts=True)
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    assert isinstance(result, Token)
+    assert result.name == "NUM"
+    assert len(result.attempts) == 2
+    winners = [a for a in result.attempts if a['winner']]
+    assert len(winners) == 1
+    assert winners[0]['name'] == "NUM"
+    losers = [a for a in result.attempts if not a['winner']]
+    assert len(losers) == 1
+    assert losers[0]['name'] == "ONE"
+
+def test_record_attempts_skip_win_includes_token_candidates():
+    # skip appears before token in definition order AND both match '42'.
+    # Skip short-circuits: result is the Skip, but NUM should appear in
+    # attempts as a non-winning candidate.
+    m = makeMatcher(r"""
+        skip WS '\d+'
+        token NUM '\d+'
+    """, record_attempts=True)
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    assert isinstance(result, Skip)
+    assert len(result.attempts) == 2
+    winners = [a for a in result.attempts if a['winner']]
+    assert len(winners) == 1
+    assert winners[0]['name'] == "WS"
+    assert winners[0]['is_skip'] is True
+    losers = [a for a in result.attempts if not a['winner']]
+    assert len(losers) == 1
+    assert losers[0]['name'] == "NUM"
+    assert losers[0]['is_skip'] is False
+
+def test_record_attempts_token_wins_over_later_skip():
+    # TOKEN appears before SKIP in definition order, so short-circuit does
+    # not fire. SKIP should still appear in attempts as non-winner.
+    m = makeMatcher(r"""
+        token NUM '\d+'
+        skip  WS  '\d'
+    """, record_attempts=True)
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    assert isinstance(result, Token)
+    names = [a['name'] for a in result.attempts]
+    assert 'NUM' in names
+    assert 'WS' in names
+    winner = next(a for a in result.attempts if a['winner'])
+    assert winner['name'] == 'NUM'
+
+def test_attempts_entry_fields():
+    m = makeMatcher(r"token NUM '\d+'", record_attempts=True)
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    a = result.attempts[0]
+    assert a['name'] == 'NUM'
+    assert a['regex'] == r'\d+'
+    assert a['lexeme'] == '42'
+    assert a['char_count'] == 2
+    assert a['is_skip'] is False
+    assert a['winner'] is True
+
+
 #helper methods
 
-def makeMatcher(spec):
+def makeMatcher(spec, record_attempts=False):
     if isinstance(spec, str):
         spec, errors = parseSpec(spec)
-        return matcher.Matcher(spec.lexical.ruleList)
+        return matcher.Matcher(spec.lexical.ruleList, record_attempts=record_attempts)
     else:
-        return matcher.Matcher(spec)
+        return matcher.Matcher(spec, record_attempts=record_attempts)
 
 
 def parseLine(string):

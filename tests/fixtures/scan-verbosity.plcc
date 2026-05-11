@@ -1,0 +1,5 @@
+token ONE '\d'
+token NUM '\d+'
+skip  WS  '\s+'
+%
+<program> ::= NUM

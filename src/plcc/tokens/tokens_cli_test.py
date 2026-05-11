@@ -91,3 +91,72 @@ def test_named_file_arg_labels_tokens_with_filename(capsys, fs):
     out, _ = capsys.readouterr()
     record = json.loads(out.strip())
     assert record['source']['file'] == '/src.txt'
+
+
+_SPEC_WITH_SKIP = {
+    "lexical": {"ruleList": [
+        {"name": "NUM", "pattern": "\\d+", "isSkip": False,
+         "line": {"string": "", "number": 1, "file": None}},
+        {"name": "WS", "pattern": "\\s+", "isSkip": True,
+         "line": {"string": "", "number": 2, "file": None}},
+    ]},
+    "syntax": {"rules": []},
+    "semantics": []
+}
+
+
+def test_default_omits_regex_and_source_line(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    record = json.loads(out.strip())
+    assert 'regex' not in record
+    assert 'source_line' not in record
+
+
+def test_trace_includes_regex_and_source_line(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['--trace', '/spec.json'])
+    out, _ = capsys.readouterr()
+    record = json.loads(out.strip())
+    assert record['regex'] == '\\d+'
+    assert record['source_line'] == '42'
+
+
+def test_default_suppresses_skip_records(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42 99\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    kinds = [r['kind'] for r in records]
+    assert 'skip' not in kinds
+
+
+def test_trace_emits_skip_records(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42 99\n'))
+    run_main(['--trace', '/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    kinds = [r['kind'] for r in records]
+    assert 'skip' in kinds
+
+
+def test_verbose_scanning_file_event(capsys, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/src.txt', contents='42\n')
+    run_main(['-v', '--verbose-format=text', '/spec.json', '/src.txt'])
+    _, err = capsys.readouterr()
+    assert 'scanning /src.txt' in err
+
+
+def test_verbose_started_finished_events(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['-v', '--verbose-format=text', '/spec.json'])
+    _, err = capsys.readouterr()
+    assert 'started' in err
+    assert 'finished' in err

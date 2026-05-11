@@ -1,24 +1,73 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "TokenStreamRecord",
-  "description": "One JSONL record from plcc-tokens stdout: either a token or a lex error.",
+  "description": "One JSONL record from plcc-tokens stdout.",
+  "definitions": {
+    "SourcePosition": {
+      "type": "object",
+      "required": ["file", "line", "column"],
+      "properties": {
+        "file":   { "type": ["string", "null"] },
+        "line":   { "type": "integer", "minimum": 1 },
+        "column": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "AttemptEntry": {
+      "type": "object",
+      "required": ["name", "regex", "lexeme", "char_count", "is_skip", "winner"],
+      "properties": {
+        "name":       { "type": "string" },
+        "regex":      { "type": "string" },
+        "lexeme":     { "type": "string" },
+        "char_count": { "type": "integer", "minimum": 0 },
+        "is_skip":    { "type": "boolean" },
+        "winner":     { "type": "boolean" }
+      }
+    },
+    "TokenOrSkipProperties": {
+      "name":        { "type": "string" },
+      "lexeme":      { "type": "string" },
+      "source":      { "$ref": "#/definitions/SourcePosition" },
+      "regex":       { "type": "string" },
+      "source_line": { "type": "string" },
+      "attempts": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/AttemptEntry" }
+      }
+    }
+  },
   "oneOf": [
     {
       "title": "TokenRecord",
       "type": "object",
       "required": ["kind", "name", "lexeme", "source"],
       "properties": {
-        "kind":   { "type": "string", "const": "token" },
-        "name":   { "type": "string" },
-        "lexeme": { "type": "string" },
-        "source": {
-          "type": "object",
-          "required": ["file", "line", "column"],
-          "properties": {
-            "file":   { "type": ["string", "null"] },
-            "line":   { "type": "integer", "minimum": 1 },
-            "column": { "type": "integer", "minimum": 1 }
-          }
+        "kind": { "type": "string", "const": "token" },
+        "name":        { "type": "string" },
+        "lexeme":      { "type": "string" },
+        "source":      { "$ref": "#/definitions/SourcePosition" },
+        "regex":       { "type": "string" },
+        "source_line": { "type": "string" },
+        "attempts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttemptEntry" }
+        }
+      }
+    },
+    {
+      "title": "SkipRecord",
+      "type": "object",
+      "required": ["kind", "name", "lexeme", "source"],
+      "properties": {
+        "kind": { "type": "string", "const": "skip" },
+        "name":        { "type": "string" },
+        "lexeme":      { "type": "string" },
+        "source":      { "$ref": "#/definitions/SourcePosition" },
+        "regex":       { "type": "string" },
+        "source_line": { "type": "string" },
+        "attempts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttemptEntry" }
         }
       }
     },
@@ -30,17 +79,9 @@
         "kind":     { "type": "string", "const": "error" },
         "stage":    { "type": "string" },
         "severity": { "type": "string" },
-        "pos": {
-          "type": "object",
-          "required": ["file", "line", "column"],
-          "properties": {
-            "file":   { "type": ["string", "null"] },
-            "line":   { "type": "integer", "minimum": 1 },
-            "column": { "type": "integer", "minimum": 1 }
-          }
-        },
-        "lexeme":  { "type": "string" },
-        "message": { "type": "string" }
+        "pos":      { "$ref": "#/definitions/SourcePosition" },
+        "lexeme":   { "type": "string" },
+        "message":  { "type": "string" }
       }
     }
   ]
