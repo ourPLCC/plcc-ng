@@ -5,19 +5,37 @@ import re
 
 
 class Matcher:
-    def __init__(self, rules):
+    def __init__(self, rules, record_attempts=False):
         self._rules = rules
         self._patterns = None
-        self._log = []
+        self._record_attempts = record_attempts
 
     def match(self, line, index):
         matches = self._getMatches(line, index)
         if not matches:
             return LexError(line=line, column=index+1)
+
+        all_matches = matches if self._record_attempts else None
+
         if isinstance(matches[0], Skip):
-            return matches[0]
-        matches = self._removeSkips(matches)
-        return self._getLongestMatch(matches)
+            result = matches[0]
+        else:
+            result = self._getLongestMatch(self._removeSkips(matches))
+
+        if self._record_attempts:
+            result.attempts = [
+                {
+                    'name': m.name,
+                    'regex': m.pattern,
+                    'lexeme': m.lexeme,
+                    'char_count': len(m.lexeme),
+                    'is_skip': isinstance(m, Skip),
+                    'winner': m is result,
+                }
+                for m in all_matches
+            ]
+
+        return result
 
     def _getMatches(self, line, index):
         patterns = self._getPatterns()
@@ -36,26 +54,27 @@ class Matcher:
         return self._patterns
 
     def _compilePatterns(self):
-        compiled_patterns = []
-        for rule in self._rules:
-            pattern = re.compile(rule.pattern)
-            compiled_patterns.append(pattern)
-        self._patterns = compiled_patterns
+        self._patterns = [re.compile(rule.pattern) for rule in self._rules]
 
     def _makeSkipOrToken(self, match, rule, line, index):
-        if(rule.isSkip):
+        if rule.isSkip:
             return self._makeSkip(match, rule, line, index)
-        else:
-            return self._makeToken(match, rule, line, index)
+        return self._makeToken(match, rule, line, index)
 
     def _makeSkip(self, match, rule, line, index):
-        return Skip(lexeme=match.group(), name=rule.name, line=line, column=1+index)
+        return Skip(
+            lexeme=match.group(), name=rule.name,
+            line=line, column=1+index, pattern=rule.pattern,
+        )
 
     def _makeToken(self, match, rule, line, index):
-        return Token(lexeme=match.group(), name=rule.name, line=line, column=1+index)
+        return Token(
+            lexeme=match.group(), name=rule.name,
+            line=line, column=1+index, pattern=rule.pattern,
+        )
 
     def _removeSkips(self, matches):
-        return list(filter(lambda sot: isinstance(sot, Token), matches))
+        return [m for m in matches if isinstance(m, Token)]
 
     def _getLongestMatch(self, matches):
-            return max(matches, key=lambda m: len(m.lexeme))
+        return max(matches, key=lambda m: len(m.lexeme))
