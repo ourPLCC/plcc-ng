@@ -68,8 +68,8 @@ def _render_record(record, show_skips, show_line, show_regex, show_attempts):
     col = source.get("column", 1)
 
     if show_line and source_line:
-        print(source_line)
-        print(" " * (col - 1) + "^")
+        print(source_line, flush=True)
+        print(" " * (col - 1) + "^", flush=True)
 
     if show_attempts:
         for attempt in attempts:
@@ -78,7 +78,7 @@ def _render_record(record, show_skips, show_line, show_regex, show_attempts):
             a_regex = attempt.get("regex", "?")
             a_count = attempt.get("char_count", 0)
             a_lexeme = attempt.get("lexeme", "?")
-            print(f"{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'")
+            print(f"{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'", flush=True)
 
     if show_regex and kind == "skip":
         print(f"{loc} {name} '{regex}' '{lexeme}' SKIPPED", flush=True)
@@ -153,6 +153,7 @@ def main(argv=None):
             print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
             sys.exit(proc.returncode)
     finally:
-        os.unlink(spec_path)
+        if os.path.exists(spec_path):
+            os.unlink(spec_path)
 
     verbose.emit(Events.FINISHED, message="done")
