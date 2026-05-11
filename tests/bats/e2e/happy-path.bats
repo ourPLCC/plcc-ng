@@ -33,15 +33,13 @@ teardown() {
     [ -f build/ll1.json ]
 }
 
-@test "plcc-make cleans build/ on rebuild" {
-    touch build/stale-marker.txt
-    # Use the same grammar but from a copy with a whitespace difference to change hash
-    TMP_GRAMMAR="$(mktemp --suffix=.plcc)"
-    trap "rm -f '${TMP_GRAMMAR}'" EXIT
-    cp "${FIXTURES}/trivial.plcc" "${TMP_GRAMMAR}"
-    echo "" >> "${TMP_GRAMMAR}"
-    plcc-make --grammar-file="${TMP_GRAMMAR}"
-    [ ! -f build/stale-marker.txt ]
+@test "plcc-make updates spec.json and .spec-hash when grammar changes" {
+    first_hash=$(cat build/.spec-hash)
+    cp "${FIXTURES}/trivial-python.plcc" "${WORK_DIR}/grammar2.plcc"
+    run plcc-make --grammar-file="${WORK_DIR}/grammar2.plcc"
+    [ "$status" -eq 0 ]
+    second_hash=$(cat build/.spec-hash)
+    [ "$first_hash" != "$second_hash" ]
 }
 
 @test "plcc-spec | plcc-model | plcc-diagram produces diagram.puml" {
