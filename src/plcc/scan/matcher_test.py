@@ -150,19 +150,25 @@ def test_record_attempts_token_win():
     assert losers[0]['name'] == "ONE"
 
 def test_record_attempts_skip_win_includes_token_candidates():
+    # skip appears before token in definition order AND both match '42'.
+    # Skip short-circuits: result is the Skip, but NUM should appear in
+    # attempts as a non-winning candidate.
     m = makeMatcher(r"""
-        skip WS '\s+'
+        skip WS '\d+'
         token NUM '\d+'
     """, record_attempts=True)
-    line = parseLine(" 42")
+    line = parseLine("42")
     result = m.match(line, index=0)
     assert isinstance(result, Skip)
-    # WS wins (first in definition order); NUM also matched the space? No —
-    # NUM '\d+' does NOT match a space. Only WS matches here.
-    assert len(result.attempts) == 1
-    assert result.attempts[0]['winner'] is True
-    assert result.attempts[0]['name'] == "WS"
-    assert result.attempts[0]['is_skip'] is True
+    assert len(result.attempts) == 2
+    winners = [a for a in result.attempts if a['winner']]
+    assert len(winners) == 1
+    assert winners[0]['name'] == "WS"
+    assert winners[0]['is_skip'] is True
+    losers = [a for a in result.attempts if not a['winner']]
+    assert len(losers) == 1
+    assert losers[0]['name'] == "NUM"
+    assert losers[0]['is_skip'] is False
 
 def test_record_attempts_token_wins_over_later_skip():
     # TOKEN appears before SKIP in definition order, so short-circuit does
