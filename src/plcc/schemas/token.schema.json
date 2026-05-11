@@ -23,7 +23,7 @@
         "is_skip":    { "type": "boolean" },
         "winner":     { "type": "boolean" }
       }
-    },
+    }
   },
   "oneOf": [
     {
