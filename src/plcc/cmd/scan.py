@@ -37,7 +37,7 @@ class Events(enum.Enum):
     FINISHED = "finished"
 
 
-def _render_record(record, show_skips, show_line, show_regex, show_attempts):
+def _render_record(record, show_skips, show_line, show_attempts):
     kind = record.get("kind")
 
     if kind == "error":
@@ -57,7 +57,6 @@ def _render_record(record, show_skips, show_line, show_regex, show_attempts):
     loc = _location_str(source)
     name = record.get("name", "?")
     lexeme = record.get("lexeme", "?")
-    regex = record.get("regex", "")
     source_line = record.get("source_line", "")
     attempts = record.get("attempts", [])
     col = source.get("column", 1)
@@ -67,18 +66,23 @@ def _render_record(record, show_skips, show_line, show_regex, show_attempts):
         print(" " * (col - 1) + "^", flush=True)
 
     if show_attempts:
+        print("Candidates:", flush=True)
         for attempt in attempts:
-            prefix = "    * " if attempt.get("winner") else "      "
+            if attempt.get("char_count", 0) == 0:
+                continue
+            prefix = "-> " if attempt.get("winner") else "   "
             a_name = attempt.get("name", "?")
             a_regex = attempt.get("regex", "?")
             a_count = attempt.get("char_count", 0)
             a_lexeme = attempt.get("lexeme", "?")
             print(f"{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'", flush=True)
 
-    if show_regex and kind == "skip":
-        print(f"{loc} {name} '{regex}' '{lexeme}' SKIPPED", flush=True)
-    elif show_regex:
-        print(f"{loc} {name} '{regex}' '{lexeme}'", flush=True)
+    if show_attempts:
+        if kind == "skip":
+            print(f"{loc}: skip: {name} '{lexeme}'", flush=True)
+        else:
+            print(f"{loc}: token: {name} '{lexeme}'", flush=True)
+        print(flush=True)
     elif kind == "skip":
         print(f"{loc} {name} '{lexeme}' SKIPPED", flush=True)
     else:
@@ -136,7 +140,7 @@ def main(argv=None):
         if not line:
             continue
         record = json.loads(line)
-        _render_record(record, trace, trace, trace, trace)
+        _render_record(record, trace, trace, trace)
 
     proc.wait()
 

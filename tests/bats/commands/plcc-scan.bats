@@ -112,14 +112,64 @@ teardown() {
 }
 
 
-@test "plcc-scan --trace produces source line, cursor, attempts, and token line" {
+@test "plcc-scan --trace produces source line, cursor, candidates, and token line" {
     cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
     [[ "$output" == *"^"* ]]
-    [[ "$output" == *"chars"* ]]
-    [[ "$output" =~ \'\\\d\+ ]]
+    [[ "$output" == *"Candidates:"* ]]
+    [[ "$output" =~ "token: NUM" ]]
+}
+
+@test "plcc-scan --trace shows Candidates: heading" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Candidates:"* ]]
+}
+
+@test "plcc-scan --trace marks winner with ->" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"-> NUM"* ]]
+}
+
+@test "plcc-scan --trace excludes zero-match candidates" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" != *"   WS"* ]]
+}
+
+@test "plcc-scan --trace token line uses token: disposition" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ -:1:1:\ token:\ NUM\ \'42\' ]]
+}
+
+@test "plcc-scan --trace skip line uses skip: disposition" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42 99' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ -:1:3:\ skip:\ WS ]]
+}
+
+@test "plcc-scan --trace token line has no regex" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    token_line=$(echo "$output" | grep "token: NUM")
+    [[ "$token_line" != *"\\d+"* ]]
+}
+
+@test "plcc-scan --trace adds blank line after each block" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42 99' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ $'\n\n' ]]
 }
 
 @test "plcc-scan -v emits started and finished events on stderr" {
