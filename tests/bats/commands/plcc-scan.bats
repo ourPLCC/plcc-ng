@@ -182,7 +182,7 @@ teardown() {
 @test "plcc-scan -v hint is absent from stderr" {
     run --separate-stderr bash -c "echo '42' | plcc-scan -v"
     [ "$status" -eq 0 ]
-    [[ "$stderr" != *"press ^D"* ]]
+    [[ "$stderr" != *"Press ^D"* ]]
 }
 
 @test "plcc-scan -vv produces no more plcc-scan stderr lines than -v" {
@@ -202,9 +202,9 @@ teardown() {
 }
 
 @test "plcc-scan TTY hint absent when stdin is not a TTY" {
-    run bash -c "echo '42' | plcc-scan"
+    run --separate-stderr bash -c "echo '42' | plcc-scan"
     [ "$status" -eq 0 ]
-    [[ "$output" != *"press ^D"* ]]
+    [[ "$stderr" != *"Press ^D"* ]]
 }
 
 @test "plcc-scan triggers rebuild when grammar changes" {

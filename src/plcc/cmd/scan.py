@@ -129,23 +129,28 @@ def main(argv=None):
     token_sources = sources if sources else ["-"]
     tokens_flags = child_flags + (["--trace"] if any_enrichment else [])
 
-    proc = subprocess.Popen(
-        ["plcc-tokens", spec_path] + token_sources + tokens_flags,
-        stdout=subprocess.PIPE,
-        stderr=None,
-    )
+    for source in token_sources:
+        if source == "-" and sys.stdin.isatty():
+            print("Enter input. Press ^D (EOF) when done.", file=sys.stderr)
 
-    for raw in proc.stdout:
-        line = raw.decode("utf-8").strip()
-        if not line:
-            continue
-        record = json.loads(line)
-        _render_record(record, trace, trace, trace)
+        proc = subprocess.Popen(
+            ["plcc-tokens", spec_path, source] + tokens_flags,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
 
-    proc.wait()
+        for raw in proc.stdout:
+            line = raw.decode("utf-8").strip()
+            if not line:
+                continue
+            record = json.loads(line)
+            _render_record(record, trace, trace, trace)
 
-    if proc.returncode != 0:
-        print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
-        sys.exit(proc.returncode)
+        proc.stdout.close()
+        proc.wait()
+
+        if proc.returncode != 0:
+            print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
+            sys.exit(proc.returncode)
 
     verbose.emit(Events.FINISHED, message="done")
