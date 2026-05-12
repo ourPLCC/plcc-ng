@@ -98,12 +98,13 @@ Each `feed(content, source)` call:
 
 ### `RepHandler` (`src/plcc/cmd/rep.py`)
 
-Same pipeline as `ParseHandler`, extended through the long-lived interpreter process (started once when `main()` begins, kept alive for the session):
+`RepHandler` is structurally `ParseHandler` plus an evaluation step. The long-lived interpreter process is started once when `main()` begins and kept alive for the session so that state (variable bindings, etc.) persists across evaluations.
 
-1. Spawns a fresh `plcc-tokens | plcc-tree` pipeline per `feed()` call with `content` piped in.
-2. Writes the resulting tree line to the interpreter's stdin.
-3. Reads the interpreter's response.
-4. Returns `True` if a result or error record was produced; `False` if no tree was produced (incomplete input — no tree to send to the interpreter).
+Each `feed(content, source)` call:
+
+1. Spawns a fresh `plcc-tokens | plcc-tree` pipeline with `content` piped in (identical to `ParseHandler`).
+2. If `plcc-tree` produces **no output** (incomplete parse): return `False` immediately. The interpreter is not contacted — its state is unchanged. This is the load-bearing guarantee: partial attempts are invisible to the interpreter.
+3. If `plcc-tree` produces a tree: write the tree line to the interpreter's stdin, read its response, print the result or error, and return `True`.
 
 ---
 
