@@ -1,3 +1,4 @@
+import io
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -11,7 +12,7 @@ HINT = "Enter input. Press ^D (EOF) when done."
 
 def _make_proc():
     return SimpleNamespace(
-        stdout=iter([]),
+        stdout=io.BytesIO(b""),
         returncode=0,
         wait=lambda: None,
     )

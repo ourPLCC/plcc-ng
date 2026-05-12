@@ -46,9 +46,13 @@ The existing bats tests assert the hint is absent by checking for `"press ^D"` (
       [[ "$stderr" != *"Press ^D"* ]]
   ```
 
-  Change line 207 to:
+  Change line 207: add `--separate-stderr` to the `run` call and check `$stderr` (not `$output`), since the hint goes to stderr:
   ```bash
-      [[ "$output" != *"Press ^D"* ]]
+  @test "plcc-scan TTY hint absent when stdin is not a TTY" {
+      run --separate-stderr bash -c "echo '42' | plcc-scan"
+      [ "$status" -eq 0 ]
+      [[ "$stderr" != *"Press ^D"* ]]
+  }
   ```
 
 - [ ] **Step 3: Run the bats command tests to confirm they still pass**

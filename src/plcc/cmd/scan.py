@@ -146,6 +146,7 @@ def main(argv=None):
             record = json.loads(line)
             _render_record(record, trace, trace, trace)
 
+        proc.stdout.close()
         proc.wait()
 
         if proc.returncode != 0:

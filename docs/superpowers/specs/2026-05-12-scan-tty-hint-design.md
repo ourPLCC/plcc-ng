@@ -59,7 +59,7 @@ The hint prints once per `-` source entry, so `plcc-scan - - file.txt -` prints 
 
 The matched string `"press ^D"` must be updated to match the new message (`"Press ^D"`).
 
-The existing `plcc-scan TTY hint absent when stdin is not a TTY` bats test requires no changes.
+The `plcc-scan TTY hint absent when stdin is not a TTY` bats test also requires updating: add `--separate-stderr` to the `run` call and check `$stderr` instead of `$output`, since the hint goes to stderr.
 
 ### New pytest unit tests (`src/plcc/cmd/scan_test.py`)
 
