@@ -202,9 +202,9 @@ teardown() {
 }
 
 @test "plcc-scan TTY hint absent when stdin is not a TTY" {
-    run bash -c "echo '42' | plcc-scan"
+    run --separate-stderr bash -c "echo '42' | plcc-scan"
     [ "$status" -eq 0 ]
-    [[ "$output" != *"Press ^D"* ]]
+    [[ "$stderr" != *"Press ^D"* ]]
 }
 
 @test "plcc-scan triggers rebuild when grammar changes" {
