@@ -17,7 +17,7 @@
 | `src/plcc/cmd/scan.py` | Commit 1: remove `--show-*` from docstring and arg parsing. Commit 2: rewrite `_render_record` output. |
 | `tests/bats/commands/plcc-scan.bats` | Commit 1: add removal test, delete 7 `--show-*` tests. Commit 2: add 7 new trace format tests, update 1 existing trace test. |
 
-No new files. No other files touched.
+No new implementation files. The design doc and this plan are also committed on this branch.
 
 ---
 
@@ -101,7 +101,7 @@ Old:
 
 New:
 ```python
-        _render_record(record, trace, trace, trace, trace)
+        _render_record(record, trace, trace, trace)
 ```
 
 - [ ] **Run commands tests to confirm the new test passes**
@@ -267,10 +267,10 @@ Expected: the seven new tests report FAIL because the old format is still in pla
 
 - [ ] **Replace the `_render_record` function body in `src/plcc/cmd/scan.py`**
 
-The full new function (signature unchanged):
+The full new function (`show_regex` removed from signature):
 
 ```python
-def _render_record(record, show_skips, show_line, show_regex, show_attempts):
+def _render_record(record, show_skips, show_line, show_attempts):
     kind = record.get("kind")
 
     if kind == "error":

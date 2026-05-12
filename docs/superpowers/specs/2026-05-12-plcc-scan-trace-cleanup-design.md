@@ -28,8 +28,9 @@ with a `BREAKING CHANGE` footer will bump the minor version, not trigger
   from the docstring/usage block.
 - Remove the four `args["--show-*"] or trace` lines.
 - Collapse to `any_enrichment = trace`.
-- `_render_record` continues to accept four bool parameters; all four are now
-  passed `trace` at the call site.
+- `_render_record` signature is reduced to three bool parameters
+  (`show_skips`, `show_line`, `show_attempts`); `show_regex` is removed as
+  dead code. All three are passed `trace` at the call site.
 
 **`tests/bats/commands/plcc-scan.bats`**
 
@@ -128,8 +129,8 @@ Candidates:
 - When `show_attempts`: print `Candidates:` heading before the attempt loop.
   Filter out attempts where `char_count == 0`. Use `-> ` for winner,
   `   ` (3 spaces) for non-winners. Remove the `*` prefix logic.
-- When `show_regex` (now always equal to `trace`): remove regex from the
-  token/skip disposition line.
+- Regex is removed from the token/skip disposition line (present only in
+  Candidates list). The `show_regex` parameter is dropped entirely.
 - Token disposition line: `f"{loc}: token: {name} '{lexeme}'"`.
 - Skip disposition line: `f"{loc}: skip: {name} '{lexeme}'"`.
 - After each token or skip disposition line: print a blank line.
