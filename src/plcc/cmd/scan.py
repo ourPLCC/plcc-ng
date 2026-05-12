@@ -28,11 +28,7 @@ Arguments:
 Options:
     -h --help                   Show this message.
     --grammar-file=<path>       Path to the PLCC grammar file [default: grammar.plcc].
-    --show-skips                Show skip records in output.
-    --show-line                 Show source line and cursor before each token.
-    --show-attempts             Show rule match attempts before each token.
-    --show-regex                Show matched regex in each token line.
-    -t --trace                  Enable all --show-* flags.
+    -t --trace                  Show detailed scanning output.
 """ + VERBOSE_OPTIONS
 
 
@@ -41,7 +37,7 @@ class Events(enum.Enum):
     FINISHED = "finished"
 
 
-def _render_record(record, show_skips, show_line, show_regex, show_attempts):
+def _render_record(record, show_skips, show_line, show_attempts):
     kind = record.get("kind")
 
     if kind == "error":
@@ -61,7 +57,6 @@ def _render_record(record, show_skips, show_line, show_regex, show_attempts):
     loc = _location_str(source)
     name = record.get("name", "?")
     lexeme = record.get("lexeme", "?")
-    regex = record.get("regex", "")
     source_line = record.get("source_line", "")
     attempts = record.get("attempts", [])
     col = source.get("column", 1)
@@ -71,18 +66,23 @@ def _render_record(record, show_skips, show_line, show_regex, show_attempts):
         print(" " * (col - 1) + "^", flush=True)
 
     if show_attempts:
+        print("Candidates:", flush=True)
         for attempt in attempts:
-            prefix = "    * " if attempt.get("winner") else "      "
+            if attempt.get("char_count", 0) == 0:
+                continue
+            prefix = "-> " if attempt.get("winner") else "   "
             a_name = attempt.get("name", "?")
             a_regex = attempt.get("regex", "?")
             a_count = attempt.get("char_count", 0)
             a_lexeme = attempt.get("lexeme", "?")
             print(f"{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'", flush=True)
 
-    if show_regex and kind == "skip":
-        print(f"{loc} {name} '{regex}' '{lexeme}' SKIPPED", flush=True)
-    elif show_regex:
-        print(f"{loc} {name} '{regex}' '{lexeme}'", flush=True)
+    if show_attempts:
+        if kind == "skip":
+            print(f"{loc}: skip: {name} '{lexeme}'", flush=True)
+        else:
+            print(f"{loc}: token: {name} '{lexeme}'", flush=True)
+        print(flush=True)
     elif kind == "skip":
         print(f"{loc} {name} '{lexeme}' SKIPPED", flush=True)
     else:
@@ -105,11 +105,7 @@ def main(argv=None):
     sources = args["SOURCE"]
 
     trace = args["--trace"]
-    show_skips = args["--show-skips"] or trace
-    show_line = args["--show-line"] or trace
-    show_regex = args["--show-regex"] or trace
-    show_attempts = args["--show-attempts"] or trace
-    any_enrichment = show_skips or show_line or show_regex or show_attempts
+    any_enrichment = trace
 
     if not os.path.exists(grammar_file):
         print(f"plcc-scan: grammar file not found: {grammar_file}", file=sys.stderr)
@@ -144,7 +140,7 @@ def main(argv=None):
         if not line:
             continue
         record = json.loads(line)
-        _render_record(record, show_skips, show_line, show_regex, show_attempts)
+        _render_record(record, trace, trace, trace)
 
     proc.wait()
 

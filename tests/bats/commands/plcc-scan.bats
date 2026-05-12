@@ -106,63 +106,70 @@ teardown() {
     [[ "$output" == *"NUM"* ]]
 }
 
-@test "plcc-scan --show-skips adds SKIPPED lines" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
-    run bash -c "echo '42 99' | plcc-scan --show-skips"
-    [ "$status" -eq 0 ]
-    [[ "$output" == *"SKIPPED"* ]]
+@test "plcc-scan --show-skips is not a recognized flag" {
+    run --separate-stderr bash -c "echo '42' | plcc-scan --show-skips"
+    [ "$status" -ne 0 ]
 }
 
-@test "plcc-scan --show-skips format is file:line:col NAME 'lexeme' SKIPPED" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
-    run bash -c "echo '42 99' | plcc-scan --show-skips"
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ -:1:[0-9]+\ WS\ \'\ \'\ SKIPPED ]]
-}
 
-@test "plcc-scan --show-line shows source line and caret cursor" {
-    run bash -c "echo '42' | plcc-scan --show-line"
-    [ "$status" -eq 0 ]
-    [[ "$output" == *"42"* ]]
-    [[ "$output" == *"^"* ]]
-}
-
-@test "plcc-scan --show-line cursor is at correct column" {
-    run bash -c "echo '42' | plcc-scan --show-line"
-    [ "$status" -eq 0 ]
-    second_line=$(echo "$output" | sed -n '2p')
-    [ "$second_line" = "^" ]
-}
-
-@test "plcc-scan --show-attempts produces indented attempt lines" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
-    run bash -c "echo '42' | plcc-scan --show-attempts"
-    [ "$status" -eq 0 ]
-    [[ "$output" == *"chars"* ]]
-}
-
-@test "plcc-scan --show-attempts has exactly one starred winner" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
-    run bash -c "echo '42' | plcc-scan --show-attempts"
-    [ "$status" -eq 0 ]
-    star_count=$(echo "$output" | grep -c '^\s*\*')
-    [ "$star_count" -eq 1 ]
-}
-
-@test "plcc-scan --show-regex includes regex in token output" {
-    run bash -c "echo '42' | plcc-scan --show-regex"
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ ^-:1:1\ NUM\ \'\\\d\+\'\ \'42\'$ ]]
-}
-
-@test "plcc-scan --trace produces source line, cursor, attempts, and token line" {
+@test "plcc-scan --trace produces source line, cursor, candidates, and token line" {
     cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
     [[ "$output" == *"^"* ]]
-    [[ "$output" == *"chars"* ]]
-    [[ "$output" =~ \'\\\d\+ ]]
+    [[ "$output" == *"Candidates:"* ]]
+    [[ "$output" =~ "token: NUM" ]]
+}
+
+@test "plcc-scan --trace shows Candidates: heading" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Candidates:"* ]]
+}
+
+@test "plcc-scan --trace marks winner with ->" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"-> NUM"* ]]
+}
+
+@test "plcc-scan --trace excludes zero-match candidates" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" != *"   WS"* ]]
+}
+
+@test "plcc-scan --trace token line uses token: disposition" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ -:1:1:\ token:\ NUM\ \'42\' ]]
+}
+
+@test "plcc-scan --trace skip line uses skip: disposition" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42 99' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ -:1:3:\ skip:\ WS ]]
+}
+
+@test "plcc-scan --trace token line has no regex" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    token_line=$(echo "$output" | grep "token: NUM")
+    [[ "$token_line" != *"\\d+"* ]]
+}
+
+@test "plcc-scan --trace adds blank line after each block" {
+    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    run bash -c "echo '42 99' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ $'\n\n' ]]
 }
 
 @test "plcc-scan -v emits started and finished events on stderr" {
