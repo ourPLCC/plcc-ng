@@ -28,11 +28,7 @@ Arguments:
 Options:
     -h --help                   Show this message.
     --grammar-file=<path>       Path to the PLCC grammar file [default: grammar.plcc].
-    --show-skips                Show skip records in output.
-    --show-line                 Show source line and cursor before each token.
-    --show-attempts             Show rule match attempts before each token.
-    --show-regex                Show matched regex in each token line.
-    -t --trace                  Enable all --show-* flags.
+    -t --trace                  Show detailed scanning output.
 """ + VERBOSE_OPTIONS
 
 
@@ -105,11 +101,7 @@ def main(argv=None):
     sources = args["SOURCE"]
 
     trace = args["--trace"]
-    show_skips = args["--show-skips"] or trace
-    show_line = args["--show-line"] or trace
-    show_regex = args["--show-regex"] or trace
-    show_attempts = args["--show-attempts"] or trace
-    any_enrichment = show_skips or show_line or show_regex or show_attempts
+    any_enrichment = trace
 
     if not os.path.exists(grammar_file):
         print(f"plcc-scan: grammar file not found: {grammar_file}", file=sys.stderr)
@@ -144,7 +136,7 @@ def main(argv=None):
         if not line:
             continue
         record = json.loads(line)
-        _render_record(record, show_skips, show_line, show_regex, show_attempts)
+        _render_record(record, trace, trace, trace, trace)
 
     proc.wait()
 
