@@ -104,7 +104,6 @@ class ScanHandler:
             stderr=None,
         )
         stdout, _ = proc.communicate(content)
-        proc.wait()
         trace = "--trace" in self._tokens_flags
         for raw in stdout.splitlines():
             raw = raw.strip()
