@@ -160,3 +160,12 @@ def test_verbose_started_finished_events(capsys, monkeypatch, fs):
     _, err = capsys.readouterr()
     assert 'started' in err
     assert 'finished' in err
+
+
+def test_source_name_overrides_stdin_label(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json', '--source-name=myfile.txt', '-'])
+    out, _ = capsys.readouterr()
+    record = json.loads(out.strip())
+    assert record['source']['file'] == 'myfile.txt'

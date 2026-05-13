@@ -25,6 +25,7 @@ Arguments:
 Options:
     -h --help               Show this message.
     -t --trace              Include regex, source_line, attempts; emit skip records.
+    --source-name=<label>   Override the source label for stdin [default: -].
 """ + VERBOSE_OPTIONS
 
 
@@ -40,12 +41,13 @@ def main(argv=None):
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-tokens", Events, args)
     trace = args['--trace']
+    source_name = args['--source-name']
     rules = load_lexical_rules(args['SPEC_JSON'])
     matcher = Matcher(rules, record_attempts=trace)
     scanner = Scanner(matcher)
     sources = args['SOURCE'] or ['-']
     verbose.emit(Events.STARTED, message="tokenizing")
-    lines = _lines_from_sources(sources, verbose)
+    lines = _lines_from_sources(sources, verbose, source_name)
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             if trace:
@@ -58,11 +60,12 @@ def main(argv=None):
     verbose.emit(Events.FINISHED, message="done")
 
 
-def _lines_from_sources(sources, verbose):
+def _lines_from_sources(sources, verbose, source_name=None):
     for file in sources:
         verbose.emit(Events.SCANNING_FILE, level=1, message=f"scanning {file}")
         if file == '-':
-            yield from _lines_from_stream(sys.stdin, '-')
+            label = source_name if source_name else '-'
+            yield from _lines_from_stream(sys.stdin, label)
         else:
             with open(file, 'r') as f:
                 yield from _lines_from_stream(f, file)
