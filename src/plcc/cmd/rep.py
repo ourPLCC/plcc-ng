@@ -7,6 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .source_runner import SourceRunner
 
 __doc__ = """plcc-rep
     REPL — read, eval, print loop for a PLCC grammar.
@@ -27,6 +28,52 @@ Options:
 class Events(enum.Enum):
     STARTED = "started"
     FINISHED = "finished"
+
+
+class RepHandler:
+    def __init__(self, spec_path, ll1_path, interpreter, verbose_format):
+        self._spec_path = spec_path
+        self._ll1_path = ll1_path
+        self._interpreter = interpreter
+        self._verbose_format = verbose_format
+
+    def feed(self, content, source):
+        tokens_proc = subprocess.Popen(
+            ["plcc-tokens", self._spec_path, "-"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        tree_proc = subprocess.Popen(
+            ["plcc-tree", f"--ll1={self._ll1_path}"],
+            stdin=tokens_proc.stdout,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        tokens_proc.stdout.close()
+        tokens_proc.stdin.write(content)
+        tokens_proc.stdin.close()
+        tree_out, _ = tree_proc.communicate()
+        tokens_proc.wait()
+
+        tree_out = tree_out.strip()
+        if not tree_out:
+            return False
+
+        record = json.loads(tree_out)
+        if record.get("kind") == "error":
+            print(f"error: {record.get('message', 'parse error')}", file=sys.stderr)
+            return True
+
+        try:
+            self._interpreter.stdin.write(tree_out + b'\n')
+            self._interpreter.stdin.flush()
+        except BrokenPipeError:
+            print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+            sys.exit(1)
+
+        _read_response(self._interpreter.stdout, self._verbose_format)
+        return True
 
 
 def main(argv=None):
@@ -81,29 +128,16 @@ def main(argv=None):
         stderr=None,
     )
 
+    completed = True
     try:
-        for src in sources:
-            with open(src, 'rb') as f:
-                chunk = f.read()
-            _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
-
-        if not sources:
-            interactive = sys.stdin.isatty()
-            if interactive:
-                while True:
-                    try:
-                        print('>>> ', end='', flush=True, file=sys.stderr)
-                        line = sys.stdin.readline()
-                        if not line:
-                            break
-                        chunk = line.encode()
-                        _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
-                    except KeyboardInterrupt:
-                        print(file=sys.stderr)
-                        break
-            else:
-                chunk = sys.stdin.buffer.read()
-                _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
+        handler = RepHandler(
+            spec_path=spec_path,
+            ll1_path=ll1_path,
+            interpreter=interpreter,
+            verbose_format=verbose_format,
+        )
+        runner = SourceRunner()
+        completed = runner.run(sources, handler)
     finally:
         try:
             interpreter.stdin.close()
@@ -111,6 +145,8 @@ def main(argv=None):
             pass
         interpreter.wait()
 
+    if not completed:
+        sys.exit(1)
     verbose.emit(Events.FINISHED, message='done')
 
 
@@ -134,46 +170,6 @@ def _resolve_tool(spec, tool_name):
     print(f"plcc-rep: multiple semantic sections: {names}. Use --tool=NAME.", file=sys.stderr)
     sys.exit(1)
 
-
-def _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format):
-    tokens_proc = subprocess.Popen(
-        ['plcc-tokens', spec_path],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    tree_proc = subprocess.Popen(
-        ['plcc-tree', f'--ll1={ll1_path}'],
-        stdin=tokens_proc.stdout,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    tokens_proc.stdout.close()
-    tokens_proc.stdin.write(chunk)
-    tokens_proc.stdin.close()
-
-    tree_out, tree_err = tree_proc.communicate()
-    tokens_err = tokens_proc.stderr.read()
-    tokens_proc.wait()
-
-    if tokens_proc.returncode != 0 or tree_proc.returncode != 0:
-        for msg in [tokens_err, tree_err]:
-            if msg:
-                sys.stderr.buffer.write(msg)
-        return
-
-    tree_line = tree_out.strip()
-    if not tree_line:
-        return
-
-    try:
-        interpreter.stdin.write(tree_line + b'\n')
-        interpreter.stdin.flush()
-    except BrokenPipeError:
-        print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
-        sys.exit(1)
-
-    _read_response(interpreter.stdout, verbose_format)
 
 
 def _read_response(stdout, verbose_format):

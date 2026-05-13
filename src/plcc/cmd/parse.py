@@ -6,7 +6,8 @@ import sys
 
 from docopt import docopt, DocoptExit
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS, reap_pipeline
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .source_runner import SourceRunner
 
 __doc__ = """plcc-parse
     Parse source input and print parse tree in human-readable format.
@@ -35,6 +36,48 @@ def _location_str(source):
     if file and file != "<stdin>":
         return f"{file}:{line}:{col}"
     return f"{line}:{col}"
+
+
+class ParseHandler:
+    def __init__(self, spec_path, ll1_path, child_flags):
+        self._spec_path = spec_path
+        self._ll1_path = ll1_path
+        self._child_flags = child_flags
+        self.had_error = False
+
+    def feed(self, content, source):
+        tokens_proc = subprocess.Popen(
+            ["plcc-tokens", self._spec_path, "-"] + self._child_flags,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        tree_proc = subprocess.Popen(
+            ["plcc-tree", f"--ll1={self._ll1_path}"] + self._child_flags,
+            stdin=tokens_proc.stdout,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        tokens_proc.stdout.close()
+        tokens_proc.stdin.write(content)
+        tokens_proc.stdin.close()
+        tree_out, _ = tree_proc.communicate()
+        tokens_proc.wait()
+
+        tree_out = tree_out.strip()
+        if not tree_out:
+            return False
+
+        record = json.loads(tree_out)
+        if record.get("kind") == "error":
+            stage = record.get("stage", "plcc-parse")
+            message = record.get("message", "error")
+            print(f"{stage}: error: {message}", file=sys.stderr)
+            self.had_error = True
+            return True
+
+        _print_tree(record, indent=0)
+        return True
 
 
 def main(argv=None):
@@ -74,65 +117,13 @@ def main(argv=None):
     spec_path = os.path.join('build', 'spec.json')
     ll1_path = os.path.join('build', 'll1.json')
 
-    # Build input
-    chunks = []
-    for src in sources:
-        if src == '-':
-            chunks.append(sys.stdin.buffer.read())
-        else:
-            with open(src, "rb") as sf:
-                chunks.append(sf.read())
-    if not sources:
-        chunks.append(sys.stdin.buffer.read())
-    input_data = b"".join(chunks)
+    handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
+                           child_flags=child_flags)
+    runner = SourceRunner()
+    completed = runner.run(sources, handler)
 
-    # plcc-tokens | plcc-tree
-    tokens_proc = subprocess.Popen(
-        ["plcc-tokens", spec_path] + child_flags,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    tree_proc = subprocess.Popen(
-        ["plcc-tree", f"--ll1={ll1_path}"] + child_flags,
-        stdin=tokens_proc.stdout,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    tokens_proc.stdout.close()
-    tokens_proc.stdin.write(input_data)
-    tokens_proc.stdin.close()
-
-    tree_out, tree_err = tree_proc.communicate()
-    tokens_err = tokens_proc.stderr.read()
-    tokens_proc.wait()
-    tokens_proc.stderr_captured = tokens_err
-    tree_proc.stderr_captured = tree_err
-
-    result = reap_pipeline([
-        (tokens_proc, "plcc-tokens"),
-        (tree_proc, "plcc-tree"),
-    ])
-    verbose.reformat_child_events(result.events_to_render)
-    if result.failed_stage:
-        sys.exit(result.exit_code)
-
-    # Print tree in human-readable format
-    for line in tree_out.decode("utf-8").splitlines():
-        if not line.strip():
-            continue
-        tree = json.loads(line)
-        if tree.get("kind") == "error":
-            verbose.reformat_child_events([{
-                "stage": tree.get("stage", "plcc-tokens"),
-                "event": "error",
-                "severity": "error",
-                "pos": tree.get("pos", {}),
-                "message": tree.get("message", "error"),
-            }])
-            sys.exit(1)
-        _print_tree(tree, indent=0)
-
+    if not completed or handler.had_error:
+        sys.exit(1)
     verbose.emit(Events.FINISHED, message="done")
 
 
