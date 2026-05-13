@@ -128,6 +128,7 @@ def main(argv=None):
         stderr=None,
     )
 
+    completed = True
     try:
         handler = RepHandler(
             spec_path=spec_path,
@@ -136,7 +137,7 @@ def main(argv=None):
             verbose_format=verbose_format,
         )
         runner = SourceRunner()
-        runner.run(sources, handler)
+        completed = runner.run(sources, handler)
     finally:
         try:
             interpreter.stdin.close()
@@ -144,6 +145,8 @@ def main(argv=None):
             pass
         interpreter.wait()
 
+    if not completed:
+        sys.exit(1)
     verbose.emit(Events.FINISHED, message='done')
 
 

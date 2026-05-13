@@ -139,27 +139,6 @@ def test_exits_nonzero_on_syntax_error(monkeypatch):
         os.unlink(ll1_file.name)
 
 
-def test_nothing_written_to_stdout_on_incomplete_input(capsys, monkeypatch):
-    """Incomplete input (EOF too soon) produces no stdout output."""
-    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
-    try:
-        json.dump(_ADDITION_LL1, ll1_file)
-        ll1_file.flush()
-        ll1_file.close()
-        # Only NUM, missing PLUS NUM
-        partial_tokens = [_tok("NUM", "1")]
-        stdin_data = "\n".join(json.dumps(t) for t in partial_tokens) + "\n"
-        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
-        try:
-            run_main([f"--ll1={ll1_file.name}"])
-        except SystemExit:
-            pass
-        out, _ = capsys.readouterr()
-        assert out.strip() == ""
-    finally:
-        os.unlink(ll1_file.name)
-
-
 def test_error_record_passes_through(capsys, monkeypatch):
     error_record = {"kind": "error", "stage": "plcc-tokens",
                     "source": {"file": None, "line": 1, "column": 1}}

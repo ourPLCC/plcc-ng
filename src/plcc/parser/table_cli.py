@@ -75,11 +75,10 @@ def main(argv=None):
     except IncompleteInputError:
         # Input ended before parse was complete. Emit nothing to stdout so
         # callers can detect "need more input" by checking for empty stdout.
-        verbose.emit_error({}, "incomplete input")
         sys.exit(1)
     except ParseError as e:
         verbose.emit_error({}, str(e))
-        print(json.dumps({"kind": "error", "message": str(e)}), flush=True)
+        print(json.dumps({"kind": "error", "message": str(e), "stage": "plcc-parser-table"}), flush=True)
         sys.exit(1)
 
     verbose.emit(Events.FINISHED, token_count=len(tokens), rule_count=_count_rules(tree))

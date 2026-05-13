@@ -133,6 +133,37 @@ def test_interactive_eof_with_empty_buffer_does_not_call_feed(monkeypatch, runne
     assert handler.calls == []
 
 
+# --- Return value ---
+
+def test_run_returns_true_when_all_feeds_succeed(tmp_path, runner):
+    f = tmp_path / "f.txt"
+    f.write_bytes(b"ok")
+    handler = RecordingHandler(results=[True])
+    assert runner.run([str(f)], handler) is True
+
+
+def test_run_returns_false_when_file_feed_returns_false(tmp_path, runner):
+    f = tmp_path / "f.txt"
+    f.write_bytes(b"partial")
+    handler = RecordingHandler(results=[False])
+    assert runner.run([str(f)], handler) is False
+
+
+def test_run_returns_false_when_non_tty_stdin_feed_returns_false(monkeypatch, runner):
+    monkeypatch.setattr(sys, "stdin", SimpleNamespace(
+        isatty=lambda: False,
+        buffer=io.BytesIO(b"partial"),
+    ))
+    handler = RecordingHandler(results=[False])
+    assert runner.run(["-"], handler) is False
+
+
+def test_run_returns_true_for_interactive_even_if_feed_returns_false(monkeypatch, runner):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"partial\n", b""]))
+    handler = RecordingHandler(results=[False])
+    assert runner.run(["-"], handler) is True
+
+
 def test_ctrl_c_clears_buffer_and_continues(monkeypatch, runner, capsys):
     class InterruptOnce:
         def __init__(self):

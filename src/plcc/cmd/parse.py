@@ -120,9 +120,9 @@ def main(argv=None):
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
                            child_flags=child_flags)
     runner = SourceRunner()
-    runner.run(sources, handler)
+    completed = runner.run(sources, handler)
 
-    if handler.had_error:
+    if not completed or handler.had_error:
         sys.exit(1)
     verbose.emit(Events.FINISHED, message="done")
 
