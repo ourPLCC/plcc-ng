@@ -7,6 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .source_runner import SourceRunner
 
 
 def _location_str(source):
@@ -89,6 +90,35 @@ def _render_record(record, show_skips, show_line, show_attempts):
         print(f"{loc} {name} '{lexeme}'", flush=True)
 
 
+class ScanHandler:
+    def __init__(self, spec_path, tokens_flags):
+        self._spec_path = spec_path
+        self._tokens_flags = tokens_flags
+
+    def feed(self, content, source):
+        proc = subprocess.Popen(
+            ["plcc-tokens", self._spec_path,
+             f"--source-name={source}", "-"] + self._tokens_flags,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        stdout, _ = proc.communicate(content)
+        proc.wait()
+        trace = "--trace" in self._tokens_flags
+        for raw in stdout.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            record = json.loads(raw)
+            _render_record(record, trace, trace, trace)
+        if proc.returncode != 0:
+            print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})",
+                  file=sys.stderr)
+            sys.exit(proc.returncode)
+        return True
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
@@ -105,7 +135,6 @@ def main(argv=None):
     sources = args["SOURCE"]
 
     trace = args["--trace"]
-    any_enrichment = trace
 
     if not os.path.exists(grammar_file):
         print(f"plcc-scan: grammar file not found: {grammar_file}", file=sys.stderr)
@@ -125,32 +154,10 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     spec_path = os.path.join('build', 'spec.json')
+    tokens_flags = child_flags + (["--trace"] if trace else [])
 
-    token_sources = sources if sources else ["-"]
-    tokens_flags = child_flags + (["--trace"] if any_enrichment else [])
-
-    for source in token_sources:
-        if source == "-" and sys.stdin.isatty():
-            print("Enter input. Press ^D (EOF) when done.", file=sys.stderr)
-
-        proc = subprocess.Popen(
-            ["plcc-tokens", spec_path, source] + tokens_flags,
-            stdout=subprocess.PIPE,
-            stderr=None,
-        )
-
-        for raw in proc.stdout:
-            line = raw.decode("utf-8").strip()
-            if not line:
-                continue
-            record = json.loads(line)
-            _render_record(record, trace, trace, trace)
-
-        proc.stdout.close()
-        proc.wait()
-
-        if proc.returncode != 0:
-            print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})", file=sys.stderr)
-            sys.exit(proc.returncode)
+    handler = ScanHandler(spec_path=spec_path, tokens_flags=tokens_flags)
+    runner = SourceRunner()
+    runner.run(sources, handler)
 
     verbose.emit(Events.FINISHED, message="done")
