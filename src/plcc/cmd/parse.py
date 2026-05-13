@@ -43,6 +43,7 @@ class ParseHandler:
         self._spec_path = spec_path
         self._ll1_path = ll1_path
         self._child_flags = child_flags
+        self.had_error = False
 
     def feed(self, content, source):
         tokens_proc = subprocess.Popen(
@@ -69,7 +70,10 @@ class ParseHandler:
 
         record = json.loads(tree_out)
         if record.get("kind") == "error":
-            print(f"error: {record.get('message', 'parse error')}", file=sys.stderr)
+            stage = record.get("stage", "plcc-parse")
+            message = record.get("message", "error")
+            print(f"{stage}: error: {message}", file=sys.stderr)
+            self.had_error = True
             return True
 
         _print_tree(record, indent=0)
@@ -118,6 +122,8 @@ def main(argv=None):
     runner = SourceRunner()
     runner.run(sources, handler)
 
+    if handler.had_error:
+        sys.exit(1)
     verbose.emit(Events.FINISHED, message="done")
 
 

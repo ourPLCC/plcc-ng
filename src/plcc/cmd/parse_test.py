@@ -25,8 +25,8 @@ def _tree_record():
     }).encode() + b"\n"
 
 
-def _error_record(msg="syntax error"):
-    return json.dumps({"kind": "error", "message": msg}).encode() + b"\n"
+def _error_record(msg="syntax error", stage="plcc-tokens"):
+    return json.dumps({"kind": "error", "message": msg, "stage": stage}).encode() + b"\n"
 
 
 @pytest.fixture()
@@ -67,3 +67,25 @@ def test_feed_prints_error_to_stderr(monkeypatch, handler, capsys):
     handler.feed(b"bad\n", "-")
     _, err = capsys.readouterr()
     assert "oops" in err
+
+
+def test_feed_error_includes_stage_in_stderr(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_error_record("bad char", stage="plcc-tokens"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"@\n", "-")
+    _, err = capsys.readouterr()
+    assert "plcc-tokens" in err
+
+
+def test_feed_sets_had_error_on_error_record(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_error_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"bad\n", "-")
+    assert handler.had_error is True
+
+
+def test_feed_does_not_set_had_error_on_success(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"ok\n", "-")
+    assert handler.had_error is False
