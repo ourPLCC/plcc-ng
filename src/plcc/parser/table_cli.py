@@ -5,7 +5,7 @@ import sys
 from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .predictive_parser import parse, ParseError
+from .predictive_parser import parse, ParseError, IncompleteInputError
 
 __doc__ = """plcc-parser-table
     Table-driven LL(1) parser. Reads token JSONL from stdin, emits a parse tree.
@@ -72,8 +72,14 @@ def main(argv=None):
     # Parse
     try:
         tree = parse(ll1, tokens)
+    except IncompleteInputError:
+        # Input ended before parse was complete. Emit nothing to stdout so
+        # callers can detect "need more input" by checking for empty stdout.
+        verbose.emit_error({}, "incomplete input")
+        sys.exit(1)
     except ParseError as e:
         verbose.emit_error({}, str(e))
+        print(json.dumps({"kind": "error", "message": str(e)}), flush=True)
         sys.exit(1)
 
     verbose.emit(Events.FINISHED, token_count=len(tokens), rule_count=_count_rules(tree))
