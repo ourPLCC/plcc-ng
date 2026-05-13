@@ -12,18 +12,24 @@ class SourceRunner:
         self._continuation = continuation
 
     def run(self, sources, handler):
+        """Run handler over sources. Returns False if any non-interactive feed
+        signalled incomplete input (handler returned False); True otherwise."""
         effective = sources if sources else ["-"]
+        completed = True
         for source in effective:
             if source == "-":
                 if sys.stdin.isatty():
                     self._run_interactive(handler)
                 else:
                     content = sys.stdin.buffer.read()
-                    handler.feed(content, "-")
+                    if handler.feed(content, "-") is False:
+                        completed = False
             else:
                 with open(source, "rb") as f:
                     content = f.read()
-                handler.feed(content, source)
+                if handler.feed(content, source) is False:
+                    completed = False
+        return completed
 
     def _run_interactive(self, handler):
         print(self._hint, file=sys.stderr)
