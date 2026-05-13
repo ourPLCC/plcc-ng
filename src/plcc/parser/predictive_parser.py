@@ -2,6 +2,11 @@ class ParseError(Exception):
     pass
 
 
+class IncompleteInputError(ParseError):
+    """Raised when the token stream ends before the parse is complete."""
+    pass
+
+
 class NodeBuilder:
     def __init__(self, rule):
         self.rule = rule
@@ -68,6 +73,10 @@ def parse(ll1: dict, tokens: list) -> dict:
     def expect(sym):
         tok = current()
         if tok["name"] != sym:
+            if tok["name"] == "$":
+                raise IncompleteInputError(
+                    f"unexpected end of input: expected {sym!r}"
+                )
             raise ParseError(
                 f"expected {sym!r}, got {tok['name']!r} "
                 f"at {tok['source']}"
@@ -89,6 +98,10 @@ def parse(ll1: dict, tokens: list) -> dict:
             raise ParseError(f"no parse table entry for nonterminal {sym!r}")
         production = nt_table.get(lookahead)
         if production is None:
+            if lookahead == "$":
+                raise IncompleteInputError(
+                    f"unexpected end of input while parsing {sym!r}"
+                )
             raise ParseError(
                 f"unexpected {lookahead!r}, no production for {sym!r} "
                 f"at {current()['source']}"

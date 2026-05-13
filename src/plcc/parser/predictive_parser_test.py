@@ -261,3 +261,36 @@ def test_arbno_result_is_tree_kind():
     result = parse(_RANDS_LL1, [_tok("NUM", "1")])
     assert result["kind"] == "tree"
     assert result["rule"] == "rands"
+
+
+from plcc.parser.predictive_parser import IncompleteInputError
+
+
+_ADDITION_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "program",
+    "parse_table": {
+        "program": {
+            "NUM": [
+                {"symbol": "NUM", "field": None},
+                {"symbol": "PLUS", "field": None},
+                {"symbol": "NUM", "field": None},
+            ]
+        }
+    },
+}
+
+
+def test_incomplete_raises_IncompleteInputError_when_table_misses_sentinel():
+    # Grammar: program → NUM PLUS NUM
+    # Tokens: [NUM] — parser needs PLUS next, gets $ instead
+    with pytest.raises(IncompleteInputError):
+        parse(_ADDITION_LL1, [_tok("NUM", "1")])
+
+
+def test_bad_token_raises_ParseError_not_IncompleteInputError():
+    # Grammar: program → NUM
+    # Tokens: [PLUS] — wrong token, not EOF
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [_tok("PLUS", "+")])
+    assert not isinstance(exc_info.value, IncompleteInputError)
