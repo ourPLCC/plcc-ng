@@ -340,7 +340,6 @@ def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_succeeds(mon
     handler = RecordingHandler(results=[False, True])
     runner.run(["-"], handler)
     _, err = capsys.readouterr()
-    # After blank-line submit succeeds, prompt resets to ">>> "
     assert err.count(">>> ") >= 2
 
 
