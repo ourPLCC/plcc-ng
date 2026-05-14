@@ -61,7 +61,10 @@ class SourceRunner:
                 print(file=sys.stderr)
                 if buffer:
                     self._evaluate(handler, buffer)
-                break
+                    buffer = b""
+                    prompt = self._prompt
+                else:
+                    break
             elif not line.strip():                # blank line
                 if buffer:
                     self._evaluate(handler, buffer + line)

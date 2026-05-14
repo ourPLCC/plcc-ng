@@ -288,3 +288,35 @@ def test_ctrl_d_on_fresh_prompt_prints_newline(monkeypatch, runner, capsys):
     _, err = capsys.readouterr()
     # Prompt is ">>> " (no newline); ^D should add one so the shell lands on a new line
     assert err.endswith(">>> \n")
+
+
+def test_ctrl_d_in_continuation_submits_and_continues(monkeypatch, runner):
+    # Setup: line1 fails (continuation), then ^D on empty "..." → should submit and
+    # continue (not exit), then line2 succeeds, then final ^D exits.
+    class EOFInContinuation:
+        def __init__(self):
+            self._calls = 0
+
+        isatty = lambda self: True
+
+        @property
+        def buffer(self):
+            return self
+
+        def readline(self):
+            self._calls += 1
+            if self._calls == 1:
+                return b"hello\n"      # returns False from handler
+            if self._calls == 2:
+                return b""             # ^D in continuation: should submit and continue
+            if self._calls == 3:
+                return b"world\n"      # returned after continuing
+            return b""                 # final ^D exits
+
+    monkeypatch.setattr(sys, "stdin", EOFInContinuation())
+    handler = RecordingHandler(results=[False, True, True])
+    runner.run(["-"], handler)
+    # With fix: ^D in continuation submits buffer and loops — "world\n" is processed.
+    # Without fix: ^D exits immediately after submitting — "world\n" is never read.
+    assert len(handler.calls) == 3
+    assert handler.calls[2][0] == b"world\n"
