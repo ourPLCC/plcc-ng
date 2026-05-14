@@ -210,6 +210,19 @@ def test_single_char_capturing_terminal_with_altname():
     assert list(parse_syntactic_spec(lines)) == expected
 
 
+def test_digit_containing_capturing_terminal():
+    digit_name = makeLine("<noun> ::= <NUM1>")
+    lines = [makeDivider(), digit_name]
+    expected = [
+        makeStandardSyntacticRule(
+            digit_name,
+            makeLhsNonTerminal("noun"),
+            [makeCapturingTerminal("NUM1")],
+        )
+    ]
+    assert list(parse_syntactic_spec(lines)) == expected
+
+
 def test_repeating():
     repeating_line = makeLine("<noun> **= WORD WORD WORD")
     lines = [makeDivider(), repeating_line]

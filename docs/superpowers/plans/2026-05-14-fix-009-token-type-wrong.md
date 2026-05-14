@@ -73,7 +73,7 @@ Change line 92 from:
 to:
 
 ```python
-        terminal = re.fullmatch(r"[A-Z][A-Z_]*", name)
+        terminal = re.fullmatch(r"[A-Z_][A-Z0-9_]*", name)
 ```
 
 - [ ] **Step 2: Run the two new tests to confirm they pass**
