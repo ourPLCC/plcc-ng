@@ -39,21 +39,36 @@ class SourceRunner:
             try:
                 print(prompt, end="", flush=True, file=sys.stderr)
                 line = sys.stdin.buffer.readline()
-                if not line:  # EOF (^D)
-                    if buffer:
-                        handler.feed(buffer, "-")
-                    break
-                if not line.strip() and not buffer:
-                    # Empty line on a fresh prompt: skip silently
-                    continue
+            except KeyboardInterrupt:
+                print(file=sys.stderr)
+                if buffer:
+                    print("KeyboardInterrupt", file=sys.stderr)
+                    buffer = b""
+                    prompt = self._prompt
+                else:
+                    sys.exit(130)
+                continue
+
+            if not line:                          # ^D
+                if buffer:
+                    self._evaluate(handler, buffer)
+                break
+            elif not line.strip():                # blank line
+                if buffer:
+                    self._evaluate(handler, buffer + line)
+                    buffer = b""
+                    prompt = self._prompt
+            else:                                 # normal line
                 buffer += line
-                result = handler.feed(buffer, "-")
-                if result:
+                if self._evaluate(handler, buffer):
                     buffer = b""
                     prompt = self._prompt
                 else:
                     prompt = self._continuation
-            except KeyboardInterrupt:
-                print(file=sys.stderr)
-                buffer = b""
-                prompt = self._prompt
+
+    def _evaluate(self, handler, content):
+        try:
+            return handler.feed(content, "-")
+        except KeyboardInterrupt:
+            print(file=sys.stderr)
+            sys.exit(130)
