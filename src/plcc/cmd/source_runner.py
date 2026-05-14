@@ -57,7 +57,7 @@ class SourceRunner:
                     sys.exit(130)
                 continue
 
-            if not line:                          # ^D
+            if not line:                          # ^D on empty line
                 print(file=sys.stderr)
                 if buffer:
                     self._evaluate(handler, buffer)
@@ -65,6 +65,12 @@ class SourceRunner:
                     prompt = self._prompt
                 else:
                     break
+            elif not line.endswith(b"\n"):        # ^D after partial text
+                print(file=sys.stderr)
+                buffer += line
+                self._evaluate(handler, buffer)
+                buffer = b""
+                prompt = self._prompt
             elif not line.strip():                # blank line
                 if buffer:
                     self._evaluate(handler, buffer + line)

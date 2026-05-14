@@ -320,3 +320,16 @@ def test_ctrl_d_in_continuation_submits_and_continues(monkeypatch, runner):
     # Without fix: ^D exits immediately after submitting — "world\n" is never read.
     assert len(handler.calls) == 3
     assert handler.calls[2][0] == b"world\n"
+
+
+def test_ctrl_d_after_partial_text_force_submits(monkeypatch, runner):
+    # "hello\n" fails → continuation.
+    # "world" (no \n, simulates ^D after text) → should force-submit buffer+"world".
+    # Without fix: "world" treated as normal line; evaluate fails; then ^D (020a fix)
+    #   submits the same buffer again — 3 calls total.
+    # With fix: "world" detected as partial-eof, force-submitted — 2 calls total.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world", b""]))
+    handler = RecordingHandler(results=[False, False])
+    runner.run(["-"], handler)
+    assert len(handler.calls) == 2
+    assert handler.calls[1][0] == b"hello\nworld"
