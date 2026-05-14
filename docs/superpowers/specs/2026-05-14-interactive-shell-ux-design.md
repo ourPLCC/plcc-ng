@@ -38,11 +38,14 @@ user presses Enter on a blank line, submit the accumulated buffer for evaluation
 
 **Change:** in the blank-line branch, check whether `buffer` is non-empty. If so,
 append the blank line to the buffer (treating it as an EOF signal) and feed the
-result. If the buffer is empty, continue silently as today.
+result, then reset unconditionally. The pipeline always produces output after a
+real EOF — either a parse tree (success) or an error record (incomplete input).
+A `False` return (no output, give me more) cannot occur after EOF, so there is
+nothing to branch on. If the buffer is empty, continue silently as today.
 
 ```text
 blank line received
-├── buffer non-empty → feed(buffer + line); reset buffer and prompt
+├── buffer non-empty → feed(buffer + line); reset buffer and prompt unconditionally
 └── buffer empty     → skip silently (existing behaviour)
 ```
 
@@ -88,14 +91,11 @@ def _run_interactive(self, handler):
                     handler.feed(buffer, "-")
                 break
             if not line.strip():
-                if buffer:                        # blank line in continuation → submit
+                if buffer:                        # blank line in continuation → submit as EOF
                     evaluating = True
-                    result = handler.feed(buffer + line, "-")
-                    if result:
-                        buffer = b""
-                        prompt = self._prompt
-                    else:
-                        prompt = self._continuation
+                    handler.feed(buffer + line, "-")
+                    buffer = b""
+                    prompt = self._prompt
                 continue                           # blank on fresh prompt → skip
             buffer += line
             evaluating = True
