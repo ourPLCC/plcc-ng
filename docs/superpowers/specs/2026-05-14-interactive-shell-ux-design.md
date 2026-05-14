@@ -37,12 +37,12 @@ This means clearing the buffer on `^C` during input is always safe: the next
 user presses Enter on a blank line, submit the accumulated buffer for evaluation.
 
 **Change:** in the blank-line branch, check whether `buffer` is non-empty. If so,
-feed the buffer (without the blank line) and reset. If the buffer is empty,
-continue silently as today.
+append the blank line to the buffer (treating it as an EOF signal) and feed the
+result. If the buffer is empty, continue silently as today.
 
 ```text
 blank line received
-├── buffer non-empty → feed(buffer); reset buffer and prompt
+├── buffer non-empty → feed(buffer + line); reset buffer and prompt
 └── buffer empty     → skip silently (existing behaviour)
 ```
 
@@ -90,7 +90,7 @@ def _run_interactive(self, handler):
             if not line.strip():
                 if buffer:                        # blank line in continuation → submit
                     evaluating = True
-                    result = handler.feed(buffer, "-")
+                    result = handler.feed(buffer + line, "-")
                     if result:
                         buffer = b""
                         prompt = self._prompt
