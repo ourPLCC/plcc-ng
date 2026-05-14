@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, _InteractiveState
 
 HINT = "Enter input. Press ^D (EOF) when done."
 
@@ -228,3 +228,55 @@ def test_ctrl_c_during_evaluation_exits_130(monkeypatch, runner):
     with pytest.raises(SystemExit) as exc_info:
         runner.run(["-"], InterruptingHandler())
     assert exc_info.value.code == 130
+
+
+# --- _InteractiveState ---
+
+def test_interactive_state_stores_buffer_and_prompt():
+    state = _InteractiveState(buffer=b"hello", prompt=">>> ")
+    assert state.buffer == b"hello"
+    assert state.prompt == ">>> "
+    assert state.done is False
+
+
+def test_interactive_state_done_flag():
+    state = _InteractiveState(buffer=b"", prompt=">>> ", done=True)
+    assert state.done is True
+
+
+# --- Predicate methods ---
+
+def test_is_eof_true_for_empty_bytes(runner):
+    assert runner._is_eof(b"") is True
+
+
+def test_is_eof_false_for_nonempty(runner):
+    assert runner._is_eof(b"hello\n") is False
+
+
+def test_is_partial_eof_true_for_line_without_newline(runner):
+    assert runner._is_partial_eof(b"partial") is True
+
+
+def test_is_partial_eof_false_for_line_with_newline(runner):
+    assert runner._is_partial_eof(b"complete\n") is False
+
+
+def test_is_blank_true_for_newline_only(runner):
+    assert runner._is_blank(b"\n") is True
+
+
+def test_is_blank_true_for_spaces_and_newline(runner):
+    assert runner._is_blank(b"  \n") is True
+
+
+def test_is_blank_false_for_content_line(runner):
+    assert runner._is_blank(b"hello\n") is False
+
+
+def test_is_interrupted_true_for_none(runner):
+    assert runner._is_interrupted(None) is True
+
+
+def test_is_interrupted_false_for_bytes(runner):
+    assert runner._is_interrupted(b"") is False

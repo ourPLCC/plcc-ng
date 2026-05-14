@@ -1,8 +1,16 @@
 import sys
+from dataclasses import dataclass
 
 HINT = "Enter input. Press ^D (EOF) when done."
 PROMPT = ">>> "
 CONTINUATION = "... "
+
+
+@dataclass
+class _InteractiveState:
+    buffer: bytes
+    prompt: str
+    done: bool = False
 
 
 class SourceRunner:
@@ -72,3 +80,15 @@ class SourceRunner:
         except KeyboardInterrupt:
             print(file=sys.stderr)
             sys.exit(130)
+
+    def _is_interrupted(self, line):
+        return line is None
+
+    def _is_eof(self, line):
+        return not line
+
+    def _is_partial_eof(self, line):
+        return not line.endswith(b"\n")
+
+    def _is_blank(self, line):
+        return not line.strip()
