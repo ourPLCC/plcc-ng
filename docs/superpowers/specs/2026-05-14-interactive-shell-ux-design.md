@@ -76,43 +76,54 @@ force the user to retype everything if they accidentally pressed Enter too early
 
 ## Implementation sketch
 
+Two separate `try/except` blocks — one for the input phase, one for evaluation —
+eliminate the need for an `evaluating` flag and make each case structurally
+independent. `_evaluate` owns the `KeyboardInterrupt` contract for all
+`handler.feed()` calls; `if/elif/else` makes the three line cases mutually
+exclusive with no trailing `continue` needed.
+
 ```python
 def _run_interactive(self, handler):
     print(self._hint, file=sys.stderr)
     buffer = b""
     prompt = self._prompt
     while True:
-        evaluating = False
         try:
             print(prompt, end="", flush=True, file=sys.stderr)
             line = sys.stdin.buffer.readline()
-            if not line:                          # ^D / EOF
-                if buffer:
-                    handler.feed(buffer, "-")
-                break
-            if not line.strip():
-                if buffer:                        # blank line in continuation → submit as EOF
-                    evaluating = True
-                    handler.feed(buffer + line, "-")
-                    buffer = b""
-                    prompt = self._prompt
-                continue                           # blank on fresh prompt → skip
+        except KeyboardInterrupt:
+            print(file=sys.stderr)
+            if buffer:
+                print("KeyboardInterrupt", file=sys.stderr)
+                buffer = b""
+                prompt = self._prompt
+            else:
+                sys.exit(130)
+            continue
+
+        if not line:                          # ^D
+            if buffer:
+                self._evaluate(handler, buffer)
+            break
+        elif not line.strip():                # blank line
+            if buffer:
+                self._evaluate(handler, buffer + line)
+                buffer = b""
+                prompt = self._prompt
+        else:                                 # normal line
             buffer += line
-            evaluating = True
-            result = handler.feed(buffer, "-")
-            if result:
+            if self._evaluate(handler, buffer):
                 buffer = b""
                 prompt = self._prompt
             else:
                 prompt = self._continuation
-        except KeyboardInterrupt:
-            print(file=sys.stderr)
-            if not evaluating and buffer:         # ^C clearing a mistyped line
-                print("KeyboardInterrupt", file=sys.stderr)
-                buffer = b""
-                prompt = self._prompt
-            else:                                 # ^C on empty prompt or during eval
-                sys.exit(130)
+
+def _evaluate(self, handler, content):
+    try:
+        return handler.feed(content, "-")
+    except KeyboardInterrupt:
+        print(file=sys.stderr)
+        sys.exit(130)
 ```
 
 ## Testing
