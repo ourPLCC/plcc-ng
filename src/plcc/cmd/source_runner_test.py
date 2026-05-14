@@ -333,3 +333,23 @@ def test_ctrl_d_after_partial_text_force_submits(monkeypatch, runner):
     runner.run(["-"], handler)
     assert len(handler.calls) == 2
     assert handler.calls[1][0] == b"hello\nworld"
+
+
+def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_succeeds(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b""]))
+    handler = RecordingHandler(results=[False, True])
+    runner.run(["-"], handler)
+    _, err = capsys.readouterr()
+    # After blank-line submit succeeds, prompt resets to ">>> "
+    assert err.count(">>> ") >= 2
+
+
+def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_fails(monkeypatch, runner):
+    # Force-submit semantics: blank line always resets, even when evaluation fails.
+    # After reset, next line starts a fresh buffer (not accumulated with previous).
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b"world\n", b""]))
+    handler = RecordingHandler(results=[False, False, True])
+    runner.run(["-"], handler)
+    # If buffer was NOT reset, "world\n" would be accumulated with "hello\n".
+    # If buffer WAS reset, "world\n" is evaluated alone.
+    assert handler.calls[2][0] == b"world\n"
