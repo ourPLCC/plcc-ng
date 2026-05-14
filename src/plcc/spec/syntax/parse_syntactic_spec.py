@@ -89,7 +89,7 @@ class SyntacticLineParser:
         )
 
     def _parseCapturing(self, name: str, altName: str) -> CapturingSymbol:
-        terminal = re.match(r"[A-Z][A-Z_]+", name)
+        terminal = re.fullmatch(r"[A-Z_][A-Z0-9_]*", name)
         altName = altName.strip(":") if altName is not None else altName
         return (
             CapturingTerminal(name=name, altName=altName)

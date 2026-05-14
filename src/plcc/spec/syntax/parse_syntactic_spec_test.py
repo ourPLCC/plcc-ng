@@ -184,6 +184,45 @@ def test_capturing_terminal():
     assert list(parse_syntactic_spec(lines)) == expected
 
 
+def test_single_char_capturing_terminal():
+    single_char = makeLine("<noun> ::= <A>")
+    lines = [makeDivider(), single_char]
+    expected = [
+        makeStandardSyntacticRule(
+            single_char,
+            makeLhsNonTerminal("noun"),
+            [makeCapturingTerminal("A")],
+        )
+    ]
+    assert list(parse_syntactic_spec(lines)) == expected
+
+
+def test_single_char_capturing_terminal_with_altname():
+    single_char_alt = makeLine("<noun> ::= <A>:b")
+    lines = [makeDivider(), single_char_alt]
+    expected = [
+        makeStandardSyntacticRule(
+            single_char_alt,
+            makeLhsNonTerminal("noun"),
+            [makeCapturingTerminal("A", "b")],
+        )
+    ]
+    assert list(parse_syntactic_spec(lines)) == expected
+
+
+def test_digit_containing_capturing_terminal():
+    digit_name = makeLine("<noun> ::= <NUM1>")
+    lines = [makeDivider(), digit_name]
+    expected = [
+        makeStandardSyntacticRule(
+            digit_name,
+            makeLhsNonTerminal("noun"),
+            [makeCapturingTerminal("NUM1")],
+        )
+    ]
+    assert list(parse_syntactic_spec(lines)) == expected
+
+
 def test_repeating():
     repeating_line = makeLine("<noun> **= WORD WORD WORD")
     lines = [makeDivider(), repeating_line]
