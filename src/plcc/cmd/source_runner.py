@@ -58,6 +58,7 @@ class SourceRunner:
                 continue
 
             if not line:                          # ^D
+                print(file=sys.stderr)
                 if buffer:
                     self._evaluate(handler, buffer)
                 break

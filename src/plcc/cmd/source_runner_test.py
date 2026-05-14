@@ -280,3 +280,11 @@ def test_is_interrupted_true_for_none(runner):
 
 def test_is_interrupted_false_for_bytes(runner):
     assert runner._is_interrupted(b"") is False
+
+
+def test_ctrl_d_on_fresh_prompt_prints_newline(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    runner.run(["-"], RecordingHandler())
+    _, err = capsys.readouterr()
+    # Prompt is ">>> " (no newline); ^D should add one so the shell lands on a new line
+    assert err.endswith(">>> \n")
