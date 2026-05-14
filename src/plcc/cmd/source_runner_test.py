@@ -118,6 +118,14 @@ def test_interactive_empty_line_on_fresh_prompt_does_not_call_feed(monkeypatch, 
     assert handler.calls[0][0] == b"hello\n"
 
 
+def test_blank_line_during_continuation_submits_buffer_with_newline(monkeypatch, runner):
+    # line1 returns False (continuation), blank line submits buffer + blank line
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"line1\n", b"\n", b""]))
+    handler = RecordingHandler(results=[False, True])
+    runner.run(["-"], handler)
+    assert handler.calls[1][0] == b"line1\n\n"
+
+
 def test_interactive_eof_with_buffer_calls_feed(monkeypatch, runner):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"partial\n", b""]))
     handler = RecordingHandler(results=[False])  # first call: no result yet
@@ -164,11 +172,27 @@ def test_run_returns_true_for_interactive_even_if_feed_returns_false(monkeypatch
     assert runner.run(["-"], handler) is True
 
 
-def test_ctrl_c_clears_buffer_and_continues(monkeypatch, runner, capsys):
-    class InterruptOnce:
+def test_ctrl_c_with_empty_buffer_exits_130(monkeypatch, runner):
+    class ImmediateInterrupt:
+        isatty = lambda self: True
+
+        @property
+        def buffer(self):
+            return self
+
+        def readline(self):
+            raise KeyboardInterrupt
+
+    monkeypatch.setattr(sys, "stdin", ImmediateInterrupt())
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], RecordingHandler())
+    assert exc_info.value.code == 130
+
+
+def test_ctrl_c_with_buffer_clears_and_continues(monkeypatch, runner, capsys):
+    class InterruptAfterLine:
         def __init__(self):
-            self._buf = io.BytesIO(b"line2\n")
-            self._raised = False
+            self._calls = 0
 
         isatty = lambda self: True
 
@@ -177,14 +201,30 @@ def test_ctrl_c_clears_buffer_and_continues(monkeypatch, runner, capsys):
             return self
 
         def readline(self):
-            if not self._raised:
-                self._raised = True
-                raise KeyboardInterrupt
-            return self._buf.read(100) or b""
+            self._calls += 1
+            if self._calls == 1:
+                return b"partial\n"   # builds the buffer
+            if self._calls == 2:
+                raise KeyboardInterrupt  # ^C with non-empty buffer
+            if self._calls == 3:
+                return b"hello\n"
+            return b""
 
-    monkeypatch.setattr(sys, "stdin", InterruptOnce())
-    handler = RecordingHandler()
+    monkeypatch.setattr(sys, "stdin", InterruptAfterLine())
+    handler = RecordingHandler(results=[False, True])
     runner.run(["-"], handler)
     _, err = capsys.readouterr()
-    # After ^C, prompt resets to >>>
-    assert ">>> " in err
+    assert "KeyboardInterrupt" in err
+    # buffer was cleared by ^C; next feed sees only "hello\n"
+    assert handler.calls[-1][0] == b"hello\n"
+
+
+def test_ctrl_c_during_evaluation_exits_130(monkeypatch, runner):
+    class InterruptingHandler:
+        def feed(self, content, source):
+            raise KeyboardInterrupt
+
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], InterruptingHandler())
+    assert exc_info.value.code == 130
