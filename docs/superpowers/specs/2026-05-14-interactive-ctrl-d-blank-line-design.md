@@ -59,7 +59,7 @@ _run_interactive
 
 ### 021 — Blank-line submission silently discards incomplete input
 
-`_force_submit_accumulated_buffer` always resets buffer and prompt after evaluation (force-submit semantics). The return value of `_evaluate` is not checked; the handler is responsible for surfacing errors to the user.
+All three force-submit paths (blank line, ^D in continuation, ^D after partial text) call `_evaluate` with `eof=True`. If the handler returns `False`, `_evaluate` prints a PLCC internal error to stderr and exits with code 1. A well-behaved handler will always surface its own diagnostic before returning `False`; a handler that returns `False` silently on a forced submission is a PLCC bug, and the process exits rather than continuing in an inconsistent state.
 
 ---
 
@@ -74,6 +74,8 @@ New tests:
 | `^D` on fresh prompt produces a newline in stderr | 018 |
 | `^D` on empty continuation line submits buffer, returns to `>>>`, does not exit | 020a |
 | `^D` after partial text appends partial text, submits, returns to `>>>` | 020b |
-| Blank line during continuation always resets to `>>>` when `_evaluate` returns `True` | 021 |
-| Blank line during continuation always resets to `>>>` when `_evaluate` returns `False` | 021 |
+| Blank line force-submit exits with error when handler returns `False` | 021 |
+| `^D` in continuation force-submit exits with error when handler returns `False` | 021 |
+| `^D` after partial text force-submit exits with error when handler returns `False` | 021 |
+| Blank line resets to `>>>` when handler accepts the submission | 021 |
 | `_is_eof`, `_is_partial_eof`, `_is_blank`, `_is_interrupted` each return correct value | predicates |

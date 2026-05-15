@@ -392,15 +392,17 @@ git commit -m "fix(source-runner): ^D after partial text force-submits buffer (0
 
 ---
 
-### Task 5: Refactor to clean architecture (addresses 021 explicitly)
+### Task 5: Refactor to clean architecture (fixes 021)
 
-All three bugs are now fixed. This task refactors `_run_interactive` into the designed clean architecture: `_InteractiveState`-returning handler methods, `_process_line` dispatch, and `_read_line`/`_print_hint` helpers. Issue 021 (blank-line always resets) is made explicit in `_force_submit_accumulated_buffer`. No behavior changes.
+All three bugs are now fixed. This task refactors `_run_interactive` into the designed clean architecture: `_InteractiveState`-returning handler methods, `_process_line` dispatch, and `_read_line`/`_print_hint` helpers. Issue 021 is fixed by passing `eof=True` to `_evaluate` on all three force-submit paths; `_evaluate` exits with a PLCC internal error if the handler returns `False` on a forced submission.
+
+**Note:** The original plan said "no behavior changes" for this task and treated 021 as documentation-only. That was revised during implementation: the force-submit paths now check the handler's return value and exit with an error rather than silently discarding input.
 
 **Files:**
 - Modify: `src/plcc/cmd/source_runner.py` (full replacement of `_run_interactive` and addition of handler methods)
-- Modify: `src/plcc/cmd/source_runner_test.py` (add 021 documentation tests)
+- Modify: `src/plcc/cmd/source_runner_test.py` (add 021 tests)
 
-- [ ] **Step 1: Add 021 documentation tests**
+- [ ] **Step 1: Add 021 tests**
 
 Add to `src/plcc/cmd/source_runner_test.py`:
 
@@ -410,28 +412,46 @@ def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_succeeds(mon
     handler = RecordingHandler(results=[False, True])
     runner.run(["-"], handler)
     _, err = capsys.readouterr()
-    # After blank-line submit succeeds, prompt resets to ">>> "
     assert err.count(">>> ") >= 2
 
 
-def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_fails(monkeypatch, runner):
-    # Force-submit semantics: blank line always resets, even when evaluation fails.
-    # After reset, next line starts a fresh buffer (not accumulated with previous).
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b"world\n", b""]))
-    handler = RecordingHandler(results=[False, False, True])
-    runner.run(["-"], handler)
-    # If buffer was NOT reset, "world\n" would be accumulated with "hello\n".
-    # If buffer WAS reset, "world\n" is evaluated alone.
-    assert handler.calls[2][0] == b"world\n"
+def test_blank_line_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n"]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
+
+
+def test_ctrl_d_in_continuation_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
+
+
+def test_partial_eof_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world"]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
 ```
 
-- [ ] **Step 2: Run new tests to confirm they already pass (existing behavior)**
+- [ ] **Step 2: Run new tests**
 
 ```bash
-bin/test/units.bash src/plcc/cmd/source_runner_test.py::test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_succeeds src/plcc/cmd/source_runner_test.py::test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_fails -v
+bin/test/units.bash src/plcc/cmd/source_runner_test.py -v
 ```
 
-Expected: both PASS (these document existing behavior, confirming 021's force-submit semantics are already in place).
+Expected: all pass. The first test verifies the prompt resets on a successful force-submit. The other three verify that a handler returning `False` on a forced submission produces a PLCC internal error and exits.
 
 - [ ] **Step 3: Replace `source_runner.py` with the full clean implementation**
 
