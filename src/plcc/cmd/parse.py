@@ -30,12 +30,12 @@ class Events(enum.Enum):
 
 
 def _location_str(source):
-    file = source.get("file")
+    file = source.get("file", "-")
     line = source.get("line", "?")
     col = source.get("column", "?")
-    if file and file != "<stdin>":
+    if file and file not in ("-", "<stdin>", ""):
         return f"{file}:{line}:{col}"
-    return f"{line}:{col}"
+    return f"-:{line}:{col}"
 
 
 class ParseHandler:
@@ -64,20 +64,21 @@ class ParseHandler:
         tree_out, _ = tree_proc.communicate()
         tokens_proc.wait()
 
-        tree_out = tree_out.strip()
-        if not tree_out:
-            return False
-
-        record = json.loads(tree_out)
-        if record.get("kind") == "error":
-            stage = record.get("stage", "plcc-parse")
-            message = record.get("message", "error")
-            print(f"{stage}: error: {message}", file=sys.stderr)
-            self.had_error = True
-            return True
-
-        _print_tree(record, indent=0)
-        return True
+        had_output = False
+        for raw in tree_out.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            record = json.loads(raw)
+            had_output = True
+            if record.get("kind") == "error":
+                loc = _location_str(record.get("source", {}))
+                message = record.get("message", "error")
+                print(f"{loc}: error: {message}", file=sys.stderr)
+                self.had_error = True
+            elif record.get("kind") == "tree":
+                _print_tree(record, indent=0)
+        return had_output
 
 
 def main(argv=None):

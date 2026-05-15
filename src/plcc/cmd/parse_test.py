@@ -29,6 +29,14 @@ def _error_record(msg="syntax error", stage="plcc-tokens"):
     return json.dumps({"kind": "error", "message": msg, "stage": stage}).encode() + b"\n"
 
 
+def _error_record_with_source(msg="syntax error", stage="plcc-parser-table",
+                               file="-", line=2, col=5):
+    return json.dumps({
+        "kind": "error", "message": msg, "stage": stage,
+        "source": {"file": file, "line": line, "column": col},
+    }).encode() + b"\n"
+
+
 @pytest.fixture()
 def handler():
     return ParseHandler(spec_path="build/spec.json", ll1_path="build/ll1.json",
@@ -69,12 +77,32 @@ def test_feed_prints_error_to_stderr(monkeypatch, handler, capsys):
     assert "oops" in err
 
 
-def test_feed_error_includes_stage_in_stderr(monkeypatch, handler, capsys):
-    procs = iter([_proc(), _proc(stdout=_error_record("bad char", stage="plcc-tokens"))])
+def test_feed_error_shows_location_in_stderr(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_error_record_with_source("bad char", file="-", line=1, col=1))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"@\n", "-")
     _, err = capsys.readouterr()
-    assert "plcc-tokens" in err
+    assert "-:1:1" in err
+
+
+def test_feed_error_renders_file_line_col(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_error_record_with_source("bad", file="foo.txt", line=3, col=7))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"bad\n", "-")
+    _, err = capsys.readouterr()
+    assert "foo.txt:3:7" in err
+    assert "bad" in err
+
+
+def test_feed_mixed_tree_and_error_renders_both(monkeypatch, handler, capsys):
+    combined = _tree_record() + _error_record_with_source("trailing")
+    procs = iter([_proc(), _proc(stdout=combined)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"input\n", "-")
+    out, err = capsys.readouterr()
+    assert "program" in out
+    assert "trailing" in err
+    assert handler.had_error is True
 
 
 def test_feed_sets_had_error_on_error_record(monkeypatch, handler):
