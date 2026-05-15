@@ -73,6 +73,10 @@ def main(argv=None):
     while cursor < len(tokens) and tokens[cursor]["name"] != "$":
         try:
             tree, consumed = parse(ll1, tokens[cursor:])
+            if consumed == 0:
+                # Epsilon production: advance to prevent infinite loop
+                cursor += 1
+                continue
             verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
             print(json.dumps(tree), flush=True)
             cursor += consumed
