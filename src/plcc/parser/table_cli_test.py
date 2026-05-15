@@ -80,33 +80,33 @@ def test_exits_zero_for_valid_input(capsys):
 def test_stdout_is_valid_json(capsys):
     _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
     out, _ = capsys.readouterr()
-    result = json.loads(out)
+    result = json.loads(out.strip().splitlines()[0])
     assert isinstance(result, dict)
 
 
 def test_output_is_tree_kind(capsys):
     _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
     out, _ = capsys.readouterr()
-    assert json.loads(out)["kind"] == "tree"
+    assert json.loads(out.strip().splitlines()[0])["kind"] == "tree"
 
 
 def test_output_rule_is_start_symbol(capsys):
     _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
     out, _ = capsys.readouterr()
-    assert json.loads(out)["rule"] == "program"
+    assert json.loads(out.strip().splitlines()[0])["rule"] == "program"
 
 
 def test_output_has_source(capsys):
     _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
     out, _ = capsys.readouterr()
-    src = json.loads(out)["source"]
+    src = json.loads(out.strip().splitlines()[0])["source"]
     assert "line" in src and "column" in src
 
 
 def test_capturing_child_in_tree(capsys):
     _run(_CAPTURING_LL1, [_tok("NUM", "42")])
     out, _ = capsys.readouterr()
-    result = json.loads(out)
+    result = json.loads(out.strip().splitlines()[0])
     fields = [c[0] for c in result["children"]]
     assert "num" in fields
 
@@ -125,16 +125,22 @@ def test_exits_nonzero_for_non_ll1_grammar(monkeypatch):
         os.unlink(ll1_file.name)
 
 
-def test_exits_nonzero_on_syntax_error(monkeypatch):
+def test_exits_zero_for_parse_error_but_emits_record(monkeypatch, capsys):
     ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
     try:
         json.dump(_TRIVIAL_LL1, ll1_file)
         ll1_file.flush()
         ll1_file.close()
         monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(_tok("IDENTIFIER", "x")) + "\n"))
-        with pytest.raises(SystemExit) as exc:
+        exit_code = 0
+        try:
             run_main([f"--ll1={ll1_file.name}"])
-        assert exc.value.code != 0
+        except SystemExit as e:
+            exit_code = e.code or 0
+        assert exit_code == 0
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        assert any(r.get("kind") == "error" for r in records)
     finally:
         os.unlink(ll1_file.name)
 
@@ -153,7 +159,7 @@ def test_error_record_passes_through(capsys, monkeypatch):
         except SystemExit as e:
             assert e.code == 0
         out, _ = capsys.readouterr()
-        assert json.loads(out)["kind"] == "error"
+        assert json.loads(out.strip().splitlines()[0])["kind"] == "error"
     finally:
         os.unlink(ll1_file.name)
 
@@ -180,22 +186,116 @@ def test_parse_error_emits_error_record_to_stdout(capsys, monkeypatch):
         os.unlink(ll1_file.name)
 
 
-def test_incomplete_input_produces_no_stdout(capsys, monkeypatch):
-    """Incomplete input (EOF too soon) produces no stdout output."""
+def _sentinel(line=1, col=1, file="-"):
+    return {"kind": "token", "name": "$", "lexeme": "",
+            "source": {"file": file, "line": line, "column": col}}
+
+
+def test_exits_zero_on_syntax_error(monkeypatch):
     ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
     try:
-        json.dump(_ADDITION_LL1, ll1_file)
+        json.dump(_TRIVIAL_LL1, ll1_file)
         ll1_file.flush()
         ll1_file.close()
-        # Only NUM, missing PLUS NUM
-        partial_tokens = [_tok("NUM", "1")]
-        stdin_data = "\n".join(json.dumps(t) for t in partial_tokens) + "\n"
+        bad = [_tok("PLUS", "+"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in bad) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        exit_code = 0
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit as e:
+            exit_code = e.code or 0
+        assert exit_code == 0
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_syntax_error_emits_error_record_with_source(capsys, monkeypatch):
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        bad = [_tok("PLUS", "+", line=2, col=5), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in bad) + "\n"
         monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
         try:
             run_main([f"--ll1={ll1_file.name}"])
         except SystemExit:
             pass
         out, _ = capsys.readouterr()
-        assert out.strip() == ""
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        err_records = [r for r in records if r.get("kind") == "error"]
+        assert len(err_records) >= 1
+        assert err_records[0].get("source", {}).get("line") == 2
+        assert err_records[0].get("source", {}).get("column") == 5
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_skip_and_retry_emits_error_then_tree(capsys, monkeypatch):
+    # Grammar: program → NUM; tokens: [PLUS, NUM, $]
+    # First parse fails at PLUS, skip; second parse succeeds at NUM.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("PLUS", "+"), _tok("NUM", "42"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        kinds = [r["kind"] for r in records]
+        assert "error" in kinds
+        assert "tree" in kinds
+        assert kinds.index("error") < kinds.index("tree")
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_two_programs_in_one_input_emits_two_trees(capsys, monkeypatch):
+    # Grammar: program → NUM; tokens: [NUM, NUM, $] → two trees
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "1"), _tok("NUM", "2"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        trees = [r for r in records if r.get("kind") == "tree"]
+        assert len(trees) == 2
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_incomplete_input_emits_error_record(capsys, monkeypatch):
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM, $] — incomplete
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_ADDITION_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "1"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        assert any(r.get("kind") == "error" for r in records)
     finally:
         os.unlink(ll1_file.name)

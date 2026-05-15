@@ -5,7 +5,7 @@ import sys
 from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .predictive_parser import parse, ParseError, IncompleteInputError
+from .predictive_parser import parse, ParseError
 
 __doc__ = """plcc-parser-table
     Table-driven LL(1) parser. Reads token JSONL from stdin, emits a parse tree.
@@ -69,20 +69,25 @@ def main(argv=None):
         print(json.dumps(error_record))
         sys.exit(0)
 
-    # Parse
-    try:
-        tree = parse(ll1, tokens)
-    except IncompleteInputError:
-        # Input ended before parse was complete. Emit nothing to stdout so
-        # callers can detect "need more input" by checking for empty stdout.
-        sys.exit(1)
-    except ParseError as e:
-        verbose.emit_error({}, str(e))
-        print(json.dumps({"kind": "error", "message": str(e), "stage": "plcc-parser-table"}), flush=True)
-        sys.exit(1)
+    cursor = 0
+    while cursor < len(tokens) and tokens[cursor]["name"] != "$":
+        try:
+            tree, consumed = parse(ll1, tokens[cursor:])
+            verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
+            print(json.dumps(tree), flush=True)
+            cursor += consumed
+        except ParseError as e:
+            record = {
+                "kind": "error",
+                "message": str(e),
+                "stage": "plcc-parser-table",
+                "source": e.source,
+            }
+            verbose.emit_error(e.source, str(e))
+            print(json.dumps(record), flush=True)
+            cursor += 1
 
-    verbose.emit(Events.FINISHED, token_count=len(tokens), rule_count=_count_rules(tree))
-    print(json.dumps(tree))
+    verbose.emit(Events.FINISHED, token_count=len(tokens))
 
 
 def _count_rules(node):
