@@ -29,7 +29,7 @@ class _InteractiveState:
 ```
 _run_interactive
   _read_line                              I/O; converts KeyboardInterrupt to None
-  _process_line                           pure dispatch table
+  _process_line                           dispatch table (has side effects via handlers)
     _is_interrupted                       line is None
     _is_eof                               not line
     _is_partial_eof                       not line.endswith(b"\n")

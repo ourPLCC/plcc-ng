@@ -4,7 +4,7 @@
 
 **Goal:** Fix three bugs in `SourceRunner._run_interactive` (^D missing newline, ^D in continuation exits instead of submitting, blank-line submission silently discards) and refactor the method to a clean single-responsibility architecture.
 
-**Architecture:** Four line types (interrupted, eof, partial-eof, blank, normal) are classified by predicate methods and dispatched to dedicated handler methods. Loop state is carried in an `_InteractiveState` dataclass. Each handler returns a new state rather than mutating variables in place.
+**Architecture:** Five line types (interrupted, eof, partial-eof, blank, normal) are classified by predicate methods and dispatched to dedicated handler methods. Loop state is carried in an `_InteractiveState` dataclass. Each handler returns a new state rather than mutating variables in place.
 
 **Tech Stack:** Python 3, pytest (`bin/test/units.bash`), dataclasses
 
