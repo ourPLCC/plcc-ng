@@ -53,17 +53,14 @@ def main(argv=None):
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             if trace:
-                rec = json.loads(format_record(obj, show_all=True))
-                last_source = rec.get("source", last_source)
+                last_source = {"file": obj.line.file, "line": obj.line.number, "column": obj.column}
                 print(format_record(obj, show_all=True), flush=True)
             continue
         if isinstance(obj, LexError):
             print(format_error_record(obj), flush=True)
             continue
-        rec_str = format_record(obj, show_all=trace)
-        rec = json.loads(rec_str)
-        last_source = rec.get("source", last_source)
-        print(rec_str, flush=True)
+        last_source = {"file": obj.line.file, "line": obj.line.number, "column": obj.column}
+        print(format_record(obj, show_all=trace), flush=True)
     print(json.dumps({"kind": "token", "name": "$", "lexeme": "", "source": last_source}), flush=True)
     verbose.emit(Events.FINISHED, message="done")
 
