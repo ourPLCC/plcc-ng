@@ -48,8 +48,8 @@ class SourceRunner:
         print(self._hint, file=sys.stderr)
 
     def _read_line(self, prompt):
-        print(prompt, end="", flush=True, file=sys.stderr)
         try:
+            print(prompt, end="", flush=True, file=sys.stderr)
             return sys.stdin.buffer.readline()
         except KeyboardInterrupt:
             return None
