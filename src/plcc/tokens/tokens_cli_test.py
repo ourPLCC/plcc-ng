@@ -34,8 +34,10 @@ def test_outputs_token_jsonl(capsys, monkeypatch, fs):
     run_main(['/spec.json'])
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
-    assert len(lines) == 1
-    record = json.loads(lines[0])
+    records = [json.loads(l) for l in lines]
+    non_sentinel = [r for r in records if r.get('name') != '$']
+    assert len(non_sentinel) == 1
+    record = non_sentinel[0]
     assert record['kind'] == 'token'
     assert record['name'] == 'NUM'
     assert record['lexeme'] == '42'
@@ -51,8 +53,10 @@ def test_lex_error_emits_error_record_to_stdout(capsys, monkeypatch, fs):
         pytest.fail(f"run_main raised SystemExit({e.code}), expected normal return")
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
-    assert len(lines) == 1
-    record = json.loads(lines[0])
+    records = [json.loads(l) for l in lines]
+    error_records = [r for r in records if r.get('kind') == 'error']
+    assert len(error_records) == 1
+    record = error_records[0]
     assert record['kind'] == 'error'
     assert record['stage'] == 'plcc-tokens'
     assert record['severity'] == 'error'
@@ -69,10 +73,12 @@ def test_lex_error_and_token_appear_in_stream_order(capsys, monkeypatch, fs):
     run_main(['/spec.json'])
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
-    assert len(lines) == 2
-    assert json.loads(lines[0])['kind'] == 'error'
-    assert json.loads(lines[1])['kind'] == 'token'
-    assert json.loads(lines[1])['name'] == 'NUM'
+    records = [json.loads(l) for l in lines]
+    non_sentinel = [r for r in records if r.get('name') != '$']
+    assert len(non_sentinel) == 2
+    assert non_sentinel[0]['kind'] == 'error'
+    assert non_sentinel[1]['kind'] == 'token'
+    assert non_sentinel[1]['name'] == 'NUM'
 
 
 def test_stdin_labels_tokens_with_dash(capsys, monkeypatch, fs):
@@ -80,8 +86,10 @@ def test_stdin_labels_tokens_with_dash(capsys, monkeypatch, fs):
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json'])
     out, _ = capsys.readouterr()
-    record = json.loads(out.strip())
-    assert record['source']['file'] == '-'
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    token_records = [r for r in records if r.get('name') != '$']
+    assert len(token_records) == 1
+    assert token_records[0]['source']['file'] == '-'
 
 
 def test_named_file_arg_labels_tokens_with_filename(capsys, fs):
@@ -89,8 +97,10 @@ def test_named_file_arg_labels_tokens_with_filename(capsys, fs):
     fs.create_file('/src.txt', contents='42\n')
     run_main(['/spec.json', '/src.txt'])
     out, _ = capsys.readouterr()
-    record = json.loads(out.strip())
-    assert record['source']['file'] == '/src.txt'
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    token_records = [r for r in records if r.get('name') != '$']
+    assert len(token_records) == 1
+    assert token_records[0]['source']['file'] == '/src.txt'
 
 
 _SPEC_WITH_SKIP = {
@@ -110,7 +120,10 @@ def test_default_omits_regex_and_source_line(capsys, monkeypatch, fs):
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json'])
     out, _ = capsys.readouterr()
-    record = json.loads(out.strip())
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    token_records = [r for r in records if r.get('name') != '$']
+    assert len(token_records) == 1
+    record = token_records[0]
     assert 'regex' not in record
     assert 'source_line' not in record
 
@@ -120,7 +133,10 @@ def test_trace_includes_regex_and_source_line(capsys, monkeypatch, fs):
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['--trace', '/spec.json'])
     out, _ = capsys.readouterr()
-    record = json.loads(out.strip())
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    token_records = [r for r in records if r.get('name') != '$']
+    assert len(token_records) == 1
+    record = token_records[0]
     assert record['regex'] == '\\d+'
     assert record['source_line'] == '42'
 
@@ -167,5 +183,7 @@ def test_source_name_overrides_stdin_label(capsys, monkeypatch, fs):
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json', '--source-name=myfile.txt', '-'])
     out, _ = capsys.readouterr()
-    record = json.loads(out.strip())
-    assert record['source']['file'] == 'myfile.txt'
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    token_records = [r for r in records if r.get('name') != '$']
+    assert len(token_records) == 1
+    assert token_records[0]['source']['file'] == 'myfile.txt'
