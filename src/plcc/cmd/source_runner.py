@@ -20,6 +20,8 @@ class SourceRunner:
         self._continuation = continuation
 
     def run(self, sources, handler):
+        """Run handler over sources. Returns False if any non-interactive feed
+        signalled incomplete input (handler returned False); True otherwise."""
         effective = sources if sources else ["-"]
         completed = True
         for source in effective:
