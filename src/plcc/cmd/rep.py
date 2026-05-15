@@ -7,7 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-rep
     REPL — read, eval, print loop for a PLCC grammar.
@@ -136,7 +136,7 @@ def main(argv=None):
             interpreter=interpreter,
             verbose_format=verbose_format,
         )
-        runner = SourceRunner()
+        runner = SourceRunner(submit_on=SubmitOn.EOL)
         completed = runner.run(sources, handler)
     finally:
         try:

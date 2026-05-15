@@ -7,7 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-parse
     Parse source input and print parse tree in human-readable format.
@@ -119,7 +119,7 @@ def main(argv=None):
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
                            child_flags=child_flags)
-    runner = SourceRunner()
+    runner = SourceRunner(submit_on=SubmitOn.EOF)
     completed = runner.run(sources, handler)
 
     if not completed or handler.had_error:

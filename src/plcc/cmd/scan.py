@@ -7,7 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, SubmitOn
 
 
 def _location_str(source):
@@ -156,7 +156,7 @@ def main(argv=None):
     tokens_flags = child_flags + (["--trace"] if trace else [])
 
     handler = ScanHandler(spec_path=spec_path, tokens_flags=tokens_flags)
-    runner = SourceRunner()
+    runner = SourceRunner(submit_on=SubmitOn.EOL)
     runner.run(sources, handler)
 
     verbose.emit(Events.FINISHED, message="done")
