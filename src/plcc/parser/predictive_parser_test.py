@@ -51,23 +51,23 @@ def _tok(name, lexeme, line=1, col=1, file="<stdin>"):
 # --- trivial grammar tests ---
 
 def test_trivial_parse_returns_tree_kind():
-    result = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
-    assert result["kind"] == "tree"
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert tree["kind"] == "tree"
 
 
 def test_trivial_parse_rule_is_start_symbol():
-    result = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
-    assert result["rule"] == "program"
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert tree["rule"] == "program"
 
 
 def test_trivial_parse_elided_symbol_not_in_children():
-    result = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
-    assert result["children"] == []
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert tree["children"] == []
 
 
 def test_trivial_parse_source_span():
-    result = parse(_TRIVIAL_LL1, [_tok("NUM", "42", line=3, col=5)])
-    src = result["source"]
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", line=3, col=5)])
+    src = tree["source"]
     assert src["line"] == 3
     assert src["column"] == 5
     assert src["endLine"] == 3
@@ -76,54 +76,54 @@ def test_trivial_parse_source_span():
 
 
 def test_trivial_parse_source_file():
-    result = parse(_TRIVIAL_LL1, [_tok("NUM", "42", file="prog.txt")])
-    assert result["source"]["file"] == "prog.txt"
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", file="prog.txt")])
+    assert tree["source"]["file"] == "prog.txt"
 
 
 # --- capturing symbol tests ---
 
 def test_capturing_child_in_children():
-    result = parse(_FLAT_EXPR_LL1, [
+    tree, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1", col=1),
         _tok("PLUS", "+", col=2),
         _tok("NUM", "2", col=3),
     ])
-    fields = [child[0] for child in result["children"]]
+    fields = [child[0] for child in tree["children"]]
     assert "left" in fields
     assert "right" in fields
 
 
 def test_capturing_children_are_token_dicts():
-    result = parse(_FLAT_EXPR_LL1, [
+    tree, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1"),
         _tok("PLUS", "+"),
         _tok("NUM", "2"),
     ])
-    left = dict(result["children"])["left"]
+    left = dict(tree["children"])["left"]
     assert left["kind"] == "token"
     assert left["name"] == "NUM"
     assert left["lexeme"] == "1"
 
 
 def test_elided_plus_not_in_children():
-    result = parse(_FLAT_EXPR_LL1, [
+    tree, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1"),
         _tok("PLUS", "+"),
         _tok("NUM", "2"),
     ])
-    fields = [child[0] for child in result["children"]]
+    fields = [child[0] for child in tree["children"]]
     assert "PLUS" not in fields
 
 
 # --- span across multiple tokens ---
 
 def test_span_covers_all_tokens_including_elided():
-    result = parse(_FLAT_EXPR_LL1, [
+    tree, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1", col=1),
         _tok("PLUS", "+", col=3),
         _tok("NUM", "2", col=5),
     ])
-    src = result["source"]
+    src = tree["source"]
     assert src["column"] == 1          # start of first token
     assert src["endColumn"] == 5       # endColumn of "2" at col 5, len 1 → 5
 
@@ -131,11 +131,11 @@ def test_span_covers_all_tokens_including_elided():
 # --- nested nonterminal tests ---
 
 def test_nested_nonterminal_child_is_tree():
-    result = parse(_EXPR_LL1, [
+    tree, _ = parse(_EXPR_LL1, [
         _tok("NUM", "3"),
     ])
-    assert result["rule"] == "E"
-    children_dict = dict(result["children"])
+    assert tree["rule"] == "E"
+    children_dict = dict(tree["children"])
     assert "t" in children_dict
     assert children_dict["t"]["kind"] == "tree"
     assert children_dict["t"]["rule"] == "Term"
@@ -157,10 +157,6 @@ def test_no_production_for_lookahead_raises_parse_error():
     with pytest.raises(ParseError):
         parse(ll1, [_tok("Y", "y")])
 
-
-def test_extra_tokens_after_parse_raises_parse_error():
-    with pytest.raises(ParseError):
-        parse(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2")])
 
 
 def test_empty_input_on_nonempty_grammar_raises_parse_error():
@@ -206,64 +202,61 @@ _CMDS_LL1 = {
 
 
 def test_arbno_separator_two_items_produces_list():
-    result = parse(_RANDS_LL1, [
+    tree, _ = parse(_RANDS_LL1, [
         _tok("NUM", "1"),
         _tok("COMMA", ","),
         _tok("NUM", "2"),
     ])
-    children_dict = dict(result["children"])
+    children_dict = dict(tree["children"])
     assert "exprList" in children_dict
     assert isinstance(children_dict["exprList"], list)
     assert len(children_dict["exprList"]) == 2
 
 
 def test_arbno_separator_list_items_are_tree_nodes():
-    result = parse(_RANDS_LL1, [
+    tree, _ = parse(_RANDS_LL1, [
         _tok("NUM", "1"),
         _tok("COMMA", ","),
         _tok("NUM", "2"),
     ])
-    expr_list = dict(result["children"])["exprList"]
+    expr_list = dict(tree["children"])["exprList"]
     assert expr_list[0]["kind"] == "tree"
     assert expr_list[0]["rule"] == "expr"
     assert expr_list[1]["kind"] == "tree"
 
 
 def test_arbno_separator_zero_items_on_no_match():
-    result = parse(_RANDS_LL1, [])
-    children_dict = dict(result["children"])
+    tree, _ = parse(_RANDS_LL1, [])
+    children_dict = dict(tree["children"])
     assert children_dict["exprList"] == []
 
 
 def test_arbno_separator_one_item():
-    result = parse(_RANDS_LL1, [_tok("NUM", "42")])
-    children_dict = dict(result["children"])
+    tree, _ = parse(_RANDS_LL1, [_tok("NUM", "42")])
+    children_dict = dict(tree["children"])
     assert len(children_dict["exprList"]) == 1
 
 
 def test_arbno_plain_multiple_items():
-    result = parse(_CMDS_LL1, [
+    tree, _ = parse(_CMDS_LL1, [
         _tok("X", "a"),
         _tok("X", "b"),
         _tok("X", "c"),
     ])
-    children_dict = dict(result["children"])
+    children_dict = dict(tree["children"])
     assert len(children_dict["cmdList"]) == 3
 
 
 def test_arbno_plain_zero_items():
-    result = parse(_CMDS_LL1, [])
-    children_dict = dict(result["children"])
+    tree, _ = parse(_CMDS_LL1, [])
+    children_dict = dict(tree["children"])
     assert children_dict["cmdList"] == []
 
 
 def test_arbno_result_is_tree_kind():
-    result = parse(_RANDS_LL1, [_tok("NUM", "1")])
-    assert result["kind"] == "tree"
-    assert result["rule"] == "rands"
-
-
-from plcc.parser.predictive_parser import IncompleteInputError
+    tree, _ = parse(_RANDS_LL1, [_tok("NUM", "1")])
+    assert tree["kind"] == "tree"
+    assert tree["rule"] == "rands"
 
 
 _ADDITION_LL1 = {
@@ -281,16 +274,36 @@ _ADDITION_LL1 = {
 }
 
 
-def test_incomplete_raises_IncompleteInputError_when_table_misses_sentinel():
-    # Grammar: program → NUM PLUS NUM
-    # Tokens: [NUM] — parser needs PLUS next, gets $ instead
-    with pytest.raises(IncompleteInputError):
+def test_incomplete_raises_ParseError():
+    with pytest.raises(ParseError):
         parse(_ADDITION_LL1, [_tok("NUM", "1")])
 
 
-def test_bad_token_raises_ParseError_not_IncompleteInputError():
-    # Grammar: program → NUM
-    # Tokens: [PLUS] — wrong token, not EOF
-    with pytest.raises(ParseError) as exc_info:
+def test_bad_token_raises_ParseError():
+    with pytest.raises(ParseError):
         parse(_TRIVIAL_LL1, [_tok("PLUS", "+")])
-    assert not isinstance(exc_info.value, IncompleteInputError)
+
+
+def test_parse_error_carries_source():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [_tok("PLUS", "+", line=3, col=7)])
+    assert exc_info.value.source["line"] == 3
+    assert exc_info.value.source["column"] == 7
+
+
+def test_parse_returns_consumed_count():
+    _, consumed = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert consumed == 1
+
+
+def test_parse_stops_at_first_unconsumed_token():
+    # Extra token after a complete parse: no exception, consumed=1
+    tree, consumed = parse(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2")])
+    assert consumed == 1
+    assert tree["kind"] == "tree"
+
+
+def test_incomplete_raises_ParseError_not_IncompleteInputError():
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM] — hits EOF before PLUS
+    with pytest.raises(ParseError):
+        parse(_ADDITION_LL1, [_tok("NUM", "1")])

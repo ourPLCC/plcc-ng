@@ -1,16 +1,13 @@
 class ParseError(Exception):
-    pass
-
-
-class IncompleteInputError(ParseError):
-    """Raised when the token stream ends before the parse is complete."""
-    pass
+    def __init__(self, message, source=None):
+        super().__init__(message)
+        self.source = source or {}
 
 
 class NodeBuilder:
     def __init__(self, rule):
         self.rule = rule
-        self.children = []      # [[field, node_or_list], ...]
+        self.children = []
         self.first_tok = None
         self.last_tok = None
 
@@ -45,14 +42,14 @@ class NodeBuilder:
         }
 
 
-def parse(ll1: dict, tokens: list) -> dict:
+def parse(ll1: dict, tokens: list) -> tuple:
     """
-    Parse tokens against the LL(1) parse table and arbno section.
+    Parse tokens against the LL(1) parse table.
 
     ll1    — dict with keys: start_symbol, parse_table, arbno (optional)
-    tokens — list of token dicts from plcc-tokens (without $ sentinel)
+    tokens — list of token dicts (may include a trailing '$' sentinel)
 
-    Returns the root parse tree dict.
+    Returns (tree_dict, consumed_count).
     Raises ParseError on any syntax error.
     """
     parse_table = ll1["parse_table"]
@@ -74,12 +71,13 @@ def parse(ll1: dict, tokens: list) -> dict:
         tok = current()
         if tok["name"] != sym:
             if tok["name"] == "$":
-                raise IncompleteInputError(
-                    f"unexpected end of input: expected {sym!r}"
+                raise ParseError(
+                    f"unexpected end of input: expected {sym!r}",
+                    source=tok["source"],
                 )
             raise ParseError(
-                f"expected {sym!r}, got {tok['name']!r} "
-                f"at {tok['source']}"
+                f"expected {sym!r}, got {tok['name']!r}",
+                source=tok["source"],
             )
         return advance()
 
@@ -95,16 +93,20 @@ def parse(ll1: dict, tokens: list) -> dict:
         lookahead = current()["name"]
         nt_table = parse_table.get(sym)
         if nt_table is None:
-            raise ParseError(f"no parse table entry for nonterminal {sym!r}")
+            raise ParseError(
+                f"no parse table entry for nonterminal {sym!r}",
+                source=current()["source"],
+            )
         production = nt_table.get(lookahead)
         if production is None:
             if lookahead == "$":
-                raise IncompleteInputError(
-                    f"unexpected end of input while parsing {sym!r}"
+                raise ParseError(
+                    f"unexpected end of input while parsing {sym!r}",
+                    source=current()["source"],
                 )
             raise ParseError(
-                f"unexpected {lookahead!r}, no production for {sym!r} "
-                f"at {current()['source']}"
+                f"unexpected {lookahead!r}, no production for {sym!r}",
+                source=current()["source"],
             )
         builder = NodeBuilder(sym)
         for entry in production:
@@ -156,10 +158,4 @@ def parse(ll1: dict, tokens: list) -> dict:
         return builder
 
     root_builder = parse_nt(start)
-    tok = current()
-    if tok["name"] != "$":
-        raise ParseError(
-            f"unexpected token {tok['name']!r} after complete parse "
-            f"at {tok['source']}"
-        )
-    return root_builder.to_node()
+    return root_builder.to_node(), cursor[0]
