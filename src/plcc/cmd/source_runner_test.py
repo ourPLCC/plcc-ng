@@ -329,7 +329,7 @@ def test_ctrl_d_after_partial_text_force_submits(monkeypatch, runner):
     #   submits the same buffer again — 3 calls total.
     # With fix: "world" detected as partial-eof, force-submitted — 2 calls total.
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world", b""]))
-    handler = RecordingHandler(results=[False, False])
+    handler = RecordingHandler(results=[False, True])
     runner.run(["-"], handler)
     assert len(handler.calls) == 2
     assert handler.calls[1][0] == b"hello\nworld"
@@ -343,12 +343,34 @@ def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_succeeds(mon
     assert err.count(">>> ") >= 2
 
 
-def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_fails(monkeypatch, runner):
-    # Force-submit semantics: blank line always resets, even when evaluation fails.
-    # After reset, next line starts a fresh buffer (not accumulated with previous).
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b"world\n", b""]))
-    handler = RecordingHandler(results=[False, False, True])
-    runner.run(["-"], handler)
-    # If buffer was NOT reset, "world\n" would be accumulated with "hello\n".
-    # If buffer WAS reset, "world\n" is evaluated alone.
-    assert handler.calls[2][0] == b"world\n"
+def test_blank_line_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    # Force-submitting via blank line and getting False back is a PLCC internal error.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n"]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
+
+
+def test_ctrl_d_in_continuation_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    # Force-submitting via ^D in continuation and getting False back is a PLCC internal error.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
+
+
+def test_partial_eof_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    # Force-submitting via ^D after partial text and getting False back is a PLCC internal error.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world"]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err

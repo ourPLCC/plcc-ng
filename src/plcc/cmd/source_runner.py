@@ -87,18 +87,18 @@ class SourceRunner:
     def _exit_or_submit_accumulated_buffer(self, handler, state):
         print(file=sys.stderr)
         if state.buffer:
-            self._evaluate(handler, state.buffer)
+            self._evaluate(handler, state.buffer, eof=True)
             return _InteractiveState(buffer=b"", prompt=self._prompt)
         return _InteractiveState(buffer=b"", prompt=self._prompt, done=True)
 
     def _force_submit_including_partial_line(self, handler, line, state):
         print(file=sys.stderr)
-        self._evaluate(handler, state.buffer + line)
+        self._evaluate(handler, state.buffer + line, eof=True)
         return _InteractiveState(buffer=b"", prompt=self._prompt)
 
     def _force_submit_accumulated_buffer(self, handler, line, state):
         if state.buffer:
-            self._evaluate(handler, state.buffer + line)
+            self._evaluate(handler, state.buffer + line, eof=True)
         return _InteractiveState(buffer=b"", prompt=self._prompt)
 
     def _accumulate_and_evaluate(self, handler, line, state):
@@ -107,9 +107,13 @@ class SourceRunner:
             return _InteractiveState(buffer=b"", prompt=self._prompt)
         return _InteractiveState(buffer=buffer, prompt=self._continuation)
 
-    def _evaluate(self, handler, content):
+    def _evaluate(self, handler, content, eof=False):
         try:
-            return handler.feed(content, "-")
+            result = handler.feed(content, "-")
         except KeyboardInterrupt:
             print(file=sys.stderr)
             sys.exit(130)
+        if eof and result is False:
+            print("PLCC internal error: forced submission was not accepted by the handler.", file=sys.stderr)
+            sys.exit(1)
+        return result
