@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, _InteractiveState
 
 HINT = "Enter input. Press ^D (EOF) when done."
 
@@ -228,3 +228,149 @@ def test_ctrl_c_during_evaluation_exits_130(monkeypatch, runner):
     with pytest.raises(SystemExit) as exc_info:
         runner.run(["-"], InterruptingHandler())
     assert exc_info.value.code == 130
+
+
+# --- _InteractiveState ---
+
+def test_interactive_state_stores_buffer_and_prompt():
+    state = _InteractiveState(buffer=b"hello", prompt=">>> ")
+    assert state.buffer == b"hello"
+    assert state.prompt == ">>> "
+    assert state.done is False
+
+
+def test_interactive_state_done_flag():
+    state = _InteractiveState(buffer=b"", prompt=">>> ", done=True)
+    assert state.done is True
+
+
+# --- Predicate methods ---
+
+def test_is_eof_true_for_empty_bytes(runner):
+    assert runner._is_eof(b"") is True
+
+
+def test_is_eof_false_for_nonempty(runner):
+    assert runner._is_eof(b"hello\n") is False
+
+
+def test_is_partial_eof_true_for_line_without_newline(runner):
+    assert runner._is_partial_eof(b"partial") is True
+
+
+def test_is_partial_eof_false_for_line_with_newline(runner):
+    assert runner._is_partial_eof(b"complete\n") is False
+
+
+def test_is_blank_true_for_newline_only(runner):
+    assert runner._is_blank(b"\n") is True
+
+
+def test_is_blank_true_for_spaces_and_newline(runner):
+    assert runner._is_blank(b"  \n") is True
+
+
+def test_is_blank_false_for_content_line(runner):
+    assert runner._is_blank(b"hello\n") is False
+
+
+def test_is_interrupted_true_for_none(runner):
+    assert runner._is_interrupted(None) is True
+
+
+def test_is_interrupted_false_for_bytes(runner):
+    assert runner._is_interrupted(b"") is False
+
+
+def test_ctrl_d_on_fresh_prompt_prints_newline(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    runner.run(["-"], RecordingHandler())
+    _, err = capsys.readouterr()
+    # Prompt is ">>> " (no newline); ^D should add one so the shell lands on a new line
+    assert err.endswith(">>> \n")
+
+
+def test_ctrl_d_in_continuation_submits_and_continues(monkeypatch, runner):
+    # Setup: line1 fails (continuation), then ^D on empty "..." → should submit and
+    # continue (not exit), then line2 succeeds, then final ^D exits.
+    class EOFInContinuation:
+        def __init__(self):
+            self._calls = 0
+
+        isatty = lambda self: True
+
+        @property
+        def buffer(self):
+            return self
+
+        def readline(self):
+            self._calls += 1
+            if self._calls == 1:
+                return b"hello\n"      # returns False from handler
+            if self._calls == 2:
+                return b""             # ^D in continuation: should submit and continue
+            if self._calls == 3:
+                return b"world\n"      # returned after continuing
+            return b""                 # final ^D exits
+
+    monkeypatch.setattr(sys, "stdin", EOFInContinuation())
+    handler = RecordingHandler(results=[False, True, True])
+    runner.run(["-"], handler)
+    # With fix: ^D in continuation submits buffer and loops — "world\n" is processed.
+    # Without fix: ^D exits immediately after submitting — "world\n" is never read.
+    assert len(handler.calls) == 3
+    assert handler.calls[2][0] == b"world\n"
+
+
+def test_ctrl_d_after_partial_text_force_submits(monkeypatch, runner):
+    # "hello\n" fails → continuation.
+    # "world" (no \n, simulates ^D after text) → should force-submit buffer+"world".
+    # Without fix: "world" treated as normal line; evaluate fails; then ^D (020a fix)
+    #   submits the same buffer again — 3 calls total.
+    # With fix: "world" detected as partial-eof, force-submitted — 2 calls total.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world", b""]))
+    handler = RecordingHandler(results=[False, True])
+    runner.run(["-"], handler)
+    assert len(handler.calls) == 2
+    assert handler.calls[1][0] == b"hello\nworld"
+
+
+def test_blank_line_submission_resets_to_fresh_prompt_when_evaluate_succeeds(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b""]))
+    handler = RecordingHandler(results=[False, True])
+    runner.run(["-"], handler)
+    _, err = capsys.readouterr()
+    assert err.count(">>> ") >= 2
+
+
+def test_blank_line_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    # Force-submitting via blank line and getting False back is a PLCC internal error.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n"]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
+
+
+def test_ctrl_d_in_continuation_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    # Force-submitting via ^D in continuation and getting False back is a PLCC internal error.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
+
+
+def test_partial_eof_force_submit_exits_with_error_when_handler_rejects(monkeypatch, runner, capsys):
+    # Force-submitting via ^D after partial text and getting False back is a PLCC internal error.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world"]))
+    handler = RecordingHandler(results=[False, False])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 1
+    _, err = capsys.readouterr()
+    assert "PLCC internal error" in err
