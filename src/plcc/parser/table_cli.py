@@ -70,7 +70,9 @@ def main(argv=None):
         sys.exit(0)
 
     cursor = 0
+    attempted = False
     while cursor < len(tokens) and tokens[cursor]["name"] != "$":
+        attempted = True
         try:
             tree, consumed = parse(ll1, tokens[cursor:])
             if consumed == 0:
@@ -90,6 +92,22 @@ def main(argv=None):
             verbose.emit_error(e.source, str(e))
             print(json.dumps(record), flush=True)
             cursor += 1
+
+    if not attempted and cursor < len(tokens):
+        # No non-sentinel tokens: try one epsilon parse for grammars that accept empty input
+        try:
+            tree, consumed = parse(ll1, tokens[cursor:])
+            if consumed == 0:
+                verbose.emit(Events.COMPLETE, token_count=0, rule_count=_count_rules(tree))
+                print(json.dumps(tree), flush=True)
+        except ParseError as e:
+            record = {
+                "kind": "error",
+                "message": str(e),
+                "stage": "plcc-parser-table",
+                "source": e.source,
+            }
+            print(json.dumps(record), flush=True)
 
     verbose.emit(Events.FINISHED, token_count=len(tokens))
 
