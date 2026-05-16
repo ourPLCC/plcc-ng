@@ -150,7 +150,7 @@ def _print_tree(node, indent):
         source = node.get("source", {})
         loc = _location_str(source)
         print(f"{prefix}{name} '{lexeme}' [{loc}]")
-    # forward-looking: plcc-tree may emit error records inline in a future protocol
+    # plcc-trees may emit error records inline in the current protocol
     elif kind == "error":
         source = node.get("source", {})
         loc = _location_str(source)
