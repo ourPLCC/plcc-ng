@@ -117,3 +117,11 @@ def test_feed_does_not_set_had_error_on_success(monkeypatch, handler):
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"ok\n", "-")
     assert handler.had_error is False
+
+
+def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_error_record("bad char", stage="plcc-tokens"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"@\n", "-")
+    _, err = capsys.readouterr()
+    assert "plcc-tokens: error: bad char" in err

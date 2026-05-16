@@ -30,9 +30,12 @@ class Events(enum.Enum):
 
 
 def _location_str(source):
-    file = source.get("file", "-")
-    line = source.get("line", "?")
-    col = source.get("column", "?")
+    """Return 'file:line:col' for real files, '-:line:col' for stdin, or None if no location."""
+    file = source.get("file", "")
+    line = source.get("line")
+    col = source.get("column")
+    if line is None or col is None:
+        return None
     if file and file not in ("-", "<stdin>", ""):
         return f"{file}:{line}:{col}"
     return f"-:{line}:{col}"
@@ -72,9 +75,14 @@ class ParseHandler:
             record = json.loads(raw)
             had_output = True
             if record.get("kind") == "error":
-                loc = _location_str(record.get("source", {}))
+                source = record.get("source", {})
                 message = record.get("message", "error")
-                print(f"{loc}: error: {message}", file=sys.stderr)
+                loc = _location_str(source)
+                if loc:
+                    print(f"{loc}: error: {message}", file=sys.stderr)
+                else:
+                    stage = record.get("stage", "plcc-parse")
+                    print(f"{stage}: error: {message}", file=sys.stderr)
                 self.had_error = True
             elif record.get("kind") == "tree":
                 _print_tree(record, indent=0)
