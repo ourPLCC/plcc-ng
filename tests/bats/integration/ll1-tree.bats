@@ -13,20 +13,20 @@ setup() {
 
 teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
 
-@test "plcc-tokens | plcc-tree with ll1 produces schema-valid tree" {
-    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}'"
+@test "plcc-tokens | plcc-trees with ll1 produces schema-valid tree" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-trees --ll1='${LL1_JSON}'"
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${TREE_SCHEMA}" -
 }
 
-@test "plcc-tokens | plcc-tree with ll1 produces tree with rule=program" {
-    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}'"
+@test "plcc-tokens | plcc-trees with ll1 produces tree with rule=program" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-trees --ll1='${LL1_JSON}'"
     [ "$status" -eq 0 ]
     echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['rule']=='program'"
 }
 
-@test "plcc-tokens | plcc-tree with ll1 output has source span" {
-    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}'"
+@test "plcc-tokens | plcc-trees with ll1 output has source span" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-trees --ll1='${LL1_JSON}'"
     [ "$status" -eq 0 ]
     echo "$output" | python3 -c "
 import json,sys

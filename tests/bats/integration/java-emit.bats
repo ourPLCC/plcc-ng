@@ -52,13 +52,13 @@ teardown() { rm -rf "${WORK_DIR}"; }
     [[ "$output" == *'"result"'* ]]
 }
 
-@test "full pipeline: plcc-tokens | plcc-tree | plcc-java-run" {
+@test "full pipeline: plcc-tokens | plcc-trees | plcc-java-run" {
     SPEC_JSON="$(mktemp)"
     LL1_JSON="$(mktemp)"
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     plcc-spec "${FIXTURES}/trivial-java.plcc" > "${SPEC_JSON}"
     plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
-    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}' | plcc-java-run --output='${WORK_DIR}'"
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-trees --ll1='${LL1_JSON}' | plcc-java-run --output='${WORK_DIR}'"
     rm -f "${SPEC_JSON}" "${LL1_JSON}"
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]

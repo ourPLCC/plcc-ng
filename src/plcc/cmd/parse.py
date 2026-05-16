@@ -56,7 +56,7 @@ class ParseHandler:
             stderr=None,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-tree", f"--ll1={self._ll1_path}"] + self._child_flags,
+            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._child_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=None,
