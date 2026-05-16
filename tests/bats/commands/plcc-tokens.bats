@@ -38,15 +38,15 @@ teardown() {
     run --separate-stderr bash -c "echo 'xyz' | plcc-tokens '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
     [ -z "$stderr" ]
-    # every output line is a valid JSON record with kind=error
+    # every output line except the $ sentinel is a valid JSON record with kind=error
     while IFS= read -r line || [ -n "$line" ]; do
         [ -z "$line" ] && continue
-        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
+        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); exit(0) if r.get('name')=='\$' else None; assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
     done <<< "$output"
 }
 
 @test "plcc-tokens with no SOURCE args labels tokens with file=-" {
-    result=$(echo '42' | plcc-tokens "${SPEC_JSON}")
+    result=$(echo '42' | plcc-tokens "${SPEC_JSON}" | head -1)
     file_val=$(echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); print(r['source']['file'])")
     [ "$file_val" = "-" ]
 }
@@ -54,14 +54,14 @@ teardown() {
 @test "plcc-tokens with SOURCE file arg labels tokens with that filename" {
     tmp=$(mktemp)
     echo "42" > "$tmp"
-    result=$(plcc-tokens "${SPEC_JSON}" "$tmp")
+    result=$(plcc-tokens "${SPEC_JSON}" "$tmp" | head -1)
     file_val=$(echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); print(r['source']['file'])")
     [ "$file_val" = "$tmp" ]
     rm -f "$tmp"
 }
 
 @test "plcc-tokens default token record omits regex and source_line" {
-    result=$(echo '42' | plcc-tokens "${SPEC_JSON}")
+    result=$(echo '42' | plcc-tokens "${SPEC_JSON}" | head -1)
     echo "$result" | python3 -c "
 import json, sys
 r = json.load(sys.stdin)
@@ -71,7 +71,7 @@ assert 'source_line' not in r, f'source_line present in lean record: {r}'
 }
 
 @test "plcc-tokens --trace token record includes regex and source_line" {
-    result=$(echo '42' | plcc-tokens --trace "${SPEC_JSON}")
+    result=$(echo '42' | plcc-tokens --trace "${SPEC_JSON}" | head -1)
     echo "$result" | python3 -c "
 import json, sys
 r = json.load(sys.stdin)
