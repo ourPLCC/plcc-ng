@@ -49,7 +49,8 @@ def main(argv=None):
     sources = args['SOURCE'] or ['-']
     verbose.emit(Events.STARTED, message="tokenizing")
     lines = _lines_from_sources(sources, verbose, source_name)
-    last_source = {}
+    first_label = (source_name or "-") if sources[0] == "-" else sources[0]
+    last_source = {"file": first_label, "line": 1, "column": 1}
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             if trace:

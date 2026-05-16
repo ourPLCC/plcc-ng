@@ -76,7 +76,17 @@ def main(argv=None):
         try:
             tree, consumed = parse(ll1, tokens[cursor:])
             if consumed == 0:
-                # Epsilon production: advance to prevent infinite loop
+                # Grammar matched epsilon but couldn't incorporate this token;
+                # emit an error record so the user sees feedback, then skip it.
+                tok = tokens[cursor]
+                record = {
+                    "kind": "error",
+                    "message": f"unexpected token {tok.get('name', '?')!r}",
+                    "stage": "plcc-parser-table",
+                    "source": tok.get("source", {}),
+                }
+                verbose.emit_error(tok.get("source", {}), record["message"])
+                print(json.dumps(record), flush=True)
                 cursor += 1
                 continue
             verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
