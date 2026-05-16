@@ -56,24 +56,24 @@ class RepHandler:
         tree_out, _ = tree_proc.communicate()
         tokens_proc.wait()
 
-        tree_out = tree_out.strip()
-        if not tree_out:
-            return False
-
-        record = json.loads(tree_out)
-        if record.get("kind") == "error":
-            print(f"error: {record.get('message', 'parse error')}", file=sys.stderr)
-            return True
-
-        try:
-            self._interpreter.stdin.write(tree_out + b'\n')
-            self._interpreter.stdin.flush()
-        except BrokenPipeError:
-            print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
-            sys.exit(1)
-
-        _read_response(self._interpreter.stdout, self._verbose_format)
-        return True
+        had_output = False
+        for raw in tree_out.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            record = json.loads(raw)
+            had_output = True
+            if record.get("kind") == "error":
+                print(f"error: {record.get('message', 'parse error')}", file=sys.stderr)
+            elif record.get("kind") == "tree":
+                try:
+                    self._interpreter.stdin.write(raw + b'\n')
+                    self._interpreter.stdin.flush()
+                except BrokenPipeError:
+                    print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+                    sys.exit(1)
+                _read_response(self._interpreter.stdout, self._verbose_format)
+        return had_output
 
 
 def main(argv=None):
