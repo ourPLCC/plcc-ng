@@ -15,7 +15,7 @@ trap 'rm -rf "${VENV}"' EXIT
 "${VENV}/bin/pip" install --quiet dist/*.whl
 
 # Verify all entry points are installed on the venv PATH
-for cmd in plcc-spec plcc-tokens plcc-tree plcc-model \
+for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
            plcc-lang-emit plcc-lang-build plcc-lang-list \
            plcc-diagram plcc-diagram-list \
            plcc-make plcc-scan plcc-parse plcc-rep; do

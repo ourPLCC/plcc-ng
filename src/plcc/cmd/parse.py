@@ -7,7 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-parse
     Parse source input and print parse tree in human-readable format.
@@ -30,12 +30,15 @@ class Events(enum.Enum):
 
 
 def _location_str(source):
-    file = source.get("file")
-    line = source.get("line", "?")
-    col = source.get("column", "?")
-    if file and file != "<stdin>":
+    """Return 'file:line:col' for real files, '-:line:col' for stdin, or None if no location."""
+    file = source.get("file", "")
+    line = source.get("line")
+    col = source.get("column")
+    if line is None or col is None:
+        return None
+    if file and file not in ("-", "<stdin>", ""):
         return f"{file}:{line}:{col}"
-    return f"{line}:{col}"
+    return f"-:{line}:{col}"
 
 
 class ParseHandler:
@@ -53,7 +56,7 @@ class ParseHandler:
             stderr=None,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-tree", f"--ll1={self._ll1_path}"] + self._child_flags,
+            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._child_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=None,
@@ -64,20 +67,26 @@ class ParseHandler:
         tree_out, _ = tree_proc.communicate()
         tokens_proc.wait()
 
-        tree_out = tree_out.strip()
-        if not tree_out:
-            return False
-
-        record = json.loads(tree_out)
-        if record.get("kind") == "error":
-            stage = record.get("stage", "plcc-parse")
-            message = record.get("message", "error")
-            print(f"{stage}: error: {message}", file=sys.stderr)
-            self.had_error = True
-            return True
-
-        _print_tree(record, indent=0)
-        return True
+        had_output = False
+        for raw in tree_out.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            record = json.loads(raw)
+            had_output = True
+            if record.get("kind") == "error":
+                source = record.get("source", {})
+                message = record.get("message", "error")
+                loc = _location_str(source)
+                if loc:
+                    print(f"{loc}: error: {message}", file=sys.stderr)
+                else:
+                    stage = record.get("stage", "plcc-parse")
+                    print(f"{stage}: error: {message}", file=sys.stderr)
+                self.had_error = True
+            elif record.get("kind") == "tree":
+                _print_tree(record, indent=0)
+        return had_output
 
 
 def main(argv=None):
@@ -119,7 +128,7 @@ def main(argv=None):
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
                            child_flags=child_flags)
-    runner = SourceRunner()
+    runner = SourceRunner(submit_on=SubmitOn.EOF)
     completed = runner.run(sources, handler)
 
     if not completed or handler.had_error:
@@ -141,7 +150,7 @@ def _print_tree(node, indent):
         source = node.get("source", {})
         loc = _location_str(source)
         print(f"{prefix}{name} '{lexeme}' [{loc}]")
-    # forward-looking: plcc-tree may emit error records inline in a future protocol
+    # plcc-trees may emit error records inline in the current protocol
     elif kind == "error":
         source = node.get("source", {})
         loc = _location_str(source)

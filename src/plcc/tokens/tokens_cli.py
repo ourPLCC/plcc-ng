@@ -1,4 +1,5 @@
 import enum
+import json
 import sys
 
 from docopt import docopt
@@ -48,15 +49,20 @@ def main(argv=None):
     sources = args['SOURCE'] or ['-']
     verbose.emit(Events.STARTED, message="tokenizing")
     lines = _lines_from_sources(sources, verbose, source_name)
+    first_label = (source_name or "-") if sources[0] == "-" else sources[0]
+    last_source = {"file": first_label, "line": 1, "column": 1}
     for obj in scanner.scan(lines):
         if isinstance(obj, Skip):
             if trace:
+                last_source = {"file": obj.line.file, "line": obj.line.number, "column": obj.column}
                 print(format_record(obj, show_all=True), flush=True)
             continue
         if isinstance(obj, LexError):
             print(format_error_record(obj), flush=True)
             continue
+        last_source = {"file": obj.line.file, "line": obj.line.number, "column": obj.column}
         print(format_record(obj, show_all=trace), flush=True)
+    print(json.dumps({"kind": "token", "name": "$", "lexeme": "", "source": last_source}), flush=True)
     verbose.emit(Events.FINISHED, message="done")
 
 

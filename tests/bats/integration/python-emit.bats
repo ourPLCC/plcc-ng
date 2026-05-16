@@ -38,7 +38,7 @@ teardown() {
     TREE_FILE="$(mktemp)"
     trap "rm -f '${LL1_JSON}' '${TREE_FILE}'" EXIT
     plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
-    echo '1 + 2' | plcc-tokens "${SPEC_JSON}" | plcc-tree "--ll1=${LL1_JSON}" > "${TREE_FILE}"
+    echo '1 + 2' | plcc-tokens "${SPEC_JSON}" | plcc-trees "--ll1=${LL1_JSON}" > "${TREE_FILE}"
     run plcc-python-run --output="${WORK_DIR}" < "${TREE_FILE}"
     [ "$status" -eq 0 ]
     [[ "$output" == *'"value"'* ]]

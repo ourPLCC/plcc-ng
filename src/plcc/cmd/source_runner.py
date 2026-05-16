@@ -1,9 +1,15 @@
+import enum
 import sys
 from dataclasses import dataclass
 
 HINT = "Enter input. Press ^D (EOF) when done."
 PROMPT = ">>> "
 CONTINUATION = "... "
+
+
+class SubmitOn(enum.Enum):
+    EOL = "eol"   # each newline submits — plcc-scan
+    EOF = "eof"   # ^D submits — plcc-parse
 
 
 @dataclass
@@ -14,7 +20,8 @@ class _InteractiveState:
 
 
 class SourceRunner:
-    def __init__(self, hint=HINT, prompt=PROMPT, continuation=CONTINUATION):
+    def __init__(self, submit_on, hint=HINT, prompt=PROMPT, continuation=CONTINUATION):
+        self._submit_on = submit_on
         self._hint = hint
         self._prompt = prompt
         self._continuation = continuation
@@ -63,6 +70,9 @@ class SourceRunner:
             return self._exit_or_submit_accumulated_buffer(handler, state)
         if self._is_partial_eof(line):
             return self._force_submit_including_partial_line(handler, line, state)
+        if self._submit_on == SubmitOn.EOF:
+            return self._accumulate_only(line, state)
+        # SubmitOn.EOL
         if self._is_blank(line):
             return self._force_submit_accumulated_buffer(handler, line, state)
         return self._accumulate_and_evaluate(handler, line, state)
@@ -78,6 +88,12 @@ class SourceRunner:
 
     def _is_blank(self, line):
         return not line.strip()
+
+    def _accumulate_only(self, line, state):
+        buffer = state.buffer + line
+        if not buffer.strip():
+            return _InteractiveState(buffer=b"", prompt=self._prompt)
+        return _InteractiveState(buffer=buffer, prompt=self._continuation)
 
     def _clear_buffer_or_exit(self, state):
         print(file=sys.stderr)

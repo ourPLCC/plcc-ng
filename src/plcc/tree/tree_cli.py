@@ -7,11 +7,11 @@ from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-tree
+__doc__ = """plcc-trees
     Dispatch to a parser plugin. Reads token JSONL, emits a parse tree.
 
 Usage:
-    plcc-tree [-v ...] [options] --ll1=LL1_JSON
+    plcc-trees [-v ...] [options] --ll1=LL1_JSON
 
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
@@ -29,13 +29,13 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args("plcc-tree", Events, args)
+    verbose = VerboseContext.from_args("plcc-trees", Events, args)
     ll1_path = args["--ll1"]
     parser_kind = args["--parser"]
     cmd = f"plcc-parser-{parser_kind}"
     if not shutil.which(cmd):
         print(
-            f"plcc-tree: parser plugin '{cmd}' not found on PATH.\n"
+            f"plcc-trees: parser plugin '{cmd}' not found on PATH.\n"
             f"Run plcc-parser-list to see what is available.",
             file=sys.stderr,
         )

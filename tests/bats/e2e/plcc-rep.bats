@@ -67,10 +67,10 @@ teardown() {
     [ "$status" -ne 0 ]
 }
 
-@test "standalone invocation: plcc-tokens | plcc-tree | python main.py" {
+@test "standalone invocation: plcc-tokens | plcc-trees | python main.py" {
     echo '1 + 2' \
     | plcc-tokens build/spec.json \
-    | plcc-tree --ll1=build/ll1.json \
+    | plcc-trees --ll1=build/ll1.json \
     | python3 -u build/calculate/main.py \
     | python3 -c "import json,sys; r=json.loads(sys.stdin.read()); assert r['value']=='3', r"
 }

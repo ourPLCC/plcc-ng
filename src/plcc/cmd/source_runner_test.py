@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from .source_runner import SourceRunner, _InteractiveState
+from .source_runner import SourceRunner, SubmitOn, _InteractiveState
 
 HINT = "Enter input. Press ^D (EOF) when done."
 
@@ -26,7 +26,7 @@ class RecordingHandler:
 
 @pytest.fixture()
 def runner():
-    return SourceRunner()
+    return SourceRunner(submit_on=SubmitOn.EOL)
 
 
 # --- File source ---
@@ -374,3 +374,62 @@ def test_partial_eof_force_submit_exits_with_error_when_handler_rejects(monkeypa
     assert exc_info.value.code == 1
     _, err = capsys.readouterr()
     assert "PLCC internal error" in err
+
+
+# --- SubmitOn enum and EOF mode ---
+
+def _eof_runner():
+    return SourceRunner(submit_on=SubmitOn.EOF)
+
+
+def test_submit_on_required():
+    with pytest.raises(TypeError):
+        SourceRunner()
+
+
+def test_eol_mode_submits_after_each_line(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"line1\n", b""]))
+    handler = RecordingHandler(results=[True])
+    SourceRunner(submit_on=SubmitOn.EOL).run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"line1\n"
+
+
+def test_eof_mode_regular_line_accumulates_without_feed(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    handler = RecordingHandler()
+    _eof_runner().run(["-"], handler)
+    # ^D on empty buffer exits without calling feed
+    assert handler.calls == []
+
+
+def test_eof_mode_ctrl_d_with_buffer_calls_feed(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world\n", b""]))
+    handler = RecordingHandler()
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\nworld\n"
+
+
+def test_eof_mode_blank_line_accumulates_without_feed(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b""]))
+    handler = RecordingHandler()
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\n\n"
+
+
+def test_eof_mode_continuation_prompt_shown_after_first_line(monkeypatch, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
+    handler = RecordingHandler()
+    _eof_runner().run(["-"], handler)
+    _, err = capsys.readouterr()
+    assert "... " in err
+
+
+def test_eof_mode_partial_eof_submits_partial_line(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world", b""]))
+    handler = RecordingHandler()
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\nworld"

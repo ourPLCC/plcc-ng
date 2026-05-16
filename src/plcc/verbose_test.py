@@ -215,10 +215,10 @@ def _dummy_proc(stderr_bytes, returncode):
 
 def test_reap_pipeline_all_success():
     tokens_stderr = b'{"stage":"plcc-tokens","event":"started"}\n'
-    tree_stderr = b'{"stage":"plcc-tree","event":"started"}\n'
+    tree_stderr = b'{"stage":"plcc-trees","event":"started"}\n'
     stages = [
         (_dummy_proc(tokens_stderr, 0), "plcc-tokens"),
-        (_dummy_proc(tree_stderr, 0), "plcc-tree"),
+        (_dummy_proc(tree_stderr, 0), "plcc-trees"),
     ]
     result = reap_pipeline(stages)
     assert result.failed_stage is None
@@ -234,13 +234,13 @@ def test_reap_pipeline_upstream_failure_suppresses_downstream():
         b'"message":"unrecognized character"}\n'
     )
     tree_err = (
-        b'{"stage":"plcc-tree","event":"error","severity":"error",'
+        b'{"stage":"plcc-trees","event":"error","severity":"error",'
         b'"pos":{"file":"p.txt","line":1,"column":0},'
         b'"message":"unexpected end of input"}\n'
     )
     stages = [
         (_dummy_proc(tokens_err, 1), "plcc-tokens"),
-        (_dummy_proc(tree_err, 1), "plcc-tree"),
+        (_dummy_proc(tree_err, 1), "plcc-trees"),
     ]
     result = reap_pipeline(stages)
     assert result.failed_stage == "plcc-tokens"
@@ -260,8 +260,8 @@ def test_reap_pipeline_downstream_failure_reports_downstream():
     )
     stages = [
         (_dummy_proc(tokens_ok, 0), "plcc-tokens"),
-        (_dummy_proc(parser_err, 2), "plcc-tree"),
+        (_dummy_proc(parser_err, 2), "plcc-trees"),
     ]
     result = reap_pipeline(stages)
-    assert result.failed_stage == "plcc-tree"
+    assert result.failed_stage == "plcc-trees"
     assert result.exit_code == 2

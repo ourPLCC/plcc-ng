@@ -24,7 +24,7 @@ teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
     [ -z "$stderr" ]
     while IFS= read -r line || [ -n "$line" ]; do
         [ -z "$line" ] && continue
-        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
+        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); exit(0) if r.get('name')=='\$' else None; assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
     done <<< "$output"
 }
 

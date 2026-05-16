@@ -7,7 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .source_runner import SourceRunner
+from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-rep
     REPL — read, eval, print loop for a PLCC grammar.
@@ -45,7 +45,7 @@ class RepHandler:
             stderr=None,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-tree", f"--ll1={self._ll1_path}"],
+            ["plcc-trees", f"--ll1={self._ll1_path}"],
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=None,
@@ -56,24 +56,24 @@ class RepHandler:
         tree_out, _ = tree_proc.communicate()
         tokens_proc.wait()
 
-        tree_out = tree_out.strip()
-        if not tree_out:
-            return False
-
-        record = json.loads(tree_out)
-        if record.get("kind") == "error":
-            print(f"error: {record.get('message', 'parse error')}", file=sys.stderr)
-            return True
-
-        try:
-            self._interpreter.stdin.write(tree_out + b'\n')
-            self._interpreter.stdin.flush()
-        except BrokenPipeError:
-            print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
-            sys.exit(1)
-
-        _read_response(self._interpreter.stdout, self._verbose_format)
-        return True
+        had_output = False
+        for raw in tree_out.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            record = json.loads(raw)
+            had_output = True
+            if record.get("kind") == "error":
+                print(f"error: {record.get('message', 'parse error')}", file=sys.stderr)
+            elif record.get("kind") == "tree":
+                try:
+                    self._interpreter.stdin.write(raw + b'\n')
+                    self._interpreter.stdin.flush()
+                except BrokenPipeError:
+                    print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+                    sys.exit(1)
+                _read_response(self._interpreter.stdout, self._verbose_format)
+        return had_output
 
 
 def main(argv=None):
@@ -136,7 +136,7 @@ def main(argv=None):
             interpreter=interpreter,
             verbose_format=verbose_format,
         )
-        runner = SourceRunner()
+        runner = SourceRunner(submit_on=SubmitOn.EOL)
         completed = runner.run(sources, handler)
     finally:
         try:

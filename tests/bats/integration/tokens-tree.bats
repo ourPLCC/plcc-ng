@@ -13,8 +13,8 @@ setup() {
 
 teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
 
-@test "plcc-tokens | plcc-tree produces schema-valid tree" {
-    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}'"
+@test "plcc-tokens | plcc-trees produces schema-valid tree" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-trees --ll1='${LL1_JSON}'"
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${TREE_SCHEMA}" -
 }
