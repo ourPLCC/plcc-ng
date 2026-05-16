@@ -32,7 +32,7 @@ run_test_case() {
     actual=$(
         cat "${input_file}" \
         | plcc-tokens "${grammar_dir}" \
-        | plcc-tree --ll1="${ll1_json}" \
+        | plcc-trees --ll1="${ll1_json}" \
         | plcc-java-run --output="${build_dir}" \
         | grep -v '^{"kind":'
     )

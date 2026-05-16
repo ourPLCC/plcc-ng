@@ -45,7 +45,7 @@ class RepHandler:
             stderr=None,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-tree", f"--ll1={self._ll1_path}"],
+            ["plcc-trees", f"--ll1={self._ll1_path}"],
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=None,
