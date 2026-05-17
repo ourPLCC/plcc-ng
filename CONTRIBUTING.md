@@ -71,4 +71,4 @@ Check [bin/](bin/) first. If a script there does what you need, use it. If one a
 
 Work happens on feature branches, not on `main`. Branch names describe the work (e.g. `fix-scanner-skip-regression`, `add-python-emitter`). Long-running initiatives may use a shared integration branch — v9 development, for example, currently lives on `multi-lang` per the roadmap (§2) and will merge into `main` at the Phase 5 cutover — but that is a property of the initiative, not a general rule.
 
-Commits follow conventional-commit style (`feat(scope): …`, `fix(scope): …`, `docs(scope): …`, `test(scope): …`, `refactor(scope): …`, `build(scope): …`, `ci: …`, `chore: …`). Match the scope names already in use in the git log.
+Commits follow conventional-commit style (`feat(scope): …`, `fix(scope): …`, `docs(scope): …`, `test(scope): …`, `refactor(scope): …`, `build(scope): …`, `ci: …`, `chore: …`). Match the scope names already in use in the git log. Documentation-only commits (issue files, plans, specs, prose changes with no code impact) should append `[skip ci]` to the subject line to skip CI.
