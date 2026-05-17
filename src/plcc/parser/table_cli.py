@@ -71,7 +71,7 @@ def main(argv=None):
 
     cursor = 0
     attempted = False
-    while cursor < len(tokens) and tokens[cursor]["name"] != "$":
+    while cursor < len(tokens) and tokens[cursor]["name"] != "eof":
         attempted = True
         try:
             tree, consumed = parse(ll1, tokens[cursor:])

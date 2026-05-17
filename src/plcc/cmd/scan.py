@@ -110,7 +110,7 @@ class ScanHandler:
             if not raw:
                 continue
             record = json.loads(raw)
-            if record.get("name") == "$":
+            if record.get("name") == "eof":
                 continue
             _render_record(record, trace, trace, trace)
         if proc.returncode != 0:

@@ -187,7 +187,7 @@ def test_parse_error_emits_error_record_to_stdout(capsys, monkeypatch):
 
 
 def _sentinel(line=1, col=1, file="-"):
-    return {"kind": "token", "name": "$", "lexeme": "",
+    return {"kind": "token", "name": "eof", "lexeme": "",
             "source": {"file": file, "line": line, "column": col}}
 
 
