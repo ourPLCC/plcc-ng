@@ -266,8 +266,8 @@ def test_is_blank_true_for_newline_only(runner):
     assert runner._is_blank(b"\n") is True
 
 
-def test_is_blank_true_for_spaces_and_newline(runner):
-    assert runner._is_blank(b"  \n") is True
+def test_is_blank_false_for_whitespace_only_line(runner):
+    assert runner._is_blank(b"  \n") is False
 
 
 def test_is_blank_false_for_content_line(runner):

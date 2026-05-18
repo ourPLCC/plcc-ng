@@ -87,12 +87,10 @@ class SourceRunner:
         return not line.endswith(b"\n")
 
     def _is_blank(self, line):
-        return not line.strip()
+        return line == b"\n"
 
     def _accumulate_only(self, line, state):
         buffer = state.buffer + line
-        if not buffer.strip():
-            return _InteractiveState(buffer=b"", prompt=self._prompt)
         return _InteractiveState(buffer=buffer, prompt=self._continuation)
 
     def _clear_buffer_or_exit(self, state):
