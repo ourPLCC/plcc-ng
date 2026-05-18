@@ -48,7 +48,7 @@ def parse(ll1: dict, tokens: list) -> tuple:
     Parse tokens against the LL(1) parse table.
 
     ll1    — dict with keys: start_symbol, parse_table, arbno (optional)
-    tokens — list of token dicts (may include a trailing '$' sentinel)
+    tokens — list of token dicts (may include a trailing 'eof' sentinel)
 
     Returns (tree_dict, consumed_count).
     Raises ParseError on any syntax error.
