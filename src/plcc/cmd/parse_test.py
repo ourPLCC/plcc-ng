@@ -125,3 +125,47 @@ def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
     handler.feed(b"@\n", "-")
     _, err = capsys.readouterr()
     assert "plcc-tokens: error: bad char" in err
+
+
+def _eof_error_record(msg="unexpected end of input: expected 'PLUS'",
+                      stage="plcc-parser-table", line=1, col=1):
+    return json.dumps({
+        "kind": "error", "message": msg, "stage": stage,
+        "found": "eof",
+        "source": {"file": "-", "line": line, "column": col},
+    }).encode() + b"\n"
+
+
+def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert handler.feed(b"1+\n", "-", eof=False) is False
+
+
+def test_feed_returns_true_for_eof_only_error_when_force_submit(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert handler.feed(b"1+\n", "-", eof=True) is True
+
+
+def test_feed_suppresses_stderr_for_eof_error_when_trial(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record("expected PLUS"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"1+\n", "-", eof=False)
+    _, err = capsys.readouterr()
+    assert err == ""
+
+
+def test_feed_shows_stderr_for_eof_error_when_force_submit(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record("expected PLUS"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"1+\n", "-", eof=True)
+    _, err = capsys.readouterr()
+    assert "expected PLUS" in err
+
+
+def test_feed_returns_true_for_genuine_error_regardless_of_eof_param(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_error_record("bad token"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    # _error_record has no "found" field → genuine error → always True
+    assert handler.feed(b"@\n", "-", eof=False) is True

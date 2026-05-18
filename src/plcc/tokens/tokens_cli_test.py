@@ -35,7 +35,7 @@ def test_outputs_token_jsonl(capsys, monkeypatch, fs):
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
     records = [json.loads(l) for l in lines]
-    non_sentinel = [r for r in records if r.get('name') != '$']
+    non_sentinel = [r for r in records if r.get('name') != 'eof']
     assert len(non_sentinel) == 1
     record = non_sentinel[0]
     assert record['kind'] == 'token'
@@ -74,7 +74,7 @@ def test_lex_error_and_token_appear_in_stream_order(capsys, monkeypatch, fs):
     out, err = capsys.readouterr()
     lines = [l for l in out.strip().splitlines() if l]
     records = [json.loads(l) for l in lines]
-    non_sentinel = [r for r in records if r.get('name') != '$']
+    non_sentinel = [r for r in records if r.get('name') != 'eof']
     assert len(non_sentinel) == 2
     assert non_sentinel[0]['kind'] == 'error'
     assert non_sentinel[1]['kind'] == 'token'
@@ -87,7 +87,7 @@ def test_stdin_labels_tokens_with_dash(capsys, monkeypatch, fs):
     run_main(['/spec.json'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
-    token_records = [r for r in records if r.get('name') != '$']
+    token_records = [r for r in records if r.get('name') != 'eof']
     assert len(token_records) == 1
     assert token_records[0]['source']['file'] == '-'
 
@@ -98,7 +98,7 @@ def test_named_file_arg_labels_tokens_with_filename(capsys, fs):
     run_main(['/spec.json', '/src.txt'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
-    token_records = [r for r in records if r.get('name') != '$']
+    token_records = [r for r in records if r.get('name') != 'eof']
     assert len(token_records) == 1
     assert token_records[0]['source']['file'] == '/src.txt'
 
@@ -121,7 +121,7 @@ def test_default_omits_regex_and_source_line(capsys, monkeypatch, fs):
     run_main(['/spec.json'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
-    token_records = [r for r in records if r.get('name') != '$']
+    token_records = [r for r in records if r.get('name') != 'eof']
     assert len(token_records) == 1
     record = token_records[0]
     assert 'regex' not in record
@@ -134,7 +134,7 @@ def test_trace_includes_regex_and_source_line(capsys, monkeypatch, fs):
     run_main(['--trace', '/spec.json'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
-    token_records = [r for r in records if r.get('name') != '$']
+    token_records = [r for r in records if r.get('name') != 'eof']
     assert len(token_records) == 1
     record = token_records[0]
     assert record['regex'] == '\\d+'
@@ -184,6 +184,6 @@ def test_source_name_overrides_stdin_label(capsys, monkeypatch, fs):
     run_main(['/spec.json', '--source-name=myfile.txt', '-'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
-    token_records = [r for r in records if r.get('name') != '$']
+    token_records = [r for r in records if r.get('name') != 'eof']
     assert len(token_records) == 1
     assert token_records[0]['source']['file'] == 'myfile.txt'

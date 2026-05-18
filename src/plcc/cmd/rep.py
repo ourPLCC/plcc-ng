@@ -37,7 +37,7 @@ class RepHandler:
         self._interpreter = interpreter
         self._verbose_format = verbose_format
 
-    def feed(self, content, source):
+    def feed(self, content, source, eof=False):
         tokens_proc = subprocess.Popen(
             ["plcc-tokens", self._spec_path, "-"],
             stdin=subprocess.PIPE,

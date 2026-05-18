@@ -92,3 +92,10 @@ def test_feed_returns_true_on_error_record(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     assert h.feed(b"bad\n", "-") is True
+
+
+def test_feed_accepts_eof_kwarg(monkeypatch, handler):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=b"")])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert h.feed(b"\n", "-", eof=True) is False

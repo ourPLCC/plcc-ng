@@ -62,7 +62,7 @@ def main(argv=None):
             continue
         last_source = {"file": obj.line.file, "line": obj.line.number, "column": obj.column}
         print(format_record(obj, show_all=trace), flush=True)
-    print(json.dumps({"kind": "token", "name": "$", "lexeme": "", "source": last_source}), flush=True)
+    print(json.dumps({"kind": "token", "name": "eof", "lexeme": "", "source": last_source}), flush=True)
     verbose.emit(Events.FINISHED, message="done")
 
 

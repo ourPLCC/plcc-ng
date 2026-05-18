@@ -38,10 +38,10 @@ teardown() {
     run --separate-stderr bash -c "echo 'xyz' | plcc-tokens '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
     [ -z "$stderr" ]
-    # every output line except the $ sentinel is a valid JSON record with kind=error
+    # every output line except the eof sentinel is a valid JSON record with kind=error
     while IFS= read -r line || [ -n "$line" ]; do
         [ -z "$line" ] && continue
-        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); exit(0) if r.get('name')=='\$' else None; assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
+        echo "$line" | python3 -c "import json,sys; r=json.load(sys.stdin); exit(0) if r.get('name')=='eof' else None; assert r['kind']=='error', f\"expected kind=error, got {r['kind']}\""
     done <<< "$output"
 }
 

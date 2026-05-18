@@ -187,7 +187,7 @@ def test_parse_error_emits_error_record_to_stdout(capsys, monkeypatch):
 
 
 def _sentinel(line=1, col=1, file="-"):
-    return {"kind": "token", "name": "$", "lexeme": "",
+    return {"kind": "token", "name": "eof", "lexeme": "",
             "source": {"file": file, "line": line, "column": col}}
 
 
@@ -276,6 +276,29 @@ def test_two_programs_in_one_input_emits_two_trees(capsys, monkeypatch):
         records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
         trees = [r for r in records if r.get("kind") == "tree"]
         assert len(trees) == 2
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_incomplete_input_error_record_has_found_eof(capsys, monkeypatch):
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM, eof] — incomplete input
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_ADDITION_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "1"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        err_records = [r for r in records if r.get("kind") == "error"]
+        assert len(err_records) >= 1
+        assert err_records[0].get("found") == "eof"
     finally:
         os.unlink(ll1_file.name)
 

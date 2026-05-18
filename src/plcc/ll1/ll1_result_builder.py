@@ -27,7 +27,7 @@ def build_ll1_result(grammar: Grammar, field_map: dict, arbno_rules: dict = None
         if t is eps:
             return ""
         if t is eof:
-            return "$"
+            return "eof"
         return t
 
     nts = sorted(

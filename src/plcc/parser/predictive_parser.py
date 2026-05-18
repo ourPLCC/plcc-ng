@@ -1,7 +1,8 @@
 class ParseError(Exception):
-    def __init__(self, message, source=None):
+    def __init__(self, message, source=None, found=None):
         super().__init__(message)
         self.source = source or {}
+        self.found = found
 
 
 class NodeBuilder:
@@ -47,7 +48,7 @@ def parse(ll1: dict, tokens: list) -> tuple:
     Parse tokens against the LL(1) parse table.
 
     ll1    — dict with keys: start_symbol, parse_table, arbno (optional)
-    tokens — list of token dicts (may include a trailing '$' sentinel)
+    tokens — list of token dicts (may include a trailing 'eof' sentinel)
 
     Returns (tree_dict, consumed_count).
     Raises ParseError on any syntax error.
@@ -57,7 +58,7 @@ def parse(ll1: dict, tokens: list) -> tuple:
     start = ll1["start_symbol"]
     cursor = [0]
 
-    SENTINEL = {"name": "$", "lexeme": "", "source": {"file": "", "line": 0, "column": 0}}
+    SENTINEL = {"name": "eof", "lexeme": "", "source": {"file": "", "line": 0, "column": 0}}
 
     def current():
         return tokens[cursor[0]] if cursor[0] < len(tokens) else SENTINEL
@@ -70,14 +71,10 @@ def parse(ll1: dict, tokens: list) -> tuple:
     def expect(sym):
         tok = current()
         if tok["name"] != sym:
-            if tok["name"] == "$":
-                raise ParseError(
-                    f"unexpected end of input: expected {sym!r}",
-                    source=tok["source"],
-                )
             raise ParseError(
                 f"expected {sym!r}, got {tok['name']!r}",
                 source=tok["source"],
+                found=tok["name"],
             )
         return advance()
 
@@ -99,14 +96,10 @@ def parse(ll1: dict, tokens: list) -> tuple:
             )
         production = nt_table.get(lookahead)
         if production is None:
-            if lookahead == "$":
-                raise ParseError(
-                    f"unexpected end of input while parsing {sym!r}",
-                    source=current()["source"],
-                )
             raise ParseError(
                 f"unexpected {lookahead!r}, no production for {sym!r}",
                 source=current()["source"],
+                found=lookahead,
             )
         builder = NodeBuilder(sym)
         for entry in production:

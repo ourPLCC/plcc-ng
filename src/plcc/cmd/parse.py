@@ -48,7 +48,7 @@ class ParseHandler:
         self._child_flags = child_flags
         self.had_error = False
 
-    def feed(self, content, source):
+    def feed(self, content, source, eof=False):
         tokens_proc = subprocess.Popen(
             ["plcc-tokens", self._spec_path, "-"] + self._child_flags,
             stdin=subprocess.PIPE,
@@ -67,17 +67,31 @@ class ParseHandler:
         tree_out, _ = tree_proc.communicate()
         tokens_proc.wait()
 
-        had_output = False
+        records = []
         for raw in tree_out.splitlines():
             raw = raw.strip()
             if not raw:
                 continue
-            record = json.loads(raw)
-            had_output = True
+            records.append(json.loads(raw))
+
+        if not records:
+            return False
+
+        any_tree = any(r.get("kind") == "tree" for r in records)
+        any_genuine_error = any(
+            r.get("kind") == "error" and r.get("found") != "eof"
+            for r in records
+        )
+        only_eof_errors = not any_tree and not any_genuine_error
+
+        if only_eof_errors and not eof:
+            return False
+
+        for record in records:
             if record.get("kind") == "error":
-                source = record.get("source", {})
+                src = record.get("source", {})
                 message = record.get("message", "error")
-                loc = _location_str(source)
+                loc = _location_str(src)
                 if loc:
                     print(f"{loc}: error: {message}", file=sys.stderr)
                 else:
@@ -86,7 +100,8 @@ class ParseHandler:
                 self.had_error = True
             elif record.get("kind") == "tree":
                 _print_tree(record, indent=0)
-        return had_output
+
+        return True
 
 
 def main(argv=None):
