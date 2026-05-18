@@ -95,7 +95,7 @@ class ScanHandler:
         self._spec_path = spec_path
         self._tokens_flags = tokens_flags
 
-    def feed(self, content, source):
+    def feed(self, content, source, eof=False):
         proc = subprocess.Popen(
             ["plcc-tokens", self._spec_path,
              f"--source-name={source}", "-"] + self._tokens_flags,
