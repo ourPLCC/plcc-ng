@@ -57,7 +57,7 @@ def test_first_sets_correct():
 def test_follow_sets_contain_dollar():
     g, fm = _simple_grammar()
     result = build_ll1_result(g, fm)
-    assert "$" in result["follow_sets"]["program"]
+    assert "eof" in result["follow_sets"]["program"]
 
 
 def test_predict_sets_correct():
@@ -88,7 +88,7 @@ def test_epsilon_production_in_parse_table():
     g, fm = _epsilon_grammar()
     result = build_ll1_result(g, fm)
     # epsilon rule: predict set contains $; parse table entry under $ is []
-    assert result["parse_table"]["rest"]["$"] == []
+    assert result["parse_table"]["rest"]["eof"] == []
 
 
 def test_epsilon_in_first_sets():
