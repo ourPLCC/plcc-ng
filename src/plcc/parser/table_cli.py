@@ -85,7 +85,6 @@ def main(argv=None):
                     "stage": "plcc-parser-table",
                     "source": tok.get("source", {}),
                 }
-                verbose.emit_error(tok.get("source", {}), record["message"])
                 print(json.dumps(record), flush=True)
                 cursor += 1
                 continue
@@ -101,7 +100,6 @@ def main(argv=None):
             }
             if e.found:
                 record["found"] = e.found
-            verbose.emit_error(e.source, str(e))
             print(json.dumps(record), flush=True)
             cursor += 1
 

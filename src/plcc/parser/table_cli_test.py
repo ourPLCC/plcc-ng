@@ -322,3 +322,24 @@ def test_incomplete_input_emits_error_record(capsys, monkeypatch):
         assert any(r.get("kind") == "error" for r in records)
     finally:
         os.unlink(ll1_file.name)
+
+
+def test_parse_error_does_not_write_to_stderr(capsys, monkeypatch):
+    # Grammar: program → NUM; token: PLUS → parse error.
+    # Parse errors are results (stdout JSONL), not diagnostics (stderr).
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        bad_tokens = [_tok("PLUS", "+"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in bad_tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        _, err = capsys.readouterr()
+        assert err == ""
+    finally:
+        os.unlink(ll1_file.name)
