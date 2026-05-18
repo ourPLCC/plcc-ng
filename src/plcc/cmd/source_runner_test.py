@@ -15,9 +15,11 @@ class RecordingHandler:
         # results: iterator of booleans to return from feed(); defaults to all True
         self._results = iter(results or [])
         self.calls = []  # list of (content, source)
+        self.eof_flags = []  # parallel list of eof values
 
     def feed(self, content, source, eof=False):
         self.calls.append((content, source))
+        self.eof_flags.append(eof)
         try:
             return next(self._results)
         except StopIteration:
@@ -59,6 +61,24 @@ def test_non_tty_stdin_reads_all_and_passes_dash(monkeypatch, runner):
     handler = RecordingHandler()
     runner.run(["-"], handler)
     assert handler.calls == [(b"content", "-")]
+
+
+def test_non_tty_stdin_passes_eof_true(monkeypatch, runner):
+    monkeypatch.setattr(sys, "stdin", SimpleNamespace(
+        isatty=lambda: False,
+        buffer=io.BytesIO(b"content"),
+    ))
+    handler = RecordingHandler()
+    runner.run(["-"], handler)
+    assert handler.eof_flags == [True]
+
+
+def test_file_source_passes_eof_true(tmp_path, runner):
+    f = tmp_path / "hello.txt"
+    f.write_bytes(b"hello")
+    handler = RecordingHandler()
+    runner.run([str(f)], handler)
+    assert handler.eof_flags == [True]
 
 
 # --- Interactive (TTY) stdin ---

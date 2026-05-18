@@ -186,6 +186,29 @@ def test_parse_error_emits_error_record_to_stdout(capsys, monkeypatch):
         os.unlink(ll1_file.name)
 
 
+# Grammar: exp → NUM exp2 ; exp2 → OP exp | ε
+# Demonstrates incomplete input: "23 +" hits eof where NUM was expected.
+_EXP_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "exp",
+    "parse_table": {
+        "exp": {
+            "NUM": [
+                {"symbol": "NUM", "field": None},
+                {"symbol": "exp2", "field": None},
+            ]
+        },
+        "exp2": {
+            "OP": [
+                {"symbol": "OP", "field": None},
+                {"symbol": "exp", "field": None},
+            ],
+            "eof": [],
+        },
+    },
+}
+
+
 def _sentinel(line=1, col=1, file="-"):
     return {"kind": "token", "name": "eof", "lexeme": "",
             "source": {"file": file, "line": line, "column": col}}
@@ -320,5 +343,52 @@ def test_incomplete_input_emits_error_record(capsys, monkeypatch):
         out, _ = capsys.readouterr()
         records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
         assert any(r.get("kind") == "error" for r in records)
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_incomplete_input_emits_only_one_error_no_cascade(capsys, monkeypatch):
+    # Tokens: [NUM("23"), OP("+"), eof] — incomplete, nothing after the operator.
+    # The parser fails with found="eof". Without the fix, cursor advances to OP
+    # and a second error with found="OP" is emitted (cascade). With the fix,
+    # the loop breaks immediately, leaving exactly one error record.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_EXP_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "23"), _tok("OP", "+"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        err_records = [r for r in records if r.get("kind") == "error"]
+        assert len(err_records) == 1
+        assert err_records[0].get("found") == "eof"
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_parse_error_does_not_write_to_stderr(capsys, monkeypatch):
+    # Grammar: program → NUM; token: PLUS → parse error.
+    # Parse errors are results (stdout JSONL), not diagnostics (stderr).
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        bad_tokens = [_tok("PLUS", "+"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in bad_tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        _, err = capsys.readouterr()
+        assert err == ""
     finally:
         os.unlink(ll1_file.name)
