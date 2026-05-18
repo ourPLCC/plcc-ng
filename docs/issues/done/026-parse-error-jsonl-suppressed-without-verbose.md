@@ -20,6 +20,8 @@ stderr.
 
 ## Notes
 
-JSONL verbose events should only be emitted when `-v` is active. The fix likely involves
-guarding the verbose event emission in the error path with a check on whether verbose mode is
-enabled.
+The two `verbose.emit_error()` calls in `table_cli.py` that wrote parse result errors to
+stderr were removed entirely. Parse result errors (unexpected token, `ParseError`) are data
+and belong on stdout as JSONL records, not on stderr as tool diagnostics. The two
+`verbose.emit_error()` calls that guard genuine tool failures (cannot load `ll1.json`,
+grammar is not LL(1)) were left intact.

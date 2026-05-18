@@ -37,12 +37,12 @@ class SourceRunner:
                     self._run_interactive(handler)
                 else:
                     content = sys.stdin.buffer.read()
-                    if handler.feed(content, "-") is False:
+                    if handler.feed(content, "-", eof=True) is False:
                         completed = False
             else:
                 with open(source, "rb") as f:
                     content = f.read()
-                if handler.feed(content, source) is False:
+                if handler.feed(content, source, eof=True) is False:
                     completed = False
         return completed
 
