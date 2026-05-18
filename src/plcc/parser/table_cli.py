@@ -99,6 +99,8 @@ def main(argv=None):
                 "stage": "plcc-parser-table",
                 "source": e.source,
             }
+            if e.found:
+                record["found"] = e.found
             verbose.emit_error(e.source, str(e))
             print(json.dumps(record), flush=True)
             cursor += 1
@@ -117,6 +119,8 @@ def main(argv=None):
                 "stage": "plcc-parser-table",
                 "source": e.source,
             }
+            if e.found:
+                record["found"] = e.found
             print(json.dumps(record), flush=True)
 
     verbose.emit(Events.FINISHED, token_count=len(tokens))
