@@ -307,3 +307,21 @@ def test_incomplete_raises_ParseError_not_IncompleteInputError():
     # Grammar: program → NUM PLUS NUM; tokens: [NUM] — hits EOF before PLUS
     with pytest.raises(ParseError):
         parse(_ADDITION_LL1, [_tok("NUM", "1")])
+
+
+def test_parse_error_found_is_set_for_wrong_terminal():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [_tok("PLUS", "+")])
+    assert exc_info.value.found == "PLUS"
+
+
+def test_parse_error_found_is_eof_for_premature_end_of_input():
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM] — hits EOF before PLUS
+    with pytest.raises(ParseError) as exc_info:
+        parse(_ADDITION_LL1, [_tok("NUM", "1")])
+    assert exc_info.value.found == "eof"
+
+
+def test_parse_error_found_is_none_by_default():
+    e = ParseError("something went wrong")
+    assert e.found is None
