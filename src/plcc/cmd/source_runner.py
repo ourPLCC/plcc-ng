@@ -71,6 +71,8 @@ class SourceRunner:
         if self._is_partial_eof(line):
             return self._force_submit_including_partial_line(handler, line, state)
         if self._submit_on == SubmitOn.EOF:
+            if not state.buffer:
+                return self._attempt_first_line(handler, line, state)
             return self._accumulate_only(line, state)
         # SubmitOn.EOL
         if self._is_blank(line):
@@ -92,6 +94,13 @@ class SourceRunner:
     def _accumulate_only(self, line, state):
         buffer = state.buffer + line
         return _InteractiveState(buffer=buffer, prompt=self._continuation)
+
+    def _attempt_first_line(self, handler, line, state):
+        if self._is_blank(line):
+            return _InteractiveState(buffer=b"", prompt=self._prompt)
+        if self._evaluate(handler, line, eof=False):
+            return _InteractiveState(buffer=b"", prompt=self._prompt)
+        return _InteractiveState(buffer=line, prompt=self._continuation)
 
     def _clear_buffer_or_exit(self, state):
         print(file=sys.stderr)
@@ -125,7 +134,7 @@ class SourceRunner:
 
     def _evaluate(self, handler, content, eof=False):
         try:
-            result = handler.feed(content, "-")
+            result = handler.feed(content, "-", eof=eof)
         except KeyboardInterrupt:
             print(file=sys.stderr)
             sys.exit(130)
