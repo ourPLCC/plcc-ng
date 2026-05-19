@@ -1,50 +1,14 @@
-import io
 import json
 import subprocess
 import sys
-from types import SimpleNamespace
 
 import pytest
 
 from .pipeline import TreePipeline, print_parse_error
-
-
-# --- helpers ---
-
-def _proc(stdout=b""):
-    p = SimpleNamespace()
-    p.communicate = lambda: (stdout, b"")
-    p.wait = lambda: None
-    p.stdin = io.BytesIO()
-    p.stdout = io.BytesIO(stdout)
-    return p
-
-
-def _tree_record():
-    return json.dumps({
-        "kind": "tree", "rule": "program",
-        "source": {}, "children": []
-    }).encode() + b"\n"
-
-
-def _error_record(msg="bad", stage="plcc-tokens"):
-    return json.dumps({"kind": "error", "message": msg, "stage": stage}).encode() + b"\n"
-
-
-def _error_record_with_source(msg="bad", stage="plcc-parser-table",
-                               file="-", line=2, col=5):
-    return json.dumps({
-        "kind": "error", "message": msg, "stage": stage,
-        "source": {"file": file, "line": line, "column": col},
-    }).encode() + b"\n"
-
-
-def _eof_error_record(msg="unexpected end of input"):
-    return json.dumps({
-        "kind": "error", "message": msg,
-        "found": "eof",
-        "source": {"file": "-", "line": 1, "column": 1},
-    }).encode() + b"\n"
+from ._test_helpers import (
+    _proc, _tree_record, _error_record, _error_record_with_source,
+    _eof_error_record,
+)
 
 
 @pytest.fixture()

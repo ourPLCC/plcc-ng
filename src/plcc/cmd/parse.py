@@ -6,7 +6,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .pipeline import TreePipeline, print_parse_error, _location_str
+from .pipeline import TreePipeline, print_parse_error, location_str
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-parse
@@ -106,11 +106,11 @@ def _print_tree(node, indent):
         name = node.get("name", "?")
         lexeme = node.get("lexeme", "?")
         source = node.get("source", {})
-        loc = _location_str(source)
+        loc = location_str(source)
         print(f"{prefix}{name} '{lexeme}' [{loc}]")
     # plcc-trees may emit error records inline in the current protocol
     elif kind == "error":
         source = node.get("source", {})
-        loc = _location_str(source)
+        loc = location_str(source)
         message = node.get("message", "unknown error")
         print(f"{prefix}{loc}: error: {message}")

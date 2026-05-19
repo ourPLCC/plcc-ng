@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 
-def _location_str(source):
+def location_str(source):
     file = source.get("file", "")
     line = source.get("line")
     col = source.get("column")
@@ -17,7 +17,7 @@ def _location_str(source):
 def print_parse_error(record, default_stage):
     src = record.get("source", {})
     message = record.get("message", "error")
-    loc = _location_str(src)
+    loc = location_str(src)
     if loc:
         print(f"{loc}: error: {message}", file=sys.stderr)
     else:
@@ -43,13 +43,13 @@ class TreePipeline:
             ["plcc-tokens", self._spec_path, "-"] + self._child_flags,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=None,
+            stderr=None,  # inherit parent stderr so errors surface to the terminal
         )
         tree_proc = subprocess.Popen(
             ["plcc-trees", f"--ll1={self._ll1_path}"] + self._child_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
-            stderr=None,
+            stderr=None,  # same: inherit
         )
         tokens_proc.stdout.close()
         tokens_proc.stdin.write(content)
@@ -58,13 +58,13 @@ class TreePipeline:
         tokens_proc.wait()
 
         records = []
-        raw_lines = []
+        raws = []
         for raw in tree_out.splitlines():
             raw = raw.strip()
             if not raw:
                 continue
             records.append(json.loads(raw))
-            raw_lines.append(raw)
+            raws.append(raw)
 
         if not records:
             return None
@@ -79,4 +79,4 @@ class TreePipeline:
         if only_eof_errors and not eof:
             return None
 
-        return list(zip(records, raw_lines))
+        return list(zip(records, raws))
