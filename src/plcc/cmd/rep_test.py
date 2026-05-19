@@ -99,3 +99,29 @@ def test_feed_accepts_eof_kwarg(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=b"")])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     assert h.feed(b"\n", "-", eof=True) is False
+
+
+def test_feed_handles_non_dict_json_number_from_interpreter(monkeypatch, handler, capsys):
+    # Interpreter emits a bare JSON number then a proper result record.
+    response = b'42\n{"kind":"result","value":"ok"}\n'
+    h, _ = handler
+    h._interpreter.stdout = io.BytesIO(response)
+    procs = iter([_proc(), _proc(stdout=_tree())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"1\n", "-")
+    out, _ = capsys.readouterr()
+    assert "42" in out
+    assert "ok" in out
+
+
+def test_feed_handles_non_dict_json_array_from_interpreter(monkeypatch, handler, capsys):
+    # Interpreter emits a JSON array then a proper result record.
+    response = b'[1,2,3]\n{"kind":"result","value":"done"}\n'
+    h, _ = handler
+    h._interpreter.stdout = io.BytesIO(response)
+    procs = iter([_proc(), _proc(stdout=_tree())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"1\n", "-")
+    out, _ = capsys.readouterr()
+    assert "[1, 2, 3]" in out or "[1,2,3]" in out
+    assert "done" in out
