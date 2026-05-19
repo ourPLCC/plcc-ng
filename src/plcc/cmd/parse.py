@@ -1,5 +1,4 @@
 import enum
-import json
 import os
 import subprocess
 import sys
@@ -7,6 +6,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .pipeline import TreePipeline, print_parse_error, _location_str
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-parse
@@ -29,78 +29,21 @@ class Events(enum.Enum):
     FINISHED = "finished"
 
 
-def _location_str(source):
-    """Return 'file:line:col' for real files, '-:line:col' for stdin, or None if no location."""
-    file = source.get("file", "")
-    line = source.get("line")
-    col = source.get("column")
-    if line is None or col is None:
-        return None
-    if file and file not in ("-", "<stdin>", ""):
-        return f"{file}:{line}:{col}"
-    return f"-:{line}:{col}"
-
-
 class ParseHandler:
     def __init__(self, spec_path, ll1_path, child_flags):
-        self._spec_path = spec_path
-        self._ll1_path = ll1_path
-        self._child_flags = child_flags
+        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags)
         self.had_error = False
 
     def feed(self, content, source, eof=False):
-        tokens_proc = subprocess.Popen(
-            ["plcc-tokens", self._spec_path, "-"] + self._child_flags,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=None,
-        )
-        tree_proc = subprocess.Popen(
-            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._child_flags,
-            stdin=tokens_proc.stdout,
-            stdout=subprocess.PIPE,
-            stderr=None,
-        )
-        tokens_proc.stdout.close()
-        tokens_proc.stdin.write(content)
-        tokens_proc.stdin.close()
-        tree_out, _ = tree_proc.communicate()
-        tokens_proc.wait()
-
-        records = []
-        for raw in tree_out.splitlines():
-            raw = raw.strip()
-            if not raw:
-                continue
-            records.append(json.loads(raw))
-
-        if not records:
+        items = self._pipeline.run(content, eof)
+        if items is None:
             return False
-
-        any_tree = any(r.get("kind") == "tree" for r in records)
-        any_genuine_error = any(
-            r.get("kind") == "error" and r.get("found") != "eof"
-            for r in records
-        )
-        only_eof_errors = not any_tree and not any_genuine_error
-
-        if only_eof_errors and not eof:
-            return False
-
-        for record in records:
+        for record, _ in items:
             if record.get("kind") == "error":
-                src = record.get("source", {})
-                message = record.get("message", "error")
-                loc = _location_str(src)
-                if loc:
-                    print(f"{loc}: error: {message}", file=sys.stderr)
-                else:
-                    stage = record.get("stage", "plcc-parse")
-                    print(f"{stage}: error: {message}", file=sys.stderr)
+                print_parse_error(record, default_stage="plcc-parse")
                 self.had_error = True
             elif record.get("kind") == "tree":
                 _print_tree(record, indent=0)
-
         return True
 
 
