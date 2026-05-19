@@ -184,7 +184,7 @@ def _read_response(stdout, verbose_format):
         except json.JSONDecodeError:
             print(line)
             continue
-        if 'kind' not in record:
+        if not isinstance(record, dict) or 'kind' not in record:
             print(line)
             continue
         _render_record(record, verbose_format)
