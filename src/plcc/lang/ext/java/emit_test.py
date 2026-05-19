@@ -105,6 +105,30 @@ def test_body_fragment_pasted_into_class(tmp_path, monkeypatch):
     assert 'System.out.println(expr.toString())' in program_java
 
 
+def test_body_fragment_injected_into_abstract_class(tmp_path, monkeypatch):
+    model = _trivial_model()
+    model['semantic_sections'][0]['fragments'].append(
+        {"class_name": "Expr", "kind": "body",
+         "body": "    public abstract int eval();"}
+    )
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    expr_java = (tmp_path / 'Expr.java').read_text()
+    assert 'public abstract int eval()' in expr_java
+
+
+def test_import_fragment_appears_in_abstract_class_file(tmp_path, monkeypatch):
+    model = _trivial_model()
+    model['semantic_sections'][0]['fragments'].append(
+        {"class_name": "Expr", "kind": "import",
+         "body": "import java.util.function.Function;"}
+    )
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    expr_java = (tmp_path / 'Expr.java').read_text()
+    assert 'import java.util.function.Function;' in expr_java
+
+
 def test_import_fragment_appears_at_top(tmp_path, monkeypatch):
     model = _trivial_model()
     model['semantic_sections'][0]['fragments'].append(
