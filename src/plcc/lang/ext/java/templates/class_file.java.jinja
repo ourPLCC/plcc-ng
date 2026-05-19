@@ -4,11 +4,8 @@ import java.util.List;
 import java.util.Map;
 import runtime.Token;
 
-{% if cls.abstract %}
-public abstract class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
-}
-{% else %}
-public class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
+public {% if cls.abstract %}abstract {% endif %}class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
+{% if not cls.abstract %}
 
     public static final String _RULE_NAME = {{ cls.rule_name | tojson }};
     public static final String[] _FIELDS = { {% for field in cls.fields %}{{ field.name | tojson }}{% if not loop.last %}, {% endif %}{% endfor %} };
@@ -31,9 +28,9 @@ public class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else
 {% endfor %}
     }
 
+{% endif %}
 {% for frag in body_fragments %}
 {{ frag.body }}
 
 {% endfor %}
 }
-{% endif %}
