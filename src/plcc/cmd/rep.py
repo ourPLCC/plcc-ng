@@ -116,7 +116,7 @@ def main(argv=None):
             verbose_format=verbose_format,
             child_flags=child_flags,
         )
-        runner = SourceRunner(submit_on=SubmitOn.EOF)
+        runner = SourceRunner(submit_on=SubmitOn.EOL)
         completed = runner.run(sources, handler)
     finally:
         try:
