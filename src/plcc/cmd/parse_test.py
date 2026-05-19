@@ -1,40 +1,13 @@
-import io
-import json
 import subprocess
 import sys
-from types import SimpleNamespace
 
 import pytest
 
 from .parse import ParseHandler
-
-
-def _proc(stdout=b"", returncode=0):
-    p = SimpleNamespace(returncode=returncode)
-    p.communicate = lambda: (stdout, b"")
-    p.wait = lambda: None
-    p.stdin = io.BytesIO()
-    p.stdout = io.BytesIO(stdout)
-    return p
-
-
-def _tree_record():
-    return json.dumps({
-        "kind": "tree", "rule": "program",
-        "source": {}, "children": []
-    }).encode() + b"\n"
-
-
-def _error_record(msg="syntax error", stage="plcc-tokens"):
-    return json.dumps({"kind": "error", "message": msg, "stage": stage}).encode() + b"\n"
-
-
-def _error_record_with_source(msg="syntax error", stage="plcc-parser-table",
-                               file="-", line=2, col=5):
-    return json.dumps({
-        "kind": "error", "message": msg, "stage": stage,
-        "source": {"file": file, "line": line, "column": col},
-    }).encode() + b"\n"
+from ._test_helpers import (
+    _proc, _tree_record, _error_record, _error_record_with_source,
+    _eof_error_record,
+)
 
 
 @pytest.fixture()
@@ -125,15 +98,6 @@ def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
     handler.feed(b"@\n", "-")
     _, err = capsys.readouterr()
     assert "plcc-tokens: error: bad char" in err
-
-
-def _eof_error_record(msg="unexpected end of input: expected 'PLUS'",
-                      stage="plcc-parser-table", line=1, col=1):
-    return json.dumps({
-        "kind": "error", "message": msg, "stage": stage,
-        "found": "eof",
-        "source": {"file": "-", "line": line, "column": col},
-    }).encode() + b"\n"
 
 
 def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):

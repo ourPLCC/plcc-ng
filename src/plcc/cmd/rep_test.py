@@ -1,5 +1,4 @@
 import io
-import json
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -7,26 +6,10 @@ from types import SimpleNamespace
 import pytest
 
 from .rep import RepHandler
-
-
-def _proc(stdout=b"", returncode=0):
-    p = SimpleNamespace(returncode=returncode)
-    p.communicate = lambda: (stdout, b"")
-    p.wait = lambda: None
-    p.stdin = io.BytesIO()
-    p.stdout = io.BytesIO(stdout)
-    return p
-
-
-def _tree():
-    return json.dumps({
-        "kind": "tree", "rule": "program",
-        "source": {}, "children": []
-    }).encode() + b"\n"
-
-
-def _error_record():
-    return json.dumps({"kind": "error", "message": "bad"}).encode() + b"\n"
+from ._test_helpers import (
+    _proc, _tree_record, _error_record, _error_record_with_source,
+    _eof_error_record,
+)
 
 
 def _make_interpreter(response=b'{"kind":"result","value":"42"}\n'):
@@ -56,7 +39,7 @@ def test_feed_returns_false_when_no_tree(monkeypatch, handler):
 
 def test_feed_returns_true_when_tree_produced(monkeypatch, handler):
     h, _ = handler
-    procs = iter([_proc(), _proc(stdout=_tree())])
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     assert h.feed(b"42\n", "-") is True
 
@@ -71,7 +54,7 @@ def test_feed_does_not_contact_interpreter_when_no_tree(monkeypatch, handler):
 
 def test_feed_sends_tree_to_interpreter(monkeypatch, handler):
     h, interp = handler
-    procs = iter([_proc(), _proc(stdout=_tree())])
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     h.feed(b"42\n", "-")
     written = interp.stdin.getvalue()
@@ -80,7 +63,7 @@ def test_feed_sends_tree_to_interpreter(monkeypatch, handler):
 
 def test_feed_prints_result(monkeypatch, handler, capsys):
     h, _ = handler
-    procs = iter([_proc(), _proc(stdout=_tree())])
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     h.feed(b"42\n", "-")
     out, _ = capsys.readouterr()
@@ -106,7 +89,7 @@ def test_feed_handles_non_dict_json_number_from_interpreter(monkeypatch, handler
     response = b'42\n{"kind":"result","value":"ok"}\n'
     h, _ = handler
     h._interpreter.stdout = io.BytesIO(response)
-    procs = iter([_proc(), _proc(stdout=_tree())])
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     h.feed(b"1\n", "-")
     out, _ = capsys.readouterr()
@@ -119,9 +102,100 @@ def test_feed_handles_non_dict_json_array_from_interpreter(monkeypatch, handler,
     response = b'[1,2,3]\n{"kind":"result","value":"done"}\n'
     h, _ = handler
     h._interpreter.stdout = io.BytesIO(response)
-    procs = iter([_proc(), _proc(stdout=_tree())])
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     h.feed(b"1\n", "-")
     out, _ = capsys.readouterr()
     assert "[1, 2, 3]" in out or "[1,2,3]" in out
     assert "done" in out
+
+
+# --- EOF error detection ---
+
+def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_eof_error_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert h.feed(b"1+\n", "-", eof=False) is False
+
+
+def test_feed_returns_true_for_eof_only_error_when_force_submit(monkeypatch, handler):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_eof_error_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert h.feed(b"1+\n", "-", eof=True) is True
+
+
+def test_feed_suppresses_stderr_for_eof_error_when_trial(monkeypatch, handler, capsys):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_eof_error_record("expected PLUS"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"1+\n", "-", eof=False)
+    _, err = capsys.readouterr()
+    assert err == ""
+
+
+def test_feed_shows_stderr_for_eof_error_when_force_submit(monkeypatch, handler, capsys):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_eof_error_record("expected PLUS"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"1+\n", "-", eof=True)
+    _, err = capsys.readouterr()
+    assert "expected PLUS" in err
+
+
+def test_feed_returns_true_for_genuine_error_regardless_of_eof(monkeypatch, handler):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_error_record("bad token"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert h.feed(b"@\n", "-", eof=False) is True
+
+
+# --- child_flags propagation ---
+
+def test_feed_passes_child_flags_to_subprocesses(monkeypatch):
+    calls = []
+
+    def mock_popen(args, **kwargs):
+        calls.append(list(args))
+        return _proc()
+
+    monkeypatch.setattr(subprocess, "Popen", mock_popen)
+    h = RepHandler(
+        spec_path="s", ll1_path="l",
+        interpreter=_make_interpreter(),
+        verbose_format="text",
+        child_flags=["--verbose"],
+    )
+    h.feed(b"x\n", "-")
+    assert any("--verbose" in c for c in calls)
+
+
+# --- error location format ---
+
+def test_feed_error_shows_location_in_stderr(monkeypatch, handler, capsys):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_error_record_with_source("bad char", file="-", line=1, col=1))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"@\n", "-")
+    _, err = capsys.readouterr()
+    assert "-:1:1" in err
+
+
+def test_feed_error_renders_file_line_col(monkeypatch, handler, capsys):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_error_record_with_source("bad", file="foo.txt", line=3, col=7))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"bad\n", "-")
+    _, err = capsys.readouterr()
+    assert "foo.txt:3:7" in err
+    assert "bad" in err
+
+
+def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
+    h, _ = handler
+    procs = iter([_proc(), _proc(stdout=_error_record("bad char", stage="plcc-tokens"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"@\n", "-")
+    _, err = capsys.readouterr()
+    assert "plcc-tokens: error: bad char" in err
