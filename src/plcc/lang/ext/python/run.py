@@ -34,11 +34,14 @@ def main(argv=None):
     output_dir = args['--output']
     main_py = os.path.join(output_dir, 'main.py')
     verbose.emit(Events.STARTED, message=f'running {main_py}')
-    result = subprocess.run(
-        [sys.executable, '-u', main_py],
-        stdin=sys.stdin,
-        stdout=sys.stdout,
-        stderr=sys.stderr,
-    )
+    try:
+        result = subprocess.run(
+            [sys.executable, '-u', main_py],
+            stdin=sys.stdin,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
+        )
+    except KeyboardInterrupt:
+        sys.exit(130)
     verbose.emit(Events.FINISHED, message=f'exit {result.returncode}')
     sys.exit(result.returncode)
