@@ -50,6 +50,20 @@ def test_scan_handler_always_returns_true(monkeypatch):
     assert handler.feed(b"anything\n", "foo.txt") is True
 
 
+def test_scan_handler_renders_error_records(monkeypatch, capsys):
+    error = json.dumps({
+        "kind": "error", "stage": "plcc-tokens", "severity": "error",
+        "source": {"file": "-", "line": 1, "column": 1},
+        "lexeme": "@", "message": "unrecognized character '@'"
+    }).encode() + b"\n"
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: _make_proc([error]))
+    handler = ScanHandler(spec_path="build/spec.json", tokens_flags=[])
+    handler.feed(b"@\n", "-")
+    out, _ = capsys.readouterr()
+    assert "-:1:1: error: unrecognized character '@'" in out
+    assert out.count("'@'") == 1
+
+
 def test_scan_handler_renders_token_records(monkeypatch, capsys):
     token = json.dumps({
         "kind": "token", "name": "NUM", "lexeme": "42",

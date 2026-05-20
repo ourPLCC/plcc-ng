@@ -63,12 +63,12 @@
     {
       "title": "ErrorRecord",
       "type": "object",
-      "required": ["kind", "stage", "severity", "pos", "lexeme", "message"],
+      "required": ["kind", "stage", "severity", "source", "lexeme", "message"],
       "properties": {
         "kind":     { "type": "string", "const": "error" },
         "stage":    { "type": "string" },
         "severity": { "type": "string" },
-        "pos":      { "$ref": "#/definitions/SourcePosition" },
+        "source":   { "$ref": "#/definitions/SourcePosition" },
         "lexeme":   { "type": "string" },
         "message":  { "type": "string" }
       }
