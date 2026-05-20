@@ -38,6 +38,6 @@ assert r['stage'] == 'plcc-tokens'
 assert r['severity'] == 'error'
 assert r['lexeme'] == '@'
 assert 'source' in r
-assert r['message'] == "unrecognized character '@'"
+assert r['message'] == 'unrecognized character \'@\''
 "
 }
