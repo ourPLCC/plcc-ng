@@ -19,6 +19,15 @@ def _make_interpreter(response=b'{"kind":"result","value":"42"}\n'):
     return interp
 
 
+def _make_dead_interpreter(returncode):
+    """Simulate an interpreter whose stdout is closed (empty) and has exited."""
+    interp = SimpleNamespace()
+    interp.stdin = io.BytesIO()
+    interp.stdout = io.BytesIO(b"")   # empty — readline() returns b""
+    interp.poll = lambda: returncode
+    return interp
+
+
 @pytest.fixture()
 def handler(monkeypatch):
     interp = _make_interpreter()
@@ -199,3 +208,37 @@ def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
     h.feed(b"@\n", "-")
     _, err = capsys.readouterr()
     assert "plcc-tokens: error: bad char" in err
+
+
+def test_feed_exits_130_when_interpreter_killed_by_signal(monkeypatch, capsys):
+    interp = _make_dead_interpreter(returncode=-2)  # SIGINT on Unix
+    h = RepHandler(
+        spec_path="build/spec.json",
+        ll1_path="build/ll1.json",
+        interpreter=interp,
+        verbose_format="text",
+    )
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    with pytest.raises(SystemExit) as exc_info:
+        h.feed(b"42\n", "-")
+    assert exc_info.value.code == 130
+    _, err = capsys.readouterr()
+    assert "unexpectedly" not in err
+
+
+def test_feed_exits_130_when_interpreter_exits_130(monkeypatch, capsys):
+    interp = _make_dead_interpreter(returncode=130)
+    h = RepHandler(
+        spec_path="build/spec.json",
+        ll1_path="build/ll1.json",
+        interpreter=interp,
+        verbose_format="text",
+    )
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    with pytest.raises(SystemExit) as exc_info:
+        h.feed(b"42\n", "-")
+    assert exc_info.value.code == 130
+    _, err = capsys.readouterr()
+    assert "unexpectedly" not in err
