@@ -52,7 +52,7 @@ class RepHandler:
                 except BrokenPipeError:
                     print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
                     sys.exit(1)
-                _read_response(self._interpreter.stdout, self._verbose_format)
+                _read_response(self._interpreter.stdout, self._interpreter, self._verbose_format)
         return True
 
 
@@ -151,10 +151,13 @@ def _resolve_tool(spec, tool_name):
     sys.exit(1)
 
 
-def _read_response(stdout, verbose_format):
+def _read_response(stdout, interpreter, verbose_format):
     while True:
         raw = stdout.readline()
         if not raw:
+            rc = interpreter.poll()
+            if rc is not None and (rc < 0 or rc == 130):
+                sys.exit(130)
             print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
             sys.exit(1)
         line = raw.decode('utf-8', errors='replace').rstrip('\n')

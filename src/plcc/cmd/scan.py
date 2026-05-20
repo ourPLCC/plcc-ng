@@ -42,10 +42,9 @@ def _render_record(record, show_skips, show_line, show_attempts):
     kind = record.get("kind")
 
     if kind == "error":
-        loc = _location_str(record.get("pos", {}))
-        lexeme = record.get("lexeme", "?")
+        loc = _location_str(record.get("source", {}))
         message = record.get("message", "unrecognized character")
-        print(f"{loc}: error: {message} '{lexeme}'", flush=True)
+        print(f"{loc}: error: {message}", flush=True)
         return
 
     if kind == "skip" and not show_skips:

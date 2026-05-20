@@ -32,15 +32,16 @@ def format_record(obj, show_all=False):
 def format_error_record(obj):
     if not isinstance(obj, LexError):
         raise TypeError(f'Unexpected type: {type(obj)}')
+    char = obj.line.string[obj.column - 1]
     return json.dumps({
         'kind': 'error',
         'stage': 'plcc-tokens',
         'severity': 'error',
-        'pos': {
+        'source': {
             'file': obj.line.file,
             'line': obj.line.number,
             'column': obj.column,
         },
-        'lexeme': obj.line.string[obj.column - 1],
-        'message': 'unrecognized character',
+        'lexeme': char,
+        'message': f"unrecognized character {char!r}",
     })

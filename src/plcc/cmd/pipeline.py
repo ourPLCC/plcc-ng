@@ -17,12 +17,10 @@ def location_str(source):
 def print_parse_error(record, default_stage):
     src = record.get("source", {})
     message = record.get("message", "error")
+    stage = record.get("stage", default_stage)
     loc = location_str(src)
-    if loc:
-        print(f"{loc}: error: {message}", file=sys.stderr)
-    else:
-        stage = record.get("stage", default_stage)
-        print(f"{stage}: error: {message}", file=sys.stderr)
+    prefix = f"{stage}: {loc}" if loc else stage
+    print(f"{prefix}: error: {message}", file=sys.stderr)
 
 
 class TreePipeline:

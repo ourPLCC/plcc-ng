@@ -61,8 +61,8 @@ def test_lex_error_emits_error_record_to_stdout(capsys, monkeypatch, fs):
     assert record['stage'] == 'plcc-tokens'
     assert record['severity'] == 'error'
     assert record['lexeme'] == '@'
-    assert record['pos'] == {'file': '-', 'line': 1, 'column': 1}
-    assert record['message'] == 'unrecognized character'
+    assert record['source'] == {'file': '-', 'line': 1, 'column': 1}
+    assert record['message'] == "unrecognized character '@'"
     assert err == ''
 
 

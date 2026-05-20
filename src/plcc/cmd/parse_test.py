@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 
@@ -133,3 +134,30 @@ def test_feed_returns_true_for_genuine_error_regardless_of_eof_param(monkeypatch
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     # _error_record has no "found" field → genuine error → always True
     assert handler.feed(b"@\n", "-", eof=False) is True
+
+
+def test_feed_prints_empty_annotation_for_childless_tree(monkeypatch, handler, capsys):
+    childless_tree = json.dumps({
+        "kind": "tree", "rule": "exp2",
+        "source": {}, "children": []
+    }).encode() + b"\n"
+    procs = iter([_proc(), _proc(stdout=childless_tree)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"1\n", "-")
+    out, _ = capsys.readouterr()
+    assert "exp2 (empty)" in out
+
+
+def test_feed_does_not_annotate_tree_with_children(monkeypatch, handler, capsys):
+    token_child = {"kind": "token", "name": "NUM", "lexeme": "1",
+                   "source": {"file": "-", "line": 1, "column": 1}}
+    tree_with_child = json.dumps({
+        "kind": "tree", "rule": "exp",
+        "source": {}, "children": [["n", token_child]]
+    }).encode() + b"\n"
+    procs = iter([_proc(), _proc(stdout=tree_with_child)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"1\n", "-")
+    out, _ = capsys.readouterr()
+    assert "exp (empty)" not in out
+    assert "exp\n" in out or out.startswith("exp")

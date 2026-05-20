@@ -99,8 +99,10 @@ def _print_tree(node, indent):
     kind = node.get("kind", "?")
     if kind == "tree":
         rule = node.get("rule", "?")
-        print(f"{prefix}{rule}")
-        for _field, child in node.get("children", []):
+        children = node.get("children", [])
+        suffix = " (empty)" if not children else ""
+        print(f"{prefix}{rule}{suffix}")
+        for _field, child in children:
             _print_tree(child, indent + 1)
     elif kind == "token":
         name = node.get("name", "?")

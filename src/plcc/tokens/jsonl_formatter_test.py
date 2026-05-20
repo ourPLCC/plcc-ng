@@ -41,9 +41,9 @@ def test_formats_error_record():
     assert result['kind'] == 'error'
     assert result['stage'] == 'plcc-tokens'
     assert result['severity'] == 'error'
-    assert result['pos'] == {'file': 'src.txt', 'line': 3, 'column': 6}
+    assert result['source'] == {'file': 'src.txt', 'line': 3, 'column': 6}
     assert result['lexeme'] == '@'
-    assert result['message'] == 'unrecognized character'
+    assert result['message'] == "unrecognized character '@'"
 
 
 def test_format_error_record_rejects_token():
