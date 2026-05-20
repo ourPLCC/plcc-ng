@@ -40,11 +40,14 @@ def main(argv=None):
         sys.exit(1)
     json_jar = str(json_jars[0])
     classpath = f"{output_dir}{os.pathsep}{json_jar}"
-    result = subprocess.run(
-        ['java', '-cp', classpath, 'Main'],
-        stdin=sys.stdin,
-        stdout=sys.stdout,
-        stderr=sys.stderr,
-    )
+    try:
+        result = subprocess.run(
+            ['java', '-cp', classpath, 'Main'],
+            stdin=sys.stdin,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
+        )
+    except KeyboardInterrupt:
+        sys.exit(130)
     verbose.emit(Events.FINISHED, message=f'exit {result.returncode}')
     sys.exit(result.returncode)

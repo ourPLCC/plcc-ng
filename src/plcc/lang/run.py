@@ -40,6 +40,9 @@ def main(argv=None):
         sys.exit(0)
     verbose.emit(Events.STARTED, message=f"dispatching to {cmd}")
     child_cmd = [cmd, f"--output={output}"] + verbose.child_flags()
-    result = subprocess.run(child_cmd, stdin=sys.stdin)
+    try:
+        result = subprocess.run(child_cmd, stdin=sys.stdin)
+    except KeyboardInterrupt:
+        sys.exit(130)
     verbose.emit(Events.FINISHED, message=f"exit {result.returncode}")
     sys.exit(result.returncode)
