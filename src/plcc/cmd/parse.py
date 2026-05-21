@@ -30,8 +30,8 @@ class Events(enum.Enum):
 
 
 class ParseHandler:
-    def __init__(self, spec_path, ll1_path, child_flags):
-        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags)
+    def __init__(self, spec_path, ll1_path, child_flags, verbose=None):
+        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags, verbose=verbose)
         self.had_error = False
 
     def feed(self, content, source, eof=False):
@@ -85,7 +85,7 @@ def main(argv=None):
     ll1_path = os.path.join('build', 'll1.json')
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
-                           child_flags=child_flags)
+                           child_flags=child_flags, verbose=verbose)
     runner = SourceRunner(submit_on=SubmitOn.EOF)
     completed = runner.run(sources, handler)
 

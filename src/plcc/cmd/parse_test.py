@@ -4,6 +4,7 @@ import sys
 
 import pytest
 
+from plcc.verbose import VerboseContext
 from .parse import ParseHandler
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
@@ -161,3 +162,24 @@ def test_feed_does_not_annotate_tree_with_children(monkeypatch, handler, capsys)
     out, _ = capsys.readouterr()
     assert "exp (empty)" not in out
     assert "exp\n" in out or out.startswith("exp")
+
+
+def test_feed_reformats_child_verbose_events(monkeypatch, capsys):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    handler = ParseHandler(
+        spec_path="build/spec.json",
+        ll1_path="build/ll1.json",
+        child_flags=[],
+        verbose=verbose,
+    )
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_tree_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"1\n", "-")
+    _, err = capsys.readouterr()
+    assert "plcc-tokens: started: tokenizing" in err

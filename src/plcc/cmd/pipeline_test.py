@@ -9,6 +9,7 @@ from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record,
 )
+from plcc.verbose import VerboseContext
 
 
 @pytest.fixture()
@@ -85,6 +86,80 @@ def test_run_returns_multiple_records(monkeypatch, pipeline):
     result = pipeline.run(b"x\n")
     assert result is not None
     assert len(result) == 2
+
+
+def test_run_reformats_child_verbose_events_when_verbose_set(monkeypatch, capsys):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_tree_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    p = TreePipeline(spec_path="s", ll1_path="l", verbose=verbose)
+    p.run(b"1\n")
+    _, err = capsys.readouterr()
+    assert "plcc-tokens: started: tokenizing" in err
+
+
+def test_run_suppresses_child_verbose_events_on_eof_probe(monkeypatch, capsys):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_eof_error_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    p = TreePipeline(spec_path="s", ll1_path="l", verbose=verbose)
+    result = p.run(b"1+\n", eof=False)
+    assert result is None
+    _, err = capsys.readouterr()
+    assert err == ""
+
+
+def test_run_does_not_reformat_when_verbose_is_none(monkeypatch, capsys):
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_tree_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    p = TreePipeline(spec_path="s", ll1_path="l")  # verbose=None default
+    result = p.run(b"1\n")
+    assert result is not None
+    _, err = capsys.readouterr()
+    assert err == ""
+
+
+def test_run_does_not_pipe_stderr_when_verbose_is_none(monkeypatch):
+    popen_kwargs = []
+
+    def mock_popen(args, **kwargs):
+        popen_kwargs.append(kwargs)
+        return _proc()
+
+    monkeypatch.setattr(subprocess, "Popen", mock_popen)
+    TreePipeline(spec_path="s", ll1_path="l").run(b"x\n")
+    assert all(kw.get("stderr") is None for kw in popen_kwargs)
+
+
+def test_run_pipes_stderr_when_verbose_is_set(monkeypatch):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    popen_kwargs = []
+
+    def mock_popen(args, **kwargs):
+        popen_kwargs.append(kwargs)
+        return _proc(stdout=_tree_record() if "plcc-trees" in args[0] else b"")
+
+    monkeypatch.setattr(subprocess, "Popen", mock_popen)
+    TreePipeline(spec_path="s", ll1_path="l", verbose=verbose).run(b"1\n")
+    assert all(kw.get("stderr") is subprocess.PIPE for kw in popen_kwargs)
 
 
 # --- print_parse_error ---

@@ -3,12 +3,13 @@ import json
 from types import SimpleNamespace
 
 
-def _proc(stdout=b"", returncode=0):
+def _proc(stdout=b"", returncode=0, stderr=b""):
     p = SimpleNamespace(returncode=returncode)
-    p.communicate = lambda: (stdout, b"")
+    p.communicate = lambda: (stdout, stderr)
     p.wait = lambda: None
     p.stdin = io.BytesIO()
     p.stdout = io.BytesIO(stdout)
+    p.stderr = io.BytesIO(stderr)
     return p
 
 
