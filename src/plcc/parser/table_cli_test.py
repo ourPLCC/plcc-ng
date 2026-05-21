@@ -256,9 +256,10 @@ def test_syntax_error_emits_error_record_with_source(capsys, monkeypatch):
         os.unlink(ll1_file.name)
 
 
-def test_skip_and_retry_emits_error_then_tree(capsys, monkeypatch):
-    # Grammar: program → NUM; tokens: [PLUS, NUM, $]
-    # First parse fails at PLUS, skip; second parse succeeds at NUM.
+def test_non_eof_error_stops_loop(capsys, monkeypatch):
+    # Grammar: program → NUM; tokens: [PLUS, NUM, eof]
+    # PLUS is not a valid start token. With the cascade removed, the loop breaks
+    # immediately on the PLUS error and never attempts to parse NUM.
     ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
     try:
         json.dump(_TRIVIAL_LL1, ll1_file)
@@ -273,10 +274,10 @@ def test_skip_and_retry_emits_error_then_tree(capsys, monkeypatch):
             pass
         out, _ = capsys.readouterr()
         records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
-        kinds = [r["kind"] for r in records]
-        assert "error" in kinds
-        assert "tree" in kinds
-        assert kinds.index("error") < kinds.index("tree")
+        errors = [r for r in records if r.get("kind") == "error"]
+        trees  = [r for r in records if r.get("kind") == "tree"]
+        assert len(errors) == 1
+        assert len(trees) == 0
     finally:
         os.unlink(ll1_file.name)
 
