@@ -101,9 +101,7 @@ def main(argv=None):
             if e.found:
                 record["found"] = e.found
             print(json.dumps(record), flush=True)
-            if e.found == "eof":
-                break
-            cursor += 1
+            break
 
     if not attempted and cursor < len(tokens):
         # No non-sentinel tokens: try one epsilon parse for grammars that accept empty input
