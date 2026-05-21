@@ -393,3 +393,30 @@ def test_parse_error_does_not_write_to_stderr(capsys, monkeypatch):
         assert err == ""
     finally:
         os.unlink(ll1_file.name)
+
+
+def test_three_invalid_tokens_emit_one_error(capsys, monkeypatch):
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM(3), NUM(2), NUM(1), eof]
+    # cursor=0: parse NUM(3), expect PLUS, find NUM(2) → error (found="NUM").
+    # With cascade: cursor advances, two more errors follow. Without cascade: one error.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_ADDITION_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "3"), _tok("NUM", "2"), _tok("NUM", "1"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        errors = [r for r in records if r.get("kind") == "error"]
+        trees  = [r for r in records if r.get("kind") == "tree"]
+        assert len(errors) == 1
+        assert len(trees) == 0
+        assert errors[0].get("found") != "eof"
+    finally:
+        os.unlink(ll1_file.name)
