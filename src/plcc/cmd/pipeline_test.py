@@ -104,6 +104,39 @@ def test_run_reformats_child_verbose_events_when_verbose_set(monkeypatch, capsys
     assert "plcc-tokens: started: tokenizing" in err
 
 
+def test_run_suppresses_child_verbose_events_on_eof_probe(monkeypatch, capsys):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_eof_error_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    p = TreePipeline(spec_path="s", ll1_path="l", verbose=verbose)
+    result = p.run(b"1+\n", eof=False)
+    assert result is None
+    _, err = capsys.readouterr()
+    assert err == ""
+
+
+def test_run_does_not_reformat_when_verbose_is_none(monkeypatch, capsys):
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_tree_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    p = TreePipeline(spec_path="s", ll1_path="l")  # verbose=None default
+    result = p.run(b"1\n")
+    assert result is not None
+    _, err = capsys.readouterr()
+    assert err == ""
+
+
 # --- print_parse_error ---
 
 def test_print_parse_error_shows_location(capsys):
