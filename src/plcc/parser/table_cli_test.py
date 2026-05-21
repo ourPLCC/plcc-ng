@@ -420,3 +420,32 @@ def test_three_invalid_tokens_emit_one_error(capsys, monkeypatch):
         assert errors[0].get("found") != "eof"
     finally:
         os.unlink(ll1_file.name)
+
+
+def test_error_after_success_stops_further_parsing(capsys, monkeypatch):
+    # Grammar: program → NUM; tokens: [NUM(1), PLUS(+), NUM(2), eof]
+    # cursor=0: parse NUM(1) → tree, cursor=1.
+    # cursor=1: parse PLUS → error (found="PLUS"). Without cascade: stop.
+    # With cascade: cursor=2, parse NUM(2) → second tree.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "1"), _tok("PLUS", "+"), _tok("NUM", "2"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        errors = [r for r in records if r.get("kind") == "error"]
+        trees  = [r for r in records if r.get("kind") == "tree"]
+        assert len(trees) == 1
+        assert len(errors) == 1
+        assert records[0]["kind"] == "tree"
+        assert records[1]["kind"] == "error"
+    finally:
+        os.unlink(ll1_file.name)
