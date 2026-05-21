@@ -33,8 +33,8 @@ class Events(enum.Enum):
 
 class RepHandler:
     def __init__(self, spec_path, ll1_path, interpreter, verbose_format,
-                 child_flags=None):
-        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags)
+                 child_flags=None, verbose=None):
+        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags, verbose=verbose)
         self._interpreter = interpreter
         self._verbose_format = verbose_format
 
@@ -115,6 +115,7 @@ def main(argv=None):
             interpreter=interpreter,
             verbose_format=verbose_format,
             child_flags=child_flags,
+            verbose=verbose,
         )
         runner = SourceRunner(submit_on=SubmitOn.EOL)
         completed = runner.run(sources, handler)
