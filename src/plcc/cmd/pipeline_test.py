@@ -137,6 +137,31 @@ def test_run_does_not_reformat_when_verbose_is_none(monkeypatch, capsys):
     assert err == ""
 
 
+def test_run_does_not_pipe_stderr_when_verbose_is_none(monkeypatch):
+    popen_kwargs = []
+
+    def mock_popen(args, **kwargs):
+        popen_kwargs.append(kwargs)
+        return _proc()
+
+    monkeypatch.setattr(subprocess, "Popen", mock_popen)
+    TreePipeline(spec_path="s", ll1_path="l").run(b"x\n")
+    assert all(kw.get("stderr") is None for kw in popen_kwargs)
+
+
+def test_run_pipes_stderr_when_verbose_is_set(monkeypatch):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    popen_kwargs = []
+
+    def mock_popen(args, **kwargs):
+        popen_kwargs.append(kwargs)
+        return _proc(stdout=_tree_record() if "plcc-trees" in args[0] else b"")
+
+    monkeypatch.setattr(subprocess, "Popen", mock_popen)
+    TreePipeline(spec_path="s", ll1_path="l", verbose=verbose).run(b"1\n")
+    assert all(kw.get("stderr") is subprocess.PIPE for kw in popen_kwargs)
+
+
 # --- print_parse_error ---
 
 def test_print_parse_error_shows_location(capsys):

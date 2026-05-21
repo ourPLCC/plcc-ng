@@ -38,27 +38,29 @@ class TreePipeline:
         Returns None  — need more input (no records, or only EOF errors with eof=False).
         Returns list  — list of (record_dict, raw_bytes) pairs ready to dispatch.
         """
+        stderr_mode = subprocess.PIPE if self._verbose else None
         tokens_proc = subprocess.Popen(
             ["plcc-tokens", self._spec_path, "-"] + self._child_flags,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=stderr_mode,
         )
         tree_proc = subprocess.Popen(
             ["plcc-trees", f"--ll1={self._ll1_path}"] + self._child_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=stderr_mode,
         )
         tokens_proc.stdout.close()
         tokens_proc.stdin.write(content)
         tokens_proc.stdin.close()
         tree_out, tree_err = tree_proc.communicate()
         tokens_proc.wait()
-        # Note: if tokens_proc wrote >64 KB to stderr before tree_proc.communicate()
-        # drained it, this read could deadlock. Verbose output is a handful of JSON
-        # lines (~300 bytes per run), so this is not a practical risk.
-        tokens_err = tokens_proc.stderr.read()
+        if self._verbose:
+            # Note: if tokens_proc wrote >64 KB to stderr before tree_proc.communicate()
+            # drained it, this read could deadlock. Verbose output is a handful of JSON
+            # lines (~300 bytes per run), so this is not a practical risk.
+            tokens_err = tokens_proc.stderr.read()
 
         records = []
         raws = []
