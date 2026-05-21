@@ -9,6 +9,7 @@ from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record,
 )
+from plcc.verbose import VerboseContext
 
 
 @pytest.fixture()
@@ -85,6 +86,22 @@ def test_run_returns_multiple_records(monkeypatch, pipeline):
     result = pipeline.run(b"x\n")
     assert result is not None
     assert len(result) == 2
+
+
+def test_run_reformats_child_verbose_events_when_verbose_set(monkeypatch, capsys):
+    verbose = VerboseContext("test", None, level=1, fmt="text")
+    tokens_stderr = (
+        b'{"stage": "plcc-tokens", "event": "started", "message": "tokenizing"}\n'
+    )
+    procs = iter([
+        _proc(stderr=tokens_stderr),
+        _proc(stdout=_tree_record(), stderr=b""),
+    ])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    p = TreePipeline(spec_path="s", ll1_path="l", verbose=verbose)
+    p.run(b"1\n")
+    _, err = capsys.readouterr()
+    assert "plcc-tokens: started: tokenizing" in err
 
 
 # --- print_parse_error ---
