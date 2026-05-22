@@ -63,3 +63,26 @@ teardown() { rm -rf "${WORK_DIR}"; }
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
 }
+
+@test "no-semantics grammar generates _Start.java" {
+    NO_SEM_DIR="$(mktemp -d)"
+    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-java-emit --output="${NO_SEM_DIR}"
+    [ -f "${NO_SEM_DIR}/_Start.java" ]
+}
+
+@test "no-semantics grammar: start class extends _Start" {
+    NO_SEM_DIR="$(mktemp -d)"
+    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-java-emit --output="${NO_SEM_DIR}"
+    grep 'extends _Start' "${NO_SEM_DIR}/Program.java"
+}
+
+@test "no-semantics grammar: compiles and runs on empty input" {
+    NO_SEM_DIR="$(mktemp -d)"
+    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-java-emit --output="${NO_SEM_DIR}"
+    plcc-java-build --output="${NO_SEM_DIR}"
+    run bash -c "echo '' | plcc-java-run --output='${NO_SEM_DIR}'"
+    [ "$status" -eq 0 ]
+}
