@@ -22,8 +22,9 @@ surrounding ones. The analogy doesn't hold.
 
 ## Requirements
 
-1. A parse error produces exactly one error record and stops further parsing of the
-   current input.
+1. A `ParseError`-based syntax error produces exactly one error record and stops
+   further parsing of the current input. (The `consumed == 0` epsilon-advance path
+   is a separate mechanism and is not changed by this fix.)
 2. Multiple valid programs in one source (needed by side-effecting course languages)
    continue to produce multiple trees — the success-path loop is preserved.
 3. Interactive sessions (plcc-rep, plcc-parse at a TTY) do not exit on a parse error.
@@ -61,7 +62,7 @@ except ParseError as e:
 
 The `if e.found == "eof": break` branch is now unreachable and is removed.
 
-No other files change.
+No other runtime code paths change.
 
 ---
 

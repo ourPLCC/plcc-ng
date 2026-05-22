@@ -4,7 +4,7 @@
 
 **Goal:** Replace the error-cascade loop in `plcc-parser-table` with a clean stop-on-first-error, so students see exactly one error message per bad input rather than a chain of cascaded errors.
 
-**Architecture:** One word changes in `table_cli.py` (`cursor += 1` → `break`); one existing test is updated (cascade-then-tree test now expects error-only); three new tests are added covering the core scenarios from the spec. No other files change.
+**Architecture:** One word changes in `table_cli.py` (`cursor += 1` → `break`); one existing test is renamed and updated (cascade-then-tree test now expects error-only); two new tests are added covering the core scenarios from the spec. No other runtime code paths change.
 
 **Tech Stack:** Python, pytest (`bin/test/units.bash` for the TDD loop)
 
