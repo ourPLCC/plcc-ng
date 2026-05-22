@@ -63,3 +63,25 @@ print(json.dumps(m))
 " | plcc-python-emit --output="${NULL_DIR}"
     grep '_run' "${NULL_DIR}/main.py"
 }
+
+@test "no-semantics grammar generates _Start.py" {
+    NO_SEM_DIR="$(mktemp -d)"
+    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-python-emit --output="${NO_SEM_DIR}"
+    [ -f "${NO_SEM_DIR}/_Start.py" ]
+}
+
+@test "no-semantics grammar: start class extends _Start" {
+    NO_SEM_DIR="$(mktemp -d)"
+    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-python-emit --output="${NO_SEM_DIR}"
+    grep 'class Program(_Start' "${NO_SEM_DIR}/Program.py"
+}
+
+@test "no-semantics grammar: main.py exits 0 on empty input" {
+    NO_SEM_DIR="$(mktemp -d)"
+    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-python-emit --output="${NO_SEM_DIR}"
+    run python3 "${NO_SEM_DIR}/main.py" <<< ""
+    [ "$status" -eq 0 ]
+}
