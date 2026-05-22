@@ -79,4 +79,4 @@ def _lines_from_sources(sources, verbose, source_name=None):
 
 def _lines_from_stream(stream, file):
     for i, raw in enumerate(stream, start=1):
-        yield Line(string=raw.rstrip('\n'), number=i, file=file)
+        yield Line(string=raw, number=i, file=file)

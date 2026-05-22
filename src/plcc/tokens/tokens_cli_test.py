@@ -29,7 +29,7 @@ def test_help(capsys):
 
 
 def test_outputs_token_jsonl(capsys, monkeypatch, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json'])
     out, err = capsys.readouterr()
@@ -45,7 +45,7 @@ def test_outputs_token_jsonl(capsys, monkeypatch, fs):
 
 def test_lex_error_emits_error_record_to_stdout(capsys, monkeypatch, fs):
     fs.create_file('/spec.json', contents=json.dumps(_SPEC))
-    monkeypatch.setattr('sys.stdin', io.StringIO('@\n'))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@'))  # no trailing \n
     # Verify it does not raise SystemExit (exits 0)
     try:
         run_main(['/spec.json'])
@@ -67,7 +67,7 @@ def test_lex_error_emits_error_record_to_stdout(capsys, monkeypatch, fs):
 
 
 def test_lex_error_and_token_appear_in_stream_order(capsys, monkeypatch, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     # '@' is unrecognized, then '42' is a valid NUM token
     monkeypatch.setattr('sys.stdin', io.StringIO('@42\n'))
     run_main(['/spec.json'])
@@ -82,7 +82,7 @@ def test_lex_error_and_token_appear_in_stream_order(capsys, monkeypatch, fs):
 
 
 def test_stdin_labels_tokens_with_dash(capsys, monkeypatch, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json'])
     out, _ = capsys.readouterr()
@@ -93,7 +93,7 @@ def test_stdin_labels_tokens_with_dash(capsys, monkeypatch, fs):
 
 
 def test_named_file_arg_labels_tokens_with_filename(capsys, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     fs.create_file('/src.txt', contents='42\n')
     run_main(['/spec.json', '/src.txt'])
     out, _ = capsys.readouterr()
@@ -115,8 +115,22 @@ _SPEC_WITH_SKIP = {
 }
 
 
+_SPEC_WITH_NL_TOKEN = {
+    "lexical": {"ruleList": [
+        {"name": "NUM", "pattern": "\\d+", "isSkip": False,
+         "line": {"string": "", "number": 1, "file": None}},
+        {"name": "NL", "pattern": "\\n", "isSkip": False,
+         "line": {"string": "", "number": 2, "file": None}},
+        {"name": "WS", "pattern": "[ \\t]+", "isSkip": True,
+         "line": {"string": "", "number": 3, "file": None}},
+    ]},
+    "syntax": {"rules": []},
+    "semantics": []
+}
+
+
 def test_default_omits_regex_and_source_line(capsys, monkeypatch, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json'])
     out, _ = capsys.readouterr()
@@ -129,12 +143,12 @@ def test_default_omits_regex_and_source_line(capsys, monkeypatch, fs):
 
 
 def test_trace_includes_regex_and_source_line(capsys, monkeypatch, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['--trace', '/spec.json'])
     out, _ = capsys.readouterr()
     records = [json.loads(l) for l in out.strip().splitlines() if l]
-    token_records = [r for r in records if r.get('name') != 'eof']
+    token_records = [r for r in records if r.get('kind') == 'token' and r.get('name') != 'eof']
     assert len(token_records) == 1
     record = token_records[0]
     assert record['regex'] == '\\d+'
@@ -179,7 +193,7 @@ def test_verbose_started_finished_events(capsys, monkeypatch, fs):
 
 
 def test_source_name_overrides_stdin_label(capsys, monkeypatch, fs):
-    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_SKIP))
     monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
     run_main(['/spec.json', '--source-name=myfile.txt', '-'])
     out, _ = capsys.readouterr()
@@ -187,3 +201,34 @@ def test_source_name_overrides_stdin_label(capsys, monkeypatch, fs):
     token_records = [r for r in records if r.get('name') != 'eof']
     assert len(token_records) == 1
     assert token_records[0]['source']['file'] == 'myfile.txt'
+
+
+def test_newline_matched_as_nl_token(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_NL_TOKEN))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    non_sentinel = [r for r in records if r.get('name') != 'eof']
+    assert len(non_sentinel) == 2
+    assert non_sentinel[0]['kind'] == 'token'
+    assert non_sentinel[0]['name'] == 'NUM'
+    assert non_sentinel[0]['lexeme'] == '42'
+    assert non_sentinel[1]['kind'] == 'token'
+    assert non_sentinel[1]['name'] == 'NL'
+    assert non_sentinel[1]['lexeme'] == '\n'
+
+
+def test_unhandled_newline_produces_lex_error(capsys, monkeypatch, fs):
+    # _SPEC has only NUM '\d+' — no whitespace or newline handler
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    non_sentinel = [r for r in records if r.get('name') != 'eof']
+    assert len(non_sentinel) == 2
+    assert non_sentinel[0]['kind'] == 'token'
+    assert non_sentinel[0]['name'] == 'NUM'
+    assert non_sentinel[1]['kind'] == 'error'
+    assert non_sentinel[1]['lexeme'] == '\n'
