@@ -24,6 +24,15 @@ __doc__ = __doc__ + VERBOSE_OPTIONS
 
 _DEFAULT_ENTRY_POINT = '_run'
 
+_START_PY = """\
+import runtime.base as _plcc
+
+
+class _Start(_plcc.Node):
+    def _run(self):
+        print(str(self))
+"""
+
 
 class Events(enum.Enum):
     STARTED = "started"
@@ -44,6 +53,7 @@ def main(argv=None):
     _copy_runtime(output_dir)
 
     classes = model['classes']
+    start_class_name = model['start'][0].upper() + model['start'][1:]
     section = _find_python_section(model)
     entry_point = (section.get('entry_point') if section else None) or _DEFAULT_ENTRY_POINT
     fragments_by_class = _group_fragments(section.get('fragments', []) if section else [])
@@ -56,6 +66,9 @@ def main(argv=None):
     main_template = env.get_template('main.py.jinja')
 
     for cls in classes:
+        cls = dict(cls)
+        if cls['name'] == start_class_name and cls['extends'] is None:
+            cls['extends'] = '_Start'
         frags = fragments_by_class.get(cls['name'], [])
         content = class_template.render(
             cls=cls,
@@ -66,6 +79,8 @@ def main(argv=None):
             body_fragments=[f for f in frags if f['kind'] == 'body'],
         )
         (output_dir / f"{cls['name']}.py").write_text(content)
+
+    (output_dir / '_Start.py').write_text(_START_PY)
 
     all_frags = section.get('fragments', []) if section else []
     for frag in all_frags:
