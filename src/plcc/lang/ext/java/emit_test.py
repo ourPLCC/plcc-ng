@@ -32,6 +32,55 @@ def _trivial_model():
     }
 
 
+def _minimal_model():
+    return {
+        "start": "program",
+        "classes": [
+            {"name": "Program", "abstract": False, "extends": None,
+             "rule_name": "program", "fields": []},
+        ],
+        "semantic_sections": [],
+    }
+
+
+def test_emit_generates_start_java(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    assert (tmp_path / '_Start.java').exists()
+    assert 'abstract class _Start' in (tmp_path / '_Start.java').read_text()
+
+
+def test_start_class_extends_start(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    program_java = (tmp_path / 'Program.java').read_text()
+    assert 'extends _Start' in program_java
+
+
+def test_non_start_class_does_not_extend_start(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
+    run_main([f'--output={tmp_path}'])
+    expr_java = (tmp_path / 'Expr.java').read_text()
+    assert 'extends _Start' not in expr_java
+
+
+def test_start_class_with_semantics_still_extends_start(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
+    run_main([f'--output={tmp_path}'])
+    program_java = (tmp_path / 'Program.java').read_text()
+    assert 'extends _Start' in program_java
+
+
+def test_start_class_with_explicit_parent_does_not_get_start_injected(tmp_path, monkeypatch):
+    model = _minimal_model()
+    model['classes'][0]['extends'] = 'SomeBase'
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    program_java = (tmp_path / 'Program.java').read_text()
+    assert 'extends _Start' not in program_java
+    assert 'extends SomeBase' in program_java
+
+
 def test_no_args_prints_usage():
     with pytest.raises((DocoptExit, SystemExit)):
         run_main([])

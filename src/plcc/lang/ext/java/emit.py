@@ -24,6 +24,14 @@ __doc__ = __doc__ + VERBOSE_OPTIONS
 
 _DEFAULT_ENTRY_POINT = '$run'
 
+_START_JAVA = """\
+public abstract class _Start extends runtime.Node {
+    public void $run() {
+        System.out.println(this.toString());
+    }
+}
+"""
+
 
 class Events(enum.Enum):
     STARTED = "started"
@@ -44,6 +52,7 @@ def main(argv=None):
     _copy_runtime(output_dir)
 
     classes = model['classes']
+    start_class_name = model['start'][0].upper() + model['start'][1:]
     section = _find_java_section(model)
     entry_point = (section.get('entry_point') if section else None) or _DEFAULT_ENTRY_POINT
     fragments_by_class = _group_fragments(section.get('fragments', []) if section else [])
@@ -56,6 +65,9 @@ def main(argv=None):
     main_template = env.get_template('Main.java.jinja')
 
     for cls in classes:
+        cls = dict(cls)
+        if cls['name'] == start_class_name and cls['extends'] is None:
+            cls['extends'] = '_Start'
         frags = fragments_by_class.get(cls['name'], [])
         content = class_template.render(
             cls=cls,
@@ -65,16 +77,17 @@ def main(argv=None):
         )
         (output_dir / f"{cls['name']}.java").write_text(content)
 
+    (output_dir / '_Start.java').write_text(_START_JAVA)
+
     all_frags = section.get('fragments', []) if section else []
     for frag in all_frags:
         if frag['kind'] == 'file':
             (output_dir / f"{frag['class_name']}.java").write_text(frag['body'])
 
     concrete_classes = [c for c in classes if not c['abstract']]
-    start_class = model['start'][0].upper() + model['start'][1:]
     main_content = main_template.render(
         concrete_classes=concrete_classes,
-        start_class=start_class,
+        start_class=start_class_name,
         entry_point=entry_point,
     )
     (output_dir / 'Main.java').write_text(main_content)
