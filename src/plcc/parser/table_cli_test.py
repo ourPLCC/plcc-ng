@@ -256,9 +256,10 @@ def test_syntax_error_emits_error_record_with_source(capsys, monkeypatch):
         os.unlink(ll1_file.name)
 
 
-def test_skip_and_retry_emits_error_then_tree(capsys, monkeypatch):
-    # Grammar: program → NUM; tokens: [PLUS, NUM, $]
-    # First parse fails at PLUS, skip; second parse succeeds at NUM.
+def test_non_eof_error_stops_loop(capsys, monkeypatch):
+    # Grammar: program → NUM; tokens: [PLUS, NUM, eof]
+    # PLUS is not a valid start token. With the cascade removed, the loop breaks
+    # immediately on the PLUS error and never attempts to parse NUM.
     ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
     try:
         json.dump(_TRIVIAL_LL1, ll1_file)
@@ -273,10 +274,10 @@ def test_skip_and_retry_emits_error_then_tree(capsys, monkeypatch):
             pass
         out, _ = capsys.readouterr()
         records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
-        kinds = [r["kind"] for r in records]
-        assert "error" in kinds
-        assert "tree" in kinds
-        assert kinds.index("error") < kinds.index("tree")
+        errors = [r for r in records if r.get("kind") == "error"]
+        trees  = [r for r in records if r.get("kind") == "tree"]
+        assert len(errors) == 1
+        assert len(trees) == 0
     finally:
         os.unlink(ll1_file.name)
 
@@ -390,5 +391,61 @@ def test_parse_error_does_not_write_to_stderr(capsys, monkeypatch):
             pass
         _, err = capsys.readouterr()
         assert err == ""
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_three_invalid_tokens_emit_one_error(capsys, monkeypatch):
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM(3), NUM(2), NUM(1), eof]
+    # cursor=0: parse NUM(3), expect PLUS, find NUM(2) → error (found="NUM").
+    # With cascade: cursor advances, two more errors follow. Without cascade: one error.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_ADDITION_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "3"), _tok("NUM", "2"), _tok("NUM", "1"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        errors = [r for r in records if r.get("kind") == "error"]
+        trees  = [r for r in records if r.get("kind") == "tree"]
+        assert len(errors) == 1
+        assert len(trees) == 0
+        assert errors[0].get("found") != "eof"
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_error_after_success_stops_further_parsing(capsys, monkeypatch):
+    # Grammar: program → NUM; tokens: [NUM(1), PLUS(+), NUM(2), eof]
+    # cursor=0: parse NUM(1) → tree, cursor=1.
+    # cursor=1: parse PLUS → error (found="PLUS"). Without cascade: stop.
+    # With cascade: cursor=2, parse NUM(2) → second tree.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok("NUM", "1"), _tok("PLUS", "+"), _tok("NUM", "2"), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        errors = [r for r in records if r.get("kind") == "error"]
+        trees  = [r for r in records if r.get("kind") == "tree"]
+        assert len(trees) == 1
+        assert len(errors) == 1
+        assert records[0]["kind"] == "tree"
+        assert records[1]["kind"] == "error"
     finally:
         os.unlink(ll1_file.name)
