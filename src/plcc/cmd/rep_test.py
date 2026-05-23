@@ -1,7 +1,9 @@
 import io
+import json as _json
 import subprocess
 import sys
 from types import SimpleNamespace
+from unittest.mock import MagicMock as _MagicMock
 
 import pytest
 
@@ -11,6 +13,42 @@ from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record,
 )
+import plcc.cmd.rep as _rep_module
+
+
+def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
+    """plcc-rep interactive mode must submit on ^D, not Enter (SubmitOn.EOF)."""
+    monkeypatch.chdir(tmp_path)
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("")
+    build = tmp_path / "build"
+    build.mkdir()
+    spec = {"semantics": [{"tool": "calc", "language": "python"}]}
+    (build / "spec.json").write_text(_json.dumps(spec))
+    (build / "ll1.json").write_text("{}")
+
+    captured = {}
+
+    def capturing_runner(submit_on, **kwargs):
+        captured["submit_on"] = submit_on
+        m = _MagicMock()
+        m.run.return_value = True
+        return m
+
+    monkeypatch.setattr(_rep_module, "SourceRunner", capturing_runner)
+    monkeypatch.setattr(
+        "subprocess.run",
+        lambda *a, **kw: _MagicMock(returncode=0, stderr=b""),
+    )
+    monkeypatch.setattr(
+        "subprocess.Popen",
+        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
+    )
+
+    _rep_module.main(["--grammar-file=grammar.plcc", "--tool=calc"])
+
+    from .source_runner import SubmitOn
+    assert captured["submit_on"] is SubmitOn.EOF
 
 
 def _make_interpreter(response=b'{"kind":"result","value":"42"}\n'):
