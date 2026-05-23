@@ -61,7 +61,7 @@ class SourceRunner:
         try:
             print(prompt, end="", flush=True, file=sys.stderr)
             if self._submit_on == SubmitOn.EOF:
-                return sys.stdin.buffer.read1(4096)
+                return sys.stdin.buffer.read1(65536)
             return sys.stdin.buffer.readline()
         except KeyboardInterrupt:
             return None
