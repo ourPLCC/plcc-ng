@@ -17,6 +17,7 @@ class _InteractiveState:
     buffer: bytes
     prompt: str
     done: bool = False
+    pending_exit: bool = False
 
 
 class SourceRunner:

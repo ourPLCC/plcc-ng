@@ -264,6 +264,16 @@ def test_interactive_state_done_flag():
     assert state.done is True
 
 
+def test_interactive_state_pending_exit_defaults_false():
+    state = _InteractiveState(buffer=b"", prompt=">>> ")
+    assert state.pending_exit is False
+
+
+def test_interactive_state_pending_exit_can_be_set():
+    state = _InteractiveState(buffer=b"", prompt=">>> ", pending_exit=True)
+    assert state.pending_exit is True
+
+
 # --- Predicate methods ---
 
 def test_is_eof_true_for_empty_bytes(runner):
