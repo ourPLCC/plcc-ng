@@ -5,7 +5,7 @@
 Adjust `SourceRunner`'s interactive `^D` behavior in two ways:
 
 1. **Empty prompt, empty buffer**: require two `^D` presses to exit. The first prints `(press ^D again to exit)` and re-shows the prompt; the second exits cleanly.
-2. **`SubmitOn.EOF` mode** (used by `plcc-parse` and `plcc-rep`): Enter never evaluates — it only accumulates. `^D` is the sole submit trigger.
+2. **`SubmitOn.EOF` mode** (used by `plcc-parse`): Enter never evaluates — it only accumulates. `^D` is the sole submit trigger.
 
 The non-empty-line `^D` path (`_is_partial_eof`) is unchanged: it already force-submits the buffer + partial line.
 
@@ -74,9 +74,9 @@ No new error conditions. The `pending_exit` path never calls `handler.feed`, so 
 
 ## Testing
 
-### Existing tests to update
+### Existing tests unchanged
 
-- `test_ctrl_d_on_fresh_prompt_prints_newline`: currently asserts `err.endswith(">>> \n")`. Update to assert the warning message appears and the prompt is shown again. `_tty_stdin([b""])` already produces two empty reads from `BytesIO`, so the fixture needs no change — only the assertion.
+- `test_ctrl_d_on_fresh_prompt_prints_newline`: still asserts `err.endswith(">>> \n")`. With the new behavior, `_tty_stdin([b""])` produces two empty reads — the first `^D` prints the warning and re-shows the prompt, the second exits — so the output still ends with `">>> \n"` and the test passes without modification. Separate new tests cover the warning message and the second-`^D` exit path.
 
 ### Existing tests unaffected
 
