@@ -89,6 +89,20 @@ def _tty_stdin(lines):
     return SimpleNamespace(isatty=lambda: True, buffer=buf)
 
 
+def _read1_tty(reads):
+    """Fake TTY stdin where each read1() call returns the next item from reads."""
+    it = iter(reads)
+
+    class _Buf:
+        def read1(self, n):
+            return next(it, b"")
+
+        def readline(self):
+            raise AssertionError("readline() called in EOF mode")
+
+    return SimpleNamespace(isatty=lambda: True, buffer=_Buf())
+
+
 def test_interactive_prints_hint(monkeypatch, runner, capsys):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
     runner.run(["-"], RecordingHandler())
@@ -504,5 +518,19 @@ def test_eof_mode_enter_then_ctrl_d_submits(monkeypatch):
     _eof_runner().run(["-"], handler)
     assert len(handler.calls) == 1
     assert handler.calls[0][0] == b"hello\n"
+
+
+def test_eof_mode_ctrl_d_without_enter_submits_immediately(monkeypatch):
+    # In EOF mode, typing content then pressing ^D (no Enter) must submit on the
+    # FIRST ^D. In Unix canonical mode, ^D flushes typed bytes to the read buffer
+    # without a newline. readline() would block waiting for \n or a second ^D;
+    # read1() returns immediately with the flushed bytes.
+    # Simulate: read1() returns b"42" (typed then ^D), then b"" (exit).
+    buf = _read1_tty([b"42", b""])
+    monkeypatch.setattr(sys, "stdin", buf)
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"42"
 
 
