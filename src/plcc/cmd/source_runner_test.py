@@ -264,6 +264,16 @@ def test_interactive_state_done_flag():
     assert state.done is True
 
 
+def test_interactive_state_pending_exit_defaults_false():
+    state = _InteractiveState(buffer=b"", prompt=">>> ")
+    assert state.pending_exit is False
+
+
+def test_interactive_state_pending_exit_can_be_set():
+    state = _InteractiveState(buffer=b"", prompt=">>> ", pending_exit=True)
+    assert state.pending_exit is True
+
+
 # --- Predicate methods ---
 
 def test_is_eof_true_for_empty_bytes(runner):
@@ -308,6 +318,30 @@ def test_ctrl_d_on_fresh_prompt_prints_newline(monkeypatch, runner, capsys):
     _, err = capsys.readouterr()
     # Prompt is ">>> " (no newline); ^D should add one so the shell lands on a new line
     assert err.endswith(">>> \n")
+
+
+def test_first_ctrl_d_on_empty_prompt_prints_warning(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    runner.run(["-"], RecordingHandler())
+    _, err = capsys.readouterr()
+    assert "(press ^D again to exit)" in err
+
+
+def test_second_ctrl_d_on_empty_prompt_exits_without_feed(monkeypatch, runner):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    handler = RecordingHandler()
+    runner.run(["-"], handler)
+    assert handler.calls == []
+
+
+def test_input_after_ctrl_d_warning_clears_pending_exit(monkeypatch, runner):
+    # ^D warns; user types a line (clears pending_exit); next ^D warns again instead
+    # of exiting immediately. The presence of the feed call proves the session continued.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"", b"hello\n", b""]))
+    handler = RecordingHandler(results=[True])
+    runner.run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\n"
 
 
 def test_ctrl_d_in_continuation_submits_and_continues(monkeypatch, runner):
@@ -423,45 +457,48 @@ def test_eof_mode_regular_line_accumulates_without_feed(monkeypatch):
     assert handler.calls == []
 
 
-def test_eof_mode_ctrl_d_with_buffer_calls_feed(monkeypatch):
-    # first line trial fails → continuation; second line accumulates; ^D force-submits
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world\n", b""]))
-    handler = RecordingHandler(results=[False, True])
+def test_eof_mode_enter_accumulates_both_lines(monkeypatch):
+    # Enter never calls feed; only ^D submits. Both lines must arrive in one call.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"line1\n", b"line2\n", b""]))
+    handler = RecordingHandler(results=[True])
     _eof_runner().run(["-"], handler)
-    assert len(handler.calls) == 2
-    assert handler.calls[0][0] == b"hello\n"
-    assert handler.calls[1][0] == b"hello\nworld\n"
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"line1\nline2\n"
+
+
+def test_eof_mode_ctrl_d_with_buffer_calls_feed(monkeypatch):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world\n", b""]))
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\nworld\n"
 
 
 def test_eof_mode_blank_line_accumulates_during_continuation(monkeypatch):
-    # first line trial fails → continuation; blank line accumulates; ^D submits all
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b""]))
-    handler = RecordingHandler(results=[False, True])
+    handler = RecordingHandler(results=[True])
     _eof_runner().run(["-"], handler)
-    assert len(handler.calls) == 2
-    assert handler.calls[0][0] == b"hello\n"
-    assert handler.calls[1][0] == b"hello\n\n"
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\n\n"
 
 
-def test_eof_mode_continuation_prompt_shown_after_failed_trial(monkeypatch, capsys):
+def test_eof_mode_enter_shows_continuation_prompt(monkeypatch, capsys):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
-    handler = RecordingHandler(results=[False, True])
+    handler = RecordingHandler(results=[True])
     _eof_runner().run(["-"], handler)
     _, err = capsys.readouterr()
     assert "... " in err
 
 
 def test_eof_mode_partial_eof_force_submits_buffer_plus_partial(monkeypatch):
-    # first line trial fails → continuation; partial-EOF force-submits buffer + partial text
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world", b""]))
-    handler = RecordingHandler(results=[False, True])
+    handler = RecordingHandler(results=[True])
     _eof_runner().run(["-"], handler)
-    assert len(handler.calls) == 2
-    assert handler.calls[0][0] == b"hello\n"
-    assert handler.calls[1][0] == b"hello\nworld"
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\nworld"
 
 
-def test_eof_mode_first_line_calls_feed_immediately(monkeypatch):
+def test_eof_mode_enter_then_ctrl_d_submits(monkeypatch):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
     handler = RecordingHandler(results=[True])
     _eof_runner().run(["-"], handler)
@@ -469,35 +506,3 @@ def test_eof_mode_first_line_calls_feed_immediately(monkeypatch):
     assert handler.calls[0][0] == b"hello\n"
 
 
-def test_eof_mode_trial_succeeds_resets_to_prompt(monkeypatch, capsys):
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
-    handler = RecordingHandler(results=[True])
-    _eof_runner().run(["-"], handler)
-    _, err = capsys.readouterr()
-    assert err.count(">>> ") >= 1
-    assert "... " not in err
-
-
-def test_eof_mode_trial_fails_enters_continuation(monkeypatch, capsys):
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
-    handler = RecordingHandler(results=[False, True])
-    _eof_runner().run(["-"], handler)
-    _, err = capsys.readouterr()
-    assert "... " in err
-
-
-def test_eof_mode_blank_first_line_is_skipped(monkeypatch):
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"\n", b""]))
-    handler = RecordingHandler()
-    _eof_runner().run(["-"], handler)
-    assert handler.calls == []
-
-
-def test_eof_mode_second_line_accumulates_not_retried(monkeypatch):
-    # first line → trial fails → continuation; second line accumulates (not retried)
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world\n", b""]))
-    handler = RecordingHandler(results=[False, True])
-    _eof_runner().run(["-"], handler)
-    assert len(handler.calls) == 2
-    assert handler.calls[0][0] == b"hello\n"
-    assert handler.calls[1][0] == b"hello\nworld\n"
