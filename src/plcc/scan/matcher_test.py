@@ -199,6 +199,20 @@ def test_attempts_entry_fields():
     assert a['winner'] is True
 
 
+def test_skip_zero_length_match_is_lex_error():
+    m = makeMatcher(r"skip WS '\s*'")
+    line = parseLine("2")
+    result = m.match(line, index=0)
+    assert isinstance(result, LexError)
+
+
+def test_token_zero_length_match_is_lex_error():
+    m = makeMatcher(r"token NUM '\d*'")
+    line = parseLine("x")
+    result = m.match(line, index=0)
+    assert isinstance(result, LexError)
+
+
 #helper methods
 
 def makeMatcher(spec, record_attempts=False):
