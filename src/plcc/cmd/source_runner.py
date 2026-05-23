@@ -68,7 +68,9 @@ class SourceRunner:
         if self._is_interrupted(line):
             return self._clear_buffer_or_exit(state)
         if self._is_eof(line):
-            return self._exit_or_submit_accumulated_buffer(handler, state)
+            if state.buffer:
+                return self._exit_or_submit_accumulated_buffer(handler, state)
+            return self._warn_then_exit(state)
         if self._is_partial_eof(line):
             return self._force_submit_including_partial_line(handler, line, state)
         if self._submit_on == SubmitOn.EOF:
@@ -109,6 +111,13 @@ class SourceRunner:
             print("KeyboardInterrupt", file=sys.stderr)
             return _InteractiveState(buffer=b"", prompt=self._prompt)
         sys.exit(130)
+
+    def _warn_then_exit(self, state):
+        print(file=sys.stderr)
+        if state.pending_exit:
+            return _InteractiveState(buffer=b"", prompt=self._prompt, done=True)
+        print("(press ^D again to exit)", file=sys.stderr)
+        return _InteractiveState(buffer=b"", prompt=self._prompt, pending_exit=True)
 
     def _exit_or_submit_accumulated_buffer(self, handler, state):
         print(file=sys.stderr)

@@ -320,6 +320,30 @@ def test_ctrl_d_on_fresh_prompt_prints_newline(monkeypatch, runner, capsys):
     assert err.endswith(">>> \n")
 
 
+def test_first_ctrl_d_on_empty_prompt_prints_warning(monkeypatch, runner, capsys):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    runner.run(["-"], RecordingHandler())
+    _, err = capsys.readouterr()
+    assert "(press ^D again to exit)" in err
+
+
+def test_second_ctrl_d_on_empty_prompt_exits_without_feed(monkeypatch, runner):
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b""]))
+    handler = RecordingHandler()
+    runner.run(["-"], handler)
+    assert handler.calls == []
+
+
+def test_input_after_ctrl_d_warning_clears_pending_exit(monkeypatch, runner):
+    # ^D warns; user types a line (clears pending_exit); next ^D warns again instead
+    # of exiting immediately. The presence of the feed call proves the session continued.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"", b"hello\n", b""]))
+    handler = RecordingHandler(results=[True])
+    runner.run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"hello\n"
+
+
 def test_ctrl_d_in_continuation_submits_and_continues(monkeypatch, runner):
     # Setup: line1 fails (continuation), then ^D on empty "..." → should submit and
     # continue (not exit), then line2 succeeds, then final ^D exits.
