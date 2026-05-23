@@ -227,3 +227,11 @@ teardown() {
     [ "$status" -eq 0 ]
     [[ "$output" == *"NUM"* ]]
 }
+
+@test "plcc-scan does not hang when skip pattern matches empty string" {
+    cp "${FIXTURES}/zero-length-skip.plcc" grammar.plcc
+    run bash -c "echo '2' | timeout 5 plcc-scan"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"NUM"* ]]
+    [[ "$output" == *"2"* ]]
+}
