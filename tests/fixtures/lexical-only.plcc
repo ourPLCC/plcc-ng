@@ -1,1 +1,2 @@
 token NUM '\d+'
+skip WS '\s+'
