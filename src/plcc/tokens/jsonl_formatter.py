@@ -22,7 +22,7 @@ def format_record(obj, show_all=False):
         }
         if show_all:
             record['regex'] = obj.pattern
-            record['source_line'] = obj.line.string
+            record['source_line'] = obj.line.string.rstrip('\n')
             if obj.attempts:
                 record['attempts'] = obj.attempts
         return json.dumps(record)
