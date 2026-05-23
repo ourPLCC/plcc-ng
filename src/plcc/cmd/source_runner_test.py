@@ -507,7 +507,7 @@ def test_eof_mode_partial_eof_force_submits_buffer_plus_partial(monkeypatch):
     assert handler.calls[0][0] == b"hello\nworld"
 
 
-def test_eof_mode_first_line_calls_feed_immediately(monkeypatch):
+def test_eof_mode_enter_then_ctrl_d_submits(monkeypatch):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
     handler = RecordingHandler(results=[True])
     _eof_runner().run(["-"], handler)
