@@ -7,13 +7,14 @@ from unittest.mock import MagicMock as _MagicMock
 
 import pytest
 
+import plcc.cmd.rep as _rep_module
 from plcc.verbose import VerboseContext
 from .rep import RepHandler
+from .source_runner import SubmitOn
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record,
 )
-import plcc.cmd.rep as _rep_module
 
 
 def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
@@ -47,7 +48,6 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
 
     _rep_module.main(["--grammar-file=grammar.plcc", "--tool=calc"])
 
-    from .source_runner import SubmitOn
     assert captured["submit_on"] is SubmitOn.EOF
 
 
