@@ -1,0 +1,3 @@
+skip WHITESPACE '\s*'
+token NUM '\d+'
+token PERIOD '\.'

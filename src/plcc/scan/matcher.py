@@ -44,6 +44,8 @@ class Matcher:
             m = pattern.match(line.string, index)
             if not m:
                 continue
+            if m.end() == index:
+                continue
             sot = self._makeSkipOrToken(m, rule, line, index)
             matches.append(sot)
         return matches
