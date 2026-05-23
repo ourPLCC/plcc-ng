@@ -1,3 +1,4 @@
 token NUM '\d+'
+skip WS '\s+'
 %
 <program> ::= NUM
