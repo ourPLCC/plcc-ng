@@ -89,6 +89,34 @@ def _tty_stdin(lines):
     return SimpleNamespace(isatty=lambda: True, buffer=buf)
 
 
+def _read1_tty(reads):
+    """Fake TTY stdin that honors the n argument of read1().
+
+    Non-empty entries in `reads` are concatenated into a single buffer;
+    a b'' entry marks the end of input (subsequent read1() calls return b'').
+    Each read1(n) call returns at most n bytes, allowing tests to exercise
+    the boundary behavior of large reads.
+    """
+    data = b"".join(r for r in reads if r)
+    view = memoryview(data)
+    pos = [0]
+    eof = len(data)
+
+    class _Buf:
+        def read1(self, n):
+            start = pos[0]
+            if start >= eof:
+                return b""
+            end = min(start + n, eof)
+            pos[0] = end
+            return bytes(view[start:end])
+
+        def readline(self):
+            raise AssertionError("readline() called in EOF mode")
+
+    return SimpleNamespace(isatty=lambda: True, buffer=_Buf())
+
+
 def test_interactive_prints_hint(monkeypatch, runner, capsys):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b""]))
     runner.run(["-"], RecordingHandler())
@@ -504,5 +532,34 @@ def test_eof_mode_enter_then_ctrl_d_submits(monkeypatch):
     _eof_runner().run(["-"], handler)
     assert len(handler.calls) == 1
     assert handler.calls[0][0] == b"hello\n"
+
+
+def test_eof_mode_ctrl_d_without_enter_submits_immediately(monkeypatch):
+    # In EOF mode, typing content then pressing ^D (no Enter) must submit on the
+    # FIRST ^D. In Unix canonical mode, ^D flushes typed bytes to the read buffer
+    # without a newline. readline() would block waiting for \n or a second ^D;
+    # read1() returns immediately with the flushed bytes.
+    # Simulate: read1() returns b"42" (typed then ^D), then b"" (exit).
+    buf = _read1_tty([b"42", b""])
+    monkeypatch.setattr(sys, "stdin", buf)
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b"42"
+
+
+def test_eof_mode_long_line_not_misclassified_as_partial_eof(monkeypatch):
+    # A line longer than 4096 bytes must not be force-submitted as partial EOF.
+    # Linux's MAX_CANON = 4096: read1(4096) would return the first 4096 bytes
+    # without the trailing \n, which _is_partial_eof() would misidentify as ^D.
+    # read1(65536) fits any canonical line in one call, so only a genuine ^D
+    # (no \n) triggers the partial-EOF path.
+    long_line = b"x" * 5000 + b"\n"
+    buf = _read1_tty([long_line, b""])
+    monkeypatch.setattr(sys, "stdin", buf)
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run(["-"], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == long_line
 
 
