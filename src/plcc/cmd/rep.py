@@ -117,7 +117,7 @@ def main(argv=None):
             child_flags=child_flags,
             verbose=verbose,
         )
-        runner = SourceRunner(submit_on=SubmitOn.EOL)
+        runner = SourceRunner(submit_on=SubmitOn.EOF)
         completed = runner.run(sources, handler)
     finally:
         try:
