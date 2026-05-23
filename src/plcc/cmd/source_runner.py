@@ -112,10 +112,8 @@ class SourceRunner:
 
     def _exit_or_submit_accumulated_buffer(self, handler, state):
         print(file=sys.stderr)
-        if state.buffer:
-            self._evaluate(handler, state.buffer, eof=True)
-            return _InteractiveState(buffer=b"", prompt=self._prompt)
-        return _InteractiveState(buffer=b"", prompt=self._prompt, done=True)
+        self._evaluate(handler, state.buffer, eof=True)
+        return _InteractiveState(buffer=b"", prompt=self._prompt)
 
     def _force_submit_including_partial_line(self, handler, line, state):
         print(file=sys.stderr)

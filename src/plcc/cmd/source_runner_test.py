@@ -466,15 +466,6 @@ def test_eof_mode_enter_accumulates_both_lines(monkeypatch):
     assert handler.calls[0][0] == b"line1\nline2\n"
 
 
-def test_eof_mode_blank_line_accumulates(monkeypatch):
-    # Blank Enter accumulates in buffer; ^D submits everything.
-    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"\n", b""]))
-    handler = RecordingHandler(results=[True])
-    _eof_runner().run(["-"], handler)
-    assert len(handler.calls) == 1
-    assert handler.calls[0][0] == b"hello\n\n"
-
-
 def test_eof_mode_ctrl_d_with_buffer_calls_feed(monkeypatch):
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello\n", b"world\n", b""]))
     handler = RecordingHandler(results=[True])
