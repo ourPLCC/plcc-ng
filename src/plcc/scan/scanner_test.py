@@ -1,10 +1,12 @@
 import pytest
 
 from ..lines import parseLines
+from ..spec import parseSpec
 from .scanner import Scanner
 from .LexError import LexError
 from .Skip import Skip
 from .Token import Token
+from . import matcher as matcherModule
 
 
 @pytest.fixture
@@ -86,6 +88,19 @@ def test_can_match_multiple_tokens(fiveCharacterMatcher):
     scanner = Scanner(fiveCharacterMatcher)
     results = list(scanner.scan(lines))
     assert len(results) == 6
+
+
+def test_scanner_does_not_hang_on_zero_length_skip():
+    spec_str = r"skip WS '\s*'" + "\n" + r"token NUM '\d+'"
+    spec, _ = parseSpec(spec_str)
+    m = matcherModule.Matcher(spec.lexical.ruleList)
+    scanner = Scanner(m)
+    lines = parseLines("2\n")
+    results = list(scanner.scan(lines))
+    assert len(results) == 1
+    assert isinstance(results[0], Token)
+    assert results[0].name == "NUM"
+    assert results[0].lexeme == "2"
 
 
 def assertLexErrors(results, lineNumber, startColumn):
