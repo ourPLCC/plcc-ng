@@ -24,6 +24,9 @@ classifiers = [
     "Topic :: Education",
 ]
 
+[project.optional-dependencies]
+diagram = ["mmdc"]
+
 [project.urls]
 Homepage = "https://github.com/ourPLCC/plcc-ng"
 Repository = "https://github.com/ourPLCC/plcc-ng"
@@ -52,9 +55,15 @@ plcc-spec = "plcc.spec.plcc_spec_cli:main"
 plcc-tokens = "plcc.tokens.tokens_cli:main"
 plcc-trees = "plcc.tree.tree_cli:main"
 plcc-model = "plcc.model.model_cli:main"
-plcc-plantuml-diagram = "plcc.diagram.plantuml.emit:main"
 plcc-lang-emit = "plcc.lang.emit:main"
-plcc-diagram = "plcc.diagram.dispatch:main"
+plcc-diagram = "plcc.cmd.diagram:main"
+plcc-diagram-build = "plcc.diagram.build:main"
+plcc-diagram-emit = "plcc.diagram.emit:main"
+plcc-diagram-run = "plcc.diagram.run:main"
+plcc-mermaid-diagram-build = "plcc.diagram.mermaid.build:main"
+plcc-mermaid-diagram-emit = "plcc.diagram.mermaid.emit:main"
+plcc-mermaid-diagram-run = "plcc.diagram.mermaid.run:main"
+plcc-plantuml-diagram-emit = "plcc.diagram.plantuml.emit:main"
 plcc-lang-build = "plcc.lang.build:main"
 plcc-lang-list = "plcc.lang.list:main"
 plcc-diagram-list = "plcc.diagram.list:main"
