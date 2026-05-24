@@ -303,3 +303,18 @@ def test_feed_exits_130_when_interpreter_exits_130(monkeypatch, capsys):
     assert exc_info.value.code == 130
     _, err = capsys.readouterr()
     assert "unexpectedly" not in err
+
+
+def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
+    # Two error records arrive. Only the first should be printed.
+    h, _ = handler
+    two_errors = (
+        _error_record_with_source("first error", col=1) +
+        _error_record_with_source("second error", col=2)
+    )
+    procs = iter([_proc(), _proc(stdout=two_errors)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    h.feed(b"ab\n", "-")
+    _, err = capsys.readouterr()
+    assert "first error" in err
+    assert "second error" not in err

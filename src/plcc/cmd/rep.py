@@ -45,6 +45,7 @@ class RepHandler:
         for record, raw in items:
             if record.get("kind") == "error":
                 print_parse_error(record, default_stage="plcc-rep")
+                break
             elif record.get("kind") == "tree":
                 try:
                     self._interpreter.stdin.write(raw + b'\n')
