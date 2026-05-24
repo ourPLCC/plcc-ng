@@ -23,7 +23,8 @@ Usage:
 
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
-    --through=<level>       Build up to this level: scan, parse, or all [default: all].
+    --through=<level>       Build up to this level: scan, parse, diagram, or all [default: all].
+    --diagram-format=FMT    Diagram format for --through=diagram or --through=all [default: mermaid].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -50,10 +51,15 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-make", Events, args)
     grammar = args['--grammar-file']
     through = args['--through']
+    diagram_fmt = args['--diagram-format'] or 'mermaid'
     build_dir = Path('build')
 
-    if through not in ('scan', 'parse', 'all'):
-        print(f"plcc-make: invalid --through value '{through}'; must be scan, parse, or all", file=sys.stderr)
+    if through not in ('scan', 'parse', 'diagram', 'all'):
+        print(
+            f"plcc-make: invalid --through value '{through}'; "
+            "must be scan, parse, diagram, or all",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     if not os.path.exists(grammar):
@@ -94,7 +100,19 @@ def main(argv=None):
     new_hash = compute_hash(tmp_spec)
     sentinel = read_sentinel(build_dir)
 
-    if is_current(sentinel, new_hash, through):
+    with open(tmp_spec) as f:
+        spec_data = json.load(f)
+    tool_stages = {s['tool'] for s in spec_data.get('semantics', [])}
+
+    _REQUIRED = {
+        'scan':    {'scan'},
+        'parse':   {'scan', 'parse'},
+        'diagram': {'scan', 'model', 'diagram'},
+        'all':     {'scan', 'parse', 'model', 'diagram'} | tool_stages,
+    }
+    required_stages = _REQUIRED[through]
+
+    if is_current(sentinel, new_hash, required_stages):
         os.unlink(tmp_spec)
         verbose.emit(Events.FINISHED, message="build is current")
         return
@@ -114,14 +132,13 @@ def main(argv=None):
             _report_ll1_failure(ll1, ll1_json)
             sys.exit(1)
 
-    if through == 'all':
+    if through in ('diagram', 'all'):
         verbose.emit(Events.PHASE, message="model")
         model_json = str(build_dir / 'model.json')
         _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
 
-        with open(spec_json) as f:
-            spec = json.load(f)
-        for section in spec.get('semantics', []):
+    if through == 'all':
+        for section in spec_data.get('semantics', []):
             tool = section['tool']
             lang = section['language']
             try:
@@ -144,7 +161,32 @@ def main(argv=None):
                 verbose=verbose,
             )
 
-    write_sentinel(build_dir, new_hash, through)
+    if through in ('diagram', 'all'):
+        verbose.emit(Events.PHASE, message="diagram emit")
+        (build_dir / 'diagram').mkdir(exist_ok=True)
+        _run_or_die(
+            ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
+            stdin_file=model_json,
+            stdout_file=str(build_dir / 'diagram' / 'diagram.mmd'),
+            verbose=verbose,
+        )
+        verbose.emit(Events.PHASE, message="diagram build")
+        _run_or_die(
+            ['plcc-diagram-build', f'--format={diagram_fmt}',
+             f'--input={build_dir / "diagram" / "diagram.mmd"}',
+             f'--output={build_dir / "diagram" / "diagram.png"}'] + child_flags,
+            verbose=verbose,
+        )
+
+    completed = {'scan'}
+    if through in ('parse', 'all'):
+        completed.add('parse')
+    if through in ('diagram', 'all'):
+        completed.add('model')
+        completed.add('diagram')
+    if through == 'all':
+        completed |= tool_stages
+    write_sentinel(build_dir, new_hash, completed)
     verbose.emit(Events.FINISHED, message="done")
 
 

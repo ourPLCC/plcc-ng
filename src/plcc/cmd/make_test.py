@@ -93,3 +93,29 @@ def test_report_left_recursion_cycle(capsys):
     _report_ll1_failure(ll1, "build/ll1.json")
     _, err = capsys.readouterr()
     assert "A -> B -> A" in err
+
+
+def test_invalid_through_diagram_is_now_valid(tmp_path, monkeypatch, capsys):
+    # 'diagram' must not be rejected as invalid
+    monkeypatch.chdir(tmp_path)
+    # grammar file missing → exits, but not with "invalid --through"
+    with pytest.raises(SystemExit):
+        run_main(['--through=diagram'])
+    _, err = capsys.readouterr()
+    assert "invalid --through" not in err
+
+
+def test_diagram_format_flag_accepted(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main(['--diagram-format=mermaid'])
+    # exits because grammar.plcc not found, not because of unknown flag
+    assert exc.value.code != 0
+
+
+def test_invalid_through_error_message_includes_diagram(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main(['--through=typo'])
+    _, err = capsys.readouterr()
+    assert "diagram" in err
