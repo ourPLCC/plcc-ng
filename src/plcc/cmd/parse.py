@@ -42,6 +42,7 @@ class ParseHandler:
             if record.get("kind") == "error":
                 print_parse_error(record, default_stage="plcc-parse")
                 self.had_error = True
+                break
             elif record.get("kind") == "tree":
                 _print_tree(record, indent=0)
         return True

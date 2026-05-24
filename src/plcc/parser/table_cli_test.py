@@ -449,3 +449,62 @@ def test_error_after_success_stops_further_parsing(capsys, monkeypatch):
         assert records[1]["kind"] == "error"
     finally:
         os.unlink(ll1_file.name)
+
+
+def test_two_lex_errors_both_pass_through(capsys, monkeypatch):
+    # Input: two lex error records (like 'ab' where both chars are unrecognized).
+    # Before fix: only the last error (col 2) appears in output.
+    # After fix: both errors appear, in order.
+    err1 = {"kind": "error", "stage": "plcc-tokens",
+            "message": "unrecognized character 'a'",
+            "source": {"file": "-", "line": 1, "column": 1}}
+    err2 = {"kind": "error", "stage": "plcc-tokens",
+            "message": "unrecognized character 'b'",
+            "source": {"file": "-", "line": 1, "column": 2}}
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        stdin_data = json.dumps(err1) + "\n" + json.dumps(err2) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        errors = [r for r in records if r.get("kind") == "error"]
+        assert len(errors) == 2
+        assert errors[0]["source"]["column"] == 1
+        assert errors[1]["source"]["column"] == 2
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_first_lex_error_comes_first_in_output(capsys, monkeypatch):
+    # The first unrecognized character must be the first error record emitted.
+    err1 = {"kind": "error", "stage": "plcc-tokens",
+            "message": "unrecognized character 'a'",
+            "source": {"file": "-", "line": 1, "column": 1}}
+    err2 = {"kind": "error", "stage": "plcc-tokens",
+            "message": "unrecognized character 'b'",
+            "source": {"file": "-", "line": 1, "column": 2}}
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_TRIVIAL_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        stdin_data = json.dumps(err1) + "\n" + json.dumps(err2) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        errors = [r for r in records if r.get("kind") == "error"]
+        assert len(errors) >= 1
+        assert errors[0]["source"]["column"] == 1
+    finally:
+        os.unlink(ll1_file.name)
