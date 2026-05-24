@@ -24,7 +24,7 @@ Usage:
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
     --through=<level>       Build up to this level: scan, parse, diagram, or all [default: all].
-    --diagram-format=FMT    Diagram format when using --through=diagram [default: mermaid].
+    --diagram-format=FMT    Diagram format when using --through=diagram or --through=all [default: mermaid].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -162,22 +162,30 @@ def main(argv=None):
                 verbose=verbose,
             )
 
-    if through == 'diagram':
+    if through in ('diagram', 'all'):
         verbose.emit(Events.PHASE, message="diagram emit")
         (build_dir / 'diagram').mkdir(exist_ok=True)
-        _run_or_die(
+        required = (through == 'diagram')
+        diagram_ok = _run_or_die(
             ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
             stdin_file=model_json,
             stdout_file=str(build_dir / 'diagram' / 'diagram.mmd'),
             verbose=verbose,
+            required=required,
         )
-        verbose.emit(Events.PHASE, message="diagram build")
-        _run_or_die(
-            ['plcc-diagram-build', f'--format={diagram_fmt}',
-             f'--input={build_dir / "diagram" / "diagram.mmd"}',
-             f'--output={build_dir / "diagram" / "diagram.png"}'] + child_flags,
-            verbose=verbose,
-        )
+        if diagram_ok:
+            verbose.emit(Events.PHASE, message="diagram build")
+            diagram_ok = _run_or_die(
+                ['plcc-diagram-build', f'--format={diagram_fmt}',
+                 f'--input={build_dir / "diagram" / "diagram.mmd"}',
+                 f'--output={build_dir / "diagram" / "diagram.png"}'] + child_flags,
+                verbose=verbose,
+                required=required,
+            )
+        if diagram_ok:
+            required_stages = required_stages | {'diagram'}
+        else:
+            print("plcc-make: diagram generation skipped", file=sys.stderr)
 
     write_sentinel(build_dir, new_hash, required_stages)
     verbose.emit(Events.FINISHED, message="done")
@@ -206,7 +214,7 @@ def _report_ll1_failure(ll1, path):
         print(f"plcc-make: error: left-recursion cycle: {' -> '.join(cycle)}", file=sys.stderr)
 
 
-def _run_or_die(cmd, stdout_file=None, stdin_file=None, verbose=None):
+def _run_or_die(cmd, stdout_file=None, stdin_file=None, verbose=None, required=True):
     with contextlib.ExitStack() as stack:
         stdin = stack.enter_context(open(stdin_file)) if stdin_file else None
         stdout = stack.enter_context(open(stdout_file, 'w')) if stdout_file else None
@@ -216,4 +224,7 @@ def _run_or_die(cmd, stdout_file=None, stdin_file=None, verbose=None):
         verbose.reformat_child_events(events)
     if result.returncode != 0:
         print(f"plcc-make: {cmd[0]} failed (exit {result.returncode})", file=sys.stderr)
-        sys.exit(result.returncode)
+        if required:
+            sys.exit(result.returncode)
+        return False
+    return True

@@ -43,7 +43,11 @@ def main(argv=None):
     with open(input_file) as f:
         source = f.read()
     converter = MermaidConverter()
-    png_bytes = converter.to_png(source)
+    try:
+        png_bytes = converter.to_png(source)
+    except RuntimeError as e:
+        print(f"plcc-mermaid-diagram-build: {e}", file=sys.stderr)
+        sys.exit(1)
     with open(output_file, 'wb') as f:
         f.write(png_bytes)
     verbose.emit(Events.FINISHED, message=f"wrote {output_file}")

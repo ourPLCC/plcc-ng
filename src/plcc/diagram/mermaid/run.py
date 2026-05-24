@@ -1,4 +1,5 @@
 import enum
+import os
 import platform
 import subprocess
 import sys
@@ -40,6 +41,6 @@ def _open_file(path):
     if system == 'Darwin':
         subprocess.run(['open', path], check=True)
     elif system == 'Windows':
-        subprocess.run(['start', path], shell=True, check=True)
+        os.startfile(path)
     else:
         subprocess.run(['xdg-open', path], check=True)
