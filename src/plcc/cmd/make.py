@@ -108,7 +108,7 @@ def main(argv=None):
         'scan':    {'scan'},
         'parse':   {'scan', 'parse'},
         'diagram': {'scan', 'model', 'diagram'},
-        'all':     {'scan', 'parse', 'model', 'diagram'} | tool_stages,
+        'all':     {'scan', 'parse', 'model'} | tool_stages,
     }
     required_stages = _REQUIRED[through]
 
@@ -162,7 +162,7 @@ def main(argv=None):
                 verbose=verbose,
             )
 
-    if through in ('diagram', 'all'):
+    if through == 'diagram':
         verbose.emit(Events.PHASE, message="diagram emit")
         (build_dir / 'diagram').mkdir(exist_ok=True)
         _run_or_die(

@@ -42,17 +42,17 @@ teardown() {
     [ "$first_hash" != "$second_hash" ]
 }
 
-@test "plcc-spec | plcc-model | plcc-diagram produces diagram.puml" {
+@test "plcc-spec | plcc-model | plcc-plantuml-diagram-emit produces diagram.puml" {
     DIAGRAM_DIR="$(mktemp -d)"
     trap "rm -rf '${DIAGRAM_DIR}'" EXIT
-    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-diagram --output="${DIAGRAM_DIR}"
+    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-plantuml-diagram-emit --output="${DIAGRAM_DIR}"
     [ -f "${DIAGRAM_DIR}/diagram.puml" ]
 }
 
 @test "diagram.puml contains expected classes" {
     DIAGRAM_DIR="$(mktemp -d)"
     trap "rm -rf '${DIAGRAM_DIR}'" EXIT
-    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-diagram --output="${DIAGRAM_DIR}"
+    plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-plantuml-diagram-emit --output="${DIAGRAM_DIR}"
     grep 'ExprRest' "${DIAGRAM_DIR}/diagram.puml"
     grep 'AddRest --|> ExprRest' "${DIAGRAM_DIR}/diagram.puml"
 }
