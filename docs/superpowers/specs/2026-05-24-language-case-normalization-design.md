@@ -9,29 +9,42 @@
 
 ## Decision
 
-Normalize the language field to title case in `build_model.py` when constructing the model JSON. The model is the right seam: it is the boundary between the raw parsed spec and the language-neutral representation consumed by all emitters.
+Normalize the language field to **lowercase** in `build_model.py` when constructing the model JSON. The model is the right seam: it is the boundary between the raw parsed spec and the language-neutral representation consumed by all emitters.
 
-The divider parser and `SemanticSpec` continue to store the literal value from the spec file. Emitters are unchanged.
+`.title()` was considered but rejected: `'PlantUML'.title()` → `'Plantuml'`, which would corrupt the canonical form of multi-word language names. `.lower()` is safe for all realistic language tags.
 
-## Change
+Both emitters' section-finder functions are also updated to compare against the lowercase canonical form (`s.get('language', '').lower() == 'python'` and `== 'java'`). This is deliberately defensive — the emitters remain correct even if they receive model JSON that was built without the normalization step.
 
-In `_build_semantic_sections` in `src/plcc/model/build_model.py`, apply `.title()` to the language string:
+The divider parser and `SemanticSpec` continue to store the literal value from the spec file.
+
+## Changes
+
+**`src/plcc/model/build_model.py`** — `_build_semantic_sections`: normalize to lowercase:
 
 ```python
-'language': s['language'].title(),
+'language': s['language'].lower(),
 ```
 
-`str.title()` title-cases a single word: `'python'` → `'Python'`, `'JAVA'` → `'Java'`, `'jAvA'` → `'Java'`.
+**`src/plcc/lang/ext/python/emit.py`** — `_find_python_section`: compare lowercase:
+
+```python
+if s.get('language', '').lower() == 'python':
+```
+
+**`src/plcc/lang/ext/java/emit.py`** — `_find_java_section`: compare lowercase:
+
+```python
+if s.get('language', '').lower() == 'java':
+```
 
 ## Tests
 
-- `build_model_test.py`: add a test that feeds a semantic section with a lowercase language name and asserts the model output uses title case.
-- `emit_test.py` (Python emitter): add a regression test that passes a model with `"language": "python"` and asserts body fragments are included in the generated class file.
-
-No existing tests change.
+- `build_model_test.py`: new test feeds `"PYTHON"` and asserts model has `'python'`; existing `test_semantic_sections_present` updated to assert `'plantuml'` (lowercase).
+- `python/emit_test.py`: regression test passes `"language": "python"` and asserts body fragments appear in the generated class file.
+- `java/emit_test.py`: same pattern for Java.
 
 ## Edge Cases
 
-`.title()` is safe for all non-empty strings. The language field always has a value (the divider parser defaults to `'Java'`). An empty string produces another empty string, which no emitter matches — harmless.
+`.lower()` is safe for all strings including empty. The language field always has a value (the divider parser defaults to `'Java'`). An empty string produces another empty string, which no emitter matches — harmless.
 
 The model JSON is generated fresh each build and never stored at rest, so no migration is needed.
