@@ -120,6 +120,7 @@ def main(argv=None):
     # Slow path: replace spec atomically, delete sentinel, run downstream steps
     os.replace(tmp_spec, build_dir / 'spec.json')
     spec_json = str(build_dir / 'spec.json')
+    model_json = None
     delete_sentinel(build_dir)  # absent until final success write below
 
     if through in ('parse', 'all'):
@@ -178,15 +179,7 @@ def main(argv=None):
             verbose=verbose,
         )
 
-    completed = {'scan'}
-    if through in ('parse', 'all'):
-        completed.add('parse')
-    if through in ('diagram', 'all'):
-        completed.add('model')
-        completed.add('diagram')
-    if through == 'all':
-        completed |= tool_stages
-    write_sentinel(build_dir, new_hash, completed)
+    write_sentinel(build_dir, new_hash, required_stages)
     verbose.emit(Events.FINISHED, message="done")
 
 
