@@ -1,16 +1,20 @@
 from .list import find_formats, extract_format_name
 
 
-def test_extract_format_name_plantuml():
-    assert extract_format_name('plcc-plantuml-diagram') == 'plantuml'
+def test_extract_format_name_plantuml_emit():
+    assert extract_format_name('plcc-plantuml-diagram-emit') == 'plantuml'
 
 
-def test_extract_format_name_mermaid():
-    assert extract_format_name('plcc-mermaid-diagram') == 'mermaid'
+def test_extract_format_name_mermaid_emit():
+    assert extract_format_name('plcc-mermaid-diagram-emit') == 'mermaid'
+
+
+def test_extract_ignores_old_pattern():
+    assert extract_format_name('plcc-plantuml-diagram') is None
 
 
 def test_extract_ignores_dispatcher():
-    assert extract_format_name('plcc-diagram') is None
+    assert extract_format_name('plcc-diagram-emit') is None
 
 
 def test_extract_ignores_non_matching():

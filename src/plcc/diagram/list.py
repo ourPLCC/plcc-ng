@@ -17,7 +17,7 @@ Options:
     -h --help   Show this message.
 """ + VERBOSE_OPTIONS
 
-_DIAGRAM_PATTERN = re.compile(r'^plcc-(.+)-diagram$')
+_DIAGRAM_PATTERN = re.compile(r'^plcc-(.+)-diagram-emit$')
 
 
 class Events(enum.Enum):
