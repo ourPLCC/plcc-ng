@@ -251,3 +251,12 @@ def test_main_java_references_start_class(tmp_path, monkeypatch):
 def test_verbose_flag_accepted(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
     run_main([f'--output={tmp_path}', '-v'])
+
+
+def test_body_fragment_pasted_into_class_when_language_is_lowercase(tmp_path, monkeypatch):
+    model = _trivial_model()
+    model['semantic_sections'][0]['language'] = 'java'
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    program_java = (tmp_path / 'Program.java').read_text()
+    assert 'System.out.println(expr.toString())' in program_java

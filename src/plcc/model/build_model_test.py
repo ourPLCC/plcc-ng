@@ -55,7 +55,7 @@ def test_class_has_num_field():
 def test_semantic_sections_present():
     model = build_model(_TRIVIAL_SPEC)
     sections = model['semantic_sections']
-    assert any(s['tool'] == 'diagram' and s['language'] == 'PlantUML' for s in sections)
+    assert any(s['tool'] == 'diagram' and s['language'] == 'plantuml' for s in sections)
 
 
 _ARITH_SPEC = {
@@ -466,3 +466,13 @@ def test_extract_body_strips_percent_markers_with_trailing_spaces():
     result = _extract_body(lines)
     assert '%%%' not in result
     assert result == '    body line'
+
+
+def test_semantic_section_language_normalized_to_lowercase():
+    spec = {
+        "lexical": {"ruleList": []},
+        "syntax": {"rules": []},
+        "semantics": [{"language": "PYTHON", "tool": "calc", "codeFragmentList": []}]
+    }
+    model = build_model(spec)
+    assert model['semantic_sections'][0]['language'] == 'python'

@@ -105,7 +105,7 @@ def _copy_runtime(output_dir):
 
 def _find_java_section(model):
     for s in model.get('semantic_sections', []):
-        if s.get('language') == 'Java':
+        if s.get('language', '').lower() == 'java':
             return s
     return None
 
