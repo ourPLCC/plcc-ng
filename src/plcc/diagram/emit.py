@@ -29,7 +29,7 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-diagram-emit", Events, args)
-    fmt = args['--format'] or 'mermaid'
+    fmt = args['--format']
     cmd = f'plcc-{fmt}-diagram-emit'
     if not shutil.which(cmd):
         print(
