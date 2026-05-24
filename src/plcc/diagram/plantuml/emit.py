@@ -7,11 +7,11 @@ from docopt import docopt
 
 from ...verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-plantuml-diagram
+__doc__ = """plcc-plantuml-diagram-emit
     Emit a PlantUML class diagram from model JSON.
 
 Usage:
-    plcc-plantuml-diagram --output=DIR [-v ...] [options]
+    plcc-plantuml-diagram-emit --output=DIR [-v ...] [options]
 
 Options:
     --output=DIR    Directory to write diagram.puml into.
