@@ -179,3 +179,12 @@ def test_emit_generated_main_is_runnable(tmp_path, monkeypatch):
         text=True,
     )
     assert result.returncode == 0
+
+
+def test_emit_class_file_contains_body_fragment_when_language_is_lowercase(tmp_path, monkeypatch):
+    model = _arith_model()
+    model['semantic_sections'][0]['language'] = 'python'
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    term_py = (tmp_path / 'Term.py').read_text()
+    assert 'def eval(self):' in term_py

@@ -103,7 +103,7 @@ def _copy_runtime(output_dir):
 
 def _find_python_section(model):
     for s in model.get('semantic_sections', []):
-        if s.get('language') == 'Python':
+        if s.get('language', '').lower() == 'python':
             return s
     return None
 
