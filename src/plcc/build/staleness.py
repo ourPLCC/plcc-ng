@@ -3,14 +3,13 @@ import json
 from pathlib import Path
 
 _SENTINEL = ".spec-hash"
-_LEVELS = {"scan": 0, "parse": 1, "all": 2}
 
 
-def compute_hash(path: Path | str) -> str:
+def compute_hash(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def read_sentinel(build_dir) -> dict | None:
+def read_sentinel(build_dir):
     p = Path(build_dir) / _SENTINEL
     try:
         return json.loads(p.read_text())
@@ -18,29 +17,23 @@ def read_sentinel(build_dir) -> dict | None:
         return None
 
 
-def write_sentinel(build_dir, hash_: str, through: str) -> None:
+def write_sentinel(build_dir, hash_, stages):
     (Path(build_dir) / _SENTINEL).write_text(
-        json.dumps({"hash": hash_, "through": through})
+        json.dumps({"hash": hash_, "stages": sorted(stages)})
     )
 
 
-def delete_sentinel(build_dir) -> None:
+def delete_sentinel(build_dir):
     try:
         (Path(build_dir) / _SENTINEL).unlink()
     except FileNotFoundError:
         pass
 
 
-def is_current(sentinel: dict | None, new_hash: str, through: str) -> bool:
+def is_current(sentinel, hash_, required_stages):
     if sentinel is None:
         return False
-    if sentinel.get("hash") != new_hash:
+    if sentinel.get("hash") != hash_:
         return False
-    # -1 sentinel: unknown level names are treated as below "scan" (level 0), so unknown
-    # level names will produce False (stale), which is the safe default.
-    stored = _LEVELS.get(sentinel.get("through", ""), -1)
-    requested = _LEVELS.get(through, -1)
-    # If either is unknown (-1), treat as stale (False)
-    if stored == -1 or requested == -1:
-        return False
-    return stored >= requested
+    completed = set(sentinel.get("stages", []))
+    return required_stages.issubset(completed)
