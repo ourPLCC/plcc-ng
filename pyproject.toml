@@ -24,8 +24,6 @@ classifiers = [
     "Topic :: Education",
 ]
 
-[project.optional-dependencies]
-diagram = ["mmdc"]
 
 [project.urls]
 Homepage = "https://github.com/ourPLCC/plcc-ng"
@@ -94,7 +92,6 @@ dev = [
     "check-jsonschema>=0.29.0",
     "python-semantic-release>=9.0.0",
     "twine>=5.0.0",
-    "mmdc>=0.4.1",
 ]
 
 [tool.semantic_release]
