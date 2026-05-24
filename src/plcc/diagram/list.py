@@ -17,7 +17,7 @@ Options:
     -h --help   Show this message.
 """ + VERBOSE_OPTIONS
 
-_DIAGRAM_PATTERN = re.compile(r'^plcc-(.+)-diagram$')
+_DIAGRAM_PATTERN = re.compile(r'^plcc-(.+)-diagram-emit$')
 
 
 class Events(enum.Enum):
@@ -35,7 +35,7 @@ def main(argv=None):
 
 
 def find_formats():
-    """Scan PATH for plcc-*-diagram commands; return list of format names."""
+    """Scan PATH for plcc-*-diagram-emit commands; return list of format names."""
     formats = []
     seen = set()
     for directory in _path_dirs():
@@ -51,7 +51,7 @@ def find_formats():
 
 
 def extract_format_name(command_name):
-    """Return format name from plcc-<fmt>-diagram command name, or None."""
+    """Return format name from plcc-<fmt>-diagram-emit command name, or None."""
     m = _DIAGRAM_PATTERN.match(command_name)
     if m:
         fmt = m.group(1)

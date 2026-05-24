@@ -21,19 +21,19 @@ teardown() {
 }
 
 @test "plcc-rep evaluates with Python tool" {
-    run bash -c "echo '42' | plcc-rep --tool=py"
+    run --separate-stderr bash -c "echo '42' | plcc-rep --tool=py"
     [ "$status" -eq 0 ]
     [[ "$output" == "42" ]]
 }
 
 @test "plcc-rep errors on missing tool" {
-    run bash -c "echo '42' | plcc-rep --tool=nonexistent 2>&1"
+    run --separate-stderr bash -c "echo '42' | plcc-rep --tool=nonexistent"
     [ "$status" -ne 0 ]
-    [[ "$output" == *"no semantic section"* ]]
+    [[ "$stderr" == *"no semantic section"* ]]
 }
 
 @test "plcc-rep accepts -v" {
-    run bash -c "echo '42' | plcc-rep --tool=py -v"
+    run --separate-stderr bash -c "echo '42' | plcc-rep --tool=py -v"
     [ "$status" -eq 0 ]
 }
 
@@ -43,15 +43,15 @@ teardown() {
 }
 
 @test "plcc-rep --grammar-file uses specified grammar" {
-    run bash -c "echo '42' | plcc-rep --grammar-file='${FIXTURES}/trivial-python.plcc' --tool=py"
+    run --separate-stderr bash -c "echo '42' | plcc-rep --grammar-file='${FIXTURES}/trivial-python.plcc' --tool=py"
     [ "$status" -eq 0 ]
     [[ "$output" == "42" ]]
 }
 
 @test "plcc-rep rebuilds when grammar changes" {
-    echo '42' | plcc-rep --tool=py > /dev/null  # prime build
+    echo '42' | plcc-rep --tool=py > /dev/null 2>&1  # prime build
     cp "${FIXTURES}/trivial-python.plcc" grammar.plcc  # same grammar, re-copy (triggers rebuild if hash changes)
-    run bash -c "echo '42' | plcc-rep --tool=py"
+    run --separate-stderr bash -c "echo '42' | plcc-rep --tool=py"
     [ "$status" -eq 0 ]
     [[ "$output" == "42" ]]
 }

@@ -17,7 +17,8 @@ trap 'rm -rf "${VENV}"' EXIT
 # Verify all entry points are installed on the venv PATH
 for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
            plcc-lang-emit plcc-lang-build plcc-lang-list \
-           plcc-diagram plcc-diagram-list \
+           plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
+           plcc-plantuml-diagram-emit \
            plcc-make plcc-scan plcc-parse plcc-rep; do
     test -x "${VENV}/bin/${cmd}" || { echo "FAIL: ${cmd} not installed"; exit 1; }
     echo "OK: ${cmd}"
@@ -47,6 +48,6 @@ trap 'rm -rf "${VENV}" "${WORK_DIR}"' EXIT
 )
 DIAGRAM_DIR="$(mktemp -d)"
 trap 'rm -rf "${VENV}" "${WORK_DIR}" "${DIAGRAM_DIR}"' EXIT
-plcc-spec "${PROJECT_ROOT}/tests/fixtures/arith.plcc" | plcc-model | plcc-diagram --output="${DIAGRAM_DIR}"
+plcc-spec "${PROJECT_ROOT}/tests/fixtures/arith.plcc" | plcc-model | plcc-plantuml-diagram-emit --output="${DIAGRAM_DIR}"
 test -f "${DIAGRAM_DIR}/diagram.puml" || { echo "FAIL: diagram.puml missing"; exit 1; }
 echo "packaging: all checks passed"

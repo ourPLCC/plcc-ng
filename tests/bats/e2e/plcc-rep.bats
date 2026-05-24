@@ -27,33 +27,33 @@ teardown() {
 }
 
 @test "plcc-rep evaluates 1+2 to 3 in batch mode" {
-    run bash -c "echo '1 + 2' | plcc-rep --tool=calculate --grammar-file='${FIXTURES}/arith.plcc'"
+    run --separate-stderr bash -c "echo '1 + 2' | plcc-rep --tool=calculate --grammar-file='${FIXTURES}/arith.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == "3" ]]
 }
 
 @test "plcc-rep evaluates file argument" {
     echo '1 + 2' > input.txt
-    run plcc-rep --tool=calculate --grammar-file="${FIXTURES}/arith.plcc" input.txt
+    run --separate-stderr plcc-rep --tool=calculate --grammar-file="${FIXTURES}/arith.plcc" input.txt
     [ "$status" -eq 0 ]
     [[ "$output" == "3" ]]
 }
 
 @test "plcc-rep exits 0 on lex error" {
-    run bash -c "echo 'bad input here' | plcc-rep --tool=calculate --grammar-file='${FIXTURES}/arith.plcc'"
+    run --separate-stderr bash -c "echo 'bad input here' | plcc-rep --tool=calculate --grammar-file='${FIXTURES}/arith.plcc'"
     [ "$status" -eq 0 ]
 }
 
 @test "plcc-rep session continues after parse error in file argument" {
     echo '1 + 2' > good.txt
     echo 'bad input here' > bad.txt
-    run plcc-rep --tool=calculate --grammar-file="${FIXTURES}/arith.plcc" good.txt bad.txt
+    run --separate-stderr plcc-rep --tool=calculate --grammar-file="${FIXTURES}/arith.plcc" good.txt bad.txt
     [ "$status" -eq 0 ]
     [[ "$output" == *"3"* ]]
 }
 
 @test "plcc-rep emits json eval record with --verbose-format=json" {
-    run bash -c "echo '1 + 2' | plcc-rep --tool=calculate --verbose-format=json --grammar-file='${FIXTURES}/arith.plcc'"
+    run --separate-stderr bash -c "echo '1 + 2' | plcc-rep --tool=calculate --verbose-format=json --grammar-file='${FIXTURES}/arith.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == *'"kind"'* ]]
     [[ "$output" == *'"result"'* ]]
@@ -86,21 +86,21 @@ setup_arbno_build() {
 
 @test "trivial-arbno: plcc-rep evaluates 1, 2, 3 to [1, 2, 3]" {
     setup_arbno_build
-    run bash -c "echo '1, 2, 3' | plcc-rep --tool=eval --grammar-file='${FIXTURES}/trivial-arbno.plcc'"
+    run --separate-stderr bash -c "echo '1, 2, 3' | plcc-rep --tool=eval --grammar-file='${FIXTURES}/trivial-arbno.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == "[1, 2, 3]" ]]
 }
 
 @test "trivial-arbno: plcc-rep evaluates empty input to []" {
     setup_arbno_build
-    run bash -c "echo '' | plcc-rep --tool=eval --grammar-file='${FIXTURES}/trivial-arbno.plcc'"
+    run --separate-stderr bash -c "echo '' | plcc-rep --tool=eval --grammar-file='${FIXTURES}/trivial-arbno.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == "[]" ]]
 }
 
 @test "trivial-arbno: plcc-rep evaluates single item 42 to [42]" {
     setup_arbno_build
-    run bash -c "echo '42' | plcc-rep --tool=eval --grammar-file='${FIXTURES}/trivial-arbno.plcc'"
+    run --separate-stderr bash -c "echo '42' | plcc-rep --tool=eval --grammar-file='${FIXTURES}/trivial-arbno.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == "[42]" ]]
 }

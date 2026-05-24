@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:04745fcb9d4f1f21dc5181022efcfb02c38347bb8262b410940e990be27d1894"
+content_hash = "sha256:6b2d306f6948d58d70f74429f9d1c50cbfd1e86854690756e3716542bb483184"
 
 [[metadata.targets]]
 requires_python = "~=3.12"
@@ -806,6 +806,19 @@ files = [
 ]
 
 [[package]]
+name = "mmdc"
+version = "0.4.1"
+requires_python = ">=3.4"
+summary = "Python-native Mermaid diagram converter – no browser, Node.js, or npm required. Renders diagrams to SVG using PhantomJS via phasma, perfect for documentation automation and CI/CD pipelines."
+groups = ["dev"]
+dependencies = [
+    "phasma>=0.4.0",
+]
+files = [
+    {file = "mmdc-0.4.1-py3-none-any.whl", hash = "sha256:84bccd4ab7a473c40511043c243242ca88fbad806351f8161765589117afbbd3"},
+]
+
+[[package]]
 name = "more-itertools"
 version = "11.0.2"
 requires_python = ">=3.10"
@@ -862,6 +875,19 @@ groups = ["dev"]
 files = [
     {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},
     {file = "packaging-24.1.tar.gz", hash = "sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002"},
+]
+
+[[package]]
+name = "phasma"
+version = "0.5.0"
+requires_python = ">=3.4"
+summary = "A modern PhantomJS driver for Python with bundled binaries, providing headless browser automation, web page rendering, and JavaScript execution."
+groups = ["dev"]
+files = [
+    {file = "phasma-0.5.0-py3-none-macosx_10_9_universal2.whl", hash = "sha256:d209e9c2720fbc9ea1e07bd0ae67d1b90075a88886a7438121a084d07bda56c7"},
+    {file = "phasma-0.5.0-py3-none-manylinux_2_17_i686.whl", hash = "sha256:cd3772db3bc52ac8478fc23b82ea7636c1889b76f2394ceb03bdc1efac01e348"},
+    {file = "phasma-0.5.0-py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:768365d8035f48f574b6496924aaa33ee8b52d2862ccfae8255d7e37d4ceb340"},
+    {file = "phasma-0.5.0-py3-none-win_amd64.whl", hash = "sha256:99dc29b11d55b9574772c5a7c0feb407704e8e20f2f534791c3c125a5dda4cd9"},
 ]
 
 [[package]]
