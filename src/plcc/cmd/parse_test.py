@@ -183,3 +183,18 @@ def test_feed_reformats_child_verbose_events(monkeypatch, capsys):
     handler.feed(b"1\n", "-")
     _, err = capsys.readouterr()
     assert "plcc-tokens: started: tokenizing" in err
+
+
+def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
+    # Two error records arrive (e.g. two lex errors from 'ab').
+    # Only the first should be printed; the second is silently dropped.
+    two_errors = (
+        _error_record_with_source("first error", col=1) +
+        _error_record_with_source("second error", col=2)
+    )
+    procs = iter([_proc(), _proc(stdout=two_errors)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"ab\n", "-")
+    _, err = capsys.readouterr()
+    assert "first error" in err
+    assert "second error" not in err
