@@ -40,7 +40,8 @@ def main(argv=None):
             file=sys.stderr,
         )
         sys.exit(1)
-    source = open(input_file).read()
+    with open(input_file) as f:
+        source = f.read()
     converter = MermaidConverter()
     png_bytes = converter.to_png(source)
     with open(output_file, 'wb') as f:
