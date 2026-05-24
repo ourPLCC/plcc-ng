@@ -133,7 +133,7 @@ That format should be avoided.
 
 ## Verification
 
-1. Run the test suite: `bin/test-unit`
+1. Run the test suite: `bin/test/units.bash`
 2. Manually: `plcc-parse` with input `ab` should report `a`, not `b`
 3. Manually: `plcc-parse` with input `abc` should report only `a`
 4. Manually: `plcc-scan` with input `ab` should still report both `a` and `b`
