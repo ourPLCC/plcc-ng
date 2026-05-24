@@ -73,7 +73,8 @@ def test_main_diagram_contains_class_name(tmp_path, monkeypatch):
     assert 'ExprRest' in content
 
 
-def test_main_no_args_exits_nonzero():
-    import docopt
-    with pytest.raises((docopt.DocoptExit, SystemExit)):
-        run_main([])
+def test_main_no_args_writes_to_stdout(monkeypatch, capsys):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_ARITH_MODEL)))
+    run_main([])
+    captured = capsys.readouterr()
+    assert '@startuml' in captured.out

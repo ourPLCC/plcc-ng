@@ -24,7 +24,7 @@ Usage:
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
     --through=<level>       Build up to this level: scan, parse, diagram, or all [default: all].
-    --diagram-format=FMT    Diagram format for --through=diagram or --through=all [default: mermaid].
+    --diagram-format=FMT    Diagram format when using --through=diagram [default: mermaid].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 

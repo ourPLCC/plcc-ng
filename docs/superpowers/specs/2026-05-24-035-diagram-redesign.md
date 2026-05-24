@@ -86,8 +86,10 @@ exposed to users.
 
 **New `--through` stage: `diagram`**
 
-`--through=diagram` builds: spec.json → ll1.json → model.json →
+`--through=diagram` builds: spec.json → model.json →
 diagram.mmd + diagram.png. Output goes to `build/diagram/`.
+`plcc-model` reads spec.json directly and does not need ll1.json,
+so the ll1 step is skipped on this path.
 
 `--through=all` now includes the diagram step after all tool steps.
 
@@ -138,7 +140,7 @@ tool_stages = {s['tool'] for s in spec.get('semantics', [])}
 required = {
     'scan':    {'scan'},
     'parse':   {'scan', 'parse'},
-    'diagram': {'scan', 'parse', 'model', 'diagram'},
+    'diagram': {'scan', 'model', 'diagram'},
     'all':     {'scan', 'parse', 'model', 'diagram'} | tool_stages,
 }[through]
 ```

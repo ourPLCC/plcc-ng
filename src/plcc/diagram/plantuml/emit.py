@@ -11,10 +11,10 @@ __doc__ = """plcc-plantuml-diagram-emit
     Emit a PlantUML class diagram from model JSON.
 
 Usage:
-    plcc-plantuml-diagram-emit --output=DIR [-v ...] [options]
+    plcc-plantuml-diagram-emit [--output=DIR] [-v ...] [options]
 
 Options:
-    --output=DIR    Directory to write diagram.puml into.
+    --output=DIR    Directory to write diagram.puml into (writes to stdout if omitted).
     -h --help       Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -28,14 +28,17 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args("plcc-plantuml-diagram", Events, args)
+    verbose = VerboseContext.from_args("plcc-plantuml-diagram-emit", Events, args)
     output_dir = args['--output']
-    os.makedirs(output_dir, exist_ok=True)
     model = json.load(sys.stdin)
     content = build_diagram(model)
-    path = os.path.join(output_dir, 'diagram.puml')
-    with open(path, 'w') as f:
-        f.write(content)
+    if output_dir is None:
+        sys.stdout.write(content)
+    else:
+        os.makedirs(output_dir, exist_ok=True)
+        path = os.path.join(output_dir, 'diagram.puml')
+        with open(path, 'w') as f:
+            f.write(content)
 
 
 def build_diagram(model):

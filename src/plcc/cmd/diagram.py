@@ -55,6 +55,8 @@ def main(argv=None):
          f'--diagram-format={fmt}'] + child_flags,
         stderr=subprocess.PIPE,
     )
+    if make_result.stderr:
+        sys.stderr.buffer.write(make_result.stderr)
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
@@ -64,6 +66,8 @@ def main(argv=None):
          f'--input={image_path}'] + child_flags,
         stderr=subprocess.PIPE,
     )
+    if run_result.stderr:
+        sys.stderr.buffer.write(run_result.stderr)
     if run_result.returncode != 0:
         sys.exit(run_result.returncode)
 
