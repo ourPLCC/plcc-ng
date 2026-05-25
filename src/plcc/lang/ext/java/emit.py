@@ -113,7 +113,5 @@ def _find_java_section(model):
 def _group_fragments(fragments):
     groups = {}
     for frag in fragments:
-        if frag['class_name'].startswith('#'):
-            continue
         groups.setdefault(frag['class_name'], []).append(frag)
     return groups

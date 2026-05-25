@@ -213,16 +213,6 @@ def test_file_fragment_written_as_standalone_java_file(tmp_path, monkeypatch):
     assert 'public class Env {}' in (tmp_path / 'Env.java').read_text()
 
 
-def test_hash_comment_class_name_is_skipped(tmp_path, monkeypatch):
-    model = _trivial_model()
-    model['semantic_sections'][0]['fragments'].append(
-        {"class_name": "# a comment", "kind": "body", "body": "// ignored"}
-    )
-    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
-    run_main([f'--output={tmp_path}'])
-    assert not (tmp_path / '# a comment.java').exists()
-
-
 def test_entry_point_defaults_to_dollar_run_when_null(tmp_path, monkeypatch):
     model = _trivial_model()
     model['semantic_sections'][0]['entry_point'] = None
