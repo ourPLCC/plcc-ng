@@ -19,7 +19,6 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     assert "grammar file not found" in err
 
 
-
 def test_calls_plcc_make_with_through_model(tmp_path, monkeypatch, capsys):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
@@ -63,3 +62,6 @@ def test_calls_emit_build_run_after_make(tmp_path, monkeypatch):
 
     cmds = [c[0] for c in calls]
     assert cmds == ['plcc-make', 'plcc-diagram-emit', 'plcc-diagram-build', 'plcc-diagram-run']
+    assert '--format=plantuml' in calls[1]   # emit
+    assert '--format=plantuml' in calls[2]   # build
+    assert '--format=plantuml' in calls[3]   # run
