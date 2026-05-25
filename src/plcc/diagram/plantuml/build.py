@@ -51,7 +51,8 @@ def main(argv=None):
         with open(input_file) as f:
             source = f.read()
         url = f'https://www.plantuml.com/plantuml/png/{_encode(source)}'
-        with urllib.request.urlopen(url, timeout=30) as response:
+        req = urllib.request.Request(url, headers={'User-Agent': 'plcc-ng/1.0'})
+        with urllib.request.urlopen(req, timeout=30) as response:
             png_bytes = response.read()
     except Exception as e:
         print(f"plcc-plantuml-diagram-build: {e}", file=sys.stderr)
