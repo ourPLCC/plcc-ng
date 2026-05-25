@@ -1,6 +1,6 @@
 import subprocess
 import pytest
-from unittest.mock import patch, call
+from unittest.mock import patch
 
 from .build import main as run_main
 
