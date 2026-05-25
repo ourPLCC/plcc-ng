@@ -1,7 +1,9 @@
 # Phase 2 Part 2: Code Model and Diagram System — Design
 
 **Date:** 2026-04-25
-**Status:** APPROVED
+**Status:** APPROVED (diagram interface partially superseded — see note below)
+
+> **Note on diagram interface.** The `plcc-diagram --output=DIR` interface and the `plcc-make --through=diagram` / `--diagram-format` flags described in this document were superseded by [2026-05-25-diagram-decouple-from-make-design.md](2026-05-25-diagram-decouple-from-make-design.md). `plcc-make` no longer has diagram stages; `plcc-diagram` now owns the full emit → build → run pipeline and prints the output path instead of launching a viewer.
 **Companion architectural spec:** `docs/design/2026-04-12-multi-lang-pipeline.md`
 **Roadmap reference:** `docs/design/2026-04-12-multi-lang-implementation-plan.md` §5
 

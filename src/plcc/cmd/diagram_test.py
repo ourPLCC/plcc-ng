@@ -19,16 +19,16 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     assert "grammar file not found" in err
 
 
-def test_calls_plcc_make_with_through_diagram(tmp_path, monkeypatch):
+def test_calls_plcc_make_with_through_model(tmp_path, monkeypatch, capsys):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
     monkeypatch.chdir(tmp_path)
-    make_calls = []
+    calls = []
 
     def fake_run(cmd, **kwargs):
-        make_calls.append(cmd)
+        calls.append(list(cmd))
         m = MagicMock()
-        m.returncode = 1  # fail so we stop after first call
+        m.returncode = 1
         m.stderr = b''
         return m
 
@@ -36,25 +36,32 @@ def test_calls_plcc_make_with_through_diagram(tmp_path, monkeypatch):
         with pytest.raises(SystemExit):
             run_main([])
 
-    assert any('plcc-make' in str(c) for c in make_calls)
-    assert any('--through=diagram' in str(c) for c in make_calls[0])
+    assert calls[0][0] == 'plcc-make'
+    assert '--through=model' in calls[0]
+    assert not any('--through=diagram' in arg for arg in calls[0])
 
 
-def test_default_format_is_plantuml(tmp_path, monkeypatch):
+def test_calls_emit_build_run_after_make(tmp_path, monkeypatch):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
     monkeypatch.chdir(tmp_path)
-    make_calls = []
+    calls = []
 
     def fake_run(cmd, **kwargs):
-        make_calls.append(cmd)
+        calls.append(list(cmd))
         m = MagicMock()
-        m.returncode = 1  # fail so we stop after first call
+        m.returncode = 0
         m.stderr = b''
         return m
 
     with patch('subprocess.run', side_effect=fake_run):
-        with pytest.raises(SystemExit):
-            run_main([])
+        run_main([])
 
-    assert any('--diagram-format=plantuml' in str(c) for c in make_calls[0])
+    cmds = [c[0] for c in calls]
+    assert cmds == ['plcc-make', 'plcc-diagram-emit', 'plcc-diagram-build', 'plcc-diagram-run']
+    assert '--format=plantuml' in calls[1]   # emit
+    assert '--format=plantuml' in calls[2]   # build
+    assert '--format=plantuml' in calls[3]   # run
