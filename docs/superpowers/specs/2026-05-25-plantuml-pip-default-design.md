@@ -14,7 +14,7 @@ pre-installed. Install friction must be minimized.
 
 ### Goal
 
-`pip install plcc[diagram]` gives users a working diagram experience out of the box.
+`pip install plcc-ng[diagram]` gives users a working diagram experience out of the box.
 No Node.js, no npm, no Java required.
 
 ### Approach
@@ -28,11 +28,11 @@ Local/offline rendering (local plantuml binary, Docker) is deferred to a future 
 
 **`src/plcc/diagram/plantuml/build.py`** — `plcc-plantuml-diagram-build`
 
-Reads a `.puml` input file, sends it to `http://www.plantuml.com/plantuml/png/` via the
+Reads a `.puml` input file, sends it to `https://www.plantuml.com/plantuml/png/` via the
 `plantuml` PyPI package, and writes the response as a `.png` output file.
 
 If `plantuml` is not installed, exits with a clear error:
-`plantuml not installed — run: pip install plcc[diagram]`
+`plantuml not installed — run: pip install plcc-ng[diagram]`
 
 **`src/plcc/diagram/plantuml/run.py`** — `plcc-plantuml-diagram-run`
 

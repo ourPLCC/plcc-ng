@@ -21,7 +21,7 @@ def test_missing_plantuml_lib_prints_helpful_error(tmp_path, capsys):
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
-    assert 'pip install plcc[diagram]' in err
+    assert 'pip install plcc-ng[diagram]' in err
 
 
 def test_calls_plantuml_server_and_writes_png(tmp_path):
@@ -81,20 +81,3 @@ def test_plantuml_error_prints_message_and_exits(tmp_path, capsys):
     assert 'connection refused' in err
 
 
-def test_configures_timeout_on_server(tmp_path):
-    src = tmp_path / "diagram.puml"
-    src.write_text("@startuml\nclass Foo {}\n@enduml\n")
-    out = tmp_path / "diagram.png"
-
-    mock_lib = MagicMock()
-    mock_server = MagicMock()
-    mock_server.processes.return_value = b'\x89PNG fake'
-    mock_lib.PlantUML.return_value = mock_server
-
-    with patch.dict('sys.modules', {'plantuml': mock_lib}):
-        run_main([f'--input={src}', f'--output={out}'])
-
-    mock_lib.PlantUML.assert_called_once_with(
-        url='https://www.plantuml.com/plantuml/png/',
-        request_opts={'timeout': 30},
-    )

@@ -36,7 +36,7 @@ def main(argv=None):
     except ImportError:
         print(
             "plcc-plantuml-diagram-build: plantuml not installed — "
-            "run: pip install plcc[diagram]",
+            "run: pip install plcc-ng[diagram]",
             file=sys.stderr,
         )
         sys.exit(1)

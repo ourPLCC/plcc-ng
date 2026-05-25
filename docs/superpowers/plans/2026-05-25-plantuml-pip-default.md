@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add `plcc-plantuml-diagram-build` and `plcc-plantuml-diagram-run` plugins, make `plantuml` the default format, and wire `pip install plcc[diagram]` to the `plantuml` PyPI package so users get working diagrams with zero extra binaries.
+**Goal:** Add `plcc-plantuml-diagram-build` and `plcc-plantuml-diagram-run` plugins, make `plantuml` the default format, and wire `pip install plcc-ng[diagram]` to the `plantuml` PyPI package so users get working diagrams with zero extra binaries.
 
 **Architecture:** Two new plugin files in `src/plcc/diagram/plantuml/` follow the same structure as the existing mermaid plugins. The `plantuml` PyPI package is imported lazily inside `main()` so the module loads without it installed. Default format changes from `mermaid` to `plantuml` in five docstrings/fallbacks across the dispatcher and command layers.
 
@@ -66,7 +66,7 @@ def test_missing_plantuml_lib_prints_helpful_error(tmp_path, capsys):
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
-    assert 'pip install plcc[diagram]' in err
+    assert 'pip install plcc-ng[diagram]' in err
 
 
 def test_calls_plantuml_server_and_writes_png(tmp_path):
@@ -164,7 +164,7 @@ def main(argv=None):
     except ImportError:
         print(
             "plcc-plantuml-diagram-build: plantuml not installed — "
-            "run: pip install plcc[diagram]",
+            "run: pip install plcc-ng[diagram]",
             file=sys.stderr,
         )
         sys.exit(1)

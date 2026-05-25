@@ -166,10 +166,13 @@ def main(argv=None):
         verbose.emit(Events.PHASE, message="diagram emit")
         (build_dir / 'diagram').mkdir(exist_ok=True)
         required = (through == 'diagram')
+        _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+        source_ext = _SOURCE_EXT.get(diagram_fmt, diagram_fmt)
+        diagram_source = str(build_dir / 'diagram' / f'diagram.{source_ext}')
         diagram_ok = _run_or_die(
             ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
             stdin_file=model_json,
-            stdout_file=str(build_dir / 'diagram' / 'diagram.mmd'),
+            stdout_file=diagram_source,
             verbose=verbose,
             required=required,
         )
@@ -177,7 +180,7 @@ def main(argv=None):
             verbose.emit(Events.PHASE, message="diagram build")
             diagram_ok = _run_or_die(
                 ['plcc-diagram-build', f'--format={diagram_fmt}',
-                 f'--input={build_dir / "diagram" / "diagram.mmd"}',
+                 f'--input={diagram_source}',
                  f'--output={build_dir / "diagram" / "diagram.png"}'] + child_flags,
                 verbose=verbose,
                 required=required,
