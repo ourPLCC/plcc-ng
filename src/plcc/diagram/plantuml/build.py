@@ -41,7 +41,10 @@ def main(argv=None):
         )
         sys.exit(1)
     try:
-        server = plantuml_lib.PlantUML(url='http://www.plantuml.com/plantuml/png/')
+        server = plantuml_lib.PlantUML(
+            url='https://www.plantuml.com/plantuml/png/',
+            request_opts={'timeout': 30},
+        )
         with open(input_file) as f:
             source = f.read()
         png_bytes = server.processes(source)
