@@ -14,7 +14,7 @@ Usage:
     plcc-diagram-run --input=FILE [-v ...] [options]
 
 Options:
-    --format=FMT    Diagram format [default: mermaid].
+    --format=FMT    Diagram format [default: plantuml].
     --input=FILE    Path to diagram image file.
     -h --help       Show this message.
 """ + VERBOSE_OPTIONS

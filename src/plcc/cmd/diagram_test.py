@@ -40,7 +40,7 @@ def test_calls_plcc_make_with_through_diagram(tmp_path, monkeypatch):
     assert any('--through=diagram' in str(c) for c in make_calls[0])
 
 
-def test_default_format_is_mermaid(tmp_path, monkeypatch):
+def test_default_format_is_plantuml(tmp_path, monkeypatch):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
     monkeypatch.chdir(tmp_path)
@@ -57,4 +57,4 @@ def test_default_format_is_mermaid(tmp_path, monkeypatch):
         with pytest.raises(SystemExit):
             run_main([])
 
-    assert any('--diagram-format=mermaid' in str(c) for c in make_calls[0])
+    assert any('--diagram-format=plantuml' in str(c) for c in make_calls[0])

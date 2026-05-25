@@ -24,7 +24,7 @@ Usage:
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
     --through=<level>       Build up to this level: scan, parse, diagram, or all [default: all].
-    --diagram-format=FMT    Diagram format when using --through=diagram or --through=all [default: mermaid].
+    --diagram-format=FMT    Diagram format when using --through=diagram or --through=all [default: plantuml].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -51,7 +51,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-make", Events, args)
     grammar = args['--grammar-file']
     through = args['--through']
-    diagram_fmt = args['--diagram-format'] or 'mermaid'
+    diagram_fmt = args['--diagram-format'] or 'plantuml'
     build_dir = Path('build')
 
     if through not in ('scan', 'parse', 'diagram', 'all'):
