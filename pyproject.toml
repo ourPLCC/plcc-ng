@@ -62,6 +62,8 @@ plcc-mermaid-diagram-build = "plcc.diagram.mermaid.build:main"
 plcc-mermaid-diagram-emit = "plcc.diagram.mermaid.emit:main"
 plcc-mermaid-diagram-run = "plcc.diagram.mermaid.run:main"
 plcc-plantuml-diagram-emit = "plcc.diagram.plantuml.emit:main"
+plcc-plantuml-diagram-build = "plcc.diagram.plantuml.build:main"
+plcc-plantuml-diagram-run   = "plcc.diagram.plantuml.run:main"
 plcc-lang-build = "plcc.lang.build:main"
 plcc-lang-list = "plcc.lang.list:main"
 plcc-diagram-list = "plcc.diagram.list:main"
@@ -78,6 +80,9 @@ plcc-python-run = "plcc.lang.ext.python.run:main"
 plcc-java-emit  = "plcc.lang.ext.java.emit:main"
 plcc-java-build = "plcc.lang.ext.java.build:main"
 plcc-java-run   = "plcc.lang.ext.java.run:main"
+
+[project.optional-dependencies]
+diagram = ["plantuml"]
 
 [tool.pdm.scripts]
 test = "pytest -qq -rfEsxXP --cov=plcc --cov-branch --cov-report term-missing:skip-covered"

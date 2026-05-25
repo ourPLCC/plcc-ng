@@ -14,7 +14,7 @@ Usage:
     plcc-diagram-build --input=FILE --output=FILE [-v ...] [options]
 
 Options:
-    --format=FMT    Diagram format [default: mermaid].
+    --format=FMT    Diagram format [default: plantuml].
     --input=FILE    Path to diagram source file.
     --output=FILE   Path to write image file.
     -h --help       Show this message.

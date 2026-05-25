@@ -14,7 +14,7 @@ Usage:
     plcc-diagram-emit [-v ...] [options]
 
 Options:
-    --format=FMT    Diagram format [default: mermaid].
+    --format=FMT    Diagram format [default: plantuml].
     -h --help       Show this message.
 """ + VERBOSE_OPTIONS
 

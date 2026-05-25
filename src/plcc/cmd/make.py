@@ -24,7 +24,7 @@ Usage:
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
     --through=<level>       Build up to this level: scan, parse, diagram, or all [default: all].
-    --diagram-format=FMT    Diagram format when using --through=diagram or --through=all [default: mermaid].
+    --diagram-format=FMT    Diagram format when using --through=diagram or --through=all [default: plantuml].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -51,7 +51,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-make", Events, args)
     grammar = args['--grammar-file']
     through = args['--through']
-    diagram_fmt = args['--diagram-format'] or 'mermaid'
+    diagram_fmt = args['--diagram-format'] or 'plantuml'
     build_dir = Path('build')
 
     if through not in ('scan', 'parse', 'diagram', 'all'):
@@ -166,10 +166,13 @@ def main(argv=None):
         verbose.emit(Events.PHASE, message="diagram emit")
         (build_dir / 'diagram').mkdir(exist_ok=True)
         required = (through == 'diagram')
+        _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+        source_ext = _SOURCE_EXT.get(diagram_fmt, diagram_fmt)
+        diagram_source = str(build_dir / 'diagram' / f'diagram.{source_ext}')
         diagram_ok = _run_or_die(
             ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
             stdin_file=model_json,
-            stdout_file=str(build_dir / 'diagram' / 'diagram.mmd'),
+            stdout_file=diagram_source,
             verbose=verbose,
             required=required,
         )
@@ -177,7 +180,7 @@ def main(argv=None):
             verbose.emit(Events.PHASE, message="diagram build")
             diagram_ok = _run_or_die(
                 ['plcc-diagram-build', f'--format={diagram_fmt}',
-                 f'--input={build_dir / "diagram" / "diagram.mmd"}',
+                 f'--input={diagram_source}',
                  f'--output={build_dir / "diagram" / "diagram.png"}'] + child_flags,
                 verbose=verbose,
                 required=required,

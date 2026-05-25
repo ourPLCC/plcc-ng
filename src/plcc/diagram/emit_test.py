@@ -13,7 +13,7 @@ _TRIVIAL_MODEL = json.dumps({
 })
 
 
-def test_dispatches_to_mermaid_diagram_emit_by_default(monkeypatch):
+def test_dispatches_to_plantuml_diagram_emit_by_default(monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
     calls = []
 
@@ -23,11 +23,11 @@ def test_dispatches_to_mermaid_diagram_emit_by_default(monkeypatch):
         m.returncode = 0
         return m
 
-    with patch('shutil.which', return_value='/usr/bin/plcc-mermaid-diagram-emit'):
+    with patch('shutil.which', return_value='/usr/bin/plcc-plantuml-diagram-emit'):
         with patch('subprocess.run', side_effect=fake_run):
             run_main([])
 
-    assert calls[0][0] == 'plcc-mermaid-diagram-emit'
+    assert calls[0][0] == 'plcc-plantuml-diagram-emit'
 
 
 def test_custom_format_dispatches_to_correct_command(monkeypatch):

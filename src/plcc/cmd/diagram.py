@@ -15,7 +15,7 @@ Usage:
 
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
-    --format=FMT            Diagram format [default: mermaid].
+    --format=FMT            Diagram format [default: plantuml].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
