@@ -23,8 +23,7 @@ Usage:
 
 Options:
     --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
-    --through=<level>       Build up to this level: scan, parse, diagram, or all [default: all].
-    --diagram-format=FMT    Diagram format when using --through=diagram or --through=all [default: plantuml].
+    --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -51,13 +50,12 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-make", Events, args)
     grammar = args['--grammar-file']
     through = args['--through']
-    diagram_fmt = args['--diagram-format'] or 'plantuml'
     build_dir = Path('build')
 
-    if through not in ('scan', 'parse', 'diagram', 'all'):
+    if through not in ('scan', 'parse', 'model', 'all'):
         print(
             f"plcc-make: invalid --through value '{through}'; "
-            "must be scan, parse, diagram, or all",
+            "must be scan, parse, model, or all",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -105,10 +103,10 @@ def main(argv=None):
     tool_stages = {s['tool'] for s in spec_data.get('semantics', [])}
 
     _REQUIRED = {
-        'scan':    {'scan'},
-        'parse':   {'scan', 'parse'},
-        'diagram': {'scan', 'model', 'diagram'},
-        'all':     {'scan', 'parse', 'model'} | tool_stages,
+        'scan':  {'scan'},
+        'parse': {'scan', 'parse'},
+        'model': {'scan', 'model'},
+        'all':   {'scan', 'parse', 'model'} | tool_stages,
     }
     required_stages = _REQUIRED[through]
 
@@ -133,7 +131,7 @@ def main(argv=None):
             _report_ll1_failure(ll1, ll1_json)
             sys.exit(1)
 
-    if through in ('diagram', 'all'):
+    if through in ('model', 'all'):
         verbose.emit(Events.PHASE, message="model")
         model_json = str(build_dir / 'model.json')
         _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
@@ -161,34 +159,6 @@ def main(argv=None):
                 ['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'] + child_flags,
                 verbose=verbose,
             )
-
-    if through in ('diagram', 'all'):
-        verbose.emit(Events.PHASE, message="diagram emit")
-        (build_dir / 'diagram').mkdir(exist_ok=True)
-        required = (through == 'diagram')
-        _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
-        source_ext = _SOURCE_EXT.get(diagram_fmt, diagram_fmt)
-        diagram_source = str(build_dir / 'diagram' / f'diagram.{source_ext}')
-        diagram_ok = _run_or_die(
-            ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
-            stdin_file=model_json,
-            stdout_file=diagram_source,
-            verbose=verbose,
-            required=required,
-        )
-        if diagram_ok:
-            verbose.emit(Events.PHASE, message="diagram build")
-            diagram_ok = _run_or_die(
-                ['plcc-diagram-build', f'--format={diagram_fmt}',
-                 f'--input={diagram_source}',
-                 f'--output={build_dir / "diagram" / "diagram.png"}'] + child_flags,
-                verbose=verbose,
-                required=required,
-            )
-        if diagram_ok:
-            required_stages = required_stages | {'diagram'}
-        else:
-            print("plcc-make: diagram generation skipped", file=sys.stderr)
 
     write_sentinel(build_dir, new_hash, required_stages)
     verbose.emit(Events.FINISHED, message="done")
