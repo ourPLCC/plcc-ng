@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-from .build import main as run_main
+from .build import main as run_main, _encode
 
 
 def test_missing_required_args_exits_nonzero():
@@ -10,18 +10,10 @@ def test_missing_required_args_exits_nonzero():
         run_main([])
 
 
-def test_missing_plantuml_lib_prints_helpful_error(tmp_path, capsys):
-    src = tmp_path / "diagram.puml"
-    src.write_text("@startuml\n@enduml\n")
-    out = tmp_path / "diagram.png"
-
-    with patch.dict('sys.modules', {'plantuml': None}):
-        with pytest.raises(SystemExit) as exc:
-            run_main([f'--input={src}', f'--output={out}'])
-
-    assert exc.value.code != 0
-    _, err = capsys.readouterr()
-    assert 'pip install plcc-ng[diagram]' in err
+def test_encode_returns_nonempty_string():
+    result = _encode("@startuml\n@enduml\n")
+    assert isinstance(result, str)
+    assert len(result) > 0
 
 
 def test_calls_plantuml_server_and_writes_png(tmp_path):
@@ -30,54 +22,39 @@ def test_calls_plantuml_server_and_writes_png(tmp_path):
     out = tmp_path / "diagram.png"
     fake_png = b'\x89PNG fake'
 
-    mock_lib = MagicMock()
-    mock_server = MagicMock()
-    mock_server.processes.return_value = fake_png
-    mock_lib.PlantUML.return_value = mock_server
+    mock_response = MagicMock()
+    mock_response.__enter__.return_value.read.return_value = fake_png
 
-    with patch.dict('sys.modules', {'plantuml': mock_lib}):
+    with patch('urllib.request.urlopen', return_value=mock_response) as mock_urlopen:
         run_main([f'--input={src}', f'--output={out}'])
 
     assert out.read_bytes() == fake_png
-    mock_lib.PlantUML.assert_called_once_with(
-        url='https://www.plantuml.com/plantuml/png/',
-        request_opts={'timeout': 30},
-    )
-    mock_server.processes.assert_called_once_with("@startuml\nclass Foo {}\n@enduml\n")
+    url_called, = mock_urlopen.call_args.args
+    assert url_called.startswith('https://www.plantuml.com/plantuml/png/')
+    assert mock_urlopen.call_args.kwargs == {'timeout': 30}
 
 
 def test_missing_input_file_exits_with_error(tmp_path, capsys):
     src = tmp_path / "nonexistent.puml"
     out = tmp_path / "diagram.png"
 
-    mock_lib = MagicMock()
-    mock_lib.PlantUML.return_value = MagicMock()
-
-    with patch.dict('sys.modules', {'plantuml': mock_lib}):
-        with pytest.raises(SystemExit) as exc:
-            run_main([f'--input={src}', f'--output={out}'])
+    with pytest.raises(SystemExit) as exc:
+        run_main([f'--input={src}', f'--output={out}'])
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
     assert err.strip() != ''
 
 
-def test_plantuml_error_prints_message_and_exits(tmp_path, capsys):
+def test_server_error_prints_message_and_exits(tmp_path, capsys):
     src = tmp_path / "diagram.puml"
     src.write_text("@startuml\n@enduml\n")
     out = tmp_path / "diagram.png"
 
-    mock_lib = MagicMock()
-    mock_server = MagicMock()
-    mock_server.processes.side_effect = Exception("connection refused")
-    mock_lib.PlantUML.return_value = mock_server
-
-    with patch.dict('sys.modules', {'plantuml': mock_lib}):
+    with patch('urllib.request.urlopen', side_effect=Exception("connection refused")):
         with pytest.raises(SystemExit) as exc:
             run_main([f'--input={src}', f'--output={out}'])
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
     assert 'connection refused' in err
-
-
