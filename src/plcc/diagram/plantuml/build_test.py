@@ -39,7 +39,24 @@ def test_calls_plantuml_server_and_writes_png(tmp_path):
         run_main([f'--input={src}', f'--output={out}'])
 
     assert out.read_bytes() == fake_png
-    mock_server.processes.assert_called_once()
+    mock_lib.PlantUML.assert_called_once_with(url='http://www.plantuml.com/plantuml/png/')
+    mock_server.processes.assert_called_once_with("@startuml\nclass Foo {}\n@enduml\n")
+
+
+def test_missing_input_file_exits_with_error(tmp_path, capsys):
+    src = tmp_path / "nonexistent.puml"
+    out = tmp_path / "diagram.png"
+
+    mock_lib = MagicMock()
+    mock_lib.PlantUML.return_value = MagicMock()
+
+    with patch.dict('sys.modules', {'plantuml': mock_lib}):
+        with pytest.raises(SystemExit) as exc:
+            run_main([f'--input={src}', f'--output={out}'])
+
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert err.strip() != ''
 
 
 def test_plantuml_error_prints_message_and_exits(tmp_path, capsys):

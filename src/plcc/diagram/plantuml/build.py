@@ -40,10 +40,10 @@ def main(argv=None):
             file=sys.stderr,
         )
         sys.exit(1)
-    server = plantuml_lib.PlantUML(url='http://www.plantuml.com/plantuml/png/')
-    with open(input_file) as f:
-        source = f.read()
     try:
+        server = plantuml_lib.PlantUML(url='http://www.plantuml.com/plantuml/png/')
+        with open(input_file) as f:
+            source = f.read()
         png_bytes = server.processes(source)
     except Exception as e:
         print(f"plcc-plantuml-diagram-build: {e}", file=sys.stderr)
