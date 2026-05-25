@@ -39,8 +39,9 @@ def test_calls_plantuml_server_and_writes_png(tmp_path):
         run_main([f'--input={src}', f'--output={out}'])
 
     assert out.read_bytes() == fake_png
-    url_called, = mock_urlopen.call_args.args
-    assert url_called.startswith('https://www.plantuml.com/plantuml/png/')
+    req_called, = mock_urlopen.call_args.args
+    assert req_called.full_url.startswith('https://www.plantuml.com/plantuml/png/')
+    assert req_called.get_header('User-agent') == 'plcc-ng/1.0'
     assert mock_urlopen.call_args.kwargs == {'timeout': 30}
 
 
