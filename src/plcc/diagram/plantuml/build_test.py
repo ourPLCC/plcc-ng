@@ -10,10 +10,20 @@ def test_missing_required_args_exits_nonzero():
         run_main([])
 
 
-def test_encode_returns_nonempty_string():
-    result = _encode("@startuml\n@enduml\n")
-    assert isinstance(result, str)
-    assert len(result) > 0
+_PLANTUML_ALPHABET = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_')
+
+
+def test_encode_known_good():
+    assert _encode("@startuml\nclass Foo {}\n@enduml\n") == 'SoWkIImgAStDuKhEIImkLd3BprUehkLoICrB0Ga200'
+
+
+def test_encode_no_padding():
+    assert '=' not in _encode("@startuml\n@enduml\n")
+
+
+def test_encode_only_plantuml_alphabet():
+    result = _encode("@startuml\nclass Foo {}\n@enduml\n")
+    assert all(c in _PLANTUML_ALPHABET for c in result)
 
 
 def test_calls_plantuml_server_and_writes_png(tmp_path):

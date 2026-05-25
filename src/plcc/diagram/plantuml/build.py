@@ -36,7 +36,7 @@ _B64_TO_PLANTUML = bytes.maketrans(
 
 def _encode(source):
     compressed = zlib.compress(source.encode('utf-8'))
-    return base64.b64encode(compressed[2:-4]).translate(_B64_TO_PLANTUML).decode('utf-8')
+    return base64.b64encode(compressed[2:-4]).rstrip(b'=').translate(_B64_TO_PLANTUML).decode('utf-8')
 
 
 def main(argv=None):
