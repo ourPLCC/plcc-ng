@@ -50,9 +50,7 @@ def main(argv=None):
     child_flags = verbose.child_flags()
 
     make_result = subprocess.run(
-        ['plcc-make', '--through=diagram',
-         f'--grammar-file={grammar_file}',
-         f'--diagram-format={fmt}'] + child_flags,
+        ['plcc-make', '--through=model', f'--grammar-file={grammar_file}'] + child_flags,
         stderr=subprocess.PIPE,
     )
     if make_result.stderr:
@@ -60,10 +58,37 @@ def main(argv=None):
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
-    image_path = os.path.join('build', 'diagram', 'diagram.png')
+    _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+    source_ext = _SOURCE_EXT.get(fmt, fmt)
+    build_diagram_dir = os.path.join('build', 'diagram')
+    os.makedirs(build_diagram_dir, exist_ok=True)
+    diagram_source = os.path.join(build_diagram_dir, f'diagram.{source_ext}')
+    diagram_image = os.path.join(build_diagram_dir, 'diagram.png')
+    model_json = os.path.join('build', 'model.json')
+
+    with open(model_json) as stdin_f, open(diagram_source, 'w') as stdout_f:
+        emit_result = subprocess.run(
+            ['plcc-diagram-emit', f'--format={fmt}'] + child_flags,
+            stdin=stdin_f, stdout=stdout_f, stderr=subprocess.PIPE,
+        )
+    if emit_result.stderr:
+        sys.stderr.buffer.write(emit_result.stderr)
+    if emit_result.returncode != 0:
+        sys.exit(emit_result.returncode)
+
+    build_result = subprocess.run(
+        ['plcc-diagram-build', f'--format={fmt}',
+         f'--input={diagram_source}',
+         f'--output={diagram_image}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if build_result.stderr:
+        sys.stderr.buffer.write(build_result.stderr)
+    if build_result.returncode != 0:
+        sys.exit(build_result.returncode)
+
     run_result = subprocess.run(
-        ['plcc-diagram-run', f'--format={fmt}',
-         f'--input={image_path}'] + child_flags,
+        ['plcc-diagram-run', f'--format={fmt}', f'--input={diagram_image}'] + child_flags,
         stderr=subprocess.PIPE,
     )
     if run_result.stderr:
