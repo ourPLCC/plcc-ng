@@ -20,6 +20,9 @@ Options:
 """ + VERBOSE_OPTIONS
 
 
+_SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+
+
 class Events(enum.Enum):
     STARTED = "started"
     FINISHED = "finished"
@@ -58,7 +61,6 @@ def main(argv=None):
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
-    _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
     source_ext = _SOURCE_EXT.get(fmt, fmt)
     build_diagram_dir = os.path.join('build', 'diagram')
     os.makedirs(build_diagram_dir, exist_ok=True)
