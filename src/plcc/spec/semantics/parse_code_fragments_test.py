@@ -28,6 +28,11 @@ def test_empty_lines_ignored():
     assert parse_code_fragments(lines) == [
         CodeFragment(make_target_locator(lines[0], 'Class', 'init'), make_block())]
 
+def test_comment_line_is_ignored():
+    lines = [make_line('# a comment'), make_line('Class:init'), make_block()]
+    assert parse_code_fragments(lines) == [
+        CodeFragment(make_target_locator(lines[1], 'Class', 'init'), make_block())]
+
 def test_consecutive_target_locators_generate_code_fragment_with_undefined_block():
     lines_and_blocks = [make_line('Class:init'), make_line('AnotherClass:init'), make_block()]
     assert parse_code_fragments(lines_and_blocks) == [

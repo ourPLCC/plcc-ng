@@ -53,5 +53,5 @@ def isEmpty(locatorOrBlock):
         return True
     if isinstance(locatorOrBlock, Line):
         s = locatorOrBlock.string
-        return s is None or s.strip() == ''
+        return s is None or s.strip() == '' or s.lstrip().startswith('#')
     return False
