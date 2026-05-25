@@ -32,7 +32,11 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-mermaid-diagram-run", Events, args)
     input_file = args['--input']
     verbose.emit(Events.STARTED, message=f"opening {input_file}")
-    _open_file(input_file)
+    try:
+        _open_file(input_file)
+    except Exception as e:
+        print(f"plcc-mermaid-diagram-run: {e}", file=sys.stderr)
+        sys.exit(1)
     verbose.emit(Events.FINISHED)
 
 

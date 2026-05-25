@@ -53,3 +53,17 @@ def test_main_calls_open_file(tmp_path):
         run_main([f'--input={img}'])
 
     mock_open.assert_called_once_with(str(img))
+
+
+def test_viewer_not_found_prints_error_and_exits(tmp_path, capsys):
+    img = tmp_path / "diagram.png"
+    img.write_bytes(b"PNG")
+
+    with patch('plcc.diagram.mermaid.run._open_file',
+               side_effect=FileNotFoundError(2, 'No such file or directory', 'xdg-open')):
+        with pytest.raises(SystemExit) as exc:
+            run_main([f'--input={img}'])
+
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert 'xdg-open' in err
