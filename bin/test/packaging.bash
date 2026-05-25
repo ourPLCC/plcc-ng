@@ -18,7 +18,7 @@ trap 'rm -rf "${VENV}"' EXIT
 for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
            plcc-lang-emit plcc-lang-build plcc-lang-list \
            plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
-           plcc-plantuml-diagram-emit \
+           plcc-plantuml-diagram-emit plcc-plantuml-diagram-build plcc-plantuml-diagram-run \
            plcc-make plcc-scan plcc-parse plcc-rep; do
     test -x "${VENV}/bin/${cmd}" || { echo "FAIL: ${cmd} not installed"; exit 1; }
     echo "OK: ${cmd}"
