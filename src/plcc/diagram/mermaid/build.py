@@ -1,4 +1,6 @@
 import enum
+import shutil
+import subprocess
 import sys
 
 from docopt import docopt
@@ -31,23 +33,19 @@ def main(argv=None):
     input_file = args['--input']
     output_file = args['--output']
     verbose.emit(Events.STARTED, message=f"rendering {input_file}")
-    try:
-        from mmdc import MermaidConverter
-    except ImportError:
+    if not shutil.which('mmdc'):
         print(
-            "plcc-mermaid-diagram-build: mmdc not installed — "
-            "run: pip install plcc[diagram]",
+            "plcc-mermaid-diagram-build: mmdc not found — "
+            "run: npm install -g @mermaid-js/mermaid-cli",
             file=sys.stderr,
         )
         sys.exit(1)
-    with open(input_file) as f:
-        source = f.read()
-    converter = MermaidConverter()
-    try:
-        png_bytes = converter.to_png(source)
-    except RuntimeError as e:
-        print(f"plcc-mermaid-diagram-build: {e}", file=sys.stderr)
-        sys.exit(1)
-    with open(output_file, 'wb') as f:
-        f.write(png_bytes)
+    result = subprocess.run(
+        ['mmdc', '-i', input_file, '-o', output_file],
+        stderr=subprocess.PIPE,
+    )
+    if result.returncode != 0:
+        stderr = result.stderr.decode('utf-8', errors='replace').strip()
+        print(f"plcc-mermaid-diagram-build: mmdc failed: {stderr}", file=sys.stderr)
+        sys.exit(result.returncode)
     verbose.emit(Events.FINISHED, message=f"wrote {output_file}")
