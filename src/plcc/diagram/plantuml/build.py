@@ -1,5 +1,8 @@
+import base64
 import enum
 import sys
+import urllib.request
+import zlib
 
 from docopt import docopt
 
@@ -23,6 +26,19 @@ class Events(enum.Enum):
     FINISHED = "finished"
 
 
+_PLANTUML_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
+_BASE64_ALPHABET   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+_B64_TO_PLANTUML = bytes.maketrans(
+    _BASE64_ALPHABET.encode('utf-8'),
+    _PLANTUML_ALPHABET.encode('utf-8'),
+)
+
+
+def _encode(source):
+    compressed = zlib.compress(source.encode('utf-8'))
+    return base64.b64encode(compressed[2:-4]).rstrip(b'=').translate(_B64_TO_PLANTUML).decode('utf-8')
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
@@ -32,22 +48,11 @@ def main(argv=None):
     output_file = args['--output']
     verbose.emit(Events.STARTED, message=f"rendering {input_file}")
     try:
-        import plantuml as plantuml_lib
-    except ImportError:
-        print(
-            "plcc-plantuml-diagram-build: plantuml not installed — "
-            "run: pip install plcc-ng[diagram]",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-    try:
-        server = plantuml_lib.PlantUML(
-            url='https://www.plantuml.com/plantuml/png/',
-            request_opts={'timeout': 30},
-        )
         with open(input_file) as f:
             source = f.read()
-        png_bytes = server.processes(source)
+        url = f'https://www.plantuml.com/plantuml/png/{_encode(source)}'
+        with urllib.request.urlopen(url, timeout=30) as response:
+            png_bytes = response.read()
     except Exception as e:
         print(f"plcc-plantuml-diagram-build: {e}", file=sys.stderr)
         sys.exit(1)
