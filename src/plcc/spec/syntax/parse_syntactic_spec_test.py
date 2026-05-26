@@ -16,18 +16,18 @@ from .Terminal import Terminal
 
 
 def test_None_yields_nothing():
-    spec, errors = parse_syntactic_spec(None)
+    spec, _ = parse_syntactic_spec(None)
     assert list(spec) == []
 
 
 def test_empty_yields_nothing():
-    spec, errors = parse_syntactic_spec([])
+    spec, _ = parse_syntactic_spec([])
     assert list(spec) == []
 
 
 def test_divider_yields_nothing():
     lines = [makeDivider()]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == []
 
 
@@ -35,7 +35,7 @@ def test_blank_rule():
     blank_rule = makeLine("<noun> ::=")
     lines = [makeDivider(), blank_rule]
     expected = [makeStandardSyntacticRule(blank_rule, makeLhsNonTerminal("noun"), [])]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -47,7 +47,7 @@ def test_one_rule():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -58,7 +58,7 @@ def test_two_rules():
         rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
     )
     expected = [expected_rule, expected_rule]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -74,7 +74,7 @@ def test_comment_ignored():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -88,7 +88,7 @@ def test_comment_trailing_ignored():
             [makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -100,7 +100,7 @@ def test_empty_ignored():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -112,7 +112,7 @@ def test_space_ignored():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -126,7 +126,7 @@ def test_named_lhs_non_terminal():
             [makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -140,7 +140,7 @@ def test_two_terminals():
             [makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -154,7 +154,7 @@ def test_three_terminals():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -168,7 +168,7 @@ def test_rhs_non_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeRhsNonTerminal("word")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -182,7 +182,7 @@ def test_rhs_middle_non_terminal():
             [makeTerminal("WORD"), makeRhsNonTerminal("word"), makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -196,7 +196,7 @@ def test_capturing_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeCapturingTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -210,7 +210,7 @@ def test_single_char_capturing_terminal():
             [makeCapturingTerminal("A")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -224,7 +224,7 @@ def test_single_char_capturing_terminal_with_altname():
             [makeCapturingTerminal("A", "b")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -238,7 +238,7 @@ def test_digit_containing_capturing_terminal():
             [makeCapturingTerminal("NUM1")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -253,7 +253,7 @@ def test_repeating():
             None,
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -267,7 +267,7 @@ def test_repeating_rhs_non_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeRhsNonTerminal("word")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -281,7 +281,7 @@ def test_repeating_capturing_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeCapturingTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -296,7 +296,7 @@ def test_repeating_separator():
             separator=makeTerminal("WORD"),
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -314,7 +314,7 @@ def test_named_rhs_non_terminal():
             ],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -332,7 +332,7 @@ def test_colon_rhs_non_terminal():
             ],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -346,7 +346,7 @@ def test_double_space():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -360,7 +360,7 @@ def test_trailing_space():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -374,7 +374,7 @@ def test_leading_space():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -388,7 +388,7 @@ def test_inserted_lhs_space():
             [makeRhsNonTerminal("cmds"), makeTerminal("END")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -402,7 +402,7 @@ def test_inserted_rhs_space():
             [makeRhsNonTerminal("cmds"), makeTerminal("END")],
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -417,7 +417,7 @@ def test_spaced_separator():
             separator=makeTerminal("WORD"),
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
@@ -432,7 +432,7 @@ def test_embedded_separator():
             separator=makeTerminal("WORD WORD"),
         )
     ]
-    spec, errors = parse_syntactic_spec(lines)
+    spec, _ = parse_syntactic_spec(lines)
     assert list(spec) == expected
 
 
