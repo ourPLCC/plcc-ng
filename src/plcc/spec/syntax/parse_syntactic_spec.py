@@ -28,7 +28,7 @@ class SyntacticParser:
 
     def parseSpec(self) -> tuple[SyntacticSpec, list]:
         if not self._dividerAndLines:
-            return self._spec, []
+            return self._spec, self._errors
         lines = self._removeStartingDivider(self._dividerAndLines)
         for line in lines:
             self._parseLine(line)
