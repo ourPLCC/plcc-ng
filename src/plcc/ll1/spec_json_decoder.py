@@ -10,39 +10,31 @@ class Rule:
 
 
 def decode(spec_dict: dict) -> tuple:
-    """
-    Build a Grammar from a spec JSON dict.
-
-    Returns (grammar, field_map, arbno_rules) where:
-      grammar      — Grammar with both regular and internal arbno expansion rules
-      field_map    — dict[(nt_name, prod_tuple)] -> list[str|None]
-      arbno_rules  — dict[nt_name] -> {rhs, separator}
-    """
     grammar = Grammar()
-    field_map = {}
+    productions = {}
     arbno_rules = {}
     for rule in spec_dict.get("syntax", {}).get("rules", []):
         nt = rule["lhs"]["name"]
+        alt = rule["lhs"].get("altName")
         rhs = rule.get("rhsSymbolList", [])
         if "separator" in rule:
-            _handle_arbno(grammar, field_map, arbno_rules, nt, rhs, rule["separator"])
+            _handle_arbno(grammar, arbno_rules, nt, rhs, rule["separator"])
         elif not rhs:
             grammar.addRule(nt, [])
-            field_map[(nt, ())] = []
+            productions[(nt, ())] = Rule(alt=alt, fields=[])
         else:
             syms = [s["name"] for s in rhs]
             fields = [_field(s) for s in rhs]
             grammar.addRule(nt, syms)
-            field_map[(nt, tuple(syms))] = fields
-    return grammar, field_map, arbno_rules
+            productions[(nt, tuple(syms))] = Rule(alt=alt, fields=fields)
+    return grammar, productions, arbno_rules
 
 
-def _handle_arbno(grammar, field_map, arbno_rules, nt, rhs, separator_entry):
+def _handle_arbno(grammar, arbno_rules, nt, rhs, separator_entry):
     separator = separator_entry["name"] if separator_entry else None
     cont = nt + "#"
     syms = [s["name"] for s in rhs]
 
-    # Expand into right-recursive internal rules for LL(1) analysis only.
     grammar.addRule(nt, syms + [cont])
     grammar.addRule(nt, [])
     if separator:
@@ -70,7 +62,6 @@ def _arbno_field(sym: dict) -> str:
 
 
 def _field(sym: dict) -> str | None:
-    """Return the field name for a symbol dict, or None if elided."""
     if not sym.get("isCapturing", False):
         return None
     alt = sym.get("altName")
