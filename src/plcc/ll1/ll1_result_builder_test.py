@@ -186,6 +186,8 @@ def test_conflict_productions_carry_alt_name():
 
 
 def _arbno_grammar_and_rules():
+    """Mimics <rands> **= <expr>expr +COMMA with <expr> ::= NUM.
+    Grammar: rands→expr rands#|ε, rands#→COMMA expr rands#|ε, expr→NUM."""
     g = Grammar()
     g.addRule("rands", ["expr", "rands#"])
     g.addRule("rands", [])
