@@ -59,3 +59,13 @@ def test_column_no_lhs_with_leading_whitespace():
     # two leading spaces, no LHS → column 3
     err = MalformedBNFError(make_line("  stmt ::= IF"))
     assert err.column == 3
+
+
+def test_kind_returns_syntax_error():
+    err = MalformedBNFError(make_line("<stmt>IfStmt ::= IF"))
+    assert err.kind == "syntax error"
+
+
+def test_hint_returns_examples():
+    err = MalformedBNFError(make_line("<stmt>IfStmt ::= IF"))
+    assert err.hint == MalformedBNFError._EXAMPLES

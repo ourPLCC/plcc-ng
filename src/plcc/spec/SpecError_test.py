@@ -32,3 +32,22 @@ SpecError: example.plcc:1:1
 hi
 ^
 '''
+
+
+def _line(string='test line', number=1, file='test.plcc'):
+    return Line(string=string, number=number, file=file)
+
+
+def test_kind_returns_message_when_set():
+    err = SpecError(line=_line(), message="pattern is invalid", column=1)
+    assert err.kind == "pattern is invalid"
+
+
+def test_kind_returns_class_name_when_message_is_none():
+    err = SpecError(line=_line(), column=1)
+    assert err.kind == "SpecError"
+
+
+def test_hint_returns_none():
+    err = SpecError(line=_line(), message="anything", column=1)
+    assert err.hint is None

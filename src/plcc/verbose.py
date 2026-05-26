@@ -63,11 +63,16 @@ class VerboseContext:
             filename = pos.get("file") or "<stdin>"
             line = pos.get("line", 0)
             col = pos.get("column", 0)
-            print(
-                f"{self.stage}: {filename}:{line}:{col}: error: {message}",
-                file=sys.stderr,
-                flush=True,
-            )
+            parts = [f"{self.stage}: {filename}:{line}:{col}: error: {message}"]
+            source_line = fields.get("source_line")
+            hint = fields.get("hint")
+            if source_line is not None:
+                parts.append(source_line)
+                if col > 0:
+                    parts.append(" " * (col - 1) + "^")
+            if hint is not None:
+                parts.append(hint)
+            print("\n".join(parts), file=sys.stderr, flush=True)
 
     def child_flags(self):
         return ["-v"] * self.level + [f"--verbose-format={self.fmt}"]
@@ -100,8 +105,16 @@ class VerboseContext:
                 line = pos.get("line", 0)
                 col = pos.get("column", 0)
                 msg = ev.get("message", "")
-                print(f"{stage}: {file}:{line}:{col}: error: {msg}",
-                      file=sys.stderr, flush=True)
+                parts = [f"{stage}: {file}:{line}:{col}: error: {msg}"]
+                source_line = ev.get("source_line")
+                hint = ev.get("hint")
+                if source_line is not None:
+                    parts.append(source_line)
+                    if col > 0:
+                        parts.append(" " * (col - 1) + "^")
+                if hint is not None:
+                    parts.append(hint)
+                print("\n".join(parts), file=sys.stderr, flush=True)
             else:
                 stage = ev.get("stage", "unknown")
                 event = ev.get("event", "unknown")

@@ -250,6 +250,75 @@ def test_reap_pipeline_upstream_failure_suppresses_downstream():
     assert rendered_stages == {"plcc-tokens"}
 
 
+def test_emit_error_text_mode_with_source_line_and_hint(capsys):
+    ctx = VerboseContext("plcc-spec", SampleEvents, level=0, fmt="text")
+    ctx.emit_error(
+        {"file": "g.plcc", "line": 3, "column": 7},
+        "syntax error",
+        source_line="<stmt>Assign ::= IDENT",
+        hint="Examples:\n  <x> ::=",
+    )
+    _, err = capsys.readouterr()
+    lines = err.splitlines()
+    assert lines[0] == "plcc-spec: g.plcc:3:7: error: syntax error"
+    assert lines[1] == "<stmt>Assign ::= IDENT"
+    assert lines[2] == "      ^"
+    assert "Examples:" in err
+
+
+def test_emit_error_text_mode_without_source_line_unchanged(capsys):
+    ctx = VerboseContext("plcc-spec", SampleEvents, level=0, fmt="text")
+    ctx.emit_error({"file": "g.plcc", "line": 3, "column": 7}, "something failed")
+    _, err = capsys.readouterr()
+    assert err.strip() == "plcc-spec: g.plcc:3:7: error: something failed"
+
+
+def test_emit_error_json_mode_includes_source_line_and_hint(capsys):
+    ctx = VerboseContext("plcc-spec", SampleEvents, level=0, fmt="json")
+    ctx.emit_error(
+        {"file": "g.plcc", "line": 3, "column": 7},
+        "syntax error",
+        source_line="<stmt>Assign ::= IDENT",
+        hint="Examples:\n  <x> ::=",
+    )
+    _, err = capsys.readouterr()
+    record = json.loads(err.strip())
+    assert record["source_line"] == "<stmt>Assign ::= IDENT"
+    assert record["hint"] == "Examples:\n  <x> ::="
+
+
+def test_reformat_child_events_renders_source_line_and_hint(capsys):
+    ctx = VerboseContext("parent", SampleEvents, level=0, fmt="text")
+    event = {
+        "stage": "plcc-spec",
+        "event": "error",
+        "pos": {"file": "g.plcc", "line": 3, "column": 7},
+        "message": "syntax error",
+        "source_line": "<stmt>Assign ::= IDENT",
+        "hint": "Examples:\n  <x> ::=",
+    }
+    ctx.reformat_child_events([event])
+    _, err = capsys.readouterr()
+    lines = err.splitlines()
+    assert lines[0] == "plcc-spec: g.plcc:3:7: error: syntax error"
+    assert lines[1] == "<stmt>Assign ::= IDENT"
+    assert lines[2] == "      ^"
+    assert "Examples:" in err
+
+
+def test_reformat_child_events_without_source_line_unchanged(capsys):
+    ctx = VerboseContext("parent", SampleEvents, level=0, fmt="text")
+    event = {
+        "stage": "plcc-spec",
+        "event": "error",
+        "pos": {"file": "g.plcc", "line": 3, "column": 7},
+        "message": "something failed",
+    }
+    ctx.reformat_child_events([event])
+    _, err = capsys.readouterr()
+    assert err.strip() == "plcc-spec: g.plcc:3:7: error: something failed"
+
+
 def test_reap_pipeline_downstream_failure_reports_downstream():
     # Upstream succeeded; downstream failed (e.g. parser hit a syntax error)
     tokens_ok = b'{"stage":"plcc-tokens","event":"finished"}\n'
