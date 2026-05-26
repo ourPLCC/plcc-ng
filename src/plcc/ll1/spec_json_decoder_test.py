@@ -1,5 +1,5 @@
 import pytest
-from plcc.ll1.spec_json_decoder import decode
+from plcc.ll1.spec_json_decoder import decode, Rule
 
 
 def _spec(rules):
@@ -182,3 +182,14 @@ def test_arbno_terminal_rhs_item():
     assert arbno_rules["tokens"]["rhs"] == [
         {"field": "numList", "symbol": "NUM", "is_terminal": True}
     ]
+
+
+def test_rule_is_dataclass_with_alt_and_fields():
+    r = Rule(alt="Add", fields=["left", None])
+    assert r.alt == "Add"
+    assert r.fields == ["left", None]
+
+
+def test_rule_alt_can_be_none():
+    r = Rule(alt=None, fields=[])
+    assert r.alt is None

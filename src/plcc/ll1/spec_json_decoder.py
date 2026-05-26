@@ -1,4 +1,12 @@
+from dataclasses import dataclass
+
 from plcc.spec.syntax.validations.ll1.Grammar import Grammar
+
+
+@dataclass
+class Rule:
+    alt: str | None
+    fields: list[str | None]
 
 
 def decode(spec_dict: dict) -> tuple:
