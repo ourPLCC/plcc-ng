@@ -47,3 +47,18 @@ def test_exits_nonzero_on_spec_error(capsys, fs):
     with pytest.raises(SystemExit) as exc:
         run_main(['/bad.plcc'])
     assert exc.value.code != 0
+
+
+def test_malformed_syntactic_rule_prints_error_and_exits_nonzero(capsys, fs):
+    fs.create_file('/bad.plcc', contents=(
+        "token NUM '\\d+'\n"
+        "%\n"
+        "<program>IfStmt ::= NUM\n"
+    ))
+    with pytest.raises(SystemExit) as exc:
+        run_main(['/bad.plcc'])
+    out, err = capsys.readouterr()
+    assert exc.value.code != 0
+    assert "bad.plcc" in err
+    assert "syntax error" in err
+    assert "Examples:" in err
