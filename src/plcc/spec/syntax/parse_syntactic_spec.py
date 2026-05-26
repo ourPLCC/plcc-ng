@@ -23,15 +23,16 @@ def parse_syntactic_spec(dividerAndLines):
 class SyntacticParser:
     def __init__(self, dividerAndLines):
         self._spec = SyntacticSpec()
+        self._errors = []
         self._dividerAndLines = dividerAndLines
 
-    def parseSpec(self) -> SyntacticSpec:
+    def parseSpec(self) -> tuple[SyntacticSpec, list]:
         if not self._dividerAndLines:
-            return self._spec
+            return self._spec, self._errors
         lines = self._removeStartingDivider(self._dividerAndLines)
         for line in lines:
             self._parseLine(line)
-        return self._spec
+        return self._spec, self._errors
 
     def _removeStartingDivider(self, lines):
         lines = self._dividerAndLines
@@ -42,8 +43,11 @@ class SyntacticParser:
     def _parseLine(self, line):
         parser = SyntacticLineParser(line)
         if parser.isSyntacticRule():
-            rule = parser.parseSyntacticRule()
-            self._spec.append(rule)
+            try:
+                rule = parser.parseSyntacticRule()
+                self._spec.append(rule)
+            except MalformedBNFError as e:
+                self._errors.append(e)
 
 
 class SyntacticLineParser:

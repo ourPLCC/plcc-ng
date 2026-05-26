@@ -16,23 +16,27 @@ from .Terminal import Terminal
 
 
 def test_None_yields_nothing():
-    assert list(parse_syntactic_spec(None)) == []
+    spec, _ = parse_syntactic_spec(None)
+    assert list(spec) == []
 
 
 def test_empty_yields_nothing():
-    assert list(parse_syntactic_spec([])) == []
+    spec, _ = parse_syntactic_spec([])
+    assert list(spec) == []
 
 
 def test_divider_yields_nothing():
     lines = [makeDivider()]
-    assert list(parse_syntactic_spec(lines)) == []
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == []
 
 
 def test_blank_rule():
     blank_rule = makeLine("<noun> ::=")
     lines = [makeDivider(), blank_rule]
     expected = [makeStandardSyntacticRule(blank_rule, makeLhsNonTerminal("noun"), [])]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_one_rule():
@@ -43,7 +47,8 @@ def test_one_rule():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_two_rules():
@@ -53,7 +58,8 @@ def test_two_rules():
         rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
     )
     expected = [expected_rule, expected_rule]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_comment_ignored():
@@ -68,7 +74,8 @@ def test_comment_ignored():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_comment_trailing_ignored():
@@ -81,7 +88,8 @@ def test_comment_trailing_ignored():
             [makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_empty_ignored():
@@ -92,7 +100,8 @@ def test_empty_ignored():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_space_ignored():
@@ -103,7 +112,8 @@ def test_space_ignored():
             rule, makeLhsNonTerminal("noun"), [makeTerminal("WORD")]
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_named_lhs_non_terminal():
@@ -116,7 +126,8 @@ def test_named_lhs_non_terminal():
             [makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_two_terminals():
@@ -129,7 +140,8 @@ def test_two_terminals():
             [makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_three_terminals():
@@ -142,7 +154,8 @@ def test_three_terminals():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_rhs_non_terminal():
@@ -155,7 +168,8 @@ def test_rhs_non_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeRhsNonTerminal("word")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_rhs_middle_non_terminal():
@@ -168,7 +182,8 @@ def test_rhs_middle_non_terminal():
             [makeTerminal("WORD"), makeRhsNonTerminal("word"), makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_capturing_terminal():
@@ -181,7 +196,8 @@ def test_capturing_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeCapturingTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_single_char_capturing_terminal():
@@ -194,7 +210,8 @@ def test_single_char_capturing_terminal():
             [makeCapturingTerminal("A")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_single_char_capturing_terminal_with_altname():
@@ -207,7 +224,8 @@ def test_single_char_capturing_terminal_with_altname():
             [makeCapturingTerminal("A", "b")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_digit_containing_capturing_terminal():
@@ -220,7 +238,8 @@ def test_digit_containing_capturing_terminal():
             [makeCapturingTerminal("NUM1")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_repeating():
@@ -234,7 +253,8 @@ def test_repeating():
             None,
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_repeating_rhs_non_terminal():
@@ -247,7 +267,8 @@ def test_repeating_rhs_non_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeRhsNonTerminal("word")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_repeating_capturing_terminal():
@@ -260,7 +281,8 @@ def test_repeating_capturing_terminal():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeCapturingTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_repeating_separator():
@@ -274,7 +296,8 @@ def test_repeating_separator():
             separator=makeTerminal("WORD"),
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_named_rhs_non_terminal():
@@ -291,7 +314,8 @@ def test_named_rhs_non_terminal():
             ],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_colon_rhs_non_terminal():
@@ -308,7 +332,8 @@ def test_colon_rhs_non_terminal():
             ],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_double_space():
@@ -321,7 +346,8 @@ def test_double_space():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_trailing_space():
@@ -334,7 +360,8 @@ def test_trailing_space():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_leading_space():
@@ -347,7 +374,8 @@ def test_leading_space():
             [makeTerminal("WORD"), makeTerminal("WORD"), makeTerminal("WORD")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_inserted_lhs_space():
@@ -360,7 +388,8 @@ def test_inserted_lhs_space():
             [makeRhsNonTerminal("cmds"), makeTerminal("END")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_inserted_rhs_space():
@@ -373,7 +402,8 @@ def test_inserted_rhs_space():
             [makeRhsNonTerminal("cmds"), makeTerminal("END")],
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_spaced_separator():
@@ -387,7 +417,8 @@ def test_spaced_separator():
             separator=makeTerminal("WORD"),
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
 def test_embedded_separator():
@@ -401,13 +432,28 @@ def test_embedded_separator():
             separator=makeTerminal("WORD WORD"),
         )
     ]
-    assert list(parse_syntactic_spec(lines)) == expected
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
 
 
-def test_malformed_bnf_raises():
+def test_malformed_bnf_returned_as_error():
     lines = [makeDivider(), makeLine("<noun> +*= WORD")]
-    with raises(MalformedBNFError):
-        parse_syntactic_spec(lines)
+    spec, errors = parse_syntactic_spec(lines)
+    assert len(errors) == 1
+    assert isinstance(errors[0], MalformedBNFError)
+
+
+def test_malformed_bnf_parsing_continues_after_error():
+    lines = [makeDivider(), makeLine("<noun> +*= WORD"), makeLine("<noun> ::= WORD")]
+    spec, errors = parse_syntactic_spec(lines)
+    assert len(errors) == 1
+    assert len(list(spec)) == 1
+
+
+def test_no_errors_on_valid_spec():
+    lines = [makeDivider(), makeLine("<noun> ::= WORD")]
+    spec, errors = parse_syntactic_spec(lines)
+    assert errors == []
 
 
 def makeDivider(string="%", lineNumber=0, file=""):
