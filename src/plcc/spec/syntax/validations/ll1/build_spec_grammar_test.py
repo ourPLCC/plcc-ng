@@ -87,10 +87,11 @@ def assertRuleAndFormLength(grammar, expectedSymbolRulesLength, expectedFormList
     assert count == expectedFormListLength
 
 def createRule(line):
-    return parse_syntactic_spec([makeDivider(), makeLine(line)])[0]
+    spec, _ = parse_syntactic_spec([makeDivider(), makeLine(line)])
+    return spec[0]
 
 def createGrammarWithSpec(lines):
-    syntacticSpec = parse_syntactic_spec([makeDivider()] + [makeLine(line) for line in lines])
+    syntacticSpec, _ = parse_syntactic_spec([makeDivider()] + [makeLine(line) for line in lines])
     return makeSpecGrammar(syntacticSpec)
 
 def makeDivider(string="%", lineNumber=0, file=""):
