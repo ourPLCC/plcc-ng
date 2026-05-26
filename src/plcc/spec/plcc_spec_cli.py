@@ -37,7 +37,11 @@ def main(argv=None):
     spec, errors = _load(args['FILE'])
     if errors:
         for e in errors:
-            print(e, file=sys.stderr)
+            pos = {"file": e.line.file, "line": e.line.number, "column": e.column}
+            kwargs = {"source_line": e.line.string}
+            if e.hint:
+                kwargs["hint"] = e.hint
+            verbose.emit_error(pos, e.kind, **kwargs)
         sys.exit(1)
     if not args['--no-json']:
         print(json.dumps(asdict(spec), indent=2))

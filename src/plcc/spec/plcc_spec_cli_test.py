@@ -62,3 +62,38 @@ def test_malformed_syntactic_rule_prints_error_and_exits_nonzero(capsys, fs):
     assert "bad.plcc" in err
     assert "syntax error" in err
     assert "Examples:" in err
+
+
+def test_malformed_syntactic_rule_stderr_includes_source_line(capsys, fs):
+    fs.create_file('/bad.plcc', contents=(
+        "token NUM '\\d+'\n"
+        "%\n"
+        "<program>IfStmt ::= NUM\n"
+    ))
+    with pytest.raises(SystemExit):
+        run_main(['/bad.plcc'])
+    _, err = capsys.readouterr()
+    assert "<program>IfStmt ::= NUM" in err
+
+
+def test_malformed_syntactic_rule_stderr_includes_caret_at_correct_column(capsys, fs):
+    # <program> is 9 chars, so lhs ends at index 8 (0-based), column 10 (1-based).
+    # Caret line must be 9 spaces + ^.
+    fs.create_file('/bad.plcc', contents=(
+        "token NUM '\\d+'\n"
+        "%\n"
+        "<program>IfStmt ::= NUM\n"
+    ))
+    with pytest.raises(SystemExit):
+        run_main(['/bad.plcc'])
+    _, err = capsys.readouterr()
+    assert "         ^" in err
+
+
+def test_lexical_error_stderr_includes_source_line(capsys, fs):
+    # "num 'bad'" is invalid (lowercase token name triggers NameExpected)
+    fs.create_file('/bad.plcc', contents="num 'bad'\n")
+    with pytest.raises(SystemExit):
+        run_main(['/bad.plcc'])
+    _, err = capsys.readouterr()
+    assert "num 'bad'" in err
