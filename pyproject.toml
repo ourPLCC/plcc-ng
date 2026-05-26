@@ -80,6 +80,7 @@ plcc-python-run = "plcc.lang.ext.python.run:main"
 plcc-java-emit  = "plcc.lang.ext.java.emit:main"
 plcc-java-build = "plcc.lang.ext.java.build:main"
 plcc-java-run   = "plcc.lang.ext.java.run:main"
+plcc-version = "plcc.version:main"
 
 [project.optional-dependencies]
 diagram = []
