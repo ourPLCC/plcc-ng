@@ -1,4 +1,3 @@
-import sys
 from unittest.mock import patch
 from importlib.metadata import PackageNotFoundError
 
