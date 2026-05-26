@@ -6,7 +6,7 @@ from plcc.spec.syntax.validations.ll1.check_parsing_table_for_ll1 import check_p
 from plcc.spec.syntax.validations.ll1.check_left_recursion import check_left_recursion
 
 
-def build_ll1_result(grammar: Grammar, field_map: dict, arbno_rules: dict = None) -> dict:
+def build_ll1_result(grammar: Grammar, productions: dict, arbno_rules: dict = None) -> dict:
     if arbno_rules is None:
         arbno_rules = {}
     eps = grammar.getEpsilon()
@@ -62,7 +62,7 @@ def build_ll1_result(grammar: Grammar, field_map: dict, arbno_rules: dict = None
             continue
         prod = next(iter(cell))
         lookahead = tok(t)
-        parse_table.setdefault(nt, {})[lookahead] = _prod_entry(nt, prod, field_map, eps)
+        parse_table.setdefault(nt, {})[lookahead] = _prod_entry(nt, prod, productions, eps)
 
     conflicts = []
 
@@ -75,11 +75,11 @@ def build_ll1_result(grammar: Grammar, field_map: dict, arbno_rules: dict = None
             continue
         prods = table.getCell(nt, t)
         lookahead = tok(t)
-        productions = [
-            _prod_entry(nt, p, field_map, eps)
+        conflict_productions = [
+            _prod_entry(nt, p, productions, eps)
             for p in sorted(prods, key=str)
         ]
-        conflicts.append({"nonterminal": nt, "lookahead": lookahead, "productions": productions})
+        conflicts.append({"nonterminal": nt, "lookahead": lookahead, "productions": conflict_productions})
 
     left_recursion = []
     for offending in lr_cycles:
@@ -113,10 +113,15 @@ def build_ll1_result(grammar: Grammar, field_map: dict, arbno_rules: dict = None
     }
 
 
-def _prod_entry(nt: str, prod: tuple, field_map: dict, eps) -> list:
-    fields = field_map.get((nt, prod), [None] * len(prod))
-    return [
-        {"symbol": sym, "field": fld}
-        for sym, fld in zip(prod, fields)
-        if sym is not eps
-    ]
+def _prod_entry(nt: str, prod: tuple, productions: dict, eps) -> dict:
+    rule = productions.get((nt, prod))
+    alt = rule.alt if rule is not None else None
+    fields = rule.fields if rule is not None else [None] * len(prod)
+    return {
+        "alt": alt,
+        "production": [
+            {"symbol": sym, "field": fld}
+            for sym, fld in zip(prod, fields)
+            if sym is not eps
+        ],
+    }

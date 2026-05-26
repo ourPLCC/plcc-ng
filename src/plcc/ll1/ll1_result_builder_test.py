@@ -1,4 +1,5 @@
 from plcc.spec.syntax.validations.ll1.Grammar import Grammar
+from plcc.ll1.spec_json_decoder import Rule
 from plcc.ll1.ll1_result_builder import build_ll1_result
 
 
@@ -6,7 +7,7 @@ def _simple_grammar():
     """program → NUM (not capturing)"""
     g = Grammar()
     g.addRule("program", ["NUM"])
-    fm = {("program", ("NUM",)): [None]}
+    fm = {("program", ("NUM",)): Rule(alt=None, fields=[None])}
     return g, fm
 
 
@@ -14,7 +15,7 @@ def _epsilon_grammar():
     """rest →  (epsilon)"""
     g = Grammar()
     g.addRule("rest", [])
-    fm = {("rest", ()): []}
+    fm = {("rest", ()): Rule(alt=None, fields=[])}
     return g, fm
 
 
@@ -23,7 +24,10 @@ def _conflict_grammar():
     g = Grammar()
     g.addRule("A", ["X"])
     g.addRule("A", ["X", "Y"])
-    fm = {("A", ("X",)): [None], ("A", ("X", "Y")): [None, None]}
+    fm = {
+        ("A", ("X",)): Rule(alt=None, fields=[None]),
+        ("A", ("X", "Y")): Rule(alt=None, fields=[None, None]),
+    }
     return g, fm
 
 
@@ -32,7 +36,10 @@ def _left_recursive_grammar():
     g = Grammar()
     g.addRule("A", ["A", "B"])
     g.addRule("A", ["C"])
-    fm = {("A", ("A", "B")): [None, None], ("A", ("C",)): [None]}
+    fm = {
+        ("A", ("A", "B")): Rule(alt=None, fields=[None, None]),
+        ("A", ("C",)): Rule(alt=None, fields=[None]),
+    }
     return g, fm
 
 
@@ -69,7 +76,10 @@ def test_predict_sets_correct():
 def test_parse_table_entry_correct():
     g, fm = _simple_grammar()
     result = build_ll1_result(g, fm)
-    assert result["parse_table"]["program"]["NUM"] == [{"symbol": "NUM", "field": None}]
+    assert result["parse_table"]["program"]["NUM"] == {
+        "alt": None,
+        "production": [{"symbol": "NUM", "field": None}],
+    }
 
 
 def test_conflicts_empty_for_ll1_grammar():
@@ -87,8 +97,7 @@ def test_left_recursion_empty_for_ll1_grammar():
 def test_epsilon_production_in_parse_table():
     g, fm = _epsilon_grammar()
     result = build_ll1_result(g, fm)
-    # epsilon rule: predict set contains $; parse table entry under $ is []
-    assert result["parse_table"]["rest"]["eof"] == []
+    assert result["parse_table"]["rest"]["eof"] == {"alt": None, "production": []}
 
 
 def test_epsilon_in_first_sets():
@@ -107,7 +116,6 @@ def test_is_ll1_false_for_conflict_grammar():
 def test_conflict_cell_omitted_from_parse_table():
     g, fm = _conflict_grammar()
     result = build_ll1_result(g, fm)
-    # Conflicting cell A/X must be absent from parse_table
     assert "X" not in result["parse_table"].get("A", {})
 
 
@@ -131,7 +139,6 @@ def test_left_recursion_cycle_format():
     g, fm = _left_recursive_grammar()
     result = build_ll1_result(g, fm)
     cycle = result["left_recursion"][0]["cycle"]
-    # Direct self-loop: ["A", "A"] — first and last element are the same
     assert cycle[0] == cycle[-1]
     assert "A" in cycle
 
@@ -139,17 +146,46 @@ def test_left_recursion_cycle_format():
 def test_capturing_symbol_field_in_parse_table():
     g = Grammar()
     g.addRule("E", ["NUM"])
-    fm = {("E", ("NUM",)): ["num"]}  # NUM is capturing with field "num"
+    fm = {("E", ("NUM",)): Rule(alt=None, fields=["num"])}
     result = build_ll1_result(g, fm)
     entry = result["parse_table"]["E"]["NUM"]
-    assert entry == [{"symbol": "NUM", "field": "num"}]
+    assert entry == {"alt": None, "production": [{"symbol": "NUM", "field": "num"}]}
+
+
+def test_alt_name_appears_in_parse_table_cell():
+    g = Grammar()
+    g.addRule("expr", ["PLUS", "expr", "expr"])
+    g.addRule("expr", ["NUM"])
+    fm = {
+        ("expr", ("PLUS", "expr", "expr")): Rule(alt="Add", fields=[None, "left", "right"]),
+        ("expr", ("NUM",)): Rule(alt="Num", fields=["val"]),
+    }
+    result = build_ll1_result(g, fm)
+    assert result["parse_table"]["expr"]["PLUS"]["alt"] == "Add"
+    assert result["parse_table"]["expr"]["NUM"]["alt"] == "Num"
+
+
+def test_alt_name_null_when_absent():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result["parse_table"]["program"]["NUM"]["alt"] is None
+
+
+def test_conflict_productions_carry_alt_name():
+    g = Grammar()
+    g.addRule("expr", ["PLUS", "expr", "expr"])
+    g.addRule("expr", ["PLUS", "NUM"])
+    fm = {
+        ("expr", ("PLUS", "expr", "expr")): Rule(alt="Add", fields=[None, "left", "right"]),
+        ("expr", ("PLUS", "NUM")): Rule(alt="Neg", fields=[None, "val"]),
+    }
+    result = build_ll1_result(g, fm)
+    assert result["is_ll1"] is False
+    alts = {p["alt"] for p in result["conflicts"][0]["productions"]}
+    assert alts == {"Add", "Neg"}
 
 
 def _arbno_grammar_and_rules():
-    """
-    Mimics <rands> **= <expr>expr +COMMA  with <expr> ::= NUM.
-    Grammar is expanded: rands→expr rands#|ε, rands#→COMMA expr rands#|ε, expr→NUM.
-    """
     g = Grammar()
     g.addRule("rands", ["expr", "rands#"])
     g.addRule("rands", [])
@@ -157,11 +193,11 @@ def _arbno_grammar_and_rules():
     g.addRule("rands#", [])
     g.addRule("expr", ["NUM"])
     fm = {
-        ("rands",  ("expr", "rands#")): [None, None],
-        ("rands",  ()):                 [],
-        ("rands#", ("COMMA", "expr", "rands#")): [None, None, None],
-        ("rands#", ()):                 [],
-        ("expr",   ("NUM",)):           [None],
+        ("rands",  ("expr", "rands#")): Rule(alt=None, fields=[None, None]),
+        ("rands",  ()):                 Rule(alt=None, fields=[]),
+        ("rands#", ("COMMA", "expr", "rands#")): Rule(alt=None, fields=[None, None, None]),
+        ("rands#", ()):                 Rule(alt=None, fields=[]),
+        ("expr",   ("NUM",)):           Rule(alt=None, fields=[None]),
     }
     arbno = {
         "rands": {
