@@ -23,6 +23,14 @@ class MalformedBNFError(Exception):
             return leading + lhs_match.end() + 1
         return leading + 1
 
+    @property
+    def kind(self):
+        return "syntax error"
+
+    @property
+    def hint(self):
+        return self._EXAMPLES
+
     def __str__(self):
         caret = " " * (self.column - 1) + "^"
         return (
