@@ -1,4 +1,12 @@
 from .parseSpec import parseSpec
+from .rough.UnclosedBlockError import UnclosedBlockError
+
+
+def test_rough_errors_are_returned():
+    # An unclosed %%% block triggers UnclosedBlockError at rough-parse time.
+    # Before the fix, the errors variable was overwritten and rough errors dropped.
+    _, errors = parseSpec("token NUM '\\d+'\n%\n<a> ::= NUM\n%\nA\n%%%\nhi")
+    assert any(isinstance(e, UnclosedBlockError) for e in errors)
 
 
 def test_lex_only():
