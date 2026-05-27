@@ -76,3 +76,20 @@ def test_format_lists_all_productions():
     msg = format_conflict_message(FIRST_FOLLOW_CONFLICT)
     assert "<elsePart> ::= ELSE <stmt>" in msg
     assert "<elsePart> ::=    (empty)" in msg
+
+
+def test_first_follow_identifies_conflict_type():
+    msg = format_conflict_message(FIRST_FOLLOW_CONFLICT)
+    assert "FIRST/FOLLOW" in msg
+
+
+def test_first_follow_names_the_lookahead():
+    msg = format_conflict_message(FIRST_FOLLOW_CONFLICT)
+    # The explanation mentions the lookahead and the nonterminal
+    assert "ELSE" in msg
+    assert "FOLLOW set of <elsePart>" in msg
+
+
+def test_first_follow_includes_tip_to_look_at_context():
+    msg = format_conflict_message(FIRST_FOLLOW_CONFLICT)
+    assert "look at the rule(s) that use <elsePart>" in msg

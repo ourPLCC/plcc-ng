@@ -46,8 +46,16 @@ def _render_production(nt: str, production_entry: dict) -> str:
 
 
 def _first_follow_lines(nt: str, lookahead: str) -> list[str]:
-    # Filled in Task 3
-    return []
+    return [
+        f"  This is a FIRST/FOLLOW conflict: {lookahead} can start the non-empty production(s)",
+        f"  above, but also appears in the FOLLOW set of {_nt(nt)}, making the empty",
+        f"  production ambiguous here.",
+        "",
+        f"  Tip: look at the rule(s) that use {_nt(nt)} — one of them places",
+        f"  {lookahead} in a position that follows {_nt(nt)}, creating the ambiguity.",
+        f"  This often means the grammar is genuinely ambiguous (e.g., the",
+        f"  dangling-else problem) and must be restructured.",
+    ]
 
 
 def _first_first_lines(nt: str, lookahead: str, productions: list[dict]) -> list[str]:
