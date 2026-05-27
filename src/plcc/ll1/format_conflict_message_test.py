@@ -1,5 +1,5 @@
 import pytest
-from plcc.ll1.format_conflict_message import format_conflict_message, _render_production
+from plcc.ll1.format_conflict_message import format_conflict_message, _render_production, _longest_common_prefix
 
 # Shared test fixtures
 FIRST_FIRST_CONFLICT = {
@@ -93,3 +93,29 @@ def test_first_follow_names_the_lookahead():
 def test_first_follow_includes_tip_to_look_at_context():
     msg = format_conflict_message(FIRST_FOLLOW_CONFLICT)
     assert "look at the rule(s) that use <elsePart>" in msg
+
+
+def test_lcp_single_shared_token():
+    p1 = [{"symbol": "ID", "field": None}, {"symbol": "PLUS", "field": None}]
+    p2 = [{"symbol": "ID", "field": None}, {"symbol": "MINUS", "field": None}]
+    lcp = _longest_common_prefix([p1, p2])
+    assert [s["symbol"] for s in lcp] == ["ID"]
+
+
+def test_lcp_multiple_shared_tokens():
+    p1 = [{"symbol": "ID", "field": None}, {"symbol": "DOT", "field": None}, {"symbol": "ID", "field": None}]
+    p2 = [{"symbol": "ID", "field": None}, {"symbol": "DOT", "field": None}, {"symbol": "NUM", "field": None}]
+    lcp = _longest_common_prefix([p1, p2])
+    assert [s["symbol"] for s in lcp] == ["ID", "DOT"]
+
+
+def test_lcp_with_three_productions():
+    p1 = [{"symbol": "ID", "field": None}, {"symbol": "PLUS", "field": None}]
+    p2 = [{"symbol": "ID", "field": None}, {"symbol": "MINUS", "field": None}]
+    p3 = [{"symbol": "ID", "field": None}, {"symbol": "TIMES", "field": None}]
+    lcp = _longest_common_prefix([p1, p2, p3])
+    assert [s["symbol"] for s in lcp] == ["ID"]
+
+
+def test_lcp_empty_input():
+    assert _longest_common_prefix([]) == []

@@ -45,6 +45,20 @@ def _render_production(nt: str, production_entry: dict) -> str:
     return f"{lhs} ::= {rhs}"
 
 
+def _longest_common_prefix(productions: list[list[dict]]) -> list[dict]:
+    if not productions:
+        return []
+    shortest = min(len(p) for p in productions)
+    prefix = []
+    for i in range(shortest):
+        sym = productions[0][i]["symbol"]
+        if all(p[i]["symbol"] == sym for p in productions):
+            prefix.append(productions[0][i])
+        else:
+            break
+    return prefix
+
+
 def _first_follow_lines(nt: str, lookahead: str) -> list[str]:
     return [
         f"  This is a FIRST/FOLLOW conflict: {lookahead} can start the non-empty production(s)",
