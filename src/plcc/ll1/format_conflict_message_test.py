@@ -119,3 +119,37 @@ def test_lcp_with_three_productions():
 
 def test_lcp_empty_input():
     assert _longest_common_prefix([]) == []
+
+
+def test_first_first_identifies_conflict_type():
+    msg = format_conflict_message(FIRST_FIRST_CONFLICT)
+    assert "FIRST/FIRST" in msg
+
+
+def test_first_first_names_the_lookahead():
+    msg = format_conflict_message(FIRST_FIRST_CONFLICT)
+    assert "ID" in msg
+    assert "parser cannot choose" in msg
+
+
+def test_first_first_includes_left_factoring_tip():
+    msg = format_conflict_message(FIRST_FIRST_CONFLICT)
+    assert "left-factor" in msg
+
+
+def test_first_first_shows_tail_nonterminal():
+    msg = format_conflict_message(FIRST_FIRST_CONFLICT)
+    # tail is <exprTail> derived from nonterminal "expr"
+    assert "<exprTail>" in msg
+
+
+def test_first_first_shows_factored_lhs_rule():
+    msg = format_conflict_message(FIRST_FIRST_CONFLICT)
+    # The common prefix is ID; factored rule is <expr> ::= ID <exprTail>
+    assert "<expr> ::= ID <exprTail>" in msg
+
+
+def test_first_first_shows_factored_tail_rules():
+    msg = format_conflict_message(FIRST_FIRST_CONFLICT)
+    assert "<exprTail> ::= PLUS <expr>" in msg
+    assert "<exprTail> ::= MINUS <expr>" in msg

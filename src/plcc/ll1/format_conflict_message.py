@@ -73,5 +73,25 @@ def _first_follow_lines(nt: str, lookahead: str) -> list[str]:
 
 
 def _first_first_lines(nt: str, lookahead: str, productions: list[dict]) -> list[str]:
-    # Filled in Tasks 4 and 5
-    return []
+    non_empty = [p["production"] for p in productions if p["production"]]
+    lcp = _longest_common_prefix(non_empty)
+    tail_nt = nt + "Tail"
+
+    lines = [
+        f"  This is a FIRST/FIRST conflict: all productions start with {lookahead}, so",
+        f"  the parser cannot choose between them.",
+        "",
+        f"  Tip: left-factor the common prefix:",
+    ]
+
+    lcp_str = " ".join(_render_symbol(s["symbol"]) for s in lcp)
+    lines.append(f"    {_nt(nt)} ::= {lcp_str} {_nt(tail_nt)}")
+    for prod_syms in non_empty:
+        remainder = prod_syms[len(lcp):]
+        if remainder:
+            rhs = " ".join(_render_symbol(s["symbol"]) for s in remainder)
+            lines.append(f"    {_nt(tail_nt)} ::= {rhs}")
+        else:
+            lines.append(f"    {_nt(tail_nt)} ::=    (empty)")
+
+    return lines
