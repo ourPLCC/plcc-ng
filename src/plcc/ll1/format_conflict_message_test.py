@@ -1,4 +1,3 @@
-import pytest
 from plcc.ll1.format_conflict_message import format_conflict_message, _render_production, _longest_common_prefix
 
 # Shared test fixtures

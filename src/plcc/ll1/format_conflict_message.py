@@ -84,6 +84,8 @@ def _first_first_lines(nt: str, lookahead: str, productions: list[dict]) -> list
         f"  Tip: left-factor the common prefix:",
     ]
 
+    # lcp is always non-empty here: a FIRST/FIRST conflict means all productions
+    # share the same lookahead token as their first symbol, so LCP length >= 1.
     lcp_str = " ".join(_render_symbol(s["symbol"]) for s in lcp)
     lines.append(f"    {_nt(nt)} ::= {lcp_str} {_nt(tail_nt)}")
     for prod_syms in non_empty:
