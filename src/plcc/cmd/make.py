@@ -129,7 +129,7 @@ def main(argv=None):
         with open(ll1_json) as f:
             ll1 = json.load(f)
         if not ll1.get("is_ll1", True):
-            _report_ll1_failure(ll1, ll1_json)
+            _report_ll1_failure(ll1)
             sys.exit(1)
 
     if through in ('model', 'all'):
@@ -173,9 +173,10 @@ def validate_tool_name(name):
         )
 
 
-def _report_ll1_failure(ll1, path):
-    print(f"plcc-make: error: grammar is not LL(1); see {path}", file=sys.stderr)
+def _report_ll1_failure(ll1):
+    print("plcc-make: error: grammar is not LL(1)", file=sys.stderr)
     for conflict in ll1.get("conflicts", []):
+        print("", file=sys.stderr)
         print(format_conflict_message(conflict), file=sys.stderr)
     for entry in ll1.get("left_recursion", []):
         cycle = entry.get("cycle", [])
