@@ -14,6 +14,7 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
+from plcc.ll1.format_conflict_message import format_conflict_message
 
 __doc__ = """plcc-make
     Build a PLCC project from a grammar file.
@@ -175,13 +176,7 @@ def validate_tool_name(name):
 def _report_ll1_failure(ll1, path):
     print(f"plcc-make: error: grammar is not LL(1); see {path}", file=sys.stderr)
     for conflict in ll1.get("conflicts", []):
-        print(
-            f"plcc-make: error: conflict at "
-            f"{conflict.get('nonterminal', '?')} on "
-            f"{conflict.get('lookahead', '?')}: "
-            f"{conflict.get('productions', [])}",
-            file=sys.stderr,
-        )
+        print(format_conflict_message(conflict), file=sys.stderr)
     for entry in ll1.get("left_recursion", []):
         cycle = entry.get("cycle", [])
         print(f"plcc-make: error: left-recursion cycle: {' -> '.join(cycle)}", file=sys.stderr)
