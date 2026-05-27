@@ -138,3 +138,56 @@ def test_invalid_through_error_message_includes_model(tmp_path, monkeypatch, cap
         run_main(['--through=typo'])
     _, err = capsys.readouterr()
     assert "model" in err
+
+
+def test_report_ll1_failure_blank_line_before_conflict(capsys):
+    ll1 = {
+        "conflicts": [
+            {
+                "nonterminal": "expr",
+                "lookahead": "ID",
+                "conflict_type": "first_first",
+                "productions": [
+                    {"alt": None, "production": [
+                        {"symbol": "ID", "field": None},
+                        {"symbol": "PLUS", "field": None},
+                    ]},
+                    {"alt": None, "production": [
+                        {"symbol": "ID", "field": None},
+                        {"symbol": "MINUS", "field": None},
+                    ]},
+                ],
+            }
+        ],
+        "left_recursion": [],
+    }
+    _report_ll1_failure(ll1)
+    _, err = capsys.readouterr()
+    # Header line ends with \n; a blank line means \n\n before the conflict header
+    assert "grammar is not LL(1)\n\nLL(1) conflict:" in err
+
+
+def test_report_ll1_failure_blank_line_between_conflicts(capsys):
+    conflict = {
+        "nonterminal": "expr",
+        "lookahead": "ID",
+        "conflict_type": "first_first",
+        "productions": [
+            {"alt": None, "production": [
+                {"symbol": "ID", "field": None},
+                {"symbol": "PLUS", "field": None},
+            ]},
+            {"alt": None, "production": [
+                {"symbol": "ID", "field": None},
+                {"symbol": "MINUS", "field": None},
+            ]},
+        ],
+    }
+    ll1 = {"conflicts": [conflict, conflict], "left_recursion": []}
+    _report_ll1_failure(ll1)
+    _, err = capsys.readouterr()
+    # The second conflict block must be preceded by a blank line.
+    # format_conflict_message ends without a trailing newline; print() adds one.
+    # A blank separator means the last line of block 1, then \n\n, then LL(1) conflict:.
+    blocks = err.split("\n\nLL(1) conflict:")
+    assert len(blocks) == 3  # header + conflict1 + conflict2

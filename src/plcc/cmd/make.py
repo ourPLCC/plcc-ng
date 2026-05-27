@@ -176,6 +176,7 @@ def validate_tool_name(name):
 def _report_ll1_failure(ll1):
     print("plcc-make: error: grammar is not LL(1)", file=sys.stderr)
     for conflict in ll1.get("conflicts", []):
+        print("", file=sys.stderr)
         print(format_conflict_message(conflict), file=sys.stderr)
     for entry in ll1.get("left_recursion", []):
         cycle = entry.get("cycle", [])
