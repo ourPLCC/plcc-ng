@@ -91,10 +91,9 @@ def test_report_ll1_failure_prints_error_and_conflicts(capsys):
         ],
         "left_recursion": [],
     }
-    _report_ll1_failure(ll1, "build/ll1.json")
+    _report_ll1_failure(ll1)
     _, err = capsys.readouterr()
     assert "plcc-make: error:" in err
-    assert "build/ll1.json" in err
     assert "LL(1) conflict: <expr> on lookahead ID" in err
     assert "FIRST/FIRST" in err
 
@@ -104,10 +103,17 @@ def test_report_left_recursion_cycle(capsys):
         "conflicts": [],
         "left_recursion": [{"cycle": ["A", "B", "A"]}],
     }
-    _report_ll1_failure(ll1, "build/ll1.json")
+    _report_ll1_failure(ll1)
     _, err = capsys.readouterr()
     assert "A -> B -> A" in err
 
+
+def test_report_ll1_failure_no_path_in_header(capsys):
+    ll1 = {"conflicts": [], "left_recursion": []}
+    _report_ll1_failure(ll1)
+    _, err = capsys.readouterr()
+    assert "see" not in err
+    assert "ll1.json" not in err
 
 
 def test_through_model_is_valid(tmp_path, monkeypatch, capsys):
