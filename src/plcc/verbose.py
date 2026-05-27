@@ -84,11 +84,12 @@ class VerboseContext:
     def parse_child_events(self, stderr_text):
         events = []
         for line in stderr_text.splitlines():
-            line = line.strip()
-            if not line:
+            stripped = line.strip()
+            if not stripped:
+                print(file=sys.stderr, flush=True)
                 continue
             try:
-                events.append(json.loads(line))
+                events.append(json.loads(stripped))
             except json.JSONDecodeError:
                 print(line, file=sys.stderr, flush=True)
         return events

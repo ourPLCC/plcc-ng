@@ -83,6 +83,22 @@ def test_child_flags_for_orchestrator_keeps_higher_user_level():
     assert flags.count("-v") == 3
 
 
+def test_parse_child_events_preserves_indentation_of_plain_text(capsys):
+    args = {"-v": 0, "--verbose-format": "text"}
+    ctx = VerboseContext.from_args("plcc-test", SampleEvents, args)
+    ctx.parse_child_events("  indented line\n")
+    captured = capsys.readouterr()
+    assert "  indented line" in captured.err
+
+
+def test_parse_child_events_preserves_blank_lines(capsys):
+    args = {"-v": 0, "--verbose-format": "text"}
+    ctx = VerboseContext.from_args("plcc-test", SampleEvents, args)
+    ctx.parse_child_events("first line\n\nsecond line\n")
+    captured = capsys.readouterr()
+    assert "first line\n\nsecond line" in captured.err
+
+
 def test_parse_child_events_roundtrip(capsys):
     args = {"-v": 1, "--verbose-format": "json"}
     ctx = VerboseContext.from_args("plcc-test", SampleEvents, args)
