@@ -152,3 +152,35 @@ def test_first_first_shows_factored_tail_rules():
     msg = format_conflict_message(FIRST_FIRST_CONFLICT)
     assert "<exprTail> ::= PLUS <expr>" in msg
     assert "<exprTail> ::= MINUS <expr>" in msg
+
+
+def test_render_production_underscore_terminal_no_angle_brackets():
+    # Terminals can start with underscore in PLCC (e.g. _SKIP, _EOL)
+    entry = {"alt": None, "production": [{"symbol": "_SKIP", "field": None}]}
+    result = _render_production("expr", entry)
+    assert "_SKIP" in result
+    assert "<_SKIP>" not in result
+
+
+def test_first_first_empty_lcp_shows_nullable_tip():
+    # FIRST/FIRST conflict where productions share no visible prefix
+    # (conflict arises through nullable leading symbols)
+    conflict = {
+        "nonterminal": "stmt",
+        "lookahead": "ID",
+        "conflict_type": "first_first",
+        "productions": [
+            {"alt": None, "production": [
+                {"symbol": "ifPart", "field": None},
+                {"symbol": "NUM", "field": None},
+            ]},
+            {"alt": None, "production": [
+                {"symbol": "elsePart", "field": None},
+                {"symbol": "NUM", "field": None},
+            ]},
+        ],
+    }
+    msg = format_conflict_message(conflict)
+    assert "FIRST/FIRST" in msg
+    assert "nullable" in msg
+    assert "left-factor" not in msg

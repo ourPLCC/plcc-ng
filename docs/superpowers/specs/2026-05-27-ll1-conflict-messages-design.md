@@ -18,12 +18,12 @@ Each conflict entry in the `conflicts` list gains a `"conflict_type"` field, der
 
 Before:
 ```json
-{"nonterminal": "<elsePart>", "lookahead": "ELSE", "productions": [...]}
+{"nonterminal": "elsePart", "lookahead": "ELSE", "productions": [...]}
 ```
 
 After:
 ```json
-{"nonterminal": "<elsePart>", "lookahead": "ELSE", "conflict_type": "first_follow", "productions": [...]}
+{"nonterminal": "elsePart", "lookahead": "ELSE", "conflict_type": "first_follow", "productions": [...]}
 ```
 
 No other data fields change. The field is computed inline where the `conflicts` list is assembled.
@@ -46,7 +46,7 @@ Takes a single conflict dict (as stored in `ll1.json`) and returns a multi-line 
 
 A helper `_render_production(nonterminal, production_entry)` converts a production entry to a readable grammar rule:
 
-- `{"alt": ..., "production": [{"symbol": "ELSE", "field": "..."}, {"symbol": "<stmt>", "field": "..."}]}` → `<elsePart> ::= ELSE <stmt>`
+- `{"alt": ..., "production": [{"symbol": "ELSE", "field": "..."}, {"symbol": "stmt", "field": "..."}]}` → `<elsePart> ::= ELSE <stmt>`
 - `{"alt": ..., "production": []}` → `<elsePart> ::=    (empty)`
 
 The `alt` and `field` values are ignored; only `symbol` is used.

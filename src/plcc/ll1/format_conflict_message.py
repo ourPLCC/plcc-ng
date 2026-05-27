@@ -1,6 +1,6 @@
 import re
 
-_TERMINAL_RE = re.compile(r'^[A-Z][A-Z0-9_]*$')
+_TERMINAL_RE = re.compile(r'^[A-Z_][A-Z0-9_]*$')
 
 
 def format_conflict_message(conflict: dict) -> str:
@@ -81,19 +81,24 @@ def _first_first_lines(nt: str, lookahead: str, productions: list[dict]) -> list
         f"  This is a FIRST/FIRST conflict: all productions start with {lookahead}, so",
         f"  the parser cannot choose between them.",
         "",
-        f"  Tip: left-factor the common prefix:",
     ]
 
-    # lcp is always non-empty here: a FIRST/FIRST conflict means all productions
-    # share the same lookahead token as their first symbol, so LCP length >= 1.
-    lcp_str = " ".join(_render_symbol(s["symbol"]) for s in lcp)
-    lines.append(f"    {_nt(nt)} ::= {lcp_str} {_nt(tail_nt)}")
-    for prod_syms in non_empty:
-        remainder = prod_syms[len(lcp):]
-        if remainder:
-            rhs = " ".join(_render_symbol(s["symbol"]) for s in remainder)
-            lines.append(f"    {_nt(tail_nt)} ::= {rhs}")
-        else:
-            lines.append(f"    {_nt(tail_nt)} ::=    (empty)")
+    if not lcp:
+        lines += [
+            f"  Tip: the conflict arises through nullable leading symbols — the productions",
+            f"  have no common visible prefix to factor out. The grammar likely needs",
+            f"  deeper restructuring to eliminate the ambiguity.",
+        ]
+    else:
+        lines.append(f"  Tip: left-factor the common prefix:")
+        lcp_str = " ".join(_render_symbol(s["symbol"]) for s in lcp)
+        lines.append(f"    {_nt(nt)} ::= {lcp_str} {_nt(tail_nt)}")
+        for prod_syms in non_empty:
+            remainder = prod_syms[len(lcp):]
+            if remainder:
+                rhs = " ".join(_render_symbol(s["symbol"]) for s in remainder)
+                lines.append(f"    {_nt(tail_nt)} ::= {rhs}")
+            else:
+                lines.append(f"    {_nt(tail_nt)} ::=    (empty)")
 
     return lines
