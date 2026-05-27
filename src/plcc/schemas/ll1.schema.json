@@ -61,7 +61,17 @@
               "required": ["alt", "production"],
               "properties": {
                 "alt": { "type": ["string", "null"] },
-                "production": { "type": "array" }
+                "production": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["symbol", "field"],
+                    "properties": {
+                      "symbol": { "type": "string" },
+                      "field":  { "type": ["string", "null"] }
+                    }
+                  }
+                }
               }
             }
           }

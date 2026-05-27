@@ -57,7 +57,7 @@ both `parse_table` entries and `conflicts` entries — both go through `_prod_en
 - Define the `Rule` dataclass.
 - `decode()` reads `rule["lhs"]["altName"]` for each rule and constructs
   `Rule(alt=altName, fields=[...])`, storing it in `productions` under `(nt, prod_tuple)`.
-- `_handle_arbno()` likewise stores a `Rule` for arbno rules (alt is always `None` for arbno).
+- `_handle_arbno()` writes only to `arbno_rules`; it does not add entries to `productions` (arbno rules are handled by a separate codepath in the parser and do not need `Rule` metadata).
 - Return remains a 3-tuple: `(grammar, productions, arbno_rules)`.
 
 ### `ll1_result_builder.py`
