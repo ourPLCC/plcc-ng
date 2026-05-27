@@ -185,6 +185,27 @@ def test_conflict_productions_carry_alt_name():
     assert alts == {"Add", "Neg"}
 
 
+def _first_follow_conflict_grammar():
+    """
+    prog → A X
+    A → X
+    A → (empty)
+
+    FOLLOW(A) = {X} because prog expands to A X.
+    On lookahead X: both (A → X) and (A → empty) apply → FIRST/FOLLOW conflict.
+    """
+    g = Grammar()
+    g.addRule("prog", ["A", "X"])
+    g.addRule("A", ["X"])
+    g.addRule("A", [])
+    fm = {
+        ("prog", ("A", "X")): Rule(alt=None, fields=[None, None]),
+        ("A", ("X",)): Rule(alt=None, fields=[None]),
+        ("A", ()): Rule(alt=None, fields=[]),
+    }
+    return g, fm
+
+
 def _arbno_grammar_and_rules():
     """Mimics <rands> **= <expr>expr +COMMA with <expr> ::= NUM.
     Grammar: rands→expr rands#|ε, rands#→COMMA expr rands#|ε, expr→NUM."""
@@ -261,3 +282,17 @@ def test_existing_grammar_unaffected_when_no_arbno():
     result = build_ll1_result(g, fm)
     assert result["is_ll1"] is True
     assert result["arbno"] == {}
+
+
+def test_conflict_type_is_first_first():
+    g, fm = _conflict_grammar()
+    result = build_ll1_result(g, fm)
+    c = result["conflicts"][0]
+    assert c["conflict_type"] == "first_first"
+
+
+def test_conflict_type_is_first_follow():
+    g, fm = _first_follow_conflict_grammar()
+    result = build_ll1_result(g, fm)
+    conflict_on_A = next(c for c in result["conflicts"] if c["nonterminal"] == "A")
+    assert conflict_on_A["conflict_type"] == "first_follow"

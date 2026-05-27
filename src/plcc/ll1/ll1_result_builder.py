@@ -79,7 +79,14 @@ def build_ll1_result(grammar: Grammar, productions: dict, arbno_rules: dict = No
             _prod_entry(nt, p, productions, eps)
             for p in sorted(prods, key=str)
         ]
-        conflicts.append({"nonterminal": nt, "lookahead": lookahead, "productions": conflict_productions})
+        has_empty = any(len(cp["production"]) == 0 for cp in conflict_productions)
+        conflict_type = "first_follow" if has_empty else "first_first"
+        conflicts.append({
+            "nonterminal": nt,
+            "lookahead": lookahead,
+            "conflict_type": conflict_type,
+            "productions": conflict_productions,
+        })
 
     left_recursion = []
     for offending in lr_cycles:
