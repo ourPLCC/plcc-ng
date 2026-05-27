@@ -73,7 +73,21 @@ def test_report_ll1_failure_prints_error_and_conflicts(capsys):
     ll1 = {
         "is_ll1": False,
         "conflicts": [
-            {"nonterminal": "E", "lookahead": "+", "competing": ["E + T", "E"]}
+            {
+                "nonterminal": "expr",
+                "lookahead": "ID",
+                "conflict_type": "first_first",
+                "productions": [
+                    {"alt": None, "production": [
+                        {"symbol": "ID", "field": None},
+                        {"symbol": "PLUS", "field": None},
+                    ]},
+                    {"alt": None, "production": [
+                        {"symbol": "ID", "field": None},
+                        {"symbol": "MINUS", "field": None},
+                    ]},
+                ],
+            }
         ],
         "left_recursion": [],
     }
@@ -81,8 +95,8 @@ def test_report_ll1_failure_prints_error_and_conflicts(capsys):
     _, err = capsys.readouterr()
     assert "plcc-make: error:" in err
     assert "build/ll1.json" in err
-    assert "E" in err
-    assert "+" in err
+    assert "LL(1) conflict: <expr> on lookahead ID" in err
+    assert "FIRST/FIRST" in err
 
 
 def test_report_left_recursion_cycle(capsys):
