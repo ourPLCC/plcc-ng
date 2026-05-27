@@ -8,22 +8,21 @@ _TRIVIAL_LL1 = {
     "start_symbol": "program",
     "parse_table": {
         "program": {
-            "NUM": [{"symbol": "NUM", "field": None}]
+            "NUM": {"alt": None, "production": [{"symbol": "NUM", "field": None}]}
         }
     },
 }
 
 # ll1.json dict for grammar: E → t:Term; Term → n:NUM
-# (tests nonterminal child appearing as tree node)
 _EXPR_LL1 = {
     "is_ll1": True,
     "start_symbol": "E",
     "parse_table": {
         "E": {
-            "NUM": [{"symbol": "Term", "field": "t"}]
+            "NUM": {"alt": None, "production": [{"symbol": "Term", "field": "t"}]}
         },
         "Term": {
-            "NUM": [{"symbol": "NUM", "field": "n"}]
+            "NUM": {"alt": None, "production": [{"symbol": "NUM", "field": "n"}]}
         },
     },
 }
@@ -34,11 +33,27 @@ _FLAT_EXPR_LL1 = {
     "start_symbol": "E",
     "parse_table": {
         "E": {
-            "NUM": [
+            "NUM": {"alt": None, "production": [
                 {"symbol": "NUM", "field": "left"},
                 {"symbol": "PLUS", "field": None},
                 {"symbol": "NUM", "field": "right"},
-            ]
+            ]}
+        }
+    },
+}
+
+# prefix expr grammar: <expr>:Add ::= PLUS <expr> <expr> | <expr>:Num ::= NUM
+_PREFIX_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "expr",
+    "parse_table": {
+        "expr": {
+            "PLUS": {"alt": "Add", "production": [
+                {"symbol": "PLUS", "field": None},
+                {"symbol": "expr", "field": "left"},
+                {"symbol": "expr", "field": "right"},
+            ]},
+            "NUM": {"alt": "Num", "production": [{"symbol": "NUM", "field": "val"}]},
         }
     },
 }
@@ -71,13 +86,29 @@ def test_trivial_parse_source_span():
     assert src["line"] == 3
     assert src["column"] == 5
     assert src["endLine"] == 3
-    # endColumn = col + len("42") - 1 = 5 + 2 - 1 = 6
     assert src["endColumn"] == 6
 
 
 def test_trivial_parse_source_file():
     tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", file="prog.txt")])
     assert tree["source"]["file"] == "prog.txt"
+
+
+# --- alt name tests ---
+
+def test_alt_name_used_as_rule_in_tree():
+    tree, _ = parse(_PREFIX_LL1, [_tok("PLUS", "+"), _tok("NUM", "2"), _tok("NUM", "3")])
+    assert tree["rule"] == "Add"
+
+
+def test_alt_name_on_leaf_node():
+    tree, _ = parse(_PREFIX_LL1, [_tok("NUM", "42")])
+    assert tree["rule"] == "Num"
+
+
+def test_no_alt_name_uses_nonterminal_name():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert tree["rule"] == "program"
 
 
 # --- capturing symbol tests ---
@@ -124,8 +155,8 @@ def test_span_covers_all_tokens_including_elided():
         _tok("NUM", "2", col=5),
     ])
     src = tree["source"]
-    assert src["column"] == 1          # start of first token
-    assert src["endColumn"] == 5       # endColumn of "2" at col 5, len 1 → 5
+    assert src["column"] == 1
+    assert src["endColumn"] == 5
 
 
 # --- nested nonterminal tests ---
@@ -152,11 +183,10 @@ def test_no_production_for_lookahead_raises_parse_error():
     ll1 = {
         "is_ll1": True,
         "start_symbol": "A",
-        "parse_table": {"A": {"X": [{"symbol": "X", "field": None}]}},
+        "parse_table": {"A": {"X": {"alt": None, "production": [{"symbol": "X", "field": None}]}}},
     }
     with pytest.raises(ParseError):
         parse(ll1, [_tok("Y", "y")])
-
 
 
 def test_empty_input_on_nonempty_grammar_raises_parse_error():
@@ -170,7 +200,7 @@ _RANDS_LL1 = {
     "start_symbol": "rands",
     "parse_table": {
         "expr": {
-            "NUM": [{"symbol": "NUM", "field": "num"}]
+            "NUM": {"alt": None, "production": [{"symbol": "NUM", "field": "num"}]}
         }
     },
     "arbno": {
@@ -188,7 +218,7 @@ _CMDS_LL1 = {
     "start_symbol": "cmds",
     "parse_table": {
         "cmd": {
-            "X": [{"symbol": "X", "field": "x"}]
+            "X": {"alt": None, "production": [{"symbol": "X", "field": "x"}]}
         }
     },
     "arbno": {
@@ -264,11 +294,11 @@ _ADDITION_LL1 = {
     "start_symbol": "program",
     "parse_table": {
         "program": {
-            "NUM": [
+            "NUM": {"alt": None, "production": [
                 {"symbol": "NUM", "field": None},
                 {"symbol": "PLUS", "field": None},
                 {"symbol": "NUM", "field": None},
-            ]
+            ]}
         }
     },
 }
@@ -297,14 +327,12 @@ def test_parse_returns_consumed_count():
 
 
 def test_parse_stops_at_first_unconsumed_token():
-    # Extra token after a complete parse: no exception, consumed=1
     tree, consumed = parse(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2")])
     assert consumed == 1
     assert tree["kind"] == "tree"
 
 
 def test_incomplete_raises_ParseError_not_IncompleteInputError():
-    # Grammar: program → NUM PLUS NUM; tokens: [NUM] — hits EOF before PLUS
     with pytest.raises(ParseError):
         parse(_ADDITION_LL1, [_tok("NUM", "1")])
 
@@ -316,7 +344,6 @@ def test_parse_error_found_is_set_for_wrong_terminal():
 
 
 def test_parse_error_found_is_eof_for_premature_end_of_input():
-    # Grammar: program → NUM PLUS NUM; tokens: [NUM] — hits EOF before PLUS
     with pytest.raises(ParseError) as exc_info:
         parse(_ADDITION_LL1, [_tok("NUM", "1")])
     assert exc_info.value.found == "eof"

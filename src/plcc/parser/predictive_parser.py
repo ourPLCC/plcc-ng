@@ -101,8 +101,8 @@ def parse(ll1: dict, tokens: list) -> tuple:
                 source=current()["source"],
                 found=lookahead,
             )
-        builder = NodeBuilder(sym)
-        for entry in production:
+        builder = NodeBuilder(production.get("alt") or sym)
+        for entry in production["production"]:
             s, f = entry["symbol"], entry["field"]
             if is_nonterminal(s):
                 child_builder = parse_nt(s)

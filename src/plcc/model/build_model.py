@@ -54,7 +54,7 @@ def _build_classes(spec):
                     'abstract': False,
                     'extends': class_name,
                     'fields': fields,
-                    'rule_name': nt_name,
+                    'rule_name': alt_name,
                 })
         else:
             rule = nt_rules[0]

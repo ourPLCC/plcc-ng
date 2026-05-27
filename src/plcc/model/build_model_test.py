@@ -353,16 +353,16 @@ def test_arith_abstract_class_has_rule_name():
     assert exprrest['rule_name'] == 'ExprRest'
 
 
-def test_arith_concrete_subclass_has_parent_rule_name():
+def test_arith_concrete_subclass_has_own_rule_name():
     model = build_model(_ARITH_SPEC)
     addrest = next(c for c in model['classes'] if c['name'] == 'AddRest')
-    assert addrest['rule_name'] == 'ExprRest'
+    assert addrest['rule_name'] == 'AddRest'
 
 
-def test_arith_nilrest_has_parent_rule_name():
+def test_arith_nilrest_has_own_rule_name():
     model = build_model(_ARITH_SPEC)
     nilrest = next(c for c in model['classes'] if c['name'] == 'NilRest')
-    assert nilrest['rule_name'] == 'ExprRest'
+    assert nilrest['rule_name'] == 'NilRest'
 
 
 def test_arith_expr_has_rule_name():

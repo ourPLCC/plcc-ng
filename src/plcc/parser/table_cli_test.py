@@ -12,7 +12,7 @@ _TRIVIAL_LL1 = {
     "start_symbol": "program",
     "parse_table": {
         "program": {
-            "NUM": [{"symbol": "NUM", "field": None}]
+            "NUM": {"alt": None, "production": [{"symbol": "NUM", "field": None}]}
         }
     },
 }
@@ -29,7 +29,7 @@ _CAPTURING_LL1 = {
     "is_ll1": True,
     "start_symbol": "E",
     "parse_table": {
-        "E": {"NUM": [{"symbol": "NUM", "field": "num"}]}
+        "E": {"NUM": {"alt": None, "production": [{"symbol": "NUM", "field": "num"}]}}
     },
 }
 
@@ -38,11 +38,11 @@ _ADDITION_LL1 = {
     "start_symbol": "program",
     "parse_table": {
         "program": {
-            "NUM": [
+            "NUM": {"alt": None, "production": [
                 {"symbol": "NUM", "field": None},
                 {"symbol": "PLUS", "field": None},
                 {"symbol": "NUM", "field": None},
-            ]
+            ]}
         }
     },
 }
@@ -193,17 +193,17 @@ _EXP_LL1 = {
     "start_symbol": "exp",
     "parse_table": {
         "exp": {
-            "NUM": [
+            "NUM": {"alt": None, "production": [
                 {"symbol": "NUM", "field": None},
                 {"symbol": "exp2", "field": None},
-            ]
+            ]}
         },
         "exp2": {
-            "OP": [
+            "OP": {"alt": None, "production": [
                 {"symbol": "OP", "field": None},
                 {"symbol": "exp", "field": None},
-            ],
-            "eof": [],
+            ]},
+            "eof": {"alt": None, "production": []},
         },
     },
 }
