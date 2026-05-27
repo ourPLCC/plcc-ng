@@ -5,10 +5,18 @@
 
 ## Description
 
-The LL(1) conflict messages introduced in #036 are correct but dense. All sections
-run together without blank lines, making them hard to scan quickly. Adding vertical
-whitespace between the header, the production list, the conflict-type explanation,
-and the tip would significantly improve readability.
+The LL(1) conflict messages introduced in #036 are correct but dense. Two formatting
+issues remain:
+
+1. **Drop the `see build/ll1.json` pointer.** The conflict messages now print
+   everything the user needs directly to stderr. Referring them to a JSON file is
+   noise — students don't know how to read it, and there is nothing there that the
+   error output doesn't already say.
+
+2. **Add vertical whitespace.** All sections run together without blank lines,
+   making them hard to scan quickly. Adding whitespace between the header, the
+   production list, the conflict-type explanation, and the tip would significantly
+   improve readability.
 
 ### Current output (FIRST/FIRST)
 
@@ -46,7 +54,7 @@ dangling-else problem) and must be restructured.
 ### Target output (FIRST/FIRST)
 
 ```
-plcc-make: error: grammar is not LL(1); see build/ll1.json
+plcc-make: error: grammar is not LL(1)
 
 LL(1) conflict: <stmts> on lookahead IDENT
 
@@ -66,7 +74,7 @@ LL(1) conflict: <stmts> on lookahead IDENT
 ### Target output (FIRST/FOLLOW)
 
 ```
-plcc-make: error: grammar is not LL(1); see build/ll1.json
+plcc-make: error: grammar is not LL(1)
 
 LL(1) conflict: <elsePart> on lookahead ELSE
 
@@ -86,6 +94,9 @@ LL(1) conflict: <elsePart> on lookahead ELSE
 
 ## Notes
 
+- `see build/ll1.json` was added before the detailed conflict messages existed.
+  Now that the messages are self-contained, the pointer is redundant and should be
+  removed from the `plcc-make: error:` line entirely.
 - A blank line before the `LL(1) conflict:` header visually separates it from the
   `plcc-make: error:` line when multiple conflicts are reported in sequence.
 - Indenting the productions list and the explanation paragraphs ties them visually
