@@ -1,4 +1,4 @@
-from plcc.ll1.format_conflict_message import format_conflict_message, _render_production, _longest_common_prefix
+from plcc.ll1.format_conflict_message import format_conflict_message, _render_production, _longest_common_prefix, _render_symbol
 
 # Shared test fixtures
 FIRST_FIRST_CONFLICT = {
@@ -59,11 +59,12 @@ def test_render_production_nonterminal_gets_angle_brackets():
     assert "<term>" in result
 
 
-def test_render_production_field_is_ignored():
+def test_render_production_capturing_terminal_with_explicit_alt():
+    # field "name" != "id" (default for ID), so renders as <ID>name
     entry = {"alt": "Add", "production": [
         {"symbol": "ID", "field": "name"},
     ]}
-    assert _render_production("expr", entry) == "<expr> ::= ID"
+    assert _render_production("expr", entry) == "<expr> ::= <ID>name"
 
 
 def test_format_includes_header_line():
@@ -160,6 +161,83 @@ def test_render_production_underscore_terminal_no_angle_brackets():
     result = _render_production("expr", entry)
     assert "_SKIP" in result
     assert "<_SKIP>" not in result
+
+
+# --- Field-aware rendering tests ---
+
+def test_render_symbol_noncapturing_terminal():
+    # field=None + terminal → bare token
+    assert _render_symbol("NUM", None) == "NUM"
+
+
+def test_render_symbol_noncapturing_nonterminal():
+    # field=None + nonterminal → <nt>
+    assert _render_symbol("expr", None) == "<expr>"
+
+
+def test_render_symbol_capturing_terminal_default_field():
+    # field == sym.lower() → default alt, render as <NUM>
+    assert _render_symbol("NUM", "num") == "<NUM>"
+
+
+def test_render_symbol_capturing_terminal_explicit_alt():
+    # field != sym.lower() → render as <NUM>name
+    assert _render_symbol("NUM", "n") == "<NUM>n"
+
+
+def test_render_symbol_capturing_nonterminal_default_field():
+    # field == sym.lower() → default alt, render as <expr>
+    assert _render_symbol("expr", "expr") == "<expr>"
+
+
+def test_render_symbol_capturing_nonterminal_explicit_alt():
+    # field != sym.lower() → render as <ExprRest>rest
+    assert _render_symbol("ExprRest", "rest") == "<ExprRest>rest"
+
+
+def test_render_production_noncapturing_symbols():
+    # When field=None for all symbols, non-capturing rendering
+    entry = {"alt": None, "production": [
+        {"symbol": "NUM", "field": None},
+        {"symbol": "expr", "field": None},
+    ]}
+    assert _render_production("stmt", entry) == "<stmt> ::= NUM <expr>"
+
+
+def test_render_production_capturing_nonterminal_default_field():
+    # field "stmt" == "stmt".lower(), so render as <stmt> (no explicit alt)
+    entry = {"alt": None, "production": [
+        {"symbol": "stmt", "field": "stmt"},
+    ]}
+    assert _render_production("block", entry) == "<block> ::= <stmt>"
+
+
+def test_first_first_left_factor_tip_uses_field_aware_rendering():
+    # Capturing symbols in productions should appear with field annotations
+    # in the left-factoring suggestion
+    conflict = {
+        "nonterminal": "expr",
+        "lookahead": "NUM",
+        "conflict_type": "first_first",
+        "productions": [
+            {"alt": None, "production": [
+                {"symbol": "NUM", "field": "n"},
+                {"symbol": "PLUS", "field": None},
+                {"symbol": "expr", "field": "expr"},
+            ]},
+            {"alt": None, "production": [
+                {"symbol": "NUM", "field": "n"},
+                {"symbol": "MINUS", "field": None},
+                {"symbol": "expr", "field": "expr"},
+            ]},
+        ],
+    }
+    msg = format_conflict_message(conflict)
+    # LCP is NUM with field "n" (explicit alt, since "n" != "num")
+    assert "<expr> ::= <NUM>n <exprTail>" in msg
+    # Remainders: PLUS <expr> and MINUS <expr> (field "expr" == default)
+    assert "<exprTail> ::= PLUS <expr>" in msg
+    assert "<exprTail> ::= MINUS <expr>" in msg
 
 
 def test_first_first_empty_lcp_shows_nullable_tip():

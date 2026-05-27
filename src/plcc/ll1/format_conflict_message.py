@@ -30,10 +30,18 @@ def _nt(name: str) -> str:
     return f"<{name}>"
 
 
-def _render_symbol(sym: str) -> str:
-    if _TERMINAL_RE.match(sym):
-        return sym
-    return _nt(sym)
+def _render_symbol(sym: str, field: str | None) -> str:
+    """Render one grammar symbol with optional field annotation.
+
+    - field=None (non-capturing): terminal → bare token, nonterminal → <nt>
+    - field == sym.lower() (default alt): always → <SYM>  (no explicit alt)
+    - field != sym.lower() (explicit alt): → <SYM>field
+    """
+    if field is None:
+        return sym if _TERMINAL_RE.match(sym) else _nt(sym)
+    if field == sym.lower():
+        return _nt(sym)
+    return f"<{sym}>{field}"
 
 
 def _render_production(nt: str, production_entry: dict) -> str:
@@ -41,7 +49,7 @@ def _render_production(nt: str, production_entry: dict) -> str:
     lhs = _nt(nt)
     if not symbols:
         return f"{lhs} ::=    (empty)"
-    rhs = " ".join(_render_symbol(s["symbol"]) for s in symbols)
+    rhs = " ".join(_render_symbol(s["symbol"], s["field"]) for s in symbols)
     return f"{lhs} ::= {rhs}"
 
 
@@ -91,12 +99,12 @@ def _first_first_lines(nt: str, lookahead: str, productions: list[dict]) -> list
         ]
     else:
         lines.append(f"  Tip: left-factor the common prefix:")
-        lcp_str = " ".join(_render_symbol(s["symbol"]) for s in lcp)
+        lcp_str = " ".join(_render_symbol(s["symbol"], s["field"]) for s in lcp)
         lines.append(f"    {_nt(nt)} ::= {lcp_str} {_nt(tail_nt)}")
         for prod_syms in non_empty:
             remainder = prod_syms[len(lcp):]
             if remainder:
-                rhs = " ".join(_render_symbol(s["symbol"]) for s in remainder)
+                rhs = " ".join(_render_symbol(s["symbol"], s["field"]) for s in remainder)
                 lines.append(f"    {_nt(tail_nt)} ::= {rhs}")
             else:
                 lines.append(f"    {_nt(tail_nt)} ::=    (empty)")
