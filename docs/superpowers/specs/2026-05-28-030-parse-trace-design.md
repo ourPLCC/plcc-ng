@@ -47,7 +47,7 @@ class Tracer:
 ```
 
 `parse()` gains `tracer=None`. When present:
-- `_parse_regular`: calls `tracer.predict(sym, lookahead, production_name)`, then `tracer.push(sym)` before the production body, `tracer.complete(rule)` + `tracer.pop()` after.
+- `_parse_regular`: calls `tracer.predict(sym, lookahead, production_name)`, then `tracer.push(sym)` before the production body, `tracer.pop()` + `tracer.complete(rule)` after (pop first so complete records the outer depth, matching its paired predict).
 - `_parse_arbno`: calls `tracer.predict(sym, lookahead, production=None)` at the start of each iteration (no parse table lookup; `production=None` signals "another iteration"), `tracer.push/pop` around each iteration body.
 - `expect()`: calls `tracer.shift(token)` on a match.
 
@@ -90,17 +90,15 @@ In `ParseHandler.feed()`, add a handler for `kind == "parse-step"` that calls `_
 Indentation: `"  " * depth`. Event keyword left-padded to 8 characters.
 
 ```
-predict  expr          lookahead=PLUS → expr:Add
-  predict  expr:Add
-    shift    PLUS '+' [1:1]
-    predict  expr          lookahead=NUM → expr:Num
-      shift    NUM '3' [1:6]
-    complete expr:Num
-    predict  expr          lookahead=NUM → expr:Num
-      shift    NUM '5' [1:8]
-    complete expr:Num
-  complete expr:Add
-complete expr
+predict  expr     lookahead=PLUS → expr:Add
+  shift    PLUS '+' [1:1]
+  predict  expr     lookahead=NUM → expr:Num
+    shift    NUM '3' [1:6]
+  complete expr:Num
+  predict  expr     lookahead=NUM → expr:Num
+    shift    NUM '5' [1:8]
+  complete expr:Num
+complete expr:Add
 ```
 
 The tree is printed immediately after the last trace line (no blank line separator needed; the structural difference is clear).

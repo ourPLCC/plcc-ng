@@ -352,3 +352,80 @@ def test_parse_error_found_is_eof_for_premature_end_of_input():
 def test_parse_error_found_is_none_by_default():
     e = ParseError("something went wrong")
     assert e.found is None
+
+
+from plcc.parser.predictive_parser import Tracer
+
+
+def test_tracer_depth_is_zero_initially():
+    t = Tracer()
+    t.predict("x", "Y", "x")
+    assert t.events[0]["depth"] == 0
+
+
+def test_tracer_push_increases_depth():
+    t = Tracer()
+    t.push("x")
+    t.predict("x", "Y", "x")
+    assert t.events[0]["depth"] == 1
+
+
+def test_tracer_pop_decreases_depth():
+    t = Tracer()
+    t.push("x")
+    t.pop()
+    t.predict("x", "Y", "x")
+    assert t.events[0]["depth"] == 0
+
+
+def test_tracer_predict_event_fields():
+    t = Tracer()
+    t.predict("expr", "NUM", "Num")
+    assert t.events[0] == {
+        "event": "predict", "sym": "expr", "lookahead": "NUM",
+        "production": "Num", "depth": 0,
+    }
+
+
+def test_tracer_predict_none_production():
+    t = Tracer()
+    t.predict("rands", "NUM", None)
+    assert t.events[0]["production"] is None
+
+
+def test_tracer_shift_event_fields():
+    t = Tracer()
+    tok = {"name": "NUM", "lexeme": "42", "source": {"file": "-", "line": 1, "column": 1}}
+    t.shift(tok)
+    e = t.events[0]
+    assert e["event"] == "shift"
+    assert e["name"] == "NUM"
+    assert e["lexeme"] == "42"
+    assert e["source"] == {"file": "-", "line": 1, "column": 1}
+    assert e["depth"] == 0
+
+
+def test_tracer_complete_event_fields():
+    t = Tracer()
+    t.complete("Num")
+    assert t.events[0] == {"event": "complete", "rule": "Num", "depth": 0}
+
+
+def test_tracer_events_returns_copy():
+    t = Tracer()
+    t.predict("x", "Y", "x")
+    copy = t.events
+    copy.clear()
+    assert len(t.events) == 1
+
+
+def test_tracer_records_sequence_of_events():
+    t = Tracer()
+    tok = {"name": "NUM", "lexeme": "1", "source": {}}
+    t.predict("program", "NUM", "program")
+    t.push("program")
+    t.shift(tok)
+    t.pop()
+    t.complete("program")
+    kinds = [e["event"] for e in t.events]
+    assert kinds == ["predict", "shift", "complete"]

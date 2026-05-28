@@ -1,3 +1,44 @@
+class Tracer:
+    def __init__(self):
+        self._events = []
+        self._depth = 0
+
+    def push(self, sym):
+        self._depth += 1
+
+    def pop(self):
+        self._depth -= 1
+
+    def predict(self, sym, lookahead, production):
+        self._events.append({
+            "event": "predict",
+            "sym": sym,
+            "lookahead": lookahead,
+            "production": production,
+            "depth": self._depth,
+        })
+
+    def shift(self, token):
+        self._events.append({
+            "event": "shift",
+            "name": token["name"],
+            "lexeme": token["lexeme"],
+            "source": token.get("source", {}),
+            "depth": self._depth,
+        })
+
+    def complete(self, rule):
+        self._events.append({
+            "event": "complete",
+            "rule": rule,
+            "depth": self._depth,
+        })
+
+    @property
+    def events(self):
+        return list(self._events)
+
+
 class ParseError(Exception):
     def __init__(self, message, source=None, found=None):
         super().__init__(message)
