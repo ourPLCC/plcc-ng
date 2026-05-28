@@ -7,6 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .output import print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
 
@@ -44,7 +45,7 @@ def _render_record(record, show_skips, show_line, show_attempts):
     if kind == "error":
         loc = _location_str(record.get("source", {}))
         message = record.get("message", "unrecognized character")
-        print(f"{loc}: error: {message}", flush=True)
+        print_user_error(f"{loc}: error: {message}")
         return
 
     if kind == "skip" and not show_skips:
