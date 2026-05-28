@@ -168,35 +168,35 @@ def test_print_parse_error_shows_location(capsys):
     record = {"kind": "error", "message": "bad char",
               "source": {"file": "foo.txt", "line": 3, "column": 7}}
     print_parse_error(record, default_stage="plcc-test")
-    _, err = capsys.readouterr()
-    assert "plcc-test: foo.txt:3:7: error: bad char" in err
+    out, _ = capsys.readouterr()
+    assert "plcc-test: foo.txt:3:7: error: bad char" in out
 
 
 def test_print_parse_error_normalises_stdin_to_dash(capsys):
     record = {"kind": "error", "message": "oops",
               "source": {"file": "-", "line": 1, "column": 1}}
     print_parse_error(record, default_stage="plcc-test")
-    _, err = capsys.readouterr()
-    assert "plcc-test: -:1:1: error: oops" in err
+    out, _ = capsys.readouterr()
+    assert "plcc-test: -:1:1: error: oops" in out
 
 
 def test_print_parse_error_shows_stage_and_location_together(capsys):
     record = {"kind": "error", "stage": "plcc-tokens", "message": "unrecognized character 'a'",
               "source": {"file": "-", "line": 1, "column": 1}}
     print_parse_error(record, default_stage="plcc-parse")
-    _, err = capsys.readouterr()
-    assert "plcc-tokens: -:1:1: error: unrecognized character 'a'" in err
+    out, _ = capsys.readouterr()
+    assert "plcc-tokens: -:1:1: error: unrecognized character 'a'" in out
 
 
 def test_print_parse_error_uses_stage_when_no_location(capsys):
     record = {"kind": "error", "message": "bad", "stage": "plcc-tokens"}
     print_parse_error(record, default_stage="plcc-test")
-    _, err = capsys.readouterr()
-    assert "plcc-tokens: error: bad" in err
+    out, _ = capsys.readouterr()
+    assert "plcc-tokens: error: bad" in out
 
 
 def test_print_parse_error_uses_default_stage_when_no_stage_and_no_location(capsys):
     record = {"kind": "error", "message": "bad"}
     print_parse_error(record, default_stage="plcc-test")
-    _, err = capsys.readouterr()
-    assert "plcc-test: error: bad" in err
+    out, _ = capsys.readouterr()
+    assert "plcc-test: error: bad" in out

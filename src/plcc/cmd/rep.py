@@ -8,6 +8,7 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from .pipeline import TreePipeline, print_parse_error
+from .output import print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-rep
@@ -184,4 +185,4 @@ def _render_record(record, verbose_format):
         if value is not None:
             print(value)
     elif record['kind'] == 'error':
-        print(f"error: {record.get('type')}: {record.get('message')}", file=sys.stderr)
+        print_user_error(f"error: {record.get('type')}: {record.get('message')}")

@@ -44,29 +44,29 @@ def test_feed_prints_tree(monkeypatch, handler, capsys):
     assert "program" in out
 
 
-def test_feed_prints_error_to_stderr(monkeypatch, handler, capsys):
+def test_feed_prints_error_to_stdout(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=_error_record("oops"))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"bad\n", "-")
-    _, err = capsys.readouterr()
-    assert "oops" in err
+    out, _ = capsys.readouterr()
+    assert "oops" in out
 
 
-def test_feed_error_shows_location_in_stderr(monkeypatch, handler, capsys):
+def test_feed_error_shows_location_in_stdout(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=_error_record_with_source("bad char", file="-", line=1, col=1))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"@\n", "-")
-    _, err = capsys.readouterr()
-    assert "-:1:1" in err
+    out, _ = capsys.readouterr()
+    assert "-:1:1" in out
 
 
 def test_feed_error_renders_file_line_col(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=_error_record_with_source("bad", file="foo.txt", line=3, col=7))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"bad\n", "-")
-    _, err = capsys.readouterr()
-    assert "foo.txt:3:7" in err
-    assert "bad" in err
+    out, _ = capsys.readouterr()
+    assert "foo.txt:3:7" in out
+    assert "bad" in out
 
 
 def test_feed_mixed_tree_and_error_renders_both(monkeypatch, handler, capsys):
@@ -74,9 +74,9 @@ def test_feed_mixed_tree_and_error_renders_both(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=combined)])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"input\n", "-")
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert "program" in out
-    assert "trailing" in err
+    assert "trailing" in out
     assert handler.had_error is True
 
 
@@ -98,8 +98,8 @@ def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=_error_record("bad char", stage="plcc-tokens"))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"@\n", "-")
-    _, err = capsys.readouterr()
-    assert "plcc-tokens: error: bad char" in err
+    out, _ = capsys.readouterr()
+    assert "plcc-tokens: error: bad char" in out
 
 
 def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):
@@ -114,20 +114,20 @@ def test_feed_returns_true_for_eof_only_error_when_force_submit(monkeypatch, han
     assert handler.feed(b"1+\n", "-", eof=True) is True
 
 
-def test_feed_suppresses_stderr_for_eof_error_when_trial(monkeypatch, handler, capsys):
+def test_feed_suppresses_output_for_eof_error_when_trial(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=_eof_error_record("expected PLUS"))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"1+\n", "-", eof=False)
-    _, err = capsys.readouterr()
-    assert err == ""
+    out, _ = capsys.readouterr()
+    assert out == ""
 
 
-def test_feed_shows_stderr_for_eof_error_when_force_submit(monkeypatch, handler, capsys):
+def test_feed_shows_output_for_eof_error_when_force_submit(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=_eof_error_record("expected PLUS"))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"1+\n", "-", eof=True)
-    _, err = capsys.readouterr()
-    assert "expected PLUS" in err
+    out, _ = capsys.readouterr()
+    assert "expected PLUS" in out
 
 
 def test_feed_returns_true_for_genuine_error_regardless_of_eof_param(monkeypatch, handler):
@@ -195,6 +195,6 @@ def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
     procs = iter([_proc(), _proc(stdout=two_errors)])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
     handler.feed(b"ab\n", "-")
-    _, err = capsys.readouterr()
-    assert "first error" in err
-    assert "second error" not in err
+    out, _ = capsys.readouterr()
+    assert "first error" in out
+    assert "second error" not in out
