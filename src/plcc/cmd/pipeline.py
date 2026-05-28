@@ -2,6 +2,8 @@ import json
 import subprocess
 import sys
 
+from .output import print_user_error
+
 
 def location_str(source):
     file = source.get("file", "")
@@ -20,7 +22,7 @@ def print_parse_error(record, default_stage):
     stage = record.get("stage", default_stage)
     loc = location_str(src)
     prefix = f"{stage}: {loc}" if loc else stage
-    print(f"{prefix}: error: {message}", file=sys.stderr)
+    print_user_error(f"{prefix}: error: {message}")
 
 
 class TreePipeline:
