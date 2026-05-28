@@ -66,8 +66,9 @@ consistency. No behavioural change; the intent becomes explicit.
 (stderr). They switch to assert on `out` (stdout). Test names are unchanged.
 
 **`rep_test.py`:** Tests for parse/scan errors currently assert on `err`. They switch to
-`out`. Tests that assert tool-failure messages on `err` (e.g., "interpreter exited
-unexpectedly") are unchanged.
+`out`. Several test names reference "stderr" (e.g., `test_feed_error_shows_location_in_stderr`)
+and are renamed to match the new stream. Tests that assert tool-failure messages on `err`
+(e.g., "interpreter exited unexpectedly") are unchanged.
 
 **New unit tests for `output.py`:** A small test file (`output_test.py`) confirms that
 `print_user_error()` writes to stdout and not stderr.
