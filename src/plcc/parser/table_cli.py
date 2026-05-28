@@ -5,7 +5,7 @@ import sys
 from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .predictive_parser import parse, ParseError
+from .predictive_parser import parse, ParseError, Tracer
 
 __doc__ = """plcc-parser-table
     Table-driven LL(1) parser. Reads token JSONL from stdin, emits a parse tree.
@@ -15,6 +15,7 @@ Usage:
 
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
+    -t --trace              Emit parse-step records tracing predict/shift/complete.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -34,6 +35,7 @@ def main(argv=None):
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-parser-table", Events, args)
     ll1_path = args["--ll1"]
+    trace = args["--trace"]
     verbose.emit(Events.STARTED, ll1_path=ll1_path)
 
     # Load ll1.json
@@ -73,8 +75,9 @@ def main(argv=None):
     attempted = False
     while cursor < len(tokens) and tokens[cursor]["name"] != "eof":
         attempted = True
+        tracer = Tracer()
         try:
-            tree, consumed = parse(ll1, tokens[cursor:])
+            tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)
             if consumed == 0:
                 # Grammar matched epsilon but couldn't incorporate this token;
                 # emit an error record so the user sees feedback, then skip it.
@@ -88,10 +91,13 @@ def main(argv=None):
                 print(json.dumps(record), flush=True)
                 cursor += 1
                 continue
+            if trace:
+                _emit_trace(tracer.events)
             verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
             print(json.dumps(tree), flush=True)
             cursor += consumed
         except ParseError as e:
+            _emit_trace(tracer.events)
             record = {
                 "kind": "error",
                 "message": str(e),
@@ -105,12 +111,16 @@ def main(argv=None):
 
     if not attempted and cursor < len(tokens):
         # No non-sentinel tokens: try one epsilon parse for grammars that accept empty input
+        tracer = Tracer()
         try:
-            tree, consumed = parse(ll1, tokens[cursor:])
+            tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)
             if consumed == 0:
+                if trace:
+                    _emit_trace(tracer.events)
                 verbose.emit(Events.COMPLETE, token_count=0, rule_count=_count_rules(tree))
                 print(json.dumps(tree), flush=True)
         except ParseError as e:
+            _emit_trace(tracer.events)
             record = {
                 "kind": "error",
                 "message": str(e),
@@ -122,6 +132,11 @@ def main(argv=None):
             print(json.dumps(record), flush=True)
 
     verbose.emit(Events.FINISHED, token_count=len(tokens))
+
+
+def _emit_trace(events):
+    for event in events:
+        print(json.dumps({"kind": "parse-step", **event}), flush=True)
 
 
 def _count_rules(node):
