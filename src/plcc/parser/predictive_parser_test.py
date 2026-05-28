@@ -429,3 +429,107 @@ def test_tracer_records_sequence_of_events():
     t.complete("program")
     kinds = [e["event"] for e in t.events]
     assert kinds == ["predict", "shift", "complete"]
+
+
+def test_parse_with_tracer_predict_fired():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    assert any(e["event"] == "predict" for e in t.events)
+
+
+def test_parse_with_tracer_predict_sym_is_start():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    predicts = [e for e in t.events if e["event"] == "predict"]
+    assert predicts[0]["sym"] == "program"
+
+
+def test_parse_with_tracer_predict_production_is_sym_when_no_alt():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    predicts = [e for e in t.events if e["event"] == "predict"]
+    assert predicts[0]["production"] == "program"
+
+
+def test_parse_with_tracer_predict_production_is_alt_name():
+    t = Tracer()
+    parse(_PREFIX_LL1, [_tok("NUM", "42")], tracer=t)
+    predicts = [e for e in t.events if e["event"] == "predict"]
+    assert predicts[0]["production"] == "Num"
+
+
+def test_parse_with_tracer_shift_fired():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    assert any(e["event"] == "shift" for e in t.events)
+
+
+def test_parse_with_tracer_shift_carries_lexeme():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    shifts = [e for e in t.events if e["event"] == "shift"]
+    assert shifts[0]["lexeme"] == "42"
+
+
+def test_parse_with_tracer_complete_fired():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    assert any(e["event"] == "complete" for e in t.events)
+
+
+def test_parse_with_tracer_complete_rule_matches_predict_production():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    predicts = [e for e in t.events if e["event"] == "predict"]
+    completes = [e for e in t.events if e["event"] == "complete"]
+    assert predicts[0]["production"] == completes[0]["rule"]
+
+
+def test_parse_with_no_tracer_still_works():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert tree["kind"] == "tree"
+
+
+def test_parse_with_tracer_nested_depths():
+    # _EXPR_LL1: E → t:Term; Term → n:NUM
+    # predict("E", ...) depth=0, predict("Term", ...) depth=1
+    t = Tracer()
+    parse(_EXPR_LL1, [_tok("NUM", "42")], tracer=t)
+    predicts = [e for e in t.events if e["event"] == "predict"]
+    assert predicts[0]["sym"] == "E"
+    assert predicts[0]["depth"] == 0
+    assert predicts[1]["sym"] == "Term"
+    assert predicts[1]["depth"] == 1
+
+
+def test_parse_with_tracer_predict_and_complete_same_depth():
+    t = Tracer()
+    parse(_TRIVIAL_LL1, [_tok("NUM", "42")], tracer=t)
+    predict_depth = next(e["depth"] for e in t.events if e["event"] == "predict")
+    complete_depth = next(e["depth"] for e in t.events if e["event"] == "complete")
+    assert predict_depth == complete_depth
+
+
+def test_parse_with_tracer_events_on_error_include_partial_trace():
+    # _ADDITION_LL1: program → NUM PLUS NUM; input [NUM] only → ParseError
+    # predict and shift for NUM were recorded before the error
+    t = Tracer()
+    with pytest.raises(ParseError):
+        parse(_ADDITION_LL1, [_tok("NUM", "1")], tracer=t)
+    assert any(e["event"] == "predict" for e in t.events)
+    assert any(e["event"] == "shift" for e in t.events)
+
+
+def test_parse_with_tracer_arbno_predict_per_iteration():
+    # _RANDS_LL1: rands **= expr +COMMA; parse 2 exprs → 2 arbno predicts
+    t = Tracer()
+    parse(_RANDS_LL1, [_tok("NUM", "1"), _tok("COMMA", ","), _tok("NUM", "2")], tracer=t)
+    arbno_predicts = [e for e in t.events if e["event"] == "predict" and e["sym"] == "rands"]
+    assert len(arbno_predicts) == 2
+
+
+def test_parse_with_tracer_arbno_predict_production_is_none():
+    t = Tracer()
+    parse(_RANDS_LL1, [_tok("NUM", "1")], tracer=t)
+    arbno_predicts = [e for e in t.events if e["event"] == "predict" and e["sym"] == "rands"]
+    assert arbno_predicts[0]["production"] is None

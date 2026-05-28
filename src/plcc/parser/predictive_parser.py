@@ -84,12 +84,13 @@ class NodeBuilder:
         }
 
 
-def parse(ll1: dict, tokens: list) -> tuple:
+def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
     """
     Parse tokens against the LL(1) parse table.
 
     ll1    — dict with keys: start_symbol, parse_table, arbno (optional)
     tokens — list of token dicts (may include a trailing 'eof' sentinel)
+    tracer — optional Tracer; records predict/shift/complete events when provided
 
     Returns (tree_dict, consumed_count).
     Raises ParseError on any syntax error.
@@ -117,7 +118,10 @@ def parse(ll1: dict, tokens: list) -> tuple:
                 source=tok["source"],
                 found=tok["name"],
             )
-        return advance()
+        tok = advance()
+        if tracer:
+            tracer.shift(tok)
+        return tok
 
     def is_nonterminal(sym):
         return sym in parse_table or sym in arbno
@@ -142,7 +146,11 @@ def parse(ll1: dict, tokens: list) -> tuple:
                 source=current()["source"],
                 found=lookahead,
             )
-        builder = NodeBuilder(production.get("alt") or sym)
+        production_name = production.get("alt") or sym
+        if tracer:
+            tracer.predict(sym, lookahead, production_name)
+            tracer.push(sym)
+        builder = NodeBuilder(production_name)
         for entry in production["production"]:
             s, f = entry["symbol"], entry["field"]
             if is_nonterminal(s):
@@ -155,6 +163,9 @@ def parse(ll1: dict, tokens: list) -> tuple:
                 builder.note_token(tok)
                 if f is not None:
                     builder.children.append([f, tok])
+        if tracer:
+            tracer.pop()
+            tracer.complete(production_name)
         return builder
 
     def _parse_arbno(sym):
@@ -166,6 +177,8 @@ def parse(ll1: dict, tokens: list) -> tuple:
         list_fields = {item["field"]: [] for item in rhs}
 
         def parse_iteration():
+            if tracer:
+                tracer.push(sym)
             for item in rhs:
                 if item["is_terminal"]:
                     tok = expect(item["symbol"])
@@ -175,15 +188,23 @@ def parse(ll1: dict, tokens: list) -> tuple:
                     child_builder = parse_nt(item["symbol"])
                     builder.note_span_from(child_builder)
                     list_fields[item["field"]].append(child_builder.to_node())
+            if tracer:
+                tracer.pop()
 
         if current()["name"] in lookahead_set:
+            if tracer:
+                tracer.predict(sym, current()["name"], None)
             parse_iteration()
             if separator:
                 while current()["name"] == separator:
                     expect(separator)
+                    if tracer:
+                        tracer.predict(sym, current()["name"], None)
                     parse_iteration()
             else:
                 while current()["name"] in lookahead_set:
+                    if tracer:
+                        tracer.predict(sym, current()["name"], None)
                     parse_iteration()
 
         for field, values in list_fields.items():
