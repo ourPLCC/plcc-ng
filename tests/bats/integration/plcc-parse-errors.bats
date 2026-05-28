@@ -14,9 +14,9 @@ EOF
     run --separate-stderr bash -c "echo 'abc' | plcc-parse --grammar-file='$tmp/trivial.plcc'"
     [ "$status" -ne 0 ]
     # User-facing error: plcc-tokens is responsible, rendered via reformat_child_events
-    [[ "$stderr" == *"plcc-tokens"* ]]
-    [[ "$stderr" == *"error"* ]]
+    [[ "$output" == *"plcc-tokens"* ]]
+    [[ "$output" == *"error"* ]]
     # plcc-trees's cascading error must NOT appear
-    ! [[ "$stderr" == *"plcc-trees:"*"error"* ]]
+    ! [[ "$output" == *"plcc-trees:"*"error"* ]]
     rm -rf "$tmp"
 }
