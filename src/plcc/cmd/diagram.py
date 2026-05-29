@@ -14,7 +14,8 @@ Usage:
     plcc-diagram [-v ...] [options]
 
 Options:
-    --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
+    --grammar-file=<path>   Grammar to build from. Once set, remembered for subsequent
+                            commands until changed. Defaults to grammar.plcc on first use.
     --format=FMT            Diagram format [default: plantuml].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
@@ -43,17 +44,19 @@ def main(argv=None):
     grammar_file = args['--grammar-file']
     fmt = args['--format']
 
-    if not os.path.exists(grammar_file):
+    if grammar_file is not None and not os.path.exists(grammar_file):
         print(f"plcc-diagram: grammar file not found: {grammar_file}", file=sys.stderr)
         print(file=sys.stderr)
         print("Run 'plcc-diagram --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
-    verbose.emit(Events.STARTED, message=f"generating diagram for {grammar_file}")
+    verbose.emit(Events.STARTED, message="generating diagram")
     child_flags = verbose.child_flags()
 
     make_result = subprocess.run(
-        ['plcc-make', '--through=model', f'--grammar-file={grammar_file}'] + child_flags,
+        ['plcc-make', '--through=model']
+        + ([f'--grammar-file={grammar_file}'] if grammar_file is not None else [])
+        + child_flags,
         stderr=subprocess.PIPE,
     )
     if make_result.stderr:
