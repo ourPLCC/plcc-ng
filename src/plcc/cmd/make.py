@@ -82,6 +82,14 @@ def main(argv=None):
         )
         sys.exit(1)
 
+    if (
+        explicit_grammar is not None
+        and stored_grammar is not None
+        and explicit_grammar != stored_grammar
+    ):
+        shutil.rmtree(build_dir)
+        build_dir.mkdir()
+
     if not os.path.exists(grammar):
         print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
         sys.exit(1)

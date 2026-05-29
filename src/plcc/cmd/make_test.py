@@ -231,3 +231,27 @@ def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys)
     assert "a.plcc" in err
     # Must NOT fall back to grammar.plcc
     assert "grammar.plcc" not in err
+
+
+def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "marker.txt").write_text("from old grammar")
+    write_grammar(build, "old.plcc")
+    (tmp_path / "new.plcc").write_text("")  # valid but empty grammar
+    run_main(["--grammar-file=new.plcc"])
+    # build/ was wiped when grammar changed, marker should not exist
+    assert not (build / "marker.txt").exists()
+
+
+def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "marker.txt").write_text("from current grammar")
+    write_grammar(build, "same.plcc")
+    (tmp_path / "same.plcc").write_text("")  # valid but empty grammar
+    run_main(["--grammar-file=same.plcc"])
+    # No wipe — marker is still present because grammar didn't change
+    assert (build / "marker.txt").exists()
