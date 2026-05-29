@@ -80,3 +80,61 @@ teardown() {
     [ "$status" -eq 0 ]
     [[ "$output" == *"program"* ]]
 }
+
+@test "plcc-parse --trace shows predict in output" {
+    run bash -c "echo '42' | plcc-parse --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"predict"* ]]
+}
+
+@test "plcc-parse --trace shows shift in output" {
+    run bash -c "echo '42' | plcc-parse --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"shift"* ]]
+    [[ "$output" == *"42"* ]]
+}
+
+@test "plcc-parse --trace shows complete in output" {
+    run bash -c "echo '42' | plcc-parse --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"complete"* ]]
+}
+
+@test "plcc-parse --trace trace appears before tree" {
+    run bash -c "echo '42' | plcc-parse --trace"
+    [ "$status" -eq 0 ]
+    predict_line=$(echo "$output" | grep -n "predict" | head -1 | cut -d: -f1)
+    program_line=$(echo "$output" | grep -n "^program" | head -1 | cut -d: -f1)
+    [ "$predict_line" -lt "$program_line" ]
+}
+
+@test "plcc-parse -t is short for --trace" {
+    run bash -c "echo '42' | plcc-parse -t"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"predict"* ]]
+}
+
+@test "plcc-parse no trace on success without --trace" {
+    run bash -c "echo '42' | plcc-parse"
+    [ "$status" -eq 0 ]
+    [[ "$output" != *"predict"* ]]
+    [[ "$output" != *"shift"* ]]
+    [[ "$output" != *"complete"* ]]
+}
+
+@test "plcc-parse shows trace on parse failure without --trace" {
+    cp "${FIXTURES}/arith.plcc" grammar.plcc
+    run bash -c "cd '${WORK_DIR}' && echo '1 +' | plcc-parse"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"predict"* ]]
+    [[ "$output" == *"shift"* ]]
+}
+
+@test "plcc-parse failure trace appears before error message" {
+    cp "${FIXTURES}/arith.plcc" grammar.plcc
+    run bash -c "cd '${WORK_DIR}' && echo '1 +' | plcc-parse"
+    [ "$status" -ne 0 ]
+    predict_line=$(echo "$output" | grep -n "predict" | head -1 | cut -d: -f1)
+    error_line=$(echo "$output" | grep -n "error:" | head -1 | cut -d: -f1)
+    [ "$predict_line" -lt "$error_line" ]
+}
