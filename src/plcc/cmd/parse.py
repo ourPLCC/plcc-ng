@@ -21,7 +21,8 @@ Arguments:
 Options:
     -h --help                   Show this message.
     -t --trace                  Show step-by-step trace of the parse algorithm.
-    --grammar-file=<path>       Path to the PLCC grammar file [default: grammar.plcc].
+    --grammar-file=<path>       Grammar to build from. Once set, remembered for subsequent
+                                commands until changed. Defaults to grammar.plcc on first use.
 """ + VERBOSE_OPTIONS
 
 
@@ -66,19 +67,21 @@ def main(argv=None):
     trace = args["--trace"]
     sources = args["SOURCE"]
 
-    if not os.path.exists(grammar_file):
+    if grammar_file is not None and not os.path.exists(grammar_file):
         print(f"plcc-parse: grammar file not found: {grammar_file}", file=sys.stderr)
         print(file=sys.stderr)
         print("Run 'plcc-parse --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
-    verbose.emit(Events.STARTED, message=f"parsing with {grammar_file}")
+    verbose.emit(Events.STARTED, message="parsing")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
     trees_flags = child_flags + (["--trace"] if trace else [])
 
     # Ensure build/ is current for the parse level
     make_result = subprocess.run(
-        ['plcc-make', '--through=parse', f'--grammar-file={grammar_file}'] + child_flags,
+        ['plcc-make', '--through=parse']
+        + ([f'--grammar-file={grammar_file}'] if grammar_file is not None else [])
+        + child_flags,
         stderr=subprocess.PIPE,
     )
     if make_result.stderr:
