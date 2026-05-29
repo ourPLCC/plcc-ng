@@ -2,6 +2,7 @@ import pytest
 import docopt
 
 from .make import main as run_main, validate_tool_name, _report_ll1_failure
+from plcc.build.grammar import write_grammar
 
 
 def test_help(capsys):
@@ -191,3 +192,66 @@ def test_report_ll1_failure_blank_line_between_conflicts(capsys):
     # A blank separator means the last line of block 1, then \n\n, then LL(1) conflict:.
     blocks = err.split("\n\nLL(1) conflict:")
     assert len(blocks) == 3  # header + conflict1 + conflict2
+
+
+def test_no_grammar_flag_no_stored_falls_back_to_grammar_plcc(tmp_path, monkeypatch, capsys):
+    # Fresh directory, no grammar.plcc → error names grammar.plcc
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main([])
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert "grammar.plcc" in err
+
+
+def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
+    # build/.grammar points to a file that does not exist
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    write_grammar(build, "missing.plcc")
+    with pytest.raises(SystemExit) as exc:
+        run_main([])
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert "grammar file not found" in err
+    assert "missing.plcc" in err
+    assert "--grammar-file" in err
+
+
+def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys):
+    # build/.grammar set to a.plcc (missing) — error names a.plcc, not grammar.plcc
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    write_grammar(build, "a.plcc")
+    with pytest.raises(SystemExit):
+        run_main([])
+    _, err = capsys.readouterr()
+    assert "a.plcc" in err
+    # Must NOT fall back to grammar.plcc
+    assert "grammar.plcc" not in err
+
+
+def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "marker.txt").write_text("from old grammar")
+    write_grammar(build, "old.plcc")
+    (tmp_path / "new.plcc").write_text("")  # valid but empty grammar
+    run_main(["--grammar-file=new.plcc"])
+    # build/ was wiped when grammar changed, marker should not exist
+    assert not (build / "marker.txt").exists()
+
+
+def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "marker.txt").write_text("from current grammar")
+    write_grammar(build, "same.plcc")
+    (tmp_path / "same.plcc").write_text("")  # valid but empty grammar
+    run_main(["--grammar-file=same.plcc"])
+    # No wipe — marker is still present because grammar didn't change
+    assert (build / "marker.txt").exists()

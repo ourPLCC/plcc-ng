@@ -29,7 +29,8 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-    --grammar-file=<path>       Path to the PLCC grammar file [default: grammar.plcc].
+    --grammar-file=<path>       Grammar to build from. Once set, remembered for subsequent
+                                commands until changed. Defaults to grammar.plcc on first use.
     -t --trace                  Show detailed scanning output.
 """ + VERBOSE_OPTIONS
 
@@ -137,18 +138,20 @@ def main(argv=None):
 
     trace = args["--trace"]
 
-    if not os.path.exists(grammar_file):
+    if grammar_file is not None and not os.path.exists(grammar_file):
         print(f"plcc-scan: grammar file not found: {grammar_file}", file=sys.stderr)
         print(file=sys.stderr)
         print("Run 'plcc-scan --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
-    verbose.emit(Events.STARTED, message=f"scanning with {grammar_file}")
+    verbose.emit(Events.STARTED, message="scanning")
     child_flags = verbose.child_flags()
 
     # Ensure build/ is current for the scan level
     make_result = subprocess.run(
-        ['plcc-make', '--through=scan', f'--grammar-file={grammar_file}'] + child_flags,
+        ['plcc-make', '--through=scan']
+        + ([f'--grammar-file={grammar_file}'] if grammar_file is not None else [])
+        + child_flags,
         stderr=None,
     )
     if make_result.returncode != 0:

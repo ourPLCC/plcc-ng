@@ -3,6 +3,7 @@ import enum
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,7 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
+from plcc.build.grammar import read_grammar, write_grammar
 from plcc.ll1.format_conflict_message import format_conflict_message
 
 __doc__ = """plcc-make
@@ -23,7 +25,8 @@ Usage:
     plcc-make [-v ...] [options]
 
 Options:
-    --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
+    --grammar-file=<path>   Grammar to build from. Once set, remembered for subsequent
+                            commands until changed. Defaults to grammar.plcc on first use.
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
@@ -49,9 +52,18 @@ def main(argv=None):
         sys.exit(1)
 
     verbose = VerboseContext.from_args("plcc-make", Events, args)
-    grammar = args['--grammar-file']
+    explicit_grammar = args['--grammar-file']
     through = args['--through']
     build_dir = Path('build')
+
+    stored_grammar = read_grammar(build_dir) if build_dir.is_dir() else None
+
+    if explicit_grammar is not None:
+        grammar = explicit_grammar
+    elif stored_grammar is not None:
+        grammar = stored_grammar
+    else:
+        grammar = 'grammar.plcc'
 
     if through not in ('scan', 'parse', 'model', 'all'):
         print(
@@ -61,11 +73,28 @@ def main(argv=None):
         )
         sys.exit(1)
 
+    if explicit_grammar is None and stored_grammar is not None and not os.path.exists(grammar):
+        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
+        print(
+            "(the active grammar was set by a previous run; "
+            "use --grammar-file to specify a different one)",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     if not os.path.exists(grammar):
         print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
         sys.exit(1)
 
-    verbose.emit(Events.STARTED, message=f"building {grammar}")
+    if (
+        explicit_grammar is not None
+        and stored_grammar is not None
+        and explicit_grammar != stored_grammar
+    ):
+        shutil.rmtree(build_dir)
+        build_dir.mkdir()
+
+    verbose.emit(Events.STARTED, message=f"grammar: {grammar}")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     build_dir.mkdir(exist_ok=True)
@@ -113,6 +142,7 @@ def main(argv=None):
 
     if is_current(sentinel, new_hash, required_stages):
         os.unlink(tmp_spec)
+        write_grammar(build_dir, grammar)
         verbose.emit(Events.FINISHED, message="build is current")
         return
 
@@ -162,6 +192,7 @@ def main(argv=None):
             )
 
     write_sentinel(build_dir, new_hash, required_stages)
+    write_grammar(build_dir, grammar)
     verbose.emit(Events.FINISHED, message="done")
 
 
