@@ -101,6 +101,10 @@ def main(argv=None):
 
 
 def _print_tree(node, indent):
+    if isinstance(node, list):
+        for item in node:
+            _print_tree(item, indent)
+        return
     prefix = "  " * indent
     kind = node.get("kind", "?")
     if kind == "tree":

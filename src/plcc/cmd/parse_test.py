@@ -240,3 +240,20 @@ def test_feed_parse_step_depth_indented(monkeypatch, handler, capsys):
     out, _ = capsys.readouterr()
     shift_line = next(l for l in out.splitlines() if "shift" in l)
     assert shift_line.startswith("    ")  # 4 spaces for depth=2
+
+
+def test_feed_prints_arbno_children(monkeypatch, handler, capsys):
+    # Arbno fields carry a list of nodes: [field, [node, node, ...]].
+    # _print_tree must iterate the list rather than calling .get() on it.
+    arbno_tree = json.dumps({
+        "kind": "tree", "rule": "prog", "source": {},
+        "children": [["s", [
+            {"kind": "tree", "rule": "stmt", "source": {}, "children": []},
+            {"kind": "tree", "rule": "stmt", "source": {}, "children": []},
+        ]]],
+    }).encode() + b"\n"
+    procs = iter([_proc(), _proc(stdout=arbno_tree)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"a = 1 b = 2\n", "-")
+    out, _ = capsys.readouterr()
+    assert out.count("stmt") == 2
