@@ -20,6 +20,7 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
+    -t --trace                  Show step-by-step trace of the parse algorithm.
     --grammar-file=<path>       Path to the PLCC grammar file [default: grammar.plcc].
 """ + VERBOSE_OPTIONS
 
@@ -39,7 +40,9 @@ class ParseHandler:
         if items is None:
             return False
         for record, _ in items:
-            if record.get("kind") == "error":
+            if record.get("kind") == "parse-step":
+                _print_parse_step(record)
+            elif record.get("kind") == "error":
                 print_parse_error(record, default_stage="plcc-parse")
                 self.had_error = True
                 break
@@ -60,6 +63,7 @@ def main(argv=None):
         sys.exit(1)
     verbose = VerboseContext.from_args("plcc-parse", Events, args)
     grammar_file = args["--grammar-file"]
+    trace = args["--trace"]
     sources = args["SOURCE"]
 
     if not os.path.exists(grammar_file):
@@ -70,6 +74,7 @@ def main(argv=None):
 
     verbose.emit(Events.STARTED, message=f"parsing with {grammar_file}")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+    tree_flags = child_flags + (["--trace"] if trace else [])
 
     # Ensure build/ is current for the parse level
     make_result = subprocess.run(
@@ -86,7 +91,7 @@ def main(argv=None):
     ll1_path = os.path.join('build', 'll1.json')
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
-                           child_flags=child_flags, verbose=verbose)
+                           child_flags=tree_flags, verbose=verbose)
     runner = SourceRunner(submit_on=SubmitOn.EOF)
     completed = runner.run(sources, handler)
 
@@ -117,3 +122,27 @@ def _print_tree(node, indent):
         loc = location_str(source)
         message = node.get("message", "unknown error")
         print(f"{prefix}{loc}: error: {message}")
+
+
+def _print_parse_step(record):
+    depth = record.get("depth", 0)
+    indent = "  " * depth
+    event = record.get("event", "?")
+    if event == "predict":
+        sym = record.get("sym", "?")
+        lookahead = record.get("lookahead", "?")
+        production = record.get("production")
+        if production is None:
+            print(f"{indent}{'predict':<9}{sym}  lookahead={lookahead} → (iteration)", flush=True)
+        else:
+            print(f"{indent}{'predict':<9}{sym}  lookahead={lookahead} → {production}", flush=True)
+    elif event == "shift":
+        name = record.get("name", "?")
+        lexeme = record.get("lexeme", "?")
+        source = record.get("source", {})
+        loc = location_str(source)
+        loc_str = f" [{loc}]" if loc else ""
+        print(f"{indent}{'shift':<9}{name} '{lexeme}'{loc_str}", flush=True)
+    elif event == "complete":
+        rule = record.get("rule", "?")
+        print(f"{indent}{'complete':<9}{rule}", flush=True)

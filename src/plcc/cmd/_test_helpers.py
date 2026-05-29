@@ -39,3 +39,15 @@ def _eof_error_record(msg="unexpected end of input", stage="plcc-parser-table",
         "found": "eof",
         "source": {"file": "-", "line": line, "column": col},
     }).encode() + b"\n"
+
+
+def _parse_step_record(event="predict", sym="program", lookahead="NUM",
+                        production="program", depth=0):
+    return json.dumps({
+        "kind": "parse-step",
+        "event": event,
+        "sym": sym,
+        "lookahead": lookahead,
+        "production": production,
+        "depth": depth,
+    }).encode() + b"\n"
