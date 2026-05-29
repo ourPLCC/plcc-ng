@@ -21,7 +21,8 @@ Arguments:
     SOURCE      Source files to evaluate before entering interactive mode.
 
 Options:
-    --grammar-file=<path>   Path to the PLCC grammar file [default: grammar.plcc].
+    --grammar-file=<path>   Grammar to build from. Once set, remembered for subsequent
+                            commands until changed. Defaults to grammar.plcc on first use.
     --tool=NAME             Semantic section to run (inferred if only one exists).
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
@@ -74,17 +75,19 @@ def main(argv=None):
     tool_name = args['--tool']
     verbose_format = args['--verbose-format'] or 'text'
 
-    if not os.path.exists(grammar_file):
+    if grammar_file is not None and not os.path.exists(grammar_file):
         print(f"plcc-rep: grammar file not found: {grammar_file}", file=sys.stderr)
         print(file=sys.stderr)
         print("Run 'plcc-rep --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
-    verbose.emit(Events.STARTED, message=f'starting rep with {grammar_file}')
+    verbose.emit(Events.STARTED, message='starting')
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
-        ['plcc-make', f'--grammar-file={grammar_file}'] + child_flags,
+        ['plcc-make']
+        + ([f'--grammar-file={grammar_file}'] if grammar_file is not None else [])
+        + child_flags,
         stderr=subprocess.PIPE,
     )
     if make_result.stderr:
