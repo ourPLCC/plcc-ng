@@ -55,9 +55,9 @@ teardown() {
     [[ "$output" == *"error"* ]]
 }
 
-@test "plcc-scan brief usage mentions --help" {
+@test "plcc-scan reports grammar file error from plcc-make" {
     run --separate-stderr bash -c "cd '${WORK_DIR}' && rm grammar.plcc && plcc-scan"
-    [[ "$stderr" == *"--help"* ]]
+    [[ "$stderr" == *"grammar file not found"* ]]
 }
 
 @test "plcc-scan accepts '-' as stdin" {
