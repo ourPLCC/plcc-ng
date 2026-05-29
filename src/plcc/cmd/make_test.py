@@ -2,6 +2,7 @@ import pytest
 import docopt
 
 from .make import main as run_main, validate_tool_name, _report_ll1_failure
+from plcc.build.grammar import write_grammar
 
 
 def test_help(capsys):
@@ -191,3 +192,42 @@ def test_report_ll1_failure_blank_line_between_conflicts(capsys):
     # A blank separator means the last line of block 1, then \n\n, then LL(1) conflict:.
     blocks = err.split("\n\nLL(1) conflict:")
     assert len(blocks) == 3  # header + conflict1 + conflict2
+
+
+def test_no_grammar_flag_no_stored_falls_back_to_grammar_plcc(tmp_path, monkeypatch, capsys):
+    # Fresh directory, no grammar.plcc → error names grammar.plcc
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main([])
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert "grammar.plcc" in err
+
+
+def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
+    # build/.grammar points to a file that does not exist
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    write_grammar(build, "missing.plcc")
+    with pytest.raises(SystemExit) as exc:
+        run_main([])
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert "grammar file not found" in err
+    assert "missing.plcc" in err
+    assert "--grammar-file" in err
+
+
+def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys):
+    # build/.grammar set to a.plcc (missing) — error names a.plcc, not grammar.plcc
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    build.mkdir()
+    write_grammar(build, "a.plcc")
+    with pytest.raises(SystemExit):
+        run_main([])
+    _, err = capsys.readouterr()
+    assert "a.plcc" in err
+    # Must NOT fall back to grammar.plcc
+    assert "grammar.plcc" not in err
