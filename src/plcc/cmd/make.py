@@ -56,7 +56,7 @@ def main(argv=None):
     through = args['--through']
     build_dir = Path('build')
 
-    stored_grammar = read_grammar(build_dir) if build_dir.exists() else None
+    stored_grammar = read_grammar(build_dir) if build_dir.is_dir() else None
 
     if explicit_grammar is not None:
         grammar = explicit_grammar
@@ -82,6 +82,10 @@ def main(argv=None):
         )
         sys.exit(1)
 
+    if not os.path.exists(grammar):
+        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
+        sys.exit(1)
+
     if (
         explicit_grammar is not None
         and stored_grammar is not None
@@ -89,10 +93,6 @@ def main(argv=None):
     ):
         shutil.rmtree(build_dir)
         build_dir.mkdir()
-
-    if not os.path.exists(grammar):
-        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
-        sys.exit(1)
 
     verbose.emit(Events.STARTED, message=f"grammar: {grammar}")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
@@ -142,6 +142,7 @@ def main(argv=None):
 
     if is_current(sentinel, new_hash, required_stages):
         os.unlink(tmp_spec)
+        write_grammar(build_dir, grammar)
         verbose.emit(Events.FINISHED, message="build is current")
         return
 

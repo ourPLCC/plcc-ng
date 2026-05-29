@@ -7,7 +7,7 @@ _GRAMMAR_FILE = ".grammar"
 def read_grammar(build_dir):
     p = Path(build_dir) / _GRAMMAR_FILE
     try:
-        return p.read_text().strip()
+        return p.read_text().strip() or None
     except FileNotFoundError:
         return None
 
