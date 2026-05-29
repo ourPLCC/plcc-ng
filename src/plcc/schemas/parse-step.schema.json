@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ParseStepRecord",
+  "description": "One JSONL record emitted by plcc-parser-table to trace LL(1) parsing. Emitted before the tree record when --trace is active, or unconditionally before an error record on parse failure.",
+  "definitions": {
+    "SourcePosition": {
+      "type": "object",
+      "properties": {
+        "file":   { "type": "string" },
+        "line":   { "type": "integer", "minimum": 0 },
+        "column": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "type": "object",
+  "required": ["kind", "event", "depth"],
+  "properties": {
+    "kind":  { "type": "string", "const": "parse-step" },
+    "event": { "type": "string", "enum": ["predict", "shift", "complete"] },
+    "depth": { "type": "integer", "minimum": 0 }
+  },
+  "oneOf": [
+    {
+      "title": "PredictStep",
+      "description": "The parser selects a production for a nonterminal based on the current lookahead token.",
+      "required": ["sym", "lookahead"],
+      "properties": {
+        "event":      { "const": "predict" },
+        "sym":        { "type": "string", "description": "The nonterminal being predicted." },
+        "lookahead":  { "type": "string", "description": "The current lookahead token name." },
+        "production": {
+          "description": "The chosen production rule name, or null for arbno iterations.",
+          "oneOf": [{ "type": "string" }, { "type": "null" }]
+        }
+      }
+    },
+    {
+      "title": "ShiftStep",
+      "description": "The parser matches and consumes a terminal token.",
+      "required": ["name", "lexeme", "source"],
+      "properties": {
+        "event":  { "const": "shift" },
+        "name":   { "type": "string", "description": "The token type name." },
+        "lexeme": { "type": "string", "description": "The matched source text." },
+        "source": { "$ref": "#/definitions/SourcePosition" }
+      }
+    },
+    {
+      "title": "CompleteStep",
+      "description": "The parser finishes processing a production rule.",
+      "required": ["rule"],
+      "properties": {
+        "event": { "const": "complete" },
+        "rule":  { "type": "string", "description": "The production rule name that was completed." }
+      }
+    }
+  ]
+}

@@ -76,3 +76,29 @@ assert len(records) >= 1, 'expected at least one output record'
 assert all(r['kind'] == 'error' for r in records), f'all records should be errors, got {records}'
 "
 }
+
+@test "plcc-parser-table --trace emits parse-step JSONL records" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}' --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *'"kind": "parse-step"'* ]] || [[ "$output" == *'"kind":"parse-step"'* ]]
+}
+
+@test "plcc-parser-table --trace parse-step records come before tree record" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}' --trace"
+    [ "$status" -eq 0 ]
+    first_step=$(echo "$output" | grep -n "parse-step" | head -1 | cut -d: -f1)
+    tree_line=$(echo "$output" | grep -n '"kind":"tree"\|"kind": "tree"' | head -1 | cut -d: -f1)
+    [ "$first_step" -lt "$tree_line" ]
+}
+
+@test "plcc-parser-table without --trace no parse-step on success" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+    [ "$status" -eq 0 ]
+    [[ "$output" != *"parse-step"* ]]
+}
+
+@test "plcc-parser-table -t is short for --trace" {
+    run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}' -t"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"parse-step"* ]]
+}

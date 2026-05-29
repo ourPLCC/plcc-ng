@@ -28,10 +28,11 @@ def print_parse_error(record, default_stage):
 class TreePipeline:
     """Runs plcc-tokens | plcc-trees and classifies the output."""
 
-    def __init__(self, spec_path, ll1_path, child_flags=None, verbose=None):
+    def __init__(self, spec_path, ll1_path, child_flags=None, trees_flags=None, verbose=None):
         self._spec_path = spec_path
         self._ll1_path = ll1_path
         self._child_flags = child_flags or []
+        self._trees_flags = trees_flags if trees_flags is not None else self._child_flags
         self._verbose = verbose
 
     def run(self, content, eof=False):
@@ -48,7 +49,7 @@ class TreePipeline:
             stderr=stderr_mode,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._child_flags,
+            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._trees_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=stderr_mode,

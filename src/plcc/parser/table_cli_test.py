@@ -508,3 +508,68 @@ def test_first_lex_error_comes_first_in_output(capsys, monkeypatch):
         assert errors[0]["source"]["column"] == 1
     finally:
         os.unlink(ll1_file.name)
+
+
+def test_trace_flag_emits_parse_step_records_before_tree(capsys):
+    code = _run(_TRIVIAL_LL1, [_tok("NUM", "42"), _sentinel()], extra_args=["--trace"])
+    assert code == 0
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    steps = [r for r in records if r.get("kind") == "parse-step"]
+    trees = [r for r in records if r.get("kind") == "tree"]
+    assert len(steps) > 0
+    assert len(trees) == 1
+    assert records.index(steps[0]) < records.index(trees[0])
+
+
+def test_trace_flag_parse_step_has_required_fields(capsys):
+    _run(_TRIVIAL_LL1, [_tok("NUM", "42"), _sentinel()], extra_args=["--trace"])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    steps = [r for r in records if r.get("kind") == "parse-step"]
+    assert len(steps) > 0
+    for s in steps:
+        assert "event" in s
+        assert "depth" in s
+        assert s["kind"] == "parse-step"
+
+
+def test_no_trace_flag_success_no_parse_step(capsys):
+    _run(_TRIVIAL_LL1, [_tok("NUM", "42"), _sentinel()])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    assert not any(r.get("kind") == "parse-step" for r in records)
+
+
+def test_failure_emits_parse_step_without_trace_flag(capsys):
+    # _ADDITION_LL1: program → NUM PLUS NUM; [NUM eof] is incomplete → ParseError
+    # Tracer has predict + shift recorded; they appear before the error record.
+    _run(_ADDITION_LL1, [_tok("NUM", "1"), _sentinel()])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    steps = [r for r in records if r.get("kind") == "parse-step"]
+    errors = [r for r in records if r.get("kind") == "error"]
+    assert len(steps) > 0
+    assert len(errors) > 0
+    assert records.index(steps[-1]) < records.index(errors[0])
+
+
+def test_trace_short_flag_works(capsys):
+    code = _run(_TRIVIAL_LL1, [_tok("NUM", "42"), _sentinel()], extra_args=["-t"])
+    assert code == 0
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    assert any(r.get("kind") == "parse-step" for r in records)
+
+
+def test_trace_resets_between_programs(capsys):
+    # Two programs: [NUM("1"), NUM("2"), eof] → two trees, each preceded by parse-steps.
+    _run(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2"), _sentinel()], extra_args=["--trace"])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    trees = [r for r in records if r.get("kind") == "tree"]
+    assert len(trees) == 2
+    first_tree_idx = next(i for i, r in enumerate(records) if r.get("kind") == "tree")
+    second_tree_idx = next(i for i, r in enumerate(records) if r.get("kind") == "tree" and i > first_tree_idx)
+    assert any(records[i].get("kind") == "parse-step" for i in range(first_tree_idx))
+    assert any(records[i].get("kind") == "parse-step" for i in range(first_tree_idx + 1, second_tree_idx))

@@ -8,7 +8,7 @@ from plcc.verbose import VerboseContext
 from .parse import ParseHandler
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
-    _eof_error_record,
+    _eof_error_record, _parse_step_record,
 )
 
 
@@ -198,3 +198,45 @@ def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
     out, _ = capsys.readouterr()
     assert "first error" in out
     assert "second error" not in out
+
+
+def test_feed_renders_parse_step_records(monkeypatch, handler, capsys):
+    step = _parse_step_record(event="predict", sym="program", lookahead="NUM",
+                               production="program", depth=0)
+    tree = _tree_record()
+    procs = iter([_proc(), _proc(stdout=step + tree)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    assert "predict" in out
+    assert "program" in out
+    assert "NUM" in out
+
+
+def test_feed_parse_step_printed_before_tree(monkeypatch, handler, capsys):
+    step = _parse_step_record(event="predict", sym="program", lookahead="NUM",
+                               production="program", depth=0)
+    tree = _tree_record()
+    procs = iter([_proc(), _proc(stdout=step + tree)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    predict_pos = out.index("predict")
+    program_tree_pos = out.rindex("program")  # tree's "program" comes after
+    assert predict_pos < program_tree_pos
+
+
+def test_feed_parse_step_depth_indented(monkeypatch, handler, capsys):
+    import json as _json
+    shift_step = _json.dumps({
+        "kind": "parse-step", "event": "shift",
+        "name": "NUM", "lexeme": "42",
+        "source": {"file": "-", "line": 1, "column": 1}, "depth": 2,
+    }).encode() + b"\n"
+    tree = _tree_record()
+    procs = iter([_proc(), _proc(stdout=shift_step + tree)])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    shift_line = next(l for l in out.splitlines() if "shift" in l)
+    assert shift_line.startswith("    ")  # 4 spaces for depth=2
