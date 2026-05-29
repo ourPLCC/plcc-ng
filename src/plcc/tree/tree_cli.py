@@ -16,6 +16,7 @@ Usage:
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
     --parser=KIND           Parser plugin to use [default: table].
+    -t --trace              Forward trace flag to parser plugin.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -32,6 +33,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-trees", Events, args)
     ll1_path = args["--ll1"]
     parser_kind = args["--parser"]
+    trace = args["--trace"]
     cmd = f"plcc-parser-{parser_kind}"
     if not shutil.which(cmd):
         print(
@@ -41,7 +43,10 @@ def main(argv=None):
         )
         sys.exit(1)
     verbose.emit(Events.STARTED, message=f"dispatching to {cmd}")
-    child_cmd = [cmd, f"--ll1={ll1_path}"] + verbose.child_flags()
+    child_flags = verbose.child_flags()
+    if trace:
+        child_flags.append("--trace")
+    child_cmd = [cmd, f"--ll1={ll1_path}"] + child_flags
     result = subprocess.run(child_cmd, stdin=sys.stdin)
     verbose.emit(Events.FINISHED, message=f"exit {result.returncode}")
     sys.exit(result.returncode)
