@@ -44,9 +44,9 @@ teardown() {
     [[ "$output" =~ NUM\ \'42\'\ \[-:1:1\] ]]
 }
 
-@test "plcc-parse brief usage mentions --help" {
+@test "plcc-parse reports grammar file error from plcc-make" {
     run --separate-stderr bash -c "cd '${WORK_DIR}' && rm grammar.plcc && plcc-parse"
-    [[ "$stderr" == *"--help"* ]]
+    [[ "$stderr" == *"grammar file not found"* ]]
 }
 
 @test "plcc-parse accepts '-' as stdin" {

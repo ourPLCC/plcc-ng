@@ -37,9 +37,9 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-rep brief usage mentions --help" {
+@test "plcc-rep reports grammar file error from plcc-make" {
     run --separate-stderr bash -c "cd '${WORK_DIR}' && rm grammar.plcc && plcc-rep"
-    [[ "$stderr" == *"--help"* ]]
+    [[ "$stderr" == *"grammar file not found"* ]]
 }
 
 @test "plcc-rep --grammar-file uses specified grammar" {
