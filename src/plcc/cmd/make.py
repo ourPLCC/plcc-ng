@@ -191,6 +191,7 @@ def main(argv=None):
             )
 
     write_sentinel(build_dir, new_hash, required_stages)
+    write_grammar(build_dir, grammar)
     verbose.emit(Events.FINISHED, message="done")
 
 

@@ -194,3 +194,55 @@ teardown() {
     [ -f build/ll1.json ]
     [ -f build/model.json ]
 }
+
+# ── Sticky grammar ─────────────────────────────────────────────────────────────
+
+@test "plcc-make writes build/.grammar after successful build" {
+    cp "${FIXTURES}/trivial.plcc" grammar.plcc
+    plcc-make --through=scan
+    [ -f "build/.grammar" ]
+    [[ "$(cat build/.grammar)" == "grammar.plcc" ]]
+}
+
+@test "plcc-make with --grammar-file writes that path to build/.grammar" {
+    run plcc-make --through=scan "--grammar-file=${FIXTURES}/trivial.plcc"
+    [ "$status" -eq 0 ]
+    [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
+}
+
+@test "plcc-make without --grammar-file uses stored grammar" {
+    # Build from an absolute path grammar, then invoke plcc-make with no args
+    # → should use stored path, not look for grammar.plcc in CWD
+    run plcc-make --through=scan "--grammar-file=${FIXTURES}/trivial.plcc"
+    [ "$status" -eq 0 ]
+    [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
+    # Now run with no --grammar-file from a dir with no grammar.plcc
+    run --separate-stderr plcc-make --through=scan
+    [ "$status" -eq 0 ]
+    [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
+}
+
+@test "plcc-make with --grammar-file differing from stored wipes build" {
+    cp "${FIXTURES}/trivial.plcc" grammar.plcc
+    plcc-make --through=scan
+    cp "${FIXTURES}/trivial-python.plcc" other.plcc
+    plcc-make --through=scan --grammar-file=other.plcc
+    # build/ was wiped and rebuilt from other.plcc
+    [[ "$(cat build/.grammar)" == "other.plcc" ]]
+}
+
+@test "plcc-make stored grammar missing gives error to stderr with hint" {
+    mkdir -p build
+    echo "ghost.plcc" > build/.grammar
+    run --separate-stderr plcc-make
+    [ "$status" -ne 0 ]
+    [[ "$stderr" == *"grammar file not found"* ]]
+    [[ "$stderr" == *"ghost.plcc"* ]]
+    [[ "$stderr" == *"--grammar-file"* ]]
+}
+
+@test "plcc-make no build/.grammar no --grammar-file falls back to grammar.plcc" {
+    run --separate-stderr plcc-make
+    [ "$status" -ne 0 ]
+    [[ "$stderr" == *"grammar.plcc"* ]]
+}
