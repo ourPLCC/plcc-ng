@@ -28,3 +28,11 @@ def test_indirect_left_recursion_not_ll1():
     g.addRule('b', ['a'])
     errors = check_ll1(g)
     assert errors
+
+
+def test_identical_predict_sets_are_ll1_conflict():
+    g = Grammar()
+    g.addRule('a', ['x'])
+    g.addRule('a', ['x'])
+    errors = check_ll1(g)
+    assert errors
