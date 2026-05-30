@@ -98,6 +98,7 @@ def main(argv=None):
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     build_dir.mkdir(exist_ok=True)
+    write_grammar(build_dir, grammar)
 
     # Run plcc-spec into a temp file to avoid corrupting build/spec.json on failure.
     # Temp file lives inside build/ so os.replace() is guaranteed atomic (same filesystem).
@@ -142,7 +143,6 @@ def main(argv=None):
 
     if is_current(sentinel, new_hash, required_stages):
         os.unlink(tmp_spec)
-        write_grammar(build_dir, grammar)
         verbose.emit(Events.FINISHED, message="build is current")
         return
 
@@ -192,7 +192,6 @@ def main(argv=None):
             )
 
     write_sentinel(build_dir, new_hash, required_stages)
-    write_grammar(build_dir, grammar)
     verbose.emit(Events.FINISHED, message="done")
 
 

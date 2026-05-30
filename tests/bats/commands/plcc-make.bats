@@ -246,3 +246,11 @@ teardown() {
     [ "$status" -ne 0 ]
     [[ "$stderr" == *"grammar.plcc"* ]]
 }
+
+@test "plcc-make writes build/.grammar even when plcc-spec fails" {
+    printf 'token BAD @@@\n' > bad.plcc
+    run plcc-make --grammar-file=bad.plcc
+    [ "$status" -ne 0 ]
+    [ -f "build/.grammar" ]
+    [[ "$(cat build/.grammar)" == "bad.plcc" ]]
+}
