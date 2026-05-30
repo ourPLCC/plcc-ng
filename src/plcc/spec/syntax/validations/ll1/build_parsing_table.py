@@ -8,7 +8,7 @@ class Table:
         self._table = table
 
     def getCell(self, X: object, a: object) -> list[tuple[object]]:
-        return self._table[(X,a)]
+        return self._table[(X, a)]
 
     def getKeys(self):
         return self._table.keys()
@@ -22,8 +22,7 @@ def build_parsing_table(
     b.setGrammar(g)
     b.setFIRST(FIRST)
     b.setFOLLOW(FOLLOW)
-    table = b.build()
-    return table
+    return b.build()
 
 
 class TableBuilder:
@@ -43,27 +42,14 @@ class TableBuilder:
         self.FOLLOW = FOLLOW
 
     def build(self) -> Table:
-        self._buildEmptyRawTable()
-        self._updateCellsForEachRule()
-        table = self._buildTable()
-        return table
-
-    def _buildEmptyRawTable(self):
-        self._rawTable = defaultdict(set)
-
-    def _updateCellsForEachRule(self):
+        self._rawTable = defaultdict(list)
         for nonterm, prod in self._grammar.getRulesIterator():
-            self._addProductionForEachTerminalInFirst(nonterm, prod)
-            self._addProductionForEachFollowIfEpsilonInFirst(nonterm, prod)
-
-    def _addProductionForEachTerminalInFirst(self, nonterm, prod):
-        for t in self._FIRST[prod]:
-            self._rawTable[(nonterm, t)].add(prod)
-
-    def _addProductionForEachFollowIfEpsilonInFirst(self, nonterm, prod):
-        if self._grammar.getEpsilon() in self._FIRST[prod]:
-            for t in self.FOLLOW[nonterm]:
-                self._rawTable[(nonterm, t)].add(prod)
-
-    def _buildTable(self):
+            for t in self._predictSet(nonterm, prod):
+                self._rawTable[(nonterm, t)].append(prod)
         return Table(self._rawTable)
+
+    def _predictSet(self, nonterm, prod) -> set:
+        terminals = set(self._FIRST[prod]) - {self._grammar.getEpsilon()}
+        if self._grammar.getEpsilon() in self._FIRST[prod]:
+            terminals |= self.FOLLOW[nonterm]
+        return terminals
