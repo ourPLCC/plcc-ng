@@ -36,3 +36,20 @@ def test_each_cell_with_duplicate_yields_an_error():
     assert errors[0].production == {'V', 'E'}
     assert errors[1].cell == ('A', 'c')
     assert errors[1].production == {'e', 'E'}
+
+def test_conflict_reports_count():
+    table = Table({
+        ('X', 'a'): ['V', 'E']
+    })
+    errors = check_parsing_table_for_ll1(table)
+    assert errors[0].count == 2
+
+def test_identical_productions_in_same_cell_yield_error():
+    table = Table({
+        ('X', 'a'): ['V', 'V']
+    })
+    errors = check_parsing_table_for_ll1(table)
+    assert len(errors) == 1
+    assert errors[0].cell == ('X', 'a')
+    assert errors[0].production == {'V'}
+    assert errors[0].count == 2
