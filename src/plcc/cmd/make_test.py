@@ -27,10 +27,17 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     assert "grammar file not found" in err
 
 
-def test_grammar_file_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main(['--grammar=nonexistent.plcc'])
+    assert exc.value.code != 0
+
+
+def test_short_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main(['-g', 'nonexistent.plcc'])
     assert exc.value.code != 0
 
 
