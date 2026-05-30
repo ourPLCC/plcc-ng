@@ -24,11 +24,43 @@ that is a conflict.
 
 ## Design
 
-### 1. `TableBuilder` — list instead of set
+### 1. `TableBuilder` — list instead of set, predict set computed explicitly
 
 Change `_rawTable` from `defaultdict(set)` with `.add()` to `defaultdict(list)` with
 `.append()`. Every rule that maps to a cell appends its production body, including
-duplicates. No other logic changes in `TableBuilder`.
+duplicates across rules. `len(cell)` is then the rule count directly.
+
+Replace the two existing methods `_addProductionForEachTerminalInFirst` and
+`_addProductionForEachFollowIfEpsilonInFirst` with a single `_predictSet` method that
+computes the full set of lookahead terminals for a rule before touching the table:
+
+```python
+def _updateCellsForEachRule(self):
+    for nonterm, prod in self._grammar.getRulesIterator():
+        for t in self._predictSet(nonterm, prod):
+            self._rawTable[(nonterm, t)].append(prod)
+
+def _predictSet(self, nonterm, prod):
+    terminals = set(self._FIRST[prod]) - {self._grammar.getEpsilon()}
+    if self._grammar.getEpsilon() in self._FIRST[prod]:
+        terminals |= self.FOLLOW[nonterm]
+    return terminals
+```
+
+This approach is necessary for two reasons:
+
+1. **FIRST/FOLLOW overlap**: if `FIRST(α)` contains both ε and a terminal `t` that is also
+   in `FOLLOW(A)`, the old two-method approach would append the same production to cell
+   `(A, t)` twice — once via FIRST, once via FOLLOW. With a set this was harmless
+   deduplication; with a list it is a false conflict. Computing the predict set as a Python
+   `set` first and then appending once per terminal eliminates the overlap.
+
+2. **ε leaking into the table**: the old `_addProductionForEachTerminalInFirst` iterated
+   over `FIRST[prod]` without filtering out ε, so ε itself could be inserted as a table key.
+   The new `_predictSet` explicitly excludes ε.
+
+The predict set formula — `FIRST(α) \ {ε}`, plus `FOLLOW(A)` when `ε ∈ FIRST(α)` — is
+the standard LL(1) definition, now stated directly in code.
 
 ### 2. `Table.getCell` — returns a list
 
@@ -67,9 +99,12 @@ conflict clear even though the set has one element.
 
 ### `build_parsing_table_test.py`
 
-- Update existing assertions to use list equality or `len`/`set` comparisons where
-  previously set equality was assumed.
-- Add a case where two rules have identical bodies: assert the cell list has two entries.
+- Update existing assertions to compare `set(table.getCell(...))` to the expected set of
+  productions, since `getCell` now returns a list and order is not guaranteed.
+- Add a case where two rules have identical bodies mapping to the same cell: assert
+  `len(table.getCell(...)) == 2`.
+- Add a case where a rule's FIRST set contains ε and a terminal `t` that is also in
+  FOLLOW — assert no false conflict (cell has exactly one entry for that rule).
 
 ### `check_parsing_table_for_ll1_test.py`
 
@@ -87,8 +122,8 @@ conflict clear even though the set has one element.
 ## Files Changed
 
 - `src/plcc/spec/syntax/LL1Error.py` — add `count` field
-- `src/plcc/spec/syntax/validations/ll1/build_parsing_table.py` — `defaultdict(list)` + `.append()`; `getCell` returns list
+- `src/plcc/spec/syntax/validations/ll1/build_parsing_table.py` — `defaultdict(list)` + `.append()`; replace two add-methods with `_predictSet`; `getCell` returns list
 - `src/plcc/spec/syntax/validations/ll1/check_parsing_table_for_ll1.py` — pass `count` and `set(cell)` to `LL1Error`
-- `src/plcc/spec/syntax/validations/ll1/build_parsing_table_test.py` — update for list semantics, add identical-body test
+- `src/plcc/spec/syntax/validations/ll1/build_parsing_table_test.py` — update for list semantics; add identical-body and FIRST/FOLLOW overlap tests
 - `src/plcc/spec/syntax/validations/ll1/check_parsing_table_for_ll1_test.py` — update `Table` constructions, add identical-body test
 - `src/plcc/spec/syntax/validations/ll1/check_ll1_test.py` — add identical-predict-set end-to-end test
