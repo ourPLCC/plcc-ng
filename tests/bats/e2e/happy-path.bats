@@ -6,7 +6,7 @@ setup() {
     MODEL_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/model.schema.json"
     WORK_DIR="$(mktemp -d)"
     cd "${WORK_DIR}"
-    plcc-make --grammar-file="${FIXTURES}/trivial.plcc"
+    plcc-make --grammar="${FIXTURES}/trivial.plcc"
 }
 
 teardown() {
@@ -36,7 +36,7 @@ teardown() {
 @test "plcc-make updates spec.json and .spec-hash when grammar changes" {
     first_hash=$(cat build/.spec-hash)
     cp "${FIXTURES}/trivial-python.plcc" "${WORK_DIR}/grammar2.plcc"
-    run plcc-make --grammar-file="${WORK_DIR}/grammar2.plcc"
+    run plcc-make --grammar="${WORK_DIR}/grammar2.plcc"
     [ "$status" -eq 0 ]
     second_hash=$(cat build/.spec-hash)
     [ "$first_hash" != "$second_hash" ]
@@ -67,7 +67,7 @@ teardown() {
     FULL_DIR="$(mktemp -d)"
     (
         cd "${FULL_DIR}"
-        plcc-make --grammar-file="${FIXTURES}/trivial-full.plcc"
+        plcc-make --grammar="${FIXTURES}/trivial-full.plcc"
         [ -f build/ll1.json ]
         [ -d build/Java ]
         [ -d build/py ]

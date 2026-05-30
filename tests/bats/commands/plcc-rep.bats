@@ -42,8 +42,8 @@ teardown() {
     [[ "$stderr" == *"grammar file not found"* ]]
 }
 
-@test "plcc-rep --grammar-file uses specified grammar" {
-    run --separate-stderr bash -c "echo '42' | plcc-rep --grammar-file='${FIXTURES}/trivial-python.plcc' --tool=py"
+@test "plcc-rep --grammar uses specified grammar" {
+    run --separate-stderr bash -c "echo '42' | plcc-rep --grammar='${FIXTURES}/trivial-python.plcc' --tool=py"
     [ "$status" -eq 0 ]
     [[ "$output" == "42" ]]
 }

@@ -25,7 +25,8 @@ Usage:
     plcc-make [-v ...] [options]
 
 Options:
-    --grammar-file=<path>   Grammar to build from. Once set, remembered for subsequent
+    -g <path> --grammar=<path>
+                            Grammar to build from. Once set, remembered for subsequent
                             commands until changed. Defaults to grammar.plcc on first use.
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
     -h --help               Show this message.
@@ -52,7 +53,7 @@ def main(argv=None):
         sys.exit(1)
 
     verbose = VerboseContext.from_args("plcc-make", Events, args)
-    explicit_grammar = args['--grammar-file']
+    explicit_grammar = args['--grammar']
     through = args['--through']
     build_dir = Path('build')
 
@@ -77,7 +78,7 @@ def main(argv=None):
         print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
         print(
             "(the active grammar was set by a previous run; "
-            "use --grammar-file to specify a different one)",
+            "use --grammar to specify a different one)",
             file=sys.stderr,
         )
         sys.exit(1)
