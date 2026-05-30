@@ -18,54 +18,37 @@ stores productions in a `set`, the second `.add()` is a no-op — the set collap
 entry. `check_parsing_table_for_ll1` only flags cells where `len(set) > 1`, so the conflict
 is never detected and `Var` is silently discarded.
 
-The root cause: conflict detection is based on the number of *distinct production bodies*
-in a cell, but it should be based on the number of *rules (alternatives)* that map to the cell.
+The root cause: the `set` was chosen to store productions per cell, but deduplication is
+exactly the bug. Two rules with identical bodies are still two distinct alternatives — and
+that is a conflict.
 
 ## Design
 
-### 1. `TableBuilder` — parallel rule-count dict
+### 1. `TableBuilder` — list instead of set
 
-Add `_ruleCounts: defaultdict(int)` alongside the existing `_rawTable: defaultdict(set)`.
+Change `_rawTable` from `defaultdict(set)` with `.add()` to `defaultdict(list)` with
+`.append()`. Every rule that maps to a cell appends its production body, including
+duplicates. No other logic changes in `TableBuilder`.
 
-Every time a rule maps a production to a cell — in both
-`_addProductionForEachTerminalInFirst` and `_addProductionForEachFollowIfEpsilonInFirst`
-— increment `_ruleCounts[(nonterm, t)]` in addition to updating `_rawTable[(nonterm, t)]`.
+### 2. `Table.getCell` — returns a list
 
-Both dicts are passed to `Table` on construction.
+`getCell(X, a)` now returns a `list[tuple]` instead of a `set[tuple]`. The list preserves
+one entry per contributing rule, so `len(cell)` is the rule count directly.
 
-### 2. `Table` — expose rule count
+### 3. `check_parsing_table_for_ll1` — unchanged condition, correct semantics
 
-`Table.__init__` accepts a second argument `ruleCounts: dict`. Add method:
-
-```python
-def getRuleCount(self, X: object, a: object) -> int:
-    return self._ruleCounts[(X, a)]
-```
-
-`getKeys()` is unchanged — both dicts share the same key space.
-
-### 3. `check_parsing_table_for_ll1` — use rule count for detection
-
-Change the conflict condition from:
+The condition `len(parsingTable.getCell(X, a)) > 1` is unchanged. It now fires correctly
+for identical-body rules because the list does not deduplicate. Pass both the count and the
+distinct productions to `LL1Error`:
 
 ```python
-if len(parsingTable.getCell(X, a)) > 1:
-```
-
-to:
-
-```python
-if parsingTable.getRuleCount(X, a) > 1:
-```
-
-Pass the count to `LL1Error`:
-
-```python
-LL1Error(
-    cell=(X, a),
-    production=parsingTable.getCell(X, a),
-    count=parsingTable.getRuleCount(X, a)
-)
+cell_entries = parsingTable.getCell(X, a)
+if len(cell_entries) > 1:
+    LL1Error(
+        cell=(X, a),
+        production=set(cell_entries),
+        count=len(cell_entries)
+    )
 ```
 
 ### 4. `LL1Error` — add `count` field
@@ -76,38 +59,36 @@ Add `count: int` parameter to `__init__`. Update the message:
 self.message = f"{count} rules in parsing table cell {cell}: {production}"
 ```
 
-For non-identical conflicts: `count=2`, `production={'A', 'B'}` — same information as
-before, plus explicit count.
-
-For identical-body conflicts: `count=2`, `production={('IDENT',)}` — the one-element set
-combined with `count=2` makes the conflict clear.
+For non-identical conflicts: `count=2`, `production={'A', 'B'}`.
+For identical-body conflicts: `count=2`, `production={('IDENT',)}` — count makes the
+conflict clear even though the set has one element.
 
 ## Tests
 
 ### `build_parsing_table_test.py`
 
-- Add a case where two rules have identical bodies mapping to the same cell.
-- Assert `getRuleCount(nonterm, terminal) == 2`.
+- Update existing assertions to use list equality or `len`/`set` comparisons where
+  previously set equality was assumed.
+- Add a case where two rules have identical bodies: assert the cell list has two entries.
 
 ### `check_parsing_table_for_ll1_test.py`
 
-- Update existing `Table` constructions to pass a `ruleCounts` dict.
-- Add a case: cell with one production body but `ruleCount=2` → conflict reported with
-  `count=2` and a one-element `production` set.
-- Existing assertions on `errors[0].production` remain valid; add assertions on
-  `errors[0].count`.
+- Update `Table` constructions to pass lists instead of sets for cell values.
+- Add a case: cell with two identical production bodies → conflict reported with `count=2`
+  and a one-element `production` set.
+- Existing assertions on `errors[0].production == {'V', 'E'}` remain valid since
+  `production=set(cell_entries)`.
 
 ### `check_ll1_test.py`
 
-- End-to-end test with a grammar that has two alternatives with identical predict sets
-  (e.g., `<expr>:Var ::= <IDENT>` / `<expr>:Const ::= <IDENT>`).
+- Add an end-to-end test with a grammar where two alternatives have identical predict sets.
 - Assert `check_ll1` returns at least one error.
 
 ## Files Changed
 
 - `src/plcc/spec/syntax/LL1Error.py` — add `count` field
-- `src/plcc/spec/syntax/validations/ll1/build_parsing_table.py` — add `_ruleCounts`, pass to `Table`; `Table` gains `getRuleCount`
-- `src/plcc/spec/syntax/validations/ll1/check_parsing_table_for_ll1.py` — use `getRuleCount` for detection, pass count to `LL1Error`
-- `src/plcc/spec/syntax/validations/ll1/build_parsing_table_test.py` — new test for identical-body rules
-- `src/plcc/spec/syntax/validations/ll1/check_parsing_table_for_ll1_test.py` — update `Table` constructions, new identical-body test
-- `src/plcc/spec/syntax/validations/ll1/check_ll1_test.py` — end-to-end identical-predict-set test
+- `src/plcc/spec/syntax/validations/ll1/build_parsing_table.py` — `defaultdict(list)` + `.append()`; `getCell` returns list
+- `src/plcc/spec/syntax/validations/ll1/check_parsing_table_for_ll1.py` — pass `count` and `set(cell)` to `LL1Error`
+- `src/plcc/spec/syntax/validations/ll1/build_parsing_table_test.py` — update for list semantics, add identical-body test
+- `src/plcc/spec/syntax/validations/ll1/check_parsing_table_for_ll1_test.py` — update `Table` constructions, add identical-body test
+- `src/plcc/spec/syntax/validations/ll1/check_ll1_test.py` — add identical-predict-set end-to-end test
