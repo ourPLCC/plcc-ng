@@ -14,7 +14,8 @@ Usage:
     plcc-diagram [-v ...] [options]
 
 Options:
-    --grammar-file=<path>   Grammar to build from. Once set, remembered for subsequent
+    -g <path> --grammar=<path>
+                            Grammar to build from. Once set, remembered for subsequent
                             commands until changed. Defaults to grammar.plcc on first use.
     --format=FMT            Diagram format [default: plantuml].
     -h --help               Show this message.
@@ -41,7 +42,7 @@ def main(argv=None):
         sys.exit(1)
 
     verbose = VerboseContext.from_args("plcc-diagram", Events, args)
-    grammar_file = args['--grammar-file']
+    grammar_file = args['--grammar']
     fmt = args['--format']
 
     if grammar_file is not None and not os.path.exists(grammar_file):
@@ -55,7 +56,7 @@ def main(argv=None):
 
     make_result = subprocess.run(
         ['plcc-make', '--through=model']
-        + ([f'--grammar-file={grammar_file}'] if grammar_file is not None else [])
+        + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
         + child_flags,
         stderr=subprocess.PIPE,
     )

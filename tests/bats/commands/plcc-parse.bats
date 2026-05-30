@@ -55,8 +55,8 @@ teardown() {
     [[ "$output" == *"program"* ]]
 }
 
-@test "plcc-parse --grammar-file uses specified grammar" {
-    run bash -c "echo '42' | plcc-parse --grammar-file='${FIXTURES}/trivial.plcc'"
+@test "plcc-parse --grammar uses specified grammar" {
+    run bash -c "echo '42' | plcc-parse --grammar='${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == *"program"* ]]
 }

@@ -100,8 +100,8 @@ teardown() {
     [ "$status" -ne 0 ]
 }
 
-@test "plcc-scan --grammar-file uses specified grammar" {
-    run bash -c "echo '42' | plcc-scan --grammar-file='${FIXTURES}/trivial.plcc'"
+@test "plcc-scan --grammar uses specified grammar" {
+    run bash -c "echo '42' | plcc-scan --grammar='${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == *"NUM"* ]]
 }

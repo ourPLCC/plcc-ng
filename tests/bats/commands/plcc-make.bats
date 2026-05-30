@@ -27,8 +27,8 @@ teardown() {
     [[ "$stderr" == *"grammar file not found"* ]]
 }
 
-@test "plcc-make --grammar-file with missing file exits nonzero" {
-    run --separate-stderr plcc-make --grammar-file=no-such-file.plcc
+@test "plcc-make --grammar with missing file exits nonzero" {
+    run --separate-stderr plcc-make --grammar=no-such-file.plcc
     [ "$status" -ne 0 ]
     [[ "$stderr" == *"grammar file not found"* ]]
 }
@@ -40,8 +40,8 @@ teardown() {
     [ -f build/spec.json ]
 }
 
-@test "plcc-make --grammar-file uses specified path" {
-    run plcc-make --through=scan "--grammar-file=${FIXTURES}/trivial.plcc"
+@test "plcc-make --grammar uses specified path" {
+    run plcc-make --through=scan "--grammar=${FIXTURES}/trivial.plcc"
     [ "$status" -eq 0 ]
     [ -f build/spec.json ]
 }
@@ -204,29 +204,29 @@ teardown() {
     [[ "$(cat build/.grammar)" == "grammar.plcc" ]]
 }
 
-@test "plcc-make with --grammar-file writes that path to build/.grammar" {
-    run plcc-make --through=scan "--grammar-file=${FIXTURES}/trivial.plcc"
+@test "plcc-make with --grammar writes that path to build/.grammar" {
+    run plcc-make --through=scan "--grammar=${FIXTURES}/trivial.plcc"
     [ "$status" -eq 0 ]
     [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
 }
 
-@test "plcc-make without --grammar-file uses stored grammar" {
+@test "plcc-make without --grammar uses stored grammar" {
     # Build from an absolute path grammar, then invoke plcc-make with no args
     # → should use stored path, not look for grammar.plcc in CWD
-    run plcc-make --through=scan "--grammar-file=${FIXTURES}/trivial.plcc"
+    run plcc-make --through=scan "--grammar=${FIXTURES}/trivial.plcc"
     [ "$status" -eq 0 ]
     [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
-    # Now run with no --grammar-file from a dir with no grammar.plcc
+    # Now run with no --grammar from a dir with no grammar.plcc
     run --separate-stderr plcc-make --through=scan
     [ "$status" -eq 0 ]
     [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
 }
 
-@test "plcc-make with --grammar-file differing from stored wipes build" {
+@test "plcc-make with --grammar differing from stored wipes build" {
     cp "${FIXTURES}/trivial.plcc" grammar.plcc
     plcc-make --through=scan
     cp "${FIXTURES}/trivial-python.plcc" other.plcc
-    plcc-make --through=scan --grammar-file=other.plcc
+    plcc-make --through=scan --grammar=other.plcc
     # build/ was wiped and rebuilt from other.plcc
     [[ "$(cat build/.grammar)" == "other.plcc" ]]
 }
@@ -238,10 +238,10 @@ teardown() {
     [ "$status" -ne 0 ]
     [[ "$stderr" == *"grammar file not found"* ]]
     [[ "$stderr" == *"ghost.plcc"* ]]
-    [[ "$stderr" == *"--grammar-file"* ]]
+    [[ "$stderr" == *"--grammar"* ]]
 }
 
-@test "plcc-make no build/.grammar no --grammar-file falls back to grammar.plcc" {
+@test "plcc-make no build/.grammar no --grammar falls back to grammar.plcc" {
     run --separate-stderr plcc-make
     [ "$status" -ne 0 ]
     [[ "$stderr" == *"grammar.plcc"* ]]
@@ -249,7 +249,7 @@ teardown() {
 
 @test "plcc-make writes build/.grammar even when plcc-spec fails" {
     printf 'token BAD @@@\n' > bad.plcc
-    run plcc-make --grammar-file=bad.plcc
+    run plcc-make --grammar=bad.plcc
     [ "$status" -ne 0 ]
     [ -f "build/.grammar" ]
     [[ "$(cat build/.grammar)" == "bad.plcc" ]]
