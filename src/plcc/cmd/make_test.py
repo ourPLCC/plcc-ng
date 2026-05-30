@@ -2,7 +2,7 @@ import pytest
 import docopt
 
 from .make import main as run_main, validate_tool_name, _report_ll1_failure
-from plcc.build.grammar import write_grammar
+from plcc.build.grammar import read_grammar, write_grammar
 
 
 def test_help(capsys):
@@ -255,3 +255,12 @@ def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     run_main(["--grammar-file=same.plcc"])
     # No wipe — marker is still present because grammar didn't change
     assert (build / "marker.txt").exists()
+
+
+def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    build = tmp_path / "build"
+    (tmp_path / "bad.plcc").write_text("token BAD @@@\n")
+    with pytest.raises(SystemExit):
+        run_main(["--grammar-file=bad.plcc"])
+    assert read_grammar(build) == "bad.plcc"
