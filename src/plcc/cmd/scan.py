@@ -29,7 +29,7 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-    --grammar-file=<path>       Grammar to build from. Once set, remembered for subsequent
+    -g <path> --grammar=<path>  Grammar to build from. Once set, remembered for subsequent
                                 commands until changed. Defaults to grammar.plcc on first use.
     -t --trace                  Show detailed scanning output.
 """ + VERBOSE_OPTIONS
@@ -133,7 +133,7 @@ def main(argv=None):
         sys.exit(1)
 
     verbose = VerboseContext.from_args("plcc-scan", Events, args)
-    grammar_file = args["--grammar-file"]
+    grammar_file = args["--grammar"]
     sources = args["SOURCE"]
 
     trace = args["--trace"]
@@ -150,7 +150,7 @@ def main(argv=None):
     # Ensure build/ is current for the scan level
     make_result = subprocess.run(
         ['plcc-make', '--through=scan']
-        + ([f'--grammar-file={grammar_file}'] if grammar_file is not None else [])
+        + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
         + child_flags,
         stderr=None,
     )
