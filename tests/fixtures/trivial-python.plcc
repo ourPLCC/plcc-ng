@@ -2,7 +2,7 @@ token NUM '\d+'
 skip WS '\s+'
 %
 <program> ::= <NUM>:num
-% py Python _run
+% py Python
 Program
 %%%
 def _run(self):
