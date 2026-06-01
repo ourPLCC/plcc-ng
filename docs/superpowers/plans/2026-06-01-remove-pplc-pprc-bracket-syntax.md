@@ -37,13 +37,17 @@
       assert list(parse_blocks(lines_)) == lines_
   ```
 
-- [ ] **Step 2: Run the new tests and confirm they fail**
+- [ ] **Step 2: Run the new tests and confirm the expected results**
 
   ```bash
   bin/test/units.bash src/plcc/spec/rough/parse_blocks_test.py::test_pplc_is_a_plain_line src/plcc/spec/rough/parse_blocks_test.py::test_pprc_is_a_plain_line -v
   ```
 
-  Expected: both FAIL. `test_pplc_is_a_plain_line` fails because `%%{` is currently recognised as a block opener and the unclosed-block error is raised. `test_pprc_is_a_plain_line` may pass or fail depending on whether `%%}` is encountered as a closer — either way, confirm the failure mode before proceeding.
+  Expected:
+  - `test_pplc_is_a_plain_line` **FAILS** — `%%{` is currently recognised as a block opener, so `parse_blocks` raises `UnclosedBlockError` instead of yielding the line.
+  - `test_pprc_is_a_plain_line` **PASSES** — `%%}` is only meaningful as a *closer*; it is never an opener, so it already passes through as a plain line before any code changes.
+
+  The red step here is `test_pplc_is_a_plain_line` only. Confirm that result before continuing.
 
 ---
 
