@@ -54,7 +54,6 @@ def test_one_divider_with_different_but_same_language_tool():
     ]
 
 
-
 def test_two_percents_does_not_match():
     lines_ = list(lines.parseLines('%%'))
     assert list(parse_dividers(lines_)) == [

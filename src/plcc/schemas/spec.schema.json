@@ -37,8 +37,7 @@
         "required": ["language", "tool"],
         "properties": {
           "language":    { "type": "string" },
-          "tool":        { "type": "string" },
-          "entry_point": { "type": ["string", "null"] }
+          "tool":        { "type": "string" }
         }
       }
     }
