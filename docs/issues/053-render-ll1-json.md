@@ -11,4 +11,5 @@ Add a command that renders `ll1.json` in a human-readable format — likely a Ma
 
 - Markdown with tables is a likely output format, but consider whether plain text or HTML might also be useful.
 - Each section of `ll1.json` should be accompanied by a short explanation of what it represents and how to read it.
+- Diagrams may be appropriate for some structures (e.g. parse trees, automata, relationships between rules). PlantUML is already used in the project and should be considered where it adds clarity.
 - This would help users understand and debug their grammars without having to read raw JSON.
