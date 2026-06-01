@@ -22,7 +22,6 @@ def _trivial_model():
             {
                 "language": "Java",
                 "tool": "Java",
-                "entry_point": "$run",
                 "fragments": [
                     {"class_name": "Program", "kind": "body",
                      "body": "    public void $run() {\n        System.out.println(expr.toString());\n    }"},
@@ -211,24 +210,6 @@ def test_file_fragment_written_as_standalone_java_file(tmp_path, monkeypatch):
     run_main([f'--output={tmp_path}'])
     assert (tmp_path / 'Env.java').exists()
     assert 'public class Env {}' in (tmp_path / 'Env.java').read_text()
-
-
-def test_entry_point_defaults_to_dollar_run_when_null(tmp_path, monkeypatch):
-    model = _trivial_model()
-    model['semantic_sections'][0]['entry_point'] = None
-    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
-    run_main([f'--output={tmp_path}'])
-    main_java = (tmp_path / 'Main.java').read_text()
-    assert '"$run"' in main_java
-
-
-def test_declared_entry_point_is_used(tmp_path, monkeypatch):
-    model = _trivial_model()
-    model['semantic_sections'][0]['entry_point'] = 'eval'
-    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
-    run_main([f'--output={tmp_path}'])
-    main_java = (tmp_path / 'Main.java').read_text()
-    assert '"eval"' in main_java
 
 
 def test_main_java_references_start_class(tmp_path, monkeypatch):
