@@ -11,5 +11,4 @@ def parse_semantic_spec(semantic_spec: list[Divider | Line | Block]) -> Semantic
         language=divider.language,
         tool=divider.tool,
         codeFragmentList=codeFragmentList,
-        entry_point=divider.entry_point,
     )
