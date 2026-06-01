@@ -10,11 +10,8 @@ def parse_blocks(lines, handler=raise_handler):
     if lines is None:
         return []
     PPP = re.compile(r'^%%%\s*(#.*)?$')
-    PPLC = re.compile(r'^%%{(?:\s*#.*)?$')
-    PPRC = re.compile(r'^%%}(?:\s*#.*)?$')
     brackets = {
         PPP: PPP,
-        PPLC: PPRC
     }
     return BlockParser(brackets, handler).parse(lines)
 
