@@ -1,7 +1,7 @@
 token NUM '\d+'
 skip SPACE '\s+'
 %
-<program> ::= <NUM>num
+<program> ::= <NUM>:num
 % Java Java
 Program
 %%%

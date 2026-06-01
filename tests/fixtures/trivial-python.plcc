@@ -1,7 +1,7 @@
 token NUM '\d+'
 skip WS '\s+'
 %
-<program> ::= <NUM>num
+<program> ::= <NUM>:num
 % py Python _run
 Program
 %%%
