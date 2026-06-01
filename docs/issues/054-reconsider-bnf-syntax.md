@@ -20,11 +20,11 @@ Using `arith.plcc` as a before/after illustration:
 **Before:**
 
 ```text
-<program>              ::= <Expr>:expr
-<Expr>                 ::= <Term>:term <ExprRest>:rest
-<ExprRest>:AddRest     ::= PLUS <Term>:term <ExprRest>:rest
-<ExprRest>:NilRest     ::=
-<Term>                 ::= <NUM>:num
+<program>              ::= <expr>:expr
+<expr>                 ::= <term>:term <exprrest>:rest
+<exprrest>:AddRest     ::= PLUS <term>:term <exprrest>:rest
+<exprrest>:NilRest     ::=
+<term>                 ::= <NUM>:num
 ```
 
 **After:**
