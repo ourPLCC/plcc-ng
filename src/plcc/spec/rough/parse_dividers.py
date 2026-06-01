@@ -2,6 +2,7 @@ import re
 
 from ...lines import Line
 from .Divider import Divider
+from .TooManyDividerTokensError import TooManyDividerTokensError
 
 
 def parse_dividers(lines):
@@ -30,8 +31,14 @@ class DividerParser:
         matchToolOnly = self._matchToolOnly(line.string)
         tool = self._getTool(matchToolLanguage, matchToolOnly)
         language = self._getLanguage(matchToolLanguage, matchToolOnly)
-        entry_point = self._getEntryPoint(matchToolLanguage)
-        return self._createDivider(tool, language, entry_point, line)
+        if matchToolLanguage and matchToolLanguage['extra']:
+            col = line.string.index(matchToolLanguage['extra']) + 1
+            raise TooManyDividerTokensError(
+                line=line,
+                column=col,
+                message=f"unexpected token '{matchToolLanguage['extra']}' on divider line",
+            )
+        return self._createDivider(tool, language, line)
 
     def _getTool(self, matchToolLanguage, matchToolOnly):
         if matchToolLanguage:
@@ -61,17 +68,12 @@ class DividerParser:
     def _matchToolOnly(self, string):
         return self.patterns['toolOnly'].match(string)
 
-    def _getEntryPoint(self, matchToolLanguage):
-        if matchToolLanguage:
-            return matchToolLanguage['entry_point']  # None when group absent
-        return None
-
-    def _createDivider(self, toolName, languageName, entry_point, line):
-        return Divider(tool=toolName, language=languageName, line=line, entry_point=entry_point)
+    def _createDivider(self, toolName, languageName, line):
+        return Divider(tool=toolName, language=languageName, line=line)
 
     def _compilePatternDictionary(self):
         return {
             'divider': re.compile(r'^%(?:\s.*)?$'),
-            'toolLanguage': re.compile(r'^%\s*(?P<tool>\S+)\s+(?P<language>\S+)(?:\s+(?P<entry_point>\S+))?.*$'),
+            'toolLanguage': re.compile(r'^%\s*(?P<tool>\S+)\s+(?P<language>\S+)(?:\s+(?P<extra>\S+))?.*$'),
             'toolOnly': re.compile(r'^%\s*(?P<tool>\S+)\s*$')
         }
