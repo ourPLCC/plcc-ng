@@ -13,6 +13,30 @@ Reconsider the syntax used in the BNF section of a grammar to improve consistenc
    - On the RHS, `<NonTerminal>:field` becomes `<field:NonTerminal>`
    - On the LHS, `<NonTerminal>:SubClass` becomes `<SubClass:NonTerminal>`
 
+## Example
+
+Using `arith.plcc` as a before/after illustration:
+
+**Before:**
+
+```text
+<program>              ::= <Expr>:expr
+<Expr>                 ::= <Term>:term <ExprRest>:rest
+<ExprRest>:AddRest     ::= PLUS <Term>:term <ExprRest>:rest
+<ExprRest>:NilRest     ::=
+<Term>                 ::= <NUM>:num
+```
+
+**After:**
+
+```text
+<Program>              ::= <expr:Expr>
+<Expr>                 ::= <term:Term> <rest:ExprRest>
+<AddRest:ExprRest>     ::= PLUS <term:Term> <rest:ExprRest>
+<NilRest:ExprRest>     ::=
+<Term>                 ::= <num:NUM>
+```
+
 ## Decision
 
 **Use the proposed syntax.** After comparing with alternatives (`=` for field binding, `as` keyword, hybrid inside/outside, and sigil-prefixed subtypes), the proposed syntax is the best fit for students learning to study programming languages.
