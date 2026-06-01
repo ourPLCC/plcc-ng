@@ -50,46 +50,11 @@ def test_triple_percent_with_trailing_space_is_block_delimiter():
     assert list(parse_blocks(lines_)) == [Block(lines_)]
 
 
-def test_curly_percent_block():
-    lines_ = list(lines.parseLines('''\
-%%{
-block
-%%}
-'''))
-    assert list(parse_blocks(lines_)) == [ Block(lines_) ]
+def test_pplc_is_a_plain_line():
+    lines_ = list(lines.parseLines('%%{'))
+    assert list(parse_blocks(lines_)) == lines_
 
 
-def test_nested_blocks_produce_single_block():
-    lines_ = list(lines.parseLines('''\
-%%{
-what
-%%%
-block
-%%%
-ever
-%%}
-'''))
-    assert list(parse_blocks(lines_)) == [ Block(lines_) ]
-
-
-def test_mixed():
-    lines_ = list(lines.parseLines('''\
-
-%%%
-one
-two
-%%%
-
-%%{
-three
-%%}
-
-'''))
-
-    assert list(parse_blocks(lines_)) == [
-        lines.Line('', 1, None),
-        Block(list(lines.parseLines('%%%\none\ntwo\n%%%', startLineNumber=2))),
-        lines.Line('', 6, None),
-        Block(list(lines.parseLines('%%{\nthree\n%%}', startLineNumber=7))),
-        lines.Line('', 10, None),
-    ]
+def test_pprc_is_a_plain_line():
+    lines_ = list(lines.parseLines('%%}'))
+    assert list(parse_blocks(lines_)) == lines_
