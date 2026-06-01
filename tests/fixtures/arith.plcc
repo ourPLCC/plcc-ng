@@ -8,7 +8,7 @@ skip  SPACE '\s+'
 <ExprRest>:NilRest     ::=
 <Term>                 ::= <NUM>:num
 %
-% calculate Python _run
+% calculate Python
 Program
 %%%
 def _run(self):

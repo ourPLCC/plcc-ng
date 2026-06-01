@@ -8,7 +8,7 @@ skip  SPACE '\s+'
 <expr>:LitExpr     ::= <NUM>:num
 <expr>:AddExpr     ::= PLUS <rands>:rands
 %
-% eval Python _run
+% eval Python
 Program
 %%%
 def _run(self):

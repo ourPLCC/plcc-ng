@@ -55,7 +55,7 @@ def main(argv=None):
     classes = model['classes']
     start_class_name = model['start'][0].upper() + model['start'][1:]
     section = _find_python_section(model)
-    entry_point = (section.get('entry_point') if section else None) or _DEFAULT_ENTRY_POINT
+    entry_point = _DEFAULT_ENTRY_POINT
     fragments_by_class = _group_fragments(section.get('fragments', []) if section else [])
 
     env = jinja2.Environment(

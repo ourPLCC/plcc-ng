@@ -119,7 +119,6 @@ def _build_semantic_sections(spec, known_class_names):
         sections.append({
             'language': s['language'].lower(),
             'tool': s['tool'],
-            'entry_point': s.get('entry_point'),
             'fragments': fragments,
         })
     return sections

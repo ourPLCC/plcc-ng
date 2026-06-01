@@ -322,24 +322,6 @@ def test_empty_codeFragmentList_gives_empty_fragments():
     model = build_model(spec)
     assert model['semantic_sections'][0]['fragments'] == []
 
-
-# ---- entry_point pass-through ----
-
-def test_semantic_section_entry_point_null_when_absent():
-    model = build_model(_TRIVIAL_SPEC)
-    assert model['semantic_sections'][0].get('entry_point') is None
-
-
-def test_semantic_section_entry_point_when_present():
-    spec = {
-        "lexical": {"ruleList": []},
-        "syntax": {"rules": []},
-        "semantics": [{"language": "Python", "tool": "calc", "entry_point": "_run", "codeFragmentList": []}]
-    }
-    model = build_model(spec)
-    assert model['semantic_sections'][0]['entry_point'] == '_run'
-
-
 # ---- rule_name on classes ----
 
 def test_trivial_class_has_rule_name():
