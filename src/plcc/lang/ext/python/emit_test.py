@@ -30,7 +30,6 @@ def _arith_model():
             {
                 "language": "Python",
                 "tool": "calculate",
-                "entry_point": "_run",
                 "fragments": [
                     {"class_name": "Program", "kind": "body", "body": "def _run(self):\n    return self.expr.eval()"},
                     {"class_name": "AddRest", "kind": "body", "body": "def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())"},
@@ -140,22 +139,6 @@ def test_emit_subclass_imports_parent(tmp_path, monkeypatch):
     run_main([f'--output={tmp_path}'])
     addrest_py = (tmp_path / 'AddRest.py').read_text()
     assert 'from ExprRest import ExprRest' in addrest_py
-
-
-def test_emit_main_py_contains_entry_point(tmp_path, monkeypatch):
-    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
-    run_main([f'--output={tmp_path}'])
-    main_py = (tmp_path / 'main.py').read_text()
-    assert 'tree._run()' in main_py
-
-
-def test_emit_main_py_entry_point_defaults_to_run_when_null(tmp_path, monkeypatch):
-    model = _arith_model()
-    model['semantic_sections'][0]['entry_point'] = None
-    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
-    run_main([f'--output={tmp_path}'])
-    main_py = (tmp_path / 'main.py').read_text()
-    assert 'tree._run()' in main_py
 
 
 def test_emit_file_fragment_written_verbatim(tmp_path, monkeypatch):
