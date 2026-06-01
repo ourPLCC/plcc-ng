@@ -300,22 +300,11 @@ def test_repeating_separator():
     assert list(spec) == expected
 
 
-def test_named_rhs_non_terminal():
-    named_rhs = makeLine("<noun> ::= WORD WORD <word>hello")
-    lines = [makeDivider(), named_rhs]
-    expected = [
-        makeStandardSyntacticRule(
-            named_rhs,
-            makeLhsNonTerminal("noun"),
-            [
-                makeTerminal("WORD"),
-                makeTerminal("WORD"),
-                makeRhsNonTerminal("word", "hello"),
-            ],
-        )
-    ]
-    spec, _ = parse_syntactic_spec(lines)
-    assert list(spec) == expected
+def test_named_rhs_non_terminal_without_colon_is_an_error():
+    line = makeLine("<noun> ::= WORD WORD <word>hello")
+    spec, errors = parse_syntactic_spec([makeDivider(), line])
+    assert len(errors) == 1
+    assert isinstance(errors[0], MalformedBNFError)
 
 
 def test_colon_rhs_non_terminal():
