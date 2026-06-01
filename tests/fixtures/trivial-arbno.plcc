@@ -3,10 +3,10 @@ token PLUS  '\+'
 token COMMA ','
 skip  SPACE '\s+'
 %
-<program>          ::= <rands>rands
-<rands>            **= <expr>expr +COMMA
-<expr>:LitExpr     ::= <NUM>num
-<expr>:AddExpr     ::= PLUS <rands>rands
+<program>          ::= <rands>:rands
+<rands>            **= <expr>:expr +COMMA
+<expr>:LitExpr     ::= <NUM>:num
+<expr>:AddExpr     ::= PLUS <rands>:rands
 %
 % eval Python _run
 Program

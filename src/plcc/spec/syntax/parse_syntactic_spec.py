@@ -85,16 +85,15 @@ class SyntacticLineParser:
         ]
 
     def _parseSymbol(self, symbol: str) -> Symbol:
-        capturing = re.match(r"<(?P<name>\S*)>(?P<altName>\S+)?", symbol)
-        return (
-            self._parseCapturing(capturing["name"], capturing["altName"])
-            if capturing
-            else Terminal(symbol)
-        )
+        capturing = re.fullmatch(r"<(?P<name>\S*)>(?::(?P<altName>\S+))?", symbol)
+        if capturing:
+            return self._parseCapturing(capturing["name"], capturing["altName"])
+        if symbol.startswith("<"):
+            raise MalformedBNFError(self.line)
+        return Terminal(symbol)
 
     def _parseCapturing(self, name: str, altName: str) -> CapturingSymbol:
         terminal = re.fullmatch(r"[A-Z_][A-Z0-9_]*", name)
-        altName = altName.strip(":") if altName is not None else altName
         return (
             CapturingTerminal(name=name, altName=altName)
             if terminal
