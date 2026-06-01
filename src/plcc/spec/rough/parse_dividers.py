@@ -32,7 +32,7 @@ class DividerParser:
         tool = self._getTool(matchToolLanguage, matchToolOnly)
         language = self._getLanguage(matchToolLanguage, matchToolOnly)
         if matchToolLanguage and matchToolLanguage['extra']:
-            col = line.string.index(matchToolLanguage['extra']) + 1
+            col = matchToolLanguage.start('extra') + 1
             raise TooManyDividerTokensError(
                 line=line,
                 column=col,
