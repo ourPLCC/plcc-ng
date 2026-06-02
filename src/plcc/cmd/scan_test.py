@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from .scan import ScanHandler, main as run_main
+import plcc.cmd.scan as _scan_module
 
 
 def _make_proc(stdout_lines=None):
@@ -75,3 +76,41 @@ def test_scan_handler_renders_token_records(monkeypatch, capsys):
     out, _ = capsys.readouterr()
     assert "NUM" in out
     assert "42" in out
+
+
+# --- main() banner ---
+
+def test_main_banner_contains_version(monkeypatch, tmp_path, capsys):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    monkeypatch.setattr(_scan_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
+    run_main([])
+    out, _ = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in out
+
+
+def test_main_banner_contains_grammar_path(monkeypatch, tmp_path, capsys):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    monkeypatch.setattr(_scan_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
+    run_main([])
+    out, _ = capsys.readouterr()
+    assert str(tmp_path / "grammar.plcc") in out
+
+
+def test_main_banner_goes_to_stdout(monkeypatch, tmp_path, capsys):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    monkeypatch.setattr(_scan_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
+    run_main([])
+    _, err = capsys.readouterr()
+    assert "plcc-ng" not in err

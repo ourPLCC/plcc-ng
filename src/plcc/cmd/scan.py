@@ -7,7 +7,9 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from .output import print_user_error
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
+from .output import print_startup_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
 
@@ -156,6 +158,8 @@ def main(argv=None):
     )
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
+
+    print_startup_banner(os.path.abspath(read_grammar('build')), get_version())
 
     spec_path = os.path.join('build', 'spec.json')
     tokens_flags = child_flags + (["--trace"] if trace else [])
