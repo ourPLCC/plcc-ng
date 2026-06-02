@@ -46,7 +46,7 @@ teardown() {
 @test "plcc-scan includes file:line:col in token output" {
     run bash -c "echo '42' | plcc-scan"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ ^-:1:1\ NUM\ \'42\'$ ]]
+    [[ "${lines[-1]}" == "-:1:1 NUM '42'" ]]
 }
 
 @test "plcc-scan exits 0 on lex error in source" {
