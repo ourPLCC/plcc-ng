@@ -107,7 +107,7 @@ def main(argv=None):
 
     tool_name, language = _resolve_tool(spec, tool_name)
     print_startup_banner(
-        os.path.abspath(read_grammar('build')),
+        os.path.abspath(read_grammar('build') or ''),
         get_version(),
         tool=tool_name,
         language=language,
