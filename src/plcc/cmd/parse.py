@@ -93,7 +93,7 @@ def main(argv=None):
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
-    print_startup_banner(os.path.abspath(read_grammar('build') or ''), get_version())
+    print_startup_banner(os.path.abspath(read_grammar('build')), get_version())
 
     spec_path = os.path.join('build', 'spec.json')
     ll1_path = os.path.join('build', 'll1.json')
