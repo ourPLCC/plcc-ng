@@ -29,14 +29,14 @@ teardown() {
 @test "plcc-rep evaluates 1+2 to 3 in batch mode" {
     run --separate-stderr bash -c "echo '1 + 2' | plcc-rep --tool=calculate --grammar='${FIXTURES}/arith.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" == "3" ]]
+    [[ "${lines[-1]}" == "3" ]]
 }
 
 @test "plcc-rep evaluates file argument" {
     echo '1 + 2' > input.txt
     run --separate-stderr plcc-rep --tool=calculate --grammar="${FIXTURES}/arith.plcc" input.txt
     [ "$status" -eq 0 ]
-    [[ "$output" == "3" ]]
+    [[ "${lines[-1]}" == "3" ]]
 }
 
 @test "plcc-rep exits 0 on lex error" {
@@ -88,19 +88,19 @@ setup_arbno_build() {
     setup_arbno_build
     run --separate-stderr bash -c "echo '1, 2, 3' | plcc-rep --tool=eval --grammar='${FIXTURES}/trivial-arbno.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" == "[1, 2, 3]" ]]
+    [[ "${lines[-1]}" == "[1, 2, 3]" ]]
 }
 
 @test "trivial-arbno: plcc-rep evaluates empty input to []" {
     setup_arbno_build
     run --separate-stderr bash -c "echo '' | plcc-rep --tool=eval --grammar='${FIXTURES}/trivial-arbno.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" == "[]" ]]
+    [[ "${lines[-1]}" == "[]" ]]
 }
 
 @test "trivial-arbno: plcc-rep evaluates single item 42 to [42]" {
     setup_arbno_build
     run --separate-stderr bash -c "echo '42' | plcc-rep --tool=eval --grammar='${FIXTURES}/trivial-arbno.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" == "[42]" ]]
+    [[ "${lines[-1]}" == "[42]" ]]
 }
