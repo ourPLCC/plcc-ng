@@ -24,6 +24,7 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
     grammar.write_text("")
     build = tmp_path / "build"
     build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
     spec = {"semantics": [{"tool": "calc", "language": "python"}]}
     (build / "spec.json").write_text(_json.dumps(spec))
     (build / "ll1.json").write_text("{}")
@@ -327,3 +328,56 @@ def test_render_record_interpreter_error_writes_to_stdout(capsys):
     assert "TypeError" in out
     assert "bad value" in out
     assert err == ""
+
+
+def _setup_rep_main(monkeypatch, tmp_path):
+    """Set up filesystem and stubs for rep main() tests."""
+    import json as _j
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "grammar.plcc").write_text("")
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    spec = {"semantics": [{"tool": "calc", "language": "python"}]}
+    (build / "spec.json").write_text(_j.dumps(spec))
+    (build / "ll1.json").write_text("{}")
+    monkeypatch.setattr(
+        "subprocess.run",
+        lambda *a, **kw: _MagicMock(returncode=0, stderr=b""),
+    )
+    monkeypatch.setattr(
+        "subprocess.Popen",
+        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
+    )
+    monkeypatch.setattr(_rep_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.rep.get_version", lambda: "1.2.3")
+
+
+def test_rep_main_banner_contains_version(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main(["--tool=calc"])
+    out, _ = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in out
+
+
+def test_rep_main_banner_contains_grammar_path(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main(["--tool=calc"])
+    out, _ = capsys.readouterr()
+    assert str(tmp_path / "grammar.plcc") in out
+
+
+def test_rep_main_banner_contains_running_line(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main(["--tool=calc"])
+    out, _ = capsys.readouterr()
+    assert "Running calc with python." in out
+
+
+def test_rep_main_banner_goes_to_stdout(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main(["--tool=calc"])
+    _, err = capsys.readouterr()
+    assert "plcc-ng" not in err
+    assert "Running" not in err

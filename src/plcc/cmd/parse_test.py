@@ -1,11 +1,13 @@
 import json
 import subprocess
 import sys
+from types import SimpleNamespace
 
 import pytest
 
 from plcc.verbose import VerboseContext
 from .parse import ParseHandler
+import plcc.cmd.parse as _parse_module
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record, _parse_step_record,
@@ -257,3 +259,42 @@ def test_feed_prints_arbno_children(monkeypatch, handler, capsys):
     handler.feed(b"a = 1 b = 2\n", "-")
     out, _ = capsys.readouterr()
     assert out.count("stmt") == 2
+
+
+def _setup_parse_main(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "grammar.plcc").write_text("")
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / "spec.json").write_text("{}")
+    (build / "ll1.json").write_text("{}")
+    monkeypatch.setattr("subprocess.run",
+                        lambda *a, **kw: SimpleNamespace(returncode=0, stderr=b""))
+    monkeypatch.setattr(_parse_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.parse.get_version", lambda: "1.2.3")
+
+
+def test_parse_main_banner_contains_version(monkeypatch, tmp_path, capsys):
+    _setup_parse_main(monkeypatch, tmp_path)
+    from .parse import main as parse_main
+    parse_main([])
+    out, _ = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in out
+
+
+def test_parse_main_banner_contains_grammar_path(monkeypatch, tmp_path, capsys):
+    _setup_parse_main(monkeypatch, tmp_path)
+    from .parse import main as parse_main
+    parse_main([])
+    out, _ = capsys.readouterr()
+    assert str(tmp_path / "grammar.plcc") in out
+
+
+def test_parse_main_banner_goes_to_stdout(monkeypatch, tmp_path, capsys):
+    _setup_parse_main(monkeypatch, tmp_path)
+    from .parse import main as parse_main
+    parse_main([])
+    _, err = capsys.readouterr()
+    assert "plcc-ng" not in err

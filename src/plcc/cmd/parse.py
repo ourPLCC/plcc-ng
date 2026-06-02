@@ -5,8 +5,11 @@ import sys
 
 from docopt import docopt, DocoptExit
 
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from .pipeline import TreePipeline, print_parse_error, location_str
+from .output import print_startup_banner
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-parse
@@ -89,6 +92,8 @@ def main(argv=None):
         verbose.reformat_child_events(events)
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
+
+    print_startup_banner(os.path.abspath(read_grammar('build')), get_version())
 
     spec_path = os.path.join('build', 'spec.json')
     ll1_path = os.path.join('build', 'll1.json')

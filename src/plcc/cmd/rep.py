@@ -7,8 +7,10 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
 from .pipeline import TreePipeline, print_parse_error
-from .output import print_user_error
+from .output import print_startup_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-rep
@@ -104,6 +106,12 @@ def main(argv=None):
         spec = json.load(f)
 
     tool_name, language = _resolve_tool(spec, tool_name)
+    print_startup_banner(
+        os.path.abspath(read_grammar('build')),
+        get_version(),
+        tool=tool_name,
+        language=language,
+    )
     tool_dir = os.path.join('build', tool_name)
 
     interpreter = subprocess.Popen(
