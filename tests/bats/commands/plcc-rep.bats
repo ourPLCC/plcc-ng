@@ -23,7 +23,7 @@ teardown() {
 @test "plcc-rep evaluates with Python tool" {
     run --separate-stderr bash -c "echo '42' | plcc-rep --tool=py"
     [ "$status" -eq 0 ]
-    [[ "$output" == "42" ]]
+    [[ "${lines[-1]}" == "42" ]]
 }
 
 @test "plcc-rep errors on missing tool" {
@@ -45,7 +45,7 @@ teardown() {
 @test "plcc-rep --grammar uses specified grammar" {
     run --separate-stderr bash -c "echo '42' | plcc-rep --grammar='${FIXTURES}/trivial-python.plcc' --tool=py"
     [ "$status" -eq 0 ]
-    [[ "$output" == "42" ]]
+    [[ "${lines[-1]}" == "42" ]]
 }
 
 @test "plcc-rep rebuilds when grammar changes" {
@@ -53,7 +53,7 @@ teardown() {
     cp "${FIXTURES}/trivial-python.plcc" grammar.plcc  # same grammar, re-copy (triggers rebuild if hash changes)
     run --separate-stderr bash -c "echo '42' | plcc-rep --tool=py"
     [ "$status" -eq 0 ]
-    [[ "$output" == "42" ]]
+    [[ "${lines[-1]}" == "42" ]]
 }
 
 @test "plcc-rep exits nonzero when grammar has syntax error" {
