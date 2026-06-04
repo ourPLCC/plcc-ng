@@ -1,6 +1,6 @@
 from typing import List
 
-from ...lexical import LexicalRule, LexicalSpec
+from ...lexical import LexicalSpec, TokenRule
 from ....lines import Line
 from ..LhsNonTerminal import LhsNonTerminal
 from ..Symbol import Symbol
@@ -52,7 +52,7 @@ def makeLexicalSpec(ruleList=None):
     return LexicalSpec(ruleList)
 
 def makeLexicalRule(name='TEST', pattern='TEST'):
-    return LexicalRule(makeLine('TEST'), False, name, pattern)
+    return TokenRule(line=makeLine('TEST'), name=name, pattern=pattern)
 
 def makeLine(string, lineNumber=1, file=None):
     return Line(string, lineNumber, file)

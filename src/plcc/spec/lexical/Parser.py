@@ -1,7 +1,8 @@
 import re
 
 from .check_for_duplicate_names import check_for_duplicate_names
-from .LexicalRule import LexicalRule
+from .TokenRule import TokenRule
+from .SkipRule import SkipRule
 from .LexicalSpec import LexicalSpec
 from .NameExpected import NameExpected
 from .PatternCompilationError import PatternCompilationError
@@ -76,7 +77,8 @@ class Parser():
             wsl = self._getLengthOfLeadingWhitespace(string, index)
             self.errors.append(UnexpectedContent(line=line, index=index+wsl))
 
-        self.ruleList.append(LexicalRule(line=line, isSkip=(type_=='skip'), name=name, pattern=regex))
+        RuleClass = SkipRule if type_ == 'skip' else TokenRule
+        self.ruleList.append(RuleClass(line=line, name=name, pattern=regex))
 
     def _getLengthOfLeadingWhitespace(self, string, index):
         ws = re.compile(r'\s*').match(string, index)

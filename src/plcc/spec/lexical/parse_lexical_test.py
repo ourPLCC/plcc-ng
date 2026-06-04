@@ -3,6 +3,8 @@ import pytest
 from .parseLexicalSpec import parseLexicalSpec
 from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent
 from .check_for_duplicate_names import DuplicateName
+from .TokenRule import TokenRule
+from .SkipRule import SkipRule
 
 def test_TypeError():
     with pytest.raises(TypeError):
@@ -245,3 +247,21 @@ def test_multiple_of_same_duplication():
     assert errors[0].__class__ == DuplicateName
     assert errors[1].__class__ == DuplicateName
     assert len(spec.ruleList) == 3
+
+
+def test_token_rule_produces_TokenRule():
+    spec, errors = parseLexicalSpec("token SPACE ' '")
+    assert errors == []
+    assert isinstance(spec.ruleList[0], TokenRule)
+
+
+def test_skip_rule_produces_SkipRule():
+    spec, errors = parseLexicalSpec("skip SPACE ' '")
+    assert errors == []
+    assert isinstance(spec.ruleList[0], SkipRule)
+
+
+def test_implicit_token_produces_TokenRule():
+    spec, errors = parseLexicalSpec("SPACE ' '")
+    assert errors == []
+    assert isinstance(spec.ruleList[0], TokenRule)
