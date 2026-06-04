@@ -129,7 +129,7 @@ def test_block_token_multi_line():
     results = list(scanner.scan(lines))
     assert len(results) == 1
     assert isinstance(results[0], Token)
-    assert results[0].lexeme == 'line1\n\nline2\n\n'  # doubled; Task 4 removes _scanBlock injection and restores 'line1\nline2\n'
+    assert results[0].lexeme == 'line1\nline2\n'
 
 
 def test_block_token_open_line_column():
@@ -178,6 +178,18 @@ def test_unclosed_block_emits_UnclosedBlockError():
     assert len(results) == 1
     assert isinstance(results[0], UnclosedBlockError)
     assert results[0].column == 1
+
+
+def test_block_token_multi_line_no_doubled_newlines():
+    """Regression for issue-061: file-style lines (string includes \\n) must not produce doubled newlines in the lexeme."""
+    from ..lines.parse_from_strings import parse_from_strings
+    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
+    ws = SkipRule(line=None, name='WS', pattern=r'\s+')
+    scanner = Scanner(matcher=makeMatcher([rule, ws]))
+    lines = list(parse_from_strings(['<<<line1\n', 'line2\n', '>>>\n']))
+    body_tokens = [r for r in scanner.scan(lines) if isinstance(r, Token) and r.name == 'BODY']
+    assert len(body_tokens) == 1
+    assert body_tokens[0].lexeme == 'line1\nline2\n'
 
 
 def makeMatcher(rules):

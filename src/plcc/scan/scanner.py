@@ -45,10 +45,10 @@ class Scanner:
         for next_line in it:
             m = close_re.search(next_line.string)
             if m:
-                buffer += '\n' + next_line.string[:m.start()]
+                buffer += next_line.string[:m.start()]
                 yield opened.rule.make_block_result(buffer, opened.line, opened.column)
                 yield from self._scanLine(next_line, it, start=m.end())
                 return
-            buffer += '\n' + next_line.string
+            buffer += next_line.string
         # Iterator exhausted without finding close.
         yield UnclosedBlockError(line=opened.line, column=opened.column, rule=opened.rule)
