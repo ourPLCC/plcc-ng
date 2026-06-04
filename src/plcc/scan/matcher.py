@@ -15,12 +15,7 @@ class Matcher:
         if not matches:
             return LexError(line=line, column=index+1)
 
-        all_matches = matches if self._record_attempts else None
-
-        if isinstance(matches[0], Skip):
-            result = matches[0]
-        else:
-            result = self._getLongestMatch(self._removeSkips(matches))
+        result = self._getLongestMatch(matches)
 
         if self._record_attempts:
             result.attempts = [
@@ -32,7 +27,7 @@ class Matcher:
                     'is_skip': isinstance(m, Skip),
                     'winner': m is result,
                 }
-                for m in all_matches
+                for m in matches
             ]
 
         return result
@@ -74,9 +69,6 @@ class Matcher:
             lexeme=match.group(), name=rule.name,
             line=line, column=1+index, pattern=rule.pattern,
         )
-
-    def _removeSkips(self, matches):
-        return [m for m in matches if isinstance(m, Token)]
 
     def _getLongestMatch(self, matches):
         return max(matches, key=lambda m: len(m.lexeme))
