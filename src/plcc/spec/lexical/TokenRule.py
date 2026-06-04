@@ -1,4 +1,5 @@
 from __future__ import annotations
+import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -17,7 +18,7 @@ class TokenRule:
     close_pattern: str | None = None
     isSkip: bool = field(init=False, default=False, compare=False, repr=False)
 
-    def make_match(self, match, line, index) -> Token | BlockOpened:
+    def make_match(self, match: re.Match[str], line, index) -> Token | BlockOpened:
         if self.close_pattern is not None:
             from ...scan.BlockOpened import BlockOpened
             return BlockOpened(

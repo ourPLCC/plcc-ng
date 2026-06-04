@@ -1,4 +1,5 @@
 from __future__ import annotations
+import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -17,7 +18,7 @@ class SkipRule:
     close_pattern: str | None = None
     isSkip: bool = field(init=False, default=True, compare=False, repr=False)
 
-    def make_match(self, match, line, index) -> Skip | BlockOpened:
+    def make_match(self, match: re.Match[str], line, index) -> Skip | BlockOpened:
         if self.close_pattern is not None:
             from ...scan.BlockOpened import BlockOpened
             return BlockOpened(
