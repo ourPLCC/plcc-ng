@@ -76,20 +76,19 @@ def test_match_first_longest_rule():
     result = matcher.match(line, index=0)
     assert result == Token(lexeme="123", name = "NUMBER", line = line, column=1)
 
-def test_skip_wins_if_it_matches_before_any_token_rules():
+def test_longer_token_beats_shorter_skip_regardless_of_declaration_order():
     matcher = makeMatcher(r'''
         skip ONE '1'
         token NUMBER '\d+'
     ''')
     line = parseLine("123")
     result = matcher.match(line, index=0)
-    assert result == Skip(lexeme='1', name='ONE', line = line, column=1)
+    assert result == Token(lexeme='123', name='NUMBER', line=line, column=1)
 
 
-def test_once_a_token_matches_subsequent_skip_are_ignored():
-    # ONETWOTHREE cannot win, even though it is the longest match,
-    # because there is at least one matching token rule earlier than
-    # the skip rule in the spec.
+def test_skip_and_token_tie_on_length_declaration_order_decides():
+    # ONETWOTHREE (skip) and NUMBER (token) both match '123'.
+    # ONETWOTHREE is declared first, so it wins.
     matcher = makeMatcher(r'''
         token ONETWO '12'
         skip ONETWOTHREE '123'
@@ -97,7 +96,7 @@ def test_once_a_token_matches_subsequent_skip_are_ignored():
     ''')
     line = parseLine("123")
     result = matcher.match(line, index=0)
-    assert result == Token(lexeme='123', name='NUMBER', line = line, column=1)
+    assert result == Skip(lexeme='123', name='ONETWOTHREE', line=line, column=1)
 
 
 def test_match_mid_string():
@@ -107,9 +106,9 @@ def test_match_mid_string():
     ''')
     line = parseLine("hi 123")
     result = matcher.match(line, index=3)
-    assert result == Skip(lexeme='1', name='ONE', line = line, column=4)
+    assert result == Token(lexeme='123', name='NUMBER', line=line, column=4)
     result = matcher.match(line, index=4)
-    assert result == Token(lexeme='23', name='NUMBER', line = line, column=5)
+    assert result == Token(lexeme='23', name='NUMBER', line=line, column=5)
 
 
 def test_pattern_always_set_on_token():
@@ -150,9 +149,8 @@ def test_record_attempts_token_win():
     assert losers[0]['name'] == "ONE"
 
 def test_record_attempts_skip_win_includes_token_candidates():
-    # skip appears before token in definition order AND both match '42'.
-    # Skip short-circuits: result is the Skip, but NUM should appear in
-    # attempts as a non-winning candidate.
+    # WS and NUM both match '42' with the same length.
+    # WS is declared first, so it wins by declaration order — not by skip priority.
     m = makeMatcher(r"""
         skip WS '\d+'
         token NUM '\d+'
@@ -171,8 +169,8 @@ def test_record_attempts_skip_win_includes_token_candidates():
     assert losers[0]['is_skip'] is False
 
 def test_record_attempts_token_wins_over_later_skip():
-    # TOKEN appears before SKIP in definition order, so short-circuit does
-    # not fire. SKIP should still appear in attempts as non-winner.
+    # NUM matches '42' (2 chars), WS matches '4' (1 char). NUM wins by length.
+    # WS should still appear in attempts as a non-winning candidate.
     m = makeMatcher(r"""
         token NUM '\d+'
         skip  WS  '\d'
