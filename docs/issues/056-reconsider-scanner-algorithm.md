@@ -15,7 +15,7 @@ This was inherited from the original PLCC and is likely a performance optimizati
 
 The semantic difference: under the current algorithm, a 1-character skip beats a 10-character token match at the same position. Under first-longest-match, length decides and skips have no categorical advantage.
 
-In practice this difference is unlikely to matter. Skips (whitespace, comments) and tokens (identifiers, literals) don't overlap, so skips win naturally by being the only match — not because of priority rules. Existing grammars are unlikely to rely on a skip preempting a longer token. All example grammars have been audited and confirmed: every fixture uses whitespace-only skips (`\s+`) that cannot overlap with token patterns, so no existing grammar changes behavior.
+In practice this difference is unlikely to matter. Skips (whitespace, comments) and tokens (identifiers, literals) don't overlap, so skips win naturally by being the only match — not because of priority rules. Existing grammars are unlikely to rely on a skip preempting a longer token. All example grammars have been audited and confirmed: every fixture uses whitespace skips (`\s+` or `\s*`) whose non-empty matches cannot overlap with token patterns, so no existing grammar changes behavior.
 
 ## Notes
 

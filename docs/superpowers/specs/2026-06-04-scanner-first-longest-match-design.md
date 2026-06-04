@@ -51,7 +51,7 @@ Four tests encode the old skip-priority behavior and are rewritten:
 
 ## Backward compatibility
 
-All example grammars use disjoint skip and token patterns (whitespace vs. digits/symbols). No grammar relies on a skip preempting a longer token, so no existing grammar behavior changes.
+All example grammars use whitespace skips (`\s+` or `\s*`) whose non-empty matches cannot overlap with token patterns (digits/symbols). No grammar relies on a skip preempting a longer token, so no existing grammar behavior changes.
 
 ## Invariants preserved
 
