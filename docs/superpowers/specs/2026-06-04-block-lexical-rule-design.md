@@ -68,6 +68,8 @@ class LexicalRule(Protocol):
 
 `TokenRule` and `SkipRule` satisfy this protocol structurally — no inheritance required.
 
+**Circular import note:** The Protocol's `make_match` return type includes `BlockOpened` (from `src/plcc/scan/`), but `BlockOpened.rule` references `TokenRule | SkipRule` (from `src/plcc/spec/lexical/`). Resolve with `TYPE_CHECKING` guards: use `if TYPE_CHECKING:` imports and string-quoted annotations in both files so the cycle is type-checker-only and does not exist at runtime.
+
 ### New scan types
 
 **`BlockOpened`** (new, in `src/plcc/scan/`): sentinel returned by `Matcher`, never yielded to callers.
@@ -134,12 +136,12 @@ def scan(self, lines):
 
 **`_scanBlock(opened, line, start, it)`:**
 
-1. Compile `opened.rule.close_pattern`.
-2. Search for the close pattern in `line.string[start:]` (tail of the opening line). This handles the same-line case — `'<<<content>>>'` — without special casing.
-3. **Close found on the opening line:** `lexeme = line.string[start:close_start]`; yield `opened.rule.make_block_result(lexeme, opened.line, opened.column)`; yield from `_scanLine(line, it, start=close_end)`.
-4. **Close not found:** `buffer = line.string[start:]`; consume lines from `it`:
-   - Close found on a subsequent line: `buffer += '\n' + line.string[:close_start]`; yield `opened.rule.make_block_result(buffer, opened.line, opened.column)`; yield from `_scanLine(line, it, start=close_end)`.
-   - Close not found: `buffer += '\n' + line.string`; continue.
+1. Compile `opened.rule.close_pattern` into a regex.
+2. Search for the close pattern in `line.string[start:]` (tail of the opening line). This handles the same-line case — `'<<<content>>>'` — without special casing. All match positions below are absolute indices into `line.string`, computed as `start + match.start()` / `start + match.end()`.
+3. **Close found on the opening line:** `lexeme = line.string[start:abs_close_start]`; yield `opened.rule.make_block_result(lexeme, opened.line, opened.column)`; yield from `_scanLine(line, it, start=abs_close_end)`.
+4. **Close not found on opening line:** `buffer = line.string[start:]`; consume lines from `it`:
+   - Close found on a subsequent line: search `line.string` from position 0; `buffer += '\n' + line.string[:match.start()]`; yield `opened.rule.make_block_result(buffer, opened.line, opened.column)`; yield from `_scanLine(line, it, start=match.end())`.
+   - Close not found on a subsequent line: `buffer += '\n' + line.string`; continue.
    - Iterator exhausted: yield `UnclosedBlockError(line=opened.line, column=opened.column, rule=opened.rule)`.
 
 The `Token` or `Skip` emitted in all success cases carries the opening delimiter's `line` and `column`.
