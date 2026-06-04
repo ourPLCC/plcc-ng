@@ -42,19 +42,19 @@ four
 %%%
 ''')
     assert rough_ == [
-        Line('one', 1, None),
-        Divider(tool='Java', language='Java', line=Line('%', 2, None)),
-        Line('two', 3, None),
-        Divider(tool='java', language='java', line=Line('% java', 4, None)),
-        Line('three', 5, None),
-        Divider(tool='python', language='python', line=Line('% python', 6, None)),
-        Line('four', 7, None),
-        Divider(tool='c++', language='c++', line=Line('% c++', 8, None)),
+        Line('one\n', 1, None),
+        Divider(tool='Java', language='Java', line=Line('%\n', 2, None)),
+        Line('two\n', 3, None),
+        Divider(tool='java', language='java', line=Line('% java\n', 4, None)),
+        Line('three\n', 5, None),
+        Divider(tool='python', language='python', line=Line('% python\n', 6, None)),
+        Line('four\n', 7, None),
+        Divider(tool='c++', language='c++', line=Line('% c++\n', 8, None)),
         Block([
-            Line('%%%', 9, None),
-            Line('%include nope', 10, None),
-            Line('% nope', 11, None),
-            Line('%%%', 12, None)
+            Line('%%%\n', 9, None),
+            Line('%include nope\n', 10, None),
+            Line('% nope\n', 11, None),
+            Line('%%%\n', 12, None)
         ])
     ]
 
