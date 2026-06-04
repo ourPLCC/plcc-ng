@@ -71,4 +71,5 @@ class Matcher:
         )
 
     def _getLongestMatch(self, matches):
+        # max() returns the first maximum on ties, so declaration order breaks ties.
         return max(matches, key=lambda m: len(m.lexeme))
