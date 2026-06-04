@@ -103,6 +103,88 @@ def test_scanner_does_not_hang_on_zero_length_skip():
     assert results[0].lexeme == "2"
 
 
+from ..spec.lexical.TokenRule import TokenRule
+from ..spec.lexical.SkipRule import SkipRule
+from .BlockOpened import BlockOpened
+from .UnclosedBlockError import UnclosedBlockError
+
+
+def test_block_token_single_line():
+    """Open and close on the same line emits one Token with content between delimiters."""
+    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
+    scanner = Scanner(matcher=makeMatcher([rule]))
+    lines = parseLines('<<<hello>>>\n')
+    results = list(scanner.scan(lines))
+    assert len(results) == 1
+    assert isinstance(results[0], Token)
+    assert results[0].name == 'BODY'
+    assert results[0].lexeme == 'hello'
+
+
+def test_block_token_multi_line():
+    """Content spanning multiple lines is collected into a single Token."""
+    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
+    scanner = Scanner(matcher=makeMatcher([rule]))
+    lines = parseLines('<<<line1\nline2\n>>>\n')
+    results = list(scanner.scan(lines))
+    assert len(results) == 1
+    assert isinstance(results[0], Token)
+    assert results[0].lexeme == 'line1\nline2\n'
+
+
+def test_block_token_open_line_column():
+    """Token carries the opening delimiter's line and column."""
+    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
+    other = TokenRule(line=None, name='WORD', pattern=r'\w+')
+    scanner = Scanner(matcher=makeMatcher([rule, other]))
+    lines = parseLines('abc<<<stuff>>>\n')
+    results = list(scanner.scan(lines))
+    block_tok = next(r for r in results if r.name == 'BODY')
+    assert block_tok.column == 4   # '<<<' starts at column 4
+
+
+def test_block_skip_emits_Skip():
+    """A block skip emits a Skip, not a Token."""
+    rule = SkipRule(line=None, name='COMMENT', pattern=r'/\*', close_pattern=r'\*/')
+    scanner = Scanner(matcher=makeMatcher([rule]))
+    lines = parseLines('/* hello */\n')
+    results = list(scanner.scan(lines))
+    assert len(results) == 1
+    assert isinstance(results[0], Skip)
+    assert results[0].name == 'COMMENT'
+    assert results[0].lexeme == ' hello '
+
+
+def test_block_token_tail_of_close_line_scanned():
+    """Content after the close delimiter on the same line is scanned normally."""
+    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
+    num = TokenRule(line=None, name='NUM', pattern=r'\d+')
+    ws = SkipRule(line=None, name='WS', pattern=r'\s+')
+    scanner = Scanner(matcher=makeMatcher([rule, num, ws]))
+    lines = parseLines('<<<stuff>>> 42\n')
+    results = [r for r in scanner.scan(lines) if not isinstance(r, Skip)]
+    assert len(results) == 2
+    assert results[0].name == 'BODY'
+    assert results[1].name == 'NUM'
+    assert results[1].lexeme == '42'
+
+
+def test_unclosed_block_emits_UnclosedBlockError():
+    """EOF before the close delimiter yields an UnclosedBlockError."""
+    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
+    scanner = Scanner(matcher=makeMatcher([rule]))
+    lines = parseLines('<<<no close here\n')
+    results = list(scanner.scan(lines))
+    assert len(results) == 1
+    assert isinstance(results[0], UnclosedBlockError)
+    assert results[0].column == 1
+
+
+def makeMatcher(rules):
+    from .matcher import Matcher
+    return Matcher(rules)
+
+
 def assertLexErrors(results, lineNumber, startColumn):
     c = startColumn
     for r in results:
