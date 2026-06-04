@@ -192,6 +192,18 @@ def test_block_token_multi_line_no_doubled_newlines():
     assert body_tokens[0].lexeme == 'line1\nline2\n'
 
 
+def test_newline_token_rule_matches_line_endings():
+    """token NEWLINE '\\n' can match each line ending when Line.string includes the trailing newline."""
+    from ..lines.parse_from_strings import parse_from_strings
+    nl_rule = TokenRule(line=None, name='NL', pattern=r'\n')
+    word_rule = TokenRule(line=None, name='WORD', pattern=r'\w+')
+    scanner = Scanner(matcher=makeMatcher([nl_rule, word_rule]))
+    lines = list(parse_from_strings(['hello\n', 'world\n']))
+    results = list(scanner.scan(lines))
+    token_names = [r.name for r in results if isinstance(r, Token)]
+    assert token_names == ['WORD', 'NL', 'WORD', 'NL']
+
+
 def makeMatcher(rules):
     from .matcher import Matcher
     return Matcher(rules)
