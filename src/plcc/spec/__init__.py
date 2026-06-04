@@ -8,6 +8,8 @@ from .lexical import (
     PatternCompilationError,
     PatternDelimiterExpected,
     PatternExpected,
+    SkipRule,
+    TokenRule,
 )
 from .parseSpec import parseSpec
 from .rough import Block, CircularIncludeError, Divider, Include, UnclosedBlockError
