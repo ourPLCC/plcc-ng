@@ -40,8 +40,7 @@ class Matcher:
                 continue
             if m.end() == index:
                 continue
-            sot = self._makeSkipOrToken(m, rule, line, index)
-            matches.append(sot)
+            matches.append(rule.make_match(m, line, index))
         return matches
 
     def _getPatterns(self):
@@ -51,9 +50,6 @@ class Matcher:
 
     def _compilePatterns(self):
         self._patterns = [re.compile(rule.pattern) for rule in self._rules]
-
-    def _makeSkipOrToken(self, match, rule, line, index):
-        return rule.make_match(match, line, index)
 
     def _getLongestMatch(self, matches):
         # max() returns the first maximum on ties, so declaration order breaks ties.

@@ -231,6 +231,8 @@ def test_block_skip_open_returns_BlockOpened():
     result = m.match(line, index=0)
     assert isinstance(result, BlockOpened)
     assert result.lexeme == '/*'
+    assert result.rule is rule
+    assert result.column == 1
 
 
 #helper methods
