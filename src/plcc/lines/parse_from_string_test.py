@@ -52,3 +52,11 @@ def test_TypeError():
 def test_file(fs):
     fs.create_file('/f', contents="one")
     assert parseLines(file='/f') == [Line(string='one', number=1, file='/f')]
+
+
+def test_crlf_line_ending_normalized_to_lf():
+    assert list(parseLines('one\r\ntwo\r\n')) == [Line('one\n', 1, None), Line('two\n', 2, None)]
+
+
+def test_bare_cr_line_ending_normalized_to_lf():
+    assert list(parseLines('one\rtwo\r')) == [Line('one\n', 1, None), Line('two\n', 2, None)]
