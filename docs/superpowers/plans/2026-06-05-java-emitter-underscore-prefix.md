@@ -117,13 +117,13 @@ bin/test/commands.bash 2>&1 | grep -E 'java-emit|PASS|FAIL|ok|not ok' | head -30
 
 Expected: All `java-emit` tests pass. (If `javac` is not available, they will be skipped — that is acceptable.)
 
-- [ ] **Step 4: Confirm no `$run` remains in the Java emitter or its tests**
+- [ ] **Step 4: Confirm no `$run` entry-point usage remains**
 
 ```bash
-grep -rn '\$run' src/plcc/lang/ext/java/ tests/fixtures/trivial-java.plcc tests/bats/integration/java-emit.bats
+grep -rn "_DEFAULT_ENTRY_POINT = '\$run'\|public void \$run()" src/plcc/lang/ext/java/ tests/fixtures/trivial-java.plcc tests/bats/integration/java-emit.bats
 ```
 
-Expected: No output.
+Expected: No output. (The negative assertion `'$run' not in start_java` in `emit_test.py` is intentional and will not match this pattern.)
 
 - [ ] **Step 5: Commit**
 

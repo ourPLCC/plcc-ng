@@ -8,7 +8,7 @@ Rename `$run` to `_run` in the Java emitter to match the Python emitter conventi
 
 ## Changeset
 
-All five occurrences of `$run` become `_run`. No behavioral change — `Main.java` still calls the method via reflection using `entry_point`, which is sourced from `_DEFAULT_ENTRY_POINT`.
+All five occurrences of `$run` become `_run`. This is a breaking change for any Java grammar that previously defined `public void $run()` — those grammars must be updated to define `public void _run()` instead. The reflection mechanism in `Main.java` is unchanged; it still calls the method named by `entry_point`, which is sourced from `_DEFAULT_ENTRY_POINT`.
 
 | File | Change |
 |------|--------|
@@ -20,4 +20,4 @@ All five occurrences of `$run` become `_run`. No behavioral change — `Main.jav
 
 ## Done When
 
-`bin/test/` passes clean with no `$run` remaining in the Java emitter or its tests/fixtures.
+`bin/test/` passes clean. No `_DEFAULT_ENTRY_POINT = '$run'` or `public void $run()` remains in the Java emitter or its fixtures (the negative assertion `'$run' not in ...` in the unit test is expected and correct).
