@@ -1,3 +1,4 @@
+import json
 import pytest
 from unittest.mock import patch, MagicMock
 
@@ -176,3 +177,29 @@ def test_make_plain_text_stderr_forwarded(tmp_path, monkeypatch, capsys):
 
     _, err = capsys.readouterr()
     assert 'plcc-make: something went wrong' in err
+
+
+def test_make_jsonl_stderr_reformatted_as_text(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("# stub")
+    monkeypatch.chdir(tmp_path)
+    event = json.dumps({
+        "stage": "plcc-make",
+        "time": 0,
+        "event": "started",
+        "message": "building"
+    })
+
+    def fake_run(cmd, **kwargs):
+        m = MagicMock()
+        m.returncode = 1
+        m.stderr = (event + '\n').encode()
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            run_main(['-v', '--verbose-format=text', '--no-banner'])
+
+    _, err = capsys.readouterr()
+    assert 'plcc-make: started: building' in err
+    assert event not in err  # raw JSON must NOT appear
