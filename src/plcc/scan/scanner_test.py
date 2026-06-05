@@ -108,7 +108,7 @@ def test_scanner_does_not_hang_on_zero_length_skip():
 
 
 def test_block_token_single_line():
-    """Open and close on the same line emits one Token with content between delimiters."""
+    """Open and close on the same line emits one Token whose lexeme includes the delimiters."""
     rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
     scanner = Scanner(matcher=makeMatcher([rule]))
     lines = parseLines('<<<hello>>>')
@@ -116,18 +116,18 @@ def test_block_token_single_line():
     assert len(results) == 1
     assert isinstance(results[0], Token)
     assert results[0].name == 'BODY'
-    assert results[0].lexeme == 'hello'
+    assert results[0].lexeme == '<<<hello>>>'
 
 
 def test_block_token_multi_line():
-    """Content spanning multiple lines is collected into a single Token."""
+    """Content spanning multiple lines is collected into a single Token including delimiters."""
     rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
     scanner = Scanner(matcher=makeMatcher([rule]))
     lines = parseLines('<<<line1\nline2\n>>>')
     results = list(scanner.scan(lines))
     assert len(results) == 1
     assert isinstance(results[0], Token)
-    assert results[0].lexeme == 'line1\nline2\n'
+    assert results[0].lexeme == '<<<line1\nline2\n>>>'
 
 
 def test_block_token_open_line_column():
@@ -142,7 +142,7 @@ def test_block_token_open_line_column():
 
 
 def test_block_skip_emits_Skip():
-    """A block skip emits a Skip, not a Token."""
+    """A block skip emits a Skip whose lexeme includes the delimiters."""
     rule = SkipRule(line=None, name='COMMENT', pattern=r'/\*', close_pattern=r'\*/')
     scanner = Scanner(matcher=makeMatcher([rule]))
     lines = parseLines('/* hello */')
@@ -150,7 +150,7 @@ def test_block_skip_emits_Skip():
     assert len(results) == 1
     assert isinstance(results[0], Skip)
     assert results[0].name == 'COMMENT'
-    assert results[0].lexeme == ' hello '
+    assert results[0].lexeme == '/* hello */'
 
 
 def test_block_token_tail_of_close_line_scanned():
@@ -179,7 +179,7 @@ def test_unclosed_block_emits_UnclosedBlockError():
 
 
 def test_block_token_multi_line_no_doubled_newlines():
-    """Regression for issue-061: file-style lines (string includes \\n) must not produce doubled newlines in the lexeme."""
+    """Regression for issue-061: file-style lines must not produce doubled newlines in the lexeme."""
     from ..lines.parse_from_strings import parse_from_strings
     rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
     ws = SkipRule(line=None, name='WS', pattern=r'\s+')
@@ -187,7 +187,18 @@ def test_block_token_multi_line_no_doubled_newlines():
     lines = list(parse_from_strings(['<<<line1\n', 'line2\n', '>>>\n']))
     body_tokens = [r for r in scanner.scan(lines) if isinstance(r, Token) and r.name == 'BODY']
     assert len(body_tokens) == 1
-    assert body_tokens[0].lexeme == 'line1\nline2\n'
+    assert body_tokens[0].lexeme == '<<<line1\nline2\n>>>'
+
+
+def test_block_token_multi_line_close_on_own_line():
+    """Multi-line block where the close delimiter is on its own line includes all delimiters."""
+    rule = TokenRule(line=None, name='BODY', pattern=r'/\*', close_pattern=r'\*/')
+    scanner = Scanner(matcher=makeMatcher([rule]))
+    lines = parseLines('/*\nhi\n*/')
+    results = list(scanner.scan(lines))
+    assert len(results) == 1
+    assert isinstance(results[0], Token)
+    assert results[0].lexeme == '/*\nhi\n*/'
 
 
 def test_newline_token_rule_matches_line_endings():

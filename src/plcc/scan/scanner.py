@@ -36,16 +36,16 @@ class Scanner:
         # Check for close on the opening line (same-line case).
         m = close_re.search(line.string, start)
         if m:
-            lexeme = line.string[start:m.start()]
+            lexeme = opened.lexeme + line.string[start:m.start()] + m.group()
             yield opened.rule.make_block_result(lexeme, opened.line, opened.column)
             yield from self._scanLine(line, it, start=m.end())
             return
         # Close not on opening line — buffer and consume subsequent lines.
-        buffer = line.string[start:]
+        buffer = opened.lexeme + line.string[start:]
         for next_line in it:
             m = close_re.search(next_line.string)
             if m:
-                buffer += next_line.string[:m.start()]
+                buffer += next_line.string[:m.start()] + m.group()
                 yield opened.rule.make_block_result(buffer, opened.line, opened.column)
                 yield from self._scanLine(next_line, it, start=m.end())
                 return
