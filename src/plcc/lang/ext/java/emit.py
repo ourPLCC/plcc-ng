@@ -22,11 +22,11 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = __doc__ + VERBOSE_OPTIONS
 
-_DEFAULT_ENTRY_POINT = '$run'
+_DEFAULT_ENTRY_POINT = '_run'
 
 _START_JAVA = """\
 public abstract class _Start extends runtime.Node {
-    public void $run() {
+    public void _run() {
         System.out.println(this.toString());
     }
 }

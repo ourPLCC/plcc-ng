@@ -24,7 +24,7 @@ def _trivial_model():
                 "tool": "Java",
                 "fragments": [
                     {"class_name": "Program", "kind": "body",
-                     "body": "    public void $run() {\n        System.out.println(expr.toString());\n    }"},
+                     "body": "    public void _run() {\n        System.out.println(expr.toString());\n    }"},
                 ]
             }
         ]
@@ -54,6 +54,14 @@ def test_start_class_extends_start(tmp_path, monkeypatch):
     run_main([f'--output={tmp_path}'])
     program_java = (tmp_path / 'Program.java').read_text()
     assert 'extends _Start' in program_java
+
+
+def test_start_java_uses_underscore_run(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    start_java = (tmp_path / '_Start.java').read_text()
+    assert 'public void _run()' in start_java
+    assert '$run' not in start_java
 
 
 def test_non_start_class_does_not_extend_start(tmp_path, monkeypatch):

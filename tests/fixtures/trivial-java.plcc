@@ -5,7 +5,7 @@ skip SPACE '\s+'
 % Java Java
 Program
 %%%
-    public void $run() {
+    public void _run() {
         System.out.println(num.toString());
     }
 %%%

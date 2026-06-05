@@ -39,7 +39,7 @@ teardown() { rm -rf "${WORK_DIR}"; }
     [ "$status" -eq 0 ]
 }
 
-@test "run outputs token lexeme from void \$run()" {
+@test "run outputs token lexeme from void _run()" {
     TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [[ "$output" == *"99"* ]]
