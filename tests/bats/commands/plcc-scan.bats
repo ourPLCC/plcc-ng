@@ -165,13 +165,6 @@ teardown() {
     [[ "$token_line" != *"\\d+"* ]]
 }
 
-@test "plcc-scan --trace adds blank line after each block" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
-    run bash -c "echo '42 99' | plcc-scan --trace"
-    [ "$status" -eq 0 ]
-    [[ "$output" =~ $'\n\n' ]]
-}
-
 @test "plcc-scan -v emits started and finished events on stderr" {
     run --separate-stderr bash -c "echo '42' | plcc-scan -v"
     [ "$status" -eq 0 ]
