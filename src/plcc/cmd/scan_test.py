@@ -129,3 +129,54 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
     monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "0")
     run_main([])
     assert captured.get("submit_on") == SubmitOn.EOF
+
+
+def test_main_version_line_appears_even_when_make_fails(monkeypatch, capsys):
+    monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=1))
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
+    with pytest.raises(SystemExit):
+        run_main([])
+    out, _ = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in out
+
+
+def test_main_no_banner_suppresses_version_line(monkeypatch, tmp_path, capsys):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    monkeypatch.setattr(_scan_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
+    run_main(["--no-banner"])
+    out, _ = capsys.readouterr()
+    assert "plcc-ng" not in out
+
+
+def test_main_no_banner_suppresses_grammar_line(monkeypatch, tmp_path, capsys):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    monkeypatch.setattr(_scan_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
+    run_main(["--no-banner"])
+    out, _ = capsys.readouterr()
+    assert "grammar:" not in out
+
+
+def test_main_make_call_includes_no_banner(monkeypatch, tmp_path, capsys):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    calls = []
+    def fake_run(cmd, **kw):
+        calls.append(list(cmd))
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    monkeypatch.setattr(_scan_module, "SourceRunner",
+                        lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "0")
+    run_main([])
+    make_calls = [c for c in calls if c and c[0] == "plcc-make"]
+    assert make_calls, "plcc-make was not called"
+    assert any("--no-banner" in c for c in make_calls)

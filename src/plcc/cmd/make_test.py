@@ -1,5 +1,6 @@
 import pytest
 import docopt
+from types import SimpleNamespace
 
 from .make import main as run_main, validate_tool_name, _report_ll1_failure
 from plcc.build.grammar import read_grammar, write_grammar
@@ -271,3 +272,48 @@ def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
     with pytest.raises(SystemExit):
         run_main(["--grammar=bad.plcc"])
     assert read_grammar(build) == "bad.plcc"
+
+
+def test_make_main_version_line_appears_before_grammar_error(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
+    with pytest.raises(SystemExit):
+        run_main([])  # no grammar.plcc — fails early
+    out, _ = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in out
+
+
+def test_make_main_no_banner_suppresses_version_line(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
+    with pytest.raises(SystemExit):
+        run_main(["--no-banner"])  # no grammar.plcc — fails, but no version
+    out, _ = capsys.readouterr()
+    assert "plcc-ng" not in out
+
+
+def test_make_main_grammar_line_appears_after_grammar_resolved(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("")
+    monkeypatch.setattr("subprocess.run",
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
+    with pytest.raises(SystemExit):
+        run_main([])
+    out, _ = capsys.readouterr()
+    assert "grammar:" in out
+    assert str(grammar) in out
+
+
+def test_make_main_no_banner_suppresses_grammar_line(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("")
+    monkeypatch.setattr("subprocess.run",
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
+    with pytest.raises(SystemExit):
+        run_main(["--no-banner"])
+    out, _ = capsys.readouterr()
+    assert "grammar:" not in out

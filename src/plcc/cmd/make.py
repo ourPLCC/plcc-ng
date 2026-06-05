@@ -17,6 +17,8 @@ from plcc.build.staleness import (
 )
 from plcc.build.grammar import read_grammar, write_grammar
 from plcc.ll1.format_conflict_message import format_conflict_message
+from plcc.version import get_version
+from .output import print_version_line, print_grammar_line
 
 __doc__ = """plcc-make
     Build a PLCC project from a grammar file.
@@ -29,6 +31,7 @@ Options:
                             Grammar to build from. Once set, remembered for subsequent
                             commands until changed. Defaults to grammar.plcc on first use.
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
+    --no-banner             Suppress the version and grammar banner.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -44,6 +47,8 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
+    if "--no-banner" not in argv:
+        print_version_line(get_version())
     try:
         args = docopt(__doc__, argv)
     except DocoptExit as e:
@@ -52,6 +57,7 @@ def main(argv=None):
         print("Run 'plcc-make --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
+    no_banner = args["--no-banner"]
     verbose = VerboseContext.from_args("plcc-make", Events, args)
     explicit_grammar = args['--grammar']
     through = args['--through']
@@ -86,6 +92,9 @@ def main(argv=None):
     if not os.path.exists(grammar):
         print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
         sys.exit(1)
+
+    if not no_banner:
+        print_grammar_line(os.path.abspath(grammar))
 
     if (
         explicit_grammar is not None
