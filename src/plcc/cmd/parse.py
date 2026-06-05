@@ -59,7 +59,8 @@ class ParseHandler:
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    if "--no-banner" not in argv:
+    _opts = argv[:argv.index("--")] if "--" in argv else argv
+    if "--no-banner" not in _opts:
         print_version_line(get_version())
     try:
         args = docopt(__doc__, argv)
