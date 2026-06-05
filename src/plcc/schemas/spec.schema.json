@@ -15,10 +15,9 @@
             "type": "object",
             "required": ["name", "pattern", "isSkip"],
             "properties": {
-              "name":          { "type": "string" },
-              "pattern":       { "type": "string" },
-              "isSkip":        { "type": "boolean" },
-              "close_pattern": { "type": ["string", "null"] }
+              "name":    { "type": "string" },
+              "pattern": { "type": "string" },
+              "isSkip":  { "type": "boolean" }
             }
           }
         }

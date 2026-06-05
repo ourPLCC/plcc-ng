@@ -1,9 +1,6 @@
 from ..lines import parseLines
 from ..spec import parseSpec
-from ..spec.lexical.TokenRule import TokenRule
-from ..spec.lexical.SkipRule import SkipRule
 from . import matcher
-from .BlockOpened import BlockOpened
 from .LexError import LexError
 from .Skip import Skip
 from .Token import Token
@@ -212,27 +209,6 @@ def test_token_zero_length_match_is_lex_error():
     line = parseLine("x")
     result = m.match(line, index=0)
     assert isinstance(result, LexError)
-
-
-def test_block_token_open_returns_BlockOpened():
-    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
-    m = matcher.Matcher([rule])
-    line = parseLine('<<<content')
-    result = m.match(line, index=0)
-    assert isinstance(result, BlockOpened)
-    assert result.lexeme == '<<<'
-    assert result.rule is rule
-    assert result.column == 1
-
-def test_block_skip_open_returns_BlockOpened():
-    rule = SkipRule(line=None, name='COMMENT', pattern=r'/\*', close_pattern=r'\*/')
-    m = matcher.Matcher([rule])
-    line = parseLine('/* comment')
-    result = m.match(line, index=0)
-    assert isinstance(result, BlockOpened)
-    assert result.lexeme == '/*'
-    assert result.rule is rule
-    assert result.column == 1
 
 
 #helper methods

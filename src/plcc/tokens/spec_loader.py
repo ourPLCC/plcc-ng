@@ -16,7 +16,6 @@ def load_lexical_rules(spec_json_path):
         rules.append(RuleClass(
             name=r['name'],
             pattern=r['pattern'],
-            close_pattern=r.get('close_pattern'),
             line=None,
         ))
     return rules

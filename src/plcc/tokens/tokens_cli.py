@@ -9,9 +9,8 @@ from ..scan.matcher import Matcher
 from ..scan.scanner import Scanner
 from ..scan.Skip import Skip
 from ..scan.LexError import LexError
-from ..scan.UnclosedBlockError import UnclosedBlockError
 from .spec_loader import load_lexical_rules
-from .jsonl_formatter import format_record, format_error_record, format_unclosed_block_error_record
+from .jsonl_formatter import format_record, format_error_record
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-tokens
@@ -60,9 +59,6 @@ def main(argv=None):
             continue
         if isinstance(obj, LexError):
             print(format_error_record(obj), flush=True)
-            continue
-        if isinstance(obj, UnclosedBlockError):
-            print(format_unclosed_block_error_record(obj), flush=True)
             continue
         last_source = {"file": obj.line.file, "line": obj.line.number, "column": obj.column}
         print(format_record(obj, show_all=trace), flush=True)
