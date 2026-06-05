@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from .scan import ScanHandler, main as run_main
+from .source_runner import SubmitOn
 import plcc.cmd.scan as _scan_module
 
 
@@ -114,3 +115,17 @@ def test_main_banner_goes_to_stdout(monkeypatch, tmp_path, capsys):
     run_main([])
     _, err = capsys.readouterr()
     assert "plcc-ng" not in err
+
+
+def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    captured = {}
+    def fake_runner(**kw):
+        captured.update(kw)
+        return type("R", (), {"run": lambda self, s, h: True})()
+    monkeypatch.setattr(_scan_module, "SourceRunner", fake_runner)
+    monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "0")
+    run_main([])
+    assert captured.get("submit_on") == SubmitOn.EOF

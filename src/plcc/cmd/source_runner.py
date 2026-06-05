@@ -8,8 +8,8 @@ CONTINUATION = "... "
 
 
 class SubmitOn(enum.Enum):
-    EOL = "eol"   # each newline submits — plcc-scan
-    EOF = "eof"   # ^D submits — plcc-parse
+    EOL = "eol"   # each newline submits
+    EOF = "eof"   # ^D submits
 
 
 @dataclass
