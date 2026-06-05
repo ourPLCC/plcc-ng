@@ -203,3 +203,22 @@ def test_make_jsonl_stderr_reformatted_as_text(tmp_path, monkeypatch, capsys):
     _, err = capsys.readouterr()
     assert 'plcc-make: started: building' in err
     assert event not in err  # raw JSON must NOT appear
+
+
+def test_empty_child_stderr_produces_no_output(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("# stub")
+    monkeypatch.chdir(tmp_path)
+
+    def fake_run(cmd, **kwargs):
+        m = MagicMock()
+        m.returncode = 1
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            run_main(['--no-banner'])
+
+    _, err = capsys.readouterr()
+    assert err == ''
