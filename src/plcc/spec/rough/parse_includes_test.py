@@ -31,7 +31,7 @@ def test_include():
     assert list(parse_includes(lines_)) == [
         Include(
             file='file',
-            line=lines.Line('%include file', 1, None)
+            line=lines.Line('%include file\n', 1, None)
         )
     ]
 
@@ -45,9 +45,9 @@ def test_ignores_includes_in_blocks():
     assert list(parse_includes(lines_)) == [
         Block(
             [
-                lines.Line('%%%', 1, None),
-                lines.Line('%include file', 2, None),
-                lines.Line('%%%', 3, None)
+                lines.Line('%%%\n', 1, None),
+                lines.Line('%include file\n', 2, None),
+                lines.Line('%%%\n', 3, None)
             ]
         )
     ]

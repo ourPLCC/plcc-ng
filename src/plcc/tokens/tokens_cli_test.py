@@ -232,3 +232,31 @@ def test_unhandled_newline_produces_lex_error(capsys, monkeypatch, fs):
     assert non_sentinel[0]['name'] == 'NUM'
     assert non_sentinel[1]['kind'] == 'error'
     assert non_sentinel[1]['lexeme'] == '\n'
+
+
+_SPEC_WITH_BLOCK = {
+    "lexical": {"ruleList": [
+        {"name": "BODY", "pattern": "<<<", "close_pattern": ">>>", "isSkip": False,
+         "line": {"string": "", "number": 1, "file": None}},
+        {"name": "WS", "pattern": "\\s+", "isSkip": True,
+         "line": {"string": "", "number": 2, "file": None}},
+    ]},
+    "syntax": {"rules": []},
+    "semantics": []
+}
+
+
+def test_unclosed_block_emits_error_record(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC_WITH_BLOCK))
+    monkeypatch.setattr('sys.stdin', io.StringIO('<<<hello'))  # no closing >>>
+    run_main(['/spec.json'])
+    out, err = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    records = [json.loads(l) for l in lines]
+    error_records = [r for r in records if r.get('kind') == 'error']
+    assert len(error_records) == 1
+    record = error_records[0]
+    assert record['stage'] == 'plcc-tokens'
+    assert record['severity'] == 'error'
+    assert 'BODY' in record['message']
+    assert err == ''

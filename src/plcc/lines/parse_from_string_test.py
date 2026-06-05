@@ -13,7 +13,7 @@ def test_empty_yields_nothing():
 
 
 def test_eol_yields_single_empty_line():
-    assert list(parseLines('\n')) == [Line('', 1, None)]
+    assert list(parseLines('\n')) == [Line('\n', 1, None)]
 
 
 def test_one_line_without_eol_yields_single_line():
@@ -21,19 +21,19 @@ def test_one_line_without_eol_yields_single_line():
 
 
 def test_one_line_with_eol_yields_single_line():
-    assert list(parseLines('one\n')) == [Line('one', 1, None)]
+    assert list(parseLines('one\n')) == [Line('one\n', 1, None)]
 
 
 def test_multiple_lines():
-    assert list(parseLines('one\ntwo')) == [Line('one', 1, None), Line('two', 2, None)]
+    assert list(parseLines('one\ntwo')) == [Line('one\n', 1, None), Line('two', 2, None)]
 
 
 def test_set_start_of_numbering():
-    assert list(parseLines('one\ntwo', startLineNumber=3)) == [Line('one', 3, None), Line('two', 4, None)]
+    assert list(parseLines('one\ntwo', startLineNumber=3)) == [Line('one\n', 3, None), Line('two', 4, None)]
 
 
 def test_set_file():
-    assert list(parseLines('one\ntwo', file='/f')) == [Line('one', 1, '/f'), Line('two', 2, '/f')]
+    assert list(parseLines('one\ntwo', file='/f')) == [Line('one\n', 1, '/f'), Line('two', 2, '/f')]
 
 
 def test_strings():
@@ -52,3 +52,11 @@ def test_TypeError():
 def test_file(fs):
     fs.create_file('/f', contents="one")
     assert parseLines(file='/f') == [Line(string='one', number=1, file='/f')]
+
+
+def test_crlf_line_ending_normalized_to_lf():
+    assert list(parseLines('one\r\ntwo\r\n')) == [Line('one\n', 1, None), Line('two\n', 2, None)]
+
+
+def test_bare_cr_line_ending_normalized_to_lf():
+    assert list(parseLines('one\rtwo\r')) == [Line('one\n', 1, None), Line('two\n', 2, None)]

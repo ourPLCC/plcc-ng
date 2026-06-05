@@ -2,21 +2,21 @@
 
 import json
 
-# plcc.spec.lexical.LexicalRule can be imported without circular dependency,
-# so we use it directly rather than defining a private dataclass.
-from ..spec.lexical import LexicalRule
+from ..spec.lexical.TokenRule import TokenRule
+from ..spec.lexical.SkipRule import SkipRule
 
 
 def load_lexical_rules(spec_json_path):
-    """Return a list of LexicalRule objects from a spec JSON file."""
+    """Return a list of TokenRule/SkipRule objects from a spec JSON file."""
     with open(spec_json_path) as f:
         data = json.load(f)
-    return [
-        LexicalRule(
+    rules = []
+    for r in data['lexical']['ruleList']:
+        RuleClass = SkipRule if r['isSkip'] else TokenRule
+        rules.append(RuleClass(
             name=r['name'],
             pattern=r['pattern'],
-            isSkip=r['isSkip'],
+            close_pattern=r.get('close_pattern'),
             line=None,
-        )
-        for r in data['lexical']['ruleList']
-    ]
+        ))
+    return rules

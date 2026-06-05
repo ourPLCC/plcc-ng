@@ -7,4 +7,6 @@ from .parseLexicalSpec import parseLexicalSpec
 from .PatternCompilationError import PatternCompilationError
 from .PatternDelimiterExpected import PatternDelimiterExpected
 from .PatternExpected import PatternExpected
+from .SkipRule import SkipRule
+from .TokenRule import TokenRule
 from .UnexpectedContent import UnexpectedContent

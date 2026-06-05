@@ -1,4 +1,3 @@
-from .Token import Token
 from .LexError import LexError
 from .Skip import Skip
 import re
@@ -41,8 +40,7 @@ class Matcher:
                 continue
             if m.end() == index:
                 continue
-            sot = self._makeSkipOrToken(m, rule, line, index)
-            matches.append(sot)
+            matches.append(rule.make_match(m, line, index))
         return matches
 
     def _getPatterns(self):
@@ -52,23 +50,6 @@ class Matcher:
 
     def _compilePatterns(self):
         self._patterns = [re.compile(rule.pattern) for rule in self._rules]
-
-    def _makeSkipOrToken(self, match, rule, line, index):
-        if rule.isSkip:
-            return self._makeSkip(match, rule, line, index)
-        return self._makeToken(match, rule, line, index)
-
-    def _makeSkip(self, match, rule, line, index):
-        return Skip(
-            lexeme=match.group(), name=rule.name,
-            line=line, column=1+index, pattern=rule.pattern,
-        )
-
-    def _makeToken(self, match, rule, line, index):
-        return Token(
-            lexeme=match.group(), name=rule.name,
-            line=line, column=1+index, pattern=rule.pattern,
-        )
 
     def _getLongestMatch(self, matches):
         # max() returns the first maximum on ties, so declaration order breaks ties.

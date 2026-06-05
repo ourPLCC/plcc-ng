@@ -1,8 +1,10 @@
 import pytest
 
 from .parseLexicalSpec import parseLexicalSpec
-from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent
+from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent, PatternCompilationError
 from .check_for_duplicate_names import DuplicateName
+from .TokenRule import TokenRule
+from .SkipRule import SkipRule
 
 def test_TypeError():
     with pytest.raises(TypeError):
@@ -162,8 +164,8 @@ def test_junk_at_the_end_of_a_line():
         SPACE ' ' junk
     ''')
     assert len(errors) == 1
-    assert errors[0].__class__ == UnexpectedContent
-    assert len(spec.ruleList) == 1
+    assert errors[0].__class__ == PatternDelimiterExpected
+    assert len(spec.ruleList) == 0
 
 
 def test_hash_in_pattern_is_not_a_comment():
@@ -245,3 +247,55 @@ def test_multiple_of_same_duplication():
     assert errors[0].__class__ == DuplicateName
     assert errors[1].__class__ == DuplicateName
     assert len(spec.ruleList) == 3
+
+
+def test_token_rule_produces_TokenRule():
+    spec, errors = parseLexicalSpec("token SPACE ' '")
+    assert errors == []
+    assert isinstance(spec.ruleList[0], TokenRule)
+
+
+def test_skip_rule_produces_SkipRule():
+    spec, errors = parseLexicalSpec("skip SPACE ' '")
+    assert errors == []
+    assert isinstance(spec.ruleList[0], SkipRule)
+
+
+def test_implicit_token_produces_TokenRule():
+    spec, errors = parseLexicalSpec("SPACE ' '")
+    assert errors == []
+    assert isinstance(spec.ruleList[0], TokenRule)
+
+
+def test_block_token_rule():
+    spec, errors = parseLexicalSpec("token BODY '<<<' '>>>'")
+    assert errors == []
+    assert len(spec.ruleList) == 1
+    r = spec.ruleList[0]
+    assert isinstance(r, TokenRule)
+    assert r.name == 'BODY'
+    assert r.pattern == '<<<'
+    assert r.close_pattern == '>>>'
+
+def test_block_skip_rule():
+    spec, errors = parseLexicalSpec(r"skip COMMENT '/\*' '\*/'")
+    assert errors == []
+    r = spec.ruleList[0]
+    assert isinstance(r, SkipRule)
+    assert r.pattern == r'/\*'
+    assert r.close_pattern == r'\*/'
+
+def test_block_rule_close_pattern_must_compile():
+    spec, errors = parseLexicalSpec("token BODY '<<<' '>>>[' ")
+    assert len(errors) == 1
+    assert isinstance(errors[0], PatternCompilationError)
+
+def test_block_rule_close_delimiter_required():
+    spec, errors = parseLexicalSpec("token BODY '<<<' '>>>")
+    assert len(errors) == 1
+    assert isinstance(errors[0], PatternDelimiterExpected)
+
+def test_block_rule_no_extra_content_after_close_pattern():
+    spec, errors = parseLexicalSpec("token BODY '<<<' '>>>' extra")
+    assert len(errors) == 1
+    assert isinstance(errors[0], UnexpectedContent)

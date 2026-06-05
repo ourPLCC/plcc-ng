@@ -16,4 +16,5 @@ class SpecError(ValidationError):
 
     def __str__(self):
         m = f'\n{self.message}' if self.message else ''
-        return f'''{self.__class__.__name__}: {self.line.file}:{self.line.number}:{self.column}\n{self.line.string}\n{' '*(self.column-1)}^{m}\n'''
+        source = self.line.string.rstrip('\n')
+        return f'''{self.__class__.__name__}: {self.line.file}:{self.line.number}:{self.column}\n{source}\n{' '*(self.column-1)}^{m}\n'''
