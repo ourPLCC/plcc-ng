@@ -51,10 +51,6 @@ class Parser():
         if regex is None:
             return
 
-        close_pattern, index = self._parseOptionalPattern(line, string, index)
-        if close_pattern is None and index is None:
-            return  # error already recorded
-
         m = re.compile(r'\s*(?:#.*)?$').match(string, index)
         if not m:
             wsl = self._getLengthOfLeadingWhitespace(string, index)
@@ -62,7 +58,7 @@ class Parser():
             return
 
         RuleClass = SkipRule if type_ == 'skip' else TokenRule
-        self.ruleList.append(RuleClass(line=line, name=name, pattern=regex, close_pattern=close_pattern))
+        self.ruleList.append(RuleClass(line=line, name=name, pattern=regex))
 
     def _parsePattern(self, line, string, index):
         """Parse a delimited pattern. Returns (regex, new_index) or (None, None) on error."""
@@ -91,13 +87,6 @@ class Parser():
             return None, None
         index += len(m[0])
         return regex, index
-
-    def _parseOptionalPattern(self, line, string, index):
-        """Parse a second delimited pattern if present. Returns (regex, new_index) or (None, index) if absent, or (None, None) on error."""
-        m = re.compile(r'\s*(?:#.*)?$').match(string, index)
-        if m:
-            return None, index  # no second pattern — that's fine
-        return self._parsePattern(line, string, index)
 
     def _getLengthOfLeadingWhitespace(self, string, index):
         ws = re.compile(r'\s*').match(string, index)
