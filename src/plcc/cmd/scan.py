@@ -165,7 +165,7 @@ def main(argv=None):
     tokens_flags = child_flags + (["--trace"] if trace else [])
 
     handler = ScanHandler(spec_path=spec_path, tokens_flags=tokens_flags)
-    runner = SourceRunner(submit_on=SubmitOn.EOL)
+    runner = SourceRunner(submit_on=SubmitOn.EOF)
     runner.run(sources, handler)
 
     verbose.emit(Events.FINISHED, message="done")
