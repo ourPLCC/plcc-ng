@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class TokenRule:
-    line: Line
+    line: Line | None
     name: str
     pattern: str
     close_pattern: str | None = None

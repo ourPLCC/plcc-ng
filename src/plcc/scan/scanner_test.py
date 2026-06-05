@@ -2,10 +2,14 @@ import pytest
 
 from ..lines import parseLines
 from ..spec import parseSpec
+from ..spec.lexical.TokenRule import TokenRule
+from ..spec.lexical.SkipRule import SkipRule
+from .BlockOpened import BlockOpened
 from .scanner import Scanner
 from .LexError import LexError
 from .Skip import Skip
 from .Token import Token
+from .UnclosedBlockError import UnclosedBlockError
 from . import matcher as matcherModule
 
 
@@ -101,12 +105,6 @@ def test_scanner_does_not_hang_on_zero_length_skip():
     assert len(tokens) == 1
     assert tokens[0].name == "NUM"
     assert tokens[0].lexeme == "2"
-
-
-from ..spec.lexical.TokenRule import TokenRule
-from ..spec.lexical.SkipRule import SkipRule
-from .BlockOpened import BlockOpened
-from .UnclosedBlockError import UnclosedBlockError
 
 
 def test_block_token_single_line():
