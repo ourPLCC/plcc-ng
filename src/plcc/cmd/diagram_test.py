@@ -157,3 +157,22 @@ def test_diagram_main_make_call_includes_no_banner(tmp_path, monkeypatch):
     make_calls = [c for c in calls if c and c[0] == 'plcc-make']
     assert make_calls, "plcc-make was not called"
     assert any('--no-banner' in c for c in make_calls)
+
+
+def test_make_plain_text_stderr_forwarded(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("# stub")
+    monkeypatch.chdir(tmp_path)
+
+    def fake_run(cmd, **kwargs):
+        m = MagicMock()
+        m.returncode = 1
+        m.stderr = b'plcc-make: something went wrong\n'
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            run_main(['--no-banner'])
+
+    _, err = capsys.readouterr()
+    assert 'plcc-make: something went wrong' in err
