@@ -1,7 +1,7 @@
 import pytest
 
 from .parseLexicalSpec import parseLexicalSpec
-from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent, PatternCompilationError
+from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent
 from .check_for_duplicate_names import DuplicateName
 from .TokenRule import TokenRule
 from .SkipRule import SkipRule
