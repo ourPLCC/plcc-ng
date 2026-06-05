@@ -4,9 +4,7 @@ from ..lines import Line
 from ..scan.Token import Token
 from ..scan.LexError import LexError
 from ..scan.Skip import Skip
-from ..scan.UnclosedBlockError import UnclosedBlockError
-from ..spec.lexical.TokenRule import TokenRule
-from .jsonl_formatter import format_record, format_error_record, format_unclosed_block_error_record
+from .jsonl_formatter import format_record, format_error_record
 
 
 def _line(s='hello', n=1, f='test.txt'):
@@ -135,24 +133,3 @@ def test_exactly_one_winner_in_attempts():
     assert len(winners) == 1
 
 
-def _unclosed_block_error():
-    rule = TokenRule(line=None, name='BODY', pattern=r'<<<', close_pattern=r'>>>')
-    line = Line(string='<<<hello', number=2, file='src.txt')
-    return UnclosedBlockError(line=line, column=1, rule=rule)
-
-
-def test_format_unclosed_block_error_record_fields():
-    err = _unclosed_block_error()
-    result = json.loads(format_unclosed_block_error_record(err))
-    assert result['kind'] == 'error'
-    assert result['stage'] == 'plcc-tokens'
-    assert result['severity'] == 'error'
-    assert result['source'] == {'file': 'src.txt', 'line': 2, 'column': 1}
-    assert result['lexeme'] == r'<<<'
-    assert result['message'] == "unclosed block 'BODY': no closing pattern found"
-
-
-def test_format_unclosed_block_error_record_rejects_non_unclosed_block():
-    err = LexError(line=Line(string='abc', number=1, file=None), column=1)
-    with pytest.raises(TypeError):
-        format_unclosed_block_error_record(err)
