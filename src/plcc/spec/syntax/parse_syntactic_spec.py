@@ -85,7 +85,7 @@ class SyntacticLineParser:
         ]
 
     def _parseSymbol(self, symbol: str) -> Symbol:
-        capturing = re.fullmatch(r"<(?P<name>\S*)>(?::(?P<altName>\S+))?", symbol)
+        capturing = re.fullmatch(r"<(?P<name>[^:>]+)(?::(?P<altName>[^>]+))?>", symbol)
         if capturing:
             return self._parseCapturing(capturing["name"], capturing["altName"])
         if symbol.startswith("<"):
@@ -105,14 +105,14 @@ class SyntacticLineParser:
     ) -> tuple[Match[str] | None, Match[str] | None, Match[str] | None]:
         lineStr = self.line.string.split("#")[0].strip()
         standard = re.match(
-            r"^\s*(?P<lhs><\S+>(?::\S+)?)\s*::=(?:\s(?P<rhs>.*))?", lineStr
+            r"^\s*(?P<lhs><[^>]+>)\s*::=(?:\s(?P<rhs>.*))?", lineStr
         )
         separated = re.match(
-            r"^\s*(?P<lhs><\S+>(?::\S+)?)\s*\*\*=\s(?P<rhs>.*)(?P<separator>\+.*)",
+            r"^\s*(?P<lhs><[^>]+>)\s*\*\*=\s(?P<rhs>.*)(?P<separator>\+.*)",
             lineStr,
         )
         repeating = re.match(
-            r"^\s*(?P<lhs><\S+>(?::\S+)?)\s*\*\*=\s(?P<rhs>.*)", lineStr
+            r"^\s*(?P<lhs><[^>]+>)\s*\*\*=\s(?P<rhs>.*)", lineStr
         )
         return standard, separated, repeating
 
@@ -137,7 +137,7 @@ class SyntacticLineParser:
         )
 
     def _matchLeft(self) -> Match[str] | None:
-        return re.match(r"<(?P<nonTerminal>\S*)>(?::(?P<altName>\S+))?\s*", self.lhs)
+        return re.match(r"<(?P<nonTerminal>[^:>]+)(?::(?P<altName>[^>]+))?>\s*", self.lhs)
 
     def isSyntacticRule(self) -> bool:
         return re.match(
