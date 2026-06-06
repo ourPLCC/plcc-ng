@@ -51,3 +51,23 @@ def _parse_step_record(event="predict", sym="program", lookahead="NUM",
         "production": production,
         "depth": depth,
     }).encode() + b"\n"
+
+
+def _shift_step_record(name="NUM", lexeme="42", file="-", line=1, col=1, depth=1):
+    return json.dumps({
+        "kind": "parse-step",
+        "event": "shift",
+        "name": name,
+        "lexeme": lexeme,
+        "source": {"file": file, "line": line, "column": col},
+        "depth": depth,
+    }).encode() + b"\n"
+
+
+def _complete_step_record(rule="program", depth=0):
+    return json.dumps({
+        "kind": "parse-step",
+        "event": "complete",
+        "rule": rule,
+        "depth": depth,
+    }).encode() + b"\n"

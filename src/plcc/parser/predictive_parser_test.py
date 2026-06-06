@@ -533,3 +533,14 @@ def test_parse_with_tracer_arbno_predict_production_is_none():
     parse(_RANDS_LL1, [_tok("NUM", "1")], tracer=t)
     arbno_predicts = [e for e in t.events if e["event"] == "predict" and e["sym"] == "rands"]
     assert arbno_predicts[0]["production"] is None
+
+
+def test_parse_with_tracer_arbno_predict_has_matching_complete():
+    # Each ARBNO predict must be followed by a matching complete so that
+    # _render_trace can keep its stack balanced. Two iterations → two completes.
+    t = Tracer()
+    parse(_RANDS_LL1, [_tok("NUM", "1"), _tok("COMMA", ","), _tok("NUM", "2")], tracer=t)
+    arbno_predicts = [e for e in t.events if e["event"] == "predict" and e["sym"] == "rands"]
+    arbno_completes = [e for e in t.events if e["event"] == "complete" and e["rule"] == "rands"]
+    assert len(arbno_predicts) == len(arbno_completes)
+

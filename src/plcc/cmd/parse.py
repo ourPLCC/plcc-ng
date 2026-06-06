@@ -23,7 +23,6 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-    -t --trace                  Show step-by-step trace of the parse algorithm.
     -g <path> --grammar=<path>  Grammar to build from. Once set, remembered for subsequent
                                 commands until changed. Defaults to grammar.plcc on first use.
     --no-banner                 Suppress the version and grammar banner.
@@ -36,22 +35,25 @@ class Events(enum.Enum):
 
 
 class ParseHandler:
-    def __init__(self, spec_path, ll1_path, child_flags, trees_flags=None, verbose=None):
-        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags, trees_flags=trees_flags, verbose=verbose)
+    def __init__(self, spec_path, ll1_path, child_flags, verbose=None):
+        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags, verbose=verbose)
         self.had_error = False
 
     def feed(self, content, source, eof=False):
         items = self._pipeline.run(content, eof)
         if items is None:
             return False
+        buffered_steps = []
         for record, _ in items:
             if record.get("kind") == "parse-step":
-                _print_parse_step(record)
+                buffered_steps.append(record)
             elif record.get("kind") == "error":
+                _render_trace(buffered_steps)
                 print_parse_error(record, default_stage="plcc-parse")
                 self.had_error = True
                 break
             elif record.get("kind") == "tree":
+                buffered_steps.clear()
                 _print_tree(record, indent=0)
         return True
 
@@ -72,7 +74,6 @@ def main(argv=None):
     no_banner = args["--no-banner"]
     verbose = VerboseContext.from_args("plcc-parse", Events, args)
     grammar_file = args["--grammar"]
-    trace = args["--trace"]
     sources = args["SOURCE"]
 
     if grammar_file is not None and not os.path.exists(grammar_file):
@@ -83,7 +84,6 @@ def main(argv=None):
 
     verbose.emit(Events.STARTED, message="parsing")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
-    trees_flags = child_flags + (["--trace"] if trace else [])
 
     make_result = subprocess.run(
         ["plcc-make", "--through=parse", "--no-banner"]
@@ -104,7 +104,7 @@ def main(argv=None):
     ll1_path = os.path.join("build", "ll1.json")
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
-                           child_flags=child_flags, trees_flags=trees_flags, verbose=verbose)
+                           child_flags=child_flags, verbose=verbose)
     runner = SourceRunner(submit_on=SubmitOn.EOF)
     completed = runner.run(sources, handler)
 
@@ -140,25 +140,32 @@ def _print_tree(node, indent):
         print(f"{prefix}{loc}: error: {message}")
 
 
-def _print_parse_step(record):
-    depth = record.get("depth", 0)
-    indent = "  " * depth
-    event = record.get("event", "?")
-    if event == "predict":
-        sym = record.get("sym", "?")
-        lookahead = record.get("lookahead", "?")
-        production = record.get("production")
-        if production is None:
-            print(f"{indent}{'predict':<9}{sym}  lookahead={lookahead} → (iteration)", flush=True)
-        else:
-            print(f"{indent}{'predict':<9}{sym}  lookahead={lookahead} → {production}", flush=True)
-    elif event == "shift":
-        name = record.get("name", "?")
-        lexeme = record.get("lexeme", "?")
-        source = record.get("source", {})
-        loc = location_str(source)
-        loc_str = f" [{loc}]" if loc else ""
-        print(f"{indent}{'shift':<9}{name} '{lexeme}'{loc_str}", flush=True)
-    elif event == "complete":
-        rule = record.get("rule", "?")
-        print(f"{indent}{'complete':<9}{rule}", flush=True)
+
+def _render_trace(steps):
+    stack = []  # dicts: {"rule": str, "depth": int, "printed": bool}
+    for step in steps:
+        event = step.get("event")
+        depth = step.get("depth", 0)
+        if event == "predict":
+            rule = step.get("production") or step.get("sym", "?")
+            stack.append({"rule": rule, "depth": depth, "printed": False})
+        elif event == "shift":
+            for frame in stack:
+                if not frame["printed"]:
+                    print("  " * frame["depth"] + frame["rule"])
+                    frame["printed"] = True
+            name = step.get("name", "?")
+            lexeme = step.get("lexeme", "?")
+            source = step.get("source", {})
+            loc = location_str(source)
+            loc_str = f" [{loc}]" if loc else ""
+            print(f"{'  ' * depth}{name} '{lexeme}'{loc_str}")
+        elif event == "complete":
+            if stack:
+                frame = stack[-1]
+                if not frame["printed"]:
+                    print(f"{'  ' * frame['depth']}{frame['rule']} (empty)")
+                stack.pop()
+    for frame in stack:
+        if not frame["printed"]:
+            print("  " * frame["depth"] + frame["rule"])

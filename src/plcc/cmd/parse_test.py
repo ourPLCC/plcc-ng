@@ -8,9 +8,10 @@ import pytest
 from plcc.verbose import VerboseContext
 from .parse import ParseHandler
 import plcc.cmd.parse as _parse_module
+from .parse import _render_trace
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
-    _eof_error_record, _parse_step_record,
+    _eof_error_record, _parse_step_record, _shift_step_record, _complete_step_record,
 )
 
 
@@ -202,46 +203,6 @@ def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
     assert "second error" not in out
 
 
-def test_feed_renders_parse_step_records(monkeypatch, handler, capsys):
-    step = _parse_step_record(event="predict", sym="program", lookahead="NUM",
-                               production="program", depth=0)
-    tree = _tree_record()
-    procs = iter([_proc(), _proc(stdout=step + tree)])
-    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    handler.feed(b"42\n", "-")
-    out, _ = capsys.readouterr()
-    assert "predict" in out
-    assert "program" in out
-    assert "NUM" in out
-
-
-def test_feed_parse_step_printed_before_tree(monkeypatch, handler, capsys):
-    step = _parse_step_record(event="predict", sym="program", lookahead="NUM",
-                               production="program", depth=0)
-    tree = _tree_record()
-    procs = iter([_proc(), _proc(stdout=step + tree)])
-    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    handler.feed(b"42\n", "-")
-    out, _ = capsys.readouterr()
-    predict_pos = out.index("predict")
-    program_tree_pos = out.rindex("program")  # tree's "program" comes after
-    assert predict_pos < program_tree_pos
-
-
-def test_feed_parse_step_depth_indented(monkeypatch, handler, capsys):
-    import json as _json
-    shift_step = _json.dumps({
-        "kind": "parse-step", "event": "shift",
-        "name": "NUM", "lexeme": "42",
-        "source": {"file": "-", "line": 1, "column": 1}, "depth": 2,
-    }).encode() + b"\n"
-    tree = _tree_record()
-    procs = iter([_proc(), _proc(stdout=shift_step + tree)])
-    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    handler.feed(b"42\n", "-")
-    out, _ = capsys.readouterr()
-    shift_line = next(l for l in out.splitlines() if "shift" in l)
-    assert shift_line.startswith("    ")  # 4 spaces for depth=2
 
 
 def test_feed_prints_arbno_children(monkeypatch, handler, capsys):
@@ -341,3 +302,172 @@ def test_parse_main_make_call_includes_no_banner(monkeypatch, tmp_path, capsys):
     make_calls = [c for c in calls if c and c[0] == "plcc-make"]
     assert make_calls, "plcc-make was not called"
     assert any("--no-banner" in c for c in make_calls)
+
+
+# --- _render_trace tests ---
+
+def test_render_trace_empty_produces_no_output(capsys):
+    _render_trace([])
+    out, _ = capsys.readouterr()
+    assert out == ""
+
+
+def test_render_trace_single_rule_with_token(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "42",
+         "source": {"file": "-", "line": 1, "column": 1}, "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines[0] == "program"
+    assert lines[1] == "  NUM '42' [-:1:1]"
+
+
+def test_render_trace_empty_rule_shows_empty_annotation(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "NilRest",
+         "production": "NilRest", "depth": 2},
+        {"kind": "parse-step", "event": "complete", "rule": "NilRest", "depth": 2},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    assert out.splitlines()[0] == "    NilRest (empty)"
+
+
+def test_render_trace_nested_rules_indented_correctly(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "predict", "sym": "expr",
+         "production": "expr", "depth": 1},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "1",
+         "source": {"file": "-", "line": 1, "column": 1}, "depth": 2},
+        {"kind": "parse-step", "event": "complete", "rule": "expr", "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines[0] == "program"
+    assert lines[1] == "  expr"
+    assert lines[2] == "    NUM '1' [-:1:1]"
+
+
+def test_render_trace_incomplete_rules_flushed_at_error(capsys):
+    # Error occurred: no shift, no complete events
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "predict", "sym": "expr",
+         "production": "expr", "depth": 1},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines[0] == "program"
+    assert lines[1] == "  expr"
+    assert "(empty)" not in out
+
+
+def test_render_trace_uses_production_name_not_sym(capsys):
+    # When a rule has an alternative, production holds the class name
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "exprRest",
+         "production": "AddRest", "depth": 0},
+        {"kind": "parse-step", "event": "shift", "name": "PLUS", "lexeme": "+",
+         "source": {"file": "-", "line": 1, "column": 3}, "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "AddRest", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    assert out.splitlines()[0] == "AddRest"
+    assert "exprRest" not in out
+
+
+def test_render_trace_token_location_uses_bracket_format(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "99",
+         "source": {"file": "foo.txt", "line": 3, "column": 7}, "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    assert "NUM '99' [foo.txt:3:7]" in out
+
+
+def test_render_trace_arbno_predict_does_not_corrupt_stack(capsys):
+    # ARBNO predict events have production=None and no matching complete in the
+    # raw parser output. After the fix to _parse_arbno, each iteration emits a
+    # complete event, so the stack stays balanced. This test verifies that given
+    # balanced ARBNO events the output is correct and "program" is not duplicated.
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "predict", "sym": "items",
+         "production": None, "depth": 1},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "1",
+         "source": {"file": "-", "line": 1, "column": 1}, "depth": 2},
+        {"kind": "parse-step", "event": "complete", "rule": "items", "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines == ["program", "  items", "    NUM '1' [-:1:1]"]
+
+
+# --- ParseHandler.feed() trace buffering tests ---
+
+def test_feed_on_error_renders_trace_before_error(monkeypatch, handler, capsys):
+    step = _parse_step_record(event="predict", sym="program",
+                               production="program", depth=0)
+    procs = iter([_proc(), _proc(stdout=step + _error_record("oops"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"bad\n", "-")
+    out, _ = capsys.readouterr()
+    rule_pos = out.index("program")
+    error_pos = out.index("oops")
+    assert rule_pos < error_pos
+
+
+def test_feed_on_error_does_not_show_old_trace_vocabulary(monkeypatch, handler, capsys):
+    step = _parse_step_record(event="predict", sym="program",
+                               production="program", depth=0)
+    procs = iter([_proc(), _proc(stdout=step + _error_record("oops"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"bad\n", "-")
+    out, _ = capsys.readouterr()
+    assert "predict" not in out
+    assert "shift" not in out
+    assert "complete" not in out
+
+
+def test_feed_on_success_does_not_render_trace(monkeypatch, capsys):
+    # Use a rule name different from "program" so we can distinguish trace from tree
+    handler = ParseHandler(spec_path="build/spec.json", ll1_path="build/ll1.json",
+                           child_flags=[])
+    step = _parse_step_record(event="predict", sym="traceSentinel",
+                               production="traceSentinel", depth=0)
+    procs = iter([_proc(), _proc(stdout=step + _tree_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    assert "traceSentinel" not in out
+
+
+def test_feed_on_error_with_shift_shows_token_in_trace(monkeypatch, handler, capsys):
+    predict = _parse_step_record(event="predict", sym="program",
+                                  production="program", depth=0)
+    shift = _shift_step_record(name="NUM", lexeme="42", depth=1)
+    procs = iter([_proc(), _proc(stdout=predict + shift + _error_record("oops"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    assert "NUM '42'" in out
+    assert "program" in out
