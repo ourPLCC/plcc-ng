@@ -44,14 +44,17 @@ class ParseHandler:
         items = self._pipeline.run(content, eof)
         if items is None:
             return False
+        buffered_steps = []
         for record, _ in items:
             if record.get("kind") == "parse-step":
-                _print_parse_step(record)
+                buffered_steps.append(record)
             elif record.get("kind") == "error":
+                _render_trace(buffered_steps)
                 print_parse_error(record, default_stage="plcc-parse")
                 self.had_error = True
                 break
             elif record.get("kind") == "tree":
+                buffered_steps.clear()
                 _print_tree(record, indent=0)
         return True
 
