@@ -21,8 +21,8 @@ _TRIVIAL_SPEC = {
     "syntax": {
         "rules": [
             {
-                "line": {"string": "<program> ::= NUM", "number": 3, "file": None},
-                "lhs": {"name": "program", "isTerminal": False, "altName": None, "isCapturing": False},
+                "line": {"string": "<Program> ::= NUM", "number": 3, "file": None},
+                "lhs": {"name": "Program", "isTerminal": False, "altName": None, "isCapturing": False},
                 "rhsSymbolList": [
                     {"name": "NUM", "isTerminal": True, "isCapturing": True}
                 ]
@@ -37,7 +37,7 @@ _TRIVIAL_SPEC = {
 
 def test_returns_model_with_start():
     model = build_model(_TRIVIAL_SPEC)
-    assert model['start'] == 'program'
+    assert model['start'] == 'Program'
 
 
 def test_returns_one_class():
@@ -63,7 +63,7 @@ _ARITH_SPEC = {
     "syntax": {
         "rules": [
             {
-                "lhs": {"name": "program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "lhs": {"name": "Program", "altName": None, "isTerminal": False, "isCapturing": False},
                 "rhsSymbolList": [
                     {"name": "Expr", "isTerminal": False, "isCapturing": True, "altName": "expr"}
                 ]
@@ -113,7 +113,7 @@ def test_trivial_class_has_no_methods_key():
 
 def test_arith_start_is_program():
     model = build_model(_ARITH_SPEC)
-    assert model['start'] == 'program'
+    assert model['start'] == 'Program'
 
 
 def test_arith_exprrest_is_abstract():
@@ -192,7 +192,7 @@ _ARITH_SPEC_WITH_FRAGMENTS = {
     "syntax": {
         "rules": [
             {
-                "lhs": {"name": "program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "lhs": {"name": "Program", "altName": None, "isTerminal": False, "isCapturing": False},
                 "rhsSymbolList": []
             },
             {
@@ -326,7 +326,7 @@ def test_empty_codeFragmentList_gives_empty_fragments():
 
 def test_trivial_class_has_rule_name():
     model = build_model(_TRIVIAL_SPEC)
-    assert model['classes'][0]['rule_name'] == 'program'
+    assert model['classes'][0]['rule_name'] == 'Program'
 
 
 def test_arith_abstract_class_has_rule_name():
@@ -358,20 +358,20 @@ _ARBNO_SPEC = {
     "syntax": {
         "rules": [
             {
-                "lhs": {"name": "program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "lhs": {"name": "Program", "altName": None, "isTerminal": False, "isCapturing": False},
                 "rhsSymbolList": [
-                    {"name": "rands", "isTerminal": False, "isCapturing": True, "altName": "rands"}
+                    {"name": "Rands", "isTerminal": False, "isCapturing": True, "altName": "rands"}
                 ]
             },
             {
-                "lhs": {"name": "rands", "altName": None, "isTerminal": False, "isCapturing": False},
+                "lhs": {"name": "Rands", "altName": None, "isTerminal": False, "isCapturing": False},
                 "rhsSymbolList": [
-                    {"name": "expr", "isTerminal": False, "isCapturing": True, "altName": "expr"}
+                    {"name": "Expr", "isTerminal": False, "isCapturing": True, "altName": "expr"}
                 ],
                 "separator": {"name": "COMMA", "isTerminal": True, "isCapturing": False}
             },
             {
-                "lhs": {"name": "expr", "altName": None, "isTerminal": False, "isCapturing": False},
+                "lhs": {"name": "Expr", "altName": None, "isTerminal": False, "isCapturing": False},
                 "rhsSymbolList": [
                     {"name": "NUM", "isTerminal": True, "isCapturing": True, "altName": "num"}
                 ]
@@ -412,7 +412,7 @@ def test_arbno_token_field_has_correct_type():
         "syntax": {
             "rules": [
                 {
-                    "lhs": {"name": "items", "altName": None, "isTerminal": False, "isCapturing": False},
+                    "lhs": {"name": "Items", "altName": None, "isTerminal": False, "isCapturing": False},
                     "rhsSymbolList": [
                         {"name": "NUM", "isTerminal": True, "isCapturing": True, "altName": "num"}
                     ],

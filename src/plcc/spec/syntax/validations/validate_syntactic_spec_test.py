@@ -26,8 +26,8 @@ def test_simple_valid_spec():
     lexSpec = makeLexicalSpec([makeLexicalRule('ONE', 'ONE')])
     synSpec = makeSyntacticSpec([
         makeSyntacticRule(
-            makeLine('<one> ::= ONE'),
-            makeLhsNonTerminal('one'),
+            makeLine('<One> ::= ONE'),
+            makeLhsNonTerminal('One'),
             [Terminal('ONE')]
         )
     ])

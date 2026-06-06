@@ -49,10 +49,10 @@ teardown() {
     echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='tree', r['kind']"
 }
 
-@test "plcc-parser-table output has rule=program" {
+@test "plcc-parser-table output has rule=Program" {
     run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
     [ "$status" -eq 0 ]
-    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['rule']=='program', r['rule']"
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['rule']=='Program', r['rule']"
 }
 
 @test "plcc-parser-table output has source span" {

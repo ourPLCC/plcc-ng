@@ -1,6 +1,6 @@
 token NUM '\d+'
 skip WS '\s+'
 %
-<program> ::= NUM
+<Program> ::= NUM
 % Java Java
 % py Python

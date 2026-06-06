@@ -31,11 +31,11 @@ def test_str_includes_examples_header():
 def test_str_includes_all_five_example_forms():
     err = MalformedBNFError(make_line("<stmt>IfStmt ::= IF"))
     s = str(err)
-    assert "<nonTerminal> ::=" in s
-    assert "<nonTerminal> ::= TOKEN <TOKEN> <rhs>" in s
-    assert "<nonTerminal>:ClassName ::= TOKEN <TOKEN>:field1 <rhs>:field2" in s
-    assert "<nonTerminal> **= <rhs>" in s
-    assert "<nonTerminal> **= <rhs> +SEPARATOR" in s
+    assert "<NonTerminal> ::=" in s
+    assert "<NonTerminal> ::= TOKEN <TOKEN> <Rhs>" in s
+    assert "<NonTerminal:ClassName> ::= TOKEN <TOKEN:field1> <Rhs:field2>" in s
+    assert "<NonTerminal> **= <Rhs>" in s
+    assert "<NonTerminal> **= <Rhs> +SEPARATOR" in s
 
 
 def test_column_after_matched_lhs():

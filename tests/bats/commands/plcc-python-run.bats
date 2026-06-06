@@ -17,7 +17,7 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
 @test "plcc-python-run is on PATH" { command -v plcc-python-run; }
 
 @test "plcc-python-run evaluates parse-tree JSONL and returns eval record" {
-    TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"42"}]]}'
+    TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"42"}]]}'
     run bash -c "echo '${TREE}' | plcc-python-run --output='${WORK_DIR}'"
     [ "$status" -eq 0 ]
     [[ "$output" == *'"kind"'* ]]

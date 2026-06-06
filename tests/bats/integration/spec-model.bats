@@ -16,6 +16,6 @@ setup() {
     echo "$result" | python3 -c "
 import json, sys
 m = json.load(sys.stdin)
-assert m['start'] == 'program', f'Expected program, got {m[\"start\"]}'
+assert m['start'] == 'Program', f'Expected Program, got {m[\"start\"]}'
 "
 }

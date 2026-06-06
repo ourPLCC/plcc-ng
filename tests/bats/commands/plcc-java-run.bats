@@ -19,7 +19,7 @@ teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
 @test "plcc-java-run is on PATH" { command -v plcc-java-run; }
 
 @test "plcc-java-run evaluates parse-tree JSONL" {
-    TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"42"}]]}'
+    TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"42"}]]}'
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]

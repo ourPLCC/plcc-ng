@@ -1,10 +1,9 @@
-import re
-
 from ...ValidationError import ValidationError
 from ..DuplicateLhsError import DuplicateLhsError
 from ..InvalidLhsAltNameError import InvalidLhsAltNameError
 from ..InvalidLhsNameError import InvalidLhsNameError
 from ..SyntacticSpec import SyntacticSpec
+from .class_name import is_valid_class_name
 
 
 def validate_lhs(syntacticSpec: SyntacticSpec):
@@ -32,20 +31,20 @@ class SyntacticLhsValidator:
             self._checkAltName(alt_name)
         self._checkDuplicates()
 
-    def _getNames(self) -> tuple[str, str]:
+    def _getNames(self) -> tuple[str, str | None]:
         return (self.rule.lhs.name, self.rule.lhs.altName)
 
     def _checkName(self, name: str):
-        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", name):
+        if not is_valid_class_name(name):
             self._appendInvalidLhsNameError()
 
     def _checkAltName(self, alt_name: str):
-        if not re.match(r"^[A-Z][a-zA-Z0-9_]+$", alt_name):
+        if not is_valid_class_name(alt_name):
             self._appendInvalidLhsAltNameError()
 
     def _getResolvedName(self) -> str:
         name, alt_name = self._getNames()
-        return alt_name if alt_name else name.capitalize()
+        return alt_name if alt_name else name
 
     def _checkDuplicates(self):
         name = self._getResolvedName()

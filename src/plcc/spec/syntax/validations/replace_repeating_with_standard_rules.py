@@ -55,8 +55,7 @@ class SyntacticSpecResolver:
 
     def _appendBaseRule(self):
         self._appendRule(
-            line=f"<{self.rule.lhs.name}> ::= {
-                self.rhs_string} <{self.rule.lhs.name}>",
+            line=f"<{self.rule.lhs.name}> ::= {self.rhs_string} <{self.rule.lhs.name}>",
             lhs=self.rule.lhs,
             rhs=self.rule.rhsSymbolList
             + [self._makeRhsNonTerminal(self.rule.lhs.name)],
@@ -64,24 +63,22 @@ class SyntacticSpecResolver:
 
     def _appendSepBaseRule(self):
         self._appendRule(
-            line=f"<{self.rule.lhs.name}> ::= {
-                self.rhs_string} <{self.ntsep}>",
+            line=f"<{self.rule.lhs.name}> ::= {self.rhs_string} <{self.ntsep}>",
             lhs=self.rule.lhs,
             rhs=self.rule.rhsSymbolList + [self._makeRhsNonTerminal(self.ntsep)],
         )
 
     def _appendVoidRule(self):
         self._appendRule(
-            line=f"<{self.rule.lhs.name}>:void ::=",
-            lhs=self._makeLHS(self.rule.lhs.name, "void"),
+            line=f"<{self.rule.lhs.name}:#nil> ::=",
+            lhs=self._makeLHS(self.rule.lhs.name, "#nil"),
             rhs=[],
         )
 
     def _appendNTSepRule(self):
         self._appendRule(
-            line=f"<{self.ntsep}>:void ::= {self.rule.separator.name} {
-                self.rhs_string} <{self.ntsep}>",
-            lhs=self._makeLHS(self.ntsep, "void"),
+            line=f"<{self.ntsep}:#nil> ::= {self.rule.separator.name} {self.rhs_string} <{self.ntsep}>",
+            lhs=self._makeLHS(self.ntsep, "#nil"),
             rhs=[self.rule.separator]
             + self.rule.rhsSymbolList
             + [self._makeRhsNonTerminal(self.ntsep)],
@@ -89,8 +86,8 @@ class SyntacticSpecResolver:
 
     def _appendVoidNTSepRule(self):
         self._appendRule(
-            line=f"<{self.ntsep}>:void ::=",
-            lhs=self._makeLHS(self.ntsep, "void"),
+            line=f"<{self.ntsep}:#nil> ::=",
+            lhs=self._makeLHS(self.ntsep, "#nil"),
             rhs=[],
         )
 

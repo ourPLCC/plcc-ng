@@ -117,7 +117,7 @@ def test_space_ignored():
 
 
 def test_named_lhs_non_terminal():
-    named_lhs_line = makeLine("<noun>:Name ::= WORD")
+    named_lhs_line = makeLine("<noun:Name> ::= WORD")
     lines = [makeDivider(), named_lhs_line]
     expected = [
         makeStandardSyntacticRule(
@@ -215,7 +215,7 @@ def test_single_char_capturing_terminal():
 
 
 def test_single_char_capturing_terminal_with_altname():
-    single_char_alt = makeLine("<noun> ::= <A>:b")
+    single_char_alt = makeLine("<noun> ::= <A:b>")
     lines = [makeDivider(), single_char_alt]
     expected = [
         makeStandardSyntacticRule(
@@ -308,7 +308,7 @@ def test_named_rhs_non_terminal_without_colon_is_an_error():
 
 
 def test_colon_rhs_non_terminal():
-    colon_rhs = makeLine("<noun> ::= WORD WORD <word>:hello")
+    colon_rhs = makeLine("<noun> ::= WORD WORD <word:hello>")
     lines = [makeDivider(), colon_rhs]
     expected = [
         makeStandardSyntacticRule(
@@ -443,6 +443,44 @@ def test_no_errors_on_valid_spec():
     lines = [makeDivider(), makeLine("<noun> ::= WORD")]
     spec, errors = parse_syntactic_spec(lines)
     assert errors == []
+
+
+def test_lhs_altname_inside_brackets():
+    line = makeLine("<noun:Name> ::= WORD")
+    lines = [makeDivider(), line]
+    expected = [makeStandardSyntacticRule(line, makeLhsNonTerminal("noun", "Name"), [makeTerminal("WORD")])]
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
+
+
+def test_rhs_field_inside_brackets():
+    line = makeLine("<noun> ::= <word:hello>")
+    lines = [makeDivider(), line]
+    expected = [makeStandardSyntacticRule(line, makeLhsNonTerminal("noun"), [makeRhsNonTerminal("word", "hello")])]
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
+
+
+def test_rhs_terminal_field_inside_brackets():
+    line = makeLine("<noun> ::= <A:b>")
+    lines = [makeDivider(), line]
+    expected = [makeStandardSyntacticRule(line, makeLhsNonTerminal("noun"), [makeCapturingTerminal("A", "b")])]
+    spec, _ = parse_syntactic_spec(lines)
+    assert list(spec) == expected
+
+
+def test_old_lhs_altname_outside_brackets_is_error():
+    line = makeLine("<noun>:Name ::= WORD")
+    spec, errors = parse_syntactic_spec([makeDivider(), line])
+    assert len(errors) == 1
+    assert isinstance(errors[0], MalformedBNFError)
+
+
+def test_old_rhs_field_outside_brackets_is_error():
+    line = makeLine("<noun> ::= <word>:hello")
+    spec, errors = parse_syntactic_spec([makeDivider(), line])
+    assert len(errors) == 1
+    assert isinstance(errors[0], MalformedBNFError)
 
 
 def makeDivider(string="%", lineNumber=0, file=""):
