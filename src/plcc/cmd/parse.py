@@ -162,3 +162,33 @@ def _print_parse_step(record):
     elif event == "complete":
         rule = record.get("rule", "?")
         print(f"{indent}{'complete':<9}{rule}", flush=True)
+
+
+def _render_trace(steps):
+    stack = []  # dicts: {"rule": str, "depth": int, "printed": bool}
+    for step in steps:
+        event = step.get("event")
+        depth = step.get("depth", 0)
+        if event == "predict":
+            rule = step.get("production") or step.get("sym", "?")
+            stack.append({"rule": rule, "depth": depth, "printed": False})
+        elif event == "shift":
+            for frame in stack:
+                if not frame["printed"]:
+                    print("  " * frame["depth"] + frame["rule"])
+                    frame["printed"] = True
+            name = step.get("name", "?")
+            lexeme = step.get("lexeme", "?")
+            source = step.get("source", {})
+            loc = location_str(source)
+            loc_str = f" [{loc}]" if loc else ""
+            print(f"{'  ' * depth}{name} '{lexeme}'{loc_str}")
+        elif event == "complete":
+            if stack:
+                frame = stack[-1]
+                if not frame["printed"]:
+                    print(f"{'  ' * frame['depth']}{frame['rule']} (empty)")
+                stack.pop()
+    for frame in stack:
+        if not frame["printed"]:
+            print("  " * frame["depth"] + frame["rule"])

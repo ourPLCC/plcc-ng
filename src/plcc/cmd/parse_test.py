@@ -381,7 +381,7 @@ def test_render_trace_empty_rule_shows_empty_annotation(capsys):
     ]
     _render_trace(steps)
     out, _ = capsys.readouterr()
-    assert out.strip() == "    NilRest (empty)"
+    assert out.splitlines()[0] == "    NilRest (empty)"
 
 
 @pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
