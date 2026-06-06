@@ -8,6 +8,10 @@ import pytest
 from plcc.verbose import VerboseContext
 from .parse import ParseHandler
 import plcc.cmd.parse as _parse_module
+try:
+    from .parse import _render_trace
+except ImportError:
+    _render_trace = None
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record, _parse_step_record, _shift_step_record, _complete_step_record,
@@ -341,3 +345,107 @@ def test_parse_main_make_call_includes_no_banner(monkeypatch, tmp_path, capsys):
     make_calls = [c for c in calls if c and c[0] == "plcc-make"]
     assert make_calls, "plcc-make was not called"
     assert any("--no-banner" in c for c in make_calls)
+
+
+# --- _render_trace tests ---
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_empty_produces_no_output(capsys):
+    _render_trace([])
+    out, _ = capsys.readouterr()
+    assert out == ""
+
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_single_rule_with_token(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "42",
+         "source": {"file": "-", "line": 1, "column": 1}, "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines[0] == "program"
+    assert lines[1] == "  NUM '42' [-:1:1]"
+
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_empty_rule_shows_empty_annotation(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "NilRest",
+         "production": "NilRest", "depth": 2},
+        {"kind": "parse-step", "event": "complete", "rule": "NilRest", "depth": 2},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    assert out.strip() == "    NilRest (empty)"
+
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_nested_rules_indented_correctly(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "predict", "sym": "expr",
+         "production": "expr", "depth": 1},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "1",
+         "source": {"file": "-", "line": 1, "column": 1}, "depth": 2},
+        {"kind": "parse-step", "event": "complete", "rule": "expr", "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines[0] == "program"
+    assert lines[1] == "  expr"
+    assert lines[2] == "    NUM '1' [-:1:1]"
+
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_incomplete_rules_flushed_at_error(capsys):
+    # Error occurred: no shift, no complete events
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "predict", "sym": "expr",
+         "production": "expr", "depth": 1},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    lines = out.splitlines()
+    assert lines[0] == "program"
+    assert lines[1] == "  expr"
+    assert "(empty)" not in out
+
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_uses_production_name_not_sym(capsys):
+    # When a rule has an alternative, production holds the class name
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "exprRest",
+         "production": "AddRest", "depth": 0},
+        {"kind": "parse-step", "event": "shift", "name": "PLUS", "lexeme": "+",
+         "source": {"file": "-", "line": 1, "column": 3}, "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "AddRest", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    assert out.splitlines()[0] == "AddRest"
+    assert "exprRest" not in out
+
+
+@pytest.mark.skipif(_render_trace is None, reason="_render_trace not yet implemented")
+def test_render_trace_token_location_uses_bracket_format(capsys):
+    steps = [
+        {"kind": "parse-step", "event": "predict", "sym": "program",
+         "production": "program", "depth": 0},
+        {"kind": "parse-step", "event": "shift", "name": "NUM", "lexeme": "99",
+         "source": {"file": "foo.txt", "line": 3, "column": 7}, "depth": 1},
+        {"kind": "parse-step", "event": "complete", "rule": "program", "depth": 0},
+    ]
+    _render_trace(steps)
+    out, _ = capsys.readouterr()
+    assert "NUM '99' [foo.txt:3:7]" in out
