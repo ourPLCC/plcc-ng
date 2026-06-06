@@ -206,46 +206,6 @@ def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
     assert "second error" not in out
 
 
-def test_feed_renders_parse_step_records(monkeypatch, handler, capsys):
-    step = _parse_step_record(event="predict", sym="program", lookahead="NUM",
-                               production="program", depth=0)
-    tree = _tree_record()
-    procs = iter([_proc(), _proc(stdout=step + tree)])
-    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    handler.feed(b"42\n", "-")
-    out, _ = capsys.readouterr()
-    assert "predict" in out
-    assert "program" in out
-    assert "NUM" in out
-
-
-def test_feed_parse_step_printed_before_tree(monkeypatch, handler, capsys):
-    step = _parse_step_record(event="predict", sym="program", lookahead="NUM",
-                               production="program", depth=0)
-    tree = _tree_record()
-    procs = iter([_proc(), _proc(stdout=step + tree)])
-    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    handler.feed(b"42\n", "-")
-    out, _ = capsys.readouterr()
-    predict_pos = out.index("predict")
-    program_tree_pos = out.rindex("program")  # tree's "program" comes after
-    assert predict_pos < program_tree_pos
-
-
-def test_feed_parse_step_depth_indented(monkeypatch, handler, capsys):
-    import json as _json
-    shift_step = _json.dumps({
-        "kind": "parse-step", "event": "shift",
-        "name": "NUM", "lexeme": "42",
-        "source": {"file": "-", "line": 1, "column": 1}, "depth": 2,
-    }).encode() + b"\n"
-    tree = _tree_record()
-    procs = iter([_proc(), _proc(stdout=shift_step + tree)])
-    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    handler.feed(b"42\n", "-")
-    out, _ = capsys.readouterr()
-    shift_line = next(l for l in out.splitlines() if "shift" in l)
-    assert shift_line.startswith("    ")  # 4 spaces for depth=2
 
 
 def test_feed_prints_arbno_children(monkeypatch, handler, capsys):
@@ -449,3 +409,54 @@ def test_render_trace_token_location_uses_bracket_format(capsys):
     _render_trace(steps)
     out, _ = capsys.readouterr()
     assert "NUM '99' [foo.txt:3:7]" in out
+
+
+# --- ParseHandler.feed() trace buffering tests ---
+
+def test_feed_on_error_renders_trace_before_error(monkeypatch, handler, capsys):
+    step = _parse_step_record(event="predict", sym="program",
+                               production="program", depth=0)
+    procs = iter([_proc(), _proc(stdout=step + _error_record("oops"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"bad\n", "-")
+    out, _ = capsys.readouterr()
+    rule_pos = out.index("program")
+    error_pos = out.index("oops")
+    assert rule_pos < error_pos
+
+
+def test_feed_on_error_does_not_show_old_trace_vocabulary(monkeypatch, handler, capsys):
+    step = _parse_step_record(event="predict", sym="program",
+                               production="program", depth=0)
+    procs = iter([_proc(), _proc(stdout=step + _error_record("oops"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"bad\n", "-")
+    out, _ = capsys.readouterr()
+    assert "predict" not in out
+    assert "shift" not in out
+    assert "complete" not in out
+
+
+def test_feed_on_success_does_not_render_trace(monkeypatch, capsys):
+    # Use a rule name different from "program" so we can distinguish trace from tree
+    handler = ParseHandler(spec_path="build/spec.json", ll1_path="build/ll1.json",
+                           child_flags=[])
+    step = _parse_step_record(event="predict", sym="traceSentinel",
+                               production="traceSentinel", depth=0)
+    procs = iter([_proc(), _proc(stdout=step + _tree_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    assert "traceSentinel" not in out
+
+
+def test_feed_on_error_with_shift_shows_token_in_trace(monkeypatch, handler, capsys):
+    predict = _parse_step_record(event="predict", sym="program",
+                                  production="program", depth=0)
+    shift = _shift_step_record(name="NUM", lexeme="42", depth=1)
+    procs = iter([_proc(), _proc(stdout=predict + shift + _error_record("oops"))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    handler.feed(b"42\n", "-")
+    out, _ = capsys.readouterr()
+    assert "NUM '42'" in out
+    assert "program" in out
