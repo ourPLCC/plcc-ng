@@ -195,17 +195,23 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
             if tracer:
                 tracer.predict(sym, current()["name"], None)
             parse_iteration()
+            if tracer:
+                tracer.complete(sym)
             if separator:
                 while current()["name"] == separator:
                     expect(separator)
                     if tracer:
                         tracer.predict(sym, current()["name"], None)
                     parse_iteration()
+                    if tracer:
+                        tracer.complete(sym)
             else:
                 while current()["name"] in lookahead_set:
                     if tracer:
                         tracer.predict(sym, current()["name"], None)
                     parse_iteration()
+                    if tracer:
+                        tracer.complete(sym)
 
         for field, values in list_fields.items():
             builder.children.append([field, values])
