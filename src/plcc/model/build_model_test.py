@@ -21,7 +21,7 @@ _TRIVIAL_SPEC = {
     "syntax": {
         "rules": [
             {
-                "line": {"string": "<program> ::= NUM", "number": 3, "file": None},
+                "line": {"string": "<Program> ::= NUM", "number": 3, "file": None},
                 "lhs": {"name": "Program", "isTerminal": False, "altName": None, "isCapturing": False},
                 "rhsSymbolList": [
                     {"name": "NUM", "isTerminal": True, "isCapturing": True}

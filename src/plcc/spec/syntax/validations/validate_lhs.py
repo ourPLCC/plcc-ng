@@ -31,7 +31,7 @@ class SyntacticLhsValidator:
             self._checkAltName(alt_name)
         self._checkDuplicates()
 
-    def _getNames(self) -> tuple[str, str]:
+    def _getNames(self) -> tuple[str, str | None]:
         return (self.rule.lhs.name, self.rule.lhs.altName)
 
     def _checkName(self, name: str):

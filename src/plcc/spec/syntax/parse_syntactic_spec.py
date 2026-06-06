@@ -136,8 +136,11 @@ class SyntacticLineParser:
             Terminal(self.separator) if self.separator else None,
         )
 
-    def _matchLeft(self) -> Match[str] | None:
-        return re.match(r"<(?P<nonTerminal>[^:>]+)(?::(?P<altName>[^>]+))?>\s*", self.lhs)
+    def _matchLeft(self) -> Match[str]:
+        m = re.match(r"<(?P<nonTerminal>[^:>]+)(?::(?P<altName>[^>]+))?>\s*", self.lhs)
+        if m is None:
+            raise MalformedBNFError(self.line)
+        return m
 
     def isSyntacticRule(self) -> bool:
         return re.match(
