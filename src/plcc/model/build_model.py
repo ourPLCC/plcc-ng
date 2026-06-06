@@ -35,7 +35,7 @@ def _build_classes(spec):
     classes = []
     for nt_name in order:
         nt_rules = groups[nt_name]
-        class_name = nt_name[:1].upper() + nt_name[1:]
+        class_name = nt_name
         is_abstract = any(r['lhs'].get('altName') for r in nt_rules)
 
         if is_abstract:
@@ -89,7 +89,7 @@ def _extract_arbno_fields(rhs_symbol_list):
             field_type = 'Token'
         else:
             n = symbol.get('name', 'Object')
-            field_type = n[:1].upper() + n[1:]
+            field_type = n
         fields.append({'name': field_name, 'type': field_type, 'is_list': True})
     return fields
 
@@ -104,7 +104,7 @@ def _extract_fields(rhs_symbol_list):
             field_type = 'Token'
         else:
             name = symbol.get('name', 'Object')
-            field_type = name[:1].upper() + name[1:]
+            field_type = name
         fields.append({'name': field_name, 'type': field_type, 'is_list': False})
     return fields
 
