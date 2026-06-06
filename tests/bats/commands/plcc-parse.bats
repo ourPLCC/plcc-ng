@@ -23,13 +23,13 @@ teardown() {
 @test "plcc-parse parses input and prints tree" {
     run bash -c "echo '42' | plcc-parse"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"program"* ]]
+    [[ "$output" == *"Program"* ]]
 }
 
 @test "plcc-parse reads from source file" {
     run plcc-parse "${FIXTURES}/trivial_input.txt"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"program"* ]]
+    [[ "$output" == *"Program"* ]]
 }
 
 @test "plcc-parse accepts -v" {
@@ -52,13 +52,13 @@ teardown() {
 @test "plcc-parse accepts '-' as stdin" {
     run bash -c "echo '42' | plcc-parse -"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"program"* ]]
+    [[ "$output" == *"Program"* ]]
 }
 
 @test "plcc-parse --grammar uses specified grammar" {
     run bash -c "echo '42' | plcc-parse --grammar='${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"program"* ]]
+    [[ "$output" == *"Program"* ]]
 }
 
 @test "plcc-parse exits nonzero when grammar has syntax error" {
@@ -78,7 +78,7 @@ teardown() {
 @test "plcc-parse works with lexical+syntactic grammar and no semantics" {
     run bash -c "echo '42' | plcc-parse"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"program"* ]]
+    [[ "$output" == *"Program"* ]]
 }
 
 @test "plcc-parse --trace shows predict in output" {
@@ -104,7 +104,7 @@ teardown() {
     run bash -c "echo '42' | plcc-parse --trace"
     [ "$status" -eq 0 ]
     predict_line=$(echo "$output" | grep -n "predict" | head -1 | cut -d: -f1)
-    program_line=$(echo "$output" | grep -n "^program" | head -1 | cut -d: -f1)
+    program_line=$(echo "$output" | grep -n "^Program" | head -1 | cut -d: -f1)
     [ "$predict_line" -lt "$program_line" ]
 }
 
