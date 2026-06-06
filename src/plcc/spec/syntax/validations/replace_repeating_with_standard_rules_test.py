@@ -41,7 +41,7 @@ def test_no_separator():
             "name",
             [makeTerminal("WORD"), makeRhsNonTerminal("name")],
         ),
-        makeStandardSyntacticRule("name:void", []),
+        makeStandardSyntacticRule("name:#nil", []),
     ])
 
     oldSpec = SyntacticSpec([rule_1, rule_2])
@@ -66,12 +66,12 @@ def test_with_separator():
             "name",
             [makeTerminal("WORD"), makeRhsNonTerminal("name#")],
         ),
-        makeStandardSyntacticRule("name:void", []),
+        makeStandardSyntacticRule("name:#nil", []),
         makeStandardSyntacticRule(
-            "name#:void",
+            "name#:#nil",
             [makeTerminal("SEP"), makeTerminal("WORD"), makeRhsNonTerminal("name#")],
         ),
-        makeStandardSyntacticRule("name#:void", []),
+        makeStandardSyntacticRule("name#:#nil", []),
     ])
 
     oldSpec = SyntacticSpec([rule_1, rule_2])
@@ -96,7 +96,8 @@ def makeRepeatingSyntacticRule(lhs: str, rhsList: List[Symbol], separator=None):
 
 def buildLineStandard(lhs, rhs):
     if lhs.__contains__(":"):
-        return makeLine(f"<{lhs.split(":")[0]}>:{lhs.split(":")[1]} ::={buildRhs(rhs)}")
+        name, alt = lhs.split(":", 1)
+        return makeLine(f"<{name}:{alt}> ::={buildRhs(rhs)}")
     return makeLine(f"<{lhs}> ::={buildRhs(rhs)}")
 
 
