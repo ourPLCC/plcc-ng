@@ -12,24 +12,12 @@ from ..Terminal import Terminal
 from .validate_lhs import validate_lhs
 
 
-def test_capital_lhs_terminal():
-    capital_lhs_name = makeLine("<Sentence> ::= WORD")
-    spec = [
-        makeSyntacticRule(
-            capital_lhs_name, makeLhsNonTerminal("Sentence"), [makeTerminal("WORD")]
-        )
-    ]
-    errors, nonterms = validate(spec)
-    assert len(errors) == 1
-    assert errors[0] == makeInvalidLhsNameFormatError(spec[0])
-
-
-def test_undercase_lhs_alt_name():
-    invalid_alt_name = makeLine("<sentence>:name ::= WORD")
+def test_lowercase_lhs_alt_name():
+    invalid_alt_name = makeLine("<Sentence:name> ::= WORD")
     spec = [
         makeSyntacticRule(
             invalid_alt_name,
-            makeLhsNonTerminal("sentence", "name"),
+            makeLhsNonTerminal("Sentence", "name"),
             [makeTerminal("WORD")],
         )
     ]
@@ -39,11 +27,11 @@ def test_undercase_lhs_alt_name():
 
 
 def test_underscore_lhs_alt_name():
-    invalid_alt_name = makeLine("<sentence>:_name ::= WORD")
+    invalid_alt_name = makeLine("<Sentence:_Name> ::= WORD")
     spec = [
         makeSyntacticRule(
             invalid_alt_name,
-            makeLhsNonTerminal("sentence", "_name"),
+            makeLhsNonTerminal("Sentence", "_Name"),
             [makeTerminal("WORD")],
         )
     ]
@@ -53,14 +41,14 @@ def test_underscore_lhs_alt_name():
 
 
 def test_duplicate_lhs_name():
-    lhs_sentence = makeLhsNonTerminal("sentence")
+    lhs_sentence = makeLhsNonTerminal("Sentence")
     rule_1 = makeSyntacticRule(
-        makeLine("<sentence> ::= VERB"),
+        makeLine("<Sentence> ::= VERB"),
         lhs_sentence,
         [makeTerminal("VERB")],
     )
     rule_2 = makeSyntacticRule(
-        makeLine("<sentence> ::= WORD"),
+        makeLine("<Sentence> ::= WORD"),
         lhs_sentence,
         [makeTerminal("WORD")],
     )
@@ -72,13 +60,13 @@ def test_duplicate_lhs_name():
 
 def test_duplicate_lhs_alt_name():
     rule_1 = makeSyntacticRule(
-        makeLine("<sentence>:Name ::= VERB"),
-        makeLhsNonTerminal("sentence", "Name"),
+        makeLine("<Sentence:Name> ::= VERB"),
+        makeLhsNonTerminal("Sentence", "Name"),
         [makeTerminal("VERB")],
     )
     rule_2 = makeSyntacticRule(
-        makeLine("<sentence>:Name ::= WORD"),
-        makeLhsNonTerminal("sentence", "Name"),
+        makeLine("<Sentence:Name> ::= WORD"),
+        makeLhsNonTerminal("Sentence", "Name"),
         [makeTerminal("WORD")],
     )
     spec = [rule_1, rule_2]
@@ -88,20 +76,41 @@ def test_duplicate_lhs_alt_name():
 
 
 def test_duplicate_resolved_name():
+    # <Sentence:Name> resolves to "Name"; <Name> also resolves to "Name" → collision
     alt_name = makeSyntacticRule(
-        makeLine("<sentence>:Name ::= VERB"),
-        makeLhsNonTerminal("sentence", "Name"),
+        makeLine("<Sentence:Name> ::= VERB"),
+        makeLhsNonTerminal("Sentence", "Name"),
         [makeTerminal("VERB")],
     )
-    non_terminal_name = makeSyntacticRule(
-        makeLine("<name> ::= WORD"),
-        makeLhsNonTerminal("name"),
+    direct_name = makeSyntacticRule(
+        makeLine("<Name> ::= WORD"),
+        makeLhsNonTerminal("Name"),
         [makeTerminal("WORD")],
     )
-    spec = [alt_name, non_terminal_name]
+    spec = [alt_name, direct_name]
     errors, nonterms = validate(spec)
     assert len(errors) == 1
     assert errors[0] == makeDuplicateLhsError(spec[1])
+
+
+def test_pascal_case_lhs_name_is_valid():
+    rule = makeSyntacticRule(
+        makeLine("<Sentence> ::= WORD"),
+        makeLhsNonTerminal("Sentence"),
+        [makeTerminal("WORD")],
+    )
+    errors, _ = validate([rule])
+    assert not any(isinstance(e, InvalidLhsNameError) for e in errors)
+
+
+def test_lowercase_lhs_name_is_invalid():
+    rule = makeSyntacticRule(
+        makeLine("<sentence> ::= WORD"),
+        makeLhsNonTerminal("sentence"),
+        [makeTerminal("WORD")],
+    )
+    errors, _ = validate([rule])
+    assert any(isinstance(e, InvalidLhsNameError) for e in errors)
 
 
 def validate(syntacticSpec: SyntacticSpec):

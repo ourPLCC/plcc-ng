@@ -47,9 +47,9 @@ teardown() {
 }
 
 @test "plcc-spec malformed syntactic rule: stderr includes source line and caret" {
-    printf "token NUM '\\\\d+'\n%%\n<program>IfStmt ::= NUM\n" > "${BAD_SPEC}"
+    printf "token NUM '\\\\d+'\n%%\n<Program>IfStmt ::= NUM\n" > "${BAD_SPEC}"
     run --separate-stderr plcc-spec "${BAD_SPEC}"
     [ "$status" -ne 0 ]
-    [[ "$stderr" == *"<program>IfStmt ::= NUM"* ]]
+    [[ "$stderr" == *"<Program>IfStmt ::= NUM"* ]]
     [[ "$stderr" == *"         ^"* ]]
 }

@@ -2,11 +2,11 @@ token NUM   '\d+'
 token PLUS  '\+'
 skip  SPACE '\s+'
 %
-<program>              ::= <Expr>:expr
-<Expr>                 ::= <Term>:term <ExprRest>:rest
-<ExprRest>:AddRest     ::= PLUS <Term>:term <ExprRest>:rest
-<ExprRest>:NilRest     ::=
-<Term>                 ::= <NUM>:num
+<Program>              ::= <Expr:expr>
+<Expr>                 ::= <Term:term> <ExprRest:rest>
+<ExprRest:AddRest>     ::= PLUS <Term:term> <ExprRest:rest>
+<ExprRest:NilRest>     ::=
+<Term>                 ::= <NUM:num>
 %
 % calculate Python
 Program

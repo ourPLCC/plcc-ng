@@ -34,19 +34,19 @@ teardown() { rm -rf "${WORK_DIR}"; }
 }
 
 @test "run exits 0 on valid tree JSON" {
-    TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
+    TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [ "$status" -eq 0 ]
 }
 
 @test "run outputs token lexeme from void _run()" {
-    TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
+    TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [[ "$output" == *"99"* ]]
 }
 
 @test "run outputs JSON result record" {
-    TREE='{"kind":"tree","rule":"program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
+    TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [[ "$output" == *'"kind"'* ]]
     [[ "$output" == *'"result"'* ]]

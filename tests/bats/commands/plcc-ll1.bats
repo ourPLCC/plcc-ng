@@ -49,11 +49,11 @@ teardown() { rm -f "${SPEC_JSON}"; }
 @test "plcc-ll1 emits start_symbol for trivial grammar" {
     run bash -c "plcc-ll1 < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
-    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['start_symbol'] == 'program', r['start_symbol']"
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['start_symbol'] == 'Program', r['start_symbol']"
 }
 
 @test "plcc-ll1 populates first_sets for trivial grammar" {
     run bash -c "plcc-ll1 < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
-    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['first_sets']['program'] == ['NUM'], r['first_sets']"
+    echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['first_sets']['Program'] == ['NUM'], r['first_sets']"
 }
