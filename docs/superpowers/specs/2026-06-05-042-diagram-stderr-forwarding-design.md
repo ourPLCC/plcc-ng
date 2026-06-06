@@ -66,12 +66,13 @@ if result.stderr:
     sys.stderr.buffer.write(result.stderr)
 
 # after
-events = verbose.parse_child_events(result.stderr.decode('utf-8', errors='replace'))
-verbose.reformat_child_events(events)
+if result.stderr:
+    events = verbose.parse_child_events(result.stderr.decode('utf-8', errors='replace'))
+    verbose.reformat_child_events(events)
 ```
 
-The `if result.stderr:` guard is no longer needed — `parse_child_events` on an empty
-string is a no-op.
+The `if result.stderr:` guard is retained, consistent with the same pattern in
+`parse.py`, `rep.py`, and `make.py`.
 
 ## Testing
 
@@ -79,7 +80,7 @@ New unit tests in `src/plcc/cmd/diagram_test.py`:
 
 - Plain-text stderr from a child is forwarded to `sys.stderr`.
 - JSONL events in child stderr are reformatted through the parent's verbose context
-  (both text and json output formats).
+  (text output format verified).
 - Empty child stderr produces no output.
 
 The existing tests stub `m.stderr = b''` so they continue to pass unchanged.
