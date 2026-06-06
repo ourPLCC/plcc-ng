@@ -4,11 +4,11 @@ import re
 class MalformedBNFError(Exception):
     _EXAMPLES = (
         "Examples:\n"
-        "  <nonTerminal> ::=\n"
-        "  <nonTerminal> ::= TOKEN <TOKEN> <rhs>\n"
-        "  <nonTerminal>:ClassName ::= TOKEN <TOKEN>:field1 <rhs>:field2\n"
-        "  <nonTerminal> **= <rhs>\n"
-        "  <nonTerminal> **= <rhs> +SEPARATOR"
+        "  <NonTerminal> ::=\n"
+        "  <NonTerminal> ::= TOKEN <TOKEN> <Rhs>\n"
+        "  <NonTerminal:ClassName> ::= TOKEN <TOKEN:field1> <Rhs:field2>\n"
+        "  <NonTerminal> **= <Rhs>\n"
+        "  <NonTerminal> **= <Rhs> +SEPARATOR"
     )
 
     def __init__(self, line):
@@ -18,7 +18,7 @@ class MalformedBNFError(Exception):
     def _compute_column(self):
         original = self.line.string
         leading = len(original) - len(original.lstrip())
-        lhs_match = re.match(r"<\S+>(?::\S+)?", original.lstrip())
+        lhs_match = re.match(r"<[^>]+>", original.lstrip())
         if lhs_match:
             return leading + lhs_match.end() + 1
         return leading + 1
