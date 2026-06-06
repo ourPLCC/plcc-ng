@@ -10,7 +10,7 @@ from .parse import ParseHandler
 import plcc.cmd.parse as _parse_module
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
-    _eof_error_record, _parse_step_record,
+    _eof_error_record, _parse_step_record, _shift_step_record, _complete_step_record,
 )
 
 
