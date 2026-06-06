@@ -59,7 +59,7 @@ def main(argv=None):
         sys.exit(1)
 
     verbose.emit(Events.STARTED, message="generating diagram")
-    child_flags = verbose.child_flags()
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ['plcc-make', '--through=model', '--no-banner']
@@ -68,7 +68,8 @@ def main(argv=None):
         stderr=subprocess.PIPE,
     )
     if make_result.stderr:
-        sys.stderr.buffer.write(make_result.stderr)
+        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
@@ -88,7 +89,8 @@ def main(argv=None):
             stdin=stdin_f, stdout=stdout_f, stderr=subprocess.PIPE,
         )
     if emit_result.stderr:
-        sys.stderr.buffer.write(emit_result.stderr)
+        events = verbose.parse_child_events(emit_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
     if emit_result.returncode != 0:
         sys.exit(emit_result.returncode)
 
@@ -99,7 +101,8 @@ def main(argv=None):
         stderr=subprocess.PIPE,
     )
     if build_result.stderr:
-        sys.stderr.buffer.write(build_result.stderr)
+        events = verbose.parse_child_events(build_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
     if build_result.returncode != 0:
         sys.exit(build_result.returncode)
 
@@ -108,7 +111,8 @@ def main(argv=None):
         stderr=subprocess.PIPE,
     )
     if run_result.stderr:
-        sys.stderr.buffer.write(run_result.stderr)
+        events = verbose.parse_child_events(run_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
     if run_result.returncode != 0:
         sys.exit(run_result.returncode)
 
