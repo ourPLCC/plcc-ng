@@ -1,5 +1,6 @@
 import re
 
+from .class_name import is_valid_class_name
 from ..CapturingSymbol import CapturingSymbol
 from ..DuplicateAttribute import DuplicateAttribute
 from ..InvalidAttribute import InvalidAttribute
@@ -47,7 +48,7 @@ class SyntacticRhsValidator:
     def _validateNonTerminal(self, s, rule):
         if s.altName:
             self._validateNonTerminalAltName(s.altName, rule)
-        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", s.name):
+        if not is_valid_class_name(s.name):
             self._appendInvalidRhsError(rule)
         if not self._nonTerminalExists(s):
             self._appendMissingNonTerminalError(rule)
@@ -63,7 +64,7 @@ class SyntacticRhsValidator:
         return self._nonTerminalSet
 
     def _validateNonTerminalAltName(self, altName: str, rule):
-        if not re.match(r"^[a-z][a-zA-Z0-9_]+$", altName):
+        if not re.match(r"^[a-z][a-zA-Z0-9_]*$", altName):
             self._appendInvalidRhsAltNameError(rule)
 
     def _validateNoDuplicateRhsSymbols(self, rule):
