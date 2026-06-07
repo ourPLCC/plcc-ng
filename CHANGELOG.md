@@ -1,3 +1,3 @@
 # Changelog
 
-<!--next-version-placeholder-->
+<!-- version list -->

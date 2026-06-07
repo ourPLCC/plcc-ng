@@ -14,6 +14,7 @@ theme:
 plugins:
   - search
   - include-markdown
+  - mike
 
 nav:
   - Home: index.md
