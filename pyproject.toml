@@ -26,6 +26,7 @@ classifiers = [
 
 
 [project.urls]
+Documentation = "https://ourplcc.github.io/plcc-ng/"
 Homepage = "https://github.com/ourPLCC/plcc-ng"
 Repository = "https://github.com/ourPLCC/plcc-ng"
 Issues = "https://github.com/ourPLCC/plcc-ng/issues"
