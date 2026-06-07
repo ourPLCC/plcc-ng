@@ -1,0 +1,39 @@
+site_name: plcc-ng
+site_url: https://ourplcc.github.io/plcc-ng/
+repo_url: https://github.com/ourPLCC/plcc-ng
+repo_name: ourPLCC/plcc-ng
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+
+plugins:
+  - search
+  - include-markdown
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Language Guide:
+    - Overview: language-guide/index.md
+    - Token Rules: language-guide/tokens.md
+    - Grammar Rules: language-guide/grammar.md
+    - Code Generation: language-guide/code-generation.md
+    - Examples: language-guide/examples.md
+  - CLI Reference:
+    - Overview: cli/index.md
+    - Primitives: cli/primitives.md
+    - Orchestrators: cli/orchestrators.md
+  - Instructor Guide:
+    - Overview: instructor-guide/index.md
+    - Evaluating plcc-ng: instructor-guide/evaluating.md
+    - Adopting plcc-ng: instructor-guide/adopting.md
+  - Changelog: changelog.md
+
+extra:
+  version:
+    provider: mike
