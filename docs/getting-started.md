@@ -3,25 +3,13 @@
 ## Prerequisites
 
 - Python 3.12 or later
+- Java JDK 21 or later (only necessary if implementing semantics in Java)
 
-<!-- TODO: note whether Java is required for any default workflow, and which version -->
-
-Verify your Python version:
-
-```bash
-python3 --version
-```
 
 ## Install
 
 ```bash
 pip install plcc-ng
-```
-
-Verify the installation:
-
-```bash
-plcc-make --help
 ```
 
 ## Quickstart
@@ -37,37 +25,29 @@ skip  WS  '\s+'
 <Program> ::= <NUM:num>
 ```
 
-**Step 2.** Build:
+**Step 2.** Test scanner:
 
 ```bash
-plcc-make -g hello.plcc
+echo "42" | plcc-scan -g hello.plcc --no-banner
 ```
 
-**Step 3.** Scan some input:
-
-```bash
-echo "42" | plcc-scan -g hello.plcc
-```
-
-<!-- TODO: verify output format -->
 Expected:
 
 ```text
-   1: NUM '42'
+-:1:1 NUM '42'
 ```
 
-**Step 4.** Parse some input:
+**Step 3.** Test parser:
 
 ```bash
-echo "42" | plcc-parse -g hello.plcc
+echo "42" | plcc-parse -g hello.plcc --no-banner
 ```
 
-<!-- TODO: verify output format -->
 Expected:
 
 ```text
-<Program>
-| NUM "42"
+Program
+  NUM '42' [-:1:1]
 ```
 
 From here, see the [Language Guide](language-guide/index.md) to add grammar
