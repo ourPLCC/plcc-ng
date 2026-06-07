@@ -20,6 +20,10 @@ and semantics. plcc-ng generates a scanner, parser, and interpreter for you.
 **Evaluating plcc-ng for a course?**
 → [Instructor Guide](instructor-guide/index.md) — what it teaches, what students need to know, how to structure assignments.
 
+## What's New
+
+See the [Changelog](changelog.md) for the latest releases and what changed in each version.
+
 ## Install
 
 ```bash
@@ -33,5 +37,4 @@ Requires Python 3.12 or later.
 ## Community
 
 - [Discord server](https://discord.gg/EVtNSxS9E2)
-- [Changelog](changelog.md)
 - [GitHub](https://github.com/ourPLCC/plcc-ng)
