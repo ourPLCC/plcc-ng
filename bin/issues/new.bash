@@ -5,7 +5,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_ROOT="$( cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd )"
 cd "${PROJECT_ROOT}"
 
-ISSUES_DIR="docs/issues"
+ISSUES_DIR="dev-docs/issues"
 NEXT_ID_FILE="${ISSUES_DIR}/.next-id.txt"
 TEMPLATE="${ISSUES_DIR}/TEMPLATE.md"
 

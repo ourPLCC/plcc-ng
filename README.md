@@ -1,9 +1,9 @@
 # plcc-ng
 
-PLCC is designed for teaching and learning programming language concepts.
-plcc-ng is a reimagining and reimplementation of PLCC.
+plcc-ng is a tool for teaching and learning programming language concepts.
+It is a reimagining of [PLCC](https://github.com/ourPLCC/plcc).
 
-This is currently under development.
+**[Documentation](https://ourplcc.github.io/plcc-ng/)**
 
 ## Install
 
@@ -17,24 +17,14 @@ pip install plcc-ng
 ## Licensing
 
 Developers license contributions under [AGPL-3.0-or-later](LICENSES/AGPL-3.0-or-later.txt) and sign off on the
-[DCO-1.1](DCO-1.1.txt)
+[DCO-1.1](DCO-1.1.txt).
 
 ## Community
 
 - [Code of conduct](CODE_OF_CONDUCT.md)
-- [Discord server]((https://discord.gg/EVtNSxS9E2))
+- [Discord server](https://discord.gg/EVtNSxS9E2)
+- [Developer docs](https://ourplcc.github.io/plcc-ng/dev-docs/)
 
 ## Development
 
-- Python
-- PDM
-- Codespaces
-- Dev Containers
-- Clean code
-- TDD
-- Open Source Values
-- Continuously run unit tests (^C to stop)
-
-    ```bash
-    pdm ctest
-    ```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow, test tiers, and TDD inner loop.

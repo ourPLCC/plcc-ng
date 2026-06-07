@@ -1,0 +1,30 @@
+site_name: plcc-ng Developer Docs
+site_url: https://ourplcc.github.io/plcc-ng/dev-docs/
+repo_url: https://github.com/ourPLCC/plcc-ng
+repo_name: ourPLCC/plcc-ng
+docs_dir: dev-docs
+site_dir: site-dev
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+
+plugins:
+  - search
+  - include-markdown:
+      opening_tag: "{!"
+      closing_tag: "!}"
+
+nav:
+  - Home: index.md
+  - Contributing: contributing.md
+  - Code of Conduct: code-of-conduct.md
+  - Release SOP: release-sop.md
+  - Architecture: architecture.md
+  - Issue Conventions: issue-conventions.md
+  - Design Specs: specs/
+  - Implementation Plans: plans/

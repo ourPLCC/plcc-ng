@@ -26,6 +26,7 @@ classifiers = [
 
 
 [project.urls]
+Documentation = "https://ourplcc.github.io/plcc-ng/"
 Homepage = "https://github.com/ourPLCC/plcc-ng"
 Repository = "https://github.com/ourPLCC/plcc-ng"
 Issues = "https://github.com/ourPLCC/plcc-ng/issues"
@@ -98,6 +99,10 @@ dev = [
     "check-jsonschema>=0.29.0",
     "python-semantic-release>=9.0.0",
     "twine>=5.0.0",
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+    "mike>=2.1",
+    "mkdocs-include-markdown-plugin>=6.0",
 ]
 
 [tool.semantic_release]
@@ -105,3 +110,4 @@ tag_format = "v{version}"
 version_variables = []
 version_toml = []
 major_on_zero = false
+changelog_file = "CHANGELOG.md"
