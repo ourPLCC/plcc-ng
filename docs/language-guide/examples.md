@@ -12,7 +12,9 @@ Create a file named `samples`:
 
 ```text
 3
+
 -(3,2)
+
 -(-(4,1), -(3,2))
 ```
 
