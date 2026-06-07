@@ -107,5 +107,6 @@ dev = [
 [tool.semantic_release]
 tag_format = "v{version}"
 version_variables = []
-version_toml = []
+version_toml = ["pyproject.toml:project.version"]
 major_on_zero = false
+changelog_file = "CHANGELOG.md"

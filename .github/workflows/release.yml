@@ -30,7 +30,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           push: "true"
-          changelog: "false"
+          changelog: "true"
           vcs_release: "false"
 
       - name: Create GitHub Release
