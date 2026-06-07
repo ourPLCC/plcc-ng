@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v0.39.2 (2026-06-07)
+
+### Bug Fixes
+
+- **docs**: Fix empty changelog page
+  ([`8122c2e`](https://github.com/ourPLCC/plcc-ng/commit/8122c2eeac7432490a3d9de03854ab69166e7aec))
+
+PSR replaced CHANGELOG.md entirely, removing the <!-- version list --> marker that docs/changelog.md
+  used as a start anchor. Without the marker include-markdown included nothing. Remove the start
+  filter to include the full file, and suppress MD041 since the linter cannot see past the include
+  directive to the # CHANGELOG heading PSR generates.
+
+### Build System
+
+- **release**: Add [skip ci] to PSR release commit message
+  ([`951fc04`](https://github.com/ourPLCC/plcc-ng/commit/951fc0456008350823e1fefe6971a18084d0b2c3))
+
+PSR pushes a version bump commit to main using the GitHub App token, which triggers the release
+  workflow again. Since the App token is not subject to GitHub's re-trigger suppression (unlike
+  GITHUB_TOKEN), the second run would be a no-op but wastes CI minutes. Adding [skip ci] prevents
+  the re-trigger. The docs site still updates via the release: published trigger that fires moments
+  later.
+
+
 ## v0.39.1 (2026-06-07)
 
 ### Bug Fixes
