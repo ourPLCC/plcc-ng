@@ -1,0 +1,2324 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-24-035-diagram-redesign/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>035 — plcc-diagram Interface Redesign Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#035-plcc-diagram-interface-redesign-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              035 — plcc-diagram Interface Redesign Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="035-plcc-diagram-interface-redesign-implementation-plan">035 — plcc-diagram Interface Redesign Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Replace the hanging <code>plcc-diagram --output=build</code> with a properly-levelled architecture: a Level 2 <code>plcc-diagram</code> command that orchestrates via <code>plcc-make</code>, Level 0 dispatchers (<code>plcc-diagram-emit</code>, <code>plcc-diagram-build</code>, <code>plcc-diagram-run</code>), and a default Mermaid plugin.</p>
+<p><strong>Architecture:</strong> <code>plcc-diagram</code> (Level 2) mirrors <code>plcc-scan</code>/<code>plcc-parse</code> — it calls <code>plcc-make --through=diagram</code> then opens the result. <code>plcc-make</code> gains a diagram step that calls <code>plcc-diagram-emit</code> (model JSON → Mermaid source) then <code>plcc-diagram-build</code> (source → PNG). The set-based staleness sentinel replaces the current linear <code>_LEVELS</code> dict to correctly handle parallel stages.</p>
+<p><strong>Tech Stack:</strong> Python 3.12, docopt-ng, mmdc (optional, <code>pip install plcc[diagram]</code>), pytest, bats.</p>
+<hr />
+<h2 id="file-map">File Map</h2>
+<p><strong>Modified:</strong></p>
+<ul>
+<li><code>src/plcc/build/staleness.py</code> — replace <code>_LEVELS</code>/linear comparison with set-based API</li>
+<li><code>src/plcc/build/staleness_test.py</code> — rewrite for new API</li>
+<li><code>src/plcc/cmd/make.py</code> — add <code>--diagram-format</code>, <code>--through=diagram</code>, updated staleness</li>
+<li><code>src/plcc/cmd/make_test.py</code> — add tests for new flag and stage</li>
+<li><code>src/plcc/diagram/dispatch.py</code> → renamed to <code>src/plcc/diagram/emit.py</code> — update command names and interface</li>
+<li><code>src/plcc/diagram/dispatch_test.py</code> → renamed to <code>src/plcc/diagram/emit_test.py</code></li>
+<li><code>src/plcc/diagram/plantuml/emit.py</code> — update <code>__doc__</code> command name</li>
+<li><code>src/plcc/diagram/list.py</code> — update pattern <code>plcc-*-diagram</code> → <code>plcc-*-diagram-emit</code></li>
+<li><code>src/plcc/diagram/list_test.py</code> — update for new pattern</li>
+<li><code>tests/bats/commands/plcc-diagram.bats</code> — rewrite for Level 2 interface</li>
+<li><code>tests/bats/commands/plcc-diagram-list.bats</code> — update for new pattern</li>
+<li><code>pyproject.toml</code> — rename entry points, add new ones, add <code>[diagram]</code> optional extra</li>
+</ul>
+<p><strong>Created:</strong></p>
+<ul>
+<li><code>src/plcc/diagram/build.py</code> — <code>plcc-diagram-build</code> dispatcher</li>
+<li><code>src/plcc/diagram/build_test.py</code></li>
+<li><code>src/plcc/diagram/run.py</code> — <code>plcc-diagram-run</code> dispatcher</li>
+<li><code>src/plcc/diagram/run_test.py</code></li>
+<li><code>src/plcc/diagram/mermaid/__init__.py</code></li>
+<li><code>src/plcc/diagram/mermaid/emit.py</code> — <code>plcc-mermaid-diagram-emit</code></li>
+<li><code>src/plcc/diagram/mermaid/emit_test.py</code></li>
+<li><code>src/plcc/diagram/mermaid/build.py</code> — <code>plcc-mermaid-diagram-build</code></li>
+<li><code>src/plcc/diagram/mermaid/build_test.py</code></li>
+<li><code>src/plcc/diagram/mermaid/run.py</code> — <code>plcc-mermaid-diagram-run</code></li>
+<li><code>src/plcc/diagram/mermaid/run_test.py</code></li>
+<li><code>src/plcc/cmd/diagram.py</code> — <code>plcc-diagram</code> Level 2</li>
+<li><code>src/plcc/cmd/diagram_test.py</code></li>
+<li><code>tests/bats/commands/plcc-diagram-build.bats</code></li>
+<li><code>tests/bats/commands/plcc-diagram-run.bats</code></li>
+</ul>
+<hr />
+<h2 id="task-1-rewrite-stalenesspy-set-based-sentinel">Task 1: Rewrite <code>staleness.py</code> — set-based sentinel</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/build/staleness.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/build/staleness_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Replace staleness_test.py with tests for the new API</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/build/staleness_test.py
+import json
+import pytest
+from pathlib import Path
+from plcc.build.staleness import (
+    compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
+)
+
+
+def test_compute_hash_returns_hex_string(tmp_path):
+    f = tmp_path / &quot;spec.json&quot;
+    f.write_text('{&quot;x&quot;: 1}')
+    h = compute_hash(f)
+    assert len(h) == 64
+    assert all(c in &quot;0123456789abcdef&quot; for c in h)
+
+
+def test_compute_hash_same_content_same_hash(tmp_path):
+    a, b = tmp_path / &quot;a.json&quot;, tmp_path / &quot;b.json&quot;
+    a.write_text(&quot;hello&quot;)
+    b.write_text(&quot;hello&quot;)
+    assert compute_hash(a) == compute_hash(b)
+
+
+def test_compute_hash_different_content_different_hash(tmp_path):
+    a, b = tmp_path / &quot;a.json&quot;, tmp_path / &quot;b.json&quot;
+    a.write_text(&quot;hello&quot;)
+    b.write_text(&quot;world&quot;)
+    assert compute_hash(a) != compute_hash(b)
+
+
+def test_read_sentinel_returns_none_when_absent(tmp_path):
+    assert read_sentinel(tmp_path) is None
+
+
+def test_read_sentinel_returns_none_on_malformed_json(tmp_path):
+    (tmp_path / &quot;.spec-hash&quot;).write_text(&quot;not json&quot;)
+    assert read_sentinel(tmp_path) is None
+
+
+def test_write_then_read_sentinel_roundtrips(tmp_path):
+    write_sentinel(tmp_path, &quot;abc123&quot;, {&quot;scan&quot;, &quot;parse&quot;})
+    s = read_sentinel(tmp_path)
+    assert s == {&quot;hash&quot;: &quot;abc123&quot;, &quot;stages&quot;: [&quot;parse&quot;, &quot;scan&quot;]}  # sorted
+
+
+def test_delete_sentinel_removes_file(tmp_path):
+    write_sentinel(tmp_path, &quot;abc123&quot;, {&quot;scan&quot;})
+    delete_sentinel(tmp_path)
+    assert read_sentinel(tmp_path) is None
+
+
+def test_delete_sentinel_is_idempotent(tmp_path):
+    delete_sentinel(tmp_path)
+
+
+def test_is_current_false_when_sentinel_none():
+    assert not is_current(None, &quot;abc&quot;, {&quot;scan&quot;})
+
+
+def test_is_current_false_when_hash_differs():
+    s = {&quot;hash&quot;: &quot;old&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;parse&quot;]}
+    assert not is_current(s, &quot;new&quot;, {&quot;scan&quot;})
+
+
+def test_is_current_true_when_required_stages_are_subset_of_completed():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;]}
+    assert is_current(s, &quot;abc&quot;, {&quot;scan&quot;})
+    assert is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;parse&quot;})
+    assert is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;model&quot;, &quot;diagram&quot;})
+    assert is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;})
+
+
+def test_is_current_false_when_required_stage_missing():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;parse&quot;]}
+    assert not is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;})
+    assert not is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;model&quot;, &quot;diagram&quot;})
+
+
+def test_is_current_false_when_unknown_stage_required():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;]}
+    assert not is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;java&quot;})
+
+
+def test_all_stages_present_is_current():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;, &quot;java&quot;]}
+    assert is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;, &quot;java&quot;})
+
+
+def test_diagram_stored_is_not_current_for_all_with_tools():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;model&quot;, &quot;diagram&quot;]}
+    assert not is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;, &quot;java&quot;})
+
+
+def test_all_stored_is_current_for_diagram():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;stages&quot;: [&quot;scan&quot;, &quot;parse&quot;, &quot;model&quot;, &quot;diagram&quot;, &quot;java&quot;]}
+    assert is_current(s, &quot;abc&quot;, {&quot;scan&quot;, &quot;model&quot;, &quot;diagram&quot;})
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/build/staleness_test.py
+</code></pre>
+<p>Expected: multiple failures — <code>write_sentinel</code> and <code>is_current</code> signatures differ.</p>
+<ul>
+<li>[ ] <strong>Step 3: Rewrite <code>staleness.py</code></strong></li>
+</ul>
+<pre><code class="language-python"># src/plcc/build/staleness.py
+import hashlib
+import json
+from pathlib import Path
+
+_SENTINEL = &quot;.spec-hash&quot;
+
+
+def compute_hash(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def read_sentinel(build_dir):
+    p = Path(build_dir) / _SENTINEL
+    try:
+        return json.loads(p.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None
+
+
+def write_sentinel(build_dir, hash_, stages):
+    (Path(build_dir) / _SENTINEL).write_text(
+        json.dumps({&quot;hash&quot;: hash_, &quot;stages&quot;: sorted(stages)})
+    )
+
+
+def delete_sentinel(build_dir):
+    try:
+        (Path(build_dir) / _SENTINEL).unlink()
+    except FileNotFoundError:
+        pass
+
+
+def is_current(sentinel, hash_, required_stages):
+    if sentinel is None:
+        return False
+    if sentinel.get(&quot;hash&quot;) != hash_:
+        return False
+    completed = set(sentinel.get(&quot;stages&quot;, []))
+    return required_stages.issubset(completed)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests and confirm they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/build/staleness_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/build/staleness.py src/plcc/build/staleness_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;refactor(build): replace linear staleness levels with set-based sentinel&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-update-plcc-make-diagram-format-throughdiagram-new-staleness">Task 2: Update <code>plcc-make</code> — <code>--diagram-format</code>, <code>--through=diagram</code>, new staleness</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/cmd/make.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/cmd/make_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add failing tests for new <code>plcc-make</code> behaviour</strong></p>
+</li>
+</ul>
+<p>Add to <code>src/plcc/cmd/make_test.py</code>:</p>
+<pre><code class="language-python">def test_invalid_through_diagram_is_now_valid(tmp_path, monkeypatch):
+    # 'diagram' must not be rejected as invalid
+    monkeypatch.chdir(tmp_path)
+    # grammar file missing → exits, but not with &quot;invalid --through&quot;
+    with pytest.raises(SystemExit):
+        run_main(['--through=diagram'])
+    _, err = capsys.readouterr()  # NOTE: add capsys to function signature
+    assert &quot;invalid --through&quot; not in err
+
+
+def test_diagram_format_flag_accepted(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main(['--diagram-format=mermaid'])
+    # exits because grammar.plcc not found, not because of unknown flag
+    assert exc.value.code != 0
+
+
+def test_invalid_through_error_message_includes_diagram(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main(['--through=typo'])
+    _, err = capsys.readouterr()
+    assert &quot;diagram&quot; in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm new tests fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
+</code></pre>
+<p>Expected: the three new tests fail.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>make.py</code></strong></li>
+</ul>
+<p>Replace the <code>__doc__</code> string, validation block, staleness block, and add the diagram step. The full updated <code>main()</code> function:</p>
+<pre><code class="language-python">__doc__ = &quot;&quot;&quot;plcc-make
+    Build a PLCC project from a grammar file.
+
+Usage:
+    plcc-make [-v ...] [options]
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    --through=&lt;level&gt;       Build up to this level: scan, parse, diagram, or all [default: all].
+    --diagram-format=FMT    Diagram format for --through=diagram or --through=all [default: mermaid].
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+</code></pre>
+<p>Replace the <code>through</code> validation:</p>
+<pre><code class="language-python">if through not in ('scan', 'parse', 'diagram', 'all'):
+    print(
+        f&quot;plcc-make: invalid --through value '{through}'; &quot;
+        &quot;must be scan, parse, diagram, or all&quot;,
+        file=sys.stderr,
+    )
+    sys.exit(1)
+</code></pre>
+<p>Add <code>diagram_fmt = args['--diagram-format'] or 'mermaid'</code> after the <code>through</code> line.</p>
+<p>Replace the staleness block (after <code>compute_hash</code> and <code>read_sentinel</code> calls, before the early return):</p>
+<pre><code class="language-python"># Read spec for tool names needed to compute required stages
+with open(tmp_spec) as f:
+    spec_data = json.load(f)
+tool_stages = {s['tool'] for s in spec_data.get('semantics', [])}
+
+_REQUIRED = {
+    'scan':    {'scan'},
+    'parse':   {'scan', 'parse'},
+    'diagram': {'scan', 'model', 'diagram'},
+    'all':     {'scan', 'parse', 'model', 'diagram'} | tool_stages,
+}
+required_stages = _REQUIRED[through]
+
+if is_current(sentinel, new_hash, required_stages):
+    os.unlink(tmp_spec)
+    verbose.emit(Events.FINISHED, message=&quot;build is current&quot;)
+    return
+</code></pre>
+<p>After the <code>os.replace(tmp_spec, ...)</code> line, update the <code>if through</code> blocks:</p>
+<pre><code class="language-python">if through in ('parse', 'all'):
+    verbose.emit(Events.PHASE, message=&quot;ll1&quot;)
+    ll1_json = str(build_dir / 'll1.json')
+    _run_or_die(['plcc-ll1'] + child_flags, stdin_file=spec_json, stdout_file=ll1_json, verbose=verbose)
+    with open(ll1_json) as f:
+        ll1 = json.load(f)
+    if not ll1.get(&quot;is_ll1&quot;, True):
+        _report_ll1_failure(ll1, ll1_json)
+        sys.exit(1)
+
+if through in ('diagram', 'all'):
+    verbose.emit(Events.PHASE, message=&quot;model&quot;)
+    model_json = str(build_dir / 'model.json')
+    _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
+
+if through == 'all':
+    for section in spec_data.get('semantics', []):
+        tool = section['tool']
+        lang = section['language']
+        try:
+            validate_tool_name(tool)
+        except ValueError as e:
+            print(f&quot;plcc-make: {e}&quot;, file=sys.stderr)
+            delete_sentinel(build_dir)
+            sys.exit(1)
+        output_dir = str(build_dir / tool)
+        os.makedirs(output_dir, exist_ok=True)
+        verbose.emit(Events.PHASE, message=f&quot;emit {lang} -&gt; {tool}&quot;)
+        _run_or_die(
+            ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'] + child_flags,
+            stdin_file=model_json,
+            verbose=verbose,
+        )
+        verbose.emit(Events.PHASE, message=f&quot;build {lang} -&gt; {tool}&quot;)
+        _run_or_die(
+            ['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'] + child_flags,
+            verbose=verbose,
+        )
+
+if through in ('diagram', 'all'):
+    verbose.emit(Events.PHASE, message=&quot;diagram emit&quot;)
+    (build_dir / 'diagram').mkdir(exist_ok=True)
+    _run_or_die(
+        ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
+        stdin_file=model_json,
+        stdout_file=str(build_dir / 'diagram' / 'diagram.mmd'),
+        verbose=verbose,
+    )
+    verbose.emit(Events.PHASE, message=&quot;diagram build&quot;)
+    _run_or_die(
+        ['plcc-diagram-build', f'--format={diagram_fmt}',
+         f'--input={build_dir / &quot;diagram&quot; / &quot;diagram.mmd&quot;}',
+         f'--output={build_dir / &quot;diagram&quot; / &quot;diagram.png&quot;}'] + child_flags,
+        verbose=verbose,
+    )
+</code></pre>
+<p>Replace <code>write_sentinel(build_dir, new_hash, through)</code> at the end:</p>
+<pre><code class="language-python">completed = {'scan'}
+if through in ('parse', 'all'):
+    completed.add('parse')
+if through in ('diagram', 'all'):
+    completed.add('model')
+    completed.add('diagram')
+if through == 'all':
+    completed |= tool_stages
+write_sentinel(build_dir, new_hash, completed)
+</code></pre>
+<p>Also remove the now-unused <code>with open(spec_json) as f: spec = json.load(f)</code> block inside <code>if through == 'all'</code> (we use <code>spec_data</code> read earlier).</p>
+<ul>
+<li>[ ] <strong>Step 4: Run all make tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(make): add --through=diagram, --diagram-format, and set-based staleness&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-rename-plcc-diagram-dispatcher-plcc-diagram-emit">Task 3: Rename <code>plcc-diagram</code> dispatcher → <code>plcc-diagram-emit</code></h2>
+<p>The current <code>src/plcc/diagram/dispatch.py</code> dispatches to <code>plcc-{fmt}-diagram</code>. Rename the file, update the command name, change the default format to <code>mermaid</code>, and drop <code>--output=DIR</code>.</p>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Rename <code>src/plcc/diagram/dispatch.py</code> → <code>src/plcc/diagram/emit.py</code></li>
+<li>
+<p>Rename <code>src/plcc/diagram/dispatch_test.py</code> → <code>src/plcc/diagram/emit_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write the new <code>emit_test.py</code></strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/emit_test.py
+import io
+import json
+import pytest
+from unittest.mock import patch, MagicMock
+
+from .emit import main as run_main
+
+_TRIVIAL_MODEL = json.dumps({
+    &quot;start&quot;: &quot;program&quot;,
+    &quot;classes&quot;: [{&quot;name&quot;: &quot;Program&quot;, &quot;abstract&quot;: False, &quot;extends&quot;: None,
+                 &quot;fields&quot;: [{&quot;name&quot;: &quot;num&quot;, &quot;type&quot;: &quot;Token&quot;}]}],
+    &quot;semantic_sections&quot;: []
+})
+
+
+def test_dispatches_to_mermaid_diagram_emit_by_default(monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
+    calls = []
+
+    def fake_run(cmd, stdin, **kwargs):
+        calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        return m
+
+    with patch('shutil.which', return_value='/usr/bin/plcc-mermaid-diagram-emit'):
+        with patch('subprocess.run', side_effect=fake_run):
+            run_main([])
+
+    assert calls[0][0] == 'plcc-mermaid-diagram-emit'
+
+
+def test_custom_format_dispatches_to_correct_command(monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
+    calls = []
+
+    def fake_run(cmd, stdin, **kwargs):
+        calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        return m
+
+    with patch('shutil.which', return_value='/usr/bin/plcc-plantuml-diagram-emit'):
+        with patch('subprocess.run', side_effect=fake_run):
+            run_main(['--format=plantuml'])
+
+    assert calls[0][0] == 'plcc-plantuml-diagram-emit'
+
+
+def test_missing_plugin_exits_nonzero(monkeypatch, capsys):
+    monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
+
+    with patch('shutil.which', return_value=None):
+        with pytest.raises(SystemExit) as exc:
+            run_main(['--format=nonexistent'])
+
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert 'nonexistent' in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Create <code>emit.py</code></strong> (do not delete <code>dispatch.py</code> yet — keep it until pyproject.toml is updated in Task 11)</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/emit.py
+import enum
+import shutil
+import subprocess
+import sys
+
+from docopt import docopt
+
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-diagram-emit
+    Dispatch model JSON to the appropriate plcc-&lt;fmt&gt;-diagram-emit command.
+
+Usage:
+    plcc-diagram-emit [-v ...] [options]
+
+Options:
+    --format=FMT    Diagram format [default: mermaid].
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-diagram-emit&quot;, Events, args)
+    fmt = args['--format'] or 'mermaid'
+    cmd = f'plcc-{fmt}-diagram-emit'
+    if not shutil.which(cmd):
+        print(
+            f&quot;No diagram plugin found for '{fmt}'. Is {cmd} installed?\n&quot;
+            f&quot;Run plcc-diagram-list to see what is available.&quot;,
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    result = subprocess.run(
+        [cmd] + verbose.child_flags(),
+        stdin=sys.stdin,
+    )
+    if result.returncode != 0:
+        sys.exit(result.returncode)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/emit_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>plcc-plantuml-diagram</code> <code>__doc__</code> name</strong></li>
+</ul>
+<p>In <code>src/plcc/diagram/plantuml/emit.py</code>, change the first line of <code>__doc__</code> from <code>plcc-plantuml-diagram</code> to <code>plcc-plantuml-diagram-emit</code>. No other changes.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/emit.py src/plcc/diagram/emit_test.py src/plcc/diagram/plantuml/emit.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-diagram-emit dispatcher (replaces plcc-diagram)&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-update-plcc-diagram-list-new-discovery-pattern">Task 4: Update <code>plcc-diagram-list</code> — new discovery pattern</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/diagram/list.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/diagram/list_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests for new pattern</strong></p>
+</li>
+</ul>
+<p>Replace <code>src/plcc/diagram/list_test.py</code>:</p>
+<pre><code class="language-python">from .list import find_formats, extract_format_name
+
+
+def test_extract_format_name_plantuml_emit():
+    assert extract_format_name('plcc-plantuml-diagram-emit') == 'plantuml'
+
+
+def test_extract_format_name_mermaid_emit():
+    assert extract_format_name('plcc-mermaid-diagram-emit') == 'mermaid'
+
+
+def test_extract_ignores_old_pattern():
+    assert extract_format_name('plcc-plantuml-diagram') is None
+
+
+def test_extract_ignores_dispatcher():
+    assert extract_format_name('plcc-diagram-emit') is None
+
+
+def test_extract_ignores_non_matching():
+    assert extract_format_name('plcc-diagram-list') is None
+    assert extract_format_name('python') is None
+
+
+def test_find_formats_returns_list(monkeypatch):
+    monkeypatch.setenv('PATH', '/fake/bin')
+    result = find_formats()
+    assert isinstance(result, list)
+
+
+def test_main_prints_sorted_formats(capsys, monkeypatch):
+    from .list import main
+    monkeypatch.setattr('plcc.diagram.list.find_formats', lambda: ['plantuml', 'mermaid'])
+    main([])
+    out, _ = capsys.readouterr()
+    assert out.splitlines() == ['mermaid', 'plantuml']
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/list_test.py
+</code></pre>
+<p>Expected: <code>test_extract_format_name_plantuml_emit</code> and <code>test_extract_format_name_mermaid_emit</code> fail; <code>test_extract_ignores_old_pattern</code> passes (old pattern still matches — will also break after the fix).</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>list.py</code></strong></li>
+</ul>
+<p>Change <code>_DIAGRAM_PATTERN</code>:</p>
+<pre><code class="language-python">_DIAGRAM_PATTERN = re.compile(r'^plcc-(.+)-diagram-emit$')
+</code></pre>
+<p>Update <code>extract_format_name</code> docstring:</p>
+<pre><code class="language-python">def extract_format_name(command_name):
+    &quot;&quot;&quot;Return format name from plcc-&lt;fmt&gt;-diagram-emit command name, or None.&quot;&quot;&quot;
+    m = _DIAGRAM_PATTERN.match(command_name)
+    if m:
+        fmt = m.group(1)
+        if fmt != 'diagram':
+            return fmt
+    return None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/list_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/list.py src/plcc/diagram/list_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): update plcc-diagram-list to discover plcc-*-diagram-emit plugins&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-create-plcc-diagram-build-dispatcher">Task 5: Create <code>plcc-diagram-build</code> dispatcher</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/plcc/diagram/build.py</code></li>
+<li>
+<p>Create: <code>src/plcc/diagram/build_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/build_test.py
+import pytest
+from unittest.mock import patch, MagicMock
+
+from .build import main as run_main
+
+
+def test_missing_required_args_exits_nonzero():
+    import docopt
+    with pytest.raises((docopt.DocoptExit, SystemExit)):
+        run_main([])
+
+
+def test_dispatches_to_mermaid_diagram_build(tmp_path):
+    src = tmp_path / &quot;diagram.mmd&quot;
+    src.write_text(&quot;classDiagram\n&quot;)
+    out = tmp_path / &quot;diagram.png&quot;
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        return m
+
+    with patch('shutil.which', return_value='/usr/bin/plcc-mermaid-diagram-build'):
+        with patch('subprocess.run', side_effect=fake_run):
+            run_main([f'--input={src}', f'--output={out}'])
+
+    assert calls[0][0] == 'plcc-mermaid-diagram-build'
+    assert f'--input={src}' in calls[0]
+    assert f'--output={out}' in calls[0]
+
+
+def test_custom_format_dispatches_correctly(tmp_path):
+    src = tmp_path / &quot;diagram.mmd&quot;
+    src.write_text(&quot;classDiagram\n&quot;)
+    out = tmp_path / &quot;diagram.png&quot;
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        return m
+
+    with patch('shutil.which', return_value='/usr/bin/plcc-plantuml-diagram-build'):
+        with patch('subprocess.run', side_effect=fake_run):
+            run_main([f'--input={src}', f'--output={out}', '--format=plantuml'])
+
+    assert calls[0][0] == 'plcc-plantuml-diagram-build'
+
+
+def test_missing_plugin_exits_nonzero(tmp_path, capsys):
+    src = tmp_path / &quot;diagram.mmd&quot;
+    src.write_text(&quot;classDiagram\n&quot;)
+    out = tmp_path / &quot;diagram.png&quot;
+
+    with patch('shutil.which', return_value=None):
+        with pytest.raises(SystemExit) as exc:
+            run_main([f'--input={src}', f'--output={out}', '--format=nonexistent'])
+
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert 'nonexistent' in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/build_test.py
+</code></pre>
+<p>Expected: <code>ImportError</code> — module doesn't exist yet.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>build.py</code></strong></li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/build.py
+import enum
+import shutil
+import subprocess
+import sys
+
+from docopt import docopt
+
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-diagram-build
+    Dispatch to the appropriate plcc-&lt;fmt&gt;-diagram-build command.
+
+Usage:
+    plcc-diagram-build --input=FILE --output=FILE [-v ...] [options]
+
+Options:
+    --format=FMT    Diagram format [default: mermaid].
+    --input=FILE    Path to diagram source file.
+    --output=FILE   Path to write image file.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-diagram-build&quot;, Events, args)
+    fmt = args['--format'] or 'mermaid'
+    input_file = args['--input']
+    output_file = args['--output']
+    cmd = f'plcc-{fmt}-diagram-build'
+    if not shutil.which(cmd):
+        print(
+            f&quot;No diagram build plugin found for '{fmt}'. Is {cmd} installed?\n&quot;
+            f&quot;Run plcc-diagram-list to see what is available.&quot;,
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    result = subprocess.run(
+        [cmd, f'--input={input_file}', f'--output={output_file}'] + verbose.child_flags(),
+    )
+    if result.returncode != 0:
+        sys.exit(result.returncode)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/build_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/build.py src/plcc/diagram/build_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-diagram-build dispatcher&quot;
+</code></pre>
+<hr />
+<h2 id="task-6-create-plcc-diagram-run-dispatcher">Task 6: Create <code>plcc-diagram-run</code> dispatcher</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/plcc/diagram/run.py</code></li>
+<li>
+<p>Create: <code>src/plcc/diagram/run_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/run_test.py
+import pytest
+from unittest.mock import patch, MagicMock
+
+from .run import main as run_main
+
+
+def test_missing_required_args_exits_nonzero():
+    import docopt
+    with pytest.raises((docopt.DocoptExit, SystemExit)):
+        run_main([])
+
+
+def test_dispatches_to_mermaid_diagram_run(tmp_path):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        return m
+
+    with patch('shutil.which', return_value='/usr/bin/plcc-mermaid-diagram-run'):
+        with patch('subprocess.run', side_effect=fake_run):
+            run_main([f'--input={img}'])
+
+    assert calls[0][0] == 'plcc-mermaid-diagram-run'
+    assert f'--input={img}' in calls[0]
+
+
+def test_missing_plugin_exits_nonzero(tmp_path, capsys):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+
+    with patch('shutil.which', return_value=None):
+        with pytest.raises(SystemExit) as exc:
+            run_main([f'--input={img}', '--format=nonexistent'])
+
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert 'nonexistent' in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/run_test.py
+</code></pre>
+<p>Expected: <code>ImportError</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>run.py</code></strong></li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/run.py
+import enum
+import shutil
+import subprocess
+import sys
+
+from docopt import docopt
+
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-diagram-run
+    Dispatch to the appropriate plcc-&lt;fmt&gt;-diagram-run command.
+
+Usage:
+    plcc-diagram-run --input=FILE [-v ...] [options]
+
+Options:
+    --format=FMT    Diagram format [default: mermaid].
+    --input=FILE    Path to diagram image file.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-diagram-run&quot;, Events, args)
+    fmt = args['--format'] or 'mermaid'
+    input_file = args['--input']
+    cmd = f'plcc-{fmt}-diagram-run'
+    if not shutil.which(cmd):
+        print(
+            f&quot;No diagram run plugin found for '{fmt}'. Is {cmd} installed?\n&quot;
+            f&quot;Run plcc-diagram-list to see what is available.&quot;,
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    result = subprocess.run(
+        [cmd, f'--input={input_file}'] + verbose.child_flags(),
+    )
+    if result.returncode != 0:
+        sys.exit(result.returncode)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/run_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/run.py src/plcc/diagram/run_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-diagram-run dispatcher&quot;
+</code></pre>
+<hr />
+<h2 id="task-7-create-mermaid-emit-plugin">Task 7: Create Mermaid emit plugin</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/plcc/diagram/mermaid/__init__.py</code></li>
+<li>Create: <code>src/plcc/diagram/mermaid/emit.py</code></li>
+<li>
+<p>Create: <code>src/plcc/diagram/mermaid/emit_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/emit_test.py
+import io
+import json
+import pytest
+
+from .emit import build_diagram, main
+
+_SIMPLE_MODEL = {
+    &quot;start&quot;: &quot;expr&quot;,
+    &quot;classes&quot;: [
+        {&quot;name&quot;: &quot;Expr&quot;, &quot;abstract&quot;: True, &quot;extends&quot;: None, &quot;fields&quot;: []},
+        {&quot;name&quot;: &quot;AddExpr&quot;, &quot;abstract&quot;: False, &quot;extends&quot;: &quot;Expr&quot;,
+         &quot;fields&quot;: [{&quot;name&quot;: &quot;left&quot;, &quot;type&quot;: &quot;Expr&quot;},
+                    {&quot;name&quot;: &quot;right&quot;, &quot;type&quot;: &quot;Expr&quot;}]},
+    ],
+    &quot;semantic_sections&quot;: []
+}
+
+
+def test_build_diagram_starts_with_classDiagram():
+    result = build_diagram(_SIMPLE_MODEL)
+    assert result.startswith('classDiagram\n')
+
+
+def test_build_diagram_ends_with_newline():
+    result = build_diagram(_SIMPLE_MODEL)
+    assert result.endswith('\n')
+
+
+def test_build_diagram_abstract_class_has_annotation():
+    result = build_diagram(_SIMPLE_MODEL)
+    assert '&lt;&lt;abstract&gt;&gt;' in result
+    assert 'class Expr' in result
+
+
+def test_build_diagram_concrete_class_has_fields():
+    result = build_diagram(_SIMPLE_MODEL)
+    assert 'left: Expr' in result
+    assert 'right: Expr' in result
+
+
+def test_build_diagram_inheritance_arrow():
+    result = build_diagram(_SIMPLE_MODEL)
+    assert 'AddExpr --|&gt; Expr' in result
+
+
+def test_build_diagram_empty_model():
+    model = {&quot;classes&quot;: [], &quot;semantic_sections&quot;: []}
+    result = build_diagram(model)
+    assert result == 'classDiagram\n'
+
+
+def test_main_writes_diagram_to_stdout(monkeypatch, capsys):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_SIMPLE_MODEL)))
+    main([])
+    out, _ = capsys.readouterr()
+    assert 'classDiagram' in out
+    assert 'AddExpr --|&gt; Expr' in out
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/mermaid/emit_test.py
+</code></pre>
+<p>Expected: <code>ImportError</code> — package doesn't exist yet.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create the package and <code>emit.py</code></strong></li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/__init__.py
+# (empty)
+</code></pre>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/emit.py
+import enum
+import json
+import sys
+
+from docopt import docopt
+
+from ...verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-mermaid-diagram-emit
+    Emit a Mermaid class diagram from model JSON.
+
+Usage:
+    plcc-mermaid-diagram-emit [-v ...] [options]
+
+Options:
+    -h --help   Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-mermaid-diagram-emit&quot;, Events, args)
+    verbose.emit(Events.STARTED)
+    model = json.load(sys.stdin)
+    sys.stdout.write(build_diagram(model))
+    verbose.emit(Events.FINISHED)
+
+
+def build_diagram(model):
+    lines = ['classDiagram']
+    classes = model.get('classes', [])
+    for cls in classes:
+        lines.extend(_render_class(cls))
+    for cls in classes:
+        if cls.get('extends'):
+            lines.append(f'    {cls[&quot;name&quot;]} --|&gt; {cls[&quot;extends&quot;]}')
+    return '\n'.join(lines) + '\n'
+
+
+def _render_class(cls):
+    name = cls['name']
+    result = [f'    class {name} {{']
+    if cls.get('abstract'):
+        result.append('        &lt;&lt;abstract&gt;&gt;')
+    for field in cls.get('fields', []):
+        result.append(f'        {field[&quot;name&quot;]}: {field[&quot;type&quot;]}')
+    result.append('    }')
+    return result
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/mermaid/emit_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/mermaid/__init__.py src/plcc/diagram/mermaid/emit.py src/plcc/diagram/mermaid/emit_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-mermaid-diagram-emit plugin&quot;
+</code></pre>
+<hr />
+<h2 id="task-8-create-mermaid-build-plugin">Task 8: Create Mermaid build plugin</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/plcc/diagram/mermaid/build.py</code></li>
+<li>
+<p>Create: <code>src/plcc/diagram/mermaid/build_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/build_test.py
+import pytest
+from unittest.mock import patch, MagicMock
+
+from .build import main as run_main
+
+
+def test_missing_required_args_exits_nonzero():
+    import docopt
+    with pytest.raises((docopt.DocoptExit, SystemExit)):
+        run_main([])
+
+
+def test_missing_mmdc_prints_helpful_error(tmp_path, capsys):
+    src = tmp_path / &quot;diagram.mmd&quot;
+    src.write_text(&quot;classDiagram\n&quot;)
+    out = tmp_path / &quot;diagram.png&quot;
+
+    with patch.dict('sys.modules', {'mmdc': None}):
+        with pytest.raises(SystemExit) as exc:
+            run_main([f'--input={src}', f'--output={out}'])
+
+    assert exc.value.code != 0
+    _, err = capsys.readouterr()
+    assert 'pip install plcc[diagram]' in err
+
+
+def test_calls_mmdc_converter(tmp_path):
+    src = tmp_path / &quot;diagram.mmd&quot;
+    src.write_text(&quot;classDiagram\n    class Foo {}\n&quot;)
+    out = tmp_path / &quot;diagram.png&quot;
+
+    mock_converter = MagicMock()
+    mock_converter.to_png.return_value = b'\x89PNG\r\n'
+    mock_mmdc = MagicMock()
+    mock_mmdc.MermaidConverter.return_value = mock_converter
+
+    with patch.dict('sys.modules', {'mmdc': mock_mmdc}):
+        run_main([f'--input={src}', f'--output={out}'])
+
+    mock_converter.to_png.assert_called_once_with(&quot;classDiagram\n    class Foo {}\n&quot;)
+    assert out.read_bytes() == b'\x89PNG\r\n'
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/mermaid/build_test.py
+</code></pre>
+<p>Expected: <code>ImportError</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>build.py</code></strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Verify the exact <code>mmdc</code> API before shipping. The test mocks <code>MermaidConverter().to_png(source_string)</code> returning <code>bytes</code>. Check <code>mmdc</code> docs/source to confirm the method signature and return type.</p>
+</blockquote>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/build.py
+import enum
+import sys
+
+from docopt import docopt
+
+from ...verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-mermaid-diagram-build
+    Render a Mermaid diagram source file to a PNG image.
+
+Usage:
+    plcc-mermaid-diagram-build --input=FILE --output=FILE [-v ...] [options]
+
+Options:
+    --input=FILE    Path to .mmd source file.
+    --output=FILE   Path to write .png image.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-mermaid-diagram-build&quot;, Events, args)
+    input_file = args['--input']
+    output_file = args['--output']
+    verbose.emit(Events.STARTED, message=f&quot;rendering {input_file}&quot;)
+    try:
+        from mmdc import MermaidConverter
+    except ImportError:
+        print(
+            &quot;plcc-mermaid-diagram-build: mmdc not installed — &quot;
+            &quot;run: pip install plcc[diagram]&quot;,
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    source = open(input_file).read()
+    converter = MermaidConverter()
+    png_bytes = converter.to_png(source)
+    with open(output_file, 'wb') as f:
+        f.write(png_bytes)
+    verbose.emit(Events.FINISHED, message=f&quot;wrote {output_file}&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/mermaid/build_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/mermaid/build.py src/plcc/diagram/mermaid/build_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-mermaid-diagram-build plugin&quot;
+</code></pre>
+<hr />
+<h2 id="task-9-create-mermaid-run-plugin">Task 9: Create Mermaid run plugin</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/plcc/diagram/mermaid/run.py</code></li>
+<li>
+<p>Create: <code>src/plcc/diagram/mermaid/run_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/run_test.py
+import pytest
+from unittest.mock import patch, MagicMock
+
+from .run import main as run_main, _open_file
+
+
+def test_missing_required_args_exits_nonzero():
+    import docopt
+    with pytest.raises((docopt.DocoptExit, SystemExit)):
+        run_main([])
+
+
+def test_open_file_calls_open_on_macos(tmp_path):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    calls = []
+
+    with patch('platform.system', return_value='Darwin'):
+        with patch('subprocess.run', side_effect=lambda cmd, **kw: calls.append(cmd)):
+            _open_file(str(img))
+
+    assert calls[0] == ['open', str(img)]
+
+
+def test_open_file_calls_xdg_open_on_linux(tmp_path):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    calls = []
+
+    with patch('platform.system', return_value='Linux'):
+        with patch('subprocess.run', side_effect=lambda cmd, **kw: calls.append(cmd)):
+            _open_file(str(img))
+
+    assert calls[0] == ['xdg-open', str(img)]
+
+
+def test_main_calls_open_file(tmp_path):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+
+    with patch('plcc.diagram.mermaid.run._open_file') as mock_open:
+        run_main([f'--input={img}'])
+
+    mock_open.assert_called_once_with(str(img))
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/mermaid/run_test.py
+</code></pre>
+<p>Expected: <code>ImportError</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>run.py</code></strong></li>
+</ul>
+<pre><code class="language-python"># src/plcc/diagram/mermaid/run.py
+import enum
+import platform
+import subprocess
+import sys
+
+from docopt import docopt
+
+from ...verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-mermaid-diagram-run
+    Open a diagram image in the system viewer.
+
+Usage:
+    plcc-mermaid-diagram-run --input=FILE [-v ...] [options]
+
+Options:
+    --input=FILE    Path to image file to open.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-mermaid-diagram-run&quot;, Events, args)
+    input_file = args['--input']
+    verbose.emit(Events.STARTED, message=f&quot;opening {input_file}&quot;)
+    _open_file(input_file)
+    verbose.emit(Events.FINISHED)
+
+
+def _open_file(path):
+    system = platform.system()
+    if system == 'Darwin':
+        subprocess.run(['open', path], check=True)
+    elif system == 'Windows':
+        subprocess.run(['start', path], shell=True, check=True)
+    else:
+        subprocess.run(['xdg-open', path], check=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/diagram/mermaid/run_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/diagram/mermaid/run.py src/plcc/diagram/mermaid/run_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-mermaid-diagram-run plugin&quot;
+</code></pre>
+<hr />
+<h2 id="task-10-create-plcc-diagram-level-2-command">Task 10: Create <code>plcc-diagram</code> Level 2 command</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>src/plcc/cmd/diagram.py</code></li>
+<li>
+<p>Create: <code>src/plcc/cmd/diagram_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write failing tests</strong></p>
+</li>
+</ul>
+<pre><code class="language-python"># src/plcc/cmd/diagram_test.py
+import pytest
+from unittest.mock import patch, MagicMock
+
+from .diagram import main as run_main
+
+
+def test_grammar_file_not_found_exits_nonzero(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main([])
+    assert exc.value.code != 0
+
+
+def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main([])
+    _, err = capsys.readouterr()
+    assert &quot;grammar file not found&quot; in err
+
+
+def test_calls_plcc_make_with_through_diagram(tmp_path, monkeypatch):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    monkeypatch.chdir(tmp_path)
+    make_calls = []
+
+    def fake_run(cmd, **kwargs):
+        make_calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            # will exit after make because diagram.png doesn't exist
+            run_main([])
+
+    assert any('plcc-make' in str(c) for c in make_calls)
+    assert any('--through=diagram' in str(c) for c in make_calls[0])
+
+
+def test_default_format_is_mermaid(tmp_path, monkeypatch):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    monkeypatch.chdir(tmp_path)
+    make_calls = []
+
+    def fake_run(cmd, **kwargs):
+        make_calls.append(cmd)
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            run_main([])
+
+    assert any('--diagram-format=mermaid' in str(c) for c in make_calls[0])
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/diagram_test.py
+</code></pre>
+<p>Expected: <code>ImportError</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>diagram.py</code></strong></li>
+</ul>
+<pre><code class="language-python"># src/plcc/cmd/diagram.py
+import enum
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-diagram
+    Generate and display a class diagram from a PLCC grammar file.
+
+Usage:
+    plcc-diagram [-v ...] [options]
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    --format=FMT            Diagram format [default: mermaid].
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-diagram --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose = VerboseContext.from_args(&quot;plcc-diagram&quot;, Events, args)
+    grammar_file = args['--grammar-file']
+    fmt = args['--format'] or 'mermaid'
+
+    if not os.path.exists(grammar_file):
+        print(f&quot;plcc-diagram: grammar file not found: {grammar_file}&quot;, file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-diagram --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message=f&quot;generating diagram for {grammar_file}&quot;)
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    make_result = subprocess.run(
+        ['plcc-make', '--through=diagram',
+         f'--grammar-file={grammar_file}',
+         f'--diagram-format={fmt}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(
+            make_result.stderr.decode('utf-8', errors='replace')
+        )
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    image_path = os.path.join('build', 'diagram', 'diagram.png')
+    run_result = subprocess.run(
+        ['plcc-diagram-run', f'--format={fmt}',
+         f'--input={image_path}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if run_result.stderr:
+        events = verbose.parse_child_events(
+            run_result.stderr.decode('utf-8', errors='replace')
+        )
+        verbose.reformat_child_events(events)
+    if run_result.returncode != 0:
+        sys.exit(run_result.returncode)
+
+    verbose.emit(Events.FINISHED, message=&quot;done&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/diagram_test.py
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add src/plcc/cmd/diagram.py src/plcc/cmd/diagram_test.py
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;feat(diagram): add plcc-diagram Level 2 command&quot;
+</code></pre>
+<hr />
+<h2 id="task-11-update-pyprojecttoml-reinstall-run-all-unit-tests">Task 11: Update <code>pyproject.toml</code>, reinstall, run all unit tests</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>pyproject.toml</code></li>
+<li>
+<p>Delete: <code>src/plcc/diagram/dispatch.py</code>, <code>src/plcc/diagram/dispatch_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Update <code>pyproject.toml</code></strong></p>
+</li>
+</ul>
+<p>In <code>[project.scripts]</code>, make these changes:</p>
+<p>Remove:</p>
+<pre><code class="language-toml">plcc-plantuml-diagram = &quot;plcc.diagram.plantuml.emit:main&quot;
+plcc-diagram = &quot;plcc.diagram.dispatch:main&quot;
+</code></pre>
+<p>Add:</p>
+<pre><code class="language-toml">plcc-diagram = &quot;plcc.cmd.diagram:main&quot;
+plcc-diagram-emit = &quot;plcc.diagram.emit:main&quot;
+plcc-diagram-build = &quot;plcc.diagram.build:main&quot;
+plcc-diagram-run = &quot;plcc.diagram.run:main&quot;
+plcc-plantuml-diagram-emit = &quot;plcc.diagram.plantuml.emit:main&quot;
+plcc-mermaid-diagram-emit = &quot;plcc.diagram.mermaid.emit:main&quot;
+plcc-mermaid-diagram-build = &quot;plcc.diagram.mermaid.build:main&quot;
+plcc-mermaid-diagram-run = &quot;plcc.diagram.mermaid.run:main&quot;
+</code></pre>
+<p>Add the optional extras section after <code>[project]</code> dependencies:</p>
+<pre><code class="language-toml">[project.optional-dependencies]
+diagram = [&quot;mmdc&quot;]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Delete the old dispatcher files</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; rm src/plcc/diagram/dispatch.py src/plcc/diagram/dispatch_test.py
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Reinstall</strong></li>
+</ul>
+<pre><code class="language-bash">pdm install
+</code></pre>
+<p>Expected: no errors.</p>
+<ul>
+<li>[ ] <strong>Step 4: Run all unit tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add pyproject.toml
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;build: update entry points for diagram redesign&quot;
+</code></pre>
+<hr />
+<h2 id="task-12-update-bats-command-tests">Task 12: Update bats command tests</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>tests/bats/commands/plcc-diagram.bats</code></li>
+<li>Modify: <code>tests/bats/commands/plcc-diagram-list.bats</code></li>
+<li>Create: <code>tests/bats/commands/plcc-diagram-build.bats</code></li>
+<li>
+<p>Create: <code>tests/bats/commands/plcc-diagram-run.bats</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Rewrite <code>plcc-diagram.bats</code> for the Level 2 interface</strong></p>
+</li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+@test &quot;plcc-diagram is on PATH&quot; { command -v plcc-diagram; }
+
+@test &quot;plcc-diagram --help exits 0&quot; {
+    run plcc-diagram --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-diagram fails when grammar file not found&quot; {
+    run bash -c &quot;cd /tmp &amp;&amp; plcc-diagram --grammar-file=nonexistent.plcc&quot;
+    [ &quot;$status&quot; -ne 0 ]
+    [[ &quot;$output&quot; =~ &quot;grammar file not found&quot; ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>plcc-diagram-list.bats</code></strong></li>
+</ul>
+<p>Replace the test that checks for <code>plantuml</code> (old pattern) with one that checks for <code>mermaid</code> (new emit pattern):</p>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+@test &quot;plcc-diagram-list is on PATH&quot; { command -v plcc-diagram-list; }
+
+@test &quot;plcc-diagram-list exits 0&quot; {
+    run plcc-diagram-list
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-diagram-list finds mermaid&quot; {
+    run plcc-diagram-list
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ &quot;mermaid&quot; ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>plcc-diagram-build.bats</code></strong></li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+@test &quot;plcc-diagram-build is on PATH&quot; { command -v plcc-diagram-build; }
+
+@test &quot;plcc-diagram-build --help exits 0&quot; {
+    run plcc-diagram-build --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-diagram-build requires --input and --output&quot; {
+    run plcc-diagram-build
+    [ &quot;$status&quot; -ne 0 ]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Create <code>plcc-diagram-run.bats</code></strong></li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+@test &quot;plcc-diagram-run is on PATH&quot; { command -v plcc-diagram-run; }
+
+@test &quot;plcc-diagram-run --help exits 0&quot; {
+    run plcc-diagram-run --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-diagram-run requires --input&quot; {
+    run plcc-diagram-run
+    [ &quot;$status&quot; -ne 0 ]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run bats command tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash tests/bats/commands/plcc-diagram.bats tests/bats/commands/plcc-diagram-list.bats tests/bats/commands/plcc-diagram-build.bats tests/bats/commands/plcc-diagram-run.bats
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add tests/bats/commands/plcc-diagram.bats tests/bats/commands/plcc-diagram-list.bats tests/bats/commands/plcc-diagram-build.bats tests/bats/commands/plcc-diagram-run.bats
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;test(diagram): update and add bats command tests for diagram redesign&quot;
+</code></pre>
+<hr />
+<h2 id="task-13-run-full-test-suite">Task 13: Run full test suite</h2>
+<ul>
+<li>[ ] <strong>Step 1: Run all functional tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 2: If anything fails, fix it before marking done</strong></li>
+</ul>
+<p>Common things to check:</p>
+<ul>
+<li>Any test that still references <code>plcc-plantuml-diagram</code> (old name) should be updated to <code>plcc-plantuml-diagram-emit</code></li>
+<li>Any test that references <code>plcc.diagram.dispatch</code> should be updated to <code>plcc.diagram.emit</code></li>
+<li>
+<p>The <code>plcc-diagram-emit</code> bats test in the existing <code>plcc-diagram.bats</code> may need a rename to <code>tests/bats/commands/plcc-diagram-emit.bats</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 3: Final commit if any fixes were needed</strong></p>
+</li>
+</ul>
+<pre><code class="language-bash">git -C &quot;$(git rev-parse --show-toplevel)&quot; add -u
+git -C &quot;$(git rev-parse --show-toplevel)&quot; commit -m &quot;fix(diagram): address issues found in full test suite run&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

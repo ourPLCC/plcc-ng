@@ -1,0 +1,1460 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-17-interactive-session/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Interactive Session Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#interactive-session-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Interactive Session Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="interactive-session-implementation-plan">Interactive Session Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Fix three interactive-mode bugs — whitespace-only lines dropped (016), no diagnostic on premature EOF (024), first line not tried before entering continuation (025) — and rename the <code>$</code> token sentinel to <code>eof</code> as the enabling cross-cut.</p>
+<p><strong>Architecture:</strong> The <code>$</code> → <code>eof</code> rename threads through the token emitter, the parser, and the two handler classes. Issues 024 and 025 add an <code>eof</code> flag to <code>feed()</code> so that <code>ParseHandler</code> can distinguish "trial" from "force-submit" and suppress or surface the incomplete-input error accordingly. Issue 016 is a narrower <code>_is_blank</code> predicate fix.</p>
+<p><strong>Tech Stack:</strong> Python 3, pytest, <code>bin/test/units.bash</code> for the TDD inner loop, <code>bin/test/commands.bash</code> and <code>bin/test/integration.bash</code> for final verification.</p>
+<hr />
+<h2 id="file-map">File map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/plcc/tokens/tokens_cli.py</code></td>
+<td>Emit <code>"eof"</code> sentinel instead of <code>"$"</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/tokens/tokens_cli_sentinel_test.py</code></td>
+<td>Update <code>"$"</code> → <code>"eof"</code> assertions and test names</td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/predictive_parser.py</code></td>
+<td>Rename internal SENTINEL; <code>ParseError</code> gains <code>found</code>; remove <code>"$"</code> special cases</td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/predictive_parser_test.py</code></td>
+<td>Add tests for <code>found</code> field</td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/table_cli.py</code></td>
+<td>Update loop guard; add <code>found</code> to error records</td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/table_cli_test.py</code></td>
+<td>Update <code>_sentinel()</code> helper; add <code>found: "eof"</code> test</td>
+</tr>
+<tr>
+<td><code>src/plcc/cmd/scan.py</code></td>
+<td>Update sentinel filter; <code>feed()</code> gains <code>eof</code> param (ignored)</td>
+</tr>
+<tr>
+<td><code>src/plcc/cmd/parse.py</code></td>
+<td><code>feed()</code> gains <code>eof</code>; return <code>False</code> for eof-only errors when trial</td>
+</tr>
+<tr>
+<td><code>src/plcc/cmd/parse_test.py</code></td>
+<td>Add tests for eof-aware <code>feed()</code> logic</td>
+</tr>
+<tr>
+<td><code>src/plcc/cmd/source_runner.py</code></td>
+<td>Fix <code>_is_blank</code>; fix <code>_accumulate_only</code>; add <code>_attempt_first_line</code>; pass <code>eof</code> in <code>_evaluate</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/cmd/source_runner_test.py</code></td>
+<td>Update <code>RecordingHandler</code>; update broken tests; add trial-mode tests</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-rename-the-sentinel-to-eof-in-tokens_cli">Task 1: Rename the <code>$</code> sentinel to <code>eof</code> in <code>tokens_cli</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/tokens/tokens_cli.py:65</code>
+- Modify: <code>src/plcc/tokens/tokens_cli_sentinel_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Run failing baseline — confirm existing sentinel tests pass before any change</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/tokens/tokens_cli_sentinel_test.py -v
+</code></pre>
+<p>Expected: all three tests PASS (baseline).</p>
+<ul>
+<li>[ ] <strong>Step 2: Update tests to expect <code>"eof"</code> — they fail now</strong></li>
+</ul>
+<p>In <code>src/plcc/tokens/tokens_cli_sentinel_test.py</code>, replace the three test bodies:</p>
+<pre><code class="language-python">def test_tokens_emits_eof_sentinel_at_eof(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    last = records[-1]
+    assert last[&quot;kind&quot;] == &quot;token&quot;
+    assert last[&quot;name&quot;] == &quot;eof&quot;
+    assert last[&quot;lexeme&quot;] == &quot;&quot;
+
+
+def test_tokens_eof_sentinel_has_source(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    last = records[-1]
+    assert &quot;source&quot; in last
+
+
+def test_tokens_eof_sentinel_on_empty_input(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO(''))
+    run_main(['/spec.json'])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l]
+    assert len(records) == 1
+    assert records[0][&quot;name&quot;] == &quot;eof&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run — confirm the three sentinel tests FAIL</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/tokens/tokens_cli_sentinel_test.py -v
+</code></pre>
+<p>Expected: FAIL with <code>AssertionError: assert '$' == 'eof'</code>.</p>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>tokens_cli.py</code> to emit <code>"eof"</code></strong></li>
+</ul>
+<p>In <code>src/plcc/tokens/tokens_cli.py</code> line 65, change:</p>
+<pre><code class="language-python">    print(json.dumps({&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: &quot;$&quot;, &quot;lexeme&quot;: &quot;&quot;, &quot;source&quot;: last_source}), flush=True)
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">    print(json.dumps({&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: &quot;eof&quot;, &quot;lexeme&quot;: &quot;&quot;, &quot;source&quot;: last_source}), flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run — confirm the three sentinel tests PASS</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/tokens/tokens_cli_sentinel_test.py -v
+</code></pre>
+<p>Expected: all three PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Run all units to surface any other breakage</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: failures in <code>table_cli_test.py</code> (uses <code>_sentinel()</code> with <code>"$"</code>) and <code>scan.py</code> filter — those are fixed in Tasks 2 and 3.</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add src/plcc/tokens/tokens_cli.py src/plcc/tokens/tokens_cli_sentinel_test.py
+git -C .worktrees/interactive-session commit -m &quot;feat(tokens): emit 'eof' sentinel instead of '\$' [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-update-table_cli-loop-guard-and-scan-filter">Task 2: Update <code>table_cli</code> loop guard and <code>scan</code> filter</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/table_cli.py:74</code>
+- Modify: <code>src/plcc/parser/table_cli_test.py:189-191</code>
+- Modify: <code>src/plcc/cmd/scan.py:113</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>_sentinel()</code> helper in <code>table_cli_test.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/parser/table_cli_test.py</code> line 191, change:</p>
+<pre><code class="language-python">def _sentinel(line=1, col=1, file=&quot;-&quot;):
+    return {&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: &quot;$&quot;, &quot;lexeme&quot;: &quot;&quot;,
+            &quot;source&quot;: {&quot;file&quot;: file, &quot;line&quot;: line, &quot;column&quot;: col}}
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">def _sentinel(line=1, col=1, file=&quot;-&quot;):
+    return {&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: &quot;eof&quot;, &quot;lexeme&quot;: &quot;&quot;,
+            &quot;source&quot;: {&quot;file&quot;: file, &quot;line&quot;: line, &quot;column&quot;: col}}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run <code>table_cli_test.py</code> — confirm failures resolve</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/table_cli_test.py -v
+</code></pre>
+<p>Expected: some tests that pass <code>_sentinel()</code> to the parser may now fail because <code>table_cli.py</code> still checks <code>!= "$"</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update loop guard in <code>table_cli.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/parser/table_cli.py</code> line 74, change:</p>
+<pre><code class="language-python">    while cursor &lt; len(tokens) and tokens[cursor][&quot;name&quot;] != &quot;$&quot;:
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">    while cursor &lt; len(tokens) and tokens[cursor][&quot;name&quot;] != &quot;eof&quot;:
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update sentinel filter in <code>scan.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/scan.py</code> line 113, change:</p>
+<pre><code class="language-python">            if record.get(&quot;name&quot;) == &quot;$&quot;:
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">            if record.get(&quot;name&quot;) == &quot;eof&quot;:
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run all units — confirm no new failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: PASS for <code>table_cli_test.py</code> and any scan-related tests. Any remaining failures should only be in <code>predictive_parser_test.py</code> related to <code>found</code> (not yet added).</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add \
+    src/plcc/parser/table_cli.py \
+    src/plcc/parser/table_cli_test.py \
+    src/plcc/cmd/scan.py
+git -C .worktrees/interactive-session commit -m &quot;fix(parser,scan): update sentinel guard and filter from '\$' to 'eof' [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-add-found-to-parseerror-and-remove-special-cases">Task 3: Add <code>found</code> to <code>ParseError</code> and remove <code>"$"</code> special cases</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/predictive_parser.py</code>
+- Modify: <code>src/plcc/parser/predictive_parser_test.py</code></p>
+<p>The <code>predictive_parser.py</code> currently has two special-case branches for <code>"$"</code>:
+1. <code>expect()</code> at line 73: <code>if tok["name"] == "$":</code> — raises a different message.
+2. <code>_parse_regular()</code> at line 102: <code>if lookahead == "$":</code> — raises a different message.</p>
+<p>After this task: both branches are removed. All <code>ParseError</code> raises pass <code>found=tok["name"]</code> (or <code>found=lookahead</code>). Because <code>"eof"</code> is a real token, no special-casing is needed.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests for the <code>found</code> field</strong></li>
+</ul>
+<p>Add to the end of <code>src/plcc/parser/predictive_parser_test.py</code>:</p>
+<pre><code class="language-python">def test_parse_error_found_is_set_for_wrong_terminal():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [_tok(&quot;PLUS&quot;, &quot;+&quot;)])
+    assert exc_info.value.found == &quot;PLUS&quot;
+
+
+def test_parse_error_found_is_eof_for_premature_end_of_input():
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM] — hits EOF before PLUS
+    with pytest.raises(ParseError) as exc_info:
+        parse(_ADDITION_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;)])
+    assert exc_info.value.found == &quot;eof&quot;
+
+
+def test_parse_error_found_is_none_by_default():
+    e = ParseError(&quot;something went wrong&quot;)
+    assert e.found is None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run — confirm new tests FAIL</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/predictive_parser_test.py -v -k &quot;test_parse_error_found&quot;
+</code></pre>
+<p>Expected: FAIL with <code>AttributeError: 'ParseError' object has no attribute 'found'</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>ParseError</code> and all raise sites in <code>predictive_parser.py</code></strong></li>
+</ul>
+<p>Replace the entire <code>ParseError</code> class and update <code>expect()</code> and <code>_parse_regular()</code> in <code>src/plcc/parser/predictive_parser.py</code>:</p>
+<pre><code class="language-python">class ParseError(Exception):
+    def __init__(self, message, source=None, found=None):
+        super().__init__(message)
+        self.source = source or {}
+        self.found = found
+</code></pre>
+<p>Replace <code>expect()</code> (lines 70-82):</p>
+<pre><code class="language-python">    def expect(sym):
+        tok = current()
+        if tok[&quot;name&quot;] != sym:
+            raise ParseError(
+                f&quot;expected {sym!r}, got {tok['name']!r}&quot;,
+                source=tok[&quot;source&quot;],
+                found=tok[&quot;name&quot;],
+            )
+        return advance()
+</code></pre>
+<p>Replace the <code>production is None</code> block in <code>_parse_regular()</code> (lines 101-110):</p>
+<pre><code class="language-python">        if production is None:
+            raise ParseError(
+                f&quot;unexpected {lookahead!r}, no production for {sym!r}&quot;,
+                source=current()[&quot;source&quot;],
+                found=lookahead,
+            )
+</code></pre>
+<p>Also rename the internal sentinel on line 60:</p>
+<pre><code class="language-python">    SENTINEL = {&quot;name&quot;: &quot;eof&quot;, &quot;lexeme&quot;: &quot;&quot;, &quot;source&quot;: {&quot;file&quot;: &quot;&quot;, &quot;line&quot;: 0, &quot;column&quot;: 0}}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run — confirm new tests PASS</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/predictive_parser_test.py -v
+</code></pre>
+<p>Expected: all PASS including the three new <code>found</code> tests.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run all units</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add \
+    src/plcc/parser/predictive_parser.py \
+    src/plcc/parser/predictive_parser_test.py
+git -C .worktrees/interactive-session commit -m &quot;fix(parser): add found field to ParseError; remove \$ special cases [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-add-found-to-error-records-in-table_cli">Task 4: Add <code>found</code> to error records in <code>table_cli</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/table_cli.py:95-104</code>
+- Modify: <code>src/plcc/parser/table_cli_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write a failing test for <code>found: "eof"</code> in incomplete-input error records</strong></li>
+</ul>
+<p>Add to the end of <code>src/plcc/parser/table_cli_test.py</code>:</p>
+<pre><code class="language-python">def test_incomplete_input_error_record_has_found_eof(capsys, monkeypatch):
+    # Grammar: program → NUM PLUS NUM; tokens: [NUM, eof] — incomplete input
+    ll1_file = tempfile.NamedTemporaryFile(mode=&quot;w&quot;, suffix=&quot;.json&quot;, delete=False)
+    try:
+        json.dump(_ADDITION_LL1, ll1_file)
+        ll1_file.flush()
+        ll1_file.close()
+        tokens = [_tok(&quot;NUM&quot;, &quot;1&quot;), _sentinel()]
+        stdin_data = &quot;\n&quot;.join(json.dumps(t) for t in tokens) + &quot;\n&quot;
+        monkeypatch.setattr(&quot;sys.stdin&quot;, io.StringIO(stdin_data))
+        try:
+            run_main([f&quot;--ll1={ll1_file.name}&quot;])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        err_records = [r for r in records if r.get(&quot;kind&quot;) == &quot;error&quot;]
+        assert len(err_records) &gt;= 1
+        assert err_records[0].get(&quot;found&quot;) == &quot;eof&quot;
+    finally:
+        os.unlink(ll1_file.name)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run — confirm new test FAILS</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/table_cli_test.py::test_incomplete_input_error_record_has_found_eof -v
+</code></pre>
+<p>Expected: FAIL with <code>AssertionError: assert None == 'eof'</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update the <code>ParseError</code> handler in <code>table_cli.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/parser/table_cli.py</code>, find the <code>except ParseError as e:</code> block (lines 95-104) and replace:</p>
+<pre><code class="language-python">        except ParseError as e:
+            record = {
+                &quot;kind&quot;: &quot;error&quot;,
+                &quot;message&quot;: str(e),
+                &quot;stage&quot;: &quot;plcc-parser-table&quot;,
+                &quot;source&quot;: e.source,
+            }
+            if e.found:
+                record[&quot;found&quot;] = e.found
+            verbose.emit_error(e.source, str(e))
+            print(json.dumps(record), flush=True)
+            cursor += 1
+</code></pre>
+<p>Also update the <code>not attempted</code> branch's <code>except ParseError as e:</code> block (lines 113-120):</p>
+<pre><code class="language-python">        except ParseError as e:
+            record = {
+                &quot;kind&quot;: &quot;error&quot;,
+                &quot;message&quot;: str(e),
+                &quot;stage&quot;: &quot;plcc-parser-table&quot;,
+                &quot;source&quot;: e.source,
+            }
+            if e.found:
+                record[&quot;found&quot;] = e.found
+            print(json.dumps(record), flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run — confirm the new test PASSES</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/table_cli_test.py -v
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run all units</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add \
+    src/plcc/parser/table_cli.py \
+    src/plcc/parser/table_cli_test.py
+git -C .worktrees/interactive-session commit -m &quot;fix(parser): add found field to parse error records in table_cli [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-parsehandlerfeed-gains-eof-flag-scanhandlerfeed-gains-eof-ignored">Task 5: <code>ParseHandler.feed</code> gains <code>eof</code> flag; <code>ScanHandler.feed</code> gains <code>eof</code> (ignored)</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/parse.py</code>
+- Modify: <code>src/plcc/cmd/scan.py</code>
+- Modify: <code>src/plcc/cmd/parse_test.py</code></p>
+<p><strong>Logic for <code>ParseHandler.feed(content, source, eof=False)</code>:</strong></p>
+<ol>
+<li>Collect all JSONL records from the pipeline output.</li>
+<li>If no records → return <code>False</code>.</li>
+<li>Classify: <code>any_tree</code>, <code>any_genuine_error</code> (kind==error, found≠"eof"), <code>only_eof_errors</code> (no tree, no genuine error).</li>
+<li>If <code>only_eof_errors</code> and <code>eof=False</code> → return <code>False</code> (trial: don't show incomplete-input error).</li>
+<li>
+<p>Otherwise → print all records to stdout/stderr as before → return <code>True</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add a helper and new tests to <code>parse_test.py</code></strong></p>
+</li>
+</ol>
+<p>Add a helper and tests to the end of <code>src/plcc/cmd/parse_test.py</code>:</p>
+<pre><code class="language-python">def _eof_error_record(msg=&quot;unexpected end of input: expected 'PLUS'&quot;,
+                      stage=&quot;plcc-parser-table&quot;, line=1, col=1):
+    return json.dumps({
+        &quot;kind&quot;: &quot;error&quot;, &quot;message&quot;: msg, &quot;stage&quot;: stage,
+        &quot;found&quot;: &quot;eof&quot;,
+        &quot;source&quot;: {&quot;file&quot;: &quot;-&quot;, &quot;line&quot;: line, &quot;column&quot;: col},
+    }).encode() + b&quot;\n&quot;
+
+
+def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record())])
+    monkeypatch.setattr(subprocess, &quot;Popen&quot;, lambda *a, **kw: next(procs))
+    assert handler.feed(b&quot;1+\n&quot;, &quot;-&quot;, eof=False) is False
+
+
+def test_feed_returns_true_for_eof_only_error_when_force_submit(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record())])
+    monkeypatch.setattr(subprocess, &quot;Popen&quot;, lambda *a, **kw: next(procs))
+    assert handler.feed(b&quot;1+\n&quot;, &quot;-&quot;, eof=True) is True
+
+
+def test_feed_suppresses_stderr_for_eof_error_when_trial(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record(&quot;expected PLUS&quot;))])
+    monkeypatch.setattr(subprocess, &quot;Popen&quot;, lambda *a, **kw: next(procs))
+    handler.feed(b&quot;1+\n&quot;, &quot;-&quot;, eof=False)
+    _, err = capsys.readouterr()
+    assert err == &quot;&quot;
+
+
+def test_feed_shows_stderr_for_eof_error_when_force_submit(monkeypatch, handler, capsys):
+    procs = iter([_proc(), _proc(stdout=_eof_error_record(&quot;expected PLUS&quot;))])
+    monkeypatch.setattr(subprocess, &quot;Popen&quot;, lambda *a, **kw: next(procs))
+    handler.feed(b&quot;1+\n&quot;, &quot;-&quot;, eof=True)
+    _, err = capsys.readouterr()
+    assert &quot;expected PLUS&quot; in err
+
+
+def test_feed_returns_true_for_genuine_error_regardless_of_eof_param(monkeypatch, handler):
+    procs = iter([_proc(), _proc(stdout=_error_record(&quot;bad token&quot;))])
+    monkeypatch.setattr(subprocess, &quot;Popen&quot;, lambda *a, **kw: next(procs))
+    # _error_record has no &quot;found&quot; field → genuine error → always True
+    assert handler.feed(b&quot;@\n&quot;, &quot;-&quot;, eof=False) is True
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run — confirm new tests FAIL</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/parse_test.py -v -k &quot;eof&quot;
+</code></pre>
+<p>Expected: FAIL (<code>TypeError: feed() got an unexpected keyword argument 'eof'</code> or similar).</p>
+<ul>
+<li>[ ] <strong>Step 3: Rewrite <code>ParseHandler.feed</code> in <code>parse.py</code></strong></li>
+</ul>
+<p>Replace the <code>feed</code> method in <code>src/plcc/cmd/parse.py</code>:</p>
+<pre><code class="language-python">    def feed(self, content, source, eof=False):
+        tokens_proc = subprocess.Popen(
+            [&quot;plcc-tokens&quot;, self._spec_path, &quot;-&quot;] + self._child_flags,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        tree_proc = subprocess.Popen(
+            [&quot;plcc-trees&quot;, f&quot;--ll1={self._ll1_path}&quot;] + self._child_flags,
+            stdin=tokens_proc.stdout,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        tokens_proc.stdout.close()
+        tokens_proc.stdin.write(content)
+        tokens_proc.stdin.close()
+        tree_out, _ = tree_proc.communicate()
+        tokens_proc.wait()
+
+        records = []
+        for raw in tree_out.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            records.append(json.loads(raw))
+
+        if not records:
+            return False
+
+        any_tree = any(r.get(&quot;kind&quot;) == &quot;tree&quot; for r in records)
+        any_genuine_error = any(
+            r.get(&quot;kind&quot;) == &quot;error&quot; and r.get(&quot;found&quot;) != &quot;eof&quot;
+            for r in records
+        )
+        only_eof_errors = not any_tree and not any_genuine_error
+
+        if only_eof_errors and not eof:
+            return False
+
+        for record in records:
+            if record.get(&quot;kind&quot;) == &quot;error&quot;:
+                src = record.get(&quot;source&quot;, {})
+                message = record.get(&quot;message&quot;, &quot;error&quot;)
+                loc = _location_str(src)
+                if loc:
+                    print(f&quot;{loc}: error: {message}&quot;, file=sys.stderr)
+                else:
+                    stage = record.get(&quot;stage&quot;, &quot;plcc-parse&quot;)
+                    print(f&quot;{stage}: error: {message}&quot;, file=sys.stderr)
+                self.had_error = True
+            elif record.get(&quot;kind&quot;) == &quot;tree&quot;:
+                _print_tree(record, indent=0)
+
+        return True
+</code></pre>
+<p>Also add <code>eof=False</code> to <code>ScanHandler.feed</code> in <code>src/plcc/cmd/scan.py</code>:</p>
+<pre><code class="language-python">    def feed(self, content, source, eof=False):
+</code></pre>
+<p>(No other changes — <code>eof</code> is accepted but ignored; <code>ScanHandler</code> always returns <code>True</code>.)</p>
+<ul>
+<li>[ ] <strong>Step 4: Run — confirm all <code>parse_test.py</code> tests PASS</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/parse_test.py -v
+</code></pre>
+<p>Expected: all PASS (existing tests unaffected because error records without <code>found</code> field are classified as genuine errors).</p>
+<ul>
+<li>[ ] <strong>Step 5: Run all units</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add \
+    src/plcc/cmd/parse.py \
+    src/plcc/cmd/scan.py \
+    src/plcc/cmd/parse_test.py
+git -C .worktrees/interactive-session commit -m &quot;fix(parse,scan): feed() gains eof flag; ParseHandler returns False for eof-only errors on trial [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-6-fix-issue-016-whitespace-only-lines-silently-dropped">Task 6: Fix Issue 016 — whitespace-only lines silently dropped</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/source_runner.py:89-96</code>
+- Modify: <code>src/plcc/cmd/source_runner_test.py</code></p>
+<p>Current <code>_is_blank</code> returns <code>True</code> for any line whose <code>.strip()</code> is empty, including <code>b"  \n"</code>. Fix: only a bare newline is blank.</p>
+<p>Current <code>_accumulate_only</code> drops whitespace-only buffers. Fix: always accumulate.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write a failing test for <code>_is_blank</code> and accumulation</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/source_runner_test.py</code>, locate <code>test_is_blank_true_for_spaces_and_newline</code> (line 269) and change it:</p>
+<pre><code class="language-python">def test_is_blank_false_for_whitespace_only_line(runner):
+    assert runner._is_blank(b&quot;  \n&quot;) is False
+</code></pre>
+<p>Also add a new test after <code>test_eof_mode_blank_line_accumulates_without_feed</code>:</p>
+<pre><code class="language-python">def test_eof_mode_whitespace_only_line_accumulates(monkeypatch):
+    # whitespace-only line is not blank — it accumulates in EOF mode
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;  \n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b&quot;  \n&quot;
+</code></pre>
+<p>Note: this test references <code>_eof_runner()</code> with a handler that has <code>eof</code> param (updated in Task 7). For now the test may error on the <code>feed()</code> signature mismatch — that's expected and fixed in Task 7. Skip running this new test until Task 7 by running only the <code>_is_blank</code> test in Step 2.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run — confirm <code>_is_blank</code> test FAILS</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/source_runner_test.py::test_is_blank_false_for_whitespace_only_line -v
+</code></pre>
+<p>Expected: FAIL with <code>assert True is False</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix <code>_is_blank</code> in <code>source_runner.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/source_runner.py</code>, change <code>_is_blank</code> (line 89-90):</p>
+<pre><code class="language-python">    def _is_blank(self, line):
+        return line == b&quot;\n&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Fix <code>_accumulate_only</code> in <code>source_runner.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/source_runner.py</code>, replace <code>_accumulate_only</code> (lines 92-96):</p>
+<pre><code class="language-python">    def _accumulate_only(self, line, state):
+        buffer = state.buffer + line
+        return _InteractiveState(buffer=buffer, prompt=self._continuation)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run — confirm <code>_is_blank</code> test PASSES</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/source_runner_test.py::test_is_blank_false_for_whitespace_only_line -v
+</code></pre>
+<p>Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add src/plcc/cmd/source_runner.py src/plcc/cmd/source_runner_test.py
+git -C .worktrees/interactive-session commit -m &quot;fix(source-runner): whitespace-only lines are not blank; _accumulate_only always accumulates (016) [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-7-issue-025-_attempt_first_line-try-first-line-before-continuation">Task 7: Issue 025 — <code>_attempt_first_line</code>: try first line before continuation</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/source_runner.py</code>
+- Modify: <code>src/plcc/cmd/source_runner_test.py</code></p>
+<p><strong>New behavior for <code>SubmitOn.EOF</code> at <code>&gt;&gt;&gt;</code> (empty buffer):</strong>
+- Blank line → skip (no feed).
+- Non-blank line → trial: <code>feed(line, eof=False)</code>.
+  - Returns <code>True</code> → complete; stay at <code>&gt;&gt;&gt;</code>.
+  - Returns <code>False</code> → incomplete; enter <code>...</code> continuation.</p>
+<p><strong>Lines while in <code>...</code> (non-empty buffer):</strong> unchanged — always <code>_accumulate_only</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>RecordingHandler</code> to accept <code>eof</code> kwarg</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/source_runner_test.py</code>, update the <code>RecordingHandler.feed</code> signature:</p>
+<pre><code class="language-python">class RecordingHandler:
+    &quot;&quot;&quot;Captures feed() calls for assertions.&quot;&quot;&quot;
+    def __init__(self, results=None):
+        self._results = iter(results or [])
+        self.calls = []
+
+    def feed(self, content, source, eof=False):
+        self.calls.append((content, source))
+        try:
+            return next(self._results)
+        except StopIteration:
+            return True
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Write new tests for trial-mode behavior</strong></li>
+</ul>
+<p>Add at the end of <code>src/plcc/cmd/source_runner_test.py</code>:</p>
+<pre><code class="language-python">def test_eof_mode_first_line_calls_feed_immediately(monkeypatch):
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert len(handler.calls) == 1
+    assert handler.calls[0][0] == b&quot;hello\n&quot;
+
+
+def test_eof_mode_trial_succeeds_resets_to_prompt(monkeypatch, capsys):
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    _, err = capsys.readouterr()
+    assert err.count(&quot;&gt;&gt;&gt; &quot;) &gt;= 1
+    assert &quot;... &quot; not in err
+
+
+def test_eof_mode_trial_fails_enters_continuation(monkeypatch, capsys):
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[False, True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    _, err = capsys.readouterr()
+    assert &quot;... &quot; in err
+
+
+def test_eof_mode_blank_first_line_is_skipped(monkeypatch):
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler()
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert handler.calls == []
+
+
+def test_eof_mode_second_line_accumulates_not_retried(monkeypatch):
+    # first line → trial fails → continuation; second line accumulates (not retried)
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;world\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[False, True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert len(handler.calls) == 2
+    assert handler.calls[0][0] == b&quot;hello\n&quot;
+    assert handler.calls[1][0] == b&quot;hello\nworld\n&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run — confirm new tests FAIL</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/source_runner_test.py -v -k &quot;test_eof_mode_first_line or test_eof_mode_trial or test_eof_mode_blank_first or test_eof_mode_second&quot;
+</code></pre>
+<p>Expected: FAIL (old code never calls feed on the first line in EOF mode).</p>
+<ul>
+<li>[ ] <strong>Step 4: Add <code>_attempt_first_line</code> and update <code>_process_line</code> and <code>_evaluate</code> in <code>source_runner.py</code></strong></li>
+</ul>
+<p>Replace <code>_process_line</code> (lines 66-78):</p>
+<pre><code class="language-python">    def _process_line(self, handler, line, state):
+        if self._is_interrupted(line):
+            return self._clear_buffer_or_exit(state)
+        if self._is_eof(line):
+            return self._exit_or_submit_accumulated_buffer(handler, state)
+        if self._is_partial_eof(line):
+            return self._force_submit_including_partial_line(handler, line, state)
+        if self._submit_on == SubmitOn.EOF:
+            if not state.buffer:
+                return self._attempt_first_line(handler, line, state)
+            return self._accumulate_only(line, state)
+        # SubmitOn.EOL
+        if self._is_blank(line):
+            return self._force_submit_accumulated_buffer(handler, line, state)
+        return self._accumulate_and_evaluate(handler, line, state)
+</code></pre>
+<p>Add <code>_attempt_first_line</code> after <code>_accumulate_only</code>:</p>
+<pre><code class="language-python">    def _attempt_first_line(self, handler, line, state):
+        if self._is_blank(line):
+            return _InteractiveState(buffer=b&quot;&quot;, prompt=self._prompt)
+        if self._evaluate(handler, line, eof=False):
+            return _InteractiveState(buffer=b&quot;&quot;, prompt=self._prompt)
+        return _InteractiveState(buffer=line, prompt=self._continuation)
+</code></pre>
+<p>Update <code>_evaluate</code> (line 129):</p>
+<pre><code class="language-python">    def _evaluate(self, handler, content, eof=False):
+        try:
+            result = handler.feed(content, &quot;-&quot;, eof=eof)
+        except KeyboardInterrupt:
+            print(file=sys.stderr)
+            sys.exit(130)
+        if eof and result is False:
+            print(&quot;PLCC internal error: forced submission was not accepted by the handler.&quot;, file=sys.stderr)
+            sys.exit(1)
+        return result
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run — confirm new tests PASS</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/source_runner_test.py -v -k &quot;test_eof_mode_first_line or test_eof_mode_trial or test_eof_mode_blank_first or test_eof_mode_second&quot;
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Update tests whose behavior changed</strong></li>
+</ul>
+<p>Four existing tests break because the old code accumulated without calling <code>feed</code>; the new code trials the first line. Update them:</p>
+<p>Replace <code>test_eof_mode_ctrl_d_with_buffer_calls_feed</code> (tests that ^D submits accumulated buffer):</p>
+<pre><code class="language-python">def test_eof_mode_ctrl_d_with_buffer_calls_feed(monkeypatch):
+    # first line trial fails → continuation; second line accumulates; ^D force-submits
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;world\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[False, True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert len(handler.calls) == 2
+    assert handler.calls[0][0] == b&quot;hello\n&quot;
+    assert handler.calls[1][0] == b&quot;hello\nworld\n&quot;
+</code></pre>
+<p>Replace <code>test_eof_mode_blank_line_accumulates_without_feed</code> (blank line behavior now depends on buffer state):</p>
+<pre><code class="language-python">def test_eof_mode_blank_line_accumulates_during_continuation(monkeypatch):
+    # first line trial fails → continuation; blank line accumulates; ^D submits all
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[False, True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert len(handler.calls) == 2
+    assert handler.calls[0][0] == b&quot;hello\n&quot;
+    assert handler.calls[1][0] == b&quot;hello\n\n&quot;
+</code></pre>
+<p>Replace <code>test_eof_mode_continuation_prompt_shown_after_first_line</code> (continuation prompt requires trial to return False):</p>
+<pre><code class="language-python">def test_eof_mode_continuation_prompt_shown_after_failed_trial(monkeypatch, capsys):
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[False, True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    _, err = capsys.readouterr()
+    assert &quot;... &quot; in err
+</code></pre>
+<p>Replace <code>test_eof_mode_partial_eof_submits_partial_line</code> (partial EOF during continuation):</p>
+<pre><code class="language-python">def test_eof_mode_partial_eof_force_submits_buffer_plus_partial(monkeypatch):
+    # first line trial fails → continuation; partial-EOF force-submits buffer + partial text
+    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;world&quot;, b&quot;&quot;]))
+    handler = RecordingHandler(results=[False, True])
+    _eof_runner().run([&quot;-&quot;], handler)
+    assert len(handler.calls) == 2
+    assert handler.calls[0][0] == b&quot;hello\n&quot;
+    assert handler.calls[1][0] == b&quot;hello\nworld&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Run all source_runner tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/source_runner_test.py -v
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 8: Run all units</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 9: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session add src/plcc/cmd/source_runner.py src/plcc/cmd/source_runner_test.py
+git -C .worktrees/interactive-session commit -m &quot;feat(source-runner): trial first line before entering continuation mode (025) [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="task-8-verify-with-command-and-integration-tests">Task 8: Verify with command and integration tests</h2>
+<ul>
+<li>[ ] <strong>Step 1: Run command-level bats tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: PASS. If any test checks for <code>$</code> in token output, update the bats test to expect <code>eof</code>.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run integration tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/integration.bash
+</code></pre>
+<p>Expected: PASS. Any <code>"$"</code> sentinel references in integration bats would need to be updated to <code>"eof"</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit any bats fixes, then tag the branch as ready</strong></li>
+</ul>
+<pre><code class="language-bash">git -C .worktrees/interactive-session log --oneline -8
+</code></pre>
+<p>Review the commit log. If everything looks clean, the branch is ready for PR.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

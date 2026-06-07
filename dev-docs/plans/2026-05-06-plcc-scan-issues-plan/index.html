@@ -1,0 +1,1380 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-06-plcc-scan-issues-plan/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>plcc-scan Issues (003, 004, 002, 001) Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plcc-scan-issues-003-004-002-001-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              plcc-scan Issues (003, 004, 002, 001) Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plcc-scan-issues-003-004-002-001-implementation-plan">plcc-scan Issues (003, 004, 002, 001) Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Improve <code>plcc-scan</code> and related Level 2 commands across four sequential PRs: add a <code>--help</code> hint to brief usage (003), accept <code>-</code> as stdin (004), continue scanning past lex errors (002), and stream tokens interactively (001).</p>
+<p><strong>Architecture:</strong> Each issue is its own branch and PR, implemented in order 003 → 004 → 002 → 001. Issues 003 and 004 touch multiple Level 2 commands uniformly. Issue 002 adds a <code>--continue-on-error</code> flag to <code>plcc-tokens</code> and updates <code>plcc-scan</code> to use it. Issue 001 replaces <code>subprocess.run()</code> with <code>Popen</code> + threading in <code>plcc-scan</code> for incremental output.</p>
+<p><strong>Tech Stack:</strong> Python 3, docopt-ng 0.9.0, subprocess, threading, pytest (unit tests via <code>bin/test/units.bash</code>), bats (CLI tests via <code>bin/test/commands.bash</code>)</p>
+<hr />
+<h2 id="pr-1-issue-003-brief-usage-message-mentions-help">PR 1 — Issue 003: Brief usage message mentions <code>--help</code></h2>
+<p>When <code>plcc-scan</code>, <code>plcc-parse</code>, or <code>plcc-rep</code> is invoked with wrong or missing arguments, docopt-ng raises <code>DocoptExit</code> (a <code>SystemExit</code> subclass) whose message is only the <code>Usage:</code> pattern — with no hint that <code>--help</code> exists. The fix intercepts <code>DocoptExit</code> before it propagates, appends the hint, and re-raises.</p>
+<h3 id="task-1-plcc-scan-hint-in-brief-usage">Task 1: plcc-scan — hint in brief usage</h3>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-scan.bats</code>
+- Modify: <code>src/plcc/cmd/scan.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing bats test</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-scan.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan brief usage mentions --help&quot; {
+    run --separate-stderr plcc-scan
+    [[ &quot;$stderr&quot; == *&quot;--help&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: FAIL on <code>plcc-scan brief usage mentions --help</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix scan.py</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/scan.py</code>, change the import line:</p>
+<pre><code class="language-python">from docopt import docopt
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">from docopt import docopt, DocoptExit
+</code></pre>
+<p>In <code>main()</code>, replace:</p>
+<pre><code class="language-python">    args = docopt(__doc__, argv)
+</code></pre>
+<p>with:</p>
+<pre><code class="language-python">    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(&quot;Run 'plcc-scan --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-scan.bats src/plcc/cmd/scan.py
+git commit -m &quot;fix(scan): brief usage mentions --help&quot;
+</code></pre>
+<hr />
+<h3 id="task-2-plcc-parse-hint-in-brief-usage">Task 2: plcc-parse — hint in brief usage</h3>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-parse.bats</code>
+- Modify: <code>src/plcc/cmd/parse.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing bats test</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-parse.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-parse brief usage mentions --help&quot; {
+    run --separate-stderr plcc-parse
+    [[ &quot;$stderr&quot; == *&quot;--help&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-parse.bats
+</code></pre>
+<p>Expected: FAIL on <code>plcc-parse brief usage mentions --help</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix parse.py</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/parse.py</code>, change:</p>
+<pre><code class="language-python">from docopt import docopt
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">from docopt import docopt, DocoptExit
+</code></pre>
+<p>In <code>main()</code>, replace:</p>
+<pre><code class="language-python">    args = docopt(__doc__, argv)
+</code></pre>
+<p>with:</p>
+<pre><code class="language-python">    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(&quot;Run 'plcc-parse --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-parse.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-parse.bats src/plcc/cmd/parse.py
+git commit -m &quot;fix(parse): brief usage mentions --help&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-plcc-rep-hint-in-brief-usage">Task 3: plcc-rep — hint in brief usage</h3>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-rep.bats</code>
+- Modify: <code>src/plcc/cmd/rep.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing bats test</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-rep.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-rep brief usage mentions --help&quot; {
+    run --separate-stderr plcc-rep
+    [[ &quot;$stderr&quot; == *&quot;--help&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-rep.bats
+</code></pre>
+<p>Expected: FAIL on <code>plcc-rep brief usage mentions --help</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix rep.py</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep.py</code>, change:</p>
+<pre><code class="language-python">from docopt import docopt
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">from docopt import docopt, DocoptExit
+</code></pre>
+<p>In <code>main()</code>, replace:</p>
+<pre><code class="language-python">    args = docopt(__doc__, argv)
+</code></pre>
+<p>with:</p>
+<pre><code class="language-python">    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(&quot;Run 'plcc-rep --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-rep.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-rep.bats src/plcc/cmd/rep.py
+git commit -m &quot;fix(rep): brief usage mentions --help&quot;
+</code></pre>
+<hr />
+<h2 id="pr-2-issue-004-accept-as-stdin">PR 2 — Issue 004: Accept <code>-</code> as stdin</h2>
+<p><code>plcc-scan</code> and <code>plcc-parse</code> read named SOURCE files, falling back to stdin only when no sources are given. Adding <code>-</code> support means treating <code>-</code> in the source list as "read from stdin at this position." <code>plcc-rep</code> is deferred.</p>
+<p>The input-reading loop in both commands currently:</p>
+<pre><code class="language-python">input_data = b&quot;&quot;
+for src in sources:
+    with open(src, &quot;rb&quot;) as sf:
+        input_data += sf.read()
+if not sources:
+    input_data = sys.stdin.buffer.read()
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-python">input_data = b&quot;&quot;
+for src in sources:
+    if src == '-':
+        input_data += sys.stdin.buffer.read()
+    else:
+        with open(src, &quot;rb&quot;) as sf:
+            input_data += sf.read()
+if not sources:
+    input_data = sys.stdin.buffer.read()
+</code></pre>
+<h3 id="task-4-plcc-scan-accept-as-stdin">Task 4: plcc-scan — accept <code>-</code> as stdin</h3>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-scan.bats</code>
+- Modify: <code>src/plcc/cmd/scan.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing bats tests</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-scan.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan accepts '-' as stdin&quot; {
+    run bash -c &quot;echo '42' | plcc-scan '${FIXTURES}/trivial.plcc' -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+}
+
+@test &quot;plcc-scan '-' interleaved with file reads both&quot; {
+    run bash -c &quot;echo '99' | plcc-scan '${FIXTURES}/trivial.plcc' '${FIXTURES}/trivial_input.txt' -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;99&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: FAIL on both new tests.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix the input loop in scan.py</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/scan.py</code>, find the input-building block (after the <code>plcc-spec</code> subprocess call, before the <code>plcc-tokens</code> call):</p>
+<pre><code class="language-python">        # Build input: concatenate source files, then stdin
+        input_data = b&quot;&quot;
+        for src in sources:
+            with open(src, &quot;rb&quot;) as sf:
+                input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+</code></pre>
+<p>Replace it with:</p>
+<pre><code class="language-python">        # Build input: concatenate source files/stdin in order
+        input_data = b&quot;&quot;
+        for src in sources:
+            if src == '-':
+                input_data += sys.stdin.buffer.read()
+            else:
+                with open(src, &quot;rb&quot;) as sf:
+                    input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-scan.bats src/plcc/cmd/scan.py
+git commit -m &quot;feat(scan): accept '-' as stdin&quot;
+</code></pre>
+<hr />
+<h3 id="task-5-plcc-parse-accept-as-stdin">Task 5: plcc-parse — accept <code>-</code> as stdin</h3>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-parse.bats</code>
+- Modify: <code>src/plcc/cmd/parse.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing bats test</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-parse.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-parse accepts '-' as stdin&quot; {
+    run bash -c &quot;echo '42' | plcc-parse '${FIXTURES}/trivial.plcc' -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;program&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-parse.bats
+</code></pre>
+<p>Expected: FAIL on <code>plcc-parse accepts '-' as stdin</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix the input loop in parse.py</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/parse.py</code>, find the input-building block (after <code>_run_child</code> for <code>plcc-ll1</code>, before the Popen calls):</p>
+<pre><code class="language-python">        # Build input
+        input_data = b&quot;&quot;
+        for src in sources:
+            with open(src, &quot;rb&quot;) as sf:
+                input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+</code></pre>
+<p>Replace it with:</p>
+<pre><code class="language-python">        # Build input: concatenate source files/stdin in order
+        input_data = b&quot;&quot;
+        for src in sources:
+            if src == '-':
+                input_data += sys.stdin.buffer.read()
+            else:
+                with open(src, &quot;rb&quot;) as sf:
+                    input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-parse.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-parse.bats src/plcc/cmd/parse.py
+git commit -m &quot;feat(parse): accept '-' as stdin&quot;
+</code></pre>
+<hr />
+<h2 id="pr-3-issue-002-continue-scanning-after-unrecognized-character">PR 3 — Issue 002: Continue scanning after unrecognized character</h2>
+<p><code>plcc-tokens</code> exits immediately on the first <code>LexError</code>. Adding <code>--continue-on-error</code> changes this: errors are emitted but scanning continues, and the exit code reflects whether any errors occurred. <code>plcc-scan</code> then passes this flag and processes <code>plcc-tokens</code> stdout regardless of exit code (currently it discards stdout on non-zero exit).</p>
+<h3 id="task-6-plcc-tokens-add-continue-on-error-flag">Task 6: plcc-tokens — add <code>--continue-on-error</code> flag</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/tokens/tokens_cli.py</code>
+- Modify: <code>src/plcc/tokens/tokens_cli_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing unit tests</strong></li>
+</ul>
+<p>Add to <code>src/plcc/tokens/tokens_cli_test.py</code>:</p>
+<pre><code class="language-python">def test_continue_on_error_continues_after_bad_char(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@ 42\n'))
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json', '--continue-on-error'])
+    assert excinfo.value.code != 0
+    out, err = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record['kind'] == 'token'
+    assert record['name'] == 'NUM'
+    assert record['lexeme'] == '42'
+    assert 'error' in err
+
+
+def test_continue_on_error_bad_char_only_exits_nonzero(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@\n'))
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json', '--continue-on-error'])
+    assert excinfo.value.code != 0
+    out, err = capsys.readouterr()
+    assert 'error' in err
+
+
+def test_default_still_exits_on_first_error(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('@ 42\n'))
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json'])
+    assert excinfo.value.code != 0
+    out, _ = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    assert len(lines) == 0
+
+
+def test_continue_on_error_valid_input_exits_zero(capsys, monkeypatch, fs):
+    fs.create_file('/spec.json', contents=json.dumps(_SPEC))
+    monkeypatch.setattr('sys.stdin', io.StringIO('42\n'))
+    run_main(['/spec.json', '--continue-on-error'])
+    out, _ = capsys.readouterr()
+    lines = [l for l in out.strip().splitlines() if l]
+    assert len(lines) == 1
+    assert json.loads(lines[0])['name'] == 'NUM'
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/tokens/tokens_cli_test.py
+</code></pre>
+<p>Expected: 4 new tests FAIL (function not defined / flag not recognized).</p>
+<ul>
+<li>[ ] <strong>Step 3: Add <code>--continue-on-error</code> to tokens_cli.py</strong></li>
+</ul>
+<p>In <code>src/plcc/tokens/tokens_cli.py</code>, update <code>__doc__</code> to add the new option:</p>
+<pre><code class="language-python">__doc__ = &quot;&quot;&quot;plcc-tokens
+    Tokenize stdin given a spec JSON file, output token JSONL.
+
+Usage:
+    plcc-tokens [options] SPEC_JSON
+
+Arguments:
+    SPEC_JSON   Path to spec JSON file (output of plcc-spec).
+
+Options:
+    -h --help               Show this message.
+    --continue-on-error     Continue scanning after an unrecognized character.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+</code></pre>
+<p>Replace the scanner loop in <code>main()</code>:</p>
+<pre><code class="language-python">    lines = _read_stdin_as_lines()
+    for obj in scanner.scan(lines):
+        if isinstance(obj, Skip):
+            continue
+        if isinstance(obj, LexError):
+            verbose.emit_error(
+                pos={
+                    &quot;file&quot;: obj.line.file,
+                    &quot;line&quot;: obj.line.number,
+                    &quot;column&quot;: obj.column,
+                },
+                message=&quot;unrecognized character&quot;,
+            )
+            sys.exit(1)
+        print(format_record(obj), flush=True)
+</code></pre>
+<p>with:</p>
+<pre><code class="language-python">    lines = _read_stdin_as_lines()
+    continue_on_error = args['--continue-on-error']
+    had_error = False
+    for obj in scanner.scan(lines):
+        if isinstance(obj, Skip):
+            continue
+        if isinstance(obj, LexError):
+            verbose.emit_error(
+                pos={
+                    &quot;file&quot;: obj.line.file,
+                    &quot;line&quot;: obj.line.number,
+                    &quot;column&quot;: obj.column,
+                },
+                message=&quot;unrecognized character&quot;,
+            )
+            if continue_on_error:
+                had_error = True
+                continue
+            sys.exit(1)
+        print(format_record(obj), flush=True)
+    if had_error:
+        sys.exit(1)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/tokens/tokens_cli_test.py
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/tokens/tokens_cli.py src/plcc/tokens/tokens_cli_test.py
+git commit -m &quot;feat(tokens): add --continue-on-error flag&quot;
+</code></pre>
+<hr />
+<h3 id="task-7-plcc-scan-pass-continue-on-error-always-print-tokens">Task 7: plcc-scan — pass <code>--continue-on-error</code>, always print tokens</h3>
+<p><code>plcc-scan</code> currently only prints tokens when <code>plcc-tokens</code> exits 0. With <code>--continue-on-error</code>, <code>plcc-tokens</code> exits 1 on lex errors but still emits tokens for valid characters. <code>plcc-scan</code> must process stdout regardless of exit code.</p>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-scan.bats</code>
+- Modify: <code>src/plcc/cmd/scan.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing bats test</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-scan.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan prints tokens before and after a lex error&quot; {
+    run --separate-stderr bash -c &quot;printf '42 @ 99\n' | plcc-scan '${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;99&quot;* ]]
+    [[ &quot;$stderr&quot; == *&quot;error&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: FAIL — currently <code>42</code> and <code>99</code> are not both printed when there is a lex error.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix scan.py</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/scan.py</code>, find the <code>plcc-tokens</code> subprocess call and the block that follows it. Currently:</p>
+<pre><code class="language-python">        # plcc-tokens spec.json &lt; input
+        result = subprocess.run(
+            [&quot;plcc-tokens&quot;, spec_path] + child_flags,
+            input=input_data,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode(&quot;utf-8&quot;, errors=&quot;replace&quot;))
+            verbose.reformat_child_events(events)
+        if result.returncode != 0:
+            # lex error: plcc-tokens already emitted the error to stderr via verbose;
+            # treat as non-fatal — pipeline completed with an error in-band
+            pass
+        else:
+            for line in result.stdout.decode(&quot;utf-8&quot;).splitlines():
+                if not line.strip():
+                    continue
+                record = json.loads(line)
+                if record.get(&quot;kind&quot;) == &quot;token&quot;:
+                    name = record.get(&quot;name&quot;, &quot;?&quot;)
+                    lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+                    source = record.get(&quot;source&quot;, {})
+                    loc = _location_str(source)
+                    print(f&quot;{loc} {name} '{lexeme}'&quot;)
+                # forward-looking: plcc-tokens may emit error records inline in a future protocol
+                elif record.get(&quot;kind&quot;) == &quot;error&quot;:
+                    source = record.get(&quot;source&quot;, {})
+                    loc = _location_str(source)
+                    message = record.get(&quot;message&quot;, &quot;unknown error&quot;)
+                    print(f&quot;{loc}: error: {message}&quot;)
+</code></pre>
+<p>Replace it with:</p>
+<pre><code class="language-python">        # plcc-tokens spec.json &lt; input
+        result = subprocess.run(
+            [&quot;plcc-tokens&quot;, spec_path, &quot;--continue-on-error&quot;] + child_flags,
+            input=input_data,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode(&quot;utf-8&quot;, errors=&quot;replace&quot;))
+            verbose.reformat_child_events(events)
+        for line in result.stdout.decode(&quot;utf-8&quot;).splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get(&quot;kind&quot;) == &quot;token&quot;:
+                name = record.get(&quot;name&quot;, &quot;?&quot;)
+                lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+                source = record.get(&quot;source&quot;, {})
+                loc = _location_str(source)
+                print(f&quot;{loc} {name} '{lexeme}'&quot;)
+            elif record.get(&quot;kind&quot;) == &quot;error&quot;:
+                source = record.get(&quot;source&quot;, {})
+                loc = _location_str(source)
+                message = record.get(&quot;message&quot;, &quot;unknown error&quot;)
+                print(f&quot;{loc}: error: {message}&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm pass</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: all tests pass, including the new one and the existing <code>plcc-scan exits 0 on lex error in source</code>.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-scan.bats src/plcc/cmd/scan.py
+git commit -m &quot;fix(scan): print tokens before and after lex errors&quot;
+</code></pre>
+<hr />
+<h2 id="pr-4-issue-001-print-tokens-after-each-line-streaming">PR 4 — Issue 001: Print tokens after each line (streaming)</h2>
+<p><code>plcc-scan</code> currently buffers all input before starting <code>plcc-tokens</code>, then prints all output at the end. The fix uses <code>subprocess.Popen()</code> and two background threads: one feeds input line by line, another drains <code>plcc-tokens</code> stderr. The main thread reads stdout and prints tokens as they arrive.</p>
+<p>This makes interactive use work: a student types a line, sees the tokens immediately.</p>
+<h3 id="task-8-plcc-scan-switch-to-popen-streaming">Task 8: plcc-scan — switch to Popen streaming</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/scan.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add a multi-line bats test</strong></li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-scan.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan outputs tokens for multi-line input&quot; {
+    run bash -c &quot;printf '42\n99\n' | plcc-scan '${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;99&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm the test currently passes (baseline)</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: all tests pass. (This test passes even before the streaming change; it verifies correctness is preserved after the change.)</p>
+<ul>
+<li>[ ] <strong>Step 3: Add <code>threading</code> import to scan.py</strong></li>
+</ul>
+<p>At the top of <code>src/plcc/cmd/scan.py</code>, the existing imports are:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+import tempfile
+</code></pre>
+<p>Add <code>import threading</code> so it becomes:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import threading
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Rewrite the plcc-tokens section of scan.py</strong></li>
+</ul>
+<p>Replace the entire <code>plcc-tokens</code> block (from the <code># Build input</code> comment through the end of the <code>if/else</code> block that prints tokens):</p>
+<pre><code class="language-python">        # Build input: concatenate source files/stdin in order
+        input_data = b&quot;&quot;
+        for src in sources:
+            if src == '-':
+                input_data += sys.stdin.buffer.read()
+            else:
+                with open(src, &quot;rb&quot;) as sf:
+                    input_data += sf.read()
+        if not sources:
+            input_data = sys.stdin.buffer.read()
+
+        # plcc-tokens spec.json &lt; input
+        result = subprocess.run(
+            [&quot;plcc-tokens&quot;, spec_path, &quot;--continue-on-error&quot;] + child_flags,
+            input=input_data,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode(&quot;utf-8&quot;, errors=&quot;replace&quot;))
+            verbose.reformat_child_events(events)
+        for line in result.stdout.decode(&quot;utf-8&quot;).splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get(&quot;kind&quot;) == &quot;token&quot;:
+                name = record.get(&quot;name&quot;, &quot;?&quot;)
+                lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+                source = record.get(&quot;source&quot;, {})
+                loc = _location_str(source)
+                print(f&quot;{loc} {name} '{lexeme}'&quot;)
+            elif record.get(&quot;kind&quot;) == &quot;error&quot;:
+                source = record.get(&quot;source&quot;, {})
+                loc = _location_str(source)
+                message = record.get(&quot;message&quot;, &quot;unknown error&quot;)
+                print(f&quot;{loc}: error: {message}&quot;)
+</code></pre>
+<p>with:</p>
+<pre><code class="language-python">        proc = subprocess.Popen(
+            [&quot;plcc-tokens&quot;, spec_path, &quot;--continue-on-error&quot;] + child_flags,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
+        stderr_chunks = []
+
+        def _drain_stderr():
+            stderr_chunks.append(proc.stderr.read())
+
+        stderr_thread = threading.Thread(target=_drain_stderr, daemon=True)
+        stderr_thread.start()
+
+        def _feed_input():
+            try:
+                if sources:
+                    for src in sources:
+                        if src == '-':
+                            for chunk in sys.stdin.buffer:
+                                proc.stdin.write(chunk)
+                                proc.stdin.flush()
+                        else:
+                            with open(src, &quot;rb&quot;) as sf:
+                                for chunk in sf:
+                                    proc.stdin.write(chunk)
+                                    proc.stdin.flush()
+                else:
+                    for chunk in sys.stdin.buffer:
+                        proc.stdin.write(chunk)
+                        proc.stdin.flush()
+            finally:
+                proc.stdin.close()
+
+        feed_thread = threading.Thread(target=_feed_input, daemon=True)
+        feed_thread.start()
+
+        for raw in proc.stdout:
+            line = raw.decode(&quot;utf-8&quot;).strip()
+            if not line:
+                continue
+            record = json.loads(line)
+            if record.get(&quot;kind&quot;) == &quot;token&quot;:
+                name = record.get(&quot;name&quot;, &quot;?&quot;)
+                lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+                source = record.get(&quot;source&quot;, {})
+                loc = _location_str(source)
+                print(f&quot;{loc} {name} '{lexeme}'&quot;)
+            elif record.get(&quot;kind&quot;) == &quot;error&quot;:
+                source = record.get(&quot;source&quot;, {})
+                loc = _location_str(source)
+                message = record.get(&quot;message&quot;, &quot;unknown error&quot;)
+                print(f&quot;{loc}: error: {message}&quot;)
+
+        feed_thread.join()
+        stderr_thread.join()
+        proc.wait()
+
+        stderr_data = b&quot;&quot;.join(stderr_chunks)
+        if stderr_data:
+            events = verbose.parse_child_events(stderr_data.decode(&quot;utf-8&quot;, errors=&quot;replace&quot;))
+            verbose.reformat_child_events(events)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run all plcc-scan bats tests</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 6: Run the full functional test suite</strong></li>
+</ul>
+<pre><code>bin/test/functional.bash
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/scan.py tests/bats/commands/plcc-scan.bats
+git commit -m &quot;feat(scan): stream tokens line by line using Popen&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

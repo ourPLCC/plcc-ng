@@ -1,0 +1,1009 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-08-scan-verbosity-redesign-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Design: Scan verbosity redesign — split diagnostics from output richness - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-scan-verbosity-redesign-split-diagnostics-from-output-richness" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design: Scan verbosity redesign — split diagnostics from output richness
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-scan-verbosity-redesign-split-diagnostics-from-output-richness">Design: Scan verbosity redesign — split diagnostics from output richness</h1>
+<p><strong>Date:</strong> 2026-05-08
+<strong>Issue:</strong> <a href="../../issues/003-scan-verbosity-levels-2-3-unused.md">003-scan-verbosity-levels-2-3-unused</a></p>
+<h2 id="problem">Problem</h2>
+<p><code>plcc-scan</code> accepts <code>-v</code> as a counting flag (<code>-v</code> = level 1, <code>-vv</code> = level 2,
+<code>-vvv</code> = level 3) but levels 2 and 3 produce output identical to level 1.
+The framed question — "what useful information should levels 2 and 3 expose?"
+— turned out to be the wrong question. The real problem is that <code>-v</code> was
+being asked to do two unrelated jobs:</p>
+<ol>
+<li>Control <strong>stderr diagnostic noise</strong> (process-level metadata: stage events,
+   file events).</li>
+<li>Control <strong>stdout content richness</strong> (per-token detail: matched regex,
+   skips, rule-attempt traces).</li>
+</ol>
+<p>Conflating these forced <code>plcc-scan</code> to capture and reformat <code>plcc-tokens</code>'s
+stderr (in JSON) so it could correlate child verbose events with the rendered
+token stream. That is the source of <code>reformat_child_events</code>,
+<code>parse_child_events</code>, <code>child_flags_for_orchestrator</code>, the always-on internal
+<code>--verbose-format=json</code> override, and the synchronization fragility we keep
+hitting whenever someone tries to add per-token detail.</p>
+<h2 id="design">Design</h2>
+<h3 id="split-the-knob">Split the knob</h3>
+<p>Two independent controls with clearly separated responsibilities:</p>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Stream</th>
+<th>Controlled by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Process-level metadata (stage, per-file)</td>
+<td>stderr</td>
+<td><code>-v</code> (counting)</td>
+</tr>
+<tr>
+<td>TTY <code>^D</code> hint</td>
+<td>stdout (first line)</td>
+<td>always on when stdin is a TTY</td>
+</tr>
+<tr>
+<td>Token records (lean)</td>
+<td>stdout JSONL → text</td>
+<td>always on</td>
+</tr>
+<tr>
+<td>Skip records, regex, source line, attempts</td>
+<td>stdout JSONL → text</td>
+<td><code>--show-*</code> flags on <code>plcc-scan</code></td>
+</tr>
+<tr>
+<td>Lex errors</td>
+<td>stdout JSONL → text</td>
+<td>always on</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>-v</code> (counting flag) controls <strong>only</strong> stderr diagnostics.</li>
+<li>Output richness is controlled by dedicated feature flags on <code>plcc-scan</code>:
+  <code>--show-skips</code>, <code>--show-line</code>, <code>--show-regex</code>, <code>--show-attempts</code>, <code>--trace/-t</code>.</li>
+<li><code>plcc-tokens</code> has a single enrichment flag, <code>--trace</code>, that causes it to
+  include the full record payload. <code>plcc-scan</code> passes this flag to <code>plcc-tokens</code>
+  whenever any of its own enrichment flags are set; <code>plcc-tokens</code> does not need
+  to know which specific things <code>plcc-scan</code> intends to render.</li>
+</ul>
+<h3 id="per-token-verbose-info-travels-in-the-stdout-jsonl-stream">Per-token verbose info travels in the stdout JSONL stream</h3>
+<p>Per-token data (regex, source line, skip records, rule attempts) is <em>associated
+with</em> the token it describes. Putting it on a different stream from the token
+forces synchronization. Putting it in the same record solves the synchronization
+problem structurally — the data is shipped together because it belongs together.</p>
+<p>Stderr is reserved for process-level metadata (stage start/finish, per-file
+"scanning <file>"). These events are coarse-grained — not tied to specific
+tokens — so any interleaving with stdout is harmless.</p>
+<h3 id="pass-through-stderr-no-capture-or-reformat">Pass-through stderr; no capture or reformat</h3>
+<p><code>plcc-scan</code> runs <code>plcc-spec</code> and <code>plcc-tokens</code> with <code>stderr=None</code> (inherited).
+Each child writes its own stderr directly. <code>plcc-scan</code> does <strong>not</strong> parse,
+capture, or reformat child stderr. Verbose flags propagate down unchanged
+(<code>-v [-v ...] --verbose-format=FMT</code>); each command independently decides
+what it emits at each level.</p>
+<h3 id="verbose-level-content-scope-scantokens">Verbose level content (scope: scan/tokens)</h3>
+<ul>
+<li>no <code>-v</code> (default): silent.</li>
+<li><code>-v</code>: stage events (started/finished), per-file <code>scanning &lt;file&gt;</code> events.</li>
+<li><code>-vv</code>, <code>-vvv</code>: reserved framework-wide for other commands; <code>plcc-scan</code> and
+  <code>plcc-tokens</code> emit nothing additional at these levels for now.</li>
+</ul>
+<p>Per-file events are emitted from <code>plcc-tokens</code> (the actual source file reader).
+No per-file event is emitted for the grammar file passed to <code>plcc-spec</code> — the
+grammar file is not a source file and its processing is not visible at this
+verbosity level. <code>plcc-scan</code> emits its own outer started/finished events. The
+TTY <code>^D</code> hint (<code>"reading from stdin — press ^D to end input"</code>) is emitted by
+<code>plcc-scan</code> to stdout as its first line of output, independent of <code>-v</code>.</p>
+<h3 id="stdout-schema-from-plcc-tokens">Stdout schema (from <code>plcc-tokens</code>)</h3>
+<p>Three record kinds, all on stdout JSONL:</p>
+<ul>
+<li><code>kind: "token"</code> — always present: <code>name</code>, <code>lexeme</code>, <code>source</code>. With
+  <code>--trace</code>: also <code>regex</code>, <code>source_line</code>, and optionally <code>attempts</code>.</li>
+<li><code>kind: "skip"</code> — same shape as token, only emitted when <code>--trace</code>.</li>
+<li><code>kind: "error"</code> — unchanged from current schema. Lex errors never carry
+  <code>attempts</code>.</li>
+</ul>
+<p><code>attempts</code> is the complete list of all rules that matched at the current
+position, in grammar definition order — both token and skip rules, regardless
+of which type wins. Non-matching rules are omitted. Exactly one entry has
+<code>winner: true</code>; it is the object returned by <code>match()</code>. The formatter does not
+re-derive the winner. This means: when a skip wins (it is first in definition
+order), the list still includes any tokens that also matched; when a token wins,
+the list still includes any skips that matched but appeared after a token rule.</p>
+<p>Each entry: <code>{name, regex, lexeme, char_count, is_skip, winner}</code>. <code>char_count</code>
+is always <code>len(lexeme)</code> — included as a convenience for renderers so they do
+not need to recompute it. <code>is_skip</code> reflects whether the rule is a skip rule;
+it is not used by <code>plcc-scan</code>'s renderer but is carried in the JSONL for
+downstream consumers (e.g. a future <code>plcc-parse --trace</code>).</p>
+<p><code>source_line</code> is the raw text of the source line containing the token's start
+position, read from <code>obj.line.string</code>. It is always present when <code>--trace</code>
+is set, and is passed through in the JSONL for downstream consumers such as
+<code>plcc-parse</code>.</p>
+<h3 id="plcc-scan-enrichment-flags"><code>plcc-scan</code> enrichment flags</h3>
+<p>All flags are independent and composable. <code>--trace/-t</code> is equivalent to setting
+all four.</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--show-skips</code></td>
+<td>Render skip records: <code>file:line:col NAME 'lexeme' SKIPPED</code></td>
+</tr>
+<tr>
+<td><code>--show-line</code></td>
+<td>Before each record, print the source line and a <code>^</code> cursor at the token's column</td>
+</tr>
+<tr>
+<td><code>--show-attempts</code></td>
+<td>After the cursor line (if <code>--show-line</code> is active) and before the token/skip line, print indented attempt lines</td>
+</tr>
+<tr>
+<td><code>--show-regex</code></td>
+<td>Include matched regex in the token/skip line: <code>file:line:col NAME 'regex' 'lexeme'</code> (applies to both token and skip lines)</td>
+</tr>
+<tr>
+<td><code>--trace/-t</code></td>
+<td>All of the above</td>
+</tr>
+</tbody>
+</table>
+<p>When any enrichment flag is set, <code>plcc-scan</code> passes <code>--trace</code> to
+<code>plcc-tokens</code>. When no enrichment flags are set, <code>plcc-tokens</code> produces lean
+JSONL and <code>plcc-scan</code> ignores any optional fields.</p>
+<h3 id="plcc-scan-rendering"><code>plcc-scan</code> rendering</h3>
+<p><strong>Default</strong> (no enrichment flags):</p>
+<pre><code>-:1:1 NUM '42'
+</code></pre>
+<p><strong><code>--show-regex</code></strong>:</p>
+<pre><code>-:1:1 NUM '\d+' '42'
+</code></pre>
+<p><strong><code>--show-skips</code></strong>:</p>
+<pre><code>-:1:1 NUM '42'
+-:1:3 WS ' ' SKIPPED
+-:1:4 NUM '99'
+</code></pre>
+<p><strong><code>--show-line</code></strong>:</p>
+<pre><code>42
+^
+-:1:1 NUM '42'
+</code></pre>
+<p><strong><code>--show-attempts</code></strong> (on its own, <code>^</code> absent):</p>
+<pre><code>      INT '\d+' 2 chars '42'
+    * NUM '\d+' 2 chars '42'
+-:1:1 NUM '42'
+</code></pre>
+<p>Winner prefix: <code>"    * "</code>. Loser prefix: <code>"      "</code>.</p>
+<p><strong><code>--trace</code></strong> (all flags):</p>
+<pre><code>42 99
+^
+      INT '\d+' 2 chars '42'
+    * NUM '\d+' 2 chars '42'
+-:1:1 NUM '\d+' '42'
+42 99
+  ^
+    * WS '\s+' 1 chars ' '
+-:1:3 WS '\s+' ' ' SKIPPED
+42 99
+   ^
+      INT '\d+' 2 chars '99'
+    * NUM '\d+' 2 chars '99'
+-:1:4 NUM '\d+' '99'
+</code></pre>
+<p>The <code>^</code> cursor is placed at column − 1 spaces from the left (columns are
+1-indexed, so column 1 means zero leading spaces).</p>
+<h3 id="data-flow">Data flow</h3>
+<p><strong>Before:</strong></p>
+<pre><code>plcc-scan
+  → spawns plcc-spec and plcc-tokens with stderr=PIPE
+  → captures child stderr, parses as JSONL, reformats per --verbose-format
+  → reads stdout JSONL, renders tokens
+</code></pre>
+<p><strong>After:</strong></p>
+<pre><code>plcc-scan
+  → if stdin is a TTY, prints ^D hint to stdout first
+  → spawns plcc-spec and plcc-tokens with stderr=None (inherited)
+  → passes --trace to plcc-tokens when any enrichment flag is set
+  → reads stdout JSONL, renders records (token / skip / error + line / attempts)
+plcc-tokens
+  → writes stage / scanning events to its own stderr
+  → writes lean token / error JSONL records to its own stdout (default)
+  → with --trace: includes regex, source_line, attempts; emits skip records
+</code></pre>
+<h2 id="file-changes-summary">File changes (summary)</h2>
+<ul>
+<li><code>src/plcc/scan/Token.py</code>, <code>src/plcc/scan/Skip.py</code>: add
+  <code>pattern: str = field(default="", compare=False)</code> and
+  <code>attempts: list = field(default_factory=list, compare=False)</code>. <code>compare=False</code>
+  preserves existing <code>Token(...)</code> equality assertions in tests. The Python field
+  is named <code>pattern</code>; <code>jsonl_formatter</code> emits it under the JSON key <code>"regex"</code>.
+  No <code>source_line</code> field needed — <code>Token</code> and <code>Skip</code> already carry <code>line</code>, and
+  <code>line.string</code> is the raw source line text.</li>
+<li><code>src/plcc/scan/matcher.py</code>: add <code>record_attempts: bool = False</code> to
+  <code>__init__</code>. When enabled, capture the full <code>_getMatches</code> result (all
+  matching rules — both tokens and skips — in definition order) before any
+  filtering, and populate it as <code>attempts</code> on the returned object. Always
+  populate <code>Token.pattern</code>/<code>Skip.pattern</code>.</li>
+<li><code>src/plcc/scan/scanner.py</code>: no changes.</li>
+<li><code>src/plcc/tokens/jsonl_formatter.py</code>: handle <code>Token</code> and <code>Skip</code>. Default
+  output: <code>name</code>, <code>lexeme</code>, <code>source</code> only. When <code>show_all=True</code>: also emit
+  <code>regex</code> (from <code>obj.pattern</code>), <code>source_line</code> (from <code>obj.line.string</code>), and
+  <code>attempts</code> array (with <code>winner</code> flags) when populated. <code>source_line</code> is
+  passed through in the JSONL for downstream consumers such as <code>plcc-parse</code>.
+  Skip records get <code>kind=skip</code>.</li>
+<li><code>src/plcc/tokens/tokens_cli.py</code>: add <code>--trace</code> option (single enrichment
+  flag). New event <code>SCANNING_FILE</code>. Per-file event from <code>_lines_from_sources</code>.
+  Construct <code>Matcher(rules, record_attempts=args["--trace"])</code>. Emit skip
+  records only when <code>--trace</code>.</li>
+<li><code>src/plcc/cmd/scan.py</code>: add <code>--show-skips</code>, <code>--show-line</code>, <code>--show-regex</code>,
+  <code>--show-attempts</code>, <code>--trace/-t</code> options. Use <code>verbose.child_flags()</code> (no JSON
+  override). <code>stderr=None</code> on both child invocations. If stdin is a TTY, print
+  the <code>^D</code> hint to stdout before any token output. Pass <code>--trace</code> to the
+  <code>plcc-tokens</code> invocation when any enrichment flag is set. Remove threading,
+  stderr capture, <code>parse_child_events</code>/<code>reformat_child_events</code> calls. Render
+  <code>kind=token</code>/<code>kind=skip</code>/<code>kind=error</code> with source line, cursor, attempts, and
+  regex according to active flags.</li>
+<li><code>src/plcc/verbose.py</code>: <strong>no removals.</strong> <code>parse_child_events</code>,
+  <code>reformat_child_events</code>, <code>child_flags_for_orchestrator</code>, <code>reap_pipeline</code>,
+  <code>PipelineResult</code> are still consumed by <code>plcc-parse</code> and <code>plcc-make</code>.
+  Converting those to pass-through is a follow-up.</li>
+<li><code>src/plcc/schemas/token.schema.json</code>: add a third branch to the <code>oneOf</code>
+  discriminator for <code>SkipRecord</code> (<code>kind: "skip"</code>). A <code>kind: "skip"</code> record
+  currently fails validation against the existing schema since neither existing
+  branch matches. <code>regex</code>, <code>source_line</code>, and <code>attempts</code> are optional on
+  <code>TokenRecord</code> and <code>SkipRecord</code> (present only when <code>plcc-tokens --trace</code>).
+  Each <code>attempts</code> item has required fields: <code>name</code> (string), <code>regex</code> (string),
+  <code>lexeme</code> (string), <code>char_count</code> (integer), <code>is_skip</code> (boolean),
+  <code>winner</code> (boolean).</li>
+</ul>
+<h2 id="tests">Tests</h2>
+<p><strong>Pytest (new):</strong>
+- <code>matcher_test.py</code>: <code>record_attempts=True</code> populates <code>attempts</code>; default
+  empty; skip-first-match still records attempts; <code>pattern</code> always set.
+- <code>jsonl_formatter_test.py</code>: lean token records omit <code>regex</code>/<code>source_line</code>/
+  <code>attempts</code>; enriched records include all three; skip records have
+  <code>kind=skip</code>; <code>attempts</code> has <code>winner: true</code> on exactly one entry.
+- <code>tokens_cli_test.py</code>: <code>--trace</code> emits <code>kind=skip</code> records, <code>regex</code>,
+  <code>source_line</code>, and <code>attempts</code>; per-file event emitted at <code>-v</code>.</p>
+<p><strong>Pytest (regression):</strong> <code>compare=False</code> keeps existing matcher/scanner test
+assertions valid.</p>
+<p><strong>Bats (<code>plcc-scan.bats</code>):</strong></p>
+<ul>
+<li>Confirm existing <code>file:line:col in token output</code> test still matches lean
+  default format <code>^-:1:1 NUM '42'$</code> (no regex).</li>
+<li>New: <code>--show-skips</code> adds <code>SKIPPED</code> lines.</li>
+<li>New: <code>--show-line</code> shows source line and <code>^</code> cursor.</li>
+<li>New: <code>--show-attempts</code> produces indented attempt lines with one starred winner.</li>
+<li>New: <code>--show-regex</code> adds regex field to output line.</li>
+<li>New: <code>--trace</code> produces all of the above.</li>
+<li>New: <code>-v</code> emits <code>started</code>/<code>finished</code>/<code>scanning</code> on stderr
+  (<code>--separate-stderr</code>); hint is absent from stderr.</li>
+<li>New: TTY <code>^D</code> hint appears on stdout as first line when stdin is a TTY;
+  absent when stdin is not a TTY.</li>
+<li>New: <code>-vv</code> and <code>-vvv</code> produce no more scan-emitted output than <code>-v</code>.</li>
+</ul>
+<p><strong>Bats (<code>plcc-tokens.bats</code>):</strong></p>
+<ul>
+<li>New: <code>--trace</code> emits <code>kind=skip</code> records (validate updated schema).</li>
+<li>New: <code>--trace</code> token records include <code>regex</code> and <code>source_line</code>.</li>
+<li>Confirm: default token records do not include <code>regex</code> or <code>source_line</code>.</li>
+<li>New: <code>-v</code> emits per-file scanning events on stderr.</li>
+</ul>
+<h2 id="verification">Verification</h2>
+<pre><code class="language-sh">cd .worktrees/003-scan-verbosity-levels
+
+# Default output: lean
+echo '42' | plcc-scan tests/fixtures/trivial.plcc
+# Expected: -:1:1 NUM '42'
+
+# Skips visible
+echo '42 99' | plcc-scan --show-skips tests/fixtures/trivial.plcc
+
+# Source line + cursor
+echo '42' | plcc-scan --show-line tests/fixtures/trivial.plcc
+
+# Attempts visible
+echo '42' | plcc-scan --show-attempts tests/fixtures/trivial.plcc
+
+# Regex in output
+echo '42' | plcc-scan --show-regex tests/fixtures/trivial.plcc
+# Expected: -:1:1 NUM '\d+' '42'
+
+# All flags at once
+echo '42 99' | plcc-scan --trace tests/fixtures/trivial.plcc
+
+# Stderr at -v
+echo '42' | plcc-scan -v tests/fixtures/trivial.plcc 2&gt;&amp;1 1&gt;/dev/null
+
+# Levels -vv/-vvv don't add scan-specific content
+echo '42' | plcc-scan -vvv tests/fixtures/trivial.plcc 2&gt;&amp;1 1&gt;/dev/null
+
+# Test suite
+bin/test
+</code></pre>
+<p><code>plcc-parse</code> and <code>plcc-tree</code> consume the same JSONL. The lean default record
+is unchanged from their perspective (<code>regex</code>, <code>source_line</code>, <code>attempts</code> are
+absent unless <code>--trace</code> is passed to <code>plcc-tokens</code>, which <code>plcc-parse</code> does
+not do). Downstream consumers are unaffected.</p>
+<h2 id="out-of-scope-deferred-follow-ups">Out of scope (deferred follow-ups)</h2>
+<ul>
+<li>Convert <code>plcc-parse</code> and <code>plcc-make</code> to the same stderr-inheritance model
+  and remove <code>reformat_child_events</code> / <code>parse_child_events</code> /
+  <code>reap_pipeline</code> once they have no consumers.</li>
+<li>Whether <code>-vv</code>/<code>-vvv</code> should ever have scan-specific content. Reserved.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

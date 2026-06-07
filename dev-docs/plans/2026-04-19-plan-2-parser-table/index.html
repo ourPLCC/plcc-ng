@@ -1,0 +1,1538 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-19-plan-2-parser-table/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Table-Driven Parser Implementation Plan (Phase 2 Part 1 — Plan 2) - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#table-driven-parser-implementation-plan-phase-2-part-1-plan-2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Table-Driven Parser Implementation Plan (Phase 2 Part 1 — Plan 2)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="table-driven-parser-implementation-plan-phase-2-part-1-plan-2">Table-Driven Parser Implementation Plan (Phase 2 Part 1 — Plan 2)</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Replace the <code>plcc-parser-table</code> stub with a real table-driven LL(1) predictive parser that reads token JSONL from stdin, uses a <code>ll1.json</code> parse table, and writes a complete parse tree JSON to stdout. Also update <code>tree.schema.json</code> to reflect the <code>[field_name, node]</code> children structure.</p>
+<p><strong>Architecture:</strong> A new <code>predictive_parser</code> module implements the iterative stack-based parsing algorithm. It takes a loaded <code>ll1.json</code> dict and a list of token records, and returns a tree dict. <code>table_cli.py</code> wires this into the CLI with verbose events.</p>
+<p><strong>Prerequisites:</strong> Plan 1 must be complete. <code>plcc-ll1</code> must produce real <code>ll1.json</code> output (including <code>parse_table</code>, <code>start_symbol</code>, <code>is_ll1</code>) before this plan can be tested end-to-end.</p>
+<p><strong>Tech Stack:</strong> Python 3.12, docopt-ng, pytest, bats, check-jsonschema.</p>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/schemas/tree.schema.json</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/parser/predictive_parser.py</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/parser/predictive_parser_test.py</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/parser/table_cli.py</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tests/bats/commands/plcc-parser-table.bats</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tests/bats/integration/ll1-tree.bats</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="background-parse-tree-format">Background: Parse Tree Format</h2>
+<p>The parse tree produced by <code>plcc-parser-table</code> (and all <code>plcc-parser-*</code> plugins) has this structure.</p>
+<p><strong>Internal node:</strong></p>
+<pre><code class="language-json">{
+  &quot;kind&quot;: &quot;tree&quot;,
+  &quot;rule&quot;: &quot;Expr&quot;,
+  &quot;source&quot;: {
+    &quot;file&quot;: &quot;prog.txt&quot;,
+    &quot;line&quot;: 4,
+    &quot;column&quot;: 12,
+    &quot;endLine&quot;: 4,
+    &quot;endColumn&quot;: 25
+  },
+  &quot;children&quot;: [
+    [&quot;left&quot;, {&quot;kind&quot;: &quot;tree&quot;, &quot;rule&quot;: &quot;Term&quot;, ...}],
+    [&quot;op&quot;,   {&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: &quot;PLUS&quot;, &quot;lexeme&quot;: &quot;+&quot;, &quot;source&quot;: {...}}]
+  ]
+}
+</code></pre>
+<p><strong>Token leaf:</strong> placed unchanged from <code>plcc-tokens</code> output — no wrapper:</p>
+<pre><code class="language-json">{&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: &quot;NUM&quot;, &quot;lexeme&quot;: &quot;42&quot;, &quot;source&quot;: {&quot;file&quot;: &quot;&lt;stdin&gt;&quot;, &quot;line&quot;: 1, &quot;column&quot;: 1}}
+</code></pre>
+<p><strong>Rules:</strong>
+- <code>children</code> is an array of <code>[field_name, node]</code> two-element arrays. Only capturing (non-elided) symbols appear.
+- <code>source</code> on internal nodes spans the full production extent including elided tokens. <code>endColumn = last_token.source.column + len(last_token.lexeme) - 1</code> (1-indexed, inclusive).
+- <code>source</code> on token leaves is the token's own <code>source</code> (no <code>endLine</code>/<code>endColumn</code>).</p>
+<hr />
+<h2 id="background-parsing-algorithm">Background: Parsing Algorithm</h2>
+<p>Standard iterative predictive parsing (design doc §5.2). All tokens are loaded into memory first.</p>
+<p>The stack holds items of the form <code>(kind, symbol, field, builder)</code>:
+- <code>kind = "T"</code> — terminal to match; <code>symbol</code> is the terminal name; <code>field</code> is <code>str|None</code>; <code>builder</code> is the <code>NodeBuilder</code> for the parent nonterminal.
+- <code>kind = "N"</code> — nonterminal to expand; <code>symbol</code> is the nonterminal name; <code>field</code> is the field name in the grandparent; <code>builder</code> is the grandparent's <code>NodeBuilder</code> (or <code>None</code> for root).
+- <code>kind = "end"</code> — sentinel marking the end of a nonterminal expansion; <code>builder</code> is the <code>NodeBuilder</code> to finalise; <code>field</code> is the field name in <code>parent_builder</code>; <code>symbol</code> is the rule name (for the node); <code>parent_builder</code> is the grandparent's builder (or <code>None</code>).</p>
+<p>A <code>NodeBuilder</code> tracks:
+- <code>rule: str</code> — the nonterminal name
+- <code>children: list</code> — <code>[field, node]</code> pairs for capturing symbols
+- <code>first_tok: dict | None</code> — first token consumed in this subtree (for span start)
+- <code>last_tok: dict | None</code> — last token consumed (for span end)</p>
+<p>When shifting (matching) a terminal:
+1. Consume the token from the token list (advance cursor).
+2. Call <code>builder.note_token(token)</code> — updates <code>first_tok</code>/<code>last_tok</code>.
+3. If <code>field is not None</code>: <code>builder.children.append([field, token])</code>.</p>
+<p>When expanding a nonterminal (stack top is <code>("N", nt, nt_field, parent_builder)</code>):
+1. Look up <code>parse_table[nt][lookahead]</code> → <code>production</code> (list of <code>{symbol, field}</code> dicts).
+2. Create <code>new_builder = NodeBuilder(nt)</code>.
+3. Pop the <code>("N", ...)</code> item.
+4. Push <code>("end", nt, nt_field, new_builder, parent_builder)</code> sentinel.
+5. Push the production symbols in <strong>reverse</strong> order, each as <code>("T", sym, field, new_builder)</code> or <code>("N", sym, field, new_builder)</code>. For empty production (<code>[]</code>) push nothing.</p>
+<p>Whether a symbol is a terminal or nonterminal: check <code>sym_name in parse_table</code> — if present it is a nonterminal, otherwise a terminal.</p>
+<p>When processing a sentinel (<code>("end", nt, nt_field, builder, parent_builder)</code>):
+1. <code>node = builder.to_node()</code> — builds the <code>{"kind": "tree", ...}</code> dict.
+2. If <code>parent_builder is not None</code>:
+   - <code>parent_builder.note_span_from(builder)</code> — propagates <code>first_tok</code>/<code>last_tok</code>.
+   - If <code>nt_field is not None</code>: <code>parent_builder.children.append([nt_field, node])</code>.
+3. If <code>parent_builder is None</code>: this is the root — store result.</p>
+<p><strong>End check:</strong> after the stack empties, the lookahead must be the <code>$</code> sentinel (cursor past all real tokens). If any real tokens remain, that is a syntax error.</p>
+<hr />
+<h2 id="task-1-update-treeschemajson">Task 1: Update <code>tree.schema.json</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/schemas/tree.schema.json</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Confirm the current schema-validation test passes</strong></li>
+</ul>
+<p><code>bash
+  bin/test/commands.bash -- tests/bats/commands/plcc-parser-table.bats</code></p>
+<p>Expected: <code>plcc-parser-table produces schema-valid tree</code> passes with the stub (which emits the old format).</p>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>tree.schema.json</code></strong></li>
+</ul>
+<p>Replace the full content of <code>src/plcc/schemas/tree.schema.json</code> with:</p>
+<p><code>json
+  {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "TreeRecord",
+    "description": "Output of plcc-parser-*: one complete parse tree.",
+    "type": "object",
+    "required": ["kind", "rule", "source"],
+    "properties": {
+      "kind":   { "type": "string", "const": "tree" },
+      "rule":   { "type": "string" },
+      "source": {
+        "type": "object",
+        "required": ["file", "line", "column", "endLine", "endColumn"],
+        "properties": {
+          "file":      { "type": "string" },
+          "line":      { "type": "integer" },
+          "column":    { "type": "integer" },
+          "endLine":   { "type": "integer" },
+          "endColumn": { "type": "integer" }
+        }
+      },
+      "children": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": [
+            { "type": "string" },
+            { "type": "object", "required": ["kind"] }
+          ]
+        }
+      }
+    }
+  }</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Run to confirm the schema-validation test now fails</strong></li>
+</ul>
+<p><code>bash
+  bin/test/commands.bash -- tests/bats/commands/plcc-parser-table.bats</code></p>
+<p>Expected: <code>plcc-parser-table produces schema-valid tree</code> FAILS (stub output lacks <code>source</code>, <code>endLine</code>, <code>endColumn</code>, and uses old children format). This is correct; the schema now drives the implementation.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<p><code>bash
+  git add src/plcc/schemas/tree.schema.json
+  git commit -m "feat(parser): update tree.schema.json for [field,node] children and source span"</code></p>
+<hr />
+<h2 id="task-2-create-predictive_parser-module">Task 2: Create <code>predictive_parser</code> Module</h2>
+<p>Implements the iterative stack-based LL(1) parsing algorithm and tree builder.</p>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/parser/predictive_parser.py</code>
+- Create: <code>src/plcc/parser/predictive_parser_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/parser/predictive_parser_test.py</code>:</p>
+<p>```python
+  import pytest
+  from plcc.parser.predictive_parser import parse, ParseError</p>
+<p># ll1.json dict for grammar: program → NUM  (NUM is non-capturing, field=null)
+  _TRIVIAL_LL1 = {
+      "is_ll1": True,
+      "start_symbol": "program",
+      "parse_table": {
+          "program": {
+              "NUM": [{"symbol": "NUM", "field": None}]
+          }
+      },
+  }</p>
+<p># ll1.json dict for grammar: E → t:Term PLUS r:E | t:Term
+  # Term → n:NUM
+  _EXPR_LL1 = {
+      "is_ll1": True,
+      "start_symbol": "E",
+      "parse_table": {
+          "E": {
+              "NUM": [
+                  {"symbol": "Term", "field": "t"},
+                  {"symbol": "PLUS", "field": None},
+                  {"symbol": "E", "field": "r"},
+              ]
+          },
+          "Term": {
+              "NUM": [{"symbol": "NUM", "field": "n"}]
+          },
+      },
+  }</p>
+<p># E → NUM PLUS NUM  (simple, no nesting, both NUMs captured)
+  _FLAT_EXPR_LL1 = {
+      "is_ll1": True,
+      "start_symbol": "E",
+      "parse_table": {
+          "E": {
+              "NUM": [
+                  {"symbol": "NUM", "field": "left"},
+                  {"symbol": "PLUS", "field": None},
+                  {"symbol": "NUM", "field": "right"},
+              ]
+          }
+      },
+  }</p>
+<p>def _tok(name, lexeme, line=1, col=1, file="<stdin>"):
+      return {"kind": "token", "name": name, "lexeme": lexeme,
+              "source": {"file": file, "line": line, "column": col}}</p>
+<p># --- trivial grammar tests ---</p>
+<p>def test_trivial_parse_returns_tree_kind():
+      result = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      assert result["kind"] == "tree"</p>
+<p>def test_trivial_parse_rule_is_start_symbol():
+      result = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      assert result["rule"] == "program"</p>
+<p>def test_trivial_parse_elided_symbol_not_in_children():
+      result = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      assert result["children"] == []</p>
+<p>def test_trivial_parse_source_span():
+      result = parse(_TRIVIAL_LL1, [_tok("NUM", "42", line=3, col=5)])
+      src = result["source"]
+      assert src["line"] == 3
+      assert src["column"] == 5
+      assert src["endLine"] == 3
+      # endColumn = col + len("42") - 1 = 5 + 2 - 1 = 6
+      assert src["endColumn"] == 6</p>
+<p>def test_trivial_parse_source_file():
+      result = parse(_TRIVIAL_LL1, [_tok("NUM", "42", file="prog.txt")])
+      assert result["source"]["file"] == "prog.txt"</p>
+<p># --- capturing symbol tests ---</p>
+<p>def test_capturing_child_in_children():
+      result = parse(_FLAT_EXPR_LL1, [
+          _tok("NUM", "1", col=1),
+          _tok("PLUS", "+", col=2),
+          _tok("NUM", "2", col=3),
+      ])
+      fields = [child[0] for child in result["children"]]
+      assert "left" in fields
+      assert "right" in fields</p>
+<p>def test_capturing_children_are_token_dicts():
+      result = parse(_FLAT_EXPR_LL1, [
+          _tok("NUM", "1"),
+          _tok("PLUS", "+"),
+          _tok("NUM", "2"),
+      ])
+      left = dict(result["children"])["left"]
+      assert left["kind"] == "token"
+      assert left["name"] == "NUM"
+      assert left["lexeme"] == "1"</p>
+<p>def test_elided_plus_not_in_children():
+      result = parse(_FLAT_EXPR_LL1, [
+          _tok("NUM", "1"),
+          _tok("PLUS", "+"),
+          _tok("NUM", "2"),
+      ])
+      fields = [child[0] for child in result["children"]]
+      assert "PLUS" not in fields</p>
+<p># --- span across multiple tokens ---</p>
+<p>def test_span_covers_all_tokens_including_elided():
+      result = parse(_FLAT_EXPR_LL1, [
+          _tok("NUM", "1", col=1),
+          _tok("PLUS", "+", col=3),
+          _tok("NUM", "2", col=5),
+      ])
+      src = result["source"]
+      assert src["column"] == 1          # start of first token
+      assert src["endColumn"] == 5       # endColumn of "2" at col 5, len 1 → 5</p>
+<p># --- nested nonterminal tests ---</p>
+<p>def test_nested_nonterminal_child_is_tree():
+      result = parse(_EXPR_LL1, [
+          _tok("NUM", "3"),
+          _tok("PLUS", "+"),
+          _tok("NUM", "4"),
+      ])
+      # E → Term PLUS E; Term → NUM; E → Term (base case with one NUM)
+      # But _EXPR_LL1 only has E→NUM entry (NUM → Term PLUS E),
+      # so for input "3 + 4" it produces E with child t=Term(NUM=3), r=E(t=Term(NUM=4))
+      assert result["rule"] == "E"
+      children_dict = dict(result["children"])
+      assert "t" in children_dict
+      assert children_dict["t"]["kind"] == "tree"
+      assert children_dict["t"]["rule"] == "Term"</p>
+<p># --- error cases ---</p>
+<p>def test_wrong_terminal_raises_parse_error():
+      with pytest.raises(ParseError):
+          parse(_TRIVIAL_LL1, [_tok("IDENTIFIER", "x")])</p>
+<p>def test_no_production_for_lookahead_raises_parse_error():
+      ll1 = {
+          "is_ll1": True,
+          "start_symbol": "A",
+          "parse_table": {"A": {"X": [{"symbol": "X", "field": None}]}},
+      }
+      with pytest.raises(ParseError):
+          parse(ll1, [_tok("Y", "y")])</p>
+<p>def test_extra_tokens_after_parse_raises_parse_error():
+      with pytest.raises(ParseError):
+          parse(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2")])</p>
+<p>def test_empty_input_on_nonempty_grammar_raises_parse_error():
+      with pytest.raises(ParseError):
+          parse(_TRIVIAL_LL1, [])
+  ```</p>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failure</strong></li>
+</ul>
+<p><code>bash
+  bin/test/units.bash src/plcc/parser/predictive_parser_test.py -v</code></p>
+<p>Expected: <code>ModuleNotFoundError: No module named 'plcc.parser.predictive_parser'</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>predictive_parser.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/parser/predictive_parser.py</code>:</p>
+<p>```python
+  class ParseError(Exception):
+      pass</p>
+<p>class NodeBuilder:
+      def <strong>init</strong>(self, rule):
+          self.rule = rule
+          self.children = []      # [[field, node], ...]
+          self.first_tok = None
+          self.last_tok = None</p>
+<pre><code>  def note_token(self, tok):
+      if self.first_tok is None:
+          self.first_tok = tok
+      self.last_tok = tok
+
+  def note_span_from(self, child_builder):
+      if child_builder.first_tok is not None:
+          if self.first_tok is None:
+              self.first_tok = child_builder.first_tok
+          self.last_tok = child_builder.last_tok
+
+  def to_node(self):
+      source = {}
+      if self.first_tok is not None and self.last_tok is not None:
+          fs = self.first_tok["source"]
+          ls = self.last_tok["source"]
+          source = {
+              "file": fs.get("file", ""),
+              "line": fs["line"],
+              "column": fs["column"],
+              "endLine": ls["line"],
+              "endColumn": ls["column"] + len(self.last_tok["lexeme"]) - 1,
+          }
+      return {
+          "kind": "tree",
+          "rule": self.rule,
+          "source": source,
+          "children": self.children,
+      }
+</code></pre>
+<p>def parse(ll1: dict, tokens: list) -&gt; dict:
+      """
+      Parse tokens against the LL(1) parse table.</p>
+<pre><code>  ll1    — dict with keys: start_symbol, parse_table
+  tokens — list of token dicts from plcc-tokens (without $ sentinel)
+
+  Returns the root parse tree dict.
+  Raises ParseError on any syntax error.
+  """
+  parse_table = ll1["parse_table"]
+  start = ll1["start_symbol"]
+  cursor = [0]
+
+  SENTINEL = {"name": "$", "lexeme": "", "source": {"file": "", "line": 0, "column": 0}}
+
+  def current():
+      return tokens[cursor[0]] if cursor[0] &lt; len(tokens) else SENTINEL
+
+  def advance():
+      tok = tokens[cursor[0]]
+      cursor[0] += 1
+      return tok
+
+  result = [None]
+
+  # Stack: items are tuples. Kinds:
+  #   ("N", sym, field, parent_builder)
+  #   ("T", sym, field, parent_builder)
+  #   ("end", rule, field, builder, parent_builder)
+  stack = [("N", start, None, None)]
+
+  while stack:
+      item = stack.pop()
+      kind = item[0]
+
+      if kind == "T":
+          _, sym, field, builder = item
+          tok = current()
+          if tok["name"] != sym:
+              raise ParseError(
+                  f"expected {sym!r}, got {tok['name']!r} "
+                  f"at {tok['source']}"
+              )
+          tok = advance()
+          if builder is not None:
+              builder.note_token(tok)
+          if field is not None and builder is not None:
+              builder.children.append([field, tok])
+
+      elif kind == "N":
+          _, sym, field, parent_builder = item
+          lookahead = current()["name"]
+          nt_table = parse_table.get(sym)
+          if nt_table is None:
+              raise ParseError(f"no parse table entry for nonterminal {sym!r}")
+          production = nt_table.get(lookahead)
+          if production is None:
+              raise ParseError(
+                  f"unexpected {lookahead!r}, no production for {sym!r} "
+                  f"at {current()['source']}"
+              )
+          new_builder = NodeBuilder(sym)
+          stack.append(("end", sym, field, new_builder, parent_builder))
+          for entry in reversed(production):
+              s = entry["symbol"]
+              f = entry["field"]
+              if s in parse_table:
+                  stack.append(("N", s, f, new_builder))
+              else:
+                  stack.append(("T", s, f, new_builder))
+
+      elif kind == "end":
+          _, rule, field, builder, parent_builder = item
+          node = builder.to_node()
+          if parent_builder is not None:
+              parent_builder.note_span_from(builder)
+              if field is not None:
+                  parent_builder.children.append([field, node])
+          else:
+              result[0] = node
+
+  tok = current()
+  if tok["name"] != "$":
+      raise ParseError(
+          f"unexpected token {tok['name']!r} after complete parse "
+          f"at {tok['source']}"
+      )
+  return result[0]
+</code></pre>
+<p>```</p>
+<ul>
+<li>[ ] <strong>Step 4: Run to confirm tests pass</strong></li>
+</ul>
+<p><code>bash
+  bin/test/units.bash src/plcc/parser/predictive_parser_test.py -v</code></p>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<p><code>bash
+  git add src/plcc/parser/predictive_parser.py src/plcc/parser/predictive_parser_test.py
+  git commit -m "feat(parser): add predictive_parser — iterative LL(1) table-driven parser"</code></p>
+<hr />
+<h2 id="task-3-implement-table_clipy">Task 3: Implement <code>table_cli.py</code></h2>
+<p>Wire up the predictive parser into the CLI with verbose events. Exit nonzero if <code>is_ll1</code> is false or on any syntax error.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/table_cli.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write unit tests for <code>table_cli.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/parser/table_cli_test.py</code>:</p>
+<p>```python
+  import io
+  import json
+  import sys
+  import pytest
+  from plcc.parser.table_cli import main as run_main</p>
+<p>_TRIVIAL_LL1 = {
+      "is_ll1": True,
+      "start_symbol": "program",
+      "parse_table": {
+          "program": {
+              "NUM": [{"symbol": "NUM", "field": None}]
+          }
+      },
+  }</p>
+<p>_NON_LL1 = {
+      "is_ll1": False,
+      "start_symbol": "program",
+      "parse_table": {},
+      "conflicts": [{"nonterminal": "program", "lookahead": "NUM", "productions": []}],
+      "left_recursion": [],
+  }</p>
+<p>_CAPTURING_LL1 = {
+      "is_ll1": True,
+      "start_symbol": "E",
+      "parse_table": {
+          "E": {"NUM": [{"symbol": "NUM", "field": "num"}]}
+      },
+  }</p>
+<p>def _tok(name, lexeme, line=1, col=1, file="<stdin>"):
+      return {"kind": "token", "name": name, "lexeme": lexeme,
+              "source": {"file": file, "line": line, "column": col}}</p>
+<p>def _run(ll1_dict, tokens, extra_args=None, tmp_path=None):
+      """Run table_cli.main with the given ll1 and tokens. Returns (stdout, stderr, exit_code)."""
+      import tempfile, os
+      ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+      try:
+          json.dump(ll1_dict, ll1_file)
+          ll1_file.flush()
+          ll1_file.close()
+          stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+          argv = [f"--ll1={ll1_file.name}"] + (extra_args or [])
+          exit_code = 0
+          try:
+              with pytest.MonkeyPatch.context() as mp:
+                  mp.setattr("sys.stdin", io.StringIO(stdin_data))
+                  run_main(argv)
+          except SystemExit as e:
+              exit_code = e.code or 0
+          return exit_code
+      finally:
+          os.unlink(ll1_file.name)</p>
+<p>def test_exits_zero_for_valid_input(capsys, tmp_path):
+      code = _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      assert code == 0</p>
+<p>def test_stdout_is_valid_json(capsys, tmp_path):
+      _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      out, _ = capsys.readouterr()
+      result = json.loads(out)
+      assert isinstance(result, dict)</p>
+<p>def test_output_is_tree_kind(capsys):
+      _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      out, _ = capsys.readouterr()
+      assert json.loads(out)["kind"] == "tree"</p>
+<p>def test_output_rule_is_start_symbol(capsys):
+      _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      out, _ = capsys.readouterr()
+      assert json.loads(out)["rule"] == "program"</p>
+<p>def test_output_has_source(capsys):
+      _run(_TRIVIAL_LL1, [_tok("NUM", "42")])
+      out, _ = capsys.readouterr()
+      src = json.loads(out)["source"]
+      assert "line" in src and "column" in src</p>
+<p>def test_capturing_child_in_tree(capsys):
+      _run(_CAPTURING_LL1, [_tok("NUM", "42")])
+      out, _ = capsys.readouterr()
+      result = json.loads(out)
+      fields = [c[0] for c in result["children"]]
+      assert "num" in fields</p>
+<p>def test_exits_nonzero_for_non_ll1_grammar(tmp_path):
+      import tempfile, os
+      ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+      try:
+          json.dump(_NON_LL1, ll1_file)
+          ll1_file.flush()
+          ll1_file.close()
+          with pytest.raises(SystemExit) as exc:
+              with pytest.MonkeyPatch.context() as mp:
+                  mp.setattr("sys.stdin", io.StringIO(""))
+                  run_main([f"--ll1={ll1_file.name}"])
+          assert exc.value.code != 0
+      finally:
+          os.unlink(ll1_file.name)</p>
+<p>def test_exits_nonzero_on_syntax_error(tmp_path):
+      import tempfile, os
+      ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+      try:
+          json.dump(_TRIVIAL_LL1, ll1_file)
+          ll1_file.flush()
+          ll1_file.close()
+          with pytest.raises(SystemExit) as exc:
+              with pytest.MonkeyPatch.context() as mp:
+                  mp.setattr("sys.stdin", io.StringIO(json.dumps(_tok("IDENTIFIER", "x")) + "\n"))
+                  run_main([f"--ll1={ll1_file.name}"])
+          assert exc.value.code != 0
+      finally:
+          os.unlink(ll1_file.name)</p>
+<p>def test_nothing_written_to_stdout_on_error(capsys, tmp_path):
+      import tempfile, os
+      ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+      try:
+          json.dump(_TRIVIAL_LL1, ll1_file)
+          ll1_file.flush()
+          ll1_file.close()
+          try:
+              with pytest.MonkeyPatch.context() as mp:
+                  mp.setattr("sys.stdin", io.StringIO(json.dumps(_tok("IDENTIFIER", "x")) + "\n"))
+                  run_main([f"--ll1={ll1_file.name}"])
+          except SystemExit:
+              pass
+          out, _ = capsys.readouterr()
+          assert out.strip() == ""
+      finally:
+          os.unlink(ll1_file.name)
+  ```</p>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<p><code>bash
+  bin/test/units.bash src/plcc/parser/table_cli_test.py -v</code></p>
+<p>Expected: several tests fail (stub emits wrong format, wrong exit codes).</p>
+<ul>
+<li>[ ] <strong>Step 3: Replace <code>table_cli.py</code></strong></li>
+</ul>
+<p>Replace the full content of <code>src/plcc/parser/table_cli.py</code> with:</p>
+<p>```python
+  import enum
+  import json
+  import sys</p>
+<p>from docopt import docopt</p>
+<p>from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+  from .predictive_parser import parse, ParseError</p>
+<p><strong>doc</strong> = """plcc-parser-table
+      Table-driven LL(1) parser. Reads token JSONL from stdin, emits a parse tree.</p>
+<p>Usage:
+      plcc-parser-table [options] --ll1=LL1_JSON</p>
+<p>Options:
+      --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
+      -h --help               Show this message.
+  """ + VERBOSE_OPTIONS</p>
+<p>class Events(enum.Enum):
+      STARTED = "started"
+      FINISHED = "finished"
+      EXPAND = "expand"
+      SHIFT = "shift"
+      COMPLETE = "complete"
+      PREDICT_LOOKUP = "predict-lookup"</p>
+<p>def main(argv=None):
+      if argv is None:
+          argv = sys.argv[1:]
+      args = docopt(<strong>doc</strong>, argv)
+      verbose = VerboseContext.from_args("plcc-parser-table", Events, args)
+      ll1_path = args["--ll1"]
+      verbose.emit(Events.STARTED, ll1_path=ll1_path)</p>
+<pre><code>  # Load ll1.json
+  try:
+      with open(ll1_path) as f:
+          ll1 = json.load(f)
+  except (OSError, json.JSONDecodeError) as e:
+      verbose.emit_error({}, f"cannot load ll1.json from {ll1_path!r}: {e}")
+      sys.exit(1)
+
+  if not ll1.get("is_ll1", False):
+      verbose.emit_error({}, "grammar is not LL(1); cannot parse")
+      sys.exit(1)
+
+  # Read all tokens from stdin
+  tokens = []
+  for line in sys.stdin:
+      line = line.strip()
+      if not line:
+          continue
+      try:
+          tokens.append(json.loads(line))
+      except json.JSONDecodeError as e:
+          verbose.emit_error({}, f"malformed token JSON: {e}")
+          sys.exit(1)
+
+  # Parse
+  try:
+      tree = parse(ll1, tokens)
+  except ParseError as e:
+      verbose.emit_error({}, str(e))
+      sys.exit(1)
+
+  verbose.emit(Events.FINISHED, token_count=len(tokens), rule_count=_count_rules(tree))
+  print(json.dumps(tree))
+</code></pre>
+<p>def _count_rules(node):
+      """Count internal (tree-kind) nodes in the parse tree."""
+      if node.get("kind") != "tree":
+          return 0
+      return 1 + sum(_count_rules(child[1]) for child in node.get("children", []))
+  ```</p>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests to confirm they pass</strong></li>
+</ul>
+<p><code>bash
+  bin/test/units.bash src/plcc/parser/table_cli_test.py -v</code></p>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<p><code>bash
+  git add src/plcc/parser/table_cli.py src/plcc/parser/table_cli_test.py
+  git commit -m "feat(parser): implement plcc-parser-table — real LL(1) predictive parser"</code></p>
+<hr />
+<h2 id="task-4-update-bats-tests">Task 4: Update Bats Tests</h2>
+<p>Add tree-shape assertions to the bats tests and confirm the schema-validation tests pass with real output.</p>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-parser-table.bats</code>
+- Modify: <code>tests/bats/integration/ll1-tree.bats</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Run schema-validation bats test to confirm it now passes</strong></li>
+</ul>
+<p><code>bash
+  bin/test/commands.bash -- tests/bats/commands/plcc-parser-table.bats</code></p>
+<p>Expected: <code>plcc-parser-table produces schema-valid tree</code> now passes (real parser emits correct format).</p>
+<ul>
+<li>[ ] <strong>Step 2: Add tree-shape tests to <code>plcc-parser-table.bats</code></strong></li>
+</ul>
+<p>Append to the end of <code>tests/bats/commands/plcc-parser-table.bats</code>:</p>
+<p>```bash
+  @test "plcc-parser-table output has kind=tree" {
+      run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+      [ "$status" -eq 0 ]
+      echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['kind']=='tree', r['kind']"
+  }</p>
+<p>@test "plcc-parser-table output has rule=program" {
+      run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+      [ "$status" -eq 0 ]
+      echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['rule']=='program', r['rule']"
+  }</p>
+<p>@test "plcc-parser-table output has source span" {
+      run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+      [ "$status" -eq 0 ]
+      echo "$output" | python3 -c "
+  import json,sys
+  r=json.load(sys.stdin)
+  src=r['source']
+  assert 'line' in src and 'endLine' in src, src
+  "
+  }</p>
+<p>@test "plcc-parser-table exits nonzero for lex error input" {
+      run bash -c "echo 'not_a_num' | plcc-tokens '${SPEC_JSON}' | plcc-parser-table --ll1='${LL1_JSON}'"
+      # plcc-tokens exits nonzero; plcc-parser-table either doesn't run or also exits nonzero
+      [ "$status" -ne 0 ]
+  }
+  ```</p>
+<ul>
+<li>[ ] <strong>Step 3: Add integration test for tree shape</strong></li>
+</ul>
+<p>Append to <code>tests/bats/integration/ll1-tree.bats</code>:</p>
+<p>```bash
+  @test "plcc-tokens | plcc-tree with ll1 produces tree with rule=program" {
+      run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}'"
+      [ "$status" -eq 0 ]
+      echo "$output" | python3 -c "import json,sys; r=json.load(sys.stdin); assert r['rule']=='program'"
+  }</p>
+<p>@test "plcc-tokens | plcc-tree with ll1 output has source span" {
+      run bash -c "echo '42' | plcc-tokens '${SPEC_JSON}' | plcc-tree --ll1='${LL1_JSON}'"
+      [ "$status" -eq 0 ]
+      echo "$output" | python3 -c "
+  import json,sys
+  r=json.load(sys.stdin)
+  assert 'endLine' in r['source'], r['source']
+  "
+  }
+  ```</p>
+<ul>
+<li>[ ] <strong>Step 4: Run all bats tests</strong></li>
+</ul>
+<p><code>bash
+  bin/test/commands.bash -- tests/bats/commands/plcc-parser-table.bats
+  bin/test/integration.bash -- tests/bats/integration/ll1-tree.bats</code></p>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<p><code>bash
+  git add tests/bats/commands/plcc-parser-table.bats tests/bats/integration/ll1-tree.bats
+  git commit -m "test(parser): add tree-shape assertions for plcc-parser-table and ll1-tree integration"</code></p>
+<hr />
+<h2 id="task-5-run-full-test-suite">Task 5: Run Full Test Suite</h2>
+<ul>
+<li>[ ] <strong>Step 1: Run all functional tests</strong></li>
+</ul>
+<p><code>bash
+  bin/test/functional.bash</code></p>
+<p>Expected: all tiers (units + commands + integration + e2e) pass.</p>
+<p>Common issues to diagnose if failures occur:
+  - <code>plcc-parser-table.bats</code> <code>plcc-parser-table requires --ll1</code> test: the new implementation still requires <code>--ll1</code>; should pass.
+  - <code>ll1-tree.bats</code> schema validation: tree.schema.json now requires <code>source</code> with <code>endLine</code>/<code>endColumn</code>. The parser emits them; should pass.
+  - <code>tokens-tree.bats</code>: exercises <code>plcc-tree</code> with no <code>--ll1</code> option; <code>plcc-tree</code> dispatches to a fallback (or emits an error). Check this test's expected behaviour.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run packaging test</strong></li>
+</ul>
+<p><code>bash
+  bin/test/packaging.bash</code></p>
+<p>Expected: wheel builds, all entry points resolve, smoke test passes.</p>
+<hr />
+<h2 id="self-review">Self-Review</h2>
+<h3 id="spec-coverage-check">Spec coverage check</h3>
+<table>
+<thead>
+<tr>
+<th>Spec section</th>
+<th>Covered by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>§5.1 <code>--ll1=&lt;path&gt;</code> required</td>
+<td>Task 3 — docopt declares <code>--ll1=LL1_JSON</code></td>
+</tr>
+<tr>
+<td>§5.1 exit nonzero if is_ll1 false</td>
+<td>Task 3 — checked after loading</td>
+</tr>
+<tr>
+<td>§5.1 nothing to stdout on failure</td>
+<td>Task 3 — <code>sys.exit(1)</code> before <code>print(tree)</code></td>
+</tr>
+<tr>
+<td>§5.2 read tokens to EOF first</td>
+<td>Task 3 — tokens list built before <code>parse()</code> call</td>
+</tr>
+<tr>
+<td>§5.2 $ sentinel appended</td>
+<td>Task 2 — <code>SENTINEL</code> in <code>parse()</code></td>
+</tr>
+<tr>
+<td>§5.2 predictive loop</td>
+<td>Task 2 — stack-based algorithm</td>
+</tr>
+<tr>
+<td>§5.2 span computation</td>
+<td>Task 2 — <code>NodeBuilder.note_token</code>, <code>note_span_from</code>, <code>endColumn</code> formula</td>
+</tr>
+<tr>
+<td>§5.2 AST elision (field: null → absent)</td>
+<td>Task 2 — <code>if field is not None</code> guards</td>
+</tr>
+<tr>
+<td>§5.2 error on syntax error</td>
+<td>Task 2 — <code>ParseError</code>; Task 3 — caught, exit nonzero</td>
+</tr>
+<tr>
+<td>§5.3 verbose started/finished</td>
+<td>Task 3 — emitted</td>
+</tr>
+<tr>
+<td>§5.3 verbose expand/shift/complete</td>
+<td><strong>Deferred</strong> — requires wiring verbose context into <code>parse()</code>; reserved enum members added</td>
+</tr>
+<tr>
+<td>§6 tree schema <code>[field,node]</code> children</td>
+<td>Task 1 (schema), Task 2 (implementation)</td>
+</tr>
+<tr>
+<td>§6 source span on internal nodes</td>
+<td>Task 2 — <code>NodeBuilder.to_node()</code></td>
+</tr>
+<tr>
+<td>§6 token leaves unchanged</td>
+<td>Task 2 — tokens passed directly into children</td>
+</tr>
+</tbody>
+</table>
+<h3 id="note-on-deferred-verbose-events-expandshiftcomplete">Note on deferred verbose events (expand/shift/complete)</h3>
+<p>The design §5.3 specifies level-2 events <code>expand</code>, <code>shift</code>, and <code>complete</code>. These require threading a <code>VerboseContext</code> into the <code>parse()</code> function and calling <code>verbose.emit(...)</code> at each stack operation. This is architecturally clean (pass <code>verbose</code> as a parameter) but was excluded from this plan to keep the parser module testable without a verbose dependency. To add them:
+1. Add <code>verbose: VerboseContext | None = None</code> parameter to <code>parse()</code>.
+2. After the expand step: <code>if verbose: verbose.emit(Events.EXPAND, level=2, nonterminal=sym, production=production)</code>.
+3. After the shift step: <code>if verbose: verbose.emit(Events.SHIFT, level=2, name=tok["name"], lexeme=tok["lexeme"], source=tok["source"])</code>.
+4. In the <code>"end"</code> case: <code>if verbose: verbose.emit(Events.COMPLETE, level=2, nonterminal=rule)</code>.
+5. Pass <code>verbose=verbose</code> from <code>table_cli.py</code>.</p>
+<h3 id="placeholder-scan">Placeholder scan</h3>
+<p>No TBD, TODO, or "fill in later" phrases in any task.</p>
+<h3 id="type-consistency">Type consistency</h3>
+<ul>
+<li><code>parse(ll1: dict, tokens: list) -&gt; dict</code> — used identically in <code>predictive_parser_test.py</code> and <code>table_cli.py</code></li>
+<li><code>ParseError</code> imported from <code>predictive_parser</code> in both <code>table_cli.py</code> and <code>predictive_parser_test.py</code></li>
+<li><code>NodeBuilder.to_node()</code> always returns a dict with <code>kind</code>, <code>rule</code>, <code>source</code>, <code>children</code> — consistent with tree schema</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

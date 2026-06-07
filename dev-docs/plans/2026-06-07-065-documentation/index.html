@@ -1,0 +1,1344 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-07-065-documentation/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Documentation Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#documentation-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Documentation Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="documentation-implementation-plan">Documentation Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Stand up two MkDocs sites (user docs + developer docs) deployed to GitHub Pages from this repo, with all stub pages in place, CI wired, CHANGELOG.md auto-generated, and README updated — ready for content to be written in follow-on plans.</p>
+<p><strong>Architecture:</strong> Three phases. Phase 1 (this plan) is infrastructure: restructure the repo, configure MkDocs, wire CI, update CHANGELOG generation, slim the README. Phases 2 and 3 are content-writing phases (each gets its own detailed plan when the time comes). Infrastructure is the prerequisite; content phases can overlap once infrastructure is done.</p>
+<p><strong>Tech Stack:</strong> MkDocs, mkdocs-material, mike (versioning), mkdocs-include-markdown-plugin, python-semantic-release, GitHub Actions, GitHub Pages.</p>
+<hr />
+<h2 id="phase-1-infrastructure">Phase 1: Infrastructure</h2>
+<p>This phase produces a deployable skeleton: both sites build and deploy, all nav pages exist as stubs, CHANGELOG.md is auto-generated, and the README points to the live site.</p>
+<h3 id="file-map">File map</h3>
+<p><strong>Create:</strong></p>
+<ul>
+<li><code>mkdocs.yml</code> — user docs site config</li>
+<li><code>mkdocs-dev.yml</code> — developer docs site config</li>
+<li><code>docs/index.md</code> — Home stub</li>
+<li><code>docs/getting-started.md</code> — Getting Started stub</li>
+<li><code>docs/language-guide/index.md</code> — Language Guide overview stub</li>
+<li><code>docs/language-guide/tokens.md</code> — Token rules stub</li>
+<li><code>docs/language-guide/grammar.md</code> — Grammar rules stub</li>
+<li><code>docs/language-guide/code-generation.md</code> — Code generation stub</li>
+<li><code>docs/language-guide/examples.md</code> — Examples stub</li>
+<li><code>docs/cli/index.md</code> — CLI Reference overview stub</li>
+<li><code>docs/cli/primitives.md</code> — Level 0 primitives stub</li>
+<li><code>docs/cli/orchestrators.md</code> — Level 2 orchestrators stub</li>
+<li><code>docs/instructor-guide/index.md</code> — Instructor Guide overview stub</li>
+<li><code>docs/instructor-guide/evaluating.md</code> — Evaluating plcc-ng stub</li>
+<li><code>docs/instructor-guide/adopting.md</code> — Adopting plcc-ng stub</li>
+<li><code>docs/changelog.md</code> — Changelog page (includes CHANGELOG.md via plugin)</li>
+<li><code>dev-docs/index.md</code> — Developer docs home stub</li>
+<li><code>dev-docs/contributing.md</code> — includes CONTRIBUTING.md via plugin</li>
+<li><code>dev-docs/code-of-conduct.md</code> — includes CODE_OF_CONDUCT.md via plugin</li>
+<li><code>dev-docs/release-sop.md</code> — Release SOP stub</li>
+<li><code>dev-docs/architecture.md</code> — Architecture overview stub</li>
+<li><code>dev-docs/issue-conventions.md</code> — Issue conventions stub</li>
+<li><code>.github/workflows/docs.yml</code> — CI for user docs deployment</li>
+</ul>
+<p><strong>Modify:</strong></p>
+<ul>
+<li><code>pyproject.toml</code> — add MkDocs deps to <code>[dependency-groups].dev</code>; add <code>project.urls.Documentation</code>; enable <code>changelog = "true"</code> in <code>[tool.semantic_release]</code></li>
+<li><code>.github/workflows/release.yml</code> — set <code>changelog: "true"</code> in the python-semantic-release step</li>
+<li><code>bin/issues/new.bash</code> — update <code>ISSUES_DIR</code> from <code>docs/issues</code> to <code>dev-docs/issues</code></li>
+<li><code>CLAUDE.md</code> — update references from <code>docs/issues/</code> to <code>dev-docs/issues/</code></li>
+<li><code>README.md</code> — slim to one paragraph + install + docs link</li>
+</ul>
+<p><strong>Move (git mv):</strong></p>
+<ul>
+<li><code>docs/superpowers/specs/</code> → <code>dev-docs/specs/</code></li>
+<li><code>docs/superpowers/plans/</code> → <code>dev-docs/plans/</code></li>
+<li><code>docs/issues/</code> → <code>dev-docs/issues/</code></li>
+</ul>
+<hr />
+<h3 id="task-1-restructure-the-repo">Task 1: Restructure the repo</h3>
+<p>Move internal docs out of <code>docs/</code> (which becomes user docs) into <code>dev-docs/</code>.</p>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Move: <code>docs/superpowers/specs/</code> → <code>dev-docs/specs/</code></li>
+<li>Move: <code>docs/superpowers/plans/</code> → <code>dev-docs/plans/</code></li>
+<li>Move: <code>docs/issues/</code> → <code>dev-docs/issues/</code></li>
+<li>Modify: <code>bin/issues/new.bash</code></li>
+<li>
+<p>Modify: <code>CLAUDE.md</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Move the directories with git mv</strong></p>
+</li>
+</ul>
+<pre><code class="language-bash">mkdir -p dev-docs
+git mv docs/superpowers/specs dev-docs/specs
+git mv docs/superpowers/plans dev-docs/plans
+git mv docs/issues dev-docs/issues
+rmdir docs/superpowers 2&gt;/dev/null || true
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update bin/issues/new.bash</strong></li>
+</ul>
+<p>In <code>bin/issues/new.bash</code>, change line:</p>
+<pre><code class="language-bash">ISSUES_DIR=&quot;docs/issues&quot;
+</code></pre>
+<p>to:</p>
+<pre><code class="language-bash">ISSUES_DIR=&quot;dev-docs/issues&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Update CLAUDE.md</strong></li>
+</ul>
+<p>In <code>CLAUDE.md</code>, change both occurrences of <code>docs/issues/</code> to <code>dev-docs/issues/</code>:</p>
+<pre><code class="language-markdown">To add a new issue to [dev-docs/issues/](dev-docs/issues/), always use [bin/issues/new.bash](bin/issues/new.bash):
+</code></pre>
+<p>and:</p>
+<pre><code class="language-markdown">This reads [dev-docs/issues/.next-id.txt](dev-docs/issues/.next-id.txt) for the next ID...
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Verify bin/issues/new.bash still works</strong></li>
+</ul>
+<pre><code class="language-bash">bin/issues/new.bash test-restructure-works docs
+</code></pre>
+<p>Expected: creates <code>dev-docs/issues/NNN-test-restructure-works.md</code> and prints the path.</p>
+<p>Then delete the test issue:</p>
+<pre><code class="language-bash">rm dev-docs/issues/*-test-restructure-works.md
+# Decrement .next-id.txt back by 1
+echo $(($(cat dev-docs/issues/.next-id.txt) - 1)) &gt; dev-docs/issues/.next-id.txt
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add -A
+git commit -m &quot;refactor(docs): move internal docs to dev-docs/ [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-2-add-mkdocs-dependencies">Task 2: Add MkDocs dependencies</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>pyproject.toml</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add dependencies to pyproject.toml</strong></p>
+</li>
+</ul>
+<p>In <code>pyproject.toml</code>, add to the <code>[dependency-groups] dev</code> array:</p>
+<pre><code class="language-toml">&quot;mkdocs&gt;=1.6&quot;,
+&quot;mkdocs-material&gt;=9.5&quot;,
+&quot;mike&gt;=2.1&quot;,
+&quot;mkdocs-include-markdown-plugin&gt;=6.0&quot;,
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Install and verify</strong></li>
+</ul>
+<pre><code class="language-bash">pdm install
+pdm run mkdocs --version
+pdm run mike --version
+</code></pre>
+<p>Expected: version strings printed for both, no errors.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add pyproject.toml pdm.lock
+git commit -m &quot;build(docs): add mkdocs, material, mike, include-markdown-plugin [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-configure-and-build-the-user-docs-site">Task 3: Configure and build the user docs site</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>mkdocs.yml</code></li>
+<li>
+<p>Create: all <code>docs/</code> stub pages listed in the file map</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Create mkdocs.yml</strong></p>
+</li>
+</ul>
+<pre><code class="language-yaml">site_name: plcc-ng
+site_url: https://ourplcc.github.io/plcc-ng/
+repo_url: https://github.com/ourPLCC/plcc-ng
+repo_name: ourPLCC/plcc-ng
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+
+plugins:
+  - search
+  - include-markdown
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Language Guide:
+    - Overview: language-guide/index.md
+    - Token Rules: language-guide/tokens.md
+    - Grammar Rules: language-guide/grammar.md
+    - Code Generation: language-guide/code-generation.md
+    - Examples: language-guide/examples.md
+  - CLI Reference:
+    - Overview: cli/index.md
+    - Primitives: cli/primitives.md
+    - Orchestrators: cli/orchestrators.md
+  - Instructor Guide:
+    - Overview: instructor-guide/index.md
+    - Evaluating plcc-ng: instructor-guide/evaluating.md
+    - Adopting plcc-ng: instructor-guide/adopting.md
+  - Changelog: changelog.md
+
+extra:
+  version:
+    provider: mike
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Create stub pages</strong></li>
+</ul>
+<p>Create each of the following files with the content shown. Replace <code>TITLE</code> with the heading matching the nav label.</p>
+<p><code>docs/index.md</code>:</p>
+<pre><code class="language-markdown"># plcc-ng
+
+plcc-ng is a tool for teaching and learning programming language concepts.
+
+- [Getting Started](getting-started.md)
+- [Language Guide](language-guide/index.md)
+- [CLI Reference](cli/index.md)
+- [Instructor Guide](instructor-guide/index.md)
+</code></pre>
+<p><code>docs/getting-started.md</code>:</p>
+<pre><code class="language-markdown"># Getting Started
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/language-guide/index.md</code>:</p>
+<pre><code class="language-markdown"># Language Guide
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/language-guide/tokens.md</code>:</p>
+<pre><code class="language-markdown"># Token Rules
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/language-guide/grammar.md</code>:</p>
+<pre><code class="language-markdown"># Grammar Rules
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/language-guide/code-generation.md</code>:</p>
+<pre><code class="language-markdown"># Code Generation
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/language-guide/examples.md</code>:</p>
+<pre><code class="language-markdown"># Examples
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/cli/index.md</code>:</p>
+<pre><code class="language-markdown"># CLI Reference
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/cli/primitives.md</code>:</p>
+<pre><code class="language-markdown"># Level 0 Primitives
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/cli/orchestrators.md</code>:</p>
+<pre><code class="language-markdown"># Level 2 Orchestrators
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/instructor-guide/index.md</code>:</p>
+<pre><code class="language-markdown"># Instructor Guide
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/instructor-guide/evaluating.md</code>:</p>
+<pre><code class="language-markdown"># Evaluating plcc-ng
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/instructor-guide/adopting.md</code>:</p>
+<pre><code class="language-markdown"># Adopting plcc-ng
+
+*Content coming soon.*
+</code></pre>
+<p><code>docs/changelog.md</code>:</p>
+<pre><code class="language-markdown"># Changelog
+
+{%
+  include-markdown &quot;../CHANGELOG.md&quot;
+  start=&quot;&lt;!--next-version-placeholder--&gt;&quot;
+%}
+</code></pre>
+<p>Note: If <code>CHANGELOG.md</code> does not yet exist, create a minimal placeholder:</p>
+<pre><code class="language-markdown"># Changelog
+
+No releases yet.
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Build the user docs site</strong></li>
+</ul>
+<pre><code class="language-bash">pdm run mkdocs build --strict
+</code></pre>
+<p>Expected: <code>site/</code> directory created, no errors, no warnings.</p>
+<ul>
+<li>[ ] <strong>Step 4: Preview locally</strong></li>
+</ul>
+<pre><code class="language-bash">pdm run mkdocs serve
+</code></pre>
+<p>Open <code>http://127.0.0.1:8000</code> in a browser. Verify:</p>
+<ul>
+<li>All nav items are present and clickable</li>
+<li>No broken links in the sidebar</li>
+<li>Search box is visible</li>
+</ul>
+<p>Press <code>Ctrl-C</code> to stop.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add mkdocs.yml docs/
+git commit -m &quot;docs: add mkdocs config and user docs stub pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-configure-and-build-the-developer-docs-site">Task 4: Configure and build the developer docs site</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>mkdocs-dev.yml</code></li>
+<li>
+<p>Create: all <code>dev-docs/</code> stub pages listed in the file map</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Create mkdocs-dev.yml</strong></p>
+</li>
+</ul>
+<pre><code class="language-yaml">site_name: plcc-ng Developer Docs
+site_url: https://ourplcc.github.io/plcc-ng/dev-docs/
+repo_url: https://github.com/ourPLCC/plcc-ng
+repo_name: ourPLCC/plcc-ng
+docs_dir: dev-docs
+site_dir: site-dev
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+
+plugins:
+  - search
+  - include-markdown
+
+nav:
+  - Home: index.md
+  - Contributing: contributing.md
+  - Code of Conduct: code-of-conduct.md
+  - Release SOP: release-sop.md
+  - Architecture: architecture.md
+  - Issue Conventions: issue-conventions.md
+  - Design Specs: specs/
+  - Implementation Plans: plans/
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Create stub pages</strong></li>
+</ul>
+<p><code>dev-docs/index.md</code>:</p>
+<pre><code class="language-markdown"># plcc-ng Developer Docs
+
+Documentation for contributors and maintainers.
+
+- [Contributing](contributing.md)
+- [Release SOP](release-sop.md)
+- [Architecture](architecture.md)
+- [Issue Conventions](issue-conventions.md)
+</code></pre>
+<p><code>dev-docs/contributing.md</code>:</p>
+<pre><code class="language-markdown"># Contributing
+
+{%
+  include-markdown &quot;../CONTRIBUTING.md&quot;
+%}
+</code></pre>
+<p><code>dev-docs/code-of-conduct.md</code>:</p>
+<pre><code class="language-markdown"># Code of Conduct
+
+{%
+  include-markdown &quot;../CODE_OF_CONDUCT.md&quot;
+%}
+</code></pre>
+<p><code>dev-docs/release-sop.md</code>:</p>
+<pre><code class="language-markdown"># Release SOP
+
+*Content coming soon.*
+</code></pre>
+<p><code>dev-docs/architecture.md</code>:</p>
+<pre><code class="language-markdown"># Architecture
+
+*Content coming soon.*
+</code></pre>
+<p><code>dev-docs/issue-conventions.md</code>:</p>
+<pre><code class="language-markdown"># Issue Conventions
+
+*Content coming soon.*
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Add .pages files so MkDocs-material lists specs/ and plans/ directories</strong></li>
+</ul>
+<p>MkDocs needs an index page to navigate into subdirectories. Create minimal index files:</p>
+<p><code>dev-docs/specs/index.md</code>:</p>
+<pre><code class="language-markdown"># Design Specs
+</code></pre>
+<p><code>dev-docs/plans/index.md</code>:</p>
+<pre><code class="language-markdown"># Implementation Plans
+</code></pre>
+<p><code>dev-docs/issues/index.md</code>:</p>
+<pre><code class="language-markdown"># Issues
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Build the developer docs site</strong></li>
+</ul>
+<pre><code class="language-bash">pdm run mkdocs build --config-file mkdocs-dev.yml --strict
+</code></pre>
+<p>Expected: <code>site-dev/</code> directory created, no errors.</p>
+<ul>
+<li>[ ] <strong>Step 5: Preview locally</strong></li>
+</ul>
+<pre><code class="language-bash">pdm run mkdocs serve -f mkdocs-dev.yml -a 127.0.0.1:8001
+</code></pre>
+<p>Open <code>http://127.0.0.1:8001</code> in a browser. Verify:</p>
+<ul>
+<li>All nav items are present</li>
+<li>Contributing and Code of Conduct pages render the included file content</li>
+</ul>
+<p>Press <code>Ctrl-C</code> to stop.</p>
+<ul>
+<li>[ ] <strong>Step 6: Add site-dev/ to .gitignore</strong></li>
+</ul>
+<p>The user docs <code>site/</code> directory may already be in <code>.gitignore</code>. Add <code>site-dev/</code> as well:</p>
+<pre><code class="language-bash">echo &quot;site-dev/&quot; &gt;&gt; .gitignore
+</code></pre>
+<p>Verify <code>site/</code> is also present in <code>.gitignore</code>. If not, add it too.</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add mkdocs-dev.yml dev-docs/ .gitignore
+git commit -m &quot;docs: add mkdocs-dev config and developer docs stub pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-5-wire-ci-for-both-docs-sites">Task 5: Wire CI for both docs sites</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Create: <code>.github/workflows/docs.yml</code></li>
+</ul>
+<p>The user docs are deployed by <code>mike</code> (versioned). The dev docs are deployed by <code>mkdocs gh-deploy</code> to the <code>dev-docs/</code> subdirectory of the <code>gh-pages</code> branch.</p>
+<p><strong>Manual prerequisite (do this before pushing the workflow):</strong></p>
+<p>Enable GitHub Pages on this repository:</p>
+<ol>
+<li>Go to the repo on GitHub → Settings → Pages</li>
+<li>Set Source to "Deploy from a branch", branch <code>gh-pages</code>, folder <code>/</code> (root)</li>
+<li>
+<p>Save. GitHub will create the <code>gh-pages</code> branch on first deploy.</p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Create .github/workflows/docs.yml</strong></p>
+</li>
+</ol>
+<pre><code class="language-yaml">name: Docs
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-user-docs:
+    name: Deploy user docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Install dependencies
+        run: pdm install
+      - name: Configure git for mike
+        run: |
+          git config user.name &quot;github-actions[bot]&quot;
+          git config user.email &quot;github-actions[bot]@users.noreply.github.com&quot;
+      - name: Deploy dev docs preview (on push to main)
+        if: github.event_name == 'push'
+        run: pdm run mike deploy --push dev
+      - name: Deploy versioned docs (on release)
+        if: github.event_name == 'release'
+        run: |
+          VERSION=&quot;${{ github.ref_name }}&quot;
+          # Strip leading 'v' (v1.2.3 → 1.2.3), then take major.minor (1.2)
+          MAJOR_MINOR=$(echo &quot;${VERSION#v}&quot; | cut -d. -f1,2)
+          pdm run mike deploy --push --update-aliases &quot;${MAJOR_MINOR}&quot; latest
+
+  deploy-dev-docs:
+    name: Deploy developer docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Install dependencies
+        run: pdm install
+      - name: Configure git
+        run: |
+          git config user.name &quot;github-actions[bot]&quot;
+          git config user.email &quot;github-actions[bot]@users.noreply.github.com&quot;
+      - name: Deploy developer docs
+        run: pdm run mkdocs gh-deploy --config-file mkdocs-dev.yml --dest-dir dev-docs --force
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add .github/workflows/docs.yml
+git commit -m &quot;ci(docs): add GitHub Actions workflow for user and developer docs [skip ci]&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Push to main and verify CI runs</strong></li>
+</ul>
+<pre><code class="language-bash">git push origin 065-design-end-user-documentation
+</code></pre>
+<p>Create a PR and merge it to <code>main</code>. Watch the Actions tab. Both <code>deploy-user-docs</code> and <code>deploy-dev-docs</code> jobs should pass. After the first successful run, visit:</p>
+<ul>
+<li><code>https://ourplcc.github.io/plcc-ng/dev/</code> — user docs dev preview</li>
+<li><code>https://ourplcc.github.io/plcc-ng/dev-docs/</code> — developer docs</li>
+</ul>
+<hr />
+<h3 id="task-6-enable-changelogmd-auto-generation">Task 6: Enable CHANGELOG.md auto-generation</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>pyproject.toml</code></li>
+<li>Modify: <code>.github/workflows/release.yml</code></li>
+</ul>
+<p>The release workflow currently runs python-semantic-release with <code>changelog: "false"</code>. We need to enable changelog generation and configure its output file.</p>
+<ul>
+<li>[ ] <strong>Step 1: Add semantic_release config to pyproject.toml</strong></li>
+</ul>
+<p>Add a <code>[tool.semantic_release]</code> section (or extend it if it exists):</p>
+<pre><code class="language-toml">[tool.semantic_release]
+version_toml = [&quot;pyproject.toml:project.version&quot;]
+changelog_file = &quot;CHANGELOG.md&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update release.yml to enable changelog</strong></li>
+</ul>
+<p>In <code>.github/workflows/release.yml</code>, change the <code>python-semantic-release</code> step:</p>
+<pre><code class="language-yaml">      - name: Python Semantic Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          push: &quot;true&quot;
+          changelog: &quot;true&quot;
+          vcs_release: &quot;false&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Create an initial CHANGELOG.md</strong></li>
+</ul>
+<p>If <code>CHANGELOG.md</code> does not exist at the repo root, create a minimal one:</p>
+<pre><code class="language-markdown"># Changelog
+
+&lt;!--next-version-placeholder--&gt;
+</code></pre>
+<p>python-semantic-release will insert release entries above the placeholder marker on each release.</p>
+<ul>
+<li>[ ] <strong>Step 4: Verify the changelog page builds</strong></li>
+</ul>
+<pre><code class="language-bash">pdm run mkdocs build --strict
+</code></pre>
+<p>Expected: no errors. The Changelog page should render (even if it only shows the placeholder text for now).</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add pyproject.toml .github/workflows/release.yml CHANGELOG.md
+git commit -m &quot;build(release): enable CHANGELOG.md auto-generation [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-7-update-readme-and-pypi-metadata">Task 7: Update README and PyPI metadata</h3>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>README.md</code></li>
+<li>
+<p>Modify: <code>pyproject.toml</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Slim down README.md</strong></p>
+</li>
+</ul>
+<p>Replace the body of <code>README.md</code> with:</p>
+<pre><code class="language-markdown"># plcc-ng
+
+plcc-ng is a tool for teaching and learning programming language concepts.
+It is a reimagining of [PLCC](https://github.com/ourPLCC/plcc).
+
+**[Documentation](https://ourplcc.github.io/plcc-ng/)**
+
+## Install
+
+```bash
+pip install plcc-ng
+</code></pre>
+<blockquote>
+<p>This package has a separate identity from the original <code>plcc</code> package.
+<code>plcc-ng</code> is experimental — no compatibility guarantees with <code>plcc</code> until a stable 1.0 release.</p>
+</blockquote>
+<h2 id="licensing">Licensing</h2>
+<p>Developers license contributions under <a href="LICENSES/AGPL-3.0-or-later.txt">AGPL-3.0-or-later</a> and sign off on the
+<a href="DCO-1.1.txt">DCO-1.1</a>.</p>
+<h2 id="community">Community</h2>
+<ul>
+<li><a href="CODE_OF_CONDUCT.md">Code of conduct</a></li>
+<li><a href="https://discord.gg/EVtNSxS9E2">Discord server</a></li>
+<li><a href="https://ourplcc.github.io/plcc-ng/dev-docs/">Developer docs</a></li>
+</ul>
+<h2 id="development">Development</h2>
+<p>See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> for the development workflow, test tiers, and TDD inner loop.</p>
+<pre><code>
+- [ ] **Step 2: Add Documentation URL to pyproject.toml**
+
+In `pyproject.toml`, find or create the `[project.urls]` table and add:
+
+```toml
+[project.urls]
+Documentation = &quot;https://ourplcc.github.io/plcc-ng/&quot;
+Repository = &quot;https://github.com/ourPLCC/plcc-ng&quot;
+</code></pre>
+<ul>
+<li>
+<p>[ ] <strong>Step 3: Set the GitHub repo About URL (manual)</strong></p>
+</li>
+<li>
+<p>Go to the plcc-ng repo on GitHub</p>
+</li>
+<li>Click the gear icon next to "About" on the right sidebar</li>
+<li>Set "Website" to <code>https://ourplcc.github.io/plcc-ng/</code></li>
+<li>Save</li>
+</ul>
+<p>This makes the docs URL visible on the repo's main page without any code change.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add README.md pyproject.toml
+git commit -m &quot;docs(readme): slim README and add docs site link [skip ci]&quot;
+</code></pre>
+<hr />
+<h2 id="phase-2-user-docs-content">Phase 2: User Docs Content</h2>
+<p><em>This phase gets its own detailed plan when Phase 1 is complete.</em></p>
+<p>High-level task list for the plan author:</p>
+<ol>
+<li><strong>Home page</strong> — Write the full <code>docs/index.md</code>: what plcc-ng is, audience navigation paths, badges</li>
+<li><strong>Getting Started</strong> — Install instructions, prerequisites, end-to-end quickstart with a trivial <code>.plcc</code> file through <code>plcc-make</code></li>
+<li><strong>Language Guide: Overview</strong> — Explain the three-section <code>.plcc</code> file structure</li>
+<li><strong>Language Guide: Token Rules</strong> — <code>token</code> and <code>skip</code> syntax, regex patterns, examples</li>
+<li><strong>Language Guide: Grammar Rules</strong> — BNF syntax, rule-to-class mapping, naming conventions</li>
+<li><strong>Language Guide: Code Generation</strong> — Target selection, embedding code, class lifecycle</li>
+<li><strong>Language Guide: Examples</strong> — Three worked examples (lexical-only, expression grammar, full language with evaluation)</li>
+<li><strong>CLI Reference: Overview</strong> — Pipeline overview diagram/description, when to use primitives vs. orchestrators</li>
+<li><strong>CLI Reference: Primitives</strong> — One section per Level 0 command: purpose, stdin/stdout, flags, exit codes, example</li>
+<li><strong>CLI Reference: Orchestrators</strong> — One section per Level 2 command: <code>plcc-make</code>, <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code></li>
+<li><strong>Instructor Guide: Evaluating</strong> — What plcc-ng teaches, prerequisites, learning curve</li>
+<li><strong>Instructor Guide: Adopting</strong> — Assignment ideas, course structure, teaching materials index</li>
+</ol>
+<hr />
+<h2 id="phase-3-developer-docs-content">Phase 3: Developer Docs Content</h2>
+<p><em>This phase gets its own detailed plan when Phase 1 is complete. Phase 2 and Phase 3 can proceed in parallel.</em></p>
+<p>High-level task list for the plan author:</p>
+<ol>
+<li><strong>Resolve the CONTRIBUTING.md boundary</strong> — Decide what stays in <code>CONTRIBUTING.md</code> (GitHub entry point) vs. what moves to dedicated <code>dev-docs/</code> pages; update accordingly</li>
+<li><strong>Release SOP</strong> — Document the full release process: what <code>python-semantic-release</code> handles automatically, what requires manual steps (GitHub Pages setup, version aliases, backport policy)</li>
+<li><strong>Architecture overview</strong> — Summarize the pipeline architecture, Level 0 primitives vs. Level 2 orchestrators, the data model, the test tier structure</li>
+<li><strong>Test tier reference</strong> — Detailed explanation of the five test tiers (unit, commands, integration, e2e, packaging), when to use each, and how to run them; drawn from <code>CONTRIBUTING.md</code> content where appropriate</li>
+<li><strong>Issue conventions</strong> — How issues are numbered, the template fields, <code>bin/issues/new.bash</code> usage, the <code>done/</code> directory</li>
+<li><strong>Dev docs index pages for specs/ and plans/</strong> — Add brief descriptions of what design specs and implementation plans are, and how to navigate them</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

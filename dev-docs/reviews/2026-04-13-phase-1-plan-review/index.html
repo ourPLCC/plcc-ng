@@ -1,0 +1,913 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/reviews/2026-04-13-phase-1-plan-review/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Phase 1 Plan Review - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-1-plan-review" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 1 Plan Review
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="phase-1-plan-review">Phase 1 Plan Review</h1>
+<p><strong>Date:</strong> 2026-04-13
+<strong>Reviewer:</strong> Independent agent review
+<strong>Documents reviewed:</strong>
+- <code>docs/design/2026-04-13-phase-1-walking-skeleton.md</code>
+- <code>docs/plans/2026-04-13-phase-1-walking-skeleton.md</code>
+<strong>Reference documents:</strong>
+- <code>docs/design/2026-04-12-multi-lang-pipeline.md</code> (architectural spec)
+- <code>docs/design/2026-04-12-multi-lang-implementation-plan.md</code> (roadmap)</p>
+<p><strong>Verdict:</strong> Not ready to execute as written. Blockers require targeted fixes to the plan before implementation begins. The overall architecture, test pyramid design, and phasing strategy are sound.</p>
+<hr />
+<h2 id="blockers-must-be-resolved-before-execution">BLOCKERS — must be resolved before execution</h2>
+<h3 id="b1-build_modelpy-uses-a-fictional-kind-key-task-10">B1: <code>build_model.py</code> uses a fictional <code>"kind"</code> key (Task 10)</h3>
+<p><code>build_model.py</code>'s <code>_extract_fields</code> function inspects <code>rhs</code> symbols using <code>symbol.get('kind', '')</code> and checks <code>'capturing' in kind</code>. When <code>plcc-spec</code> serializes the spec via <code>dataclasses.asdict()</code>, a <code>CapturingTerminal</code> object serializes to:</p>
+<pre><code class="language-json">{&quot;name&quot;: &quot;NUM&quot;, &quot;altName&quot;: null, &quot;isTerminal&quot;: true, &quot;isCapturing&quot;: true}
+</code></pre>
+<p>There is no <code>kind</code> field. The plan's unit tests pass because they use hand-crafted dicts with a <code>"kind"</code> key — but <code>plcc-spec tests/fixtures/trivial.plcc | plcc-model -</code> will silently produce zero fields because no real symbol matches <code>'capturing' in kind</code>.</p>
+<p><strong>Consequence:</strong> Unit tests pass, integration and E2E tests fail. The acceptance criterion (<code>Program</code> class with <code>num</code> field) will not be met.</p>
+<p><strong>Fix:</strong> Before writing <code>build_model.py</code>, run <code>plcc-spec tests/fixtures/trivial.plcc</code> and record the actual serialized shape of <code>rhs</code> symbols. Then implement <code>_extract_fields</code> using the actual flags:</p>
+<pre><code class="language-python">def _extract_fields(rhs):
+    fields = []
+    for symbol in rhs:
+        if symbol.get('isCapturing') and symbol.get('isTerminal'):
+            field_name = symbol.get('altName') or symbol.get('name', '').lower()
+            fields.append({'name': field_name, 'type': 'Token'})
+        elif symbol.get('isCapturing') and not symbol.get('isTerminal'):
+            field_name = symbol.get('altName') or symbol.get('name', '').lower()
+            field_type = symbol.get('name', 'Object')[:1].upper() + symbol.get('name', 'Object')[1:]
+            fields.append({'name': field_name, 'type': field_type})
+    return fields
+</code></pre>
+<p>A discovery step should be added to Task 10 before writing the implementation: run <code>plcc-spec</code> on the trivial grammar, inspect the actual JSON output, and confirm the symbol structure before writing any model code against it.</p>
+<hr />
+<h3 id="b2-plcc-tree-spec-contract-is-unresolved-task-9">B2: <code>plcc-tree --spec</code> contract is unresolved (Task 9)</h3>
+<p>The <code>tree_cli_test.py</code> test passes a <strong>raw grammar file</strong> to <code>--spec</code>:</p>
+<pre><code class="language-python">run_main(['--spec=tests/fixtures/trivial.plcc'])
+</code></pre>
+<p>The docstring in <code>tree_cli.py</code> says:</p>
+<pre><code>--spec=SPEC_JSON   Path to spec JSON file (output of plcc-spec).
+</code></pre>
+<p>The architectural spec §5 also states <code>plcc-tree</code> takes <code>spec JSON path</code>. These three things disagree. The BATS integration test <code>tokens-tree.bats</code> correctly passes spec JSON, creating an internal contradiction within the plan.</p>
+<p><strong>Fix:</strong> Decide and document the contract. The architectural spec is clear: <code>--spec</code> takes the spec JSON path (output of <code>plcc-spec</code>). Update the unit test to match, and ensure <code>tree_cli.py</code> actually loads spec JSON at the path if it needs the grammar structure. For the Phase 1 minimal implementation (which ignores spec content), the <code>--spec</code> argument can be accepted but unused — but the test must pass spec JSON, not a grammar file.</p>
+<hr />
+<h3 id="b3-dead-with-open-block-in-plcc-make-task-15">B3: Dead <code>with open</code> block in <code>plcc-make</code> (Task 15)</h3>
+<p>In the <code>plcc-make</code> implementation, the following block is present:</p>
+<pre><code class="language-python">with open(model_json) as model_f:
+    _run_or_die(
+        ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'],
+        stdin_file=model_json,
+    )
+</code></pre>
+<p><code>model_f</code> is never used. <code>_run_or_die</code> opens <code>model_json</code> independently via <code>stdin_file=</code>. The <code>with open</code> block creates a confusing double-open and should be removed.</p>
+<p><strong>Fix:</strong></p>
+<pre><code class="language-python">_run_or_die(
+    ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'],
+    stdin_file=model_json,
+)
+</code></pre>
+<hr />
+<h3 id="b4-covplccng-not-updated-in-task-3">B4: <code>--cov=plccng</code> not updated in Task 3</h3>
+<p><code>pyproject.toml</code> contains:</p>
+<pre><code class="language-toml">[tool.pdm.scripts]
+test = &quot;pytest -qq -rfEsxXP --cov=plccng --cov-branch --cov-report term-missing:skip-covered&quot;
+</code></pre>
+<p>Task 3 does not include a step to update <code>--cov=plccng</code> to <code>--cov=plcc</code>. After the rename, running <code>bin/test/units.bash</code> (which calls <code>pdm test</code>) will either fail or report 0% coverage against a non-existent module.</p>
+<p><strong>Fix:</strong> Add a step to Task 3:</p>
+<pre><code class="language-bash">sed -i '' 's/--cov=plccng/--cov=plcc/g' pyproject.toml
+</code></pre>
+<hr />
+<h3 id="b5-no-tasks-retire-scanscan_clipy-scanjson_formatterpy-and-their-tests">B5: No tasks retire <code>scan/scan_cli.py</code>, <code>scan/json_formatter.py</code>, and their tests</h3>
+<p>The roadmap §9.2 explicitly states: "Tests that are temporarily broken by Phase 1 work are either migrated or deleted in that same phase. Tests should not be skipped indefinitely."</p>
+<p>After Phase 1, the following files from the old <code>plccng.scan</code> package remain active with passing tests, but they test an interface that no longer aligns with the pipeline:</p>
+<ul>
+<li><code>src/plcc/scan/scan_cli.py</code> — old CLI that reads raw grammar file, outputs formatted tokens</li>
+<li><code>src/plcc/scan/scan_cli_test.py</code> — tests the old interface</li>
+<li><code>src/plcc/scan/json_formatter.py</code> — produces multi-line JSON with uppercase keys (incompatible with <code>token.schema.json</code>)</li>
+<li><code>src/plcc/scan/json_formatter_test.py</code> — tests the old format</li>
+<li><code>src/plcc/scan/text_formatter.py</code> — text formatter, superseded</li>
+<li><code>src/plcc/scan/text_formatter_test.py</code></li>
+</ul>
+<p><strong>Fix:</strong> Add a task (before Task 8) that inventories these files, migrates any test coverage worth keeping into the new <code>plcc.tokens</code> tests, and deletes the rest. The new <code>plcc-tokens</code> JSONL output is tested in <code>tokens_cli_test.py</code> and <code>jsonl_formatter_test.py</code> — the old formatters are not needed.</p>
+<hr />
+<h3 id="b6-no-tasks-retire-specspec_clipy-and-specspec_cli_testpy">B6: No tasks retire <code>spec/spec_cli.py</code> and <code>spec/spec_cli_test.py</code></h3>
+<p>The plan adds <code>plcc_spec_cli.py</code> alongside the existing <code>spec_cli.py</code> without retiring the old one. After Phase 1, both exist and both have passing tests. The old <code>spec_cli.py</code> tests the subcommand interface (<code>run(['spec', FILE])</code>); the new <code>plcc_spec_cli.py</code> tests the standalone interface.</p>
+<p><strong>Fix:</strong> Add a task (after Task 7) to either:
+- Delete <code>spec_cli.py</code> and <code>spec_cli_test.py</code> if the <code>plcc_cli.py</code> dispatcher is also being removed, or
+- Update <code>spec_cli.py</code> to delegate to <code>plcc_spec_cli.main()</code> (making it a thin wrapper) if the <code>plcc spec</code> subcommand is being kept.</p>
+<p>Also clarify what happens to <code>plcc_cli.py</code> (the renamed <code>plccng_cli.py</code>): it currently dispatches <code>plcc spec</code> and <code>plcc scan</code>. As standalone commands are added, the subcommand CLI becomes redundant. The plan should state explicitly whether it is kept or removed in Phase 1.</p>
+<hr />
+<h2 id="concerns-should-be-addressed-but-wont-stop-work">CONCERNS — should be addressed but won't stop work</h2>
+<h3 id="c1-trivial-grammar-mismatch-between-design-doc-3-and-plan-task-5">C1: Trivial grammar mismatch between design doc §3 and plan Task 5</h3>
+<p>Design doc §3 shows <code>% plantuml PlantUML</code> as the semantic divider. Task 5 uses <code>% diagram PlantUML</code>. The plan's choice is correct (tool name <code>diagram</code> produces <code>build/diagram/</code> matching the acceptance criterion). The design doc §3 should be corrected.</p>
+<h3 id="c2-capitalize-corrupts-camelcase-rule-names">C2: <code>capitalize()</code> corrupts camelCase rule names</h3>
+<p><code>_build_classes</code> uses <code>lhs_name.capitalize()</code> which lowercases everything after the first character. <code>addExpr</code> → <code>Addexpr</code> (wrong); <code>program</code> → <code>Program</code> (correct for the trivial grammar only). Fix: <code>lhs_name[:1].upper() + lhs_name[1:]</code>.</p>
+<h3 id="c3-spec_loaderpy-duplicates-lexicalrule">C3: <code>spec_loader.py</code> duplicates <code>LexicalRule</code></h3>
+<p><code>spec_loader.py</code> defines a private <code>_LexicalRule</code> dataclass with <code>name</code>, <code>pattern</code>, <code>isSkip</code> fields — the same fields as <code>plcc.spec.lexical.LexicalRule</code>. Consider whether <code>spec_loader</code> can import and instantiate <code>LexicalRule</code> directly from the spec package, or document why a copy is preferable (e.g. avoiding circular imports).</p>
+<h3 id="c4-plcc-tree-silently-ignores-spec-in-phase-1-implementation">C4: <code>plcc-tree</code> silently ignores <code>--spec</code> in Phase 1 implementation</h3>
+<p>The minimal <code>tree_cli.py</code> accepts <code>--spec=SPEC_JSON</code> but never reads it. This is intentional for Phase 1 but should be documented with a comment:</p>
+<pre><code class="language-python"># Phase 1: --spec is accepted for interface compatibility but not yet used.
+# The minimal implementation wraps each token in a tree record unconditionally.
+# Phase 2 will implement a real LL(1) parser using the spec.
+</code></pre>
+<h3 id="c5-plcc-plantuml-emit-emits-one-file-per-class">C5: <code>plcc-plantuml-emit</code> emits one file per class</h3>
+<p>For the trivial grammar (one class), this produces one file. For any grammar with multiple classes, it produces N separate one-class <code>.puml</code> files rather than one class hierarchy diagram. The design choice (one file per class vs. one combined diagram) should be made explicitly and documented in <code>emit.py</code>.</p>
+<h3 id="c6-plcc-make-lets-valueerror-propagate-as-a-raw-traceback">C6: <code>plcc-make</code> lets <code>ValueError</code> propagate as a raw traceback</h3>
+<p><code>validate_tool_name</code> raises <code>ValueError</code> but <code>main()</code> does not catch it. A grammar with an invalid tool name produces a Python traceback rather than a clean error message. Add:</p>
+<pre><code class="language-python">try:
+    validate_tool_name(tool)
+except ValueError as e:
+    print(f&quot;plcc-make: {e}&quot;, file=sys.stderr)
+    sys.exit(1)
+</code></pre>
+<h3 id="c7-plcc_clipy-retains-old-subcommand-dispatch">C7: <code>plcc_cli.py</code> retains old subcommand dispatch</h3>
+<p>After the rename, <code>plcc_cli.py</code> still dispatches <code>plcc spec</code> and <code>plcc scan</code>. As standalone commands are added, this becomes dead code. The plan should state explicitly what happens to it.</p>
+<h3 id="c8-no-inventory-of-existing-tests">C8: No inventory of existing tests</h3>
+<p>The roadmap §9.2 requires an inventory of existing tests: valid as-is, needs migration, or delete. Task 4 assumes a global rename is sufficient. It is not — <code>scan_cli_test.py</code> tests an interface that will no longer exist.</p>
+<h3 id="c9-semantics-deferral-not-documented">C9: <code>--semantics</code> deferral not documented</h3>
+<p>The architectural spec §10.1 defines <code>--semantics</code> as a required part of the plugin contract. <code>plcc-lang-emit</code> (Task 12) omits it entirely with no comment. A note should be added to the <code>plcc-lang-emit</code> dispatcher and <code>plcc-make</code> acknowledging this gap and which phase addresses it.</p>
+<h3 id="c10-packagingbash-entry-point-check-logic-is-fragile">C10: <code>packaging.bash</code> entry-point check logic is fragile</h3>
+<p>The double-negative <code>&amp;&amp;</code> chain in <code>packaging.bash</code> is hard to follow and can incorrectly pass for broken commands. Simplify to:</p>
+<pre><code class="language-bash">&quot;${VENV}/bin/${cmd}&quot; --help &gt; /dev/null 2&gt;&amp;1 || \
+&quot;${VENV}/bin/${cmd}&quot; 2&gt;&amp;1 | grep -qi 'not yet implemented' || {
+    echo &quot;FAIL: ${cmd} not working&quot;; exit 1
+}
+</code></pre>
+<p>Or more simply, just verify the binary exists on the venv PATH:</p>
+<pre><code class="language-bash">test -x &quot;${VENV}/bin/${cmd}&quot; || { echo &quot;FAIL: ${cmd} not installed&quot;; exit 1; }
+</code></pre>
+<hr />
+<h2 id="scope-judgment">Scope judgment</h2>
+<p>No area requires a separate design/plan cycle. The overall scope of Phase 1 is appropriate: restrict to the trivial grammar, establish all contracts, defer real parsing to Phase 2. The test pyramid is well-structured.</p>
+<p>One area needs a brief discovery step rather than a separate cycle: the <code>spec → model</code> mapping (Blocker B1). Before writing <code>build_model.py</code>, a developer must run <code>plcc-spec</code> on the trivial grammar and record the actual serialized shape of <code>rhs</code> symbols. The plan should include this as an explicit step.</p>
+<hr />
+<h2 id="summary-table">Summary table</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Severity</th>
+<th>Area</th>
+<th>Short description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>BLOCKER</td>
+<td>Task 10</td>
+<td><code>build_model.py</code> uses fictional <code>"kind"</code> key; real output uses <code>isCapturing</code>/<code>isTerminal</code></td>
+</tr>
+<tr>
+<td>B2</td>
+<td>BLOCKER</td>
+<td>Task 9</td>
+<td><code>--spec</code> contract unresolved: test passes grammar file, docstring says spec JSON</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>BLOCKER</td>
+<td>Task 15</td>
+<td>Dead <code>with open(model_json) as model_f:</code> block in <code>plcc-make</code></td>
+</tr>
+<tr>
+<td>B4</td>
+<td>BLOCKER</td>
+<td>Task 3</td>
+<td><code>--cov=plccng</code> not updated to <code>--cov=plcc</code> in <code>pyproject.toml</code></td>
+</tr>
+<tr>
+<td>B5</td>
+<td>BLOCKER</td>
+<td>Missing task</td>
+<td>No task retires <code>scan_cli.py</code>, <code>json_formatter.py</code>, and their tests</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>BLOCKER</td>
+<td>Missing task</td>
+<td>No task retires <code>spec_cli.py</code> and <code>spec_cli_test.py</code></td>
+</tr>
+<tr>
+<td>C1</td>
+<td>CONCERN</td>
+<td>Design doc §3</td>
+<td>Trivial grammar shows <code>% plantuml PlantUML</code>; fixture uses <code>% diagram PlantUML</code></td>
+</tr>
+<tr>
+<td>C2</td>
+<td>CONCERN</td>
+<td>Task 10</td>
+<td><code>capitalize()</code> corrupts camelCase names; use <code>[:1].upper() + [1:]</code></td>
+</tr>
+<tr>
+<td>C3</td>
+<td>CONCERN</td>
+<td>Task 8</td>
+<td><code>spec_loader.py</code> duplicates <code>LexicalRule</code></td>
+</tr>
+<tr>
+<td>C4</td>
+<td>CONCERN</td>
+<td>Task 9</td>
+<td><code>plcc-tree</code> silently ignores <code>--spec</code>; should be documented with a comment</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>CONCERN</td>
+<td>Task 11</td>
+<td><code>plcc-plantuml-emit</code> emits one file per class; design choice undocumented</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>CONCERN</td>
+<td>Task 15</td>
+<td><code>ValueError</code> from <code>validate_tool_name</code> propagates as raw traceback</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>CONCERN</td>
+<td>Task 3</td>
+<td><code>plcc_cli.py</code> retains old subcommand dispatch; fate not stated</td>
+</tr>
+<tr>
+<td>C8</td>
+<td>CONCERN</td>
+<td>Task 4</td>
+<td>No inventory of existing tests for migration vs. deletion</td>
+</tr>
+<tr>
+<td>C9</td>
+<td>CONCERN</td>
+<td>Task 12</td>
+<td><code>--semantics</code> flag deferred with no comment in dispatcher or <code>plcc-make</code></td>
+</tr>
+<tr>
+<td>C10</td>
+<td>CONCERN</td>
+<td>Task 17</td>
+<td><code>packaging.bash</code> entry-point check logic is fragile</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

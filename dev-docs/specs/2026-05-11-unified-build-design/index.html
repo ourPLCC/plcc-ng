@@ -1,0 +1,1097 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-11-unified-build-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Unified Build: build/ as Single Source of Truth - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unified-build-build-as-single-source-of-truth" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unified Build: build/ as Single Source of Truth
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="unified-build-build-as-single-source-of-truth">Unified Build: <code>build/</code> as Single Source of Truth</h1>
+<p><strong>Date:</strong> 2026-05-11
+<strong>Status:</strong> Draft — pending review</p>
+<h2 id="1-problem">1. Problem</h2>
+<p>The Level 2 commands present inconsistent behavior around grammar changes:</p>
+<ul>
+<li><code>plcc-scan</code> and <code>plcc-parse</code> compile fresh from the grammar file on every invocation, so a grammar edit is immediately reflected.</li>
+<li><code>plcc-rep</code> reads pre-built artifacts from <code>build/</code> and requires a prior <code>plcc-make</code> run. A grammar edit is invisible to <code>plcc-rep</code> until the student remembers to rebuild.</li>
+</ul>
+<p>A student who edits their grammar and runs <code>plcc-scan</code> sees the change. The same student who then runs <code>plcc-rep</code> sees the old behavior — silently, with no warning. This is a trap.</p>
+<p>A secondary bug: <code>plcc-rep</code> accepts <code>GRAMMAR</code> as a CLI argument but never uses it; it always reads from <code>build/</code> regardless.</p>
+<h2 id="2-goal">2. Goal</h2>
+<p>Make all four Level 2 commands — <code>plcc-make</code>, <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code> — read from and write to <code>build/</code> consistently. The grammar file is always the single source of truth. Students never need to remember to rebuild manually.</p>
+<h2 id="3-design-overview">3. Design Overview</h2>
+<p><code>plcc-make</code> becomes the gatekeeper for <code>build/</code>. It detects whether <code>build/</code> is current using a content-hash of the compiled spec, and rebuilds only when something has changed. All other Level 2 commands call <code>plcc-make</code> first and then use artifacts from <code>build/</code>.</p>
+<p><code>plcc-make</code> accepts a <code>--through=scan|parse|all</code> flag so that each command builds only what it needs, preventing errors in later pipeline stages from blocking commands that only depend on earlier stages.</p>
+<p>All four commands default to looking for <code>grammar.plcc</code> in the current working directory, with a <code>--grammar-file=&lt;path&gt;</code> override.</p>
+<h2 id="4-build-directory-structure">4. <code>build/</code> Directory Structure</h2>
+<pre><code>build/
+  spec.json        ← output of plcc-spec (always written first)
+  .spec-hash       ← SHA-256 of spec.json content (success sentinel)
+  ll1.json         ← output of plcc-ll1
+  model.json       ← output of plcc-model
+  &lt;tool&gt;/          ← one directory per semantic section
+    ...             ← emitted + compiled language artifacts
+</code></pre>
+<p><code>build/</code> lives relative to the current working directory (unchanged from today). Its contents are reproducible from the grammar file; students should not edit them by hand.</p>
+<h2 id="5-plcc-make-staleness-algorithm">5. <code>plcc-make</code> Staleness Algorithm</h2>
+<h3 id="51-motivation-and-goal">5.1 Motivation and Goal</h3>
+<p>The hash sentinel exists to make <code>plcc-make</code> fast when nothing has changed — a common case when students run <code>plcc-scan</code> or <code>plcc-parse</code> repeatedly against the same grammar. Without staleness detection, every command invocation would re-run the entire build pipeline.</p>
+<p>The design hashes the <em>output</em> of <code>plcc-spec</code> (i.e., <code>spec.json</code>) rather than the raw grammar file. This is deliberate: the spec format supports <code>include</code> directives that pull in other files. Hashing the raw grammar file would miss changes to included files. Hashing the fully-resolved spec output catches all changes regardless of where they originated.</p>
+<h3 id="52-the-spec-hash-sentinel">5.2 The <code>.spec-hash</code> Sentinel</h3>
+<p><code>build/.spec-hash</code> is a JSON file written when a build completes successfully. It contains two fields:</p>
+<pre><code class="language-json">{&quot;hash&quot;: &quot;&lt;sha256-hex&gt;&quot;, &quot;through&quot;: &quot;scan|parse|all&quot;}
+</code></pre>
+<ul>
+<li><code>hash</code>: SHA-256 hex digest of <code>spec.json</code> at the time the build completed.</li>
+<li><code>through</code>: the <code>--through</code> level that was requested (determines which artifacts exist).</li>
+</ul>
+<p>It is:</p>
+<ul>
+<li>Written <strong>last</strong>, after every required build step succeeds.</li>
+<li>Deleted immediately if any step fails.</li>
+<li>Absent when <code>build/</code> does not yet exist or the last build did not complete successfully.</li>
+</ul>
+<p><strong>Invariant:</strong> <code>.spec-hash</code> is present if and only if <code>build/</code> contains a complete, successful build at the recorded <code>through</code> level for the spec whose digest it contains.</p>
+<p>Storing the level is necessary because a <code>--through=scan</code> run only produces <code>spec.json</code>, but then a <code>--through=all</code> call must still run the full downstream pipeline even if the grammar hasn't changed.</p>
+<h3 id="53-algorithm">5.3 Algorithm</h3>
+<pre><code>plcc-make [--through=scan|parse|all] [--grammar-file=&lt;path&gt;]
+</code></pre>
+<p>Default: <code>--through=all</code>, grammar file: <code>./grammar.plcc</code>.</p>
+<p>Steps:</p>
+<ol>
+<li>
+<p>Resolve grammar file path (<code>--grammar-file</code> or <code>./grammar.plcc</code>). If not found, print a clear error and exit nonzero. Do not create or modify <code>build/</code>.</p>
+</li>
+<li>
+<p>Create <code>build/</code> if it does not exist.</p>
+</li>
+<li>
+<p>Run <code>plcc-spec &lt;grammar&gt;</code> writing output to a <strong>temp file</strong> (not directly to <code>build/spec.json</code>). On failure:</p>
+</li>
+<li>Delete the temp file.</li>
+<li>Delete <code>build/.spec-hash</code> (forces full rebuild on next invocation).</li>
+<li>Exit nonzero.</li>
+</ol>
+<p>Writing to a temp file is essential. If <code>plcc-spec</code> were to write directly to <code>build/spec.json</code> and then fail mid-stream, <code>build/spec.json</code> would be partially overwritten. The stale <code>.spec-hash</code> would then no longer match the corrupted file, triggering a spurious rebuild — or worse, a partial spec could be mistaken for valid output. Using a temp file keeps <code>build/spec.json</code> either fully updated or untouched.</p>
+<ol>
+<li>
+<p>Compute SHA-256 of the temp file → <code>new_hash</code>. Read <code>build/.spec-hash</code> → <code>{stored_hash, stored_level}</code> (or <code>None</code> if absent).</p>
+</li>
+<li>
+<p><strong>Fast path:</strong> if <code>new_hash == stored_hash</code> AND <code>stored_level</code> &gt;= requested <code>--through</code> level (ordering: <code>scan</code> &lt; <code>parse</code> &lt; <code>all</code>):</p>
+</li>
+<li>Delete temp file.</li>
+<li>Exit 0. Nothing has changed and the existing artifacts are sufficient.</li>
+</ol>
+<p>This level comparison is essential. A previous <code>--through=scan</code> run writes the sentinel with <code>"through": "scan"</code>. A subsequent <code>--through=all</code> call must detect that the stored level is insufficient and proceed to the slow path, even though the grammar hash matches.</p>
+<ol>
+<li><strong>Slow path</strong> (hash mismatch, missing hash, or missing artifacts):</li>
+<li>Move temp file → <code>build/spec.json</code>.</li>
+<li>Delete <code>build/.spec-hash</code> immediately. This ensures that any subsequent failure leaves no sentinel, forcing the next invocation to rebuild.</li>
+<li>Run the steps required by <code>--through</code>:<ul>
+<li><code>scan</code>: no additional steps (spec.json is sufficient).</li>
+<li><code>parse</code>: run <code>plcc-ll1</code> → <code>build/ll1.json</code>.</li>
+<li><code>all</code>: run <code>plcc-ll1</code> → <code>build/ll1.json</code>, <code>plcc-model</code> → <code>build/model.json</code>, then for each semantic section: <code>plcc-lang-emit</code> + <code>plcc-lang-build</code> → <code>build/&lt;tool&gt;/</code>.</li>
+</ul>
+</li>
+<li>On any step failure: delete <code>build/.spec-hash</code>, exit nonzero.</li>
+<li>On full success: write <code>new_hash</code> → <code>build/.spec-hash</code> (the final step).</li>
+</ol>
+<h3 id="54-pitfalls-the-algorithm-avoids">5.4 Pitfalls the Algorithm Avoids</h3>
+<p><strong>Corrupted <code>build/spec.json</code> after <code>plcc-spec</code> failure.</strong> Using a temp file means <code>build/spec.json</code> is only replaced atomically on success. A failing <code>plcc-spec</code> run leaves the previous <code>build/spec.json</code> intact.</p>
+<p><strong>Stale build appearing current after failure.</strong> Deleting <code>.spec-hash</code> on any failure means the sentinel is absent whenever <code>build/</code> is in an incomplete or unknown state. The next <code>plcc-make</code> invocation always detects the missing sentinel and rebuilds.</p>
+<p><strong>Repeated failure without grammar changes.</strong> If <code>plcc-spec</code> fails (e.g., syntax error in grammar), the student re-runs any Level 2 command, which calls <code>plcc-make</code>, which re-runs <code>plcc-spec</code>, which fails again. The student is not confused by stale success — they get the same error every time until they fix the grammar.</p>
+<p><strong>Included file changes undetected.</strong> By hashing the output of <code>plcc-spec</code> (the fully-resolved spec) rather than the raw grammar file, changes to any <code>include</code>d file are automatically detected.</p>
+<p><strong>Partial build hash.</strong> Writing <code>.spec-hash</code> last means it is never present after a partial build. A process that is killed mid-build leaves no sentinel; the next run rebuilds from scratch.</p>
+<p><strong>Insufficient prior build level.</strong> A <code>--through=scan</code> run writes a sentinel with <code>"through": "scan"</code>. If <code>--through=all</code> is then called with an unchanged grammar, the hash still matches — but <code>ll1.json</code>, <code>model.json</code>, and tool directories do not exist. The level comparison in step 5 catches this: <code>scan &lt; all</code>, so the fast path is skipped and the missing downstream steps run.</p>
+<h3 id="55-through-levels">5.5 <code>--through</code> Levels</h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Artifacts built</th>
+<th>Sufficient for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scan</code></td>
+<td><code>spec.json</code></td>
+<td><code>plcc-scan</code></td>
+</tr>
+<tr>
+<td><code>parse</code></td>
+<td><code>spec.json</code>, <code>ll1.json</code></td>
+<td><code>plcc-parse</code></td>
+</tr>
+<tr>
+<td><code>all</code></td>
+<td><code>spec.json</code>, <code>ll1.json</code>, <code>model.json</code>, <code>build/&lt;tool&gt;/</code></td>
+<td><code>plcc-rep</code>, standalone <code>plcc-make</code></td>
+</tr>
+</tbody>
+</table>
+<p>Default when called standalone: <code>--through=all</code>.</p>
+<p><code>--through</code> is primarily an internal flag used by the Level 2 commands to limit build scope. Students may also use it directly if they want to rebuild only up to a certain stage. The values are named after the command they enable, not after the internal artifact names, so the mapping is obvious without knowledge of pipeline internals.</p>
+<p><strong>Why this matters:</strong> without <code>--through</code>, a compile error in a Java semantics block would cause <code>plcc-scan</code> to fail even though scanning requires only <code>spec.json</code>. <code>--through=scan</code> stops the build at spec and never reaches the compile step. This preserves the natural student workflow of building the grammar incrementally: lexical section first, syntactic section second, semantic section last.</p>
+<h2 id="6-grammar-file-resolution">6. Grammar File Resolution</h2>
+<p>All four commands default to <code>./grammar.plcc</code> and accept <code>--grammar-file=&lt;path&gt;</code> to override. If neither the default file exists nor <code>--grammar-file</code> is specified with a reachable file, the command exits with a clear error and does not touch <code>build/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Default usage</th>
+<th>Override</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plcc-make</code></td>
+<td><code>plcc-make</code></td>
+<td><code>plcc-make --grammar-file=other.plcc</code></td>
+</tr>
+<tr>
+<td><code>plcc-scan</code></td>
+<td><code>plcc-scan [SOURCE ...]</code></td>
+<td><code>plcc-scan --grammar-file=other.plcc [SOURCE ...]</code></td>
+</tr>
+<tr>
+<td><code>plcc-parse</code></td>
+<td><code>plcc-parse [SOURCE ...]</code></td>
+<td><code>plcc-parse --grammar-file=other.plcc [SOURCE ...]</code></td>
+</tr>
+<tr>
+<td><code>plcc-rep</code></td>
+<td><code>plcc-rep [SOURCE ...]</code></td>
+<td><code>plcc-rep --grammar-file=other.plcc [SOURCE ...]</code></td>
+</tr>
+</tbody>
+</table>
+<p>The positional <code>GRAMMAR</code> argument is removed from all four commands. This fixes the latent bug in <code>plcc-rep</code> where <code>GRAMMAR</code> was accepted but silently ignored.</p>
+<h2 id="7-changes-to-level-2-commands">7. Changes to Level 2 Commands</h2>
+<h3 id="plcc-make"><code>plcc-make</code></h3>
+<ul>
+<li>Remove unconditional <code>shutil.rmtree(build_dir)</code> at startup; <code>build/</code> is now managed incrementally.</li>
+<li>Add <code>--grammar-file=&lt;path&gt;</code> option; default to <code>./grammar.plcc</code>.</li>
+<li>Add <code>--through=scan|parse|all</code> option; default to <code>all</code>.</li>
+<li>Implement the staleness algorithm (§5.3).</li>
+<li>Remove the positional <code>GRAMMAR</code> argument.</li>
+</ul>
+<h3 id="plcc-scan"><code>plcc-scan</code></h3>
+<ul>
+<li>Remove positional <code>GRAMMAR</code> argument.</li>
+<li>Add <code>--grammar-file=&lt;path&gt;</code> option; default to <code>./grammar.plcc</code>.</li>
+<li>Call <code>plcc-make --through=scan [--grammar-file=&lt;path&gt;]</code> as first step; exit with its return code on failure.</li>
+<li>Replace tempfile + <code>plcc-spec</code> logic with: use <code>build/spec.json</code> directly.</li>
+<li>Pass <code>build/spec.json</code> to <code>plcc-tokens</code> (path changes; behavior unchanged).</li>
+</ul>
+<h3 id="plcc-parse"><code>plcc-parse</code></h3>
+<ul>
+<li>Remove positional <code>GRAMMAR</code> argument.</li>
+<li>Add <code>--grammar-file=&lt;path&gt;</code> option; default to <code>./grammar.plcc</code>.</li>
+<li>Call <code>plcc-make --through=parse [--grammar-file=&lt;path&gt;]</code> as first step; exit on failure.</li>
+<li>Replace tempfile + <code>plcc-spec</code> + <code>plcc-ll1</code> logic with: use <code>build/spec.json</code> and <code>build/ll1.json</code> directly.</li>
+</ul>
+<h3 id="plcc-rep"><code>plcc-rep</code></h3>
+<ul>
+<li>Remove positional <code>GRAMMAR</code> argument (fixes the silent-ignore bug).</li>
+<li>Add <code>--grammar-file=&lt;path&gt;</code> option; default to <code>./grammar.plcc</code>.</li>
+<li>Call <code>plcc-make [--grammar-file=&lt;path&gt;]</code> (full build) as first step; exit on failure.</li>
+<li>Remove the manual <code>os.path.exists(spec_path)</code> guard — <code>plcc-make</code> guarantees artifact presence on exit 0.</li>
+<li>Everything else unchanged.</li>
+</ul>
+<h2 id="8-partial-grammars">8. Partial Grammars</h2>
+<p>Students typically build their grammar incrementally: lexical section first, then syntactic, then semantic. All four commands must handle incomplete grammars gracefully.</p>
+<ul>
+<li><strong>Lexical only</strong> (no syntactic or semantic sections): <code>plcc-make --through=scan</code> succeeds. <code>plcc-make --through=parse</code> and <code>--through=all</code> must also succeed gracefully — <code>plcc-ll1</code> and <code>plcc-model</code> must handle an empty syntactic section without error, and the semantic section loop in <code>plcc-make</code> already skips cleanly when there are no semantic sections.</li>
+<li><strong>Lexical + syntactic</strong> (no semantic sections): <code>plcc-make --through=parse</code> succeeds. <code>plcc-make --through=all</code> succeeds because the emit/build loop is empty.</li>
+<li><strong><code>plcc-rep</code> with no semantic sections:</strong> <code>plcc-make</code> exits 0 but there is no <code>build/&lt;tool&gt;/</code> to run. <code>plcc-rep</code> fails with a clear message indicating no semantic sections were found.</li>
+</ul>
+<p>Implementation must verify that <code>plcc-ll1</code> and <code>plcc-model</code> exit 0 with valid (possibly empty) output when the syntactic or semantic section is absent, and add tests if they do not.</p>
+<h2 id="9-error-handling">9. Error Handling</h2>
+<table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Grammar file not found</td>
+<td>Clear error message, exit nonzero, <code>build/</code> not created or modified</td>
+</tr>
+<tr>
+<td><code>plcc-spec</code> fails (syntax error)</td>
+<td>Temp file deleted, <code>.spec-hash</code> deleted, exit nonzero</td>
+</tr>
+<tr>
+<td>Grammar not LL(1)</td>
+<td>Conflicts/cycles reported (existing behavior), <code>.spec-hash</code> deleted, exit nonzero</td>
+</tr>
+<tr>
+<td>Downstream step fails (model, emit, build)</td>
+<td><code>.spec-hash</code> deleted, exit nonzero; partial artifacts remain but are unreachable without the sentinel</td>
+</tr>
+<tr>
+<td><code>plcc-rep</code> with no semantic sections</td>
+<td><code>plcc-make</code> exits 0; <code>plcc-rep</code> reports no semantic sections found</td>
+</tr>
+</tbody>
+</table>
+<p>When any Level 2 command calls <code>plcc-make</code> and <code>plcc-make</code> fails, the calling command propagates <code>plcc-make</code>'s exit code without additional output.</p>
+<h2 id="10-test-plan">10. Test Plan</h2>
+<h3 id="staleness-algorithm-plcc-make-commands-tier">Staleness algorithm — <code>plcc-make</code> (commands tier)</h3>
+<p>These tests are the most critical. The staleness logic is subtle; any regression here produces silent stale-build bugs.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expected behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First run, no <code>build/</code> directory</td>
+<td><code>build/</code> created, full pipeline runs, <code>.spec-hash</code> written</td>
+</tr>
+<tr>
+<td>Second run, grammar unchanged</td>
+<td>Hash matches; exits 0 immediately; no downstream tools invoked</td>
+</tr>
+<tr>
+<td>Run after grammar edit</td>
+<td>Hash mismatch detected; full rebuild; <code>.spec-hash</code> updated</td>
+</tr>
+<tr>
+<td>Run after edit to an <code>include</code>d file</td>
+<td>Hash mismatch detected (resolved spec changes); full rebuild</td>
+</tr>
+<tr>
+<td><code>build/</code> exists but <code>.spec-hash</code> absent</td>
+<td>Treated as dirty; full rebuild; <code>.spec-hash</code> written</td>
+</tr>
+<tr>
+<td><code>--through=scan</code> run succeeds, then <code>--through=all</code> called, grammar unchanged</td>
+<td>Level comparison detects <code>scan &lt; all</code>; downstream steps run; sentinel updated to <code>all</code></td>
+</tr>
+<tr>
+<td><code>--through=all</code> run succeeds, then <code>--through=scan</code> called, grammar unchanged</td>
+<td>Level comparison detects <code>all &gt;= scan</code>; fast path taken</td>
+</tr>
+<tr>
+<td><code>plcc-spec</code> fails (syntax error in grammar)</td>
+<td><code>.spec-hash</code> deleted; exits nonzero</td>
+</tr>
+<tr>
+<td><code>plcc-spec</code> fails, re-run without fixing grammar</td>
+<td><code>plcc-spec</code> fails again; <code>.spec-hash</code> absent; exits nonzero</td>
+</tr>
+<tr>
+<td><code>plcc-spec</code> fails, grammar fixed, re-run</td>
+<td>Hash differs from absent sentinel; full rebuild succeeds</td>
+</tr>
+<tr>
+<td>Downstream step fails (e.g., not LL(1))</td>
+<td><code>.spec-hash</code> deleted; exits nonzero; re-run rebuilds</td>
+</tr>
+<tr>
+<td>Build interrupted (<code>.spec-hash</code> absent after partial build)</td>
+<td>Next run treats as dirty; full rebuild</td>
+</tr>
+</tbody>
+</table>
+<h3 id="-through-levels-commands-tier"><code>--through</code> levels (commands tier)</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expected behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--through=scan</code>: Java compile error in semantics block</td>
+<td>Exits 0; <code>build/spec.json</code> written; <code>build/ll1.json</code> not required</td>
+</tr>
+<tr>
+<td><code>--through=parse</code>: Java compile error in semantics block</td>
+<td>Exits 0; <code>build/spec.json</code> and <code>build/ll1.json</code> written</td>
+</tr>
+<tr>
+<td><code>--through=all</code> (default): Java compile error</td>
+<td>Exits nonzero at compile step; <code>.spec-hash</code> deleted</td>
+</tr>
+<tr>
+<td><code>--through=scan</code> then <code>--through=all</code></td>
+<td>Second run detects missing downstream artifacts and completes the build</td>
+</tr>
+<tr>
+<td><code>--through=parse</code> then <code>--through=scan</code>, grammar unchanged</td>
+<td><code>--through=scan</code> fast-paths; no rebuild</td>
+</tr>
+</tbody>
+</table>
+<h3 id="grammar-file-resolution-commands-tier-all-four-commands">Grammar file resolution (commands tier, all four commands)</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expected behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grammar.plcc</code> present in CWD, no <code>--grammar-file</code></td>
+<td>Used automatically</td>
+</tr>
+<tr>
+<td><code>grammar.plcc</code> absent, no <code>--grammar-file</code></td>
+<td>Clear error; <code>build/</code> not touched</td>
+</tr>
+<tr>
+<td><code>--grammar-file=other.plcc</code>, file present</td>
+<td>That file used</td>
+</tr>
+<tr>
+<td><code>--grammar-file=other.plcc</code>, file absent</td>
+<td>Clear error; <code>build/</code> not touched</td>
+</tr>
+</tbody>
+</table>
+<h3 id="level-2-command-delegation-commands-tier">Level 2 command delegation (commands tier)</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expected behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plcc-scan</code> with changed grammar</td>
+<td>Triggers rebuild before scanning</td>
+</tr>
+<tr>
+<td><code>plcc-scan</code> with unchanged grammar</td>
+<td>No rebuild; uses existing <code>build/spec.json</code></td>
+</tr>
+<tr>
+<td><code>plcc-scan</code> when <code>plcc-make</code> fails</td>
+<td>Exits with <code>plcc-make</code>'s error code</td>
+</tr>
+<tr>
+<td><code>plcc-parse</code> with changed grammar</td>
+<td>Triggers rebuild before parsing</td>
+</tr>
+<tr>
+<td><code>plcc-parse</code> when <code>plcc-make</code> fails</td>
+<td>Exits with <code>plcc-make</code>'s error code</td>
+</tr>
+<tr>
+<td><code>plcc-rep</code> with changed grammar</td>
+<td>Triggers full rebuild before starting REPL</td>
+</tr>
+<tr>
+<td><code>plcc-rep</code> when <code>plcc-make</code> fails</td>
+<td>Exits with <code>plcc-make</code>'s error code</td>
+</tr>
+<tr>
+<td><code>plcc-rep</code> with grammar that has no semantic sections</td>
+<td><code>plcc-make</code> succeeds; <code>plcc-rep</code> reports no semantic sections</td>
+</tr>
+</tbody>
+</table>
+<h3 id="partial-grammars-commands-tier">Partial grammars (commands tier)</h3>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Expected behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plcc-scan</code> with lexical-only grammar</td>
+<td>Succeeds</td>
+</tr>
+<tr>
+<td><code>plcc-parse</code> with lexical + syntactic grammar, no semantics</td>
+<td>Succeeds</td>
+</tr>
+<tr>
+<td><code>plcc-make</code> with lexical-only grammar</td>
+<td>Succeeds (emit/build loop is empty)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hash-logic-unit-tier">Hash logic (unit tier)</h3>
+<ul>
+<li>Hash match returns true for identical spec.json content</li>
+<li>Hash mismatch returns false for any content change</li>
+<li>Missing <code>.spec-hash</code> file treated as mismatch</li>
+<li>Hash written to correct path with correct content</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

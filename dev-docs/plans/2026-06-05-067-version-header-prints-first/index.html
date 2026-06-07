@@ -1,0 +1,2037 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-067-version-header-prints-first/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Version Header Prints First Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#version-header-prints-first-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Version Header Prints First Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="version-header-prints-first-implementation-plan">Version Header Prints First Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Print <code>plcc-ng &lt;version&gt;</code> as the very first output of every orchestrator command, even when the command fails early, and split the grammar path into a separate line printed only after <code>plcc-make</code> succeeds.</p>
+<p><strong>Architecture:</strong> Add <code>print_version_line</code> and <code>print_grammar_line</code> to <code>output.py</code>, replacing <code>print_startup_banner</code>. Each of the five orchestrators (<code>scan</code>, <code>parse</code>, <code>rep</code>, <code>diagram</code>, <code>make</code>) prints the version line before any other output and accepts <code>--no-banner</code> to suppress both lines. Orchestrators always pass <code>--no-banner</code> when spawning <code>plcc-make</code> as a subprocess, preventing double-printing.</p>
+<p><strong>Tech Stack:</strong> Python, docopt, pytest, <code>plcc.build.grammar.read_grammar</code>, <code>plcc.version.get_version</code></p>
+<hr />
+<h3 id="task-1-add-print_version_line-and-print_grammar_line-to-outputpy">Task 1: Add print_version_line and print_grammar_line to output.py</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/output.py</code>
+- Modify: <code>src/plcc/cmd/output_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests for the two new functions</strong></li>
+</ul>
+<p>Replace all content in <code>src/plcc/cmd/output_test.py</code> with:</p>
+<pre><code class="language-python">from .output import print_user_error, print_version_line, print_grammar_line
+
+
+def test_print_user_error_writes_to_stdout(capsys):
+    print_user_error(&quot;scan error: bad token&quot;)
+    out, err = capsys.readouterr()
+    assert &quot;scan error: bad token&quot; in out
+    assert err == &quot;&quot;
+
+
+def test_print_user_error_does_not_write_to_stderr(capsys):
+    print_user_error(&quot;any message&quot;)
+    _, err = capsys.readouterr()
+    assert err == &quot;&quot;
+
+
+def test_print_version_line_contains_version(capsys):
+    print_version_line(&quot;1.2.3&quot;)
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng 1.2.3&quot; in out
+
+
+def test_print_version_line_goes_to_stdout(capsys):
+    print_version_line(&quot;1.2.3&quot;)
+    _, err = capsys.readouterr()
+    assert err == &quot;&quot;
+
+
+def test_print_version_line_prints_one_line(capsys):
+    print_version_line(&quot;1.2.3&quot;)
+    out, _ = capsys.readouterr()
+    assert out.count(&quot;\n&quot;) == 1
+
+
+def test_print_grammar_line_contains_grammar_path(capsys):
+    print_grammar_line(&quot;/abs/path/grammar.plcc&quot;)
+    out, _ = capsys.readouterr()
+    assert &quot;/abs/path/grammar.plcc&quot; in out
+
+
+def test_print_grammar_line_goes_to_stdout(capsys):
+    print_grammar_line(&quot;/abs/path/grammar.plcc&quot;)
+    _, err = capsys.readouterr()
+    assert err == &quot;&quot;
+
+
+def test_print_grammar_line_no_tool_prints_one_line(capsys):
+    print_grammar_line(&quot;/abs/path/grammar.plcc&quot;)
+    out, _ = capsys.readouterr()
+    assert out.count(&quot;\n&quot;) == 1
+
+
+def test_print_grammar_line_with_tool_prints_running_line(capsys):
+    print_grammar_line(&quot;/abs/path/grammar.plcc&quot;, tool=&quot;calc&quot;, language=&quot;python&quot;)
+    out, _ = capsys.readouterr()
+    assert &quot;Running calc with python.&quot; in out
+
+
+def test_print_grammar_line_tool_line_goes_to_stdout(capsys):
+    print_grammar_line(&quot;/abs/path/grammar.plcc&quot;, tool=&quot;calc&quot;, language=&quot;python&quot;)
+    _, err = capsys.readouterr()
+    assert err == &quot;&quot;
+
+
+def test_print_grammar_line_with_tool_prints_two_lines(capsys):
+    print_grammar_line(&quot;/abs/path/grammar.plcc&quot;, tool=&quot;calc&quot;, language=&quot;python&quot;)
+    out, _ = capsys.readouterr()
+    assert out.count(&quot;\n&quot;) == 2
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/output_test.py -v
+</code></pre>
+<p>Expected: FAIL — <code>ImportError: cannot import name 'print_version_line'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Replace output.py with the two new functions</strong></li>
+</ul>
+<p>Replace all content in <code>src/plcc/cmd/output.py</code> with:</p>
+<pre><code class="language-python">def print_user_error(message):
+    print(message, flush=True)
+
+
+def print_version_line(version):
+    print(f&quot;plcc-ng {version}&quot;, flush=True)
+
+
+def print_grammar_line(grammar_path, tool=None, language=None):
+    print(f&quot;grammar: {grammar_path}&quot;, flush=True)
+    if tool is not None and language is not None:
+        print(f&quot;Running {tool} with {language}.&quot;, flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/output_test.py -v
+</code></pre>
+<p>Expected: all output tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Run full unit suite to catch broken callers</strong></li>
+</ul>
+<pre><code>bin/test/units.bash
+</code></pre>
+<p>Expected: FAIL — <code>scan.py</code>, <code>parse.py</code>, <code>rep.py</code> import <code>print_startup_banner</code> which no longer exists</p>
+<p><em>(This is expected — the next tasks fix each caller. Do not commit yet.)</em></p>
+<hr />
+<h3 id="task-2-update-scanpy-version-first-no-banner-pass-no-banner-to-make">Task 2: Update scan.py — version first, --no-banner, pass --no-banner to make</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/scan.py</code>
+- Modify: <code>src/plcc/cmd/scan_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests</strong></li>
+</ul>
+<p>Add these tests to the bottom of <code>src/plcc/cmd/scan_test.py</code>:</p>
+<pre><code class="language-python">def test_main_version_line_appears_even_when_make_fails(monkeypatch, capsys):
+    monkeypatch.setattr(subprocess, &quot;run&quot;, lambda *a, **kw: SimpleNamespace(returncode=1))
+    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        run_main([])
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng 1.2.3&quot; in out
+
+
+def test_main_no_banner_suppresses_version_line(monkeypatch, tmp_path, capsys):
+    build = tmp_path / &quot;build&quot;
+    build.mkdir()
+    (build / &quot;.grammar&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
+    monkeypatch.setattr(_scan_module, &quot;SourceRunner&quot;,
+                        lambda **kw: type(&quot;R&quot;, (), {&quot;run&quot;: lambda self, s, h: True})())
+    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    run_main([&quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng&quot; not in out
+
+
+def test_main_no_banner_suppresses_grammar_line(monkeypatch, tmp_path, capsys):
+    build = tmp_path / &quot;build&quot;
+    build.mkdir()
+    (build / &quot;.grammar&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
+    monkeypatch.setattr(_scan_module, &quot;SourceRunner&quot;,
+                        lambda **kw: type(&quot;R&quot;, (), {&quot;run&quot;: lambda self, s, h: True})())
+    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    run_main([&quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;grammar:&quot; not in out
+
+
+def test_main_make_call_includes_no_banner(monkeypatch, tmp_path, capsys):
+    build = tmp_path / &quot;build&quot;
+    build.mkdir()
+    (build / &quot;.grammar&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
+    calls = []
+    def fake_run(cmd, **kw):
+        calls.append(list(cmd))
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(subprocess, &quot;run&quot;, fake_run)
+    monkeypatch.setattr(_scan_module, &quot;SourceRunner&quot;,
+                        lambda **kw: type(&quot;R&quot;, (), {&quot;run&quot;: lambda self, s, h: True})())
+    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;0&quot;)
+    run_main([])
+    make_calls = [c for c in calls if c and c[0] == &quot;plcc-make&quot;]
+    assert make_calls, &quot;plcc-make was not called&quot;
+    assert any(&quot;--no-banner&quot; in c for c in make_calls)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail (and that existing tests also fail due to import error)</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/scan_test.py -v
+</code></pre>
+<p>Expected: FAIL — <code>ImportError: cannot import name 'print_startup_banner'</code> from scan.py's import</p>
+<ul>
+<li>[ ] <strong>Step 3: Update scan.py</strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/scan.py</code> with:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
+from .output import print_version_line, print_grammar_line, print_user_error
+from .source_runner import SourceRunner, SubmitOn
+
+
+def _location_str(source):
+    file = source.get(&quot;file&quot;, &quot;-&quot;)
+    line = source.get(&quot;line&quot;, &quot;?&quot;)
+    col = source.get(&quot;column&quot;, &quot;?&quot;)
+    return f&quot;{file}:{line}:{col}&quot;
+
+
+__doc__ = &quot;&quot;&quot;plcc-scan
+    Tokenize source input and print tokens in human-readable format.
+
+Usage:
+    plcc-scan [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to tokenize. Reads stdin if none given.
+
+Options:
+    -h --help                   Show this message.
+    -g &lt;path&gt; --grammar=&lt;path&gt;  Grammar to build from. Once set, remembered for subsequent
+                                commands until changed. Defaults to grammar.plcc on first use.
+    -t --trace                  Show detailed scanning output.
+    --no-banner                 Suppress the version and grammar banner.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def _render_record(record, show_skips, show_line, show_attempts):
+    kind = record.get(&quot;kind&quot;)
+
+    if kind == &quot;error&quot;:
+        loc = _location_str(record.get(&quot;source&quot;, {}))
+        message = record.get(&quot;message&quot;, &quot;unrecognized character&quot;)
+        print_user_error(f&quot;{loc}: error: {message}&quot;)
+        return
+
+    if kind == &quot;skip&quot; and not show_skips:
+        return
+
+    if kind not in (&quot;token&quot;, &quot;skip&quot;):
+        return
+
+    source = record.get(&quot;source&quot;, {})
+    loc = _location_str(source)
+    name = record.get(&quot;name&quot;, &quot;?&quot;)
+    lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+    source_line = record.get(&quot;source_line&quot;, &quot;&quot;)
+    attempts = record.get(&quot;attempts&quot;, [])
+    col = source.get(&quot;column&quot;, 1)
+
+    if show_line and source_line:
+        print(source_line, flush=True)
+        print(&quot; &quot; * (col - 1) + &quot;^&quot;, flush=True)
+
+    if show_attempts:
+        print(&quot;Candidates:&quot;, flush=True)
+        for attempt in attempts:
+            if attempt.get(&quot;char_count&quot;, 0) == 0:
+                continue
+            prefix = &quot;-&gt; &quot; if attempt.get(&quot;winner&quot;) else &quot;   &quot;
+            a_name = attempt.get(&quot;name&quot;, &quot;?&quot;)
+            a_regex = attempt.get(&quot;regex&quot;, &quot;?&quot;)
+            a_count = attempt.get(&quot;char_count&quot;, 0)
+            a_lexeme = attempt.get(&quot;lexeme&quot;, &quot;?&quot;)
+            print(f&quot;{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'&quot;, flush=True)
+
+    if show_attempts:
+        if kind == &quot;skip&quot;:
+            print(f&quot;{loc}: skip: {name} '{lexeme}'&quot;, flush=True)
+        else:
+            print(f&quot;{loc}: token: {name} '{lexeme}'&quot;, flush=True)
+        print(flush=True)
+    elif kind == &quot;skip&quot;:
+        print(f&quot;{loc} {name} '{lexeme}' SKIPPED&quot;, flush=True)
+    else:
+        print(f&quot;{loc} {name} '{lexeme}'&quot;, flush=True)
+
+
+class ScanHandler:
+    def __init__(self, spec_path, tokens_flags):
+        self._spec_path = spec_path
+        self._tokens_flags = tokens_flags
+
+    def feed(self, content, source, eof=False):
+        proc = subprocess.Popen(
+            [&quot;plcc-tokens&quot;, self._spec_path,
+             f&quot;--source-name={source}&quot;, &quot;-&quot;] + self._tokens_flags,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=None,
+        )
+        stdout, _ = proc.communicate(content)
+        trace = &quot;--trace&quot; in self._tokens_flags
+        for raw in stdout.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            record = json.loads(raw)
+            if record.get(&quot;name&quot;) == &quot;eof&quot;:
+                continue
+            _render_record(record, trace, trace, trace)
+        if proc.returncode != 0:
+            print(f&quot;plcc-scan: plcc-tokens failed (exit {proc.returncode})&quot;,
+                  file=sys.stderr)
+            sys.exit(proc.returncode)
+        return True
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if &quot;--no-banner&quot; not in argv:
+        print_version_line(get_version())
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-scan --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    no_banner = args[&quot;--no-banner&quot;]
+    verbose = VerboseContext.from_args(&quot;plcc-scan&quot;, Events, args)
+    grammar_file = args[&quot;--grammar&quot;]
+    sources = args[&quot;SOURCE&quot;]
+    trace = args[&quot;--trace&quot;]
+
+    if grammar_file is not None and not os.path.exists(grammar_file):
+        print(f&quot;plcc-scan: grammar file not found: {grammar_file}&quot;, file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-scan --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message=&quot;scanning&quot;)
+    child_flags = verbose.child_flags()
+
+    make_result = subprocess.run(
+        [&quot;plcc-make&quot;, &quot;--through=scan&quot;, &quot;--no-banner&quot;]
+        + ([f&quot;--grammar={grammar_file}&quot;] if grammar_file is not None else [])
+        + child_flags,
+        stderr=None,
+    )
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    if not no_banner:
+        print_grammar_line(os.path.abspath(read_grammar(&quot;build&quot;)))
+
+    spec_path = os.path.join(&quot;build&quot;, &quot;spec.json&quot;)
+    tokens_flags = child_flags + ([&quot;--trace&quot;] if trace else [])
+
+    handler = ScanHandler(spec_path=spec_path, tokens_flags=tokens_flags)
+    runner = SourceRunner(submit_on=SubmitOn.EOF)
+    runner.run(sources, handler)
+
+    verbose.emit(Events.FINISHED, message=&quot;done&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run scan tests to verify they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/scan_test.py -v
+</code></pre>
+<p>Expected: all scan tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Run full unit suite (parse and rep still broken — expected)</strong></li>
+</ul>
+<pre><code>bin/test/units.bash 2&gt;&amp;1 | grep -E &quot;FAILED|ERROR|passed|failed&quot; | tail -5
+</code></pre>
+<p>Expected: failures only in parse_test.py and rep_test.py (still import print_startup_banner)</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C /workspaces/plcc-ng/.worktrees/issue-067 add src/plcc/cmd/output.py src/plcc/cmd/output_test.py src/plcc/cmd/scan.py src/plcc/cmd/scan_test.py
+git -C /workspaces/plcc-ng/.worktrees/issue-067 commit -m &quot;$(cat &lt;&lt;'EOF'
+feat(scan): print version first, add --no-banner, split banner output
+
+Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-update-parsepy-version-first-no-banner-pass-no-banner-to-make">Task 3: Update parse.py — version first, --no-banner, pass --no-banner to make</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/parse.py</code>
+- Modify: <code>src/plcc/cmd/parse_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests</strong></li>
+</ul>
+<p>Add these tests to the bottom of <code>src/plcc/cmd/parse_test.py</code>:</p>
+<pre><code class="language-python">def test_parse_main_version_line_appears_even_when_make_fails(monkeypatch, tmp_path, capsys):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / &quot;grammar.plcc&quot;).write_text(&quot;&quot;)
+    monkeypatch.setattr(&quot;subprocess.run&quot;,
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
+    monkeypatch.setattr(&quot;plcc.cmd.parse.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        from .parse import main as parse_main
+        parse_main([])
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng 1.2.3&quot; in out
+
+
+def test_parse_main_no_banner_suppresses_version_line(monkeypatch, tmp_path, capsys):
+    _setup_parse_main(monkeypatch, tmp_path)
+    from .parse import main as parse_main
+    parse_main([&quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng&quot; not in out
+
+
+def test_parse_main_no_banner_suppresses_grammar_line(monkeypatch, tmp_path, capsys):
+    _setup_parse_main(monkeypatch, tmp_path)
+    from .parse import main as parse_main
+    parse_main([&quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;grammar:&quot; not in out
+
+
+def test_parse_main_make_call_includes_no_banner(monkeypatch, tmp_path, capsys):
+    _setup_parse_main(monkeypatch, tmp_path)
+    calls = []
+    original_run = __import__(&quot;subprocess&quot;).run
+    def capturing_run(cmd, **kw):
+        calls.append(list(cmd))
+        return SimpleNamespace(returncode=0, stderr=b&quot;&quot;)
+    monkeypatch.setattr(&quot;subprocess.run&quot;, capturing_run)
+    from .parse import main as parse_main
+    parse_main([])
+    make_calls = [c for c in calls if c and c[0] == &quot;plcc-make&quot;]
+    assert make_calls, &quot;plcc-make was not called&quot;
+    assert any(&quot;--no-banner&quot; in c for c in make_calls)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/parse_test.py -v 2&gt;&amp;1 | tail -10
+</code></pre>
+<p>Expected: FAIL — <code>ImportError: cannot import name 'print_startup_banner'</code> in parse.py</p>
+<ul>
+<li>[ ] <strong>Step 3: Update parse.py</strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/parse.py</code> with:</p>
+<pre><code class="language-python">import enum
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .pipeline import TreePipeline, print_parse_error, location_str
+from .output import print_version_line, print_grammar_line
+from .source_runner import SourceRunner, SubmitOn
+
+__doc__ = &quot;&quot;&quot;plcc-parse
+    Parse source input and print parse tree in human-readable format.
+
+Usage:
+    plcc-parse [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to parse. Reads stdin if none given.
+
+Options:
+    -h --help                   Show this message.
+    -t --trace                  Show step-by-step trace of the parse algorithm.
+    -g &lt;path&gt; --grammar=&lt;path&gt;  Grammar to build from. Once set, remembered for subsequent
+                                commands until changed. Defaults to grammar.plcc on first use.
+    --no-banner                 Suppress the version and grammar banner.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+class ParseHandler:
+    def __init__(self, spec_path, ll1_path, child_flags, trees_flags=None, verbose=None):
+        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags, trees_flags=trees_flags, verbose=verbose)
+        self.had_error = False
+
+    def feed(self, content, source, eof=False):
+        items = self._pipeline.run(content, eof)
+        if items is None:
+            return False
+        for record, _ in items:
+            if record.get(&quot;kind&quot;) == &quot;parse-step&quot;:
+                _print_parse_step(record)
+            elif record.get(&quot;kind&quot;) == &quot;error&quot;:
+                print_parse_error(record, default_stage=&quot;plcc-parse&quot;)
+                self.had_error = True
+                break
+            elif record.get(&quot;kind&quot;) == &quot;tree&quot;:
+                _print_tree(record, indent=0)
+        return True
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if &quot;--no-banner&quot; not in argv:
+        print_version_line(get_version())
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-parse --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+    no_banner = args[&quot;--no-banner&quot;]
+    verbose = VerboseContext.from_args(&quot;plcc-parse&quot;, Events, args)
+    grammar_file = args[&quot;--grammar&quot;]
+    trace = args[&quot;--trace&quot;]
+    sources = args[&quot;SOURCE&quot;]
+
+    if grammar_file is not None and not os.path.exists(grammar_file):
+        print(f&quot;plcc-parse: grammar file not found: {grammar_file}&quot;, file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-parse --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message=&quot;parsing&quot;)
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+    trees_flags = child_flags + ([&quot;--trace&quot;] if trace else [])
+
+    make_result = subprocess.run(
+        [&quot;plcc-make&quot;, &quot;--through=parse&quot;, &quot;--no-banner&quot;]
+        + ([f&quot;--grammar={grammar_file}&quot;] if grammar_file is not None else [])
+        + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(make_result.stderr.decode(&quot;utf-8&quot;, errors=&quot;replace&quot;))
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    if not no_banner:
+        print_grammar_line(os.path.abspath(read_grammar(&quot;build&quot;)))
+
+    spec_path = os.path.join(&quot;build&quot;, &quot;spec.json&quot;)
+    ll1_path = os.path.join(&quot;build&quot;, &quot;ll1.json&quot;)
+
+    handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
+                           child_flags=child_flags, trees_flags=trees_flags, verbose=verbose)
+    runner = SourceRunner(submit_on=SubmitOn.EOF)
+    completed = runner.run(sources, handler)
+
+    if not completed or handler.had_error:
+        sys.exit(1)
+    verbose.emit(Events.FINISHED, message=&quot;done&quot;)
+
+
+def _print_tree(node, indent):
+    if isinstance(node, list):
+        for item in node:
+            _print_tree(item, indent)
+        return
+    prefix = &quot;  &quot; * indent
+    kind = node.get(&quot;kind&quot;, &quot;?&quot;)
+    if kind == &quot;tree&quot;:
+        rule = node.get(&quot;rule&quot;, &quot;?&quot;)
+        children = node.get(&quot;children&quot;, [])
+        suffix = &quot; (empty)&quot; if not children else &quot;&quot;
+        print(f&quot;{prefix}{rule}{suffix}&quot;)
+        for _field, child in children:
+            _print_tree(child, indent + 1)
+    elif kind == &quot;token&quot;:
+        name = node.get(&quot;name&quot;, &quot;?&quot;)
+        lexeme = node.get(&quot;lexeme&quot;, &quot;?&quot;)
+        source = node.get(&quot;source&quot;, {})
+        loc = location_str(source)
+        print(f&quot;{prefix}{name} '{lexeme}' [{loc}]&quot;)
+    elif kind == &quot;error&quot;:
+        source = node.get(&quot;source&quot;, {})
+        loc = location_str(source)
+        message = node.get(&quot;message&quot;, &quot;unknown error&quot;)
+        print(f&quot;{prefix}{loc}: error: {message}&quot;)
+
+
+def _print_parse_step(record):
+    depth = record.get(&quot;depth&quot;, 0)
+    indent = &quot;  &quot; * depth
+    event = record.get(&quot;event&quot;, &quot;?&quot;)
+    if event == &quot;predict&quot;:
+        sym = record.get(&quot;sym&quot;, &quot;?&quot;)
+        lookahead = record.get(&quot;lookahead&quot;, &quot;?&quot;)
+        production = record.get(&quot;production&quot;)
+        if production is None:
+            print(f&quot;{indent}{'predict':&lt;9}{sym}  lookahead={lookahead} → (iteration)&quot;, flush=True)
+        else:
+            print(f&quot;{indent}{'predict':&lt;9}{sym}  lookahead={lookahead} → {production}&quot;, flush=True)
+    elif event == &quot;shift&quot;:
+        name = record.get(&quot;name&quot;, &quot;?&quot;)
+        lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+        source = record.get(&quot;source&quot;, {})
+        loc = location_str(source)
+        loc_str = f&quot; [{loc}]&quot; if loc else &quot;&quot;
+        print(f&quot;{indent}{'shift':&lt;9}{name} '{lexeme}'{loc_str}&quot;, flush=True)
+    elif event == &quot;complete&quot;:
+        rule = record.get(&quot;rule&quot;, &quot;?&quot;)
+        print(f&quot;{indent}{'complete':&lt;9}{rule}&quot;, flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run parse tests to verify they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/parse_test.py -v
+</code></pre>
+<p>Expected: all parse tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C /workspaces/plcc-ng/.worktrees/issue-067 add src/plcc/cmd/parse.py src/plcc/cmd/parse_test.py
+git -C /workspaces/plcc-ng/.worktrees/issue-067 commit -m &quot;$(cat &lt;&lt;'EOF'
+feat(parse): print version first, add --no-banner, split banner output
+
+Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-update-reppy-version-first-no-banner-pass-no-banner-to-make">Task 4: Update rep.py — version first, --no-banner, pass --no-banner to make</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/rep.py</code>
+- Modify: <code>src/plcc/cmd/rep_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests</strong></li>
+</ul>
+<p>Add these tests to the bottom of <code>src/plcc/cmd/rep_test.py</code>:</p>
+<pre><code class="language-python">def test_rep_main_version_line_appears_even_when_make_fails(monkeypatch, tmp_path, capsys):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / &quot;grammar.plcc&quot;).write_text(&quot;&quot;)
+    monkeypatch.setattr(
+        &quot;subprocess.run&quot;,
+        lambda *a, **kw: _MagicMock(returncode=1, stderr=b&quot;&quot;),
+    )
+    monkeypatch.setattr(&quot;plcc.cmd.rep.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        _rep_module.main([])
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng 1.2.3&quot; in out
+
+
+def test_rep_main_no_banner_suppresses_version_line(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main([&quot;--tool=calc&quot;, &quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng&quot; not in out
+
+
+def test_rep_main_no_banner_suppresses_grammar_line(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main([&quot;--tool=calc&quot;, &quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;grammar:&quot; not in out
+
+
+def test_rep_main_no_banner_suppresses_running_line(monkeypatch, tmp_path, capsys):
+    _setup_rep_main(monkeypatch, tmp_path)
+    _rep_module.main([&quot;--tool=calc&quot;, &quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;Running&quot; not in out
+
+
+def test_rep_main_make_call_includes_no_banner(monkeypatch, tmp_path):
+    _setup_rep_main(monkeypatch, tmp_path)
+    calls = []
+    def capturing_run(cmd, **kw):
+        calls.append(list(cmd))
+        return _MagicMock(returncode=0, stderr=b&quot;&quot;)
+    monkeypatch.setattr(&quot;subprocess.run&quot;, capturing_run)
+    _rep_module.main([&quot;--tool=calc&quot;])
+    make_calls = [c for c in calls if c and c[0] == &quot;plcc-make&quot;]
+    assert make_calls, &quot;plcc-make was not called&quot;
+    assert any(&quot;--no-banner&quot; in c for c in make_calls)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/rep_test.py -v 2&gt;&amp;1 | tail -10
+</code></pre>
+<p>Expected: FAIL — <code>ImportError: cannot import name 'print_startup_banner'</code> in rep.py</p>
+<ul>
+<li>[ ] <strong>Step 3: Update rep.py</strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/rep.py</code> with:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
+from .pipeline import TreePipeline, print_parse_error
+from .output import print_version_line, print_grammar_line, print_user_error
+from .source_runner import SourceRunner, SubmitOn
+
+__doc__ = &quot;&quot;&quot;plcc-rep
+    REPL — read, eval, print loop for a PLCC grammar.
+
+Usage:
+    plcc-rep [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to evaluate before entering interactive mode.
+
+Options:
+    -g &lt;path&gt; --grammar=&lt;path&gt;
+                            Grammar to build from. Once set, remembered for subsequent
+                            commands until changed. Defaults to grammar.plcc on first use.
+    --tool=NAME             Semantic section to run (inferred if only one exists).
+    --no-banner             Suppress the version and grammar banner.
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+class RepHandler:
+    def __init__(self, spec_path, ll1_path, interpreter, verbose_format,
+                 child_flags=None, verbose=None):
+        self._pipeline = TreePipeline(spec_path, ll1_path, child_flags, verbose=verbose)
+        self._interpreter = interpreter
+        self._verbose_format = verbose_format
+
+    def feed(self, content, source, eof=False):
+        items = self._pipeline.run(content, eof)
+        if items is None:
+            return False
+        for record, raw in items:
+            if record.get(&quot;kind&quot;) == &quot;error&quot;:
+                print_parse_error(record, default_stage=&quot;plcc-rep&quot;)
+                break
+            elif record.get(&quot;kind&quot;) == &quot;tree&quot;:
+                try:
+                    self._interpreter.stdin.write(raw + b'\n')
+                    self._interpreter.stdin.flush()
+                except BrokenPipeError:
+                    print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+                    sys.exit(1)
+                _read_response(self._interpreter.stdout, self._interpreter, self._verbose_format)
+        return True
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if &quot;--no-banner&quot; not in argv:
+        print_version_line(get_version())
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-rep --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+    no_banner = args[&quot;--no-banner&quot;]
+    verbose = VerboseContext.from_args(&quot;plcc-rep&quot;, Events, args)
+    grammar_file = args['--grammar']
+    sources = args['SOURCE']
+    tool_name = args['--tool']
+    verbose_format = args['--verbose-format'] or 'text'
+
+    if grammar_file is not None and not os.path.exists(grammar_file):
+        print(f&quot;plcc-rep: grammar file not found: {grammar_file}&quot;, file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-rep --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message='starting')
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    make_result = subprocess.run(
+        ['plcc-make', '--no-banner']
+        + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
+        + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    spec_path = os.path.join('build', 'spec.json')
+    ll1_path = os.path.join('build', 'll1.json')
+
+    with open(spec_path) as f:
+        spec = json.load(f)
+
+    tool_name, language = _resolve_tool(spec, tool_name)
+    if not no_banner:
+        print_grammar_line(
+            os.path.abspath(read_grammar('build')),
+            tool=tool_name,
+            language=language,
+        )
+    tool_dir = os.path.join('build', tool_name)
+
+    interpreter = subprocess.Popen(
+        ['plcc-lang-run', f'--target={language}', f'--output={tool_dir}'],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=None,
+    )
+
+    completed = True
+    try:
+        handler = RepHandler(
+            spec_path=spec_path,
+            ll1_path=ll1_path,
+            interpreter=interpreter,
+            verbose_format=verbose_format,
+            child_flags=child_flags,
+            verbose=verbose,
+        )
+        runner = SourceRunner(submit_on=SubmitOn.EOF)
+        completed = runner.run(sources, handler)
+    finally:
+        try:
+            interpreter.stdin.close()
+        except BrokenPipeError:
+            pass
+        interpreter.wait()
+
+    if not completed:
+        sys.exit(1)
+    verbose.emit(Events.FINISHED, message='done')
+
+
+def _resolve_tool(spec, tool_name):
+    sections = spec.get('semantics', [])
+    if tool_name:
+        for s in sections:
+            if s['tool'] == tool_name:
+                return s['tool'], s['language']
+        print(f&quot;plcc-rep: no semantic section with tool '{tool_name}'&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    if len(sections) == 0:
+        print(&quot;plcc-rep: no semantic sections found in grammar.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    if len(sections) == 1:
+        return sections[0]['tool'], sections[0]['language']
+
+    names = [s['tool'] for s in sections]
+    print(f&quot;plcc-rep: multiple semantic sections: {names}. Use --tool=NAME.&quot;, file=sys.stderr)
+    sys.exit(1)
+
+
+def _read_response(stdout, interpreter, verbose_format):
+    while True:
+        raw = stdout.readline()
+        if not raw:
+            rc = interpreter.poll()
+            if rc is not None and (rc &lt; 0 or rc == 130):
+                sys.exit(130)
+            print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+            sys.exit(1)
+        line = raw.decode('utf-8', errors='replace').rstrip('\n')
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            print(line)
+            continue
+        if not isinstance(record, dict) or 'kind' not in record:
+            print(line)
+            continue
+        _render_record(record, verbose_format)
+        return
+
+
+def _render_record(record, verbose_format):
+    if verbose_format == 'json':
+        print(json.dumps(record))
+        return
+    if record['kind'] == 'result':
+        value = record.get('value')
+        if value is not None:
+            print(value)
+    elif record['kind'] == 'error':
+        print_user_error(f&quot;error: {record.get('type')}: {record.get('message')}&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run rep tests to verify they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/rep_test.py -v
+</code></pre>
+<p>Expected: all rep tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Run full unit suite — should now be fully green</strong></li>
+</ul>
+<pre><code>bin/test/units.bash
+</code></pre>
+<p>Expected: all 955+ tests pass (scan, parse, rep, output all updated)</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C /workspaces/plcc-ng/.worktrees/issue-067 add src/plcc/cmd/rep.py src/plcc/cmd/rep_test.py
+git -C /workspaces/plcc-ng/.worktrees/issue-067 commit -m &quot;$(cat &lt;&lt;'EOF'
+feat(rep): print version first, add --no-banner, split banner output
+
+Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h3 id="task-5-update-diagrampy-add-banner-no-banner-pass-no-banner-to-make">Task 5: Update diagram.py — add banner, --no-banner, pass --no-banner to make</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/diagram.py</code>
+- Modify: <code>src/plcc/cmd/diagram_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests</strong></li>
+</ul>
+<p>Add these tests to the bottom of <code>src/plcc/cmd/diagram_test.py</code>:</p>
+<pre><code class="language-python">def test_diagram_main_version_line_appears_even_when_make_fails(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(&quot;plcc.cmd.diagram.get_version&quot;, lambda: &quot;1.2.3&quot;)
+
+    def fake_run(cmd, **kwargs):
+        m = MagicMock()
+        m.returncode = 1
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            run_main([])
+
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng 1.2.3&quot; in out
+
+
+def test_diagram_main_no_banner_suppresses_version_line(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
+    (build_dir / '.grammar').write_text(str(grammar))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(&quot;plcc.cmd.diagram.get_version&quot;, lambda: &quot;1.2.3&quot;)
+
+    def fake_run(cmd, **kwargs):
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        run_main([&quot;--no-banner&quot;])
+
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng&quot; not in out
+
+
+def test_diagram_main_no_banner_suppresses_grammar_line(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
+    (build_dir / '.grammar').write_text(str(grammar))
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(&quot;plcc.cmd.diagram.get_version&quot;, lambda: &quot;1.2.3&quot;)
+
+    def fake_run(cmd, **kwargs):
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        run_main([&quot;--no-banner&quot;])
+
+    out, _ = capsys.readouterr()
+    assert &quot;grammar:&quot; not in out
+
+
+def test_diagram_main_make_call_includes_no_banner(tmp_path, monkeypatch):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
+    (build_dir / '.grammar').write_text(str(grammar))
+    monkeypatch.chdir(tmp_path)
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        run_main([])
+
+    make_calls = [c for c in calls if c and c[0] == 'plcc-make']
+    assert make_calls, &quot;plcc-make was not called&quot;
+    assert any('--no-banner' in c for c in make_calls)
+</code></pre>
+<p>Also update the existing <code>test_calls_emit_build_run_after_make</code> test to add <code>build/.grammar</code> (required now that diagram reads it for the grammar line). Find this test and add one line:</p>
+<pre><code class="language-python">def test_calls_emit_build_run_after_make(tmp_path, monkeypatch):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
+    (build_dir / '.grammar').write_text(str(grammar))   # ADD THIS LINE
+    monkeypatch.chdir(tmp_path)
+    # ... rest unchanged
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/diagram_test.py -v
+</code></pre>
+<p>Expected: new tests FAIL — <code>AttributeError: module 'plcc.cmd.diagram' has no attribute 'get_version'</code>; <code>test_calls_emit_build_run_after_make</code> may also fail with a read_grammar error</p>
+<ul>
+<li>[ ] <strong>Step 3: Update diagram.py</strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/diagram.py</code> with:</p>
+<pre><code class="language-python">import enum
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.version import get_version
+from plcc.build.grammar import read_grammar
+from .output import print_version_line, print_grammar_line
+
+__doc__ = &quot;&quot;&quot;plcc-diagram
+    Generate and display a class diagram from a PLCC grammar file.
+
+Usage:
+    plcc-diagram [-v ...] [options]
+
+Options:
+    -g &lt;path&gt; --grammar=&lt;path&gt;
+                            Grammar to build from. Once set, remembered for subsequent
+                            commands until changed. Defaults to grammar.plcc on first use.
+    --format=FMT            Diagram format [default: plantuml].
+    --no-banner             Suppress the version and grammar banner.
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+_SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if &quot;--no-banner&quot; not in argv:
+        print_version_line(get_version())
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-diagram --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    no_banner = args[&quot;--no-banner&quot;]
+    verbose = VerboseContext.from_args(&quot;plcc-diagram&quot;, Events, args)
+    grammar_file = args['--grammar']
+    fmt = args['--format']
+
+    if grammar_file is not None and not os.path.exists(grammar_file):
+        print(f&quot;plcc-diagram: grammar file not found: {grammar_file}&quot;, file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-diagram --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message=&quot;generating diagram&quot;)
+    child_flags = verbose.child_flags()
+
+    make_result = subprocess.run(
+        ['plcc-make', '--through=model', '--no-banner']
+        + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
+        + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        sys.stderr.buffer.write(make_result.stderr)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    if not no_banner:
+        print_grammar_line(os.path.abspath(read_grammar('build')))
+
+    source_ext = _SOURCE_EXT.get(fmt, fmt)
+    build_diagram_dir = os.path.join('build', 'diagram')
+    os.makedirs(build_diagram_dir, exist_ok=True)
+    diagram_source = os.path.join(build_diagram_dir, f'diagram.{source_ext}')
+    diagram_image = os.path.join(build_diagram_dir, 'diagram.png')
+    model_json = os.path.join('build', 'model.json')
+
+    with open(model_json) as stdin_f, open(diagram_source, 'w') as stdout_f:
+        emit_result = subprocess.run(
+            ['plcc-diagram-emit', f'--format={fmt}'] + child_flags,
+            stdin=stdin_f, stdout=stdout_f, stderr=subprocess.PIPE,
+        )
+    if emit_result.stderr:
+        sys.stderr.buffer.write(emit_result.stderr)
+    if emit_result.returncode != 0:
+        sys.exit(emit_result.returncode)
+
+    build_result = subprocess.run(
+        ['plcc-diagram-build', f'--format={fmt}',
+         f'--input={diagram_source}',
+         f'--output={diagram_image}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if build_result.stderr:
+        sys.stderr.buffer.write(build_result.stderr)
+    if build_result.returncode != 0:
+        sys.exit(build_result.returncode)
+
+    run_result = subprocess.run(
+        ['plcc-diagram-run', f'--format={fmt}', f'--input={diagram_image}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if run_result.stderr:
+        sys.stderr.buffer.write(run_result.stderr)
+    if run_result.returncode != 0:
+        sys.exit(run_result.returncode)
+
+    verbose.emit(Events.FINISHED, message=&quot;done&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run diagram tests to verify they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/diagram_test.py -v
+</code></pre>
+<p>Expected: all diagram tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C /workspaces/plcc-ng/.worktrees/issue-067 add src/plcc/cmd/diagram.py src/plcc/cmd/diagram_test.py
+git -C /workspaces/plcc-ng/.worktrees/issue-067 commit -m &quot;$(cat &lt;&lt;'EOF'
+feat(diagram): add banner, --no-banner, pass --no-banner to make
+
+Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h3 id="task-6-update-makepy-add-banner-no-banner">Task 6: Update make.py — add banner, --no-banner</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/make.py</code>
+- Modify: <code>src/plcc/cmd/make_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write failing tests</strong></li>
+</ul>
+<p>Add these tests to the bottom of <code>src/plcc/cmd/make_test.py</code>:</p>
+<pre><code class="language-python">def test_make_main_version_line_appears_before_grammar_error(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        run_main([])  # no grammar.plcc — fails early
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng 1.2.3&quot; in out
+
+
+def test_make_main_no_banner_suppresses_version_line(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        run_main([&quot;--no-banner&quot;])  # no grammar.plcc — fails, but no version
+    out, _ = capsys.readouterr()
+    assert &quot;plcc-ng&quot; not in out
+
+
+def test_make_main_grammar_line_appears_after_grammar_resolved(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;&quot;)
+    monkeypatch.setattr(&quot;subprocess.run&quot;,
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
+    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        run_main([])
+    out, _ = capsys.readouterr()
+    assert &quot;grammar:&quot; in out
+    assert str(grammar) in out
+
+
+def test_make_main_no_banner_suppresses_grammar_line(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;&quot;)
+    monkeypatch.setattr(&quot;subprocess.run&quot;,
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
+    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
+    with pytest.raises(SystemExit):
+        run_main([&quot;--no-banner&quot;])
+    out, _ = capsys.readouterr()
+    assert &quot;grammar:&quot; not in out
+</code></pre>
+<p><code>make_test.py</code> does not currently import <code>SimpleNamespace</code>. Add it at the top of <code>make_test.py</code>:</p>
+<pre><code class="language-python">from types import SimpleNamespace
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/make_test.py::test_make_main_version_line_appears_before_grammar_error -v
+</code></pre>
+<p>Expected: FAIL — <code>AttributeError: module 'plcc.cmd.make' has no attribute 'get_version'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Update make.py</strong></li>
+</ul>
+<p>Add these imports near the top of <code>src/plcc/cmd/make.py</code> (after the existing imports):</p>
+<pre><code class="language-python">from plcc.version import get_version
+from .output import print_version_line, print_grammar_line
+</code></pre>
+<p>Add <code>--no-banner</code> to the docopt string in <code>__doc__</code>:</p>
+<pre><code class="language-python">__doc__ = &quot;&quot;&quot;plcc-make
+    Build a PLCC project from a grammar file.
+
+Usage:
+    plcc-make [-v ...] [options]
+
+Options:
+    -g &lt;path&gt; --grammar=&lt;path&gt;
+                            Grammar to build from. Once set, remembered for subsequent
+                            commands until changed. Defaults to grammar.plcc on first use.
+    --through=&lt;level&gt;       Build up to this level: scan, parse, model, or all [default: all].
+    --no-banner             Suppress the version and grammar banner.
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+</code></pre>
+<p>In <code>main()</code>, add the version line as the very first output (before <code>docopt</code>), and the grammar line after grammar is validated. The diff to <code>main()</code>:</p>
+<pre><code class="language-python">def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    if &quot;--no-banner&quot; not in argv:          # ADD
+        print_version_line(get_version())  # ADD
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        ...
+
+    no_banner = args[&quot;--no-banner&quot;]        # ADD
+    verbose = VerboseContext.from_args(&quot;plcc-make&quot;, Events, args)
+    explicit_grammar = args['--grammar']
+    through = args['--through']
+    build_dir = Path('build')
+
+    stored_grammar = read_grammar(build_dir) if build_dir.is_dir() else None
+
+    if explicit_grammar is not None:
+        grammar = explicit_grammar
+    elif stored_grammar is not None:
+        grammar = stored_grammar
+    else:
+        grammar = 'grammar.plcc'
+
+    if through not in ('scan', 'parse', 'model', 'all'):
+        print(...)
+        sys.exit(1)
+
+    if explicit_grammar is None and stored_grammar is not None and not os.path.exists(grammar):
+        print(...)
+        sys.exit(1)
+
+    if not os.path.exists(grammar):
+        print(...)
+        sys.exit(1)
+
+    # grammar is resolved and exists here
+    if not no_banner:                                          # ADD
+        print_grammar_line(os.path.abspath(grammar))          # ADD
+
+    if (...):   # existing shutil.rmtree block
+        ...
+
+    verbose.emit(Events.STARTED, message=f&quot;grammar: {grammar}&quot;)
+    ...
+</code></pre>
+<p>The full updated <code>main()</code> function (only showing modified regions — leave everything else unchanged):</p>
+<p>At the very start of <code>main()</code>, before the <code>try: args = docopt(...)</code> block:</p>
+<pre><code class="language-python">    if &quot;--no-banner&quot; not in argv:
+        print_version_line(get_version())
+</code></pre>
+<p>After <code>try/except DocoptExit</code>, add:</p>
+<pre><code class="language-python">    no_banner = args[&quot;--no-banner&quot;]
+</code></pre>
+<p>After the second <code>if not os.path.exists(grammar): sys.exit(1)</code> block and before the <code>if (explicit_grammar is not None and stored_grammar is not None ...)</code> block:</p>
+<pre><code class="language-python">    if not no_banner:
+        print_grammar_line(os.path.abspath(grammar))
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run make tests to verify they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/make_test.py -v
+</code></pre>
+<p>Expected: all make tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Run full unit suite</strong></li>
+</ul>
+<pre><code>bin/test/units.bash
+</code></pre>
+<p>Expected: all tests pass</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git -C /workspaces/plcc-ng/.worktrees/issue-067 add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
+git -C /workspaces/plcc-ng/.worktrees/issue-067 commit -m &quot;$(cat &lt;&lt;'EOF'
+feat(make): add version banner and --no-banner flag
+
+Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h3 id="task-7-final-check-and-run-commands-tests">Task 7: Final check and run commands tests</h3>
+<ul>
+<li>[ ] <strong>Step 1: Run the full unit suite one final time</strong></li>
+</ul>
+<pre><code>bin/test/units.bash
+</code></pre>
+<p>Expected: all tests pass, 0 failures</p>
+<ul>
+<li>[ ] <strong>Step 2: Run commands tests (black-box CLI tier)</strong></li>
+</ul>
+<pre><code>bin/test/commands.bash
+</code></pre>
+<p>Expected: pass (or note any pre-existing failures unrelated to this change)</p>
+<ul>
+<li>[ ] <strong>Step 3: Confirm no print_startup_banner references remain</strong></li>
+</ul>
+<pre><code>grep -r &quot;print_startup_banner&quot; /workspaces/plcc-ng/src/
+</code></pre>
+<p>Expected: no output (all callers migrated)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

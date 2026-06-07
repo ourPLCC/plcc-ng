@@ -1,0 +1,1051 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-25-phase-2-part-2-model-diagram-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Phase 2 Part 2: Code Model and Diagram System — Design - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-2-part-2-code-model-and-diagram-system-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 2 Part 2: Code Model and Diagram System — Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="phase-2-part-2-code-model-and-diagram-system-design">Phase 2 Part 2: Code Model and Diagram System — Design</h1>
+<p><strong>Date:</strong> 2026-04-25
+<strong>Status:</strong> APPROVED (diagram interface partially superseded — see note below)</p>
+<blockquote>
+<p><strong>Note on diagram interface.</strong> The <code>plcc-diagram --output=DIR</code> interface and the <code>plcc-make --through=diagram</code> / <code>--diagram-format</code> flags described in this document were superseded by <a href="../2026-05-25-diagram-decouple-from-make-design/">2026-05-25-diagram-decouple-from-make-design.md</a>. <code>plcc-make</code> no longer has diagram stages; <code>plcc-diagram</code> now owns the full emit → build → run pipeline and prints the output path instead of launching a viewer.
+<strong>Companion architectural spec:</strong> <code>docs/design/2026-04-12-multi-lang-pipeline.md</code>
+<strong>Roadmap reference:</strong> <code>docs/design/2026-04-12-multi-lang-implementation-plan.md</code> §5</p>
+</blockquote>
+<hr />
+<h2 id="1-goal">1. Goal</h2>
+<p>Deliver a complete, tested <code>plcc-model</code> implementation and a new <code>plcc-diagram-*</code> plugin
+system with a built-in <code>plcc-plantuml-diagram</code> plugin. After Part 2:</p>
+<pre><code class="language-sh">plcc-spec arith.plcc | plcc-model | plcc-diagram --output=build/diagram/
+</code></pre>
+<p>produces a <code>build/diagram/diagram.puml</code> whose rendered class diagram correctly shows all
+classes, inheritance, and fields for the arithmetic grammar.</p>
+<hr />
+<h2 id="2-phase-structure">2. Phase Structure</h2>
+<p>Phase 2 is divided into three parts:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Scope</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Part 1</td>
+<td>LL(1) parser (<code>plcc-ll1</code>, <code>plcc-parser-table</code>)</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td><strong>Part 2</strong></td>
+<td><strong>Full <code>plcc-model</code> + <code>plcc-diagram-*</code> system</strong></td>
+<td><strong>This design</strong></td>
+</tr>
+<tr>
+<td>Part 3</td>
+<td><code>plcc-python-emit</code> + <code>plcc-rep</code></td>
+<td>Next</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-test-grammar-arithmetic-evaluator">3. Test Grammar — Arithmetic Evaluator</h2>
+<p>The Phase 2 test grammar is a simple arithmetic evaluator (addition with the potential
+to extend). It must be LL(1), demonstrate inheritance (at least one nonterminal with
+multiple named alternatives), and have fields of both nonterminal and terminal types.</p>
+<p>A conforming fixture using the <code>ExprRest</code> pattern (standard LL(1) approach):</p>
+<pre><code class="language-text">token NUM   '\d+'
+token PLUS  '\+'
+skip  SPACE '\s+'
+%
+&lt;program&gt;              ::= &lt;Expr&gt;expr
+&lt;Expr&gt;                 ::= &lt;Term&gt;term &lt;ExprRest&gt;rest
+&lt;ExprRest&gt;:AddRest     ::= PLUS &lt;Term&gt;term &lt;ExprRest&gt;rest
+&lt;ExprRest&gt;:NilRest     ::=
+&lt;Term&gt;                 ::= &lt;NUM&gt;num
+%
+% calculate Python
+AddRest
+%%%
+def eval(self, acc):
+    return self.rest.eval(acc + self.term.eval())
+%%%
+NilRest
+%%%
+def eval(self, acc):
+    return acc
+%%%
+Term
+%%%
+def eval(self):
+    return int(self.num.lexeme)
+%%%
+</code></pre>
+<p>The fixture is saved as <code>tests/fixtures/arith.plcc</code>. The implementation plan confirms
+or adjusts the exact grammar syntax; the requirements are:</p>
+<ol>
+<li>LL(1) — <code>plcc-ll1</code> reports <code>is_ll1: true</code></li>
+<li>At least one nonterminal with multiple named alternatives (demonstrating inheritance)</li>
+<li>Fields of both nonterminal type and terminal (<code>Token</code>) type</li>
+<li>A <code>% calculate Python</code> semantic section with method bodies</li>
+</ol>
+<hr />
+<h2 id="4-modeljson-schema">4. <code>model.json</code> Schema</h2>
+<p>Output of <code>plcc-model</code>. A single JSON document with two top-level keys.</p>
+<h3 id="41-start">4.1 <code>start</code></h3>
+<p>String. Name of the first nonterminal in the syntax section (lowercased, matching the
+<code>lhs.name</code> field in spec JSON). Used by downstream tools to identify the root class.</p>
+<h3 id="42-classes">4.2 <code>classes</code></h3>
+<p>Array of class objects derived from the syntax section only. Each object:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;:     &quot;AddRest&quot;,
+  &quot;abstract&quot;: false,
+  &quot;extends&quot;:  &quot;ExprRest&quot;,
+  &quot;fields&quot;: [
+    {&quot;name&quot;: &quot;term&quot;, &quot;type&quot;: &quot;Term&quot;},
+    {&quot;name&quot;: &quot;rest&quot;, &quot;type&quot;: &quot;ExprRest&quot;}
+  ]
+}
+</code></pre>
+<p><strong>Fields:</strong>
+- <code>name</code> — class name. For concrete alternatives: <code>altName</code> from the rule. For
+  nonterminals with a single rule and no <code>altName</code>: <code>lhs.name</code> capitalized
+  (<code>name[:1].upper() + name[1:]</code>).
+- <code>abstract</code> — <code>true</code> when the nonterminal has multiple alternatives (each with a
+  non-null <code>altName</code>). <code>false</code> otherwise.
+- <code>extends</code> — <code>lhs.name</code> capitalized when <code>altName</code> is non-null; <code>null</code> otherwise.
+- <code>fields</code> — derived from <code>rhsSymbolList</code> entries where <code>isCapturing: true</code>.
+  Field name: <code>altName</code> if non-null, else <code>name.lower()</code>.
+  Field type: <code>"Token"</code> for terminals (<code>isTerminal: true</code>);
+  <code>name[:1].upper() + name[1:]</code> for nonterminals (<code>isTerminal: false</code>).</p>
+<p><strong>Abstract class rule:</strong> a nonterminal is <code>abstract: true</code> when any rule for it has a
+non-null <code>altName</code> (even if there is only one such alternative). The abstract base class
+itself has <code>fields: []</code> — fields belong only to concrete subclasses.</p>
+<p><strong>Class ordering:</strong> abstract base classes appear before their concrete subclasses.
+Within a group, grammar order is preserved.</p>
+<h3 id="43-semantic_sections">4.3 <code>semantic_sections</code></h3>
+<p>Array mirroring the grammar's <code>% &lt;tool&gt; &lt;language&gt;</code> sections. Each object:</p>
+<pre><code class="language-json">{
+  &quot;language&quot;: &quot;Python&quot;,
+  &quot;tool&quot;:     &quot;calculate&quot;,
+  &quot;fragments&quot;: [
+    {&quot;class_name&quot;: &quot;AddRest&quot;, &quot;kind&quot;: &quot;body&quot;,   &quot;body&quot;: &quot;def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())&quot;},
+    {&quot;class_name&quot;: &quot;AddRest&quot;, &quot;kind&quot;: &quot;import&quot;, &quot;body&quot;: &quot;import something&quot;},
+    {&quot;class_name&quot;: &quot;Helper&quot;,  &quot;kind&quot;: &quot;file&quot;,   &quot;body&quot;: &quot;class Helper:\n    pass&quot;}
+  ]
+}
+</code></pre>
+<p><strong>Fragment fields:</strong>
+- <code>class_name</code> — <code>targetLocator.className</code> from spec JSON, passed through verbatim.
+  <code>plcc-model</code> does not parse or validate this string.
+- <code>kind</code> — computed by <code>plcc-model</code> from <code>targetLocator.modifier</code> and whether
+  <code>class_name</code> matches a known class (see §5.2). One of:
+  - <code>"top"</code> — inject at top of the generated file for this class
+  - <code>"import"</code> — add import statements to the generated file
+  - <code>"class"</code> — inject into the class declaration line (e.g. <code>extends</code>/<code>implements</code>)
+  - <code>"init"</code> — inject into the constructor
+  - <code>"body"</code> — append a code block to the class body (methods, fields, etc.)
+  - <code>"file"</code> — complete file contents; write as a new standalone file named after <code>class_name</code>
+- <code>body</code> — body text extracted from <code>block.lines</code>, with leading and trailing <code>%%%</code>
+  marker lines stripped, and the remaining lines joined with <code>\n</code>. Leading/trailing
+  whitespace within body lines is preserved — indentation is significant in Python.</p>
+<p><strong><code>kind</code> determination:</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>targetLocator.modifier</code></th>
+<th><code>class_name</code> in classes?</th>
+<th><code>kind</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"top"</code></td>
+<td>—</td>
+<td><code>"top"</code></td>
+</tr>
+<tr>
+<td><code>"import"</code></td>
+<td>—</td>
+<td><code>"import"</code></td>
+</tr>
+<tr>
+<td><code>"class"</code></td>
+<td>—</td>
+<td><code>"class"</code></td>
+</tr>
+<tr>
+<td><code>"init"</code></td>
+<td>—</td>
+<td><code>"init"</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td>yes</td>
+<td><code>"body"</code></td>
+</tr>
+<tr>
+<td><code>null</code></td>
+<td>no</td>
+<td><code>"file"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>body</code> extraction:</strong> strip the first line if it is exactly <code>%%%</code> and the last line if
+it is exactly <code>%%%</code>. Join remaining lines with <code>\n</code>. Do not strip leading/trailing
+whitespace from body lines — indentation is significant in Python and must be preserved.</p>
+<h3 id="44-complete-example">4.4 Complete example</h3>
+<pre><code class="language-json">{
+  &quot;start&quot;: &quot;program&quot;,
+  &quot;classes&quot;: [
+    {&quot;name&quot;: &quot;Program&quot;,  &quot;abstract&quot;: false, &quot;extends&quot;: null,       &quot;fields&quot;: [{&quot;name&quot;: &quot;expr&quot;, &quot;type&quot;: &quot;Expr&quot;}]},
+    {&quot;name&quot;: &quot;Expr&quot;,     &quot;abstract&quot;: false, &quot;extends&quot;: null,       &quot;fields&quot;: [{&quot;name&quot;: &quot;term&quot;, &quot;type&quot;: &quot;Term&quot;}, {&quot;name&quot;: &quot;rest&quot;, &quot;type&quot;: &quot;ExprRest&quot;}]},
+    {&quot;name&quot;: &quot;ExprRest&quot;, &quot;abstract&quot;: true,  &quot;extends&quot;: null,       &quot;fields&quot;: []},
+    {&quot;name&quot;: &quot;AddRest&quot;,  &quot;abstract&quot;: false, &quot;extends&quot;: &quot;ExprRest&quot;, &quot;fields&quot;: [{&quot;name&quot;: &quot;term&quot;, &quot;type&quot;: &quot;Term&quot;}, {&quot;name&quot;: &quot;rest&quot;, &quot;type&quot;: &quot;ExprRest&quot;}]},
+    {&quot;name&quot;: &quot;NilRest&quot;,  &quot;abstract&quot;: false, &quot;extends&quot;: &quot;ExprRest&quot;, &quot;fields&quot;: []},
+    {&quot;name&quot;: &quot;Term&quot;,     &quot;abstract&quot;: false, &quot;extends&quot;: null,       &quot;fields&quot;: [{&quot;name&quot;: &quot;num&quot;,  &quot;type&quot;: &quot;Token&quot;}]}
+  ],
+  &quot;semantic_sections&quot;: [
+    {
+      &quot;language&quot;: &quot;Python&quot;,
+      &quot;tool&quot;: &quot;calculate&quot;,
+      &quot;fragments&quot;: [
+        {&quot;class_name&quot;: &quot;AddRest&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())&quot;},
+        {&quot;class_name&quot;: &quot;NilRest&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self, acc):\n    return acc&quot;},
+        {&quot;class_name&quot;: &quot;Term&quot;,    &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self):\n    return int(self.num.lexeme)&quot;}
+      ]
+    }
+  ]
+}
+</code></pre>
+<hr />
+<h2 id="5-plcc-model-changes">5. <code>plcc-model</code> Changes</h2>
+<p><code>plcc-model</code> reads spec JSON from stdin and writes <code>model.json</code> to stdout.</p>
+<h3 id="51-class-derivation-algorithm">5.1 Class derivation algorithm</h3>
+<ol>
+<li>Collect all syntax rules from <code>spec.syntax.rules</code>.</li>
+<li>Group rules by <code>lhs.name</code>.</li>
+<li>For each nonterminal group:</li>
+<li>If any rule has a non-null <code>altName</code>: mark the nonterminal itself as
+     <code>abstract: true</code> with <code>fields: []</code>; create one concrete class per alternative
+     with <code>extends = lhs.name capitalized</code> and fields from that alternative's
+     <code>rhsSymbolList</code>.</li>
+<li>Otherwise (single rule, null <code>altName</code>): create one concrete class with
+     <code>extends: null</code> and fields from the rule's <code>rhsSymbolList</code>.</li>
+<li>Output abstract base before its concrete subclasses; preserve grammar order
+   within each group.</li>
+</ol>
+<h3 id="52-semantic-section-pass-through">5.2 Semantic section pass-through</h3>
+<p>Build the set of known class names from the <code>classes</code> array computed in §5.1.</p>
+<p>For each entry in <code>spec.semantics</code>:
+- Copy <code>language</code> and <code>tool</code>.
+- For each <code>codeFragment</code> in <code>codeFragmentList</code>:
+  - <code>class_name</code> ← <code>targetLocator.className</code> (verbatim)
+  - <code>kind</code> ← derived from <code>targetLocator.modifier</code> and the known class names set:
+    - modifier <code>"top"</code> → <code>"top"</code>, <code>"import"</code> → <code>"import"</code>, <code>"class"</code> → <code>"class"</code>, <code>"init"</code> → <code>"init"</code>
+    - modifier <code>null</code> + <code>class_name</code> in known classes → <code>"body"</code>
+    - modifier <code>null</code> + <code>class_name</code> not in known classes → <code>"file"</code>
+  - <code>body</code> ← join <code>block.lines</code> strings with <code>\n</code>, stripping leading/trailing
+    <code>%%%</code> lines.</p>
+<hr />
+<h2 id="6-plcc-diagram-plugin-system">6. <code>plcc-diagram-*</code> Plugin System</h2>
+<p>A new plugin namespace parallel to <code>plcc-lang-*</code>. Visualizes model JSON as a diagram.
+No grammar section required — works for any grammar regardless of target languages.</p>
+<h3 id="61-commands">6.1 Commands</h3>
+<p><strong><code>plcc-diagram</code></strong> — dispatcher.
+- Reads model JSON from stdin.
+- <code>--format=&lt;fmt&gt;</code> (default <code>plantuml</code>) — constructs <code>plcc-&lt;fmt&gt;-diagram</code> and execs
+  via PATH, forwarding <code>--output</code>, <code>--verbose</code>, <code>--verbose-format</code>.
+- If <code>plcc-&lt;fmt&gt;-diagram</code> is not on PATH: exits nonzero with:
+  <code>No diagram plugin found for '&lt;fmt&gt;'. Is plcc-&lt;fmt&gt;-diagram installed?
+  Run plcc-diagram-list to see what is available.</code>
+- Accepts <code>--verbose</code>/<code>--verbose-format</code> per arch spec §9.</p>
+<p><strong><code>plcc-diagram-list</code></strong> — discovery.
+- Scans PATH for executables matching <code>plcc-*-diagram</code>.
+- Prints one format name per line (strips <code>plcc-</code> prefix and <code>-diagram</code> suffix).
+- Accepts <code>--verbose</code>/<code>--verbose-format</code> (accept-and-propagate; nothing emitted).</p>
+<p><strong><code>plcc-plantuml-diagram</code></strong> — built-in PlantUML plugin.
+- Reads model JSON from stdin.
+- <code>--output=&lt;dir&gt;</code> (required) — writes <code>&lt;dir&gt;/diagram.puml</code>.
+- Accepts <code>--verbose</code>/<code>--verbose-format</code> per arch spec §9.</p>
+<h3 id="62-plugin-contract-plcc-fmt-diagram">6.2 Plugin contract (<code>plcc-&lt;fmt&gt;-diagram</code>)</h3>
+<ul>
+<li>Reads model JSON from stdin.</li>
+<li>Accepts <code>--output=&lt;dir&gt;</code> (required).</li>
+<li>Accepts and forwards <code>--verbose</code>/<code>--verbose-format</code> per arch spec §9.</li>
+<li>Writes diagram file(s) to <code>&lt;dir&gt;</code>.</li>
+<li>Exits 0 on success; exits nonzero and writes to stderr on failure.</li>
+</ul>
+<h3 id="63-plcc-plantuml-diagram-output-format">6.3 <code>plcc-plantuml-diagram</code> output format</h3>
+<p>Generates <code>diagram.puml</code> for the model's class structure. Semantic sections are ignored.</p>
+<p>Rules:
+- <code>abstract: true</code> → <code>abstract class ClassName</code>
+- <code>abstract: false</code> → <code>class ClassName {...}</code> (with field lines inside)
+- Field lines: <code>name: type</code> (two-space indent)
+- Abstract classes with no fields: no <code>{}</code> block
+- Non-null <code>extends</code> → <code>ChildClass --|&gt; ParentClass</code> line after the class block
+- Wrapped in <code>@startuml</code> / <code>@enduml</code></p>
+<p>Example output for the arithmetic grammar:</p>
+<pre><code class="language-plantuml">@startuml
+class Program {
+  expr: Expr
+}
+
+class Expr {
+  term: Term
+  rest: ExprRest
+}
+
+abstract class ExprRest
+
+class AddRest {
+  term: Term
+  rest: ExprRest
+}
+AddRest --|&gt; ExprRest
+
+class NilRest {
+}
+NilRest --|&gt; ExprRest
+
+class Term {
+  num: Token
+}
+@enduml
+</code></pre>
+<h3 id="64-plcc-plantuml-emit-retirement">6.4 <code>plcc-plantuml-emit</code> retirement</h3>
+<p><code>plcc-plantuml-emit</code> (introduced in Phase 1 as a language plugin) is retired in Part 2:
+- The <code>plcc-plantuml-emit</code> command and its source module are removed.
+- <code>plcc-lang-list</code> no longer finds <code>plantuml</code>.
+- Grammar fixtures that contained <code>% diagram PlantUML</code> sections have those sections
+  removed (the trivial grammar fixtures).
+- The Phase 1 smoke test is updated to invoke <code>plcc-diagram</code> instead of relying on
+  the language plugin.</p>
+<h3 id="65-plcc-make-integration">6.5 <code>plcc-make</code> integration</h3>
+<p><strong>Deferred to Phase 4.</strong> <code>plcc-make</code> will gain options to control diagram format and
+output location. For Part 2, users invoke <code>plcc-diagram</code> directly in tests and scripts.</p>
+<hr />
+<h2 id="7-deferred-items">7. Deferred Items</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Deferred to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entry_point</code> in model</td>
+<td>Part 3 — no grammar declaration mechanism yet; Python emitter brainstorm decides where and how it is specified</td>
+</tr>
+<tr>
+<td><code>plcc-make --diagram</code> flag and options</td>
+<td>Phase 4 polish</td>
+</tr>
+<tr>
+<td><code>plcc-python-emit</code> + runtime library</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td><code>plcc-rep</code> REPL</td>
+<td>Part 3</td>
+</tr>
+<tr>
+<td>Full arithmetic grammar (mul, div, parens)</td>
+<td>Part 3 — Part 2 fixture needs only enough structure to validate inheritance and fields</td>
+</tr>
+<tr>
+<td>Entry-point guidance for extension authors</td>
+<td>Note for Part 3 design doc: include guidance on how to choose and document the entry-point hook name for language extension designers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-acceptance-criteria">8. Acceptance Criteria</h2>
+<ol>
+<li><strong>Arithmetic fixture is LL(1):</strong> <code>plcc-spec arith.plcc | plcc-ll1</code> produces
+   <code>is_ll1: true</code>.</li>
+<li><strong>Model is schema-valid:</strong> <code>plcc-spec arith.plcc | plcc-model</code> produces
+   schema-valid <code>model.json</code> validated against <code>src/plcc/schemas/model.schema.json</code>.</li>
+<li><strong>Classes are correct:</strong> <code>model.json</code> contains the correct class names, abstract
+   flags, <code>extends</code> relationships, and fields for the arithmetic fixture (verified by
+   unit tests and a bats assertion).</li>
+<li><strong>Semantic sections pass through:</strong> <code>model.json</code> contains the <code>calculate</code>/<code>Python</code>
+   semantic section with correct fragments (verified by unit tests).</li>
+<li><strong>Diagram is produced:</strong> <code>plcc-spec arith.plcc | plcc-model | plcc-diagram
+   --output=build/diagram/</code> produces <code>build/diagram/diagram.puml</code>.</li>
+<li><strong>Diagram renders:</strong> rendering <code>diagram.puml</code> through PlantUML produces a valid
+   class diagram with correct classes, inheritance arrows, and fields (manually
+   verified; CI runs schema-level check only).</li>
+<li><strong>Discovery works:</strong> <code>plcc-diagram-list</code> finds <code>plantuml</code>.</li>
+<li><strong><code>plcc-plantuml-emit</code> is gone:</strong> <code>plcc-lang-list</code> no longer lists <code>plantuml</code>;
+   all affected tests and fixtures are updated.</li>
+<li><strong>All existing tests pass:</strong> 431 Python unit tests and 117 bats tests remain green
+   after fixture and source updates.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

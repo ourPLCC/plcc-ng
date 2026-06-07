@@ -1,0 +1,1271 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-26-043-044-spec-error-improvements/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Spec Error Improvements (Issues 043 and 044) Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spec-error-improvements-issues-043-and-044-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spec Error Improvements (Issues 043 and 044) Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="spec-error-improvements-issues-043-and-044-implementation-plan">Spec Error Improvements (Issues 043 and 044) Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Fix two spec error bugs: (043) <code>parseSpec</code> drops rough-phase errors by shadowing the <code>errors</code> variable; (044) spec errors appear corrupted when piped through the verbose event layer because <code>plcc-spec</code> writes multi-line human text instead of structured events.</p>
+<p><strong>Architecture:</strong> Issue 043 is a one-line variable rename. Issue 044 extends <code>VerboseContext.emit_error</code> and <code>reformat_child_events</code> to render <code>source_line</code>/<code>hint</code> fields in text mode, adds <code>kind</code>/<code>hint</code> properties to the spec error base classes, and updates <code>plcc_spec_cli.py</code> to call <code>emit_error</code> instead of printing directly.</p>
+<p><strong>Tech Stack:</strong> Python, pytest, bats</p>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/plcc/spec/parseSpec.py</code></td>
+<td>Rename shadowed <code>errors</code> variable (043)</td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/parseSpec_test.py</code></td>
+<td>New test: rough errors not dropped</td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/SpecError.py</code></td>
+<td>Add <code>kind</code> and <code>hint</code> properties</td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/SpecError_test.py</code></td>
+<td>New file: tests for <code>kind</code> and <code>hint</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/syntax/MalformedBNFError.py</code></td>
+<td>Add <code>kind</code> and <code>hint</code> properties</td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/syntax/MalformedBNFError_test.py</code></td>
+<td>New tests for <code>kind</code> and <code>hint</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/verbose.py</code></td>
+<td>Render <code>source_line</code>/<code>hint</code> in <code>emit_error</code> and <code>reformat_child_events</code> text mode</td>
+</tr>
+<tr>
+<td><code>src/plcc/verbose_test.py</code></td>
+<td>New tests for rich error rendering</td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/plcc_spec_cli.py</code></td>
+<td>Use <code>verbose.emit_error</code> instead of <code>print</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/spec/plcc_spec_cli_test.py</code></td>
+<td>New tests for structured error output</td>
+</tr>
+<tr>
+<td><code>tests/bats/commands/plcc-spec.bats</code></td>
+<td>New test: caret and source line appear in stderr</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-fix-043-variable-shadowing-in-parsespec">Task 1: Fix 043 — variable shadowing in parseSpec</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/spec/parseSpec.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/spec/parseSpec_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write the failing test</strong></p>
+</li>
+</ul>
+<p>The file currently starts with:</p>
+<pre><code class="language-python">from .parseSpec import parseSpec
+</code></pre>
+<p>Add the new import and test so the file becomes:</p>
+<pre><code class="language-python">from .parseSpec import parseSpec
+from .rough.UnclosedBlockError import UnclosedBlockError
+
+
+def test_rough_errors_are_returned():
+    # An unclosed %%% block triggers UnclosedBlockError at rough-parse time.
+    # Before the fix, the errors variable was overwritten and rough errors dropped.
+    _, errors = parseSpec(&quot;token NUM '\\d+'\n%%%\nunclosed block\n&quot;)
+    assert any(isinstance(e, UnclosedBlockError) for e in errors)
+</code></pre>
+<p>Keep all existing tests in the file unchanged.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run test to verify it fails</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/parseSpec_test.py::test_rough_errors_are_returned -v
+</code></pre>
+<p>Expected: FAIL — the error list is empty because rough errors are dropped.</p>
+<ul>
+<li>[ ] <strong>Step 3: Fix the variable shadowing</strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/parseSpec.py</code> with:</p>
+<pre><code class="language-python">from .Spec import Spec
+from .split_rough import split_rough
+from . import lexical, rough, semantics, syntax
+
+
+def parseSpec(string, file=None, startLineNumber=1):
+    rough_, rough_errors = rough.parseRough(string, file, startLineNumber)
+    rough_ = iter(rough_)
+    rough_lex, rough_syn, rough_sems = split_rough(rough_)
+    lex_, lex_errors = lexical.parseLexicalSpec(rough_lex)
+    syn_, syn_errors = syntax.parse_syntactic_spec(rough_syn)
+    sems_ = [semantics.parse_semantic_spec(rs) for rs in rough_sems]
+    return Spec(lexical=lex_, syntax=syn_, semantics=sems_), rough_errors + lex_errors + syn_errors
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/parseSpec_test.py -v
+</code></pre>
+<p>Expected: all tests PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/spec/parseSpec.py src/plcc/spec/parseSpec_test.py
+git commit -m &quot;fix: stop dropping rough-parse errors in parseSpec (closes 043)&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-add-kind-and-hint-to-specerror">Task 2: Add <code>kind</code> and <code>hint</code> to <code>SpecError</code></h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/spec/SpecError.py</code></li>
+<li>
+<p>Create: <code>src/plcc/spec/SpecError_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write the failing tests</strong></p>
+</li>
+</ul>
+<p>Create <code>src/plcc/spec/SpecError_test.py</code>:</p>
+<pre><code class="language-python">from ..lines import Line
+from .SpecError import SpecError
+
+
+def _line(string='test line', number=1, file='test.plcc'):
+    return Line(string=string, number=number, file=file)
+
+
+def test_kind_returns_message_when_set():
+    err = SpecError(line=_line(), message=&quot;pattern is invalid&quot;, column=1)
+    assert err.kind == &quot;pattern is invalid&quot;
+
+
+def test_kind_returns_class_name_when_message_is_none():
+    err = SpecError(line=_line(), column=1)
+    assert err.kind == &quot;SpecError&quot;
+
+
+def test_hint_returns_none():
+    err = SpecError(line=_line(), message=&quot;anything&quot;, column=1)
+    assert err.hint is None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/SpecError_test.py -v
+</code></pre>
+<p>Expected: FAIL — <code>SpecError</code> has no <code>kind</code> or <code>hint</code> attribute.</p>
+<ul>
+<li>[ ] <strong>Step 3: Add properties to <code>SpecError</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/SpecError.py</code> with:</p>
+<pre><code class="language-python">from .ValidationError import ValidationError
+
+
+class SpecError(ValidationError):
+    def __init__(self, line=None, message=None, column=None, index=None):
+        self.column = column if column is not None else index + 1
+        ValidationError.__init__(self, line=line, message=message)
+
+    @property
+    def kind(self):
+        return self.message or type(self).__name__
+
+    @property
+    def hint(self):
+        return None
+
+    def __str__(self):
+        m = f'\n{self.message}' if self.message else ''
+        return f'''{self.__class__.__name__}: {self.line.file}:{self.line.number}:{self.column}\n{self.line.string}\n{' '*(self.column-1)}^{m}\n'''
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/SpecError_test.py -v
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/spec/SpecError.py src/plcc/spec/SpecError_test.py
+git commit -m &quot;feat: add kind and hint properties to SpecError&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-add-kind-and-hint-to-malformedbnferror">Task 3: Add <code>kind</code> and <code>hint</code> to <code>MalformedBNFError</code></h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/spec/syntax/MalformedBNFError.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/spec/syntax/MalformedBNFError_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write the failing tests</strong></p>
+</li>
+</ul>
+<p>Add to <code>src/plcc/spec/syntax/MalformedBNFError_test.py</code>:</p>
+<pre><code class="language-python">def test_kind_returns_syntax_error():
+    err = MalformedBNFError(make_line(&quot;&lt;stmt&gt;IfStmt ::= IF&quot;))
+    assert err.kind == &quot;syntax error&quot;
+
+
+def test_hint_returns_examples():
+    err = MalformedBNFError(make_line(&quot;&lt;stmt&gt;IfStmt ::= IF&quot;))
+    assert err.hint == MalformedBNFError._EXAMPLES
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/syntax/MalformedBNFError_test.py::test_kind_returns_syntax_error src/plcc/spec/syntax/MalformedBNFError_test.py::test_hint_returns_examples -v
+</code></pre>
+<p>Expected: FAIL — <code>MalformedBNFError</code> has no <code>kind</code> or <code>hint</code> attribute.</p>
+<ul>
+<li>[ ] <strong>Step 3: Add properties to <code>MalformedBNFError</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/syntax/MalformedBNFError.py</code> with:</p>
+<pre><code class="language-python">import re
+
+
+class MalformedBNFError(Exception):
+    _EXAMPLES = (
+        &quot;Examples:\n&quot;
+        &quot;  &lt;nonTerminal&gt; ::=\n&quot;
+        &quot;  &lt;nonTerminal&gt; ::= TOKEN &lt;TOKEN&gt; &lt;rhs&gt;\n&quot;
+        &quot;  &lt;nonTerminal&gt;:ClassName ::= TOKEN &lt;TOKEN&gt;:field1 &lt;rhs&gt;:field2\n&quot;
+        &quot;  &lt;nonTerminal&gt; **= &lt;rhs&gt;\n&quot;
+        &quot;  &lt;nonTerminal&gt; **= &lt;rhs&gt; +SEPARATOR&quot;
+    )
+
+    def __init__(self, line):
+        self.line = line
+        self.column = self._compute_column()
+
+    def _compute_column(self):
+        original = self.line.string
+        leading = len(original) - len(original.lstrip())
+        lhs_match = re.match(r&quot;&lt;\S+&gt;(?::\S+)?&quot;, original.lstrip())
+        if lhs_match:
+            return leading + lhs_match.end() + 1
+        return leading + 1
+
+    @property
+    def kind(self):
+        return &quot;syntax error&quot;
+
+    @property
+    def hint(self):
+        return self._EXAMPLES
+
+    def __str__(self):
+        caret = &quot; &quot; * (self.column - 1) + &quot;^&quot;
+        return (
+            f&quot;{self.line.file}:{self.line.number}:{self.column}: syntax error\n&quot;
+            f&quot;{self.line.string}\n&quot;
+            f&quot;{caret}\n&quot;
+            f&quot;{self._EXAMPLES}&quot;
+        )
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/syntax/MalformedBNFError_test.py -v
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/spec/syntax/MalformedBNFError.py src/plcc/spec/syntax/MalformedBNFError_test.py
+git commit -m &quot;feat: add kind and hint properties to MalformedBNFError&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-extend-verboseemit_error-and-reformat_child_events-with-rich-rendering">Task 4: Extend <code>verbose.emit_error</code> and <code>reformat_child_events</code> with rich rendering</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/verbose.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/verbose_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write the failing tests</strong></p>
+</li>
+</ul>
+<p>Add to <code>src/plcc/verbose_test.py</code>:</p>
+<pre><code class="language-python">def test_emit_error_text_mode_with_source_line_and_hint(capsys):
+    ctx = VerboseContext(&quot;plcc-spec&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    ctx.emit_error(
+        {&quot;file&quot;: &quot;g.plcc&quot;, &quot;line&quot;: 3, &quot;column&quot;: 7},
+        &quot;syntax error&quot;,
+        source_line=&quot;&lt;stmt&gt;Assign ::= IDENT&quot;,
+        hint=&quot;Examples:\n  &lt;x&gt; ::=&quot;,
+    )
+    _, err = capsys.readouterr()
+    lines = err.splitlines()
+    assert lines[0] == &quot;plcc-spec: g.plcc:3:7: error: syntax error&quot;
+    assert lines[1] == &quot;&lt;stmt&gt;Assign ::= IDENT&quot;
+    assert lines[2] == &quot;      ^&quot;
+    assert &quot;Examples:&quot; in err
+
+
+def test_emit_error_text_mode_without_source_line_unchanged(capsys):
+    ctx = VerboseContext(&quot;plcc-spec&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    ctx.emit_error({&quot;file&quot;: &quot;g.plcc&quot;, &quot;line&quot;: 3, &quot;column&quot;: 7}, &quot;something failed&quot;)
+    _, err = capsys.readouterr()
+    assert err.strip() == &quot;plcc-spec: g.plcc:3:7: error: something failed&quot;
+
+
+def test_emit_error_json_mode_includes_source_line_and_hint(capsys):
+    ctx = VerboseContext(&quot;plcc-spec&quot;, SampleEvents, level=0, fmt=&quot;json&quot;)
+    ctx.emit_error(
+        {&quot;file&quot;: &quot;g.plcc&quot;, &quot;line&quot;: 3, &quot;column&quot;: 7},
+        &quot;syntax error&quot;,
+        source_line=&quot;&lt;stmt&gt;Assign ::= IDENT&quot;,
+        hint=&quot;Examples:\n  &lt;x&gt; ::=&quot;,
+    )
+    _, err = capsys.readouterr()
+    record = json.loads(err.strip())
+    assert record[&quot;source_line&quot;] == &quot;&lt;stmt&gt;Assign ::= IDENT&quot;
+    assert record[&quot;hint&quot;] == &quot;Examples:\n  &lt;x&gt; ::=&quot;
+
+
+def test_reformat_child_events_renders_source_line_and_hint(capsys):
+    ctx = VerboseContext(&quot;parent&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    event = {
+        &quot;stage&quot;: &quot;plcc-spec&quot;,
+        &quot;event&quot;: &quot;error&quot;,
+        &quot;pos&quot;: {&quot;file&quot;: &quot;g.plcc&quot;, &quot;line&quot;: 3, &quot;column&quot;: 7},
+        &quot;message&quot;: &quot;syntax error&quot;,
+        &quot;source_line&quot;: &quot;&lt;stmt&gt;Assign ::= IDENT&quot;,
+        &quot;hint&quot;: &quot;Examples:\n  &lt;x&gt; ::=&quot;,
+    }
+    ctx.reformat_child_events([event])
+    _, err = capsys.readouterr()
+    lines = err.splitlines()
+    assert lines[0] == &quot;plcc-spec: g.plcc:3:7: error: syntax error&quot;
+    assert lines[1] == &quot;&lt;stmt&gt;Assign ::= IDENT&quot;
+    assert lines[2] == &quot;      ^&quot;
+    assert &quot;Examples:&quot; in err
+
+
+def test_reformat_child_events_without_source_line_unchanged(capsys):
+    ctx = VerboseContext(&quot;parent&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    event = {
+        &quot;stage&quot;: &quot;plcc-spec&quot;,
+        &quot;event&quot;: &quot;error&quot;,
+        &quot;pos&quot;: {&quot;file&quot;: &quot;g.plcc&quot;, &quot;line&quot;: 3, &quot;column&quot;: 7},
+        &quot;message&quot;: &quot;something failed&quot;,
+    }
+    ctx.reformat_child_events([event])
+    _, err = capsys.readouterr()
+    assert err.strip() == &quot;plcc-spec: g.plcc:3:7: error: something failed&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/verbose_test.py::test_emit_error_text_mode_with_source_line_and_hint src/plcc/verbose_test.py::test_reformat_child_events_renders_source_line_and_hint -v
+</code></pre>
+<p>Expected: FAIL.</p>
+<ul>
+<li>[ ] <strong>Step 3: Extend <code>emit_error</code> text mode in <code>verbose.py</code></strong></li>
+</ul>
+<p>Replace the <code>else</code> branch of <code>emit_error</code> (lines 62–70 in <code>src/plcc/verbose.py</code>) with:</p>
+<pre><code class="language-python">    else:
+        filename = pos.get(&quot;file&quot;) or &quot;&lt;stdin&gt;&quot;
+        line = pos.get(&quot;line&quot;, 0)
+        col = pos.get(&quot;column&quot;, 0)
+        parts = [f&quot;{self.stage}: {filename}:{line}:{col}: error: {message}&quot;]
+        source_line = fields.get(&quot;source_line&quot;)
+        hint = fields.get(&quot;hint&quot;)
+        if source_line is not None:
+            parts.append(source_line)
+            if col &gt; 0:
+                parts.append(&quot; &quot; * (col - 1) + &quot;^&quot;)
+        if hint is not None:
+            parts.append(hint)
+        print(&quot;\n&quot;.join(parts), file=sys.stderr, flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Extend <code>reformat_child_events</code> in <code>verbose.py</code></strong></li>
+</ul>
+<p>Replace the <code>if ev.get("event") == "error":</code> block inside <code>reformat_child_events</code> (lines 96–104) with:</p>
+<pre><code class="language-python">            if ev.get(&quot;event&quot;) == &quot;error&quot;:
+                stage = ev.get(&quot;stage&quot;, &quot;unknown&quot;)
+                pos = ev.get(&quot;pos&quot;, {}) or {}
+                file = pos.get(&quot;file&quot;) or &quot;&lt;stdin&gt;&quot;
+                line = pos.get(&quot;line&quot;, 0)
+                col = pos.get(&quot;column&quot;, 0)
+                msg = ev.get(&quot;message&quot;, &quot;&quot;)
+                parts = [f&quot;{stage}: {file}:{line}:{col}: error: {msg}&quot;]
+                source_line = ev.get(&quot;source_line&quot;)
+                hint = ev.get(&quot;hint&quot;)
+                if source_line is not None:
+                    parts.append(source_line)
+                    if col &gt; 0:
+                        parts.append(&quot; &quot; * (col - 1) + &quot;^&quot;)
+                if hint is not None:
+                    parts.append(hint)
+                print(&quot;\n&quot;.join(parts), file=sys.stderr, flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/verbose_test.py -v
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/verbose.py src/plcc/verbose_test.py
+git commit -m &quot;feat: render source_line and hint in emit_error and reformat_child_events text mode&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-update-plcc_spec_clipy-to-use-emit_error">Task 5: Update <code>plcc_spec_cli.py</code> to use <code>emit_error</code></h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>Modify: <code>src/plcc/spec/plcc_spec_cli.py</code></li>
+<li>
+<p>Modify: <code>src/plcc/spec/plcc_spec_cli_test.py</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Write the failing tests</strong></p>
+</li>
+</ul>
+<p>Add to <code>src/plcc/spec/plcc_spec_cli_test.py</code>:</p>
+<pre><code class="language-python">def test_malformed_syntactic_rule_stderr_includes_source_line(capsys, fs):
+    fs.create_file('/bad.plcc', contents=(
+        &quot;token NUM '\\d+'\n&quot;
+        &quot;%\n&quot;
+        &quot;&lt;program&gt;IfStmt ::= NUM\n&quot;
+    ))
+    with pytest.raises(SystemExit):
+        run_main(['/bad.plcc'])
+    _, err = capsys.readouterr()
+    assert &quot;&lt;program&gt;IfStmt ::= NUM&quot; in err
+
+
+def test_malformed_syntactic_rule_stderr_includes_caret_at_correct_column(capsys, fs):
+    # &lt;program&gt; is 9 chars, so lhs ends at index 8 (0-based), column 10 (1-based).
+    # Caret line must be 9 spaces + ^.
+    fs.create_file('/bad.plcc', contents=(
+        &quot;token NUM '\\d+'\n&quot;
+        &quot;%\n&quot;
+        &quot;&lt;program&gt;IfStmt ::= NUM\n&quot;
+    ))
+    with pytest.raises(SystemExit):
+        run_main(['/bad.plcc'])
+    _, err = capsys.readouterr()
+    assert &quot;         ^&quot; in err
+
+
+def test_lexical_error_stderr_includes_source_line(capsys, fs):
+    # &quot;num 'bad'&quot; is invalid (lowercase token name triggers NameExpected)
+    fs.create_file('/bad.plcc', contents=&quot;num 'bad'\n&quot;)
+    with pytest.raises(SystemExit):
+        run_main(['/bad.plcc'])
+    _, err = capsys.readouterr()
+    assert &quot;num 'bad'&quot; in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/plcc_spec_cli_test.py::test_malformed_syntactic_rule_stderr_includes_source_line src/plcc/spec/plcc_spec_cli_test.py::test_malformed_syntactic_rule_stderr_includes_caret_at_correct_column src/plcc/spec/plcc_spec_cli_test.py::test_lexical_error_stderr_includes_source_line -v
+</code></pre>
+<p>Expected: FAIL — stderr contains the old format without source line in a way that matches or doesn't, but specifically the caret position test will fail.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>plcc_spec_cli.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/plcc_spec_cli.py</code> with:</p>
+<pre><code class="language-python">import enum
+import json
+import sys
+from dataclasses import asdict
+
+from docopt import docopt
+
+from . import parseSpec
+from ..verbose import VerboseContext, VERBOSE_OPTIONS
+
+# No LL(1) analysis here; see plcc-ll1.
+__doc__ = &quot;&quot;&quot;plcc-spec
+    Parse, validate, and print a PLCC grammar file as JSON.
+
+Usage:
+    plcc-spec [-v ...] [options] FILE
+
+Arguments:
+    FILE    PLCC grammar file. Use - to read from stdin.
+
+Options:
+    --no-json       Do not print JSON to stdout.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-spec&quot;, Events, args)
+    spec, errors = _load(args['FILE'])
+    if errors:
+        for e in errors:
+            pos = {&quot;file&quot;: e.line.file, &quot;line&quot;: e.line.number, &quot;column&quot;: e.column}
+            kwargs = {&quot;source_line&quot;: e.line.string}
+            if e.hint:
+                kwargs[&quot;hint&quot;] = e.hint
+            verbose.emit_error(pos, e.kind, **kwargs)
+        sys.exit(1)
+    if not args['--no-json']:
+        print(json.dumps(asdict(spec), indent=2))
+
+
+def _load(path):
+    if path == '-':
+        return parseSpec(sys.stdin.read(), '-')
+    with open(path) as f:
+        return parseSpec(f.read(), path)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run all spec CLI tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/plcc_spec_cli_test.py -v
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run full unit suite to catch regressions</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: all PASS.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/spec/plcc_spec_cli.py src/plcc/spec/plcc_spec_cli_test.py
+git commit -m &quot;fix: route plcc-spec errors through verbose.emit_error with source line and caret (closes 044)&quot;
+</code></pre>
+<hr />
+<h2 id="task-6-bats-integration-test-for-end-to-end-caret-rendering">Task 6: Bats integration test for end-to-end caret rendering</h2>
+<p><strong>Files:</strong></p>
+<ul>
+<li>
+<p>Modify: <code>tests/bats/commands/plcc-spec.bats</code></p>
+</li>
+<li>
+<p>[ ] <strong>Step 1: Add the test</strong></p>
+</li>
+</ul>
+<p>Add to <code>tests/bats/commands/plcc-spec.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-spec malformed syntactic rule: stderr includes source line and caret&quot; {
+    printf &quot;token NUM '\\\\d+'\n%%\n&lt;program&gt;IfStmt ::= NUM\n&quot; &gt; &quot;${BAD_SPEC}&quot;
+    run --separate-stderr plcc-spec &quot;${BAD_SPEC}&quot;
+    [ &quot;$status&quot; -ne 0 ]
+    [[ &quot;$stderr&quot; == *&quot;&lt;program&gt;IfStmt ::= NUM&quot;* ]]
+    [[ &quot;$stderr&quot; == *&quot;         ^&quot;* ]]
+}
+</code></pre>
+<p>Note: <code>&lt;program&gt;</code> is 9 characters so the caret is preceded by 9 spaces (column 10).</p>
+<ul>
+<li>[ ] <strong>Step 2: Run the commands test suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: all PASS including the new test.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-spec.bats
+git commit -m &quot;test: add bats test for plcc-spec caret alignment in error output&quot;
+</code></pre>
+<hr />
+<h2 id="task-7-final-check">Task 7: Final check</h2>
+<ul>
+<li>[ ] <strong>Run the full functional test suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: all PASS.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

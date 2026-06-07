@@ -1,0 +1,803 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-12-source-runner-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Design: Shared SourceRunner for plcc-scan, plcc-parse, plcc-rep - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-shared-sourcerunner-for-plcc-scan-plcc-parse-plcc-rep" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design: Shared SourceRunner for plcc-scan, plcc-parse, plcc-rep
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="design-shared-sourcerunner-for-plcc-scan-plcc-parse-plcc-rep">Design: Shared SourceRunner for plcc-scan, plcc-parse, plcc-rep</h1>
+<p><strong>Date:</strong> 2026-05-12</p>
+<h2 id="problem">Problem</h2>
+<p><code>plcc-scan</code>, <code>plcc-parse</code>, and <code>plcc-rep</code> share a common CLI pattern: they accept source files on the command line, fall back to stdin when none are given (or when <code>-</code> is listed), and need to behave consistently in interactive sessions. Currently each command reimplements this logic independently, producing an inconsistent user experience:</p>
+<ul>
+<li><code>plcc-rep</code> already shows a <code>&gt;&gt;&gt;</code> prompt and detects TTY interactivity; <code>plcc-scan</code> and <code>plcc-parse</code> do not.</li>
+<li>The planned <code>plcc-scan</code> TTY hint (issue 005) would add <em>some</em> feedback for scan but still leave parse unaddressed.</li>
+<li>Source file name metadata in token records is handled differently across commands.</li>
+</ul>
+<p>The goal is a single shared component that all three commands use for source routing, TTY detection, hint/prompt display, and interactive input accumulation.</p>
+<hr />
+<h2 id="design">Design</h2>
+<h3 id="sourcerunner-srcplcccmdsource_runnerpy"><code>SourceRunner</code> (<code>src/plcc/cmd/source_runner.py</code>)</h3>
+<p>A new <code>SourceRunner</code> class owns all source I/O behavior. Each command constructs a <code>SourceRunner</code> and passes it a <code>SourceHandler</code> — an object with one method:</p>
+<pre><code class="language-python">def feed(self, content: bytes, source: str) -&gt; bool:
+    ...
+</code></pre>
+<p><code>True</code> means the pipeline produced output (tree, tokens, result, or error) — the runner resets the accumulation buffer and shows a fresh <code>&gt;&gt;&gt;</code> prompt. <code>False</code> means no output yet — the runner keeps accumulating and shows <code>...</code>.</p>
+<h4 id="source-routing">Source routing</h4>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filename argument</td>
+<td>Read file content, call <code>feed(content, filename)</code> once</td>
+</tr>
+<tr>
+<td>No arguments</td>
+<td>Treat as <code>["-"]</code></td>
+</tr>
+<tr>
+<td><code>"-"</code> with non-TTY stdin</td>
+<td>Read all of stdin, call <code>feed(content, "-")</code> once</td>
+</tr>
+<tr>
+<td><code>"-"</code> with TTY stdin</td>
+<td>Enter interactive loop (see below)</td>
+</tr>
+</tbody>
+</table>
+<p>Multiple sources are processed in order. A mix of files and <code>-</code> is valid.</p>
+<h4 id="interactive-loop">Interactive loop</h4>
+<p>When stdin is a TTY, the runner:</p>
+<ol>
+<li>Prints the hint once to stderr: <code>Enter input. Press ^D (EOF) when done.</code></li>
+<li>Shows <code>&gt;&gt;&gt;</code> prompt, reads a line, appends to an accumulation buffer, calls <code>feed(buffer, "-")</code>.</li>
+<li>If <code>feed</code> returns <code>True</code>: clears the buffer, shows <code>&gt;&gt;&gt;</code> again.</li>
+<li>If <code>feed</code> returns <code>False</code>: shows <code>...</code> and reads another line.</li>
+<li><strong><code>^D</code> with non-empty buffer</strong>: submits the buffer via <code>feed(buffer, "-")</code>, then exits the loop (EOF is a terminal state — the session ends).</li>
+<li><strong><code>^D</code> with empty buffer</strong>: exits the loop immediately.</li>
+<li><strong><code>^C</code> (KeyboardInterrupt)</strong>: clears the buffer and returns to <code>&gt;&gt;&gt;</code> without exiting.</li>
+</ol>
+<h4 id="d-semantics-and-ll1-grammars"><code>^D</code> semantics and LL1 grammars</h4>
+<p>For grammars where the start symbol is a single expression or statement, <code>plcc-tree</code> emits a tree as soon as the start symbol is complete and the token buffer is empty — so pressing <code>Enter</code> after a complete expression triggers output and the <code>&gt;&gt;&gt;</code> prompt returns naturally. <code>^D</code> is only needed to signal end-of-input for <code>&lt;stmt&gt;+</code>-style top-level grammars, where the parser cannot know whether more statements will follow. In that case <code>^D</code> submits the accumulated program and ends the session, which is the correct behavior (multi-statement programs are better run as files).</p>
+<hr />
+<h3 id="changes-to-plcc-tokens-srcplcctokenstokens_clipy">Changes to <code>plcc-tokens</code> (<code>src/plcc/tokens/tokens_cli.py</code>)</h3>
+<p>Add <code>--source-name=&lt;label&gt;</code> flag. When present, this label replaces <code>"-"</code> as the file annotation for all lines read from stdin. This allows <code>ScanHandler</code> to pipe file content while preserving the original filename in token location metadata (e.g. <code>foo.txt:3:1</code> instead of <code>-:3:1</code>).</p>
+<p>No other behavior changes to <code>plcc-tokens</code>.</p>
+<hr />
+<h3 id="changes-to-plcc-tree-srcplcctreetree_clipy">Changes to <code>plcc-tree</code> (<code>src/plcc/tree/tree_cli.py</code>)</h3>
+<p>Two additions to support the streaming control signal:</p>
+<ol>
+<li>
+<p><strong>Mid-stream emit</strong>: when the LL1 parser completes the start symbol derivation and the token buffer is empty (no remaining tokens from the current input chunk), emit the tree record immediately without waiting for stdin to close.</p>
+</li>
+<li>
+<p><strong>Incomplete-EOF error</strong>: when stdin closes (EOF) and the parser has not yet completed the start symbol, emit <code>{"kind": "error", "message": "unexpected end of input", ...}</code> to stdout.</p>
+</li>
+</ol>
+<p>Both fit the existing JSONL output protocol — no format changes are needed upstream or downstream.</p>
+<hr />
+<h3 id="scanhandler-srcplcccmdscanpy"><code>ScanHandler</code> (<code>src/plcc/cmd/scan.py</code>)</h3>
+<p>Each <code>feed(content, source)</code> call:</p>
+<ol>
+<li>Spawns a fresh <code>plcc-tokens &lt;spec&gt; --source-name=&lt;source&gt; -</code> subprocess with <code>content</code> piped to its stdin.</li>
+<li>Reads all JSONL token records from stdout, renders each via <code>_render_record</code>.</li>
+<li>Returns <code>True</code> unconditionally — every content chunk tokenizes completely; scan has no continuation concept.</li>
+</ol>
+<hr />
+<h3 id="parsehandler-srcplcccmdparsepy"><code>ParseHandler</code> (<code>src/plcc/cmd/parse.py</code>)</h3>
+<p>Each <code>feed(content, source)</code> call:</p>
+<ol>
+<li>Spawns a fresh <code>plcc-tokens &lt;spec&gt; -</code> piped into <code>plcc-tree --ll1=&lt;ll1&gt;</code>, with <code>content</code> sent to tokens' stdin.</li>
+<li>Reads stdout for a tree or error record.</li>
+<li>Returns <code>True</code> if any record was produced; <code>False</code> if stdout was empty (incomplete parse — more input needed).</li>
+</ol>
+<hr />
+<h3 id="rephandler-srcplcccmdreppy"><code>RepHandler</code> (<code>src/plcc/cmd/rep.py</code>)</h3>
+<p><code>RepHandler</code> is structurally <code>ParseHandler</code> plus an evaluation step. The long-lived interpreter process is started once when <code>main()</code> begins and kept alive for the session so that state (variable bindings, etc.) persists across evaluations.</p>
+<p>Each <code>feed(content, source)</code> call:</p>
+<ol>
+<li>Spawns a fresh <code>plcc-tokens | plcc-tree</code> pipeline with <code>content</code> piped in (identical to <code>ParseHandler</code>).</li>
+<li>If <code>plcc-tree</code> produces <strong>no output</strong> (incomplete parse): return <code>False</code> immediately. The interpreter is not contacted — its state is unchanged. This is the load-bearing guarantee: partial attempts are invisible to the interpreter.</li>
+<li>If <code>plcc-tree</code> produces a tree: write the tree line to the interpreter's stdin, read its response, print the result or error, and return <code>True</code>.</li>
+</ol>
+<hr />
+<h3 id="module-layout">Module layout</h3>
+<pre><code>src/plcc/cmd/
+    source_runner.py       ← new: SourceRunner class + SourceHandler protocol
+    source_runner_test.py  ← new: unit tests (monkeypatched, no subprocesses)
+    scan.py                ← add ScanHandler; replace IO loop with SourceRunner
+    scan_test.py           ← add handler unit tests
+    parse.py               ← add ParseHandler; replace IO loop with SourceRunner
+    parse_test.py          ← new: handler unit tests
+    rep.py                 ← add RepHandler; replace IO loop with SourceRunner
+    rep_test.py            ← new: handler unit tests
+src/plcc/tokens/
+    tokens_cli.py          ← add --source-name flag + tests
+src/plcc/tree/
+    tree_cli.py            ← add streaming emit + incomplete-EOF error + tests
+</code></pre>
+<hr />
+<h2 id="testing">Testing</h2>
+<h3 id="unit-tests-pytest">Unit tests (<code>pytest</code>)</h3>
+<ul>
+<li><strong><code>source_runner_test.py</code></strong>: covers source routing (file, non-TTY stdin, TTY stdin), accumulation across multiple <code>feed()</code> calls, <code>^C</code> reset, <code>^D</code> with non-empty buffer, <code>^D</code> with empty buffer, and multiple <code>-</code> sources. All via monkeypatching — no subprocesses.</li>
+<li><strong><code>scan_test.py</code></strong>: covers <code>ScanHandler.feed()</code> in isolation — verifies <code>plcc-tokens</code> is invoked with correct <code>--source-name</code>, and that <code>True</code> is always returned.</li>
+<li><strong><code>parse_test.py</code></strong>: covers <code>ParseHandler.feed()</code> — verifies <code>True</code> when output produced, <code>False</code> when stdout empty.</li>
+<li><strong><code>rep_test.py</code></strong>: covers <code>RepHandler.feed()</code> — verifies interpreter interaction and return values.</li>
+<li><strong><code>tokens_cli_test.py</code></strong>: add tests for <code>--source-name</code> label override.</li>
+<li><strong><code>tree_cli_test.py</code></strong>: add tests for mid-stream emit and incomplete-EOF error.</li>
+</ul>
+<h3 id="bats-command-tests">Bats command tests</h3>
+<p>Existing bats tests for <code>plcc-scan</code>, <code>plcc-parse</code>, and <code>plcc-rep</code> cover the end-to-end CLI contract (stdin/stdout/exit-code) and require no structural changes — the external behavior is preserved.</p>
+<hr />
+<h2 id="supersedes">Supersedes</h2>
+<p>The planned TTY hint for <code>plcc-scan</code> (issue 005 / <code>docs/superpowers/plans/2026-05-12-scan-tty-hint.md</code>) is subsumed by this design. The hint and prompt behavior specified there is now owned by <code>SourceRunner</code> and applies uniformly to all three commands. Issue 005 should be closed in favour of this work.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2034 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-26-045-altname-ll1-pipeline/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Thread altName through LL(1) pipeline (issue 045) Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thread-altname-through-ll1-pipeline-issue-045-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Thread altName through LL(1) pipeline (issue 045) Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="thread-altname-through-ll1-pipeline-issue-045-implementation-plan">Thread altName through LL(1) pipeline (issue 045) Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Fix the bug where alternative class names (<code>&lt;expr&gt;:Add</code>) are lost in the LL(1) pipeline, causing parse tree nodes to always carry the base nonterminal name instead of the correct class name.</p>
+<p><strong>Architecture:</strong> Introduce a <code>Rule</code> dataclass (alt name + field names) in <code>spec_json_decoder.py</code> to replace the bare-list <code>field_map</code>. Thread it through <code>ll1_result_builder.py</code>, changing parse table cells from bare lists to <code>{"alt": ..., "production": [...]}</code> dicts. Update <code>predictive_parser.py</code> to read <code>cell["alt"]</code> when naming tree nodes.</p>
+<p><strong>Tech Stack:</strong> Python 3.14, pytest, <code>dataclasses</code> stdlib module. Tests run via <code>bin/test/units.bash</code>.</p>
+<hr />
+<h2 id="file-map">File map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/plcc/ll1/spec_json_decoder.py</code></td>
+<td>Add <code>Rule</code> dataclass; read <code>altName</code>; build <code>productions</code> dict</td>
+</tr>
+<tr>
+<td><code>src/plcc/ll1/spec_json_decoder_test.py</code></td>
+<td>Assert <code>Rule</code> objects; add altName test</td>
+</tr>
+<tr>
+<td><code>src/plcc/ll1/ll1_result_builder.py</code></td>
+<td>Accept <code>productions</code>; <code>_prod_entry</code> emits new cell shape</td>
+</tr>
+<tr>
+<td><code>src/plcc/ll1/ll1_result_builder_test.py</code></td>
+<td>Update fixtures to <code>Rule</code>; update cell assertions</td>
+</tr>
+<tr>
+<td><code>src/plcc/ll1/ll1_cli.py</code></td>
+<td>Rename local <code>field_map</code> → <code>productions</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/predictive_parser.py</code></td>
+<td>Read <code>cell["alt"]</code> and <code>cell["production"]</code> in <code>_parse_regular</code></td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/predictive_parser_test.py</code></td>
+<td>Update fixtures to new cell shape; add alt-name tree test</td>
+</tr>
+<tr>
+<td><code>src/plcc/parser/table_cli_test.py</code></td>
+<td>Update fixtures to new cell shape</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-define-the-rule-dataclass">Task 1: Define the <code>Rule</code> dataclass</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/ll1/spec_json_decoder.py</code>
+- Test: <code>src/plcc/ll1/spec_json_decoder_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing test</strong></li>
+</ul>
+<p>Add at the top of <code>src/plcc/ll1/spec_json_decoder_test.py</code>, after the existing import:</p>
+<pre><code class="language-python">from plcc.ll1.spec_json_decoder import Rule
+</code></pre>
+<p>Then add this test at the end of the file:</p>
+<pre><code class="language-python">def test_rule_is_dataclass_with_alt_and_fields():
+    r = Rule(alt=&quot;Add&quot;, fields=[&quot;left&quot;, None])
+    assert r.alt == &quot;Add&quot;
+    assert r.fields == [&quot;left&quot;, None]
+
+
+def test_rule_alt_can_be_none():
+    r = Rule(alt=None, fields=[])
+    assert r.alt is None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/spec_json_decoder_test.py -v -k &quot;test_rule&quot;
+</code></pre>
+<p>Expected: <code>ImportError: cannot import name 'Rule'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Add <code>Rule</code> to <code>spec_json_decoder.py</code></strong></li>
+</ul>
+<p>Add at the top of <code>src/plcc/ll1/spec_json_decoder.py</code>, after the existing import:</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+
+@dataclass
+class Rule:
+    alt: str | None
+    fields: list[str | None]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/spec_json_decoder_test.py -v -k &quot;test_rule&quot;
+</code></pre>
+<p>Expected: 2 passed.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/ll1/spec_json_decoder.py src/plcc/ll1/spec_json_decoder_test.py
+git commit -m &quot;feat: add Rule dataclass to spec_json_decoder&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-update-decode-to-build-productions-with-rule-objects">Task 2: Update <code>decode()</code> to build <code>productions</code> with <code>Rule</code> objects</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/ll1/spec_json_decoder.py</code>
+- Test: <code>src/plcc/ll1/spec_json_decoder_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update existing decoder tests to assert <code>Rule</code> objects</strong></li>
+</ul>
+<p>In <code>src/plcc/ll1/spec_json_decoder_test.py</code>, every call to <code>decode()</code> unpacks three values. Change
+every assertion that inspects the second return value (currently called <code>field_map</code>) to use <code>Rule</code>
+objects instead of bare lists. Also add a test for <code>altName</code> on the LHS.</p>
+<p>Replace the entire test file content with:</p>
+<pre><code class="language-python">import pytest
+from plcc.ll1.spec_json_decoder import decode, Rule
+
+
+def _spec(rules):
+    return {&quot;lexical&quot;: {&quot;ruleList&quot;: []}, &quot;syntax&quot;: {&quot;rules&quot;: rules}, &quot;semantics&quot;: []}
+
+
+def _rule(lhs_name, rhs_syms, alt_name=None):
+    return {
+        &quot;line&quot;: {&quot;string&quot;: &quot;&quot;, &quot;number&quot;: 0, &quot;file&quot;: &quot;&quot;},
+        &quot;lhs&quot;: {&quot;name&quot;: lhs_name, &quot;isTerminal&quot;: False, &quot;altName&quot;: alt_name, &quot;isCapturing&quot;: False},
+        &quot;rhsSymbolList&quot;: rhs_syms,
+    }
+
+
+def _terminal(name, capturing=False, alt_name=None):
+    d = {&quot;name&quot;: name, &quot;isTerminal&quot;: True, &quot;isCapturing&quot;: capturing}
+    if alt_name is not None:
+        d[&quot;altName&quot;] = alt_name
+    return d
+
+
+def _nonterminal(name, capturing=False, alt_name=None):
+    d = {&quot;name&quot;: name, &quot;isTerminal&quot;: False, &quot;isCapturing&quot;: capturing}
+    if alt_name is not None:
+        d[&quot;altName&quot;] = alt_name
+    return d
+
+
+def test_rule_is_dataclass_with_alt_and_fields():
+    r = Rule(alt=&quot;Add&quot;, fields=[&quot;left&quot;, None])
+    assert r.alt == &quot;Add&quot;
+    assert r.fields == [&quot;left&quot;, None]
+
+
+def test_rule_alt_can_be_none():
+    r = Rule(alt=None, fields=[])
+    assert r.alt is None
+
+
+def test_empty_grammar():
+    grammar, productions, arbno_rules = decode(_spec([]))
+    assert grammar.getStartSymbol() is None
+    assert productions == {}
+
+
+def test_single_rule_noncapturing():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;program&quot;, [_terminal(&quot;NUM&quot;)])
+    ]))
+    assert grammar.getStartSymbol() == &quot;program&quot;
+    assert list(grammar.getForms(&quot;program&quot;)) == [(&quot;NUM&quot;,)]
+    assert productions == {(&quot;program&quot;, (&quot;NUM&quot;,)): Rule(alt=None, fields=[None])}
+
+
+def test_epsilon_rule():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;empty&quot;, [])
+    ]))
+    assert grammar.getStartSymbol() == &quot;empty&quot;
+    assert list(grammar.getForms(&quot;empty&quot;)) == [()]
+    assert productions == {(&quot;empty&quot;, ()): Rule(alt=None, fields=[])}
+
+
+def test_capturing_terminal_uses_name_lower():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;E&quot;, [_terminal(&quot;NUM&quot;, capturing=True)])
+    ]))
+    assert productions == {(&quot;E&quot;, (&quot;NUM&quot;,)): Rule(alt=None, fields=[&quot;num&quot;])}
+
+
+def test_capturing_terminal_uses_alt_name():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;E&quot;, [_terminal(&quot;NUM&quot;, capturing=True, alt_name=&quot;value&quot;)])
+    ]))
+    assert productions == {(&quot;E&quot;, (&quot;NUM&quot;,)): Rule(alt=None, fields=[&quot;value&quot;])}
+
+
+def test_capturing_nonterminal_uses_name_lower():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;E&quot;, [_nonterminal(&quot;Term&quot;, capturing=True)])
+    ]))
+    assert productions == {(&quot;E&quot;, (&quot;Term&quot;,)): Rule(alt=None, fields=[&quot;term&quot;])}
+
+
+def test_multiple_symbols():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;E&quot;, [_nonterminal(&quot;T&quot;, capturing=True), _terminal(&quot;PLUS&quot;), _nonterminal(&quot;E&quot;, capturing=True, alt_name=&quot;r&quot;)])
+    ]))
+    assert productions == {(&quot;E&quot;, (&quot;T&quot;, &quot;PLUS&quot;, &quot;E&quot;)): Rule(alt=None, fields=[&quot;t&quot;, None, &quot;r&quot;])}
+
+
+def test_start_symbol_is_first_rule_lhs():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;first&quot;, [_terminal(&quot;A&quot;)]),
+        _rule(&quot;second&quot;, [_terminal(&quot;B&quot;)]),
+    ]))
+    assert grammar.getStartSymbol() == &quot;first&quot;
+
+
+def test_lhs_alt_name_captured_in_rule():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;expr&quot;, [_terminal(&quot;PLUS&quot;), _nonterminal(&quot;expr&quot;), _nonterminal(&quot;expr&quot;)], alt_name=&quot;Add&quot;),
+        _rule(&quot;expr&quot;, [_terminal(&quot;NUM&quot;)], alt_name=&quot;Num&quot;),
+    ]))
+    assert productions[(&quot;expr&quot;, (&quot;PLUS&quot;, &quot;expr&quot;, &quot;expr&quot;))].alt == &quot;Add&quot;
+    assert productions[(&quot;expr&quot;, (&quot;NUM&quot;,))].alt == &quot;Num&quot;
+
+
+def test_lhs_alt_name_none_when_absent():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;program&quot;, [_terminal(&quot;NUM&quot;)])
+    ]))
+    assert productions[(&quot;program&quot;, (&quot;NUM&quot;,))].alt is None
+
+
+def _arbno_rule(lhs_name, rhs_syms, separator_name):
+    sep = None if separator_name is None else {
+        &quot;name&quot;: separator_name, &quot;isTerminal&quot;: True, &quot;isCapturing&quot;: False
+    }
+    return {
+        &quot;line&quot;: {&quot;string&quot;: &quot;&quot;, &quot;number&quot;: 0, &quot;file&quot;: &quot;&quot;},
+        &quot;lhs&quot;: {&quot;name&quot;: lhs_name, &quot;isTerminal&quot;: False, &quot;altName&quot;: None, &quot;isCapturing&quot;: False},
+        &quot;rhsSymbolList&quot;: rhs_syms,
+        &quot;separator&quot;: sep,
+    }
+
+
+def test_decode_returns_3_tuple():
+    grammar, productions, arbno_rules = decode(_spec([]))
+    assert isinstance(arbno_rules, dict)
+
+
+def test_non_arbno_rules_not_in_arbno_rules():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule(&quot;program&quot;, [_terminal(&quot;NUM&quot;)])
+    ]))
+    assert arbno_rules == {}
+
+
+def test_separator_arbno_in_arbno_rules():
+    spec = _spec([
+        _arbno_rule(&quot;rands&quot;,
+                    [_nonterminal(&quot;expr&quot;, capturing=True, alt_name=&quot;expr&quot;)],
+                    &quot;COMMA&quot;),
+        _rule(&quot;expr&quot;, [_terminal(&quot;NUM&quot;)]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert &quot;rands&quot; in arbno_rules
+
+
+def test_separator_arbno_rhs_field_has_list_suffix():
+    spec = _spec([
+        _arbno_rule(&quot;rands&quot;,
+                    [_nonterminal(&quot;expr&quot;, capturing=True, alt_name=&quot;expr&quot;)],
+                    &quot;COMMA&quot;),
+        _rule(&quot;expr&quot;, [_terminal(&quot;NUM&quot;)]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules[&quot;rands&quot;][&quot;rhs&quot;] == [
+        {&quot;field&quot;: &quot;exprList&quot;, &quot;symbol&quot;: &quot;expr&quot;, &quot;is_terminal&quot;: False}
+    ]
+
+
+def test_separator_arbno_separator_field():
+    spec = _spec([
+        _arbno_rule(&quot;rands&quot;,
+                    [_nonterminal(&quot;expr&quot;, capturing=True, alt_name=&quot;expr&quot;)],
+                    &quot;COMMA&quot;),
+        _rule(&quot;expr&quot;, [_terminal(&quot;NUM&quot;)]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules[&quot;rands&quot;][&quot;separator&quot;] == &quot;COMMA&quot;
+
+
+def test_plain_arbno_separator_is_none():
+    spec = _spec([
+        _arbno_rule(&quot;cmds&quot;,
+                    [_nonterminal(&quot;cmd&quot;, capturing=True, alt_name=&quot;cmd&quot;)],
+                    None),
+        _rule(&quot;cmd&quot;, [_terminal(&quot;X&quot;)]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules[&quot;cmds&quot;][&quot;separator&quot;] is None
+
+
+def test_arbno_expansion_adds_internal_rules_to_grammar():
+    spec = _spec([
+        _arbno_rule(&quot;rands&quot;,
+                    [_nonterminal(&quot;expr&quot;, capturing=True, alt_name=&quot;expr&quot;)],
+                    &quot;COMMA&quot;),
+        _rule(&quot;expr&quot;, [_terminal(&quot;NUM&quot;)]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    nts = grammar.getNonterminalSet()
+    assert &quot;rands&quot; in nts
+    assert &quot;rands#&quot; in nts
+
+
+def test_arbno_terminal_rhs_item():
+    spec = _spec([
+        _arbno_rule(&quot;tokens&quot;,
+                    [_terminal(&quot;NUM&quot;, capturing=True, alt_name=&quot;num&quot;)],
+                    None),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules[&quot;tokens&quot;][&quot;rhs&quot;] == [
+        {&quot;field&quot;: &quot;numList&quot;, &quot;symbol&quot;: &quot;NUM&quot;, &quot;is_terminal&quot;: True}
+    ]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/spec_json_decoder_test.py -v
+</code></pre>
+<p>Expected: multiple failures — <code>AssertionError</code> on <code>productions == {("program", ("NUM",)): [None]}</code> (bare list vs <code>Rule</code>) and <code>test_lhs_alt_name_captured_in_rule</code> failing because <code>altName</code> isn't read yet.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>spec_json_decoder.py</code> implementation</strong></li>
+</ul>
+<p>Replace the full content of <code>src/plcc/ll1/spec_json_decoder.py</code>:</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+from plcc.spec.syntax.validations.ll1.Grammar import Grammar
+
+
+@dataclass
+class Rule:
+    alt: str | None
+    fields: list[str | None]
+
+
+def decode(spec_dict: dict) -&gt; tuple:
+    &quot;&quot;&quot;
+    Build a Grammar from a spec JSON dict.
+
+    Returns (grammar, productions, arbno_rules) where:
+      grammar     — Grammar with both regular and internal arbno expansion rules
+      productions — dict[(nt_name, prod_tuple)] -&gt; Rule
+      arbno_rules — dict[nt_name] -&gt; {rhs, separator}
+    &quot;&quot;&quot;
+    grammar = Grammar()
+    productions = {}
+    arbno_rules = {}
+    for rule in spec_dict.get(&quot;syntax&quot;, {}).get(&quot;rules&quot;, []):
+        nt = rule[&quot;lhs&quot;][&quot;name&quot;]
+        alt = rule[&quot;lhs&quot;].get(&quot;altName&quot;)
+        rhs = rule.get(&quot;rhsSymbolList&quot;, [])
+        if &quot;separator&quot; in rule:
+            _handle_arbno(grammar, arbno_rules, nt, rhs, rule[&quot;separator&quot;])
+        elif not rhs:
+            grammar.addRule(nt, [])
+            productions[(nt, ())] = Rule(alt=alt, fields=[])
+        else:
+            syms = [s[&quot;name&quot;] for s in rhs]
+            fields = [_field(s) for s in rhs]
+            grammar.addRule(nt, syms)
+            productions[(nt, tuple(syms))] = Rule(alt=alt, fields=fields)
+    return grammar, productions, arbno_rules
+
+
+def _handle_arbno(grammar, arbno_rules, nt, rhs, separator_entry):
+    separator = separator_entry[&quot;name&quot;] if separator_entry else None
+    cont = nt + &quot;#&quot;
+    syms = [s[&quot;name&quot;] for s in rhs]
+
+    grammar.addRule(nt, syms + [cont])
+    grammar.addRule(nt, [])
+    if separator:
+        grammar.addRule(cont, [separator] + syms + [cont])
+    else:
+        grammar.addRule(cont, syms + [cont])
+    grammar.addRule(cont, [])
+
+    arbno_rhs = [
+        {
+            &quot;field&quot;: _arbno_field(s),
+            &quot;symbol&quot;: s[&quot;name&quot;],
+            &quot;is_terminal&quot;: bool(s.get(&quot;isTerminal&quot;, False)),
+        }
+        for s in rhs
+        if s.get(&quot;isCapturing&quot;, False)
+    ]
+    arbno_rules[nt] = {&quot;rhs&quot;: arbno_rhs, &quot;separator&quot;: separator}
+
+
+def _arbno_field(sym: dict) -&gt; str:
+    alt = sym.get(&quot;altName&quot;)
+    name = sym[&quot;name&quot;]
+    return (alt if alt else name).lower() + &quot;List&quot;
+
+
+def _field(sym: dict) -&gt; str | None:
+    &quot;&quot;&quot;Return the field name for a symbol dict, or None if elided.&quot;&quot;&quot;
+    if not sym.get(&quot;isCapturing&quot;, False):
+        return None
+    alt = sym.get(&quot;altName&quot;)
+    name = sym[&quot;name&quot;]
+    return (alt if alt else name).lower()
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/spec_json_decoder_test.py -v
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/ll1/spec_json_decoder.py src/plcc/ll1/spec_json_decoder_test.py
+git commit -m &quot;feat: decode() reads altName into Rule.alt; productions replaces field_map&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-update-ll1_result_builderpy-to-consume-productions-and-emit-new-cell-shape">Task 3: Update <code>ll1_result_builder.py</code> to consume <code>productions</code> and emit new cell shape</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/ll1/ll1_result_builder.py</code>
+- Modify: <code>src/plcc/ll1/ll1_cli.py</code>
+- Test: <code>src/plcc/ll1/ll1_result_builder_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>ll1_result_builder_test.py</code> fixtures and assertions</strong></li>
+</ul>
+<p>Replace the full content of <code>src/plcc/ll1/ll1_result_builder_test.py</code>:</p>
+<pre><code class="language-python">from plcc.spec.syntax.validations.ll1.Grammar import Grammar
+from plcc.ll1.spec_json_decoder import Rule
+from plcc.ll1.ll1_result_builder import build_ll1_result
+
+
+def _simple_grammar():
+    &quot;&quot;&quot;program → NUM (not capturing)&quot;&quot;&quot;
+    g = Grammar()
+    g.addRule(&quot;program&quot;, [&quot;NUM&quot;])
+    fm = {(&quot;program&quot;, (&quot;NUM&quot;,)): Rule(alt=None, fields=[None])}
+    return g, fm
+
+
+def _epsilon_grammar():
+    &quot;&quot;&quot;rest →  (epsilon)&quot;&quot;&quot;
+    g = Grammar()
+    g.addRule(&quot;rest&quot;, [])
+    fm = {(&quot;rest&quot;, ()): Rule(alt=None, fields=[])}
+    return g, fm
+
+
+def _conflict_grammar():
+    &quot;&quot;&quot;A → X | X Y  (two productions with same first token → conflict)&quot;&quot;&quot;
+    g = Grammar()
+    g.addRule(&quot;A&quot;, [&quot;X&quot;])
+    g.addRule(&quot;A&quot;, [&quot;X&quot;, &quot;Y&quot;])
+    fm = {
+        (&quot;A&quot;, (&quot;X&quot;,)): Rule(alt=None, fields=[None]),
+        (&quot;A&quot;, (&quot;X&quot;, &quot;Y&quot;)): Rule(alt=None, fields=[None, None]),
+    }
+    return g, fm
+
+
+def _left_recursive_grammar():
+    &quot;&quot;&quot;A → A B | C  (direct left recursion)&quot;&quot;&quot;
+    g = Grammar()
+    g.addRule(&quot;A&quot;, [&quot;A&quot;, &quot;B&quot;])
+    g.addRule(&quot;A&quot;, [&quot;C&quot;])
+    fm = {
+        (&quot;A&quot;, (&quot;A&quot;, &quot;B&quot;)): Rule(alt=None, fields=[None, None]),
+        (&quot;A&quot;, (&quot;C&quot;,)): Rule(alt=None, fields=[None]),
+    }
+    return g, fm
+
+
+def test_is_ll1_true_for_simple_grammar():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;is_ll1&quot;] is True
+
+
+def test_start_symbol_present():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;start_symbol&quot;] == &quot;program&quot;
+
+
+def test_first_sets_correct():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;first_sets&quot;][&quot;program&quot;] == [&quot;NUM&quot;]
+
+
+def test_follow_sets_contain_dollar():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert &quot;eof&quot; in result[&quot;follow_sets&quot;][&quot;program&quot;]
+
+
+def test_predict_sets_correct():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;predict_sets&quot;][&quot;program&quot;] == [[&quot;NUM&quot;]]
+
+
+def test_parse_table_entry_correct():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;parse_table&quot;][&quot;program&quot;][&quot;NUM&quot;] == {
+        &quot;alt&quot;: None,
+        &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None}],
+    }
+
+
+def test_conflicts_empty_for_ll1_grammar():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;conflicts&quot;] == []
+
+
+def test_left_recursion_empty_for_ll1_grammar():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;left_recursion&quot;] == []
+
+
+def test_epsilon_production_in_parse_table():
+    g, fm = _epsilon_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;parse_table&quot;][&quot;rest&quot;][&quot;eof&quot;] == {&quot;alt&quot;: None, &quot;production&quot;: []}
+
+
+def test_epsilon_in_first_sets():
+    g, fm = _epsilon_grammar()
+    result = build_ll1_result(g, fm)
+    assert &quot;&quot; in result[&quot;first_sets&quot;][&quot;rest&quot;]
+
+
+def test_is_ll1_false_for_conflict_grammar():
+    g, fm = _conflict_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;is_ll1&quot;] is False
+    assert len(result[&quot;conflicts&quot;]) &gt; 0
+
+
+def test_conflict_cell_omitted_from_parse_table():
+    g, fm = _conflict_grammar()
+    result = build_ll1_result(g, fm)
+    assert &quot;X&quot; not in result[&quot;parse_table&quot;].get(&quot;A&quot;, {})
+
+
+def test_conflict_entry_has_required_fields():
+    g, fm = _conflict_grammar()
+    result = build_ll1_result(g, fm)
+    c = result[&quot;conflicts&quot;][0]
+    assert c[&quot;nonterminal&quot;] == &quot;A&quot;
+    assert c[&quot;lookahead&quot;] == &quot;X&quot;
+    assert len(c[&quot;productions&quot;]) == 2
+
+
+def test_left_recursion_detected():
+    g, fm = _left_recursive_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;is_ll1&quot;] is False
+    assert len(result[&quot;left_recursion&quot;]) &gt; 0
+
+
+def test_left_recursion_cycle_format():
+    g, fm = _left_recursive_grammar()
+    result = build_ll1_result(g, fm)
+    cycle = result[&quot;left_recursion&quot;][0][&quot;cycle&quot;]
+    assert cycle[0] == cycle[-1]
+    assert &quot;A&quot; in cycle
+
+
+def test_capturing_symbol_field_in_parse_table():
+    g = Grammar()
+    g.addRule(&quot;E&quot;, [&quot;NUM&quot;])
+    fm = {(&quot;E&quot;, (&quot;NUM&quot;,)): Rule(alt=None, fields=[&quot;num&quot;])}
+    result = build_ll1_result(g, fm)
+    entry = result[&quot;parse_table&quot;][&quot;E&quot;][&quot;NUM&quot;]
+    assert entry == {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;num&quot;}]}
+
+
+def test_alt_name_appears_in_parse_table_cell():
+    g = Grammar()
+    g.addRule(&quot;expr&quot;, [&quot;PLUS&quot;, &quot;expr&quot;, &quot;expr&quot;])
+    g.addRule(&quot;expr&quot;, [&quot;NUM&quot;])
+    fm = {
+        (&quot;expr&quot;, (&quot;PLUS&quot;, &quot;expr&quot;, &quot;expr&quot;)): Rule(alt=&quot;Add&quot;, fields=[None, &quot;left&quot;, &quot;right&quot;]),
+        (&quot;expr&quot;, (&quot;NUM&quot;,)): Rule(alt=&quot;Num&quot;, fields=[&quot;val&quot;]),
+    }
+    result = build_ll1_result(g, fm)
+    assert result[&quot;parse_table&quot;][&quot;expr&quot;][&quot;PLUS&quot;][&quot;alt&quot;] == &quot;Add&quot;
+    assert result[&quot;parse_table&quot;][&quot;expr&quot;][&quot;NUM&quot;][&quot;alt&quot;] == &quot;Num&quot;
+
+
+def test_alt_name_null_when_absent():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;parse_table&quot;][&quot;program&quot;][&quot;NUM&quot;][&quot;alt&quot;] is None
+
+
+def test_conflict_productions_carry_alt_name():
+    g = Grammar()
+    g.addRule(&quot;expr&quot;, [&quot;PLUS&quot;, &quot;expr&quot;, &quot;expr&quot;])
+    g.addRule(&quot;expr&quot;, [&quot;PLUS&quot;, &quot;NUM&quot;])
+    fm = {
+        (&quot;expr&quot;, (&quot;PLUS&quot;, &quot;expr&quot;, &quot;expr&quot;)): Rule(alt=&quot;Add&quot;, fields=[None, &quot;left&quot;, &quot;right&quot;]),
+        (&quot;expr&quot;, (&quot;PLUS&quot;, &quot;NUM&quot;)): Rule(alt=&quot;Neg&quot;, fields=[None, &quot;val&quot;]),
+    }
+    result = build_ll1_result(g, fm)
+    assert result[&quot;is_ll1&quot;] is False
+    alts = {p[&quot;alt&quot;] for p in result[&quot;conflicts&quot;][0][&quot;productions&quot;]}
+    assert alts == {&quot;Add&quot;, &quot;Neg&quot;}
+
+
+def _arbno_grammar_and_rules():
+    g = Grammar()
+    g.addRule(&quot;rands&quot;, [&quot;expr&quot;, &quot;rands#&quot;])
+    g.addRule(&quot;rands&quot;, [])
+    g.addRule(&quot;rands#&quot;, [&quot;COMMA&quot;, &quot;expr&quot;, &quot;rands#&quot;])
+    g.addRule(&quot;rands#&quot;, [])
+    g.addRule(&quot;expr&quot;, [&quot;NUM&quot;])
+    fm = {
+        (&quot;rands&quot;,  (&quot;expr&quot;, &quot;rands#&quot;)): Rule(alt=None, fields=[None, None]),
+        (&quot;rands&quot;,  ()):                 Rule(alt=None, fields=[]),
+        (&quot;rands#&quot;, (&quot;COMMA&quot;, &quot;expr&quot;, &quot;rands#&quot;)): Rule(alt=None, fields=[None, None, None]),
+        (&quot;rands#&quot;, ()):                 Rule(alt=None, fields=[]),
+        (&quot;expr&quot;,   (&quot;NUM&quot;,)):           Rule(alt=None, fields=[None]),
+    }
+    arbno = {
+        &quot;rands&quot;: {
+            &quot;rhs&quot;: [{&quot;field&quot;: &quot;exprList&quot;, &quot;symbol&quot;: &quot;expr&quot;, &quot;is_terminal&quot;: False}],
+            &quot;separator&quot;: &quot;COMMA&quot;,
+        }
+    }
+    return g, fm, arbno
+
+
+def test_arbno_section_present_in_result():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert &quot;arbno&quot; in result
+
+
+def test_arbno_nt_in_arbno_not_parse_table():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert &quot;rands&quot; in result[&quot;arbno&quot;]
+    assert &quot;rands&quot; not in result[&quot;parse_table&quot;]
+
+
+def test_arbno_internal_cont_not_in_parse_table():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert &quot;rands#&quot; not in result[&quot;parse_table&quot;]
+
+
+def test_arbno_internal_nts_not_in_first_sets():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert &quot;rands&quot; not in result[&quot;first_sets&quot;]
+    assert &quot;rands#&quot; not in result[&quot;first_sets&quot;]
+
+
+def test_arbno_lookahead_computed_from_first_of_first_item():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert result[&quot;arbno&quot;][&quot;rands&quot;][&quot;lookahead&quot;] == [&quot;NUM&quot;]
+
+
+def test_arbno_separator_preserved():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert result[&quot;arbno&quot;][&quot;rands&quot;][&quot;separator&quot;] == &quot;COMMA&quot;
+
+
+def test_arbno_rhs_preserved():
+    g, fm, arbno = _arbno_grammar_and_rules()
+    result = build_ll1_result(g, fm, arbno)
+    assert result[&quot;arbno&quot;][&quot;rands&quot;][&quot;rhs&quot;] == [
+        {&quot;field&quot;: &quot;exprList&quot;, &quot;symbol&quot;: &quot;expr&quot;, &quot;is_terminal&quot;: False}
+    ]
+
+
+def test_existing_grammar_unaffected_when_no_arbno():
+    g, fm = _simple_grammar()
+    result = build_ll1_result(g, fm)
+    assert result[&quot;is_ll1&quot;] is True
+    assert result[&quot;arbno&quot;] == {}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/ll1_result_builder_test.py -v
+</code></pre>
+<p>Expected: multiple failures — <code>ImportError</code> for <code>Rule</code> import, and cell format assertions failing because builder still returns bare lists.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>ll1_result_builder.py</code> implementation</strong></li>
+</ul>
+<p>Replace the full content of <code>src/plcc/ll1/ll1_result_builder.py</code>:</p>
+<pre><code class="language-python">from plcc.spec.syntax.validations.ll1.Grammar import Grammar
+from plcc.spec.syntax.validations.ll1.build_first_sets import build_first_sets
+from plcc.spec.syntax.validations.ll1.build_follow_sets import build_follow_sets
+from plcc.spec.syntax.validations.ll1.build_parsing_table import build_parsing_table
+from plcc.spec.syntax.validations.ll1.check_parsing_table_for_ll1 import check_parsing_table_for_ll1
+from plcc.spec.syntax.validations.ll1.check_left_recursion import check_left_recursion
+
+
+def build_ll1_result(grammar: Grammar, productions: dict, arbno_rules: dict = None) -&gt; dict:
+    if arbno_rules is None:
+        arbno_rules = {}
+    eps = grammar.getEpsilon()
+    eof = grammar.getEof()
+
+    internal_nts = set(arbno_rules) | {nt + &quot;#&quot; for nt in arbno_rules}
+
+    try:
+        lr_cycles = check_left_recursion(grammar)
+    except (IndexError, TypeError):
+        lr_cycles = []
+    firsts = build_first_sets(grammar)
+    follows = build_follow_sets(grammar, firsts)
+    table = build_parsing_table(firsts, follows, grammar)
+    conflict_errors = check_parsing_table_for_ll1(table)
+
+    def tok(t):
+        if t is eps:
+            return &quot;&quot;
+        if t is eof:
+            return &quot;eof&quot;
+        return t
+
+    nts = sorted(
+        nt for nt in grammar.getNonterminalSet()
+        if nt not in internal_nts
+    )
+
+    first_sets = {nt: sorted(tok(t) for t in firsts[nt]) for nt in nts}
+    follow_sets = {nt: sorted(tok(t) for t in follows[nt]) for nt in nts}
+
+    predict_sets = {}
+    for nt in nts:
+        nt_preds = []
+        for prod in grammar.getForms(nt):
+            prod_first = firsts.get(prod, set())
+            pset = {tok(t) for t in prod_first if t is not eps}
+            if eps in prod_first:
+                pset.update(tok(t) for t in follows[nt])
+            nt_preds.append(sorted(pset))
+        predict_sets[nt] = nt_preds
+
+    bad_cells = {(e.cell[0], e.cell[1]) for e in conflict_errors}
+
+    parse_table = {}
+    for (nt, t) in table.getKeys():
+        if nt in internal_nts:
+            continue
+        if (nt, t) in bad_cells:
+            continue
+        cell = table.getCell(nt, t)
+        if len(cell) != 1:
+            continue
+        prod = next(iter(cell))
+        lookahead = tok(t)
+        parse_table.setdefault(nt, {})[lookahead] = _prod_entry(nt, prod, productions, eps)
+
+    conflicts = []
+
+    def cell_sort_key(cell):
+        nt, t = cell
+        return (nt, tok(t))
+
+    for (nt, t) in sorted(bad_cells, key=cell_sort_key):
+        if nt in internal_nts:
+            continue
+        prods = table.getCell(nt, t)
+        lookahead = tok(t)
+        conflict_productions = [
+            _prod_entry(nt, p, productions, eps)
+            for p in sorted(prods, key=str)
+        ]
+        conflicts.append({&quot;nonterminal&quot;: nt, &quot;lookahead&quot;: lookahead, &quot;productions&quot;: conflict_productions})
+
+    left_recursion = []
+    for offending in lr_cycles:
+        cycle = [rule[0] for rule in offending] + [offending[-1][1][0]]
+        left_recursion.append({&quot;cycle&quot;: cycle})
+
+    arbno_out = {}
+    for nt, entry in arbno_rules.items():
+        if entry[&quot;rhs&quot;]:
+            first_item = entry[&quot;rhs&quot;][0]
+            first_sym = first_item[&quot;symbol&quot;]
+            if first_item[&quot;is_terminal&quot;]:
+                lookahead = [first_sym]
+            else:
+                fset = firsts.get(first_sym, set())
+                lookahead = sorted(t for t in fset if t is not eps and t is not eof)
+        else:
+            lookahead = []
+        arbno_out[nt] = {**entry, &quot;lookahead&quot;: lookahead}
+
+    return {
+        &quot;is_ll1&quot;: not (conflicts or left_recursion),
+        &quot;start_symbol&quot;: grammar.getStartSymbol(),
+        &quot;first_sets&quot;: first_sets,
+        &quot;follow_sets&quot;: follow_sets,
+        &quot;predict_sets&quot;: predict_sets,
+        &quot;parse_table&quot;: parse_table,
+        &quot;conflicts&quot;: conflicts,
+        &quot;left_recursion&quot;: left_recursion,
+        &quot;arbno&quot;: arbno_out,
+    }
+
+
+def _prod_entry(nt: str, prod: tuple, productions: dict, eps) -&gt; dict:
+    rule = productions.get((nt, prod))
+    alt = rule.alt if rule is not None else None
+    fields = rule.fields if rule is not None else [None] * len(prod)
+    return {
+        &quot;alt&quot;: alt,
+        &quot;production&quot;: [
+            {&quot;symbol&quot;: sym, &quot;field&quot;: fld}
+            for sym, fld in zip(prod, fields)
+            if sym is not eps
+        ],
+    }
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>ll1_cli.py</code> — rename local variable</strong></li>
+</ul>
+<p>In <code>src/plcc/ll1/ll1_cli.py</code>, change line 44:</p>
+<pre><code class="language-python"># Before
+grammar, field_map, arbno_rules = decode(spec)
+result = build_ll1_result(grammar, field_map, arbno_rules)
+
+# After
+grammar, productions, arbno_rules = decode(spec)
+result = build_ll1_result(grammar, productions, arbno_rules)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/ll1_result_builder_test.py src/plcc/ll1/ll1_cli_test.py -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/ll1/ll1_result_builder.py src/plcc/ll1/ll1_result_builder_test.py src/plcc/ll1/ll1_cli.py
+git commit -m &quot;feat: ll1_result_builder emits new cell shape {alt, production}&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-update-predictive_parserpy-to-use-the-new-cell-shape">Task 4: Update <code>predictive_parser.py</code> to use the new cell shape</h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/predictive_parser.py</code>
+- Test: <code>src/plcc/parser/predictive_parser_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>predictive_parser_test.py</code> fixtures and add alt-name test</strong></li>
+</ul>
+<p>Replace the full content of <code>src/plcc/parser/predictive_parser_test.py</code>:</p>
+<pre><code class="language-python">import pytest
+from plcc.parser.predictive_parser import parse, ParseError
+
+
+# ll1.json dict for grammar: program → NUM  (NUM is non-capturing, field=null)
+_TRIVIAL_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;program&quot;,
+    &quot;parse_table&quot;: {
+        &quot;program&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None}]}
+        }
+    },
+}
+
+# ll1.json dict for grammar: E → t:Term; Term → n:NUM
+_EXPR_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;E&quot;,
+    &quot;parse_table&quot;: {
+        &quot;E&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;Term&quot;, &quot;field&quot;: &quot;t&quot;}]}
+        },
+        &quot;Term&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;n&quot;}]}
+        },
+    },
+}
+
+# E → NUM PLUS NUM  (simple, no nesting, both NUMs captured)
+_FLAT_EXPR_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;E&quot;,
+    &quot;parse_table&quot;: {
+        &quot;E&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;left&quot;},
+                {&quot;symbol&quot;: &quot;PLUS&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;right&quot;},
+            ]}
+        }
+    },
+}
+
+# prefix expr grammar: &lt;expr&gt;:Add ::= PLUS &lt;expr&gt; &lt;expr&gt; | &lt;expr&gt;:Num ::= NUM
+_PREFIX_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;expr&quot;,
+    &quot;parse_table&quot;: {
+        &quot;expr&quot;: {
+            &quot;PLUS&quot;: {&quot;alt&quot;: &quot;Add&quot;, &quot;production&quot;: [
+                {&quot;symbol&quot;: &quot;PLUS&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;expr&quot;, &quot;field&quot;: &quot;left&quot;},
+                {&quot;symbol&quot;: &quot;expr&quot;, &quot;field&quot;: &quot;right&quot;},
+            ]},
+            &quot;NUM&quot;: {&quot;alt&quot;: &quot;Num&quot;, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;val&quot;}]},
+        }
+    },
+}
+
+def _tok(name, lexeme, line=1, col=1, file=&quot;&lt;stdin&gt;&quot;):
+    return {&quot;kind&quot;: &quot;token&quot;, &quot;name&quot;: name, &quot;lexeme&quot;: lexeme,
+            &quot;source&quot;: {&quot;file&quot;: file, &quot;line&quot;: line, &quot;column&quot;: col}}
+
+
+# --- trivial grammar tests ---
+
+def test_trivial_parse_returns_tree_kind():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    assert tree[&quot;kind&quot;] == &quot;tree&quot;
+
+
+def test_trivial_parse_rule_is_start_symbol():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    assert tree[&quot;rule&quot;] == &quot;program&quot;
+
+
+def test_trivial_parse_elided_symbol_not_in_children():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    assert tree[&quot;children&quot;] == []
+
+
+def test_trivial_parse_source_span():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;, line=3, col=5)])
+    src = tree[&quot;source&quot;]
+    assert src[&quot;line&quot;] == 3
+    assert src[&quot;column&quot;] == 5
+    assert src[&quot;endLine&quot;] == 3
+    assert src[&quot;endColumn&quot;] == 6
+
+
+def test_trivial_parse_source_file():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;, file=&quot;prog.txt&quot;)])
+    assert tree[&quot;source&quot;][&quot;file&quot;] == &quot;prog.txt&quot;
+
+
+# --- alt name tests ---
+
+def test_alt_name_used_as_rule_in_tree():
+    tree, _ = parse(_PREFIX_LL1, [_tok(&quot;PLUS&quot;, &quot;+&quot;), _tok(&quot;NUM&quot;, &quot;2&quot;), _tok(&quot;NUM&quot;, &quot;3&quot;)])
+    assert tree[&quot;rule&quot;] == &quot;Add&quot;
+
+
+def test_alt_name_on_leaf_node():
+    tree, _ = parse(_PREFIX_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    assert tree[&quot;rule&quot;] == &quot;Num&quot;
+
+
+def test_no_alt_name_uses_nonterminal_name():
+    tree, _ = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    assert tree[&quot;rule&quot;] == &quot;program&quot;
+
+
+# --- capturing symbol tests ---
+
+def test_capturing_child_in_children():
+    tree, _ = parse(_FLAT_EXPR_LL1, [
+        _tok(&quot;NUM&quot;, &quot;1&quot;, col=1),
+        _tok(&quot;PLUS&quot;, &quot;+&quot;, col=2),
+        _tok(&quot;NUM&quot;, &quot;2&quot;, col=3),
+    ])
+    fields = [child[0] for child in tree[&quot;children&quot;]]
+    assert &quot;left&quot; in fields
+    assert &quot;right&quot; in fields
+
+
+def test_capturing_children_are_token_dicts():
+    tree, _ = parse(_FLAT_EXPR_LL1, [
+        _tok(&quot;NUM&quot;, &quot;1&quot;),
+        _tok(&quot;PLUS&quot;, &quot;+&quot;),
+        _tok(&quot;NUM&quot;, &quot;2&quot;),
+    ])
+    left = dict(tree[&quot;children&quot;])[&quot;left&quot;]
+    assert left[&quot;kind&quot;] == &quot;token&quot;
+    assert left[&quot;name&quot;] == &quot;NUM&quot;
+    assert left[&quot;lexeme&quot;] == &quot;1&quot;
+
+
+def test_elided_plus_not_in_children():
+    tree, _ = parse(_FLAT_EXPR_LL1, [
+        _tok(&quot;NUM&quot;, &quot;1&quot;),
+        _tok(&quot;PLUS&quot;, &quot;+&quot;),
+        _tok(&quot;NUM&quot;, &quot;2&quot;),
+    ])
+    fields = [child[0] for child in tree[&quot;children&quot;]]
+    assert &quot;PLUS&quot; not in fields
+
+
+# --- span across multiple tokens ---
+
+def test_span_covers_all_tokens_including_elided():
+    tree, _ = parse(_FLAT_EXPR_LL1, [
+        _tok(&quot;NUM&quot;, &quot;1&quot;, col=1),
+        _tok(&quot;PLUS&quot;, &quot;+&quot;, col=3),
+        _tok(&quot;NUM&quot;, &quot;2&quot;, col=5),
+    ])
+    src = tree[&quot;source&quot;]
+    assert src[&quot;column&quot;] == 1
+    assert src[&quot;endColumn&quot;] == 5
+
+
+# --- nested nonterminal tests ---
+
+def test_nested_nonterminal_child_is_tree():
+    tree, _ = parse(_EXPR_LL1, [
+        _tok(&quot;NUM&quot;, &quot;3&quot;),
+    ])
+    assert tree[&quot;rule&quot;] == &quot;E&quot;
+    children_dict = dict(tree[&quot;children&quot;])
+    assert &quot;t&quot; in children_dict
+    assert children_dict[&quot;t&quot;][&quot;kind&quot;] == &quot;tree&quot;
+    assert children_dict[&quot;t&quot;][&quot;rule&quot;] == &quot;Term&quot;
+
+
+# --- error cases ---
+
+def test_wrong_terminal_raises_parse_error():
+    with pytest.raises(ParseError):
+        parse(_TRIVIAL_LL1, [_tok(&quot;IDENTIFIER&quot;, &quot;x&quot;)])
+
+
+def test_no_production_for_lookahead_raises_parse_error():
+    ll1 = {
+        &quot;is_ll1&quot;: True,
+        &quot;start_symbol&quot;: &quot;A&quot;,
+        &quot;parse_table&quot;: {&quot;A&quot;: {&quot;X&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;X&quot;, &quot;field&quot;: None}]}}},
+    }
+    with pytest.raises(ParseError):
+        parse(ll1, [_tok(&quot;Y&quot;, &quot;y&quot;)])
+
+
+def test_empty_input_on_nonempty_grammar_raises_parse_error():
+    with pytest.raises(ParseError):
+        parse(_TRIVIAL_LL1, [])
+
+
+# ll1 dict for: rands **= expr +COMMA, expr → NUM
+_RANDS_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;rands&quot;,
+    &quot;parse_table&quot;: {
+        &quot;expr&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;num&quot;}]}
+        }
+    },
+    &quot;arbno&quot;: {
+        &quot;rands&quot;: {
+            &quot;rhs&quot;: [{&quot;field&quot;: &quot;exprList&quot;, &quot;symbol&quot;: &quot;expr&quot;, &quot;is_terminal&quot;: False}],
+            &quot;separator&quot;: &quot;COMMA&quot;,
+            &quot;lookahead&quot;: [&quot;NUM&quot;],
+        }
+    }
+}
+
+# ll1 dict for: cmds **= cmd (no separator), cmd → X
+_CMDS_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;cmds&quot;,
+    &quot;parse_table&quot;: {
+        &quot;cmd&quot;: {
+            &quot;X&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;X&quot;, &quot;field&quot;: &quot;x&quot;}]}
+        }
+    },
+    &quot;arbno&quot;: {
+        &quot;cmds&quot;: {
+            &quot;rhs&quot;: [{&quot;field&quot;: &quot;cmdList&quot;, &quot;symbol&quot;: &quot;cmd&quot;, &quot;is_terminal&quot;: False}],
+            &quot;separator&quot;: None,
+            &quot;lookahead&quot;: [&quot;X&quot;],
+        }
+    }
+}
+
+
+def test_arbno_separator_two_items_produces_list():
+    tree, _ = parse(_RANDS_LL1, [
+        _tok(&quot;NUM&quot;, &quot;1&quot;),
+        _tok(&quot;COMMA&quot;, &quot;,&quot;),
+        _tok(&quot;NUM&quot;, &quot;2&quot;),
+    ])
+    children_dict = dict(tree[&quot;children&quot;])
+    assert &quot;exprList&quot; in children_dict
+    assert isinstance(children_dict[&quot;exprList&quot;], list)
+    assert len(children_dict[&quot;exprList&quot;]) == 2
+
+
+def test_arbno_separator_list_items_are_tree_nodes():
+    tree, _ = parse(_RANDS_LL1, [
+        _tok(&quot;NUM&quot;, &quot;1&quot;),
+        _tok(&quot;COMMA&quot;, &quot;,&quot;),
+        _tok(&quot;NUM&quot;, &quot;2&quot;),
+    ])
+    expr_list = dict(tree[&quot;children&quot;])[&quot;exprList&quot;]
+    assert expr_list[0][&quot;kind&quot;] == &quot;tree&quot;
+    assert expr_list[0][&quot;rule&quot;] == &quot;expr&quot;
+    assert expr_list[1][&quot;kind&quot;] == &quot;tree&quot;
+
+
+def test_arbno_separator_zero_items_on_no_match():
+    tree, _ = parse(_RANDS_LL1, [])
+    children_dict = dict(tree[&quot;children&quot;])
+    assert children_dict[&quot;exprList&quot;] == []
+
+
+def test_arbno_separator_one_item():
+    tree, _ = parse(_RANDS_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    children_dict = dict(tree[&quot;children&quot;])
+    assert len(children_dict[&quot;exprList&quot;]) == 1
+
+
+def test_arbno_plain_multiple_items():
+    tree, _ = parse(_CMDS_LL1, [
+        _tok(&quot;X&quot;, &quot;a&quot;),
+        _tok(&quot;X&quot;, &quot;b&quot;),
+        _tok(&quot;X&quot;, &quot;c&quot;),
+    ])
+    children_dict = dict(tree[&quot;children&quot;])
+    assert len(children_dict[&quot;cmdList&quot;]) == 3
+
+
+def test_arbno_plain_zero_items():
+    tree, _ = parse(_CMDS_LL1, [])
+    children_dict = dict(tree[&quot;children&quot;])
+    assert children_dict[&quot;cmdList&quot;] == []
+
+
+def test_arbno_result_is_tree_kind():
+    tree, _ = parse(_RANDS_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;)])
+    assert tree[&quot;kind&quot;] == &quot;tree&quot;
+    assert tree[&quot;rule&quot;] == &quot;rands&quot;
+
+
+_ADDITION_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;program&quot;,
+    &quot;parse_table&quot;: {
+        &quot;program&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;PLUS&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None},
+            ]}
+        }
+    },
+}
+
+
+def test_incomplete_raises_ParseError():
+    with pytest.raises(ParseError):
+        parse(_ADDITION_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;)])
+
+
+def test_bad_token_raises_ParseError():
+    with pytest.raises(ParseError):
+        parse(_TRIVIAL_LL1, [_tok(&quot;PLUS&quot;, &quot;+&quot;)])
+
+
+def test_parse_error_carries_source():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [_tok(&quot;PLUS&quot;, &quot;+&quot;, line=3, col=7)])
+    assert exc_info.value.source[&quot;line&quot;] == 3
+    assert exc_info.value.source[&quot;column&quot;] == 7
+
+
+def test_parse_returns_consumed_count():
+    _, consumed = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
+    assert consumed == 1
+
+
+def test_parse_stops_at_first_unconsumed_token():
+    tree, consumed = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;), _tok(&quot;NUM&quot;, &quot;2&quot;)])
+    assert consumed == 1
+    assert tree[&quot;kind&quot;] == &quot;tree&quot;
+
+
+def test_incomplete_raises_ParseError_not_IncompleteInputError():
+    with pytest.raises(ParseError):
+        parse(_ADDITION_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;)])
+
+
+def test_parse_error_found_is_set_for_wrong_terminal():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [_tok(&quot;PLUS&quot;, &quot;+&quot;)])
+    assert exc_info.value.found == &quot;PLUS&quot;
+
+
+def test_parse_error_found_is_eof_for_premature_end_of_input():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_ADDITION_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;)])
+    assert exc_info.value.found == &quot;eof&quot;
+
+
+def test_parse_error_found_is_none_by_default():
+    e = ParseError(&quot;something went wrong&quot;)
+    assert e.found is None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/predictive_parser_test.py -v
+</code></pre>
+<p>Expected: <code>TypeError: string indices must be integers</code> on most tests (iterating the dict <code>{"alt": ..., "production": [...]}</code> yields string keys <code>"alt"</code> and <code>"production"</code>, and <code>entry["symbol"]</code> on a string fails); plus wrong <code>rule</code> value on the new alt-name tests.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>predictive_parser.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/parser/predictive_parser.py</code>, change the two marked lines inside <code>_parse_regular</code>:</p>
+<pre><code class="language-python">    def _parse_regular(sym):
+        lookahead = current()[&quot;name&quot;]
+        nt_table = parse_table.get(sym)
+        if nt_table is None:
+            raise ParseError(
+                f&quot;no parse table entry for nonterminal {sym!r}&quot;,
+                source=current()[&quot;source&quot;],
+            )
+        production = nt_table.get(lookahead)
+        if production is None:
+            raise ParseError(
+                f&quot;unexpected {lookahead!r}, no production for {sym!r}&quot;,
+                source=current()[&quot;source&quot;],
+                found=lookahead,
+            )
+        builder = NodeBuilder(production.get(&quot;alt&quot;) or sym)
+        for entry in production[&quot;production&quot;]:
+            s, f = entry[&quot;symbol&quot;], entry[&quot;field&quot;]
+            if is_nonterminal(s):
+                child_builder = parse_nt(s)
+                builder.note_span_from(child_builder)
+                if f is not None:
+                    builder.children.append([f, child_builder.to_node()])
+            else:
+                tok = expect(s)
+                builder.note_token(tok)
+                if f is not None:
+                    builder.children.append([f, tok])
+        return builder
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/predictive_parser_test.py -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/parser/predictive_parser.py src/plcc/parser/predictive_parser_test.py
+git commit -m &quot;feat: predictive_parser uses cell alt name for tree node rule&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-update-table_cli_testpy-fixtures">Task 5: Update <code>table_cli_test.py</code> fixtures</h2>
+<p><strong>Files:</strong>
+- Test: <code>src/plcc/parser/table_cli_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update all inline fixtures to new cell shape</strong></li>
+</ul>
+<p>Replace the five inline ll1 fixture dicts at the top of <code>src/plcc/parser/table_cli_test.py</code>. No test logic changes — only the cell values inside <code>parse_table</code>.</p>
+<pre><code class="language-python">_TRIVIAL_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;program&quot;,
+    &quot;parse_table&quot;: {
+        &quot;program&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None}]}
+        }
+    },
+}
+
+_NON_LL1 = {
+    &quot;is_ll1&quot;: False,
+    &quot;start_symbol&quot;: &quot;program&quot;,
+    &quot;parse_table&quot;: {},
+    &quot;conflicts&quot;: [{&quot;nonterminal&quot;: &quot;program&quot;, &quot;lookahead&quot;: &quot;NUM&quot;, &quot;productions&quot;: []}],
+    &quot;left_recursion&quot;: [],
+}
+
+_CAPTURING_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;E&quot;,
+    &quot;parse_table&quot;: {
+        &quot;E&quot;: {&quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [{&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;num&quot;}]}}
+    },
+}
+
+_ADDITION_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;program&quot;,
+    &quot;parse_table&quot;: {
+        &quot;program&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;PLUS&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None},
+            ]}
+        }
+    },
+}
+
+_EXP_LL1 = {
+    &quot;is_ll1&quot;: True,
+    &quot;start_symbol&quot;: &quot;exp&quot;,
+    &quot;parse_table&quot;: {
+        &quot;exp&quot;: {
+            &quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
+                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;exp2&quot;, &quot;field&quot;: None},
+            ]}
+        },
+        &quot;exp2&quot;: {
+            &quot;OP&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
+                {&quot;symbol&quot;: &quot;OP&quot;, &quot;field&quot;: None},
+                {&quot;symbol&quot;: &quot;exp&quot;, &quot;field&quot;: None},
+            ]},
+            &quot;eof&quot;: {&quot;alt&quot;: None, &quot;production&quot;: []},
+        },
+    },
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/parser/table_cli_test.py -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 3: Run the full unit suite to verify nothing is broken</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: 810+ passed, 0 failed.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/parser/table_cli_test.py
+git commit -m &quot;test: update table_cli fixtures to new cell shape {alt, production}&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

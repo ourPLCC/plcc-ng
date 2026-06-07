@@ -1,0 +1,1160 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-25-diagram-decouple-from-make/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Decouple Diagram Operations from plcc-make — Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#decouple-diagram-operations-from-plcc-make-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Decouple Diagram Operations from plcc-make — Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="decouple-diagram-operations-from-plcc-make-implementation-plan">Decouple Diagram Operations from plcc-make — Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Remove all diagram operations from <code>plcc-make</code>; make <code>plcc-diagram</code> own the full emit → build → print-path workflow; replace viewer-launcher logic with a simple <code>print(path)</code>.</p>
+<p><strong>Architecture:</strong> Three independent changes applied in order: (1) simplify the two <code>run</code> commands to print the file path; (2) strip diagram stages from <code>make.py</code> and rename <code>--through=diagram</code> to <code>--through=model</code>; (3) update <code>diagram.py</code> to call <code>plcc-make --through=model</code> then explicitly orchestrate emit, build, and run.</p>
+<p><strong>Tech Stack:</strong> Python 3, pytest, <code>unittest.mock</code>, <code>subprocess</code>, <code>docopt</code></p>
+<p><strong>Working directory:</strong> <code>.worktrees/fix/xdg-open-missing</code> — all paths are relative to the repo root; run commands from this worktree. Use <code>/workspaces/plcc-ng/.venv/bin/pytest</code> (the venv is shared).</p>
+<hr />
+<h3 id="task-1-replace-viewer-launcher-logic-with-printpath-plantuml">Task 1: Replace viewer-launcher logic with <code>print(path)</code> — plantuml</h3>
+<p>The <code>plantuml/run.py</code> on this branch already has an error-handling fix that is now superseded. Replace the entire <code>_open_file</code> function and all platform-detection logic with a single <code>print(path)</code>.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/diagram/plantuml/run.py</code>
+- Modify: <code>src/plcc/diagram/plantuml/run_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing test</strong></li>
+</ul>
+<p>Add to <code>src/plcc/diagram/plantuml/run_test.py</code>:</p>
+<pre><code class="language-python">def test_prints_path_to_stdout(tmp_path, capsys):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    run_main([f'--input={img}'])
+    out, _ = capsys.readouterr()
+    assert str(img) in out
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the test to verify it fails</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/diagram/plantuml/run_test.py::test_prints_path_to_stdout -v
+</code></pre>
+<p>Expected: FAIL — <code>run_main</code> currently calls <code>xdg-open</code> (or raises), never prints.</p>
+<ul>
+<li>[ ] <strong>Step 3: Replace <code>run.py</code> with the new implementation</strong></li>
+</ul>
+<p>Replace the entire contents of <code>src/plcc/diagram/plantuml/run.py</code> with:</p>
+<pre><code class="language-python">import enum
+import sys
+
+from docopt import docopt
+
+from ...verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-plantuml-diagram-run
+    Print the path to the rendered diagram image.
+
+Usage:
+    plcc-plantuml-diagram-run --input=FILE [-v ...] [options]
+
+Options:
+    --input=FILE    Path to image file.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-plantuml-diagram-run&quot;, Events, args)
+    input_file = args['--input']
+    verbose.emit(Events.STARTED, message=f&quot;diagram ready: {input_file}&quot;)
+    print(input_file)
+    verbose.emit(Events.FINISHED)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Replace <code>run_test.py</code> with the updated test file</strong></li>
+</ul>
+<p>Replace the entire contents of <code>src/plcc/diagram/plantuml/run_test.py</code> with:</p>
+<pre><code class="language-python">import pytest
+
+from .run import main as run_main
+
+
+def test_missing_required_args_exits_nonzero():
+    import docopt
+    with pytest.raises((docopt.DocoptExit, SystemExit)):
+        run_main([])
+
+
+def test_prints_path_to_stdout(tmp_path, capsys):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    run_main([f'--input={img}'])
+    out, _ = capsys.readouterr()
+    assert str(img) in out
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run all plantuml run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/diagram/plantuml/run_test.py -v
+</code></pre>
+<p>Expected: 2 passed.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/diagram/plantuml/run.py src/plcc/diagram/plantuml/run_test.py
+git commit -m &quot;fix(diagram): plantuml run prints path instead of opening viewer&quot;
+</code></pre>
+<hr />
+<h3 id="task-2-replace-viewer-launcher-logic-with-printpath-mermaid">Task 2: Replace viewer-launcher logic with <code>print(path)</code> — mermaid</h3>
+<p>Identical change to Task 1, applied to the mermaid module.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/diagram/mermaid/run.py</code>
+- Modify: <code>src/plcc/diagram/mermaid/run_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing test</strong></li>
+</ul>
+<p>Add to <code>src/plcc/diagram/mermaid/run_test.py</code>:</p>
+<pre><code class="language-python">def test_prints_path_to_stdout(tmp_path, capsys):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    run_main([f'--input={img}'])
+    out, _ = capsys.readouterr()
+    assert str(img) in out
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the test to verify it fails</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/diagram/mermaid/run_test.py::test_prints_path_to_stdout -v
+</code></pre>
+<p>Expected: FAIL.</p>
+<ul>
+<li>[ ] <strong>Step 3: Replace <code>run.py</code> with the new implementation</strong></li>
+</ul>
+<p>Replace the entire contents of <code>src/plcc/diagram/mermaid/run.py</code> with:</p>
+<pre><code class="language-python">import enum
+import sys
+
+from docopt import docopt
+
+from ...verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-mermaid-diagram-run
+    Print the path to the rendered diagram image.
+
+Usage:
+    plcc-mermaid-diagram-run --input=FILE [-v ...] [options]
+
+Options:
+    --input=FILE    Path to image file.
+    -h --help       Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = docopt(__doc__, argv)
+    verbose = VerboseContext.from_args(&quot;plcc-mermaid-diagram-run&quot;, Events, args)
+    input_file = args['--input']
+    verbose.emit(Events.STARTED, message=f&quot;diagram ready: {input_file}&quot;)
+    print(input_file)
+    verbose.emit(Events.FINISHED)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Replace <code>run_test.py</code> with the updated test file</strong></li>
+</ul>
+<p>Replace the entire contents of <code>src/plcc/diagram/mermaid/run_test.py</code> with:</p>
+<pre><code class="language-python">import pytest
+
+from .run import main as run_main
+
+
+def test_missing_required_args_exits_nonzero():
+    import docopt
+    with pytest.raises((docopt.DocoptExit, SystemExit)):
+        run_main([])
+
+
+def test_prints_path_to_stdout(tmp_path, capsys):
+    img = tmp_path / &quot;diagram.png&quot;
+    img.write_bytes(b&quot;PNG&quot;)
+    run_main([f'--input={img}'])
+    out, _ = capsys.readouterr()
+    assert str(img) in out
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run all mermaid run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/diagram/mermaid/run_test.py -v
+</code></pre>
+<p>Expected: 2 passed.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/diagram/mermaid/run.py src/plcc/diagram/mermaid/run_test.py
+git commit -m &quot;fix(diagram): mermaid run prints path instead of opening viewer&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-remove-diagram-operations-from-plcc-make-rename-throughdiagram-to-throughmodel">Task 3: Remove diagram operations from <code>plcc-make</code>; rename <code>--through=diagram</code> to <code>--through=model</code></h3>
+<p><code>make.py</code> currently runs <code>plcc-diagram-emit</code> and <code>plcc-diagram-build</code> as part of <code>--through=diagram</code> and <code>--through=all</code>. Remove both. Rename <code>diagram</code> level to <code>model</code> (the model is what that level actually produces). Remove <code>--diagram-format</code> option.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/make.py</code>
+- Modify: <code>src/plcc/cmd/make_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write three failing tests</strong></li>
+</ul>
+<p>Add to <code>src/plcc/cmd/make_test.py</code>:</p>
+<pre><code class="language-python">def test_through_model_is_valid(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main(['--through=model'])
+    _, err = capsys.readouterr()
+    assert &quot;invalid --through&quot; not in err
+
+
+def test_through_diagram_is_rejected(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main(['--through=diagram'])
+    _, err = capsys.readouterr()
+    assert &quot;invalid --through&quot; in err
+
+
+def test_invalid_through_error_message_includes_model(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main(['--through=typo'])
+    _, err = capsys.readouterr()
+    assert &quot;model&quot; in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the new tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/cmd/make_test.py::test_through_model_is_valid src/plcc/cmd/make_test.py::test_through_diagram_is_rejected src/plcc/cmd/make_test.py::test_invalid_through_error_message_includes_model -v
+</code></pre>
+<p>Expected: all 3 FAIL — <code>--through=diagram</code> is currently valid, <code>--through=model</code> is not, and the error message says "diagram" not "model".</p>
+<ul>
+<li>[ ] <strong>Step 3: Update the docstring in <code>make.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/make.py</code>, replace the <code>__doc__</code> string:</p>
+<pre><code class="language-python">__doc__ = &quot;&quot;&quot;plcc-make
+    Build a PLCC project from a grammar file.
+
+Usage:
+    plcc-make [-v ...] [options]
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    --through=&lt;level&gt;       Build up to this level: scan, parse, model, or all [default: all].
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>main()</code> in <code>make.py</code> — remove <code>diagram_fmt</code>, update validation, update <code>_REQUIRED</code></strong></li>
+</ul>
+<p>In <code>main()</code>, remove this line:</p>
+<pre><code class="language-python">    diagram_fmt = args['--diagram-format'] or 'plantuml'
+</code></pre>
+<p>Replace the <code>through</code> validation block:</p>
+<pre><code class="language-python">    if through not in ('scan', 'parse', 'model', 'all'):
+        print(
+            f&quot;plcc-make: invalid --through value '{through}'; &quot;
+            &quot;must be scan, parse, model, or all&quot;,
+            file=sys.stderr,
+        )
+        sys.exit(1)
+</code></pre>
+<p>Replace the <code>_REQUIRED</code> dict:</p>
+<pre><code class="language-python">    _REQUIRED = {
+        'scan':  {'scan'},
+        'parse': {'scan', 'parse'},
+        'model': {'scan', 'model'},
+        'all':   {'scan', 'parse', 'model'} | tool_stages,
+    }
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Update the model-build condition and remove the diagram emit/build block</strong></li>
+</ul>
+<p>Replace:</p>
+<pre><code class="language-python">    if through in ('diagram', 'all'):
+        verbose.emit(Events.PHASE, message=&quot;model&quot;)
+        model_json = str(build_dir / 'model.json')
+        _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
+</code></pre>
+<p>with:</p>
+<pre><code class="language-python">    if through in ('model', 'all'):
+        verbose.emit(Events.PHASE, message=&quot;model&quot;)
+        model_json = str(build_dir / 'model.json')
+        _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
+</code></pre>
+<p>Then delete the entire diagram emit/build block that follows (currently lines ~165–191):</p>
+<pre><code class="language-python">    if through in ('diagram', 'all'):
+        verbose.emit(Events.PHASE, message=&quot;diagram emit&quot;)
+        (build_dir / 'diagram').mkdir(exist_ok=True)
+        required = (through == 'diagram')
+        _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+        source_ext = _SOURCE_EXT.get(diagram_fmt, diagram_fmt)
+        diagram_source = str(build_dir / 'diagram' / f'diagram.{source_ext}')
+        diagram_ok = _run_or_die(
+            ['plcc-diagram-emit', f'--format={diagram_fmt}'] + child_flags,
+            stdin_file=model_json,
+            stdout_file=diagram_source,
+            verbose=verbose,
+            required=required,
+        )
+        if diagram_ok:
+            verbose.emit(Events.PHASE, message=&quot;diagram build&quot;)
+            diagram_ok = _run_or_die(
+                ['plcc-diagram-build', f'--format={diagram_fmt}',
+                 f'--input={diagram_source}',
+                 f'--output={build_dir / &quot;diagram&quot; / &quot;diagram.png&quot;}'] + child_flags,
+                verbose=verbose,
+                required=required,
+            )
+        if diagram_ok:
+            required_stages = required_stages | {'diagram'}
+        else:
+            print(&quot;plcc-make: diagram generation skipped&quot;, file=sys.stderr)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 6: Run the three new tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/cmd/make_test.py::test_through_model_is_valid src/plcc/cmd/make_test.py::test_through_diagram_is_rejected src/plcc/cmd/make_test.py::test_invalid_through_error_message_includes_model -v
+</code></pre>
+<p>Expected: all 3 PASS.</p>
+<ul>
+<li>[ ] <strong>Step 7: Delete the three now-wrong tests from <code>make_test.py</code></strong></li>
+</ul>
+<p>Remove these three tests entirely from <code>src/plcc/cmd/make_test.py</code>:
+- <code>test_invalid_through_diagram_is_now_valid</code>
+- <code>test_diagram_format_flag_accepted</code>
+- <code>test_invalid_through_error_message_includes_diagram</code></p>
+<ul>
+<li>[ ] <strong>Step 8: Run the full make test suite</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/cmd/make_test.py -v
+</code></pre>
+<p>Expected: all remaining tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 9: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
+git commit -m &quot;fix(make): remove diagram operations; rename --through=diagram to --through=model&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-update-plcc-diagram-to-orchestrate-emit-build-run">Task 4: Update <code>plcc-diagram</code> to orchestrate emit → build → run</h3>
+<p><code>diagram.py</code> currently calls <code>plcc-make --through=diagram</code> (which ran emit and build) then <code>plcc-diagram-run</code>. Now it must call <code>plcc-make --through=model</code> and explicitly run emit, build, and run in sequence.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/diagram.py</code>
+- Modify: <code>src/plcc/cmd/diagram_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write two failing tests</strong></li>
+</ul>
+<p>Add to <code>src/plcc/cmd/diagram_test.py</code>:</p>
+<pre><code class="language-python">def test_calls_plcc_make_with_through_model(tmp_path, monkeypatch, capsys):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    monkeypatch.chdir(tmp_path)
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        m = MagicMock()
+        m.returncode = 1
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        with pytest.raises(SystemExit):
+            run_main([])
+
+    assert calls[0][0] == 'plcc-make'
+    assert '--through=model' in calls[0]
+    assert not any('--through=diagram' in arg for arg in calls[0])
+
+
+def test_calls_emit_build_run_after_make(tmp_path, monkeypatch):
+    grammar = tmp_path / &quot;grammar.plcc&quot;
+    grammar.write_text(&quot;# stub&quot;)
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
+    monkeypatch.chdir(tmp_path)
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        run_main([])
+
+    cmds = [c[0] for c in calls]
+    assert cmds == ['plcc-make', 'plcc-diagram-emit', 'plcc-diagram-build', 'plcc-diagram-run']
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the new tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/cmd/diagram_test.py::test_calls_plcc_make_with_through_model src/plcc/cmd/diagram_test.py::test_calls_emit_build_run_after_make -v
+</code></pre>
+<p>Expected: both FAIL — current code calls <code>--through=diagram</code> and only dispatches to <code>plcc-diagram-run</code>, not emit/build separately.</p>
+<ul>
+<li>[ ] <strong>Step 3: Replace <code>diagram.py</code> <code>main()</code> with the new implementation</strong></li>
+</ul>
+<p>Replace the body of <code>main()</code> in <code>src/plcc/cmd/diagram.py</code> (from <code>verbose.emit(Events.STARTED</code> onward) with:</p>
+<pre><code class="language-python">    verbose.emit(Events.STARTED, message=f&quot;generating diagram for {grammar_file}&quot;)
+    child_flags = verbose.child_flags()
+
+    make_result = subprocess.run(
+        ['plcc-make', '--through=model', f'--grammar-file={grammar_file}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        sys.stderr.buffer.write(make_result.stderr)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    _SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+    source_ext = _SOURCE_EXT.get(fmt, fmt)
+    build_diagram_dir = os.path.join('build', 'diagram')
+    os.makedirs(build_diagram_dir, exist_ok=True)
+    diagram_source = os.path.join(build_diagram_dir, f'diagram.{source_ext}')
+    diagram_image = os.path.join(build_diagram_dir, 'diagram.png')
+    model_json = os.path.join('build', 'model.json')
+
+    with open(model_json) as stdin_f, open(diagram_source, 'w') as stdout_f:
+        emit_result = subprocess.run(
+            ['plcc-diagram-emit', f'--format={fmt}'] + child_flags,
+            stdin=stdin_f, stdout=stdout_f, stderr=subprocess.PIPE,
+        )
+    if emit_result.stderr:
+        sys.stderr.buffer.write(emit_result.stderr)
+    if emit_result.returncode != 0:
+        sys.exit(emit_result.returncode)
+
+    build_result = subprocess.run(
+        ['plcc-diagram-build', f'--format={fmt}',
+         f'--input={diagram_source}',
+         f'--output={diagram_image}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if build_result.stderr:
+        sys.stderr.buffer.write(build_result.stderr)
+    if build_result.returncode != 0:
+        sys.exit(build_result.returncode)
+
+    run_result = subprocess.run(
+        ['plcc-diagram-run', f'--format={fmt}', f'--input={diagram_image}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if run_result.stderr:
+        sys.stderr.buffer.write(run_result.stderr)
+    if run_result.returncode != 0:
+        sys.exit(run_result.returncode)
+
+    verbose.emit(Events.FINISHED, message=&quot;done&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run the two new tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/cmd/diagram_test.py::test_calls_plcc_make_with_through_model src/plcc/cmd/diagram_test.py::test_calls_emit_build_run_after_make -v
+</code></pre>
+<p>Expected: both PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Delete and update the now-wrong tests in <code>diagram_test.py</code></strong></li>
+</ul>
+<p>Delete <code>test_calls_plcc_make_with_through_diagram</code> and <code>test_default_format_is_plantuml</code> entirely.</p>
+<ul>
+<li>[ ] <strong>Step 6: Run the full diagram test suite</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/plcc/cmd/diagram_test.py -v
+</code></pre>
+<p>Expected: all remaining tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 7: Run the full test suite to check for regressions</strong></li>
+</ul>
+<pre><code class="language-bash">/workspaces/plcc-ng/.venv/bin/pytest src/ -v
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 8: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/diagram.py src/plcc/cmd/diagram_test.py
+git commit -m &quot;fix(diagram): orchestrate emit, build, run directly; drop --through=diagram from make&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1208 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-17-error-handling-2-code-sonnet/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Error Handling Redesign — Part 2: Stage-Local Code Changes (Sonnet) - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#error-handling-redesign-part-2-stage-local-code-changes-sonnet" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Error Handling Redesign — Part 2: Stage-Local Code Changes (Sonnet)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="error-handling-redesign-part-2-stage-local-code-changes-sonnet">Error Handling Redesign — Part 2: Stage-Local Code Changes (Sonnet)</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+<p><strong>Model:</strong> Sonnet. This part is well-specified TDD on Level 0 stages — extending <code>verbose.emit_error</code>, removing in-band error records, toggling <code>plcc-ll1</code>'s exit semantics. Mechanical, test-first, small blast radius per task.</p>
+</blockquote>
+<p><strong>Goal:</strong> Apply the code changes that Part 1's §17.9 amendment requires, limited to Level 0 stages and the intra-stage logic of <code>plcc-make</code>. After Part 2, <code>plcc-tokens</code> emits errors to stderr with nonzero exit; <code>plcc-ll1</code> always exits 0 and signals non-LL(1) via <code>is_ll1</code> in its output; <code>plcc-make</code> reads <code>build/ll1.json</code> and aborts when <code>is_ll1</code> is false.</p>
+<p><strong>Design reference:</strong> <code>docs/design/2026-04-12-multi-lang-pipeline.md</code> §17.9 (landed by Part 1).</p>
+<p><strong>Predecessor:</strong> <code>docs/plans/2026-04-17-error-handling-1-docs-opus.md</code> must be merged first. The schemas and contracts this plan modifies are described in the §17.9 amendment; without it, this plan is editing against a stale design.</p>
+<p><strong>Successor:</strong> <code>docs/plans/2026-04-17-error-handling-3-orchestrators-opus.md</code> — pipefail discipline and cascade-suppression in <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>. Those orchestrators drive actual subprocess pipelines; <code>plcc-make</code> runs stages sequentially with file-mediated stdout, so its failure handling is simpler and lives in this plan.</p>
+<p><strong>Tech stack:</strong> Python 3.12+, pdm, pytest, docopt-ng, BATS, check-jsonschema.</p>
+<hr />
+<h2 id="task-1-verify-green-bar">Task 1 — Verify green bar</h2>
+<p><strong>Files:</strong>
+- Run only: <code>bin/test/all.bash</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Run the full test suite</strong></li>
+</ul>
+<pre><code class="language-bash">cd /workspaces/plcc-ng/.worktrees/multi-lang
+bin/test/all.bash
+</code></pre>
+<p>Expected: all tests pass. Do not proceed until green.</p>
+<ul>
+<li>[ ] <strong>Step 2: Record test counts</strong></li>
+</ul>
+<p>Record passing unit tests and BATS tests. Unit counts will grow in this plan (new <code>emit_error</code> tests, rewritten lex-error tests); BATS counts should be stable or grow slightly (new integration coverage for the stderr error path).</p>
+<hr />
+<h2 id="task-2-extend-verbosecontext-with-emit_error">Task 2 — Extend <code>VerboseContext</code> with <code>emit_error</code></h2>
+<p><strong>Files:</strong>
+- Edit: <code>src/plcc/verbose.py</code>
+- Edit: <code>src/plcc/verbose_test.py</code></p>
+<p>Context: <code>VerboseContext.emit</code> already exists for level-gated diagnostic events. Errors are not level-gated (always emitted, §17.8.4) and have a distinct record shape. The cleanest addition is a sibling method <code>emit_error</code> that reuses the same text/json branching but ignores the level gate and always writes <code>"event": "error"</code> in JSON mode.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Add to <code>src/plcc/verbose_test.py</code>:</p>
+<pre><code class="language-python">def test_emit_error_text_format(capsys):
+    ctx = VerboseContext(&quot;plcc-tokens&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    ctx.emit_error(
+        pos={&quot;file&quot;: &quot;prog.txt&quot;, &quot;line&quot;: 4, &quot;column&quot;: 12},
+        message=&quot;unrecognized character '$'&quot;,
+    )
+    out, err = capsys.readouterr()
+    assert out == &quot;&quot;
+    assert err == &quot;plcc-tokens: prog.txt:4:12: error: unrecognized character '$'\n&quot;
+
+
+def test_emit_error_text_format_no_file(capsys):
+    ctx = VerboseContext(&quot;plcc-tokens&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    ctx.emit_error(
+        pos={&quot;file&quot;: None, &quot;line&quot;: 1, &quot;column&quot;: 1},
+        message=&quot;unrecognized character&quot;,
+    )
+    _, err = capsys.readouterr()
+    assert err == &quot;plcc-tokens: &lt;stdin&gt;:1:1: error: unrecognized character\n&quot;
+
+
+def test_emit_error_json_format(capsys):
+    ctx = VerboseContext(&quot;plcc-tokens&quot;, SampleEvents, level=0, fmt=&quot;json&quot;)
+    ctx.emit_error(
+        pos={&quot;file&quot;: &quot;prog.txt&quot;, &quot;line&quot;: 4, &quot;column&quot;: 12},
+        message=&quot;unrecognized character '$'&quot;,
+        codepoint=36,
+    )
+    out, err = capsys.readouterr()
+    assert out == &quot;&quot;
+    lines = [l for l in err.strip().splitlines() if l]
+    assert len(lines) == 1
+    record = json.loads(lines[0])
+    assert record[&quot;stage&quot;] == &quot;plcc-tokens&quot;
+    assert record[&quot;event&quot;] == &quot;error&quot;
+    assert record[&quot;severity&quot;] == &quot;error&quot;
+    assert record[&quot;pos&quot;] == {&quot;file&quot;: &quot;prog.txt&quot;, &quot;line&quot;: 4, &quot;column&quot;: 12}
+    assert record[&quot;message&quot;] == &quot;unrecognized character '$'&quot;
+    assert record[&quot;codepoint&quot;] == 36
+
+
+def test_emit_error_ignores_verbose_level(capsys):
+    # Even at level 0, errors must still emit.
+    ctx = VerboseContext(&quot;plcc-tokens&quot;, SampleEvents, level=0, fmt=&quot;text&quot;)
+    ctx.emit_error(
+        pos={&quot;file&quot;: &quot;prog.txt&quot;, &quot;line&quot;: 1, &quot;column&quot;: 1},
+        message=&quot;boom&quot;,
+    )
+    _, err = capsys.readouterr()
+    assert &quot;error: boom&quot; in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the tests, confirm they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/verbose_test.py
+</code></pre>
+<p>Expected: four tests fail (method does not exist yet).</p>
+<ul>
+<li>[ ] <strong>Step 3: Implement <code>emit_error</code> in <code>VerboseContext</code></strong></li>
+</ul>
+<p>Edit <code>src/plcc/verbose.py</code>. Add a method on <code>VerboseContext</code>:</p>
+<pre><code class="language-python">def emit_error(self, pos, message, **fields):
+    &quot;&quot;&quot;Emit a structured error. Never level-gated; always goes to stderr.&quot;&quot;&quot;
+    if self.fmt == &quot;json&quot;:
+        record = {
+            &quot;stage&quot;: self.stage,
+            &quot;time&quot;: time.monotonic_ns(),
+            &quot;event&quot;: &quot;error&quot;,
+            &quot;severity&quot;: &quot;error&quot;,
+            &quot;pos&quot;: pos,
+            &quot;message&quot;: message,
+            **fields,
+        }
+        print(json.dumps(record), file=sys.stderr, flush=True)
+    else:
+        file = pos.get(&quot;file&quot;) or &quot;&lt;stdin&gt;&quot;
+        line = pos.get(&quot;line&quot;, 0)
+        col = pos.get(&quot;column&quot;, 0)
+        print(
+            f&quot;{self.stage}: {file}:{line}:{col}: error: {message}&quot;,
+            file=sys.stderr,
+            flush=True,
+        )
+</code></pre>
+<p>Place it next to <code>emit</code>.</p>
+<ul>
+<li>[ ] <strong>Step 4: Run the tests, confirm they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/verbose_test.py
+</code></pre>
+<p>Expected: all four new tests pass; existing tests still pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run the full unit suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: green.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/verbose.py src/plcc/verbose_test.py
+git commit -m &quot;feat(verbose): add VerboseContext.emit_error for stderr + exit-code error path per §17.9&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-remove-in-band-errors-from-token-pipeline">Task 3 — Remove in-band errors from token pipeline</h2>
+<p><strong>Files:</strong>
+- Edit: <code>src/plcc/schemas/token.schema.json</code>
+- Edit: <code>src/plcc/tokens/jsonl_formatter.py</code>
+- Edit: <code>src/plcc/tokens/jsonl_formatter_test.py</code>
+- Edit: <code>src/plcc/tokens/tokens_cli.py</code>
+- Edit: <code>src/plcc/tokens/tokens_cli_test.py</code>
+- Edit (if present): <code>tests/bats/commands/plcc-tokens.bats</code></p>
+<p>Context: <code>plcc-tokens</code> currently emits <code>{"kind": "error", ...}</code> records in-band on unrecognized input, per the now-retired §8. Under §17.9, the tool stops at the first lex error, writes a structured error to stderr via <code>VerboseContext.emit_error</code>, and exits nonzero. <code>format_record</code> stops handling <code>LexError</code>. The schema's <code>oneOf</code> collapses to a single token shape.</p>
+<ul>
+<li>[ ] <strong>Step 1: Rewrite the failing test</strong></li>
+</ul>
+<p>In <code>src/plcc/tokens/tokens_cli_test.py</code>, replace <code>test_lex_error_is_inband</code> (and the later <code>assert err == ''</code> assertion) with the new contract:</p>
+<pre><code class="language-python">def test_lex_error_goes_to_stderr_and_exits_nonzero(capsys, monkeypatch, fs):
+    spec = {
+        &quot;lexical&quot;: {&quot;ruleList&quot;: [
+            {&quot;name&quot;: &quot;NUM&quot;, &quot;pattern&quot;: &quot;\\d+&quot;, &quot;isSkip&quot;: False,
+             &quot;line&quot;: {&quot;string&quot;: &quot;&quot;, &quot;number&quot;: 1, &quot;file&quot;: None}}
+        ]},
+        &quot;syntax&quot;: {&quot;rules&quot;: []},
+        &quot;semantics&quot;: []
+    }
+    import json as _json
+    fs.create_file('/spec.json', contents=_json.dumps(spec))
+    monkeypatch.setattr('sys.stdin', io.StringIO('abc\n'))  # not a NUM
+    with pytest.raises(SystemExit) as excinfo:
+        run_main(['/spec.json'])
+    assert excinfo.value.code != 0
+    out, err = capsys.readouterr()
+    # stdout may contain zero or more token lines but no error records
+    for line in out.strip().splitlines():
+        if not line:
+            continue
+        record = json.loads(line)
+        assert record['kind'] == 'token'
+    # stderr carries the error
+    assert 'error' in err
+    assert 'plcc-tokens' in err
+</code></pre>
+<p>Also add a test for JSON-format error output:</p>
+<pre><code class="language-python">def test_lex_error_json_format(capsys, monkeypatch, fs):
+    spec = {
+        &quot;lexical&quot;: {&quot;ruleList&quot;: [
+            {&quot;name&quot;: &quot;NUM&quot;, &quot;pattern&quot;: &quot;\\d+&quot;, &quot;isSkip&quot;: False,
+             &quot;line&quot;: {&quot;string&quot;: &quot;&quot;, &quot;number&quot;: 1, &quot;file&quot;: None}}
+        ]},
+        &quot;syntax&quot;: {&quot;rules&quot;: []},
+        &quot;semantics&quot;: []
+    }
+    import json as _json
+    fs.create_file('/spec.json', contents=_json.dumps(spec))
+    monkeypatch.setattr('sys.stdin', io.StringIO('abc\n'))
+    with pytest.raises(SystemExit):
+        run_main(['/spec.json', '--verbose-format=json'])
+    _, err = capsys.readouterr()
+    records = [json.loads(l) for l in err.strip().splitlines() if l.strip()]
+    error_records = [r for r in records if r.get('event') == 'error']
+    assert len(error_records) &gt;= 1
+    assert error_records[0]['stage'] == 'plcc-tokens'
+    assert error_records[0]['severity'] == 'error'
+    assert 'pos' in error_records[0]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Rewrite the formatter test</strong></li>
+</ul>
+<p>In <code>src/plcc/tokens/jsonl_formatter_test.py</code>, delete <code>test_formats_lex_error</code> entirely. Add a test that <code>format_record</code> raises <code>TypeError</code> on anything that is not a <code>Token</code>:</p>
+<pre><code class="language-python">def test_format_record_rejects_lex_error():
+    from plcc.scan.LexError import LexError
+    from plcc.lines import Line
+    err = LexError(line=Line(string=&quot;abc&quot;, number=1, file=None), column=1)
+    with pytest.raises(TypeError):
+        format_record(err)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run the failing tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/tokens/
+</code></pre>
+<p>Expected: the new tests fail (in-band error path still exists); existing token-formatter tests may also fail where they asserted the error shape.</p>
+<ul>
+<li>[ ] <strong>Step 4: Update the schema</strong></li>
+</ul>
+<p>Edit <code>src/plcc/schemas/token.schema.json</code>. Remove the second <code>oneOf</code> branch (the error record) and collapse to a single shape. The result:</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-07/schema#&quot;,
+  &quot;title&quot;: &quot;TokenRecord&quot;,
+  &quot;description&quot;: &quot;One JSONL record from plcc-tokens.&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;required&quot;: [&quot;kind&quot;, &quot;name&quot;, &quot;lexeme&quot;, &quot;source&quot;],
+  &quot;properties&quot;: {
+    &quot;kind&quot;:   { &quot;type&quot;: &quot;string&quot;, &quot;const&quot;: &quot;token&quot; },
+    &quot;name&quot;:   { &quot;type&quot;: &quot;string&quot; },
+    &quot;lexeme&quot;: { &quot;type&quot;: &quot;string&quot; },
+    &quot;source&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [&quot;file&quot;, &quot;line&quot;, &quot;column&quot;],
+      &quot;properties&quot;: {
+        &quot;file&quot;:   { &quot;type&quot;: [&quot;string&quot;, &quot;null&quot;] },
+        &quot;line&quot;:   { &quot;type&quot;: &quot;integer&quot;, &quot;minimum&quot;: 1 },
+        &quot;column&quot;: { &quot;type&quot;: &quot;integer&quot;, &quot;minimum&quot;: 1 }
+      }
+    }
+  }
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Update <code>jsonl_formatter.py</code></strong></li>
+</ul>
+<p>Replace the body of <code>format_record</code> with:</p>
+<pre><code class="language-python">def format_record(obj):
+    &quot;&quot;&quot;Return a single-line JSON string for a token. Errors do not pass through here.&quot;&quot;&quot;
+    if isinstance(obj, Token):
+        return json.dumps({
+            'kind': 'token',
+            'name': obj.name,
+            'lexeme': obj.lexeme,
+            'source': {
+                'file': obj.line.file,
+                'line': obj.line.number,
+                'column': obj.column,
+            },
+        })
+    raise TypeError(f'Unexpected type: {type(obj)}')
+</code></pre>
+<p>Remove the <code>LexError</code> import if it is no longer used in this module.</p>
+<ul>
+<li>[ ] <strong>Step 6: Update <code>tokens_cli.py</code></strong></li>
+</ul>
+<p>Edit the main loop to stop at the first <code>LexError</code>, emit to stderr via <code>emit_error</code>, and exit nonzero. Replace the loop:</p>
+<pre><code class="language-python">for obj in scanner.scan(lines):
+    if isinstance(obj, Skip):
+        continue
+    if isinstance(obj, LexError):
+        verbose.emit_error(
+            pos={
+                &quot;file&quot;: obj.line.file,
+                &quot;line&quot;: obj.line.number,
+                &quot;column&quot;: obj.column,
+            },
+            message=f&quot;unrecognized character at {obj.line.file or '&lt;stdin&gt;'}:{obj.line.number}:{obj.column}&quot;,
+        )
+        sys.exit(1)
+    print(format_record(obj), flush=True)
+</code></pre>
+<p>Add <code>from ..scan.LexError import LexError</code> to the imports. The message format may be refined in a follow-up — what matters now is that an error is structured, reaches stderr, and the process exits nonzero.</p>
+<ul>
+<li>[ ] <strong>Step 7: Run the failing tests, confirm they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/tokens/
+</code></pre>
+<p>Expected: all new and updated tests pass. If the scanner's <code>_scanLine</code> still advances past a bad char (it does), that is fine — the CLI's <code>sys.exit(1)</code> stops the iteration before the scanner can yield any more tokens.</p>
+<ul>
+<li>[ ] <strong>Step 8: Update BATS coverage</strong></li>
+</ul>
+<p>Open <code>tests/bats/commands/plcc-tokens.bats</code>. If it has a test asserting that errors are in-band on stdout, rewrite it to assert:</p>
+<ul>
+<li>nonzero exit</li>
+<li>no <code>"kind": "error"</code> records on stdout</li>
+<li><code>error</code> text or a <code>"event": "error"</code> JSONL record on stderr, per <code>--verbose-format</code></li>
+</ul>
+<p>If no such test exists, add one covering an unrecognized-character input.</p>
+<ul>
+<li>[ ] <strong>Step 9: Run the full test suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: green.</p>
+<ul>
+<li>[ ] <strong>Step 10: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/schemas/token.schema.json src/plcc/tokens/ tests/bats/commands/plcc-tokens.bats
+git commit -m &quot;feat(tokens): route lex errors to stderr + exit nonzero per §17.9; drop in-band error schema&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-remove-error-from-the-tree-children-enum">Task 4 — Remove <code>error</code> from the tree children enum</h2>
+<p><strong>Files:</strong>
+- Edit: <code>src/plcc/schemas/tree.schema.json</code>
+- Edit (if needed): <code>tests/bats/commands/plcc-tree.bats</code></p>
+<p>Context: the tree schema currently allows children of kind <code>token</code>, <code>tree</code>, or <code>error</code>. Under §17.9 plus the Part 1 simplification, trees are made of tokens and subtrees only; errors go to stderr.</p>
+<ul>
+<li>[ ] <strong>Step 1: Edit <code>tree.schema.json</code></strong></li>
+</ul>
+<p>Change the children <code>kind</code> enum from <code>["token", "tree", "error"]</code> to <code>["token", "tree"]</code>.</p>
+<ul>
+<li>[ ] <strong>Step 2: Check BATS tests</strong></li>
+</ul>
+<pre><code class="language-bash">grep -n '&quot;error&quot;' tests/bats/commands/plcc-tree.bats
+</code></pre>
+<p>If any test asserts an <code>"error"</code> node in tree output, rewrite it to assert the nonzero-exit + stderr contract instead. If none do, no change needed.</p>
+<ul>
+<li>[ ] <strong>Step 3: Run the full test suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: green.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/schemas/tree.schema.json tests/bats/commands/plcc-tree.bats
+git commit -m &quot;refactor(tree): drop 'error' from children kind enum; errors go to stderr per §17.9&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-plcc-ll1-add-is_ll1-field-always-exit-0">Task 5 — <code>plcc-ll1</code>: add <code>is_ll1</code> field; always exit 0</h2>
+<p><strong>Files:</strong>
+- Edit: <code>src/plcc/ll1/ll1_cli.py</code>
+- Create or edit: <code>src/plcc/ll1/ll1_cli_test.py</code> (create if missing)</p>
+<p>Context: <code>plcc-ll1</code> is currently a stub that emits empty sets and exits 0 (except on tool failures such as missing input). Under §17.9, its output must carry <code>is_ll1</code> (boolean), plus <code>conflicts</code> and <code>left_recursion</code> arrays (already present in the stub as empty). Since the stub does no real analysis, <code>is_ll1</code> defaults to <code>true</code>. Real LL(1) computation remains a Phase 2 Part 1 implementation item; this plan only commits to the stub-level contract.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/ll1/ll1_cli_test.py</code> (or extend an existing test file if present):</p>
+<pre><code class="language-python">import io
+import json
+import pytest
+
+from plcc.ll1.ll1_cli import main as run_main
+
+
+def test_stub_emits_is_ll1_true_and_exits_zero(capsys, monkeypatch, fs):
+    spec = {&quot;lexical&quot;: {&quot;ruleList&quot;: []}, &quot;syntax&quot;: {&quot;rules&quot;: []}, &quot;semantics&quot;: []}
+    fs.create_file('/spec.json', contents=json.dumps(spec))
+    run_main(['/spec.json'])
+    out, err = capsys.readouterr()
+    record = json.loads(out)
+    assert record['is_ll1'] is True
+    assert record['conflicts'] == []
+    assert record['left_recursion'] == []
+
+
+def test_stub_accepts_stdin(capsys, monkeypatch):
+    spec = {&quot;lexical&quot;: {&quot;ruleList&quot;: []}, &quot;syntax&quot;: {&quot;rules&quot;: []}, &quot;semantics&quot;: []}
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(spec)))
+    run_main(['-'])
+    out, _ = capsys.readouterr()
+    record = json.loads(out)
+    assert record['is_ll1'] is True
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run, confirm failure</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/
+</code></pre>
+<p>Expected: new tests fail because <code>is_ll1</code> is not yet emitted.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>ll1_cli.py</code></strong></li>
+</ul>
+<p>Add <code>is_ll1</code> to the result dict:</p>
+<pre><code class="language-python">result = {
+    &quot;is_ll1&quot;: not (conflicts or left_recursion),  # stub: both empty -&gt; True
+    &quot;first_sets&quot;: {},
+    &quot;follow_sets&quot;: {},
+    &quot;predict_sets&quot;: {},
+    &quot;parse_table&quot;: {},
+    &quot;conflicts&quot;: [],
+    &quot;left_recursion&quot;: [],
+}
+</code></pre>
+<p>For the stub, <code>conflicts</code> and <code>left_recursion</code> are always empty, so <code>is_ll1</code> is always <code>true</code>. When real analysis lands in Phase 2 Part 1, the field will track the actual result.</p>
+<ul>
+<li>[ ] <strong>Step 4: Run, confirm pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/ll1/
+</code></pre>
+<p>Expected: green.</p>
+<ul>
+<li>[ ] <strong>Step 5: Update BATS coverage</strong></li>
+</ul>
+<p>Check for a BATS test for <code>plcc-ll1</code>. If one exists, add an assertion that the output JSON contains <code>"is_ll1"</code>. If none exists, add a small one:</p>
+<pre><code class="language-bash"># tests/bats/commands/plcc-ll1.bats (create if missing)
+@test &quot;plcc-ll1 stub: is_ll1 is true for empty spec&quot; {
+    run bash -c &quot;echo '{\&quot;lexical\&quot;:{\&quot;ruleList\&quot;:[]},\&quot;syntax\&quot;:{\&quot;rules\&quot;:[]},\&quot;semantics\&quot;:[]}' | plcc-ll1 -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    echo &quot;$output&quot; | grep -q '&quot;is_ll1&quot;: *true'
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 6: Run the full functional suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: green.</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/ll1/ tests/bats/commands/plcc-ll1.bats
+git commit -m &quot;feat(ll1): emit is_ll1 field; keep exit 0 on non-LL(1) per §17.9 (stub)&quot;
+</code></pre>
+<hr />
+<h2 id="task-6-plcc-make-abort-on-is_ll1-false">Task 6 — <code>plcc-make</code>: abort on <code>is_ll1: false</code></h2>
+<p><strong>Files:</strong>
+- Edit: <code>src/plcc/cmd/make.py</code>
+- Edit: <code>src/plcc/cmd/make_test.py</code></p>
+<p>Context: <code>plcc-make</code> already runs <code>plcc-ll1</code> and redirects stdout to <code>build/ll1.json</code>. Under §17.9, after that run succeeds, make must read the file back, check <code>is_ll1</code>, and abort with a human-readable conflict summary on stderr if it is false.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing test</strong></li>
+</ul>
+<p>Extend <code>src/plcc/cmd/make_test.py</code> (or create if missing):</p>
+<pre><code class="language-python">def test_make_aborts_when_ll1_false(tmp_path, monkeypatch):
+    # Arrange: a ll1.json with is_ll1 false
+    # Arrange: a shim plcc-ll1 that writes that file
+    # (exact shim layout depends on how make_test already stubs subprocesses —
+    # follow the existing pattern)
+    ...
+    # Act + Assert: plcc-make should exit nonzero and stderr should mention
+    # the conflict (nonterminal, lookahead, competing productions).
+</code></pre>
+<p>If <code>make_test.py</code> does not yet exercise the ll1 phase end-to-end, model the new test after whatever pattern is already in use for testing <code>_run_or_die</code>. The test's essential assertions:</p>
+<ul>
+<li><code>plcc-make</code> exits nonzero.</li>
+<li><code>build/ll1.json</code> exists and contains <code>is_ll1: false</code> plus the conflict detail.</li>
+<li>
+<p>stderr contains <code>plcc-make: error:</code> plus a reference to the conflict.</p>
+</li>
+<li>
+<p>[ ] <strong>Step 2: Update <code>make.py</code></strong></p>
+</li>
+</ul>
+<p>After the LL(1) phase, add a check:</p>
+<pre><code class="language-python"># 3. LL(1)
+verbose.emit(Events.PHASE, message=&quot;ll1&quot;)
+ll1_json = os.path.join(build_dir, 'll1.json')
+_run_or_die(['plcc-ll1', spec_json] + child_flags, stdout_file=ll1_json, verbose=verbose)
+
+with open(ll1_json) as f:
+    ll1 = json.load(f)
+if not ll1.get(&quot;is_ll1&quot;, True):
+    _report_ll1_failure(ll1, ll1_json, verbose)
+    sys.exit(1)
+</code></pre>
+<p>And the helper:</p>
+<pre><code class="language-python">def _report_ll1_failure(ll1, path, verbose):
+    print(
+        f&quot;plcc-make: error: grammar is not LL(1); see {path}&quot;,
+        file=sys.stderr,
+    )
+    for conflict in ll1.get(&quot;conflicts&quot;, []):
+        print(
+            f&quot;plcc-make: error: conflict at &quot;
+            f&quot;{conflict.get('nonterminal', '?')} on &quot;
+            f&quot;{conflict.get('lookahead', '?')}: &quot;
+            f&quot;{conflict.get('competing', [])}&quot;,
+            file=sys.stderr,
+        )
+    for cycle in ll1.get(&quot;left_recursion&quot;, []):
+        print(
+            f&quot;plcc-make: error: left-recursion cycle: {' -&gt; '.join(cycle)}&quot;,
+            file=sys.stderr,
+        )
+</code></pre>
+<p>(Exact key names on <code>conflicts</code> and <code>left_recursion</code> entries are Phase 2 Part 1's decision; adjust to match whatever <code>plcc-ll1</code> emits when it gains real analysis. For now, the helper tolerates missing keys via <code>.get</code>.)</p>
+<ul>
+<li>[ ] <strong>Step 3: Run, confirm pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
+bin/test/functional.bash
+</code></pre>
+<p>Expected: green.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
+git commit -m &quot;feat(make): abort on is_ll1:false with human-readable conflict summary per §17.9&quot;
+</code></pre>
+<hr />
+<h2 id="task-7-final-verification">Task 7 — Final verification</h2>
+<ul>
+<li>[ ] <strong>Step 1: Full suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/all.bash
+</code></pre>
+<p>Expected: green. Unit count grew from Task 1; BATS count stable or grew.</p>
+<ul>
+<li>[ ] <strong>Step 2: Manual smoke test — token error</strong></li>
+</ul>
+<pre><code class="language-bash">echo 'abc' | plcc-tokens build/spec.json
+echo &quot;exit: $?&quot;
+</code></pre>
+<p>Expected: <code>exit: 1</code>, error line on stderr of the form <code>plcc-tokens: &lt;stdin&gt;:...: error: ...</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Manual smoke test — <code>plcc-ll1</code> stub</strong></li>
+</ul>
+<pre><code class="language-bash">echo '{&quot;lexical&quot;:{&quot;ruleList&quot;:[]},&quot;syntax&quot;:{&quot;rules&quot;:[]},&quot;semantics&quot;:[]}' | plcc-ll1 -
+echo &quot;exit: $?&quot;
+</code></pre>
+<p>Expected: <code>exit: 0</code>, stdout JSON contains <code>"is_ll1": true</code>.</p>
+<ul>
+<li>[ ] <strong>Step 4: Manual smoke test — <code>plcc-make</code> happy path</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/e2e.bash
+</code></pre>
+<p>Expected: green. Verifies that the build/ll1.json change has not broken end-to-end builds.</p>
+<h2 id="handoff">Handoff</h2>
+<p>When this plan is complete and committed:</p>
+<ol>
+<li>Hand off to <code>docs/plans/2026-04-17-error-handling-3-orchestrators-opus.md</code> (fresh Opus session).</li>
+<li>Part 3 wires pipefail discipline and cascade suppression into <code>plcc-scan</code>, <code>plcc-parse</code>, and <code>plcc-rep</code> — the orchestrators that drive actual subprocess pipelines.</li>
+<li>After Part 3, the full error contract described by §17.9 is in force end-to-end.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1025 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-12-plcc-scan-trace-cleanup/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>plcc-scan Trace Cleanup Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plcc-scan-trace-cleanup-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              plcc-scan Trace Cleanup Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plcc-scan-trace-cleanup-implementation-plan">plcc-scan Trace Cleanup Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Remove the four <code>--show-*</code> flags from <code>plcc-scan</code> and improve the <code>--trace</code> output format to use a clean <code>location: disposition: details</code> style.</p>
+<p><strong>Architecture:</strong> Two sequential commits on one branch — commit 1 removes the dead <code>--show-*</code> CLI surface (issue 007), commit 2 reformats the trace output (issue 006). The rendering logic lives entirely in <code>_render_record</code> in <code>scan.py</code>; bats tests cover the CLI contract.</p>
+<p><strong>Tech Stack:</strong> Python (docopt for CLI parsing), bats for CLI tests.</p>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/plcc/cmd/scan.py</code></td>
+<td>Commit 1: remove <code>--show-*</code> from docstring and arg parsing. Commit 2: rewrite <code>_render_record</code> output.</td>
+</tr>
+<tr>
+<td><code>tests/bats/commands/plcc-scan.bats</code></td>
+<td>Commit 1: add removal test, delete 7 <code>--show-*</code> tests. Commit 2: add 7 new trace format tests, update 1 existing trace test.</td>
+</tr>
+</tbody>
+</table>
+<p>No new implementation files. The design doc and this plan are also committed on this branch.</p>
+<hr />
+<h2 id="commit-1-remove-show-flags-issue-007">Commit 1 — Remove <code>--show-*</code> flags (issue 007)</h2>
+<h3 id="task-1-create-a-feature-branch">Task 1: Create a feature branch</h3>
+<ul>
+<li>[ ] <strong>Create branch</strong></li>
+</ul>
+<pre><code class="language-bash">git checkout -b fix-scan-trace-cleanup
+</code></pre>
+<hr />
+<h3 id="task-2-write-a-failing-bats-test-asserting-show-skips-is-no-longer-valid">Task 2: Write a failing bats test asserting <code>--show-skips</code> is no longer valid</h3>
+<p>The flag currently exists, so this test will fail (exit 0 instead of nonzero).</p>
+<ul>
+<li>[ ] <strong>Add this test to <code>tests/bats/commands/plcc-scan.bats</code></strong> — insert after the existing <code>plcc-scan --grammar-file uses specified grammar</code> test (around line 108):</li>
+</ul>
+<pre><code class="language-bash">@test &quot;plcc-scan --show-skips is not a recognized flag&quot; {
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan --show-skips&quot;
+    [ &quot;$status&quot; -ne 0 ]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Run to confirm it fails</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: the new test reports FAIL because <code>--show-skips</code> is currently valid.</p>
+<hr />
+<h3 id="task-3-remove-show-from-scanpy">Task 3: Remove <code>--show-*</code> from <code>scan.py</code></h3>
+<ul>
+<li>[ ] <strong>Replace the <code>__doc__</code> options block in <code>src/plcc/cmd/scan.py</code></strong></li>
+</ul>
+<p>Old:</p>
+<pre><code class="language-python">    --show-skips                Show skip records in output.
+    --show-line                 Show source line and cursor before each token.
+    --show-attempts             Show rule match attempts before each token.
+    --show-regex                Show matched regex in each token line.
+    -t --trace                  Enable all --show-* flags.
+</code></pre>
+<p>New:</p>
+<pre><code class="language-python">    -t --trace                  Show detailed scanning output.
+</code></pre>
+<ul>
+<li>[ ] <strong>Replace the flag-parsing block in <code>main()</code> in <code>src/plcc/cmd/scan.py</code></strong></li>
+</ul>
+<p>Old:</p>
+<pre><code class="language-python">    trace = args[&quot;--trace&quot;]
+    show_skips = args[&quot;--show-skips&quot;] or trace
+    show_line = args[&quot;--show-line&quot;] or trace
+    show_regex = args[&quot;--show-regex&quot;] or trace
+    show_attempts = args[&quot;--show-attempts&quot;] or trace
+    any_enrichment = show_skips or show_line or show_regex or show_attempts
+</code></pre>
+<p>New:</p>
+<pre><code class="language-python">    trace = args[&quot;--trace&quot;]
+    any_enrichment = trace
+</code></pre>
+<ul>
+<li>[ ] <strong>Replace the <code>_render_record</code> call in <code>main()</code> in <code>src/plcc/cmd/scan.py</code></strong></li>
+</ul>
+<p>Old:</p>
+<pre><code class="language-python">        _render_record(record, show_skips, show_line, show_regex, show_attempts)
+</code></pre>
+<p>New:</p>
+<pre><code class="language-python">        _render_record(record, trace, trace, trace)
+</code></pre>
+<ul>
+<li>[ ] <strong>Run commands tests to confirm the new test passes</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: the new <code>--show-skips is not a recognized flag</code> test passes. The seven old <code>--show-*</code> tests fail (they invoke flags that no longer exist).</p>
+<hr />
+<h3 id="task-4-delete-the-seven-show-bats-tests">Task 4: Delete the seven <code>--show-*</code> bats tests</h3>
+<ul>
+<li>[ ] <strong>Delete these seven complete test blocks from <code>tests/bats/commands/plcc-scan.bats</code>:</strong></li>
+</ul>
+<pre><code class="language-bash">@test &quot;plcc-scan --show-skips adds SKIPPED lines&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42 99' | plcc-scan --show-skips&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;SKIPPED&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-skips format is file:line:col NAME 'lexeme' SKIPPED&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42 99' | plcc-scan --show-skips&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ -:1:[0-9]+\ WS\ \'\ \'\ SKIPPED ]]
+}
+
+@test &quot;plcc-scan --show-line shows source line and caret cursor&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --show-line&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;^&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-line cursor is at correct column&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --show-line&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    second_line=$(echo &quot;$output&quot; | sed -n '2p')
+    [ &quot;$second_line&quot; = &quot;^&quot; ]
+}
+
+@test &quot;plcc-scan --show-attempts produces indented attempt lines&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --show-attempts&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;chars&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-attempts has exactly one starred winner&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --show-attempts&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    star_count=$(echo &quot;$output&quot; | grep -c '^\s*\*')
+    [ &quot;$star_count&quot; -eq 1 ]
+}
+
+@test &quot;plcc-scan --show-regex includes regex in token output&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --show-regex&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ ^-:1:1\ NUM\ \'\\\d\+\'\ \'42\'$ ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Run commands tests to confirm all green</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: all tests pass.</p>
+<hr />
+<h3 id="task-5-commit-1">Task 5: Commit 1</h3>
+<ul>
+<li>[ ] <strong>Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/scan.py tests/bats/commands/plcc-scan.bats
+git commit -m &quot;$(cat &lt;&lt;'EOF'
+fix(scan)!: remove --show-skips, --show-line, --show-regex, --show-attempts flags
+
+BREAKING CHANGE: the four --show-* flags are removed. Use --trace, which
+already implied all four, to enable detailed output.
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h2 id="commit-2-improve-trace-output-format-issue-006">Commit 2 — Improve <code>--trace</code> output format (issue 006)</h2>
+<h3 id="task-6-write-failing-bats-tests-for-the-new-trace-format">Task 6: Write failing bats tests for the new <code>--trace</code> format</h3>
+<p>All seven tests below will fail because the current format does not match.</p>
+<ul>
+<li>[ ] <strong>Add these seven tests to <code>tests/bats/commands/plcc-scan.bats</code></strong> — insert after the existing <code>plcc-scan --trace produces source line, cursor, attempts, and token line</code> test:</li>
+</ul>
+<pre><code class="language-bash">@test &quot;plcc-scan --trace shows Candidates: heading&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;Candidates:&quot;* ]]
+}
+
+@test &quot;plcc-scan --trace marks winner with -&gt;&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;-&gt; NUM&quot;* ]]
+}
+
+@test &quot;plcc-scan --trace excludes zero-match candidates&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; != *&quot;   WS&quot;* ]]
+}
+
+@test &quot;plcc-scan --trace token line uses token: disposition&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ -:1:1:\ token:\ NUM\ \'42\' ]]
+}
+
+@test &quot;plcc-scan --trace skip line uses skip: disposition&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42 99' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ -:1:3:\ skip:\ WS ]]
+}
+
+@test &quot;plcc-scan --trace token line has no regex&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    token_line=$(echo &quot;$output&quot; | grep &quot;token: NUM&quot;)
+    [[ &quot;$token_line&quot; != *&quot;\\d+&quot;* ]]
+}
+
+@test &quot;plcc-scan --trace adds blank line after each block&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ $'\n\n' ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Run to confirm all seven fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: the seven new tests report FAIL because the old format is still in place.</p>
+<hr />
+<h3 id="task-7-rewrite-_render_record-in-scanpy">Task 7: Rewrite <code>_render_record</code> in <code>scan.py</code></h3>
+<ul>
+<li>[ ] <strong>Replace the <code>_render_record</code> function body in <code>src/plcc/cmd/scan.py</code></strong></li>
+</ul>
+<p>The full new function (<code>show_regex</code> removed from signature):</p>
+<pre><code class="language-python">def _render_record(record, show_skips, show_line, show_attempts):
+    kind = record.get(&quot;kind&quot;)
+
+    if kind == &quot;error&quot;:
+        loc = _location_str(record.get(&quot;pos&quot;, {}))
+        lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+        message = record.get(&quot;message&quot;, &quot;unrecognized character&quot;)
+        print(f&quot;{loc}: error: {message} '{lexeme}'&quot;, flush=True)
+        return
+
+    if kind == &quot;skip&quot; and not show_skips:
+        return
+
+    if kind not in (&quot;token&quot;, &quot;skip&quot;):
+        return
+
+    source = record.get(&quot;source&quot;, {})
+    loc = _location_str(source)
+    name = record.get(&quot;name&quot;, &quot;?&quot;)
+    lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+    source_line = record.get(&quot;source_line&quot;, &quot;&quot;)
+    attempts = record.get(&quot;attempts&quot;, [])
+    col = source.get(&quot;column&quot;, 1)
+
+    if show_line and source_line:
+        print(source_line, flush=True)
+        print(&quot; &quot; * (col - 1) + &quot;^&quot;, flush=True)
+
+    if show_attempts:
+        print(&quot;Candidates:&quot;, flush=True)
+        for attempt in attempts:
+            if attempt.get(&quot;char_count&quot;, 0) == 0:
+                continue
+            prefix = &quot;-&gt; &quot; if attempt.get(&quot;winner&quot;) else &quot;   &quot;
+            a_name = attempt.get(&quot;name&quot;, &quot;?&quot;)
+            a_regex = attempt.get(&quot;regex&quot;, &quot;?&quot;)
+            a_count = attempt.get(&quot;char_count&quot;, 0)
+            a_lexeme = attempt.get(&quot;lexeme&quot;, &quot;?&quot;)
+            print(f&quot;{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'&quot;, flush=True)
+
+    if show_attempts:
+        if kind == &quot;skip&quot;:
+            print(f&quot;{loc}: skip: {name} '{lexeme}'&quot;, flush=True)
+        else:
+            print(f&quot;{loc}: token: {name} '{lexeme}'&quot;, flush=True)
+        print(flush=True)
+    elif kind == &quot;skip&quot;:
+        print(f&quot;{loc} {name} '{lexeme}' SKIPPED&quot;, flush=True)
+    else:
+        print(f&quot;{loc} {name} '{lexeme}'&quot;, flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Run commands tests to confirm the seven new tests pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: the seven new tests pass. The existing <code>--trace</code> test may still pass or may fail — check next task.</p>
+<hr />
+<h3 id="task-8-update-the-existing-trace-test">Task 8: Update the existing <code>--trace</code> test</h3>
+<ul>
+<li>[ ] <strong>Replace the existing <code>plcc-scan --trace produces source line, cursor, attempts, and token line</code> test in <code>tests/bats/commands/plcc-scan.bats</code>:</strong></li>
+</ul>
+<p>Old:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan --trace produces source line, cursor, attempts, and token line&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;^&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;chars&quot;* ]]
+    [[ &quot;$output&quot; =~ \'\\\d\+ ]]
+}
+</code></pre>
+<p>New:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan --trace produces source line, cursor, candidates, and token line&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;^&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;Candidates:&quot;* ]]
+    [[ &quot;$output&quot; =~ &quot;token: NUM&quot; ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Run all commands tests to confirm everything is green</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash
+</code></pre>
+<p>Expected: all tests pass with no failures.</p>
+<hr />
+<h3 id="task-9-commit-2">Task 9: Commit 2</h3>
+<ul>
+<li>[ ] <strong>Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/scan.py tests/bats/commands/plcc-scan.bats
+git commit -m &quot;$(cat &lt;&lt;'EOF'
+fix(scan): improve --trace output format
+
+- Add Candidates: heading before match attempts
+- Mark winning candidate with -&gt; instead of *
+- Exclude zero-match candidates from Candidates list
+- Use location: disposition: details format for token and skip lines
+- Remove regex from token/skip lines (still present in Candidates)
+- Add blank line after each match block
+EOF
+)&quot;
+</code></pre>
+<hr />
+<h2 id="final-check">Final check</h2>
+<ul>
+<li>[ ] <strong>Run the full functional test suite</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: all tiers (units, commands, integration, e2e) pass.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

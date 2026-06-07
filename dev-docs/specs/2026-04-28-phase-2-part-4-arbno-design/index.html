@@ -1,0 +1,932 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-28-phase-2-part-4-arbno-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Phase 2 Part 4: Arbno Support — Design - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-2-part-4-arbno-support-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 2 Part 4: Arbno Support — Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="phase-2-part-4-arbno-support-design">Phase 2 Part 4: Arbno Support — Design</h1>
+<p><strong>Date:</strong> 2026-04-28
+<strong>Status:</strong> APPROVED
+<strong>Companion architectural spec:</strong> <code>docs/superpowers/specs/2026-04-12-multi-lang-pipeline.md</code>
+<strong>Roadmap reference:</strong> <code>docs/superpowers/specs/2026-04-12-multi-lang-implementation-plan.md</code> §5</p>
+<hr />
+<h2 id="1-goal">1. Goal</h2>
+<p>Add end-to-end support for arbno (repeating) rules (<code>**=</code>) so that grammars using
+them can be processed by the full pipeline and a working REPL session is possible.
+After Part 4:</p>
+<pre><code class="language-sh">plcc-make trivial-arbno.plcc
+plcc-rep trivial-arbno.plcc
+&gt;&gt;&gt; 1, 2, 3
+[1, 2, 3]
+</code></pre>
+<hr />
+<h2 id="2-motivation">2. Motivation</h2>
+<p>28 of 30 <code>languages</code> test-suite grammars use arbno rules. Without arbno support,
+Phase 3 (Java emitter + <code>languages</code> suite) cannot proceed. Part 4 closes this gap
+before Phase 3 begins.</p>
+<p>A survey of the <code>languages</code> repo also confirmed:</p>
+<ul>
+<li>All arbno-using grammars use the separator form (<code>**= item +SEP</code>) for at least one
+  rule</li>
+<li><code>plcc-spec</code> already parses v8 legacy grammars correctly (no <code>% tool lang</code> header
+  defaults to <code>language: "Java", tool: "Java"</code>)</li>
+<li>The <code>!flag=</code> syntax (used only by <code>CHAR</code>) is out of scope for Part 4</li>
+</ul>
+<hr />
+<h2 id="3-phase-structure">3. Phase Structure</h2>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Scope</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Part 1</td>
+<td>LL(1) parser (<code>plcc-ll1</code>, <code>plcc-parser-table</code>)</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>Part 2</td>
+<td>Full <code>plcc-model</code> + <code>plcc-diagram-*</code> system</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>Part 3</td>
+<td><code>plcc-spec</code> entry-point, <code>plcc-python-emit</code>, <code>plcc-rep</code></td>
+<td>Complete</td>
+</tr>
+<tr>
+<td><strong>Part 4</strong></td>
+<td><strong>Arbno support end-to-end</strong></td>
+<td><strong>This design</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-plcc-ll1-arbno-section-in-ll1json">4. <code>plcc-ll1</code>: arbno section in <code>ll1.json</code></h2>
+<h3 id="41-internal-ll1-analysis">4.1 Internal LL(1) analysis</h3>
+<p><code>plcc-ll1</code> currently treats <code>**=</code> rules as single productions, producing incorrect
+FIRST/FOLLOW/predict sets. Part 4 fixes this: <code>plcc-ll1</code> expands arbno rules
+internally into right-recursive equivalents for LL(1) analysis (computing correct
+FIRST, FOLLOW, and predict sets), then discards those internal rules from the output.</p>
+<h3 id="42-the-arbno-section">4.2 The <code>arbno</code> section</h3>
+<p>Arbno nonterminals are <strong>removed from <code>parse_table</code></strong> and placed in a new top-level
+<code>arbno</code> key instead. <code>plcc-parser-table</code> checks <code>arbno</code> before <code>parse_table</code>.</p>
+<p>Schema:</p>
+<pre><code class="language-json">&quot;arbno&quot;: {
+  &quot;rands&quot;: {
+    &quot;rhs&quot;: [
+      {&quot;field&quot;: &quot;expList&quot;, &quot;symbol&quot;: &quot;exp&quot;, &quot;is_terminal&quot;: false}
+    ],
+    &quot;separator&quot;: &quot;COMMA&quot;,
+    &quot;lookahead&quot;: [&quot;INT&quot;, &quot;LPAREN&quot;, &quot;VAR&quot;]
+  },
+  &quot;cmds&quot;: {
+    &quot;rhs&quot;: [
+      {&quot;field&quot;: &quot;cmdList&quot;, &quot;symbol&quot;: &quot;cmd&quot;, &quot;is_terminal&quot;: false}
+    ],
+    &quot;separator&quot;: null,
+    &quot;lookahead&quot;: [&quot;LT&quot;, &quot;GT&quot;, &quot;PLUS&quot;]
+  }
+}
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li><code>rhs</code> lists only the <strong>capturing</strong> items in the repeating body — the separator
+  token is not included; it is conveyed solely by the <code>separator</code> field</li>
+<li><code>field</code> is <code>symbolNameLower + "List"</code> for each capturing item</li>
+<li><code>separator</code> is the separator token name, or <code>null</code> for plain arbno</li>
+<li><code>lookahead</code> is FIRST of the first RHS item — the set the parser loops on</li>
+</ul>
+<hr />
+<h2 id="5-plcc-parser-table-loop-mode">5. <code>plcc-parser-table</code>: loop mode</h2>
+<p>When the parser encounters a nonterminal present in <code>arbno</code>, it runs a loop instead
+of a recursive descent.</p>
+<h3 id="51-no-separator-loop-separator-null">5.1 No-separator loop (<code>separator: null</code>)</h3>
+<ol>
+<li>Initialize one empty list per capturing field</li>
+<li>While lookahead ∈ <code>arbno[nt].lookahead</code>:
+   parse each RHS item in order; append capturing items to their lists</li>
+<li>Emit the flat node</li>
+</ol>
+<h3 id="52-separator-loop-separator-token">5.2 Separator loop (<code>separator: "TOKEN"</code>)</h3>
+<ol>
+<li>Initialize empty lists</li>
+<li>If lookahead ∉ <code>arbno[nt].lookahead</code>: emit node with empty lists (zero items valid)</li>
+<li>Otherwise: parse first iteration's RHS items; then loop — while next token is
+   the separator, consume it and parse another iteration</li>
+<li>Emit the flat node</li>
+</ol>
+<h3 id="53-tree-json-produced">5.3 Tree JSON produced</h3>
+<pre><code class="language-json">{&quot;kind&quot;: &quot;Rands&quot;, &quot;rule&quot;: &quot;rands&quot;, &quot;expList&quot;: [
+  {&quot;kind&quot;: &quot;LitExpr&quot;, &quot;rule&quot;: &quot;expr&quot;, &quot;num&quot;: {&quot;match&quot;: &quot;NUM&quot;, &quot;lexeme&quot;: &quot;1&quot;}},
+  {&quot;kind&quot;: &quot;LitExpr&quot;, &quot;rule&quot;: &quot;expr&quot;, &quot;num&quot;: {&quot;match&quot;: &quot;NUM&quot;, &quot;lexeme&quot;: &quot;2&quot;}}
+]}
+</code></pre>
+<ul>
+<li><code>kind</code> is the nonterminal name with first letter uppercased (same as <code>plcc-model</code>)</li>
+<li><code>rule</code> is the nonterminal name as-is</li>
+<li>List fields hold JSON arrays; the values follow the same node/token conventions as
+  all other tree JSON</li>
+</ul>
+<hr />
+<h2 id="6-plcc-model-arbno-fields">6. <code>plcc-model</code>: arbno fields</h2>
+<p><code>plcc-model</code> detects arbno rules by checking for the presence of a <code>separator</code> key
+in each spec rule (non-arbno rules have no <code>separator</code> key; arbno rules have
+<code>separator: null</code> or <code>separator: "TOKEN"</code>).</p>
+<p>For arbno classes, each capturing RHS item becomes a list-typed field. A new boolean
+<code>is_list</code> on the field signals this to emitters:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Rands&quot;,
+  &quot;abstract&quot;: false,
+  &quot;extends&quot;: null,
+  &quot;fields&quot;: [
+    {&quot;name&quot;: &quot;expList&quot;, &quot;type&quot;: &quot;Exp&quot;, &quot;is_list&quot;: true}
+  ],
+  &quot;rule_name&quot;: &quot;rands&quot;
+}
+</code></pre>
+<p>Multi-item arbno example (<code>&lt;formals&gt; **= &lt;VAR&gt; COLON &lt;typeExp&gt; +COMMA</code>):</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;Formals&quot;,
+  &quot;abstract&quot;: false,
+  &quot;extends&quot;: null,
+  &quot;fields&quot;: [
+    {&quot;name&quot;: &quot;varList&quot;,     &quot;type&quot;: &quot;Token&quot;,   &quot;is_list&quot;: true},
+    {&quot;name&quot;: &quot;typeExpList&quot;, &quot;type&quot;: &quot;TypeExp&quot;,  &quot;is_list&quot;: true}
+  ],
+  &quot;rule_name&quot;: &quot;formals&quot;
+}
+</code></pre>
+<p>Rules:</p>
+<ul>
+<li>Only capturing RHS items become fields; bare separator tokens do not</li>
+<li>Field name is <code>symbolNameLower + "List"</code> — matching v8's naming convention exactly</li>
+<li><code>type</code> is the base element type (<code>Token</code> for terminals, capitalized nonterminal
+  name for nonterminals); the emitter applies the list wrapper</li>
+<li>Non-arbno fields have <code>is_list: false</code></li>
+<li>No <code>is_arbno</code> flag on the class — <code>is_list: true</code> on any field is sufficient signal</li>
+</ul>
+<hr />
+<h2 id="7-plcc-python-emit-and-runtime-deserializer">7. <code>plcc-python-emit</code> and runtime deserializer</h2>
+<h3 id="71-plcc-python-emit">7.1 <code>plcc-python-emit</code></h3>
+<p>No change to the Jinja templates. Python is dynamically typed — <code>self.expList =
+expList</code> works whether the value is a list or a scalar. The constructor loop in
+<code>class_file.py.jinja</code> already iterates <code>cls.fields</code> by name without type inspection.</p>
+<h3 id="72-runtimedeserializepy">7.2 <code>runtime/deserialize.py</code></h3>
+<p>This is where the real change lives. The deserializer currently reconstructs each
+field as a single node. It needs to handle JSON arrays for list fields:</p>
+<pre><code class="language-python">def _deserialize_value(v, registry):
+    if isinstance(v, list):
+        return [_deserialize_value(item, registry) for item in v]
+    elif isinstance(v, dict) and v.get('match'):   # token node
+        return Token(v['lexeme'], v['match'])
+    elif isinstance(v, dict):                       # tree node
+        return registry.deserialize(v)
+    else:
+        return v
+</code></pre>
+<p>No field metadata required — dispatch is purely on the JSON value's Python type.
+A list value deserializes each element recursively. This handles both arbno list
+fields and any future use of JSON arrays in tree nodes.</p>
+<hr />
+<h2 id="8-test-fixture-trivial-arbnoplcc">8. Test fixture: <code>trivial-arbno.plcc</code></h2>
+<p>A new fixture that exercises both separator and non-separator arbno:</p>
+<pre><code class="language-text">token NUM   '\d+'
+token PLUS  '\+'
+token COMMA ','
+skip  SPACE '\s+'
+%
+&lt;program&gt;          ::= &lt;rands&gt;rands
+&lt;rands&gt;            **= &lt;expr&gt;expr +COMMA
+&lt;expr&gt;:LitExpr     ::= &lt;NUM&gt;num
+&lt;expr&gt;:AddExpr     ::= PLUS &lt;rands&gt;rands
+%
+% eval Python _run
+Program
+%%%
+def _run(self):
+    return [e.eval() for e in self.rands.exprList]
+%%%
+LitExpr
+%%%
+def eval(self):
+    return int(self.num.lexeme)
+%%%
+AddExpr
+%%%
+def eval(self):
+    return sum(e.eval() for e in self.rands.exprList)
+%%%
+</code></pre>
+<p><code>AddExpr</code> uses a nested arbno (<code>+rands+</code>), exercising non-separator arbno indirectly
+via recursive use of the separator form.</p>
+<p><strong>Acceptance:</strong> <code>plcc-rep trivial-arbno.plcc</code>, input <code>1, 2, 3</code> → <code>[1, 2, 3]</code>.</p>
+<hr />
+<h2 id="9-testing-strategy">9. Testing strategy</h2>
+<h3 id="91-unit-tests-tdd-one-per-component">9.1 Unit tests (TDD, one per component)</h3>
+<ul>
+<li><strong><code>plcc-ll1</code>:</strong> given a grammar with plain and separator arbno, <code>ll1.json</code> contains
+  a correct <code>arbno</code> section; expanded <code>xxx#</code> rules do not appear in <code>parse_table</code>;
+  <code>is_ll1</code> remains correct</li>
+<li><strong><code>plcc-parser-table</code> (via <code>plcc-tree</code>):</strong> plain arbno produces a flat list node;
+  separator arbno produces a flat list node; zero-item arbno produces <code>[]</code></li>
+<li><strong><code>plcc-model</code>:</strong> arbno rules produce <code>is_list: true</code> fields with correct names and
+  types; non-arbno fields are unchanged</li>
+<li><strong><code>plcc-python-emit</code>:</strong> generated class files have correct constructor signatures</li>
+<li><strong><code>runtime/deserialize.py</code>:</strong> a tree JSON with a list field deserializes correctly</li>
+</ul>
+<h3 id="92-integration-e2e-tests">9.2 Integration / e2e tests</h3>
+<p>New bats test using <code>trivial-arbno.plcc</code>:</p>
+<ul>
+<li><code>plcc-make trivial-arbno.plcc</code> succeeds</li>
+<li>Token + tree pipeline produces the expected flat-list tree JSON</li>
+<li><code>plcc-rep trivial-arbno.plcc</code> with input <code>1, 2, 3</code> returns <code>[1, 2, 3]</code></li>
+</ul>
+<h3 id="93-regression">9.3 Regression</h3>
+<p>All existing Phase 1 and Phase 2 tests pass. <code>arith.plcc</code> REPL is unaffected.</p>
+<hr />
+<h2 id="10-acceptance-criteria">10. Acceptance Criteria</h2>
+<ol>
+<li><code>plcc-ll1</code> produces a correct <code>arbno</code> section for both plain and separator forms</li>
+<li><code>plcc-tree</code> produces flat list nodes for all arbno nonterminals</li>
+<li><code>plcc-model</code> emits <code>is_list: true</code> fields with correct names and types</li>
+<li><code>plcc-rep trivial-arbno.plcc</code> works end-to-end</li>
+<li>All existing tests pass</li>
+</ol>
+<hr />
+<h2 id="11-out-of-scope-for-part-4">11. Out of scope for Part 4</h2>
+<ul>
+<li>Java emitter arbno support (Phase 3)</li>
+<li><code>!flag=</code> syntax / CHAR grammar (deferred)</li>
+<li><code>languages</code> test suite integration (Phase 3)</li>
+<li><code>plcc-scan</code> / <code>plcc-parse</code> visualizers (Phase 4)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

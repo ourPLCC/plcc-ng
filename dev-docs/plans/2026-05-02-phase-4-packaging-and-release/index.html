@@ -1,0 +1,1352 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-02-phase-4-packaging-and-release/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Phase 4: Packaging and First Release — Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-4-packaging-and-first-release-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 4: Packaging and First Release — Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="phase-4-packaging-and-first-release-implementation-plan">Phase 4: Packaging and First Release — Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Polish the plcc-scan/plcc-parse visualizers, rename the package to <code>plcc-ng</code>, wire up semantic-release CI, and ship the first public release on PyPI.</p>
+<p><strong>Architecture:</strong> Work progresses in four independent streams — (1) visualizer output polish in <code>src/plcc/cmd/</code>, (2) packaging metadata in <code>pyproject.toml</code> and <code>README.md</code>, (3) CI/release workflow files in <code>.github/workflows/</code>, and (4) one-time manual setup (Trusted Publishing, branch protection). The streams are independent and can be sequenced in any order; Task ordering below minimises review churn.</p>
+<p><strong>Tech Stack:</strong> Python, Bats, pdm-backend, python-semantic-release v9, PyPA Trusted Publishing (OIDC), GitHub Actions</p>
+<hr />
+<h2 id="phase-4-entry-conditions">Phase 4 Entry Conditions</h2>
+<p>Before beginning, confirm all of the following are true:</p>
+<ul>
+<li>[ ] <code>tests/fixtures/languages-corpus.txt</code> has 29 grammars (GINGER included)</li>
+<li>[ ] <code>docs/superpowers/specs/2026-04-29-phase-3-java-emitter-design.md</code> has an <code>## 11. Phase 3 Retro</code> section</li>
+<li>[ ] This Phase 4 design doc (<code>docs/superpowers/specs/2026-05-01-phase-4-packaging-and-release-design.md</code>) is approved and committed</li>
+<li>[ ] <code>bin/test/functional.bash</code> passes locally with <code>LANGUAGES_REPO_PATH</code> set</li>
+</ul>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Action</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>src/plcc/cmd/scan.py</code></td>
+<td>Modify</td>
+<td>Location-aware token output; compiler-style error records</td>
+</tr>
+<tr>
+<td><code>tests/bats/commands/plcc-scan.bats</code></td>
+<td>Modify</td>
+<td>Tests for new output format</td>
+</tr>
+<tr>
+<td><code>src/plcc/cmd/parse.py</code></td>
+<td>Modify</td>
+<td>Location-aware token leaves in tree output; error record handling</td>
+</tr>
+<tr>
+<td><code>tests/bats/commands/plcc-parse.bats</code></td>
+<td>Modify</td>
+<td>Tests for new output format</td>
+</tr>
+<tr>
+<td><code>pyproject.toml</code></td>
+<td>Modify</td>
+<td>Rename to <code>plcc-ng</code>, fix license, add metadata, add <code>[tool.semantic_release]</code></td>
+</tr>
+<tr>
+<td><code>README.md</code></td>
+<td>Modify</td>
+<td>Fix typo, add install section and "what this is" paragraph</td>
+</tr>
+<tr>
+<td><code>src/plcc/lang/ext/plantuml/</code></td>
+<td>Delete</td>
+<td>Empty stub — remove before packaging</td>
+</tr>
+<tr>
+<td><code>bin/test/packaging.bash</code></td>
+<td>Modify</td>
+<td>Add <code>plcc-lang-list</code> and <code>plcc-diagram-list</code> checks</td>
+</tr>
+<tr>
+<td><code>tests/fixtures/languages-pin.txt</code></td>
+<td>Create</td>
+<td>Pinned <code>languages</code> repo commit SHA for CI corpus run</td>
+</tr>
+<tr>
+<td><code>.github/workflows/ci.yml</code></td>
+<td>Replace</td>
+<td>Three-job workflow (unit-and-integration, languages-corpus, packaging)</td>
+</tr>
+<tr>
+<td><code>.github/workflows/pypi.yaml</code></td>
+<td>Delete</td>
+<td>Replaced by release.yml</td>
+</tr>
+<tr>
+<td><code>.github/workflows/release.yml</code></td>
+<td>Create</td>
+<td>semantic-release + TestPyPI + PyPI publish</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-plcc-scan-location-aware-output">Task 1: plcc-scan location-aware output</h2>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-scan.bats</code>
+- Modify: <code>src/plcc/cmd/scan.py</code></p>
+<h3 id="background">Background</h3>
+<p><code>plcc-tokens</code> emits token records with a <code>source</code> object: <code>{"file": "&lt;stdin&gt;", "line": 1, "column": 1}</code>. The file is the string <code>"&lt;stdin&gt;"</code> when reading from a pipe. Since <code>plcc-scan</code> always pipes input to <code>plcc-tokens</code>, file is always <code>"&lt;stdin&gt;"</code>.</p>
+<p>New token output format: <code>{line}:{col} {NAME} '{lexeme}'</code> (file prefix omitted when file is null or <code>"&lt;stdin&gt;"</code>).</p>
+<p>New error record format: <code>{line}:{col}: error: {message}</code> (same omit logic).</p>
+<p>Exit-code change: <code>plcc-scan</code> exits 0 even when <code>plcc-tokens</code> exits non-zero (lex error in source is an in-band event, not a tool failure). It exits non-zero only when <code>plcc-spec</code> fails (bad grammar file).</p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing tests for the new token output format</strong></li>
+</ul>
+<p>Append to <code>tests/bats/commands/plcc-scan.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-scan includes line:col in token output&quot; {
+    run bash -c &quot;echo '42' | plcc-scan '${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ ^1:1\ NUM\ \'42\'$ ]]
+}
+
+@test &quot;plcc-scan exits 0 on lex error in source&quot; {
+    run bash -c &quot;echo 'abc' | plcc-scan '${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the new tests and confirm they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A2 &quot;line:col\|exits 0 on lex&quot;
+</code></pre>
+<p>Expected: FAIL — output currently shows <code>NUM '42'</code> without location.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>src/plcc/cmd/scan.py</code> — add <code>_location_str</code> and update the output loop</strong></li>
+</ul>
+<p>Replace the token/error printing section (the <code>for line in result.stdout...</code> loop and the <code>if result.returncode != 0</code> block after plcc-tokens) with:</p>
+<pre><code class="language-python">        if result.returncode != 0:
+            # lex error: plcc-tokens already emitted the error to stderr via verbose;
+            # treat as non-fatal — pipeline completed with an error in-band
+            pass
+        else:
+            for line in result.stdout.decode(&quot;utf-8&quot;).splitlines():
+                if not line.strip():
+                    continue
+                record = json.loads(line)
+                if record.get(&quot;kind&quot;) == &quot;token&quot;:
+                    name = record.get(&quot;name&quot;, &quot;?&quot;)
+                    lexeme = record.get(&quot;lexeme&quot;, &quot;?&quot;)
+                    source = record.get(&quot;source&quot;, {})
+                    loc = _location_str(source)
+                    print(f&quot;{loc} {name} '{lexeme}'&quot;)
+                elif record.get(&quot;kind&quot;) == &quot;error&quot;:
+                    source = record.get(&quot;source&quot;) or {}
+                    loc = _location_str(source)
+                    message = record.get(&quot;message&quot;, &quot;unknown error&quot;)
+                    print(f&quot;{loc}: error: {message}&quot;)
+</code></pre>
+<p>Add this helper at module level (after the imports, before <code>main</code>):</p>
+<pre><code class="language-python">def _location_str(source):
+    file = source.get(&quot;file&quot;)
+    line = source.get(&quot;line&quot;, &quot;?&quot;)
+    col = source.get(&quot;column&quot;, &quot;?&quot;)
+    if file and file != &quot;&lt;stdin&gt;&quot;:
+        return f&quot;{file}:{line}:{col}&quot;
+    return f&quot;{line}:{col}&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run the tests and confirm they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -E &quot;plcc-scan&quot;
+</code></pre>
+<p>Expected: all plcc-scan tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/scan.py tests/bats/commands/plcc-scan.bats
+git commit -m &quot;feat(scan): add location-aware output and compiler-style error format&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-plcc-parse-location-aware-tree-output">Task 2: plcc-parse location-aware tree output</h2>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-parse.bats</code>
+- Modify: <code>src/plcc/cmd/parse.py</code></p>
+<h3 id="background_1">Background</h3>
+<p>Token leaves in the tree now show <code>{NAME} '{lexeme}' [{line}:{col}]</code>. Error records that come through the tree (passed through by <code>plcc-parser-table</code>) are formatted as <code>{line}:{col}: error: {message}</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing tests for the new tree output format</strong></li>
+</ul>
+<p>Append to <code>tests/bats/commands/plcc-parse.bats</code>:</p>
+<pre><code class="language-bash">@test &quot;plcc-parse includes location on token leaves&quot; {
+    run bash -c &quot;echo '42' | plcc-parse '${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ NUM\ \'42\'\ \[1:1\] ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the new test and confirm it fails</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A2 &quot;location on token&quot;
+</code></pre>
+<p>Expected: FAIL — token leaves currently show <code>NUM '42'</code> without location.</p>
+<ul>
+<li>[ ] <strong>Step 3: Add <code>_location_str</code> helper and update <code>_print_tree</code> in <code>src/plcc/cmd/parse.py</code></strong></li>
+</ul>
+<p>Add the helper at module level (after imports, before <code>main</code>):</p>
+<pre><code class="language-python">def _location_str(source):
+    file = source.get(&quot;file&quot;)
+    line = source.get(&quot;line&quot;, &quot;?&quot;)
+    col = source.get(&quot;column&quot;, &quot;?&quot;)
+    if file and file != &quot;&lt;stdin&gt;&quot;:
+        return f&quot;{file}:{line}:{col}&quot;
+    return f&quot;{line}:{col}&quot;
+</code></pre>
+<p>Replace <code>_print_tree</code> entirely:</p>
+<pre><code class="language-python">def _print_tree(node, indent):
+    prefix = &quot;  &quot; * indent
+    kind = node.get(&quot;kind&quot;, &quot;?&quot;)
+    if kind == &quot;tree&quot;:
+        rule = node.get(&quot;rule&quot;, &quot;?&quot;)
+        print(f&quot;{prefix}{rule}&quot;)
+        for child in node.get(&quot;children&quot;, []):
+            _print_tree(child, indent + 1)
+    elif kind == &quot;token&quot;:
+        name = node.get(&quot;name&quot;, &quot;?&quot;)
+        lexeme = node.get(&quot;lexeme&quot;, &quot;?&quot;)
+        source = node.get(&quot;source&quot;, {})
+        loc = _location_str(source)
+        print(f&quot;{prefix}{name} '{lexeme}' [{loc}]&quot;)
+    elif kind == &quot;error&quot;:
+        source = node.get(&quot;source&quot;) or {}
+        loc = _location_str(source)
+        message = node.get(&quot;message&quot;, &quot;unknown error&quot;)
+        print(f&quot;{prefix}{loc}: error: {message}&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run the tests and confirm they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -E &quot;plcc-parse&quot;
+</code></pre>
+<p>Expected: all plcc-parse tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run the full command + integration suite to check for regressions</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash &amp;&amp; bin/test/integration.bash
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/parse.py tests/bats/commands/plcc-parse.bats
+git commit -m &quot;feat(parse): add location-aware tree output and compiler-style error format&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-package-rename-and-metadata">Task 3: Package rename and metadata</h2>
+<p><strong>Files:</strong>
+- Modify: <code>pyproject.toml</code></p>
+<p>Change <code>pyproject.toml</code> to rename the package to <code>plcc-ng</code>, fix the license, add full PyPI metadata, and configure <code>python-semantic-release</code> in tag-only mode.</p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>[project]</code> section of <code>pyproject.toml</code></strong></li>
+</ul>
+<p>Replace the entire <code>[project]</code> section (keep everything else):</p>
+<pre><code class="language-toml">[project]
+name = &quot;plcc-ng&quot;
+dynamic = [&quot;version&quot;]
+description = &quot;Programming Languages Compiler Compiler — experimental rewrite of PLCC&quot;
+authors = [
+    {name = &quot;PLCC Community&quot;, email = &quot;https://discord.gg/EVtNSxS9E2&quot;},
+]
+dependencies = [
+    &quot;docopt-ng&gt;=0.9.0&quot;,
+    &quot;jinja2&gt;=3.1.0&quot;,
+]
+requires-python = &quot;&gt;=3.12&quot;
+readme = &quot;README.md&quot;
+license = {text = &quot;AGPL-3.0-or-later&quot;}
+keywords = [&quot;compiler&quot;, &quot;parser&quot;, &quot;education&quot;, &quot;plcc&quot;, &quot;teaching&quot;, &quot;programming-languages&quot;]
+classifiers = [
+    &quot;Development Status :: 3 - Alpha&quot;,
+    &quot;Intended Audience :: Education&quot;,
+    &quot;Intended Audience :: Developers&quot;,
+    &quot;License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)&quot;,
+    &quot;Programming Language :: Python :: 3&quot;,
+    &quot;Programming Language :: Python :: 3.12&quot;,
+    &quot;Topic :: Software Development :: Compilers&quot;,
+    &quot;Topic :: Education&quot;,
+]
+
+[project.urls]
+Homepage = &quot;https://github.com/ourorg/plcc-ng&quot;
+Repository = &quot;https://github.com/ourorg/plcc-ng&quot;
+Issues = &quot;https://github.com/ourorg/plcc-ng/issues&quot;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Replace <code>ourorg/plcc-ng</code> above with the actual GitHub org/repo path (e.g. <code>StoneyJackson/plcc-ng</code>). Run <code>git remote get-url origin</code> if unsure.</p>
+</blockquote>
+<ul>
+<li>[ ] <strong>Step 2: Add <code>python-semantic-release</code> dev dependency</strong></li>
+</ul>
+<p>In the <code>[dependency-groups]</code> <code>dev</code> list, add:</p>
+<pre><code class="language-toml">    &quot;python-semantic-release&gt;=9.0.0&quot;,
+    &quot;twine&gt;=5.0.0&quot;,
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Add <code>[tool.semantic_release]</code> config at the bottom of <code>pyproject.toml</code></strong></li>
+</ul>
+<pre><code class="language-toml">[tool.semantic_release]
+tag_format = &quot;v{version}&quot;
+version_variables = []
+version_toml = []
+major_on_zero = false
+</code></pre>
+<p><code>version_variables = []</code> and <code>version_toml = []</code> prevent PSR from committing version changes to any file (tag-only mode). <code>major_on_zero = false</code> prevents a breaking change from auto-promoting 0.x to 1.0.</p>
+<ul>
+<li>[ ] <strong>Step 4: Install and verify the metadata</strong></li>
+</ul>
+<pre><code class="language-bash">pdm install
+pdm build
+.venv/bin/twine check dist/*.whl
+</code></pre>
+<p>Expected: <code>PASSED</code> for both checks. If README fails, fix the markdown issue and re-run.</p>
+<ul>
+<li>[ ] <strong>Step 5: Verify non-Python package data is present in the wheel</strong></li>
+</ul>
+<pre><code class="language-bash">unzip -l dist/*.whl | grep -E &quot;org\.json.*\.jar|\.jinja|\.schema\.json&quot;
+</code></pre>
+<p>Expected: lines for <code>org.json-20250107.jar</code>, <code>.jinja</code> templates, and <code>.schema.json</code> files. If any are missing, pdm-backend didn't pick them up from git tracking. Fix by adding explicit <code>[tool.pdm.build.package-data]</code> entries to <code>pyproject.toml</code>:</p>
+<pre><code class="language-toml">[tool.pdm.build.package-data]
+&quot;plcc.lang.ext.java.runtime&quot; = [&quot;*.jar&quot;, &quot;*.java&quot;]
+&quot;plcc.lang.ext.java.templates&quot; = [&quot;*.jinja&quot;]
+&quot;plcc.lang.ext.python.runtime&quot; = [&quot;*.py&quot;]
+&quot;plcc.diagram.plantuml.templates&quot; = [&quot;*.jinja&quot;]
+&quot;plcc.schemas&quot; = [&quot;*.json&quot;]
+</code></pre>
+<p>Then rebuild and re-run <code>twine check</code>.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add pyproject.toml
+git commit -m &quot;chore(packaging): rename to plcc-ng, fix license, add PyPI metadata and semantic-release config&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-readme-polish">Task 4: README polish</h2>
+<p><strong>Files:</strong>
+- Modify: <code>README.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Fix the typo "Licnesing" → "Licensing", add install section, add "what this is" paragraph</strong></li>
+</ul>
+<p>Open <code>README.md</code>. Make three changes:</p>
+<ol>
+<li>
+<p>Fix the heading typo: <code>## Licnesing</code> → <code>## Licensing</code></p>
+</li>
+<li>
+<p>Add after the opening paragraph, before <code>## Licensing</code>:</p>
+</li>
+</ol>
+<pre><code class="language-markdown">## Install
+
+```bash
+pip install plcc-ng
+</code></pre>
+<blockquote>
+<p>This package has a separate identity from the original <code>plcc</code> package.
+<code>plcc-ng</code> is experimental — no compatibility guarantees with <code>plcc</code> until a stable 1.0 release.</p>
+</blockquote>
+<pre><code>
+3. (No other changes — README is intentionally minimal for now.)
+
+- [ ] **Step 2: Verify README renders**
+
+```bash
+pdm build &amp;&amp; .venv/bin/twine check dist/*.whl
+</code></pre>
+<p>Expected: <code>PASSED</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add README.md
+git commit -m &quot;docs(readme): fix typo, add install section and 'what this is' note&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-delete-empty-plantuml-ext-stub">Task 5: Delete empty plantuml ext stub</h2>
+<p><strong>Files:</strong>
+- Delete: <code>src/plcc/lang/ext/plantuml/__init__.py</code> (and directory)</p>
+<p>The <code>src/plcc/lang/ext/plantuml/</code> directory is an empty stub left over from an earlier architectural shift. PlantUML lives in <code>plcc.diagram.plantuml</code>; this directory should not be shipped.</p>
+<ul>
+<li>[ ] <strong>Step 1: Delete the directory</strong></li>
+</ul>
+<pre><code class="language-bash">git rm -r src/plcc/lang/ext/plantuml/
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run unit and command tests to confirm nothing broke</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash &amp;&amp; bin/test/commands.bash
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git commit -m &quot;chore: delete empty src/plcc/lang/ext/plantuml stub&quot;
+</code></pre>
+<hr />
+<h2 id="task-6-extend-packaging-smoke-test">Task 6: Extend packaging smoke test</h2>
+<p><strong>Files:</strong>
+- Modify: <code>bin/test/packaging.bash</code></p>
+<p>Add checks that the installed wheel exposes language and diagram discovery commands, and that they report the right plugins.</p>
+<ul>
+<li>[ ] <strong>Step 1: Add the new checks to <code>bin/test/packaging.bash</code></strong></li>
+</ul>
+<p>After the loop that checks for console scripts (after the <code>done</code> line) and before the <code>export PATH</code> line, insert:</p>
+<pre><code class="language-bash">export PATH=&quot;${VENV}/bin:${PATH}&quot;
+
+# Verify language and diagram discovery
+LANG_LIST=$(&quot;${VENV}/bin/plcc-lang-list&quot;)
+echo &quot;${LANG_LIST}&quot; | grep -q &quot;python&quot; || { echo &quot;FAIL: plcc-lang-list missing 'python'&quot;; exit 1; }
+echo &quot;${LANG_LIST}&quot; | grep -q &quot;java&quot;   || { echo &quot;FAIL: plcc-lang-list missing 'java'&quot;;   exit 1; }
+echo &quot;OK: plcc-lang-list reports python and java&quot;
+
+DIAGRAM_LIST=$(&quot;${VENV}/bin/plcc-diagram-list&quot;)
+echo &quot;${DIAGRAM_LIST}&quot; | grep -q &quot;plantuml&quot; || { echo &quot;FAIL: plcc-diagram-list missing 'plantuml'&quot;; exit 1; }
+echo &quot;OK: plcc-diagram-list reports plantuml&quot;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Remove the <code>export PATH</code> line that appears later in the file (it would be a duplicate). The line currently appears as <code>export PATH="${VENV}/bin:${PATH}"</code> just before the <code>WORK_DIR</code> block — merge these together.</p>
+</blockquote>
+<ul>
+<li>[ ] <strong>Step 2: Build the wheel and run the packaging test</strong></li>
+</ul>
+<pre><code class="language-bash">bin/build/package.bash &amp;&amp; bin/test/packaging.bash
+</code></pre>
+<p>Expected: all checks pass including the new lang-list/diagram-list checks.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/packaging.bash
+git commit -m &quot;test(packaging): add plcc-lang-list and plcc-diagram-list smoke checks&quot;
+</code></pre>
+<hr />
+<h2 id="task-7-languages-pintxt">Task 7: languages-pin.txt</h2>
+<p><strong>Files:</strong>
+- Create: <code>tests/fixtures/languages-pin.txt</code></p>
+<p>CI needs to clone the <code>languages</code> repo at a pinned commit so corpus tests are reproducible.</p>
+<ul>
+<li>[ ] <strong>Step 1: Get the current HEAD SHA of the languages repo</strong></li>
+</ul>
+<pre><code class="language-bash">git -C &quot;${LANGUAGES_REPO_PATH}&quot; rev-parse HEAD
+</code></pre>
+<p>Copy the SHA printed.</p>
+<ul>
+<li>[ ] <strong>Step 2: Create the pin file</strong></li>
+</ul>
+<pre><code class="language-bash">echo &quot;&lt;SHA-from-step-1&gt;&quot; &gt; tests/fixtures/languages-pin.txt
+</code></pre>
+<p>The file must contain exactly one line: the 40-character SHA.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/fixtures/languages-pin.txt
+git commit -m &quot;chore(ci): add languages-pin.txt for reproducible corpus tests&quot;
+</code></pre>
+<hr />
+<h2 id="task-8-ciyml">Task 8: ci.yml</h2>
+<p><strong>Files:</strong>
+- Replace: <code>.github/workflows/ci.yml</code></p>
+<p>Replace the existing ci.yml with a three-job workflow. The <code>unit-and-integration</code> job gives fast feedback. <code>languages-corpus</code> and <code>packaging</code> run only after it passes.</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace <code>.github/workflows/ci.yml</code> entirely</strong></li>
+</ul>
+<pre><code class="language-yaml">name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-and-integration:
+    name: Unit and integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Run unit tests
+        run: bin/test/units.bash
+      - name: Run command tests
+        run: bin/test/commands.bash
+      - name: Run integration tests
+        run: bin/test/integration.bash
+
+  languages-corpus:
+    name: Languages corpus (Java e2e)
+    needs: unit-and-integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Clone languages repo at pinned commit
+        run: |
+          PIN=$(cat tests/fixtures/languages-pin.txt)
+          git clone https://github.com/ourorg/languages.git /tmp/languages
+          git -C /tmp/languages checkout &quot;${PIN}&quot;
+      - name: Run e2e corpus tests
+        env:
+          LANGUAGES_REPO_PATH: /tmp/languages
+        run: bin/test/e2e.bash
+
+  packaging:
+    name: Packaging
+    needs: unit-and-integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Build wheel
+        run: bin/build/package.bash
+      - name: Validate metadata and README
+        run: pip install twine &amp;&amp; twine check dist/*
+      - name: Run packaging smoke test
+        run: bin/test/packaging.bash
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Replace <code>ourorg/languages</code> with the actual GitHub path of the languages repo (e.g. <code>StoneyJackson/languages</code>). Run <code>git remote get-url origin</code> in <code>${LANGUAGES_REPO_PATH}</code> if unsure.</p>
+</blockquote>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add .github/workflows/ci.yml
+git commit -m &quot;ci: replace ci.yml with three-job workflow (unit-integration, corpus, packaging)&quot;
+</code></pre>
+<hr />
+<h2 id="task-9-releaseyml">Task 9: release.yml</h2>
+<p><strong>Files:</strong>
+- Delete: <code>.github/workflows/pypi.yaml</code>
+- Create: <code>.github/workflows/release.yml</code></p>
+<p>The release workflow runs on every push to <code>main</code> and on manual <code>workflow_dispatch</code>. It determines the next version, tags, creates a GitHub Release, and publishes to TestPyPI then real PyPI.</p>
+<p>When triggered by <code>workflow_dispatch</code>, the real-PyPI step is skipped — making it a safe rehearsal.</p>
+<ul>
+<li>[ ] <strong>Step 1: Delete the old release workflow</strong></li>
+</ul>
+<pre><code class="language-bash">git rm .github/workflows/pypi.yaml
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Create <code>.github/workflows/release.yml</code></strong></li>
+</ul>
+<pre><code class="language-yaml">name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  semantic-release:
+    name: Semantic release
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Python Semantic Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          push: &quot;true&quot;
+          commit: &quot;false&quot;
+          changelog: &quot;false&quot;
+
+  publish:
+    name: Publish to PyPI
+    needs: semantic-release
+    if: needs.semantic-release.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.semantic-release.outputs.version &amp;&amp; format('v{0}', needs.semantic-release.outputs.version) || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Build wheel
+        run: bin/build/package.bash
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Smoke test TestPyPI install
+        run: |
+          VERSION=&quot;${{ needs.semantic-release.outputs.version }}&quot;
+          python -m venv /tmp/smoke-venv
+          /tmp/smoke-venv/bin/pip install \
+            --index-url https://test.pypi.org/simple/ \
+            --extra-index-url https://pypi.org/simple/ \
+            &quot;plcc-ng==${VERSION}&quot;
+          WORK=$(mktemp -d)
+          /tmp/smoke-venv/bin/plcc-make &quot;$(pwd)/tests/fixtures/trivial.plcc&quot; --output=&quot;${WORK}&quot;
+          test -f &quot;${WORK}/spec.json&quot; || { echo &quot;FAIL: spec.json missing&quot;; exit 1; }
+          echo &quot;TestPyPI smoke test passed&quot;
+
+      - name: Publish to PyPI
+        if: github.event_name != 'workflow_dispatch'
+        uses: pypa/gh-action-pypi-publish@release/v1
+</code></pre>
+<blockquote>
+<p><strong>Note on Trusted Publishing:</strong> The <code>pypa/gh-action-pypi-publish</code> action uses OIDC (no API token needed) when Trusted Publishing is configured on PyPI/TestPyPI. See Task 10 for the one-time manual setup.</p>
+</blockquote>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add .github/workflows/release.yml .github/workflows/pypi.yaml
+git commit -m &quot;ci: add release.yml with semantic-release and Trusted Publishing&quot;
+</code></pre>
+<hr />
+<h2 id="task-10-manual-setup-checklist">Task 10: Manual setup checklist</h2>
+<p>These steps cannot be automated. Complete them once before the first release attempt.</p>
+<ul>
+<li>[ ] <strong>Step 1: Verify the GitHub repo name matches pyproject.toml URLs</strong></li>
+</ul>
+<p>Check that <code>[project.urls]</code> in <code>pyproject.toml</code> and the <code>languages-corpus</code> job's clone URL in <code>ci.yml</code> both use the correct GitHub org/repo paths.</p>
+<ul>
+<li>[ ] <strong>Step 2: Configure Trusted Publishing on TestPyPI</strong></li>
+</ul>
+<p>Go to https://test.pypi.org → Account settings → Publishing → Add a new pending publisher:
+- PyPI project name: <code>plcc-ng</code>
+- Owner: <code>&lt;your GitHub org&gt;</code>
+- Repository: <code>plcc-ng</code> (or whatever the repo is named)
+- Workflow filename: <code>release.yml</code>
+- Environment name: <em>(leave blank — the release.yml publish job has no environment block for TestPyPI)</em></p>
+<ul>
+<li>[ ] <strong>Step 3: Configure Trusted Publishing on real PyPI</strong></li>
+</ul>
+<p>Same as Step 2 but at https://pypi.org.</p>
+<ul>
+<li>[ ] <strong>Step 4: Enable branch protection on <code>main</code></strong></li>
+</ul>
+<p>Go to the GitHub repo → Settings → Branches → Add rule for <code>main</code>:
+- ✅ Require a pull request before merging
+- ✅ Require status checks to pass before merging
+  - Add required checks: <code>Unit and integration tests</code>, <code>Languages corpus (Java e2e)</code>, <code>Packaging</code>
+- ✅ Require linear history
+- ✅ Do not allow bypassing the above settings</p>
+<ul>
+<li>[ ] <strong>Step 5: Test the release pipeline with workflow_dispatch</strong></li>
+</ul>
+<p>Merge a PR (or push directly to main before branch protection is active). Go to Actions → Release → Run workflow. This triggers a <code>workflow_dispatch</code> run which: determines version, tags, creates a GitHub Release, builds wheel, publishes to <strong>TestPyPI only</strong> (real PyPI is skipped on <code>workflow_dispatch</code>), runs the smoke test.</p>
+<p>Verify: the TestPyPI smoke test passes and the package appears at https://test.pypi.org/project/plcc-ng/.</p>
+<ul>
+<li>[ ] <strong>Step 6: Confirm first real release</strong></li>
+</ul>
+<p>After branch protection is active, merge a PR with conventional commits. The <code>release.yml</code> push-to-main trigger fires, produces a real PyPI release. Verify at https://pypi.org/project/plcc-ng/.</p>
+<hr />
+<h2 id="running-the-full-suite-after-all-tasks">Running the full suite after all tasks</h2>
+<pre><code class="language-bash">cd .worktrees/multi-lang
+bin/test/units.bash
+bin/test/commands.bash
+bin/test/integration.bash
+LANGUAGES_REPO_PATH=/tmp/languages bin/test/e2e.bash
+bin/build/package.bash &amp;&amp; bin/test/packaging.bash
+</code></pre>
+<p>All should pass.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

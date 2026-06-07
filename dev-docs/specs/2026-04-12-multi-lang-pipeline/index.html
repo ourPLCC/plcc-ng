@@ -1,0 +1,1162 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-12-multi-lang-pipeline/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PLCC Multi-Language Pipeline Architecture - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plcc-multi-language-pipeline-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PLCC Multi-Language Pipeline Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../plans/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plans/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="plcc-multi-language-pipeline-architecture">PLCC Multi-Language Pipeline Architecture</h1>
+<p><strong>Date:</strong> 2026-04-12 (rewritten 2026-04-18 — amendments merged into main body)
+<strong>Status:</strong> Draft — pending review
+<strong>Target release:</strong> PLCC v9.0.0</p>
+<h2 id="1-goal">1. Goal</h2>
+<p>Make PLCC adoptable by faculty whose students do not know Java, by refactoring PLCC into a Unix-style pipeline of small JSON-filter tools and a plugin-based code generator that can emit interpreters in multiple target languages.</p>
+<h2 id="2-non-goals">2. Non-Goals</h2>
+<ul>
+<li>Replacing or competing with production compiler toolchains. Generated interpreters are pedagogical artifacts, not production software.</li>
+<li>Supporting non-OO target languages. Retargeting is limited to modern OO languages because the pedagogy depends on class hierarchy and polymorphic dispatch.</li>
+<li>Pluggable scanners and verifiers. These remain non-pluggable in v9. Parsers (parse-tree-generators) are pluggable; see §13. Verifiers may become pluggable in a later version if demand emerges.</li>
+<li>Bit-exact compatibility with v8's generated Java output. See §17.</li>
+<li>Windows-native shell pipelines. Cross-platform support comes from Python orchestration, not from shell portability. See §6.</li>
+</ul>
+<h2 id="3-motivation-and-context">3. Motivation and Context</h2>
+<p>PLCC is an educational compiler-compiler used to teach programming language concepts. As of v8.0.2 it generates only Java, which limits adoption to courses and institutions where students already know Java. Faculty at institutions that teach Python, TypeScript, or other languages as their primary language cannot adopt PLCC without imposing a language-learning burden on their students.</p>
+<p>A parallel project, <code>plcc-ng</code>, is a clean-room rewrite in Python by students using TDD. It has completed spec parsing (lexical, syntactic, and semantic sections), a working scanner, LL(1) validation, and CLIs for <code>spec</code> and <code>scan</code>. It has not built the parser runtime or code generator. plcc-ng has accumulated 282 commits of student work.</p>
+<p>This design builds on plcc-ng's foundation rather than starting over, preserves the student contributions from plcc-ng's history, and refactors the result into a pipeline architecture that supports multiple target languages through a plugin system.</p>
+<h2 id="4-architecture-overview">4. Architecture Overview</h2>
+<p>PLCC v9 is a pipeline of small tools communicating through JSON. The pipeline has two layers:</p>
+<ul>
+<li><strong>Level 0</strong> primitives are single-responsibility JSON filters. Each reads a specific JSON format on stdin (or a file path argument) and writes a specific JSON format on stdout. Primitives are composable by hand on a Unix command line.</li>
+<li><strong>Level 2</strong> user-facing commands are Python orchestrators that compose Level 0 primitives into pipelines using <code>subprocess.Popen</code>. They match the vocabulary of existing PLCC learning materials.</li>
+</ul>
+<p>Level 1 (intermediate compositions) is deliberately unoccupied in v9. It may emerge later if pedagogical use cases justify it.</p>
+<pre><code class="language-text">             ┌────────────────────────────────────────────────────┐
+             │                     Level 2                        │
+             │     plcc-make   plcc-scan   plcc-parse   plcc-rep  │
+             └──────────────────────────┬─────────────────────────┘
+                                        │ orchestrates
+                                        ▼
+   ┌──────────┬──────────┬──────────────┬──────────────┬──────────┐
+   │plcc-spec │plcc-ll1  │ plcc-tokens  │  plcc-tree   │plcc-model│
+   │          │          │              │ (dispatcher) │          │
+   │ grammar  │spec JSON │ text stream  │ tokens JSONL │spec JSON │
+   │    ↓     │    ↓     │      ↓       │      ↓       │    ↓     │
+   │spec JSON │ ll1 JSON │ token JSONL  │  tree JSON   │model JSON│
+   └──────────┴──────────┴──────────────┴──────┬───────┴─────┬────┘
+                                               │             │
+                                               ▼             ▼
+                                    ┌──────────────────┐ ┌──────────────┐
+                                    │ plcc-parser-*    │ │plcc-lang-emit│
+                                    │  (PATH plugin)   │ │ (dispatcher) │
+                                    └──────────────────┘ └──────┬───────┘
+                                                                ▼
+                                                     ┌────────────────────┐
+                                                     │  plcc-&lt;lang&gt;-emit  │
+                                                     │   (PATH plugin)    │
+                                                     └────────────────────┘
+</code></pre>
+<h2 id="5-level-0-primitives">5. Level 0 Primitives</h2>
+<p>Each primitive is a pip console-script entry point provided by the <code>plcc</code> package. Every primitive accepts the cross-cutting <code>--verbose</code>/<code>-v</code> and <code>--verbose-format=text|json</code> flags defined in §9.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Input</th>
+<th>Output</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plcc-spec</code></td>
+<td><code>.plcc</code> grammar file (path or stdin)</td>
+<td>spec JSON (stdout)</td>
+<td>Faithful translation of the grammar file into JSON. Does <strong>not</strong> perform LL(1) analysis. One-shot; single JSON document.</td>
+</tr>
+<tr>
+<td><code>plcc-ll1</code></td>
+<td>spec JSON (stdin or path)</td>
+<td>LL(1) analysis JSON (stdout)</td>
+<td>Compute FIRST, FOLLOW, predict sets; build the parsing table; detect conflicts and left-recursion cycles. One-shot; single JSON document. Exits 0 on any grammar that parses as spec JSON; result is signalled by the top-level <code>is_ll1</code> field. Nonzero exit reserved for tool failures (missing input, malformed spec JSON).</td>
+</tr>
+<tr>
+<td><code>plcc-tokens</code></td>
+<td>text stream (stdin), <code>--spec &lt;path&gt;</code></td>
+<td>token JSONL (stdout)</td>
+<td>Tokenize a character stream into a line-delimited JSON stream of tokens. Streaming; stateless; runs until EOF.</td>
+</tr>
+<tr>
+<td><code>plcc-tree</code></td>
+<td>token JSONL (stdin), <code>--ll1 &lt;path&gt;</code> (required), <code>--parser=&lt;kind&gt;</code> (optional, default <code>table</code>)</td>
+<td>parse tree as a single newline-terminated JSON document (stdout)</td>
+<td>Dispatcher. Reads token JSONL to EOF, execs <code>plcc-parser-&lt;kind&gt;</code> forwarding <code>--ll1</code>, exits when the dispatched plugin exits. One parse tree per invocation. No long-running mode, no multi-program mode. Output is also a valid one-line JSONL stream so it composes directly with the long-lived interpreter (§10).</td>
+</tr>
+<tr>
+<td><code>plcc-model</code></td>
+<td>spec JSON (stdin or path)</td>
+<td>model JSON (stdout)</td>
+<td>Transform a language spec into a language-neutral OO code model: classes, inheritance, attributes, constructors, method slots, and opaque semantic blocks. One-shot; single JSON document.</td>
+</tr>
+<tr>
+<td><code>plcc-lang-emit</code></td>
+<td>model JSON (stdin), <code>--target=&lt;lang&gt;</code>, <code>--output=&lt;dir&gt;</code></td>
+<td>source files in <code>&lt;dir&gt;</code></td>
+<td>Dispatcher: constructs <code>plcc-&lt;lang&gt;-emit</code> and execs it via PATH. The plugin writes generated source files and copies its bundled runtime into <code>&lt;dir&gt;</code>.</td>
+</tr>
+<tr>
+<td><code>plcc-lang-build</code></td>
+<td><code>--target=&lt;lang&gt;</code>, <code>--output=&lt;dir&gt;</code></td>
+<td>compiled artifacts in <code>&lt;dir&gt;</code></td>
+<td>Dispatcher: constructs <code>plcc-&lt;lang&gt;-build</code> and execs it via PATH if present. Exits 0 silently if no build command is installed for that language.</td>
+</tr>
+<tr>
+<td><code>plcc-lang-list</code></td>
+<td>—</td>
+<td>language names (stdout)</td>
+<td>Scans PATH for commands matching <code>plcc-*-emit</code>; prints one language name per line.</td>
+</tr>
+<tr>
+<td><code>plcc-parser-list</code></td>
+<td>—</td>
+<td>parser-kind names (stdout)</td>
+<td>Scans PATH for commands matching <code>plcc-parser-*</code>; prints one kind per line.</td>
+</tr>
+</tbody>
+</table>
+<p>Naming rationale: the pure filters (<code>spec</code>, <code>ll1</code>, <code>tokens</code>, <code>tree</code>, <code>model</code>) are named after their output. The <code>plcc-lang-*</code> and <code>plcc-parser-*</code> commands are named after the layer they manage — they form the boundary between the core pipeline and the plugin ecosystem. <code>tree</code> is preferred over <code>ast</code> because it is approachable without jargon; <code>tokens</code> is preferred over <code>lex</code> or <code>tokenize</code> because it is a noun and matches the output. <code>model</code> is preferred over <code>code-model</code> for brevity.</p>
+<h2 id="6-level-2-commands">6. Level 2 Commands</h2>
+<p>Level 2 commands are Python modules published as pip console-script entry points. They orchestrate Level 0 primitives using <code>subprocess.Popen</code>, wire stdin/stdout between stages, handle tty detection and prompting, and present errors to the user. Every Level 2 command accepts <code>--verbose</code>/<code>-v</code> and <code>--verbose-format=text|json</code> (§9) and a <code>--parser=&lt;kind&gt;</code> flag that plumbs through to <code>plcc-tree</code>. Phase 2 Part 1 ships only <code>plcc-parser-table</code> and <code>plcc-tree</code>'s dispatcher; the Level 2 <code>--parser</code> passthroughs land in Part 2 and Phase 4.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Role</th>
+<th>Replaces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plcc-make</code></td>
+<td>Build the project from a grammar file. Always cleans <code>build/</code> before rebuilding. See §11 for phase sequence.</td>
+<td><code>plccmk</code></td>
+</tr>
+<tr>
+<td><code>plcc-scan</code></td>
+<td>Pedagogical scanner view. Reads source input, runs it through <code>plcc-tokens</code>, prints tokens in a human-readable format.</td>
+<td><code>scan</code></td>
+</tr>
+<tr>
+<td><code>plcc-parse</code></td>
+<td>Pedagogical parser view. Reads source input, runs it through <code>plcc-tokens</code> then <code>plcc-tree</code>, prints parse trees in a human-readable format.</td>
+<td>(new; previously part of <code>rep</code>)</td>
+</tr>
+<tr>
+<td><code>plcc-rep</code></td>
+<td>REPL. Reads source input (files then stdin if interactive), runs it through <code>plcc-tokens</code> then <code>plcc-tree</code> then the interpreter, prints evaluation results. Handles prompting in tty mode.</td>
+<td><code>rep</code></td>
+</tr>
+</tbody>
+</table>
+<p>All Level 2 commands take the same input model: zero or more file arguments followed by stdin. Files are concatenated in order, then stdin is appended. In interactive mode (<code>sys.stdin.isatty()</code>), the orchestrator emits prompts to stderr before each read.</p>
+<p><strong>No shell dependency.</strong> Level 2 orchestrators do not invoke <code>cat</code>, <code>sh</code>, or any external shell. They open files through <code>pathlib</code>, read stdin through <code>sys.stdin</code>, and write bytes to the first subprocess's stdin pipe. This works identically on Linux, macOS, and Windows without platform branching.</p>
+<p>Students or instructors who want to run the primitives by hand from a Unix shell can do so. That usage is documented as a teaching aid but is not the path any installed Level 2 command takes.</p>
+<h2 id="7-json-contracts">7. JSON Contracts</h2>
+<p>This section describes the shape of data flowing between stages at a high level. Exact schemas are the implementation plan's responsibility; this spec establishes only the contract.</p>
+<p><strong>One-shot vs. streaming.</strong> One primitive runs as a streaming pipeline stage and uses JSONL (one JSON document per line) so it can emit output incrementally as input arrives:</p>
+<ul>
+<li><code>plcc-tokens</code> — token JSONL.</li>
+</ul>
+<p>The remaining primitives run once per invocation and produce a single JSON document (or, for <code>plcc-lang-emit</code>, files on disk):</p>
+<ul>
+<li><code>plcc-spec</code> — spec JSON.</li>
+<li><code>plcc-ll1</code> — LL(1) analysis JSON.</li>
+<li><code>plcc-tree</code> — a single newline-terminated JSON document (also a valid one-line JSONL stream).</li>
+<li><code>plcc-model</code> — model JSON.</li>
+<li><code>plcc-lang-emit</code> — files.</li>
+</ul>
+<h3 id="71-spec-json">7.1 Spec JSON</h3>
+<p>Output of <code>plcc-spec</code>. Contains lexical rules, syntactic rules, semantic sections (one per <code>% &lt;tool&gt; &lt;language&gt;</code> divider), and metadata needed by downstream primitives. Already produced by plcc-ng's existing <code>spec</code> command; the shape of the v9 spec JSON starts from whatever plcc-ng emits today and is refined as downstream primitives require.</p>
+<h3 id="72-ll1-analysis-json">7.2 LL(1) Analysis JSON</h3>
+<p>Output of <code>plcc-ll1</code>. A single JSON document with top-level fields:</p>
+<ul>
+<li><code>is_ll1</code> — boolean result.</li>
+<li><code>first</code>, <code>follow</code>, <code>predict</code> — set representations per nonterminal.</li>
+<li><code>parse_table</code> — the LL(1) parse table.</li>
+<li><code>conflicts</code> — array; empty when <code>is_ll1</code> is true.</li>
+<li><code>left_recursion</code> — array of cycle reports; empty when the grammar has no left recursion.</li>
+</ul>
+<p>A <code>--format=human</code> flag renders the same content human-readably for direct inspection. Downstream stages (currently <code>plcc-parser-table</code>) consume this JSON directly and do not recompute analysis at runtime.</p>
+<p>All of the fields above — FIRST, FOLLOW, predict, parse table, conflicts, and the left-recursion cycle report — are first-class outputs of <code>plcc-ll1</code> from Phase 1 onward, not deferred features. Left-factoring candidate detection is the one analysis deferred to a later phase because it requires new logic beyond what the plcc-ng validator currently computes.</p>
+<p><strong>LL(1) analysis is separated from <code>plcc-spec</code> on purpose.</strong> It is a derived artifact, not a translation of the grammar file, so embedding it in <code>spec.json</code> would violate the philosophy that <code>spec.json</code> is a faithful parse of the <code>.plcc</code> file. Extracting the analysis into its own stage (a) preserves that philosophy, (b) exposes the analysis data as a first-class pedagogical artifact — the very thing PLCC exists to teach, (c) gives downstream consumers (<code>plcc-tree</code> today, future parse-tree-generator generators tomorrow) a stable JSON contract, and (d) factors the one-JSON-stage-per-responsibility architecture honestly.</p>
+<p><strong><code>plcc-model</code> does not depend on <code>ll1.json</code>.</strong> Model construction is a translation of the spec into the canonical model representation; LL(1) analysis is a separate concern that flows to <code>plcc-tree</code> and parser plugins, not to <code>plcc-model</code>. The two stages consume <code>spec.json</code> independently of each other.</p>
+<h3 id="73-token-jsonl">7.3 Token JSONL</h3>
+<p>Output of <code>plcc-tokens</code>. One JSON object per line, each describing a single token: kind, lexeme, source position. Streaming: tokens are emitted as they are scanned. Lexical errors terminate the stage with a structured error on stderr and a nonzero exit per §8.</p>
+<h3 id="74-tree-json">7.4 Tree JSON</h3>
+<p>Output of <code>plcc-tree</code> (and, transitively, of any <code>plcc-parser-&lt;kind&gt;</code> plugin). A single newline-terminated JSON document describing an abstract syntax tree rooted at the grammar's start symbol for one program. One-shot: the stage reads token JSONL to EOF, parses exactly one program, emits the tree, and exits. Batch use parses multiple programs by spawning <code>plcc-tree</code> per program.</p>
+<p>The output is also a valid one-line JSONL stream, so it composes directly with downstream consumers that expect JSONL (notably the long-lived interpreter — see §10). No adapter is needed between <code>plcc-tree</code>'s output and the interpreter's input.</p>
+<h3 id="75-model-json">7.5 Model JSON</h3>
+<p>Output of <code>plcc-model</code>. A single JSON document — a language-neutral description of the OO class hierarchy that an emitter will realize in its target language:</p>
+<ul>
+<li><strong>Classes</strong> with inheritance relationships.</li>
+<li><strong>Attributes</strong> with types described abstractly (primitive, reference, optional, list-of).</li>
+<li><strong>Constructors</strong> with parameter lists and field bindings.</li>
+<li><strong>Method slots</strong> — named methods with parameter lists and opaque bodies.</li>
+<li><strong>Semantic blocks</strong> — opaque strings carrying target-language code from the grammar's <code>%%%</code> sections, tagged with the source language.</li>
+</ul>
+<p>The code model is the retargeting pivot. Every emitter consumes this format; adding a new target language means writing an emitter that reads model JSON and produces source files. The code model does not know anything about any specific target language.</p>
+<h2 id="8-error-handling">8. Error Handling</h2>
+<p>Every Level 0 stage follows the Unix <code>stderr + nonzero exit</code> convention:</p>
+<ul>
+<li><strong>Success:</strong> valid output on stdout, exit 0.</li>
+<li><strong>Failure:</strong> error on stderr, exit nonzero, stdout undefined.</li>
+</ul>
+<p>There are no in-band error records in the pipeline. Errors always terminate the stage that emits them.</p>
+<p>Error rendering uses the verbose infrastructure (§9): GNU-style text on stderr under <code>--verbose-format=text</code>, a JSONL record with <code>"event": "error"</code> under <code>--verbose-format=json</code>. Errors are emitted regardless of <code>--verbose</code> level — <code>--verbose=0</code> suppresses informational output, never error output.</p>
+<p>Orchestrators detect failures by checking child returncodes in pipeline order (upstream first), capture the structured JSONL stderr their children produce (children are always spawned with <code>--verbose-format=json</code> — see §9.3), and report the first failing stage's error. In interpreter sessions (§10), per-chunk subpipeline failures do not kill the long-lived interpreter; the orchestrator reports the error and the session continues.</p>
+<p><strong><code>plcc-ll1</code> is a pure filter.</strong> A non-LL(1) grammar is a result, not a failure. <code>plcc-ll1</code> always exits 0 on any grammar that parses as spec JSON; the result is signalled by its <code>is_ll1</code> output field. Nonzero exit is reserved for tool failures (missing input, malformed spec JSON). <code>plcc-make</code> decides whether to continue by reading <code>build/ll1.json</code> back after writing it (see §11). <code>grep</code> exits 1 on no matches, which is widely considered a design mistake that makes scripting harder; <code>jq</code> exits 0 on <code>null</code> results, which is preferred. <code>plcc-ll1</code> joins the latter camp.</p>
+<p><strong>Parser plugins terminate on the first syntax error.</strong> No error recovery, no partial trees, no Error nodes. A syntax error in the token stream is a structured error on stderr plus a nonzero exit. If a future amendment reintroduces recovery, it will specify the contract.</p>
+<p><strong>Interpreter runtime errors</strong> are the interpreter's own stdout schema, not a revival of in-band errors. Because the interpreter is long-lived (§10), runtime errors in student code are emitted as one kind of evaluation record on stdout; exit stays 0. Stderr is reserved for interpreter-level tool failures. The exact record shape is a Phase 2 Part 2 design-doc decision.</p>
+<h2 id="9-verbose-diagnostics">9. Verbose Diagnostics</h2>
+<p>Every pipeline stage — Level 0 and Level 2 — accepts two cross-cutting flags that give the pipeline a uniform diagnostic surface:</p>
+<ul>
+<li><code>--verbose</code> (<code>-v</code>) — <strong>how much</strong> to emit on stderr. Level dial 0–3.</li>
+<li><code>--verbose-format=text|json</code> — <strong>how</strong> to render. Default <code>text</code>.</li>
+</ul>
+<p>Both flags are part of the walking-skeleton baseline from Phase 1 onward. Retrofitting diagnostic output across an already-shipped pipeline is exactly the cross-cutting change most disruptive to do after the fact, so every stage accepts and propagates both flags from day one. What varies across phases is how much each stage has to say, not whether it participates. Concretely:</p>
+<ul>
+<li><strong>Accept-and-propagate</strong> is mandatory for every stage from day one. The cost of adding two flags to an argparse/Click definition plus a subprocess-argv pass-through is negligible; the cost of retrofitting it later is high because every stage's contract, every test that invokes a stage, and every subprocess-spawning call site would need to change at once.</li>
+<li><strong>Both renderers</strong> (text and JSON) must be implemented for every event a stage emits. This is enforced by test parity checks (§9.5). A stage that has no events yet has no renderers to implement — the null case costs nothing.</li>
+<li><strong>Emit</strong> is expected for every stage that has meaningful milestones or events, as soon as it has them. "We'll add verbose output later" is rejected as a valid plan item. The protocol itself must be present from day one; only the content fills in over time.</li>
+</ul>
+<p>Diagnostic visibility is the single most-requested PLCC v8 feature among faculty using PLCC for teaching: "what is the parser doing, what is the scanner doing, why did this program behave that way." v8 offers a handful of ad-hoc <code>-t</code> flags on individual tools; the result is inconsistent, undiscoverable, and does not compose across a pipeline. A single cross-cutting flag pair with uniform semantics fixes all three problems.</p>
+<p><strong>Two flags, not one, because the pipeline has two audiences.</strong> A student running <code>plcc-parser-table -vv</code> at the command line wants human-readable narration — present tense, one event per line, GNU-style positions. A Level 2 orchestrator consuming <code>plcc-parser-table -vv</code> as a subprocess wants structured JSONL it can reliably parse, aggregate, and reformat into a higher-level view (e.g. <code>plcc-parse -vv</code> producing a v8-style indented parse trace). Making the stage responsible for both renderings — text for humans, JSON for machines — keeps the boundary between "what events happened" (the stage's responsibility) and "how to present them" (the consumer's responsibility) clean. <code>--verbose-format</code> selects which rendering the consumer wants; <code>--verbose</code> selects how much.</p>
+<h3 id="91-verbose-level-dial">9.1 <code>--verbose</code>: level dial</h3>
+<ul>
+<li><code>--verbose=0</code> or flag absent — silent. <strong>Default.</strong></li>
+<li><code>--verbose=1</code>, <code>--verbose</code>, <code>-v</code> — milestones. One line per major phase boundary.</li>
+<li><code>--verbose=2</code>, <code>-vv</code> — per-event narration. Every shift, expand, token, evaluation step, etc.</li>
+<li><code>--verbose=3</code>, <code>-vvv</code> — internal detail. Predict-set lookups, table entries consulted, recovery decisions, DFA transitions.</li>
+</ul>
+<p>Higher levels are strictly supersets of lower ones. Shorthand <code>-vv</code> means two <code>-v</code> flags counted by the argument parser (e.g. Click's <code>count</code> action or argparse's <code>"count"</code> action), not a literal string. Levels higher than a stage supports collapse silently — asking for <code>-vvv</code> from a stage that only defines <code>-v</code> and <code>-vv</code> is not an error, it just gets <code>-vv</code>. A stage that has nothing interesting to say at a given level emits nothing, which is a valid forward-compatible null case.</p>
+<p>The specific events emitted at each level are stage-specific and specified in the relevant phase design doc. Examples:</p>
+<ul>
+<li><code>plcc-parser-table</code>: <code>-v</code> emits start/finish milestones and summary stats; <code>-vv</code> emits shift/expand/complete per token; <code>-vvv</code> adds predict-set lookup detail and recovery decisions.</li>
+<li><code>plcc-tokens</code>: <code>-v</code> emits start/finish and token count; <code>-vv</code> emits each token as it is scanned; <code>-vvv</code> adds DFA-state transitions.</li>
+<li>Level 2 commands: <code>-v</code> emits orchestration milestones and aggregated statistics (possibly derived from higher-detail Level 0 output); <code>-vv</code> emits the v8-style formatted view appropriate to the command (e.g. indented parse trace for <code>plcc-parse</code>, token-by-token narration for <code>plcc-scan</code>); <code>-vvv</code> adds internal orchestration detail.</li>
+</ul>
+<p>A single level dial was chosen over per-stage selection because the primary consumer of verbose output is a human looking at a terminal. Per-stage selection is a solution to noise in structured-log grep results, which is a machine concern, not a human concern. If one stage is overwhelmingly chatty at a given level, the correct fix is to recalibrate which events that stage emits at which level.</p>
+<h3 id="92-verbose-format-output-format">9.2 <code>--verbose-format</code>: output format</h3>
+<ul>
+<li><code>--verbose-format=text</code> (default) — human-readable narrative on stderr per §9.4. Intended for direct human consumption when a student or developer runs a stage at the command line.</li>
+<li><code>--verbose-format=json</code> — JSONL on stderr, one record per line per §9.5. Intended for machine consumption by Level 2 orchestrators that need to parse, aggregate, and reformat diagnostic events from their children.</li>
+</ul>
+<p>Both formats emit the same underlying events at the same level; the flag selects rendering, not content. Tests enforce parity: the set of events and their counts must match under both formats for identical input.</p>
+<h3 id="93-propagation-rules">9.3 Propagation rules</h3>
+<p>Propagation is asymmetric between Level 0 and Level 2. Level 2's job is to consume Level 0's diagnostic output and present it in a form appropriate to its own task, so Level 2 needs machine-readable input from children regardless of what the user asked for, and may need more detail than the user's requested level.</p>
+<p><strong>Level 0 stages and dispatchers</strong> (e.g. <code>plcc-tree</code> forwarding to <code>plcc-parser-&lt;kind&gt;</code>):</p>
+<ol>
+<li><strong>Self-emit.</strong> Honour <code>--verbose</code> and <code>--verbose-format</code> as received. Emit events on stderr accordingly.</li>
+<li><strong>Forward unchanged.</strong> Pass both flags to any child subprocess exactly as received. Dispatchers are pass-throughs, not reformatters.</li>
+</ol>
+<p><strong>Level 2 orchestrators</strong> (e.g. <code>plcc-parse</code>, <code>plcc-rep</code>, <code>plcc-scan</code>, <code>plcc-make</code>):</p>
+<ol>
+<li><strong>Self-emit.</strong> Emit the command's own diagnostic output on stderr in the format the <strong>user</strong> requested (default <code>text</code>). Level 2's output includes both its own orchestration events (chunk boundaries, subprocess lifecycles) and reformatted events from Level 0 children.</li>
+<li><strong>Override children's flags.</strong> When spawning Level 0 children:</li>
+<li><strong>Always</strong> pass <code>--verbose-format=json</code>, regardless of the user's <code>--verbose-format</code>. This makes children's stderr reliably parseable.</li>
+<li>Set <code>--verbose</code> to whatever the orchestrator needs internally, which may be higher than the user's requested level. For example, <code>plcc-parse -v</code> (user wants milestones) may need <code>plcc-parser-table -vvv</code> to compute summary statistics like parse-table size. Each Level 2 command's phase design doc specifies this mapping.</li>
+<li><strong>Capture and reformat.</strong> Level 2 captures children's JSONL stderr, parses the records, and re-renders them into its own output format. This is how <code>plcc-parse -vv</code> produces a v8-style indented parse trace from <code>plcc-parser-table</code>'s flat JSONL event stream.</li>
+</ol>
+<p><strong>Why Level 2 overrides both axes.</strong> Level 2 orchestrators need structured input (JSON, not text) from children to do reliable reformatting — text parsing is fragile and drifts with formatting changes. They also need sufficient detail from children to present their own output — a Level 2 summary at <code>-v</code> may require Level 0 detail at <code>-vvv</code>. The user's flags express what the user wants to <em>see</em> from Level 2; they do not constrain what Level 2 needs <em>internally</em> from its children. The asymmetry is the same pattern that every compiler driver uses: <code>gcc -v</code> shows the user a summary while internally passing whatever flags each subprocess needs.</p>
+<p><strong>Long-lived subprocesses (§10 interpreter).</strong> The interpreter is long-lived for the session. <code>--verbose</code> and <code>--verbose-format</code> are set at spawn time and are immutable for the session — there is no mid-session mechanism to change them. If a future phase needs dynamic verbosity (e.g. a REPL user toggling <code>-vv</code> for a single chunk), the mechanism will be specified as an amendment at that time.</p>
+<p><strong>Level 2 nesting</strong> is not designed for. If that topology arises in a future phase, propagation rules will be amended.</p>
+<h3 id="94-text-output-standards">9.4 Text output standards</h3>
+<p>When a stage emits text-format verbose output:</p>
+<ul>
+<li><strong>Stage-name prefix.</strong> Every line begins with the stage's executable name, a colon, and a space: <code>plcc-tree: expanding Expression -&gt; left:Term op:Op right:Term</code>. The prefix is how a reader tells who said what when stderr from several stages interleaves.</li>
+<li><strong>GNU-style source positions where relevant.</strong> When a line corresponds to a source location, include the position as <code>file:line:col:</code> after the stage prefix: <code>plcc-tree: program.txt:4:12: shift IDENT 'foo'</code>. Editors and IDEs already parse this convention, so verbose lines become click-through.</li>
+<li><strong>Present tense, active voice, one event per line.</strong> "expanding Expression", not "Expression was expanded." "shift IDENT 'foo'", not "a shift occurred."</li>
+<li><strong>Line-atomic writes.</strong> A stage buffers an entire line before writing. Under POSIX, writes smaller than <code>PIPE_BUF</code> (4096 bytes on Linux) are atomic to pipes; to files and ptys, atomicity is best-effort. One line per write minimises interleaving in all cases.</li>
+<li><strong>No ANSI colors by default.</strong> Colors break when stderr is redirected or captured. A future <code>--color=auto|always|never</code> flag can add colors opt-in.</li>
+<li><strong>No timestamps by default.</strong> Timestamps add noise for human consumption. If a future phase needs them, they can be added behind an opt-in flag.</li>
+<li><strong>Errors remain distinguishable.</strong> Real errors use a distinct marker (<code>plcc-tree: error: ...</code>) and are emitted regardless of verbose level (§8).</li>
+</ul>
+<h3 id="95-json-output-standards">9.5 JSON output standards</h3>
+<p>When <code>--verbose-format=json</code> is active, every verbose event is a single JSONL line on stderr. Minimum shape:</p>
+<pre><code class="language-json">{&quot;stage&quot;: &quot;&lt;executable-name&gt;&quot;, &quot;time&quot;: &lt;monotonic-ns&gt;, &quot;event&quot;: &quot;&lt;kind&gt;&quot;, ...payload}
+</code></pre>
+<ul>
+<li><code>stage</code> — emitting executable's name (same as the text-format prefix).</li>
+<li><code>time</code> — monotonic nanosecond timestamp for <strong>intra-stage</strong> ordering. Monotonic clocks are per-process; timestamps from different stages are not directly comparable. Level 2 orchestrators that need cross-stage ordering stamp ingestion time when capturing children's stderr.</li>
+<li><code>event</code> — a stable event-kind identifier (e.g. <code>shift</code>, <code>expand</code>, <code>predict-lookup</code>, <code>error-recovery</code>, <code>milestone</code>, <code>error</code>). Event kinds and payloads are stage-specific and defined in each phase design doc.</li>
+</ul>
+<h2 id="10-pipeline-lifetimes">10. Pipeline Lifetimes</h2>
+<p>In any session-scoped Level 2 command that includes an interpreter (primarily <code>plcc-rep</code>):</p>
+<ul>
+<li>The <strong>interpreter</strong> subprocess is <strong>long-lived</strong> for the duration of the session. It accepts parse-tree JSONL on stdin continuously, evaluates each tree as it arrives, and emits one evaluation record (also JSONL) per tree on stdout. Line-delimited JSON frames both directions; no out-of-band delimiter is needed.</li>
+<li><code>plcc-tokens</code> and <code>plcc-tree</code> (and any parser plugin dispatched from <code>plcc-tree</code>) are <strong>one-shot per input chunk</strong>. For each chunk — a library file, the main program file, or an interactive REPL entry — the orchestrator spawns a fresh <code>plcc-tokens | plcc-tree</code> subpipeline, feeds the chunk through, reads the resulting parse-tree JSON, and pipes it into the long-lived interpreter's stdin. The orchestrator waits for the interpreter's evaluation output before accepting the next chunk.</li>
+<li><strong>One evaluation record per parse tree.</strong> The exact schema of evaluation records (how they represent printed output, errors, and multiple results per program) is a Phase 2 Part 2 design-doc decision.</li>
+</ul>
+<p><code>plcc-rep</code> invocation forms compose cleanly under this model:</p>
+<ul>
+<li><code>plcc-rep grammar.plcc</code> — interactive; prompts, reads chunks from tty, evaluates each.</li>
+<li><code>plcc-rep grammar.plcc &lt; program.txt</code> — batch; feeds the file as a single chunk.</li>
+<li><code>plcc-rep grammar.plcc lib1.txt lib2.txt</code> — loads libraries as sequential chunks into the interpreter, then enters interactive mode. State from the libraries is visible to subsequent chunks because the interpreter is long-lived.</li>
+<li><code>plcc-rep grammar.plcc lib1.txt lib2.txt &lt; program.txt</code> — loads libraries, then runs program.txt as the final chunk, then exits.</li>
+</ul>
+<p><strong>Rationale.</strong> Only stages that hold state need to be long-lived. The interpreter holds state (loaded library definitions, runtime environment) and must persist for the session. <code>plcc-tokens</code> and <code>plcc-tree</code> hold no state; spawning them per chunk is simpler than coordinating program-boundary framing across long-running streaming stages. Fork/exec/JSON-load cost per chunk is imperceptible in interactive use and negligible in batch use.</p>
+<h2 id="11-build-output-layout">11. Build Output Layout</h2>
+<p><code>plcc-make</code> produces all generated artifacts under a single top-level <code>build/</code> directory:</p>
+<pre><code class="language-text">build/
+├── spec.json         # output of plcc-spec
+├── ll1.json          # output of plcc-ll1
+├── model.json        # output of plcc-model
+├── Java/             # output of plcc-lang-emit for the first semantic section
+│   ├── &lt;generated .java files&gt;
+│   └── runtime/      # runtime library copied from the Java emitter plugin
+├── py/               # output of plcc-lang-emit for a second semantic section
+│   ├── &lt;generated .py files&gt;
+│   └── runtime/      # runtime library copied from the Python emitter plugin
+└── ...
+</code></pre>
+<p>Key properties:</p>
+<ul>
+<li><strong>Single directory to clean.</strong> <code>plcc-make</code> always runs <code>rm -rf build/</code> before rebuilding. There is no <code>-c</code> flag in v9; clean-and-rebuild is the default and only behaviour. (A future option to skip cleaning can be added if a concrete need arises.)</li>
+<li><strong>Single <code>.gitignore</code> line.</strong> <code>build/</code> in the project's <code>.gitignore</code> excludes every generated artifact.</li>
+<li><strong>Intermediate files are visible.</strong> <code>spec.json</code>, <code>ll1.json</code>, and <code>model.json</code> live at the top of <code>build/</code> where students can <code>cat</code> them. The pipeline is inspectable, not magical.</li>
+<li><strong>One output subdirectory per semantic section.</strong> Each <code>% &lt;tool&gt; &lt;language&gt;</code> divider in the grammar produces one subdirectory named <code>&lt;tool&gt;</code>, emitted by the plugin for <code>&lt;language&gt;</code>. The name is taken verbatim from the grammar; <code>plcc-make</code> does not normalize casing. A divider written as <code>% Java Java</code> produces <code>build/Java/</code>; one written as <code>% java Java</code> produces <code>build/java/</code>. Learning materials should standardize on a casing convention.</li>
+<li><strong>Generated output is disposable.</strong> Students regenerate frequently. Source (the grammar file) persists; <code>build/</code> is ephemeral.</li>
+</ul>
+<p><code>plcc-make</code> phase sequence:</p>
+<ol>
+<li><strong>Clean:</strong> <code>rm -rf build/</code></li>
+<li><strong>Spec:</strong> <code>plcc-spec grammar.plcc &gt; build/spec.json</code></li>
+<li><strong>LL(1):</strong> <code>plcc-ll1 build/spec.json &gt; build/ll1.json</code></li>
+<li><strong>Model:</strong> <code>plcc-model build/spec.json &gt; build/model.json</code></li>
+<li><strong>Emit:</strong> for each semantic section, <code>plcc-lang-emit --target=&lt;lang&gt; --output=build/&lt;tool&gt;/ &lt; build/model.json</code></li>
+<li><strong>Build:</strong> for each semantic section, <code>plcc-lang-build --target=&lt;lang&gt; --output=build/&lt;tool&gt;/</code> (silently skipped if no build command is installed for that language)</li>
+</ol>
+<p>After step 3, <code>plcc-make</code> reads <code>build/ll1.json</code> back. If <code>is_ll1</code> is false, it prints a human-readable summary of <code>conflicts</code> and <code>left_recursion</code> on stderr and exits nonzero; subsequent phases do not run. If any other phase exits nonzero, <code>plcc-make</code> reports the error and stops; subsequent phases do not run.</p>
+<h2 id="12-language-plugin-system">12. Language Plugin System</h2>
+<p>Language plugins are discovered via PATH. A plugin is any executable named <code>plcc-&lt;lang&gt;-emit</code> present on the user's PATH. No entry point group, no registry, no Python packaging machinery is required beyond <code>pip install</code> placing the command on PATH.</p>
+<h3 id="121-contract">12.1 Contract</h3>
+<p>A language plugin consists of one required command and one optional command:</p>
+<p><strong><code>plcc-&lt;lang&gt;-emit</code> (required)</strong></p>
+<ul>
+<li>Reads model JSON from stdin.</li>
+<li>Accepts <code>--output=&lt;dir&gt;</code> (required) and <code>--semantics=hide|note|comment|body</code> (optional, default <code>body</code>).</li>
+<li>Accepts and forwards <code>--verbose</code> and <code>--verbose-format</code> per §9.</li>
+<li>Writes generated source files into <code>&lt;dir&gt;</code>.</li>
+<li>Copies its bundled runtime into <code>&lt;dir&gt;/runtime/</code>.</li>
+<li>Exits 0 on success; exits nonzero and writes to stderr on failure.</li>
+<li>A malformed model is a tool failure: stderr + nonzero exit per §8.</li>
+</ul>
+<p><strong><code>plcc-&lt;lang&gt;-build</code> (optional)</strong></p>
+<ul>
+<li>Accepts <code>--output=&lt;dir&gt;</code> (required).</li>
+<li>Accepts and forwards <code>--verbose</code> and <code>--verbose-format</code> per §9.</li>
+<li>Compiles or prepares files already in <code>&lt;dir&gt;</code> (e.g. runs <code>javac</code>).</li>
+<li>Exits 0 on success; exits nonzero and writes to stderr on failure.</li>
+<li>Absence from PATH means no build step for that language — not an error.</li>
+</ul>
+<p>The <code>--semantics</code> flag controls how semantic <code>%%%</code> blocks appear in emitted output. PlantUML and similar diagram emitters use <code>--semantics=note</code> or <code>--semantics=hide</code>; interpreter emitters use <code>--semantics=body</code>. How the user specifies <code>--semantics</code> (as a flag to <code>plcc-make</code> or embedded in the grammar file) is left to the Phase 1 design document.</p>
+<p>Because the contract is stdin/stdout/exit codes, a plugin need not be a Python package. <code>pip install</code> is the conventional delivery mechanism, but the runtime contract has no Python dependency.</p>
+<h3 id="122-package-layout">12.2 Package layout</h3>
+<p>Each language plugin package bundles its own runtime library. A reference layout for a third-party plugin (e.g. <code>plcc-rust</code>):</p>
+<pre><code class="language-text">plcc_rust/
+├── __main__.py          # entry point for plcc-rust-emit console script
+├── templates/           # generation templates (Jinja or equivalent)
+└── runtime/             # copied verbatim into build/&lt;tool&gt;/runtime/
+    └── ...              # target-language runtime files
+</code></pre>
+<p>Declared in <code>pyproject.toml</code> as:</p>
+<pre><code class="language-toml">[project.scripts]
+plcc-rust-emit = &quot;plcc_rust:emit_main&quot;
+</code></pre>
+<p>The runtime lives inside the plugin so that:</p>
+<ul>
+<li><strong>Plugin authors own their runtime.</strong> A plugin for a new language defines both the generated code shape and the base classes those generated classes inherit from. No coordination with plcc core required.</li>
+<li><strong>Output is self-contained.</strong> The bundled runtime in <code>build/&lt;tool&gt;/runtime/</code> has no per-language external dependencies: no separate runtime package on PyPI, no Maven Central lookup, no crates.io. The generated interpreter is a pipeline stage (§14) that composes with <code>plcc-tokens</code> and <code>plcc-tree</code> from the main <code>plcc</code> install, and needs nothing else beyond the target language's interpreter itself.</li>
+<li><strong>One install per language.</strong> <code>pip install plcc-rust</code> brings in emission logic, templates, and runtime in a single unit. Runtime bugs are fixed by releasing a new version of the plugin package.</li>
+<li><strong>Regeneration is cheap.</strong> Students regenerate frequently, so "runtime is copied into every rebuild" is not a cost.</li>
+</ul>
+<h3 id="123-discovery">12.3 Discovery</h3>
+<p><code>plcc-lang-emit --target=&lt;lang&gt;</code> constructs <code>plcc-&lt;lang&gt;-emit</code> and execs it as a subprocess. Discovery is PATH-based: if the command exists on PATH, the plugin is installed; if not, <code>plcc-lang-emit</code> exits nonzero with:</p>
+<pre><code class="language-text">No emitter found for '&lt;lang&gt;'. Is plcc-&lt;lang&gt;-emit installed?
+Run plcc-lang-list to see what is available.
+</code></pre>
+<p><code>plcc-lang-list</code> scans PATH for executables matching <code>plcc-*-emit</code>, strips the prefix and suffix, and prints one language name per line.</p>
+<h3 id="124-built-in-emitters">12.4 Built-in emitters</h3>
+<p>The <code>plcc</code> core package ships with three built-in language plugins, declared as console scripts in <code>plcc</code>'s own <code>pyproject.toml</code>:</p>
+<pre><code class="language-toml">[project.scripts]
+plcc-plantuml-emit = &quot;plcc.lang.plantuml:emit_main&quot;
+plcc-python-emit   = &quot;plcc.lang.python:emit_main&quot;
+plcc-java-emit     = &quot;plcc.lang.java:emit_main&quot;
+plcc-java-build    = &quot;plcc.lang.java:build_main&quot;
+</code></pre>
+<p><code>pip install plcc</code> installs all three out of the box. No separate packages, no entry point groups.</p>
+<p>Third-party plugins (<code>plcc-rust</code>, <code>plcc-typescript</code>, etc.) are published as independent PyPI packages following the naming convention <code>plcc-&lt;lang&gt;</code>. Installing one places <code>plcc-&lt;lang&gt;-emit</code> (and optionally <code>plcc-&lt;lang&gt;-build</code>) on PATH, making the language immediately available to <code>plcc-lang-emit</code>.</p>
+<h2 id="13-parser-plugin-system">13. Parser Plugin System</h2>
+<p>Parser plugins follow the same PATH-based discovery as language plugins. A parser plugin is any executable named <code>plcc-parser-&lt;kind&gt;</code> on PATH.</p>
+<h3 id="131-contract">13.1 Contract</h3>
+<ul>
+<li>Reads token JSONL on stdin.</li>
+<li>Accepts <code>--ll1 &lt;path&gt;</code> (required).</li>
+<li>Accepts <code>--verbose</code> and <code>--verbose-format</code> per §9.</li>
+<li>Emits a single newline-terminated parse-tree JSON document on stdout (also a valid one-line JSONL stream).</li>
+<li>Exits 0 on success; exits nonzero and writes to stderr on tool failure.</li>
+<li>Terminates on the first syntax error; no error recovery, no partial trees, no Error nodes (§8).</li>
+</ul>
+<p>One-shot, like <code>plcc-tree</code> itself: a parser plugin reads token JSONL to EOF, parses one program, emits one tree, and exits. No long-running mode, no multi-tree-per-invocation mode. Error-recovery strategy (panic-mode, phrase-level, etc.) is plugin-defined beyond the one-error-terminates rule; the Phase 2 Part 1 design doc commits <code>plcc-parser-table</code> to a specific strategy.</p>
+<h3 id="132-dispatcher-plcc-tree">13.2 Dispatcher (<code>plcc-tree</code>)</h3>
+<p><code>plcc-tree</code> is a dispatcher. It constructs <code>plcc-parser-&lt;kind&gt;</code> from its <code>--parser=&lt;kind&gt;</code> flag (default <code>table</code>), execs it forwarding <code>--ll1</code>, <code>--verbose</code>, and <code>--verbose-format</code> unchanged, and exits when the dispatched plugin exits. If <code>plcc-parser-&lt;kind&gt;</code> is not on PATH, <code>plcc-tree</code> exits nonzero with a message naming the missing command and pointing at <code>plcc-parser-list</code>.</p>
+<h3 id="133-built-in-parser">13.3 Built-in parser</h3>
+<p>The <code>plcc</code> package ships with one built-in parser plugin:</p>
+<pre><code class="language-toml">[project.scripts]
+plcc-parser-table = &quot;plcc.parser.table:main&quot;
+</code></pre>
+<p><code>plcc-parser-table</code> is the table-driven LL(1) parser that consumes <code>ll1.json</code> and produces parse-tree JSON. It is the default parser, so <code>plcc-tree</code> (and <code>plcc-rep</code>, <code>plcc-parse</code>, <code>plcc-scan</code>, <code>plcc-make</code>) work out of the box with <code>pip install plcc</code>.</p>
+<h3 id="134-discovery">13.4 Discovery</h3>
+<p><code>plcc-parser-list</code> scans PATH for executables matching <code>plcc-parser-*</code>, strips prefix and suffix, and prints one parser-kind name per line (symmetric with <code>plcc-lang-list</code>).</p>
+<h3 id="135-recursive-descent-parser-generation-forward-looking">13.5 Recursive-descent parser generation (forward-looking)</h3>
+<p>A future Level 0 stage, working name <code>plcc-gen-parser</code> (named outside the <code>plcc-parser-*</code> glob to avoid being mistaken for a parser plugin by <code>plcc-tree</code> or <code>plcc-parser-list</code>), will generate parser source code in a target language from <code>ll1.json</code>. A built-in invocation always generates Python source, producing a parser plugin that can be installed alongside <code>plcc-parser-table</code> and selected via <code>--parser=</code>. Language plugins may optionally provide their own target-language parser generators (e.g. a Java parser generator emitted into <code>build/Java/</code>). The generated parser is itself a pipeline-stage parse-tree-generator under §14: token JSONL in, parse-tree JSON out, no scanner. Recursive-descent generation is not Phase 2 Part 1 scope; the Part 1 design doc describes the intended shape as a forward-looking note so the later phase slides in without reshaping.</p>
+<h3 id="136-rationale">13.6 Rationale</h3>
+<p>The parse-tree-generator is already one pipeline stage regardless of whether it is the built-in Python table-driven parser, a generated Python recursive-descent parser, or a parser generated in a different target language — every variant reads token JSONL and emits parse-tree JSON. The question is only how that stage is discovered and dispatched. PATH-based discovery reuses infrastructure from the language-plugin system, composes with <code>pip install</code>, and matches the Unix-idiomatic pattern the architecture already uses.</p>
+<p>PLCC's pedagogical context is programming languages courses, in which parser implementation strategies are part of the curriculum even when parsers are not student-written. Making parse-tree-generators visibly pluggable lets faculty show students a table-driven parser, a recursive-descent parser, and any other strategy side-by-side against the same grammar — the same pluggability axis that makes language-level retargeting work. Scanner and verifier pluggability remain out of scope because (a) lexical analysis in PLCC's context is a DFA-driven data problem rather than an algorithmic variation, and (b) verifiers in v9 consist of exactly one implementation (<code>plcc-ll1</code>); pluggability is meaningless without multiple implementations. These constraints may loosen post-v9.</p>
+<h2 id="14-generated-components">14. Generated Components</h2>
+<p>Every generated component is a <strong>pipeline stage</strong> that communicates via JSON on stdin/stdout, not a standalone program:</p>
+<ul>
+<li>A <strong>generated interpreter</strong> reads parse-tree JSONL on stdin, deserializes each tree into an object tree whose classes are generated from the grammar, calls the root entry-point method, and writes evaluation records on stdout. <strong>It has no scanner and no parser.</strong> To deserialize trees, it uses whatever off-the-shelf JSON library ships with its target language.</li>
+<li>A <strong>generated parse-tree-generator</strong> (future, via §13.5) reads token JSONL on stdin, deserializes each token, runs its parsing algorithm, and emits parse-tree JSON on stdout. <strong>It has no scanner.</strong></li>
+<li>A <strong>generated tokenizer</strong> is out of scope in v9.</li>
+</ul>
+<p>To invoke a generated interpreter standalone, a student composes the upstream stages:</p>
+<pre><code class="language-sh">plcc-tokens --spec build/spec.json &lt; program.txt \
+  | plcc-tree --ll1 build/ll1.json \
+  | python build/py/main.py
+</code></pre>
+<p><code>plcc-rep</code> automates this orchestration and is the primary way students interact with generated interpreters.</p>
+<h3 id="141-runtime-contents">14.1 Runtime contents</h3>
+<p>The runtime a language plugin bundles into <code>&lt;dir&gt;/runtime/</code> consists of:</p>
+<ol>
+<li>Base classes for the generated grammar classes (one base per nonterminal kind, plus token base classes).</li>
+<li>Parse-tree JSON deserialization helpers that reconstruct an object tree from parse-tree JSONL on stdin.</li>
+<li>Optional token JSON deserialization helpers, included only if the plugin also emits a parse-tree-generator.</li>
+<li>An entry-point harness that reads parse-tree JSONL from stdin, deserializes one tree per line, calls the root entry-point method on each, and writes evaluation records to stdout.</li>
+<li>Error-record rendering helpers per §8.</li>
+</ol>
+<p>The runtime explicitly does <strong>not</strong> include a tokenizer, a parser, or any code for reading raw program source. Generated components rely on upstream pipeline stages for tokenization and parsing.</p>
+<p>Generated components are pipeline stages and inherit the full verbose-diagnostics contract from §9: they accept <code>--verbose</code> and <code>--verbose-format</code>, forward them to any subprocess they spawn, and emit diagnostic output under their own executable name on stderr in the requested format. The runtime bundles whatever rendering helpers the emitter needs to satisfy this contract in its target language.</p>
+<h3 id="142-entry-point-method-name">14.2 Entry-point method name</h3>
+<p><code>$run()</code> (the name used by v8) is not portable: Python, C#, Rust, Go, and Swift all reject <code>$</code> in identifiers. The portable name is deferred to the Phase 2 Part 2 brainstorm, which is the first phase that emits an interpreter and thus must commit to a name.</p>
+<h3 id="143-rationale">14.3 Rationale</h3>
+<p>Treating generated components as pipeline stages eliminates a two-layer mental model where the "parser inside <code>plcc-rep</code>" and the "parser inside the generated interpreter" appear to be different things. Under the pipeline-stage framing, there is one parse-tree-generator in use at a time, and it serves both the interactive Level 2 commands and the composition used when invoking generated interpreters. Students see one pipeline and one JSON contract. The generated artifact's responsibility narrows to "take trees, run trees," which is the pedagogical essence of an interpreter and eliminates the need for every emitter to independently reinvent tokenization and parsing in its target language.</p>
+<h2 id="15-first-non-java-target-python">15. First Non-Java Target: Python</h2>
+<p>The primary proof point for the retargeting architecture in v9 is <code>plcc-python-emit</code>. Python is chosen because:</p>
+<ul>
+<li>It is the highest-leverage adoption win. Many institutions teach Python as their primary language; their faculty cannot currently adopt PLCC.</li>
+<li>Its dynamic typing puts pressure on the code model abstraction. A code model that survives emission to Python without Java-ism leaks is much more likely to also survive emission to TypeScript, C#, or Rust later.</li>
+<li>Students in most CS curricula already know some Python, so the emitted interpreter is immediately readable to them.</li>
+</ul>
+<p><code>plcc-python-emit</code> must round-trip through the <code>languages</code> test repository (§17) in both its emitted code and its embedded runtime. "Round-trip" here means the generated Python interpreter pipeline stage correctly evaluates parse trees the upstream pipeline produces — not that the generated artifact runs programs end-to-end standalone.</p>
+<h2 id="16-distribution-and-packaging">16. Distribution and Packaging</h2>
+<p>PLCC v9 is distributed through PyPI as <code>plcc</code>. All Level 0 primitives and Level 2 commands are console-script entry points declared in <code>pyproject.toml</code>. Installing the package provides every command on the user's <code>PATH</code>.</p>
+<pre><code class="language-sh">pip install plcc
+</code></pre>
+<p>Cross-platform by construction. No shell scripts, no environment variable setup, no OS-specific installers. The command a student or instructor runs to get a working PLCC is the same on Windows, macOS, and Linux.</p>
+<p>Third-party language plugins are separate PyPI packages following the naming convention <code>plcc-&lt;lang&gt;</code>. Installing one places <code>plcc-&lt;lang&gt;-emit</code> (and optionally <code>plcc-&lt;lang&gt;-build</code>) on PATH.</p>
+<pre><code class="language-sh">pip install plcc plcc-rust
+</code></pre>
+<p>This distribution model replaces the v8 model, which required cloning the repo and configuring environment variables — an adoption barrier that disproportionately affects students on Windows and instructors supporting multiple operating systems.</p>
+<h2 id="17-backwards-compatibility">17. Backwards Compatibility</h2>
+<p>v9 provides <strong>semantic backwards compatibility</strong> for v8 grammar files, not bit-exact compatibility. A grammar file written against v8 passed to v9's <code>plcc-make</code> produces a working Java interpreter with the same runtime behaviour. Generated class names, method signatures, and file layout may differ from v8's output; faculty tests of student programs continue to pass; faculty who inspected generated Java source may see differences.</p>
+<h3 id="the-languages-test-oracle">The <code>languages</code> test oracle</h3>
+<p>Backwards compatibility is not an aspiration. It is a runnable, concrete signal. The <code>languages</code> repository contains the example languages referenced in PLCC's learning materials, along with tests that verify each language can be parsed by PLCC, have Java code generated, compiled, and run against example programs.</p>
+<p><strong>v9 is considered backwards compatible when the full <code>languages</code> test suite passes against it.</strong></p>
+<p>This test suite is part of v9's acceptance criteria. It runs in CI throughout development to catch regressions early rather than at the end. The Java language plugin (<code>plcc-java-emit</code>) is designed and tested against this suite.</p>
+<p>The suite is not comprehensive — its coverage of runtime behaviour is shallow — but it is concrete, already written, and exercises the full pipeline end to end against realistic grammars.</p>
+<h2 id="18-deferred-and-out-of-scope">18. Deferred and Out of Scope</h2>
+<ul>
+<li><strong>Pluggable verifiers.</strong> Future extension; no work in v9.</li>
+<li><strong>Pluggable scanners.</strong> The Level 0 primitive <code>plcc-tokens</code> remains the only implementation in v9.</li>
+<li><strong>Level 1 intermediate compositions.</strong> Deferred until a pedagogical use case emerges.</li>
+<li><strong>Non-OO target languages.</strong> Retargeting in v9 is limited to modern OO languages.</li>
+<li><strong>Exact JSON schemas.</strong> This spec establishes contracts and the error model (§8); schema details are the implementation plan's responsibility.</li>
+<li><strong>Migration of existing PLCC users to v9 on a timeline.</strong> The cutover strategy supports parallel operation; the decision of when individual faculty migrate is their own.</li>
+<li><strong>Integration of plcc-ng into the plcc repository.</strong> Deferred until v9 is complete and has demonstrated buy-in. Development of v9 happens entirely within the plcc-ng repository.</li>
+<li><strong>Recursive-descent parser generation</strong> (<code>plcc-gen-parser</code>). Forward-looking design sketched in §13.5; not Phase 2 Part 1 scope.</li>
+<li><strong>Left-factoring candidate detection in <code>plcc-ll1</code>.</strong> Deferred to a later phase; requires new logic beyond what the plcc-ng validator currently computes.</li>
+<li><strong>Dynamic verbosity in long-lived subprocesses.</strong> <code>--verbose</code> and <code>--verbose-format</code> are immutable for the interpreter session.</li>
+<li><strong>Interpreter evaluation record schema.</strong> Phase 2 Part 2 design-doc decision.</li>
+<li><strong>Entry-point method name for generated interpreters.</strong> Phase 2 Part 2 design-doc decision.</li>
+</ul>
+<h2 id="19-open-risks">19. Open Risks</h2>
+<ul>
+<li><strong>Code model generality.</strong> The code model is the retargeting pivot. If it accidentally encodes Java-isms, emission to Python will surface them, but late-discovered abstraction leaks could require rework of every emitter. Mitigation: emit to Python as early in the implementation plan as possible, before investing in the Java emitter's polish.</li>
+<li><strong>Runtime library drift across languages.</strong> Each emitter plugin owns its runtime, so different languages' interpreters can drift in behaviour. Mitigation: the <code>languages</code> test suite exercises Java runtime behaviour; a parallel language-agnostic test suite should exercise Python runtime behaviour as the Python emitter matures.</li>
+<li><strong>plcc-ng code that does not fit the pipeline shape.</strong> plcc-ng's 282 commits include spec parsing and a scanner, but its internal structure shares dataclasses across package boundaries. Re-homing that code into Level 0 primitives with JSON contracts may reveal coupling that requires restructuring, not just relocation. Mitigation: the implementation plan begins with extracting <code>plcc-spec</code> as a standalone primitive to surface these issues early.</li>
+<li><strong>Learning materials lag.</strong> Learning materials need to be updated to match v9's commands and behaviour before v9 can be widely adopted. Mitigation: name a specific maintainer responsible for the learning materials update, with a review checkpoint after the Python emitter lands.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

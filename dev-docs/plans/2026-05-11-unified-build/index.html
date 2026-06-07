@@ -1,0 +1,2514 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-11-unified-build/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Unified Build Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unified-build-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unified Build Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="unified-build-implementation-plan">Unified Build Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Make <code>build/</code> the single source of truth for all Level 2 commands by implementing hash-based staleness detection in <code>plcc-make</code> and having <code>plcc-scan</code>, <code>plcc-parse</code>, and <code>plcc-rep</code> call <code>plcc-make</code> first.</p>
+<p><strong>Architecture:</strong> <code>plcc-make</code> runs <code>plcc-spec</code> into a temp file, hashes the output, compares to a JSON sentinel (<code>build/.spec-hash</code>), and skips downstream steps when the grammar and required level are already current. All other Level 2 commands call <code>plcc-make --through=&lt;level&gt;</code> before using artifacts from <code>build/</code>. Grammar file defaults to <code>./grammar.plcc</code> with <code>--grammar-file=&lt;path&gt;</code> override on all four commands.</p>
+<p><strong>Tech Stack:</strong> Python 3, <code>hashlib</code> (stdlib), <code>json</code> (stdlib), <code>docopt-ng</code>, <code>subprocess</code>, <code>bats-core</code> for CLI tests, <code>pytest</code> for unit tests.</p>
+<p><strong>Spec:</strong> <code>docs/superpowers/specs/2026-05-11-unified-build-design.md</code></p>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/build/__init__.py</code></td>
+<td>Package marker</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/build/staleness.py</code></td>
+<td>Hash computation, sentinel read/write/delete, <code>is_current</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/build/staleness_test.py</code></td>
+<td>Unit tests for staleness module</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>tests/fixtures/lexical-only.plcc</code></td>
+<td>Grammar with only a lexical section (no <code>%</code>)</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/make.py</code></td>
+<td>Remove positional GRAMMAR, add <code>--grammar-file</code>/<code>--through</code>, implement staleness algorithm</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/make_test.py</code></td>
+<td>Update for new interface; remove positional-arg tests</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/scan.py</code></td>
+<td>Remove positional GRAMMAR, add <code>--grammar-file</code>, call <code>plcc-make --through=scan</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/parse.py</code></td>
+<td>Remove positional GRAMMAR, add <code>--grammar-file</code>, call <code>plcc-make --through=parse</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/rep.py</code></td>
+<td>Remove positional GRAMMAR (fixing silent-ignore bug), add <code>--grammar-file</code>, call <code>plcc-make</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tests/bats/commands/plcc-make.bats</code></td>
+<td>New staleness, <code>--through</code>, grammar-resolution tests; update existing to drop positional arg</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tests/bats/commands/plcc-scan.bats</code></td>
+<td>Add WORK_DIR setup; update all tests to new interface</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tests/bats/commands/plcc-parse.bats</code></td>
+<td>Add WORK_DIR setup; update all tests to new interface</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tests/bats/commands/plcc-rep.bats</code></td>
+<td>Simplify setup; update all tests to new interface</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-lexical-only-fixture">Task 1: Lexical-only fixture</h2>
+<p><strong>Files:</strong>
+- Create: <code>tests/fixtures/lexical-only.plcc</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create the fixture</strong></li>
+</ul>
+<pre><code>token NUM '\d+'
+</code></pre>
+<p>Save as <code>tests/fixtures/lexical-only.plcc</code>. No <code>%</code> divider — lexical section only.</p>
+<ul>
+<li>[ ] <strong>Step 2: Verify it parses</strong></li>
+</ul>
+<pre><code class="language-bash">plcc-spec tests/fixtures/lexical-only.plcc | python3 -c &quot;import json,sys; d=json.load(sys.stdin); assert d['lexical'], 'no lexical'; assert d['syntax']==[], 'has syntax'&quot;
+</code></pre>
+<p>Expected: exits 0 silently.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/fixtures/lexical-only.plcc
+git commit -m &quot;test: add lexical-only fixture for partial-grammar tests&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-staleness-module">Task 2: Staleness module</h2>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/build/__init__.py</code>
+- Create: <code>src/plcc/build/staleness_test.py</code>
+- Create: <code>src/plcc/build/staleness.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing unit tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/build/staleness_test.py</code>:</p>
+<pre><code class="language-python">import json
+import pytest
+from pathlib import Path
+from plcc.build.staleness import (
+    compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
+)
+
+
+def test_compute_hash_returns_hex_string(tmp_path):
+    f = tmp_path / &quot;spec.json&quot;
+    f.write_text('{&quot;x&quot;: 1}')
+    h = compute_hash(f)
+    assert len(h) == 64
+    assert all(c in &quot;0123456789abcdef&quot; for c in h)
+
+
+def test_compute_hash_same_content_same_hash(tmp_path):
+    a = tmp_path / &quot;a.json&quot;
+    b = tmp_path / &quot;b.json&quot;
+    a.write_text(&quot;hello&quot;)
+    b.write_text(&quot;hello&quot;)
+    assert compute_hash(a) == compute_hash(b)
+
+
+def test_compute_hash_different_content_different_hash(tmp_path):
+    a = tmp_path / &quot;a.json&quot;
+    b = tmp_path / &quot;b.json&quot;
+    a.write_text(&quot;hello&quot;)
+    b.write_text(&quot;world&quot;)
+    assert compute_hash(a) != compute_hash(b)
+
+
+def test_read_sentinel_returns_none_when_absent(tmp_path):
+    assert read_sentinel(tmp_path) is None
+
+
+def test_read_sentinel_returns_none_on_malformed_json(tmp_path):
+    (tmp_path / &quot;.spec-hash&quot;).write_text(&quot;not json&quot;)
+    assert read_sentinel(tmp_path) is None
+
+
+def test_write_then_read_sentinel_roundtrips(tmp_path):
+    write_sentinel(tmp_path, &quot;abc123&quot;, &quot;all&quot;)
+    s = read_sentinel(tmp_path)
+    assert s == {&quot;hash&quot;: &quot;abc123&quot;, &quot;through&quot;: &quot;all&quot;}
+
+
+def test_delete_sentinel_removes_file(tmp_path):
+    write_sentinel(tmp_path, &quot;abc123&quot;, &quot;all&quot;)
+    delete_sentinel(tmp_path)
+    assert read_sentinel(tmp_path) is None
+
+
+def test_delete_sentinel_is_idempotent(tmp_path):
+    delete_sentinel(tmp_path)  # no error when absent
+
+
+def test_is_current_false_when_sentinel_none():
+    assert not is_current(None, &quot;abc&quot;, &quot;all&quot;)
+
+
+def test_is_current_false_when_hash_differs():
+    s = {&quot;hash&quot;: &quot;old&quot;, &quot;through&quot;: &quot;all&quot;}
+    assert not is_current(s, &quot;new&quot;, &quot;all&quot;)
+
+
+def test_is_current_true_when_hash_matches_and_level_sufficient():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;through&quot;: &quot;all&quot;}
+    assert is_current(s, &quot;abc&quot;, &quot;scan&quot;)
+    assert is_current(s, &quot;abc&quot;, &quot;parse&quot;)
+    assert is_current(s, &quot;abc&quot;, &quot;all&quot;)
+
+
+def test_is_current_false_when_stored_level_insufficient():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;through&quot;: &quot;scan&quot;}
+    assert not is_current(s, &quot;abc&quot;, &quot;parse&quot;)
+    assert not is_current(s, &quot;abc&quot;, &quot;all&quot;)
+
+
+def test_is_current_scan_satisfies_scan():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;through&quot;: &quot;scan&quot;}
+    assert is_current(s, &quot;abc&quot;, &quot;scan&quot;)
+
+
+def test_is_current_parse_satisfies_scan_and_parse():
+    s = {&quot;hash&quot;: &quot;abc&quot;, &quot;through&quot;: &quot;parse&quot;}
+    assert is_current(s, &quot;abc&quot;, &quot;scan&quot;)
+    assert is_current(s, &quot;abc&quot;, &quot;parse&quot;)
+    assert not is_current(s, &quot;abc&quot;, &quot;all&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/build/staleness_test.py
+</code></pre>
+<p>Expected: <code>ModuleNotFoundError</code> — <code>plcc.build.staleness</code> does not exist.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create the package marker</strong></li>
+</ul>
+<p>Create <code>src/plcc/build/__init__.py</code> (empty).</p>
+<ul>
+<li>[ ] <strong>Step 4: Implement <code>staleness.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/build/staleness.py</code>:</p>
+<pre><code class="language-python">import hashlib
+import json
+from pathlib import Path
+
+_SENTINEL = &quot;.spec-hash&quot;
+_LEVELS = {&quot;scan&quot;: 0, &quot;parse&quot;: 1, &quot;all&quot;: 2}
+
+
+def compute_hash(path) -&gt; str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def read_sentinel(build_dir) -&gt; dict | None:
+    p = Path(build_dir) / _SENTINEL
+    try:
+        return json.loads(p.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None
+
+
+def write_sentinel(build_dir, hash_: str, through: str) -&gt; None:
+    (Path(build_dir) / _SENTINEL).write_text(
+        json.dumps({&quot;hash&quot;: hash_, &quot;through&quot;: through})
+    )
+
+
+def delete_sentinel(build_dir) -&gt; None:
+    try:
+        (Path(build_dir) / _SENTINEL).unlink()
+    except FileNotFoundError:
+        pass
+
+
+def is_current(sentinel: dict | None, new_hash: str, through: str) -&gt; bool:
+    if sentinel is None:
+        return False
+    if sentinel.get(&quot;hash&quot;) != new_hash:
+        return False
+    stored = _LEVELS.get(sentinel.get(&quot;through&quot;, &quot;&quot;), -1)
+    requested = _LEVELS.get(through, -1)
+    return stored &gt;= requested
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run tests to confirm they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/build/staleness_test.py
+</code></pre>
+<p>Expected: all 15 tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/build/__init__.py src/plcc/build/staleness.py src/plcc/build/staleness_test.py
+git commit -m &quot;feat: add staleness module for build/ sentinel management&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-update-plcc-make">Task 3: Update <code>plcc-make</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/make.py</code>
+- Modify: <code>src/plcc/cmd/make_test.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update the unit tests</strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/make_test.py</code> entirely:</p>
+<pre><code class="language-python">import pytest
+import docopt
+
+from .make import main as run_main, validate_tool_name, _report_ll1_failure
+
+
+def test_help(capsys):
+    with pytest.raises(SystemExit):
+        run_main(['--help'])
+    out, err = capsys.readouterr()
+    assert 'Usage' in out
+
+
+def test_grammar_file_not_found_exits_nonzero(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main([])
+    assert exc.value.code != 0
+
+
+def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit):
+        run_main([])
+    _, err = capsys.readouterr()
+    assert &quot;grammar file not found&quot; in err
+
+
+def test_grammar_file_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with pytest.raises(SystemExit) as exc:
+        run_main(['--grammar-file=nonexistent.plcc'])
+    assert exc.value.code != 0
+
+
+def test_validate_tool_name_accepts_valid():
+    validate_tool_name('diagram')
+    validate_tool_name('Java')
+    validate_tool_name('my-tool')
+    validate_tool_name('tool_123')
+
+
+def test_validate_tool_name_rejects_path_traversal():
+    with pytest.raises(ValueError):
+        validate_tool_name('../etc')
+    with pytest.raises(ValueError):
+        validate_tool_name('foo/bar')
+    with pytest.raises(ValueError):
+        validate_tool_name('/absolute')
+
+
+def test_validate_tool_name_rejects_empty():
+    with pytest.raises(ValueError):
+        validate_tool_name('')
+
+
+def test_report_ll1_failure_prints_error_and_conflicts(capsys):
+    ll1 = {
+        &quot;is_ll1&quot;: False,
+        &quot;conflicts&quot;: [
+            {&quot;nonterminal&quot;: &quot;E&quot;, &quot;lookahead&quot;: &quot;+&quot;, &quot;competing&quot;: [&quot;E + T&quot;, &quot;E&quot;]}
+        ],
+        &quot;left_recursion&quot;: [],
+    }
+    _report_ll1_failure(ll1, &quot;build/ll1.json&quot;, verbose=None)
+    _, err = capsys.readouterr()
+    assert &quot;plcc-make: error:&quot; in err
+    assert &quot;build/ll1.json&quot; in err
+    assert &quot;E&quot; in err
+    assert &quot;+&quot; in err
+
+
+def test_report_left_recursion_cycle(capsys):
+    ll1 = {
+        &quot;conflicts&quot;: [],
+        &quot;left_recursion&quot;: [{&quot;cycle&quot;: [&quot;A&quot;, &quot;B&quot;, &quot;A&quot;]}],
+    }
+    _report_ll1_failure(ll1, &quot;build/ll1.json&quot;, None)
+    _, err = capsys.readouterr()
+    assert &quot;A -&gt; B -&gt; A&quot; in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
+</code></pre>
+<p>Expected: <code>test_grammar_file_not_found_exits_nonzero</code> and <code>test_grammar_file_not_found_prints_error</code> and <code>test_grammar_file_flag_not_found_exits_nonzero</code> fail; others pass.</p>
+<ul>
+<li>[ ] <strong>Step 3: Rewrite <code>make.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/make.py</code> entirely:</p>
+<pre><code class="language-python">import contextlib
+import enum
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.build.staleness import (
+    compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
+)
+
+__doc__ = &quot;&quot;&quot;plcc-make
+    Build a PLCC project from a grammar file.
+
+Usage:
+    plcc-make [-v ...] [options]
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    --through=&lt;level&gt;       Build up to this level: scan, parse, or all [default: all].
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+_TOOL_NAME_RE = re.compile(r'^[a-zA-Z0-9_-]+$')
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    PHASE = &quot;phase&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-make --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose = VerboseContext.from_args(&quot;plcc-make&quot;, Events, args)
+    grammar = args['--grammar-file'] or 'grammar.plcc'
+    through = args['--through'] or 'all'
+    build_dir = Path('build')
+
+    if not os.path.exists(grammar):
+        print(f&quot;plcc-make: grammar file not found: {grammar}&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose.emit(Events.STARTED, message=f&quot;building {grammar}&quot;)
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    build_dir.mkdir(exist_ok=True)
+
+    # Run plcc-spec into a temp file to avoid corrupting build/spec.json on failure
+    verbose.emit(Events.PHASE, message=&quot;spec&quot;)
+    tmp_fd, tmp_spec = tempfile.mkstemp(suffix='.json')
+    os.close(tmp_fd)
+    try:
+        with open(tmp_spec, 'w') as spec_out:
+            result = subprocess.run(
+                ['plcc-spec', grammar] + child_flags,
+                stdout=spec_out,
+                stderr=subprocess.PIPE,
+            )
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode('utf-8', errors='replace'))
+            verbose.reformat_child_events(events)
+        if result.returncode != 0:
+            os.unlink(tmp_spec)
+            delete_sentinel(build_dir)
+            print(f&quot;plcc-make: plcc-spec failed (exit {result.returncode})&quot;, file=sys.stderr)
+            sys.exit(result.returncode)
+    except Exception:
+        if os.path.exists(tmp_spec):
+            os.unlink(tmp_spec)
+        delete_sentinel(build_dir)
+        raise
+
+    new_hash = compute_hash(tmp_spec)
+    sentinel = read_sentinel(build_dir)
+
+    if is_current(sentinel, new_hash, through):
+        os.unlink(tmp_spec)
+        verbose.emit(Events.FINISHED, message=&quot;build is current&quot;)
+        return
+
+    # Slow path: move spec into place, delete sentinel, run downstream steps
+    shutil.move(tmp_spec, build_dir / 'spec.json')
+    spec_json = str(build_dir / 'spec.json')
+    delete_sentinel(build_dir)  # absent until final success write below
+
+    if through in ('parse', 'all'):
+        verbose.emit(Events.PHASE, message=&quot;ll1&quot;)
+        ll1_json = str(build_dir / 'll1.json')
+        _run_or_die(['plcc-ll1'] + child_flags, stdin_file=spec_json, stdout_file=ll1_json, verbose=verbose)
+        with open(ll1_json) as f:
+            ll1 = json.load(f)
+        if not ll1.get(&quot;is_ll1&quot;, True):
+            _report_ll1_failure(ll1, ll1_json, verbose)
+            delete_sentinel(build_dir)
+            sys.exit(1)
+
+    if through == 'all':
+        verbose.emit(Events.PHASE, message=&quot;model&quot;)
+        model_json = str(build_dir / 'model.json')
+        _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
+
+        with open(spec_json) as f:
+            spec = json.load(f)
+        for section in spec.get('semantics', []):
+            tool = section['tool']
+            lang = section['language']
+            try:
+                validate_tool_name(tool)
+            except ValueError as e:
+                print(f&quot;plcc-make: {e}&quot;, file=sys.stderr)
+                delete_sentinel(build_dir)
+                sys.exit(1)
+            output_dir = str(build_dir / tool)
+            os.makedirs(output_dir, exist_ok=True)
+            verbose.emit(Events.PHASE, message=f&quot;emit {lang} -&gt; {tool}&quot;)
+            _run_or_die(
+                ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'] + child_flags,
+                stdin_file=model_json,
+                verbose=verbose,
+            )
+            verbose.emit(Events.PHASE, message=f&quot;build {lang} -&gt; {tool}&quot;)
+            _run_or_die(
+                ['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'] + child_flags,
+                verbose=verbose,
+            )
+
+    write_sentinel(build_dir, new_hash, through)
+    verbose.emit(Events.FINISHED, message=&quot;done&quot;)
+
+
+def validate_tool_name(name):
+    if not name or not _TOOL_NAME_RE.match(name):
+        raise ValueError(
+            f&quot;Invalid tool name '{name}'. &quot;
+            &quot;Tool names must match [a-zA-Z0-9_-]+ to prevent path traversal.&quot;
+        )
+
+
+def _report_ll1_failure(ll1, path, verbose):
+    print(f&quot;plcc-make: error: grammar is not LL(1); see {path}&quot;, file=sys.stderr)
+    for conflict in ll1.get(&quot;conflicts&quot;, []):
+        print(
+            f&quot;plcc-make: error: conflict at &quot;
+            f&quot;{conflict.get('nonterminal', '?')} on &quot;
+            f&quot;{conflict.get('lookahead', '?')}: &quot;
+            f&quot;{conflict.get('productions', [])}&quot;,
+            file=sys.stderr,
+        )
+    for entry in ll1.get(&quot;left_recursion&quot;, []):
+        cycle = entry.get(&quot;cycle&quot;, [])
+        print(f&quot;plcc-make: error: left-recursion cycle: {' -&gt; '.join(cycle)}&quot;, file=sys.stderr)
+
+
+def _run_or_die(cmd, stdout_file=None, stdin_file=None, verbose=None):
+    with contextlib.ExitStack() as stack:
+        stdin = stack.enter_context(open(stdin_file)) if stdin_file else None
+        stdout = stack.enter_context(open(stdout_file, 'w')) if stdout_file else None
+        result = subprocess.run(cmd, stdin=stdin, stdout=stdout, stderr=subprocess.PIPE)
+    if verbose and result.stderr:
+        events = verbose.parse_child_events(result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+    if result.returncode != 0:
+        print(f&quot;plcc-make: {cmd[0]} failed (exit {result.returncode})&quot;, file=sys.stderr)
+        sys.exit(result.returncode)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Smoke-test manually</strong></li>
+</ul>
+<pre><code class="language-bash">cd /tmp &amp;&amp; mkdir smoke-make &amp;&amp; cd smoke-make
+cp /workspaces/plcc-ng/tests/fixtures/trivial-python.plcc grammar.plcc
+plcc-make
+ls build/
+</code></pre>
+<p>Expected: <code>build/</code> contains <code>spec.json ll1.json model.json .spec-hash py/</code>.</p>
+<pre><code class="language-bash">plcc-make   # second run
+</code></pre>
+<p>Expected: exits 0 immediately with "build is current".</p>
+<pre><code class="language-bash">plcc-make --through=scan --grammar-file=/workspaces/plcc-ng/tests/fixtures/trivial.plcc
+</code></pre>
+<p>Expected: exits 0, only <code>build/spec.json</code> and <code>build/.spec-hash</code> present (or updated).</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">cd /workspaces/plcc-ng
+git add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
+git commit -m &quot;feat: add staleness algorithm, --grammar-file, --through to plcc-make&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-update-plcc-make-bats-tests">Task 4: Update <code>plcc-make</code> bats tests</h2>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/commands/plcc-make.bats</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Replace the bats file</strong></li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+setup() {
+    FIXTURES=&quot;$(git rev-parse --show-toplevel)/tests/fixtures&quot;
+    WORK_DIR=&quot;$(mktemp -d)&quot;
+    cd &quot;${WORK_DIR}&quot;
+}
+
+teardown() {
+    rm -rf &quot;${WORK_DIR}&quot;
+}
+
+# ── Basic interface ────────────────────────────────────────────────────────────
+
+@test &quot;plcc-make is on PATH&quot; { command -v plcc-make; }
+
+@test &quot;plcc-make --help exits 0&quot; {
+    run plcc-make --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-make with no grammar.plcc exits nonzero&quot; {
+    run --separate-stderr plcc-make
+    [ &quot;$status&quot; -ne 0 ]
+    [[ &quot;$stderr&quot; == *&quot;grammar file not found&quot;* ]]
+}
+
+@test &quot;plcc-make --grammar-file with missing file exits nonzero&quot; {
+    run --separate-stderr plcc-make --grammar-file=no-such-file.plcc
+    [ &quot;$status&quot; -ne 0 ]
+    [[ &quot;$stderr&quot; == *&quot;grammar file not found&quot;* ]]
+}
+
+@test &quot;plcc-make defaults to grammar.plcc in CWD&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    run plcc-make --through=scan
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+}
+
+@test &quot;plcc-make --grammar-file uses specified path&quot; {
+    run plcc-make --through=scan &quot;--grammar-file=${FIXTURES}/trivial.plcc&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+}
+
+@test &quot;plcc-make accepts -v&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    run plcc-make -v --through=scan
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+# ── Build artifacts ────────────────────────────────────────────────────────────
+
+@test &quot;plcc-make full build produces spec.json ll1.json model.json&quot; {
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc
+    run plcc-make
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+    [ -f build/ll1.json ]
+    [ -f build/model.json ]
+}
+
+@test &quot;plcc-make full build writes .spec-hash sentinel&quot; {
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc
+    run plcc-make
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f &quot;build/.spec-hash&quot; ]
+}
+
+@test &quot;plcc-make --through=scan creates spec.json but not ll1.json&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    run plcc-make --through=scan
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+    [ ! -f build/ll1.json ]
+}
+
+@test &quot;plcc-make --through=parse creates spec.json and ll1.json but not model.json&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    run plcc-make --through=parse
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+    [ -f build/ll1.json ]
+    [ ! -f build/model.json ]
+}
+
+# ── Staleness: fast path ───────────────────────────────────────────────────────
+
+@test &quot;plcc-make does not rebuild when grammar is unchanged&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    plcc-make --through=parse
+    rm build/ll1.json          # manually remove artifact
+    plcc-make --through=parse  # grammar unchanged → fast path
+    [ ! -f build/ll1.json ]    # not rebuilt confirms fast path taken
+}
+
+@test &quot;plcc-make --through=all fast-paths when all-level sentinel present&quot; {
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc
+    plcc-make
+    rm build/ll1.json          # manually corrupt build/
+    plcc-make                  # grammar unchanged, sentinel at 'all' level → fast path
+    [ ! -f build/ll1.json ]    # not rebuilt confirms fast path taken
+}
+
+# ── Staleness: slow path ───────────────────────────────────────────────────────
+
+@test &quot;plcc-make rebuilds when grammar changes&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    plcc-make --through=scan
+    first_spec=$(cat build/spec.json)
+
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc  # different grammar
+    plcc-make --through=scan
+    second_spec=$(cat build/spec.json)
+
+    [ &quot;$first_spec&quot; != &quot;$second_spec&quot; ]
+}
+
+@test &quot;plcc-make --through=scan then --through=all completes full build&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    plcc-make --through=scan
+    [ ! -f build/ll1.json ]
+
+    plcc-make  # grammar unchanged but level insufficient (scan &lt; all)
+    [ -f build/ll1.json ]
+}
+
+@test &quot;plcc-make --through=all then --through=scan fast-paths&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    plcc-make
+    rm build/ll1.json
+    plcc-make --through=scan  # all &gt;= scan → fast path
+    [ ! -f build/ll1.json ]   # not rebuilt confirms fast path
+}
+
+# ── Staleness: failure handling ────────────────────────────────────────────────
+
+@test &quot;plcc-make deletes sentinel when plcc-spec fails&quot; {
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc
+    plcc-make
+    [ -f &quot;build/.spec-hash&quot; ]
+
+    printf 'token BAD @@@\n' &gt; grammar.plcc  # syntax error
+    run plcc-make
+    [ &quot;$status&quot; -ne 0 ]
+    [ ! -f &quot;build/.spec-hash&quot; ]
+}
+
+@test &quot;plcc-make re-fails on repeated call with broken grammar&quot; {
+    printf 'token BAD @@@\n' &gt; grammar.plcc
+    run plcc-make
+    [ &quot;$status&quot; -ne 0 ]
+    run plcc-make
+    [ &quot;$status&quot; -ne 0 ]
+}
+
+@test &quot;plcc-make rebuilds after broken grammar is fixed&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    plcc-make --through=scan
+
+    printf 'token BAD @@@\n' &gt; grammar.plcc
+    run plcc-make --through=scan
+    [ &quot;$status&quot; -ne 0 ]
+
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc
+    run plcc-make --through=scan
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+}
+
+# ── Partial grammars ───────────────────────────────────────────────────────────
+
+@test &quot;plcc-make --through=scan succeeds with lexical-only grammar&quot; {
+    cp &quot;${FIXTURES}/lexical-only.plcc&quot; grammar.plcc
+    run plcc-make --through=scan
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/spec.json ]
+}
+
+@test &quot;plcc-make --through=parse succeeds with lexical-only grammar&quot; {
+    cp &quot;${FIXTURES}/lexical-only.plcc&quot; grammar.plcc
+    run plcc-make --through=parse
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/ll1.json ]
+}
+
+@test &quot;plcc-make full build succeeds with lexical+syntactic grammar and no semantics&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    run plcc-make
+    [ &quot;$status&quot; -eq 0 ]
+    [ -f build/ll1.json ]
+    [ -f build/model.json ]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run the bats tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash tests/bats/commands/plcc-make.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/commands/plcc-make.bats
+git commit -m &quot;test: rewrite plcc-make bats for staleness, --through, --grammar-file&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-update-plcc-scan">Task 5: Update <code>plcc-scan</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/scan.py</code>
+- Modify: <code>tests/bats/commands/plcc-scan.bats</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Rewrite <code>scan.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/scan.py</code> entirely:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+import threading
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
+
+def _location_str(source):
+    file = source.get(&quot;file&quot;, &quot;?&quot;)
+    line = source.get(&quot;line&quot;, &quot;?&quot;)
+    col = source.get(&quot;column&quot;, &quot;?&quot;)
+    return f&quot;{file}:{line}:{col}&quot;
+
+
+__doc__ = &quot;&quot;&quot;plcc-scan
+    Tokenize source input and print tokens in human-readable format.
+
+Usage:
+    plcc-scan [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to tokenize. Reads stdin if none given.
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    --show-skips            Print skipped tokens.
+    --show-line             Print source line and cursor for each token.
+    --show-attempts         Print pattern-match attempts for each token.
+    --show-regex            Print the regex of each matched pattern.
+    --trace                 Print source line, cursor, attempts, and token (enables all --show-* options).
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-scan --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose = VerboseContext.from_args(&quot;plcc-scan&quot;, Events, args)
+    grammar_file = args['--grammar-file'] or 'grammar.plcc'
+    sources = args['SOURCE']
+
+    verbose.emit(Events.STARTED, message=f&quot;scanning with {grammar_file}&quot;)
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    # Ensure build/ is current for the scan level
+    make_result = subprocess.run(
+        ['plcc-make', '--through=scan', f'--grammar-file={grammar_file}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    spec_path = os.path.join('build', 'spec.json')
+
+    # Build plcc-tokens flags
+    tokens_flags = []
+    if args.get('--show-skips'):
+        tokens_flags.append('--show-skips')
+    if args.get('--show-line'):
+        tokens_flags.append('--show-line')
+    if args.get('--show-attempts'):
+        tokens_flags.append('--show-attempts')
+    if args.get('--show-regex'):
+        tokens_flags.append('--show-regex')
+    if args.get('--trace'):
+        tokens_flags.append('--trace')
+
+    token_sources = sources if sources else ['-']
+    proc = subprocess.Popen(
+        ['plcc-tokens', spec_path] + token_sources + tokens_flags + child_flags,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    stderr_chunks = []
+
+    def _drain_stderr():
+        stderr_chunks.append(proc.stderr.read())
+
+    stderr_thread = threading.Thread(target=_drain_stderr, daemon=True)
+    stderr_thread.start()
+
+    for raw in proc.stdout:
+        line = raw.decode('utf-8').strip()
+        if not line:
+            continue
+        record = json.loads(line)
+        if record.get('kind') == 'token':
+            name = record.get('name', '?')
+            lexeme = record.get('lexeme', '?')
+            source = record.get('source', {})
+            loc = _location_str(source)
+            extra = ''
+            if record.get('skipped'):
+                extra = ' SKIPPED'
+            if 'regex' in record:
+                extra = f&quot; '{record['regex']}'&quot;
+            print(f&quot;{loc} {name} '{lexeme}'{extra}&quot;, flush=True)
+            if record.get('line_text') is not None:
+                print(record['line_text'])
+                col = record.get('source', {}).get('column', 1)
+                print(' ' * (col - 1) + '^')
+            for attempt in record.get('attempts', []):
+                winner = '*' if attempt.get('matched') else ' '
+                print(f&quot;  {winner} {attempt.get('name')} {attempt.get('chars', '')}&quot;)
+        elif record.get('kind') == 'error':
+            loc = _location_str(record.get('pos', {}))
+            lexeme = record.get('lexeme', '?')
+            message = record.get('message', 'unrecognized character')
+            print(f&quot;{loc}: error: {message} '{lexeme}'&quot;, flush=True)
+
+    stderr_thread.join()
+    proc.wait()
+
+    stderr_data = b''.join(stderr_chunks)
+    if stderr_data:
+        events = verbose.parse_child_events(stderr_data.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+
+    if proc.returncode != 0:
+        print(f&quot;plcc-scan: plcc-tokens failed (exit {proc.returncode})&quot;, file=sys.stderr)
+        sys.exit(proc.returncode)
+
+    verbose.emit(Events.FINISHED, message='done')
+</code></pre>
+<p><strong>Note:</strong> The <code>--show-skips</code>, <code>--show-line</code>, <code>--show-attempts</code>, <code>--show-regex</code>, <code>--trace</code> flags are carried over from the existing implementation. Check the existing <code>scan.py</code> before running to verify these flags match what <code>plcc-tokens</code> actually accepts — adjust the tokens_flags list if needed.</p>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>plcc-scan.bats</code></strong></li>
+</ul>
+<p>Add <code>WORK_DIR</code> setup and update all tests to drop the positional GRAMMAR arg. Replace the file:</p>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+setup() {
+    FIXTURES=&quot;$(git rev-parse --show-toplevel)/tests/fixtures&quot;
+    WORK_DIR=&quot;$(mktemp -d)&quot;
+    cd &quot;${WORK_DIR}&quot;
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+}
+
+teardown() {
+    rm -rf &quot;${WORK_DIR}&quot;
+}
+
+@test &quot;plcc-scan is on PATH&quot; { command -v plcc-scan; }
+
+@test &quot;plcc-scan --help exits 0&quot; {
+    run plcc-scan --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-scan tokenizes input&quot; {
+    run bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+}
+
+@test &quot;plcc-scan reads from source file&quot; {
+    run plcc-scan &quot;${FIXTURES}/trivial_input.txt&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+}
+
+@test &quot;plcc-scan accepts -v&quot; {
+    run bash -c &quot;echo '42' | plcc-scan -v&quot;
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-scan accepts -vv (bundled short flag)&quot; {
+    run bash -c &quot;echo '42' | plcc-scan -vv --verbose-format=json&quot;
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-scan includes file:line:col in token output&quot; {
+    run bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ ^-:1:1\ NUM\ \'42\'$ ]]
+}
+
+@test &quot;plcc-scan exits 0 on lex error in source&quot; {
+    run --separate-stderr bash -c &quot;echo 'abc' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;error&quot;* ]]
+}
+
+@test &quot;plcc-scan brief usage mentions --help&quot; {
+    run --separate-stderr bash -c &quot;cd '${WORK_DIR}' &amp;&amp; rm grammar.plcc &amp;&amp; plcc-scan&quot;
+    [[ &quot;$stderr&quot; == *&quot;--help&quot;* ]]
+}
+
+@test &quot;plcc-scan accepts '-' as stdin&quot; {
+    run bash -c &quot;echo '42' | plcc-scan -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+}
+
+@test &quot;plcc-scan '-' interleaved with file reads both&quot; {
+    run bash -c &quot;echo '99' | plcc-scan '${FIXTURES}/trivial_input.txt' -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;99&quot;* ]]
+}
+
+@test &quot;plcc-scan prints tokens before and after a lex error&quot; {
+    run --separate-stderr bash -c &quot;printf '42 @ 99\n' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;99&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;error&quot;* ]]
+}
+
+@test &quot;plcc-scan outputs tokens for multi-line input&quot; {
+    run bash -c &quot;printf '42\n99\n' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;99&quot;* ]]
+}
+
+@test &quot;plcc-scan includes source filename in token output for named file&quot; {
+    run plcc-scan &quot;${FIXTURES}/trivial_input.txt&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;trivial_input.txt&quot;* ]]
+}
+
+@test &quot;plcc-scan exits nonzero when source file does not exist&quot; {
+    run --separate-stderr plcc-scan &quot;/nonexistent/no-such-file.txt&quot;
+    [ &quot;$status&quot; -ne 0 ]
+}
+
+@test &quot;plcc-scan --grammar-file uses specified grammar&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --grammar-file='${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-skips adds SKIPPED lines&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42 99' | plcc-scan --show-skips&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;SKIPPED&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-skips format is file:line:col NAME 'lexeme' SKIPPED&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42 99' | plcc-scan --show-skips&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ -:1:[0-9]+\ WS\ \'\ \'\ SKIPPED ]]
+}
+
+@test &quot;plcc-scan --show-line shows source line and caret cursor&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --show-line&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;^&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-line cursor is at correct column&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --show-line&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    second_line=$(echo &quot;$output&quot; | sed -n '2p')
+    [ &quot;$second_line&quot; = &quot;^&quot; ]
+}
+
+@test &quot;plcc-scan --show-attempts produces indented attempt lines&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --show-attempts&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;chars&quot;* ]]
+}
+
+@test &quot;plcc-scan --show-attempts has exactly one starred winner&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --show-attempts&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    star_count=$(echo &quot;$output&quot; | grep -c '^\s*\*')
+    [ &quot;$star_count&quot; -eq 1 ]
+}
+
+@test &quot;plcc-scan --show-regex includes regex in token output&quot; {
+    run bash -c &quot;echo '42' | plcc-scan --show-regex&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ ^-:1:1\ NUM\ \'\\\d\+\'\ \'42\'$ ]]
+}
+
+@test &quot;plcc-scan --trace produces source line, cursor, attempts, and token line&quot; {
+    cp &quot;${FIXTURES}/scan-verbosity.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan --trace&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;42&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;^&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;chars&quot;* ]]
+    [[ &quot;$output&quot; =~ \'\\\d\+ ]]
+}
+
+@test &quot;plcc-scan -v emits started and finished events on stderr&quot; {
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan -v&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$stderr&quot; == *&quot;started&quot;* ]]
+    [[ &quot;$stderr&quot; == *&quot;finished&quot;* ]]
+}
+
+@test &quot;plcc-scan -v hint is absent from stderr&quot; {
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan -v&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$stderr&quot; != *&quot;press ^D&quot;* ]]
+}
+
+@test &quot;plcc-scan -vv produces no more plcc-scan stderr lines than -v&quot; {
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan -v&quot;
+    v1_lines=$(echo &quot;$stderr&quot; | grep '^plcc-scan:' | wc -l)
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan -vv&quot;
+    v2_lines=$(echo &quot;$stderr&quot; | grep '^plcc-scan:' | wc -l)
+    [ &quot;$v2_lines&quot; -le &quot;$v1_lines&quot; ]
+}
+
+@test &quot;plcc-scan -vvv produces no more plcc-scan stderr lines than -v&quot; {
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan -v&quot;
+    v1_lines=$(echo &quot;$stderr&quot; | grep '^plcc-scan:' | wc -l)
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan -vvv&quot;
+    v3_lines=$(echo &quot;$stderr&quot; | grep '^plcc-scan:' | wc -l)
+    [ &quot;$v3_lines&quot; -le &quot;$v1_lines&quot; ]
+}
+
+@test &quot;plcc-scan TTY hint absent when stdin is not a TTY&quot; {
+    run bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; != *&quot;press ^D&quot;* ]]
+}
+
+@test &quot;plcc-scan does not rebuild when grammar is unchanged&quot; {
+    plcc-scan &lt; /dev/null || true   # first run builds
+    rm build/spec.json              # manually remove artifact
+    run bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -ne 0 ]             # fails because spec.json is missing but fast-path taken
+}
+
+@test &quot;plcc-scan triggers rebuild when grammar changes&quot; {
+    echo '42' | plcc-scan &gt; /dev/null  # prime build
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc  # change grammar
+    run bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+}
+
+@test &quot;plcc-scan exits nonzero when grammar has syntax error&quot; {
+    printf 'token BAD @@@\n' &gt; grammar.plcc
+    run --separate-stderr bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -ne 0 ]
+}
+
+@test &quot;plcc-scan works with lexical-only grammar&quot; {
+    cp &quot;${FIXTURES}/lexical-only.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-scan&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;NUM&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run the bats tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash tests/bats/commands/plcc-scan.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/scan.py tests/bats/commands/plcc-scan.bats
+git commit -m &quot;feat: plcc-scan uses build/ via plcc-make, drops positional GRAMMAR arg&quot;
+</code></pre>
+<hr />
+<h2 id="task-6-update-plcc-parse">Task 6: Update <code>plcc-parse</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/parse.py</code>
+- Modify: <code>tests/bats/commands/plcc-parse.bats</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Rewrite <code>parse.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/parse.py</code> entirely:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS, reap_pipeline
+
+__doc__ = &quot;&quot;&quot;plcc-parse
+    Parse source input and print parse tree in human-readable format.
+
+Usage:
+    plcc-parse [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to parse. Reads stdin if none given.
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def _location_str(source):
+    file = source.get(&quot;file&quot;)
+    line = source.get(&quot;line&quot;, &quot;?&quot;)
+    col = source.get(&quot;column&quot;, &quot;?&quot;)
+    if file and file != &quot;&lt;stdin&gt;&quot;:
+        return f&quot;{file}:{line}:{col}&quot;
+    return f&quot;{line}:{col}&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-parse --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose = VerboseContext.from_args(&quot;plcc-parse&quot;, Events, args)
+    grammar_file = args['--grammar-file'] or 'grammar.plcc'
+    sources = args['SOURCE']
+
+    verbose.emit(Events.STARTED, message=f&quot;parsing with {grammar_file}&quot;)
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    # Ensure build/ is current for the parse level
+    make_result = subprocess.run(
+        ['plcc-make', '--through=parse', f'--grammar-file={grammar_file}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    spec_path = os.path.join('build', 'spec.json')
+    ll1_path = os.path.join('build', 'll1.json')
+
+    # Build input
+    chunks = []
+    for src in sources:
+        if src == '-':
+            chunks.append(sys.stdin.buffer.read())
+        else:
+            with open(src, 'rb') as sf:
+                chunks.append(sf.read())
+    if not sources:
+        chunks.append(sys.stdin.buffer.read())
+    input_data = b''.join(chunks)
+
+    # plcc-tokens | plcc-tree
+    tokens_proc = subprocess.Popen(
+        ['plcc-tokens', spec_path] + child_flags,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    tree_proc = subprocess.Popen(
+        ['plcc-tree', f'--ll1={ll1_path}'] + child_flags,
+        stdin=tokens_proc.stdout,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    tokens_proc.stdout.close()
+    tokens_proc.stdin.write(input_data)
+    tokens_proc.stdin.close()
+
+    tree_out, tree_err = tree_proc.communicate()
+    tokens_err = tokens_proc.stderr.read()
+    tokens_proc.wait()
+    tokens_proc.stderr_captured = tokens_err
+    tree_proc.stderr_captured = tree_err
+
+    result = reap_pipeline([
+        (tokens_proc, 'plcc-tokens'),
+        (tree_proc, 'plcc-tree'),
+    ])
+    verbose.reformat_child_events(result.events_to_render)
+    if result.failed_stage:
+        sys.exit(result.exit_code)
+
+    for line in tree_out.decode('utf-8').splitlines():
+        if not line.strip():
+            continue
+        tree = json.loads(line)
+        if tree.get('kind') == 'error':
+            verbose.reformat_child_events([{
+                'stage': tree.get('stage', 'plcc-tokens'),
+                'event': 'error',
+                'severity': 'error',
+                'pos': tree.get('pos', {}),
+                'message': tree.get('message', 'error'),
+            }])
+            sys.exit(1)
+        _print_tree(tree, indent=0)
+
+    verbose.emit(Events.FINISHED, message='done')
+
+
+def _print_tree(node, indent):
+    prefix = '  ' * indent
+    kind = node.get('kind', '?')
+    if kind == 'tree':
+        rule = node.get('rule', '?')
+        print(f&quot;{prefix}{rule}&quot;)
+        for _field, child in node.get('children', []):
+            _print_tree(child, indent + 1)
+    elif kind == 'token':
+        name = node.get('name', '?')
+        lexeme = node.get('lexeme', '?')
+        source = node.get('source', {})
+        loc = _location_str(source)
+        print(f&quot;{prefix}{name} '{lexeme}' [{loc}]&quot;)
+    elif kind == 'error':
+        source = node.get('source', {})
+        loc = _location_str(source)
+        message = node.get('message', 'unknown error')
+        print(f&quot;{prefix}{loc}: error: {message}&quot;)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>plcc-parse.bats</code></strong></li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+setup() {
+    FIXTURES=&quot;$(git rev-parse --show-toplevel)/tests/fixtures&quot;
+    WORK_DIR=&quot;$(mktemp -d)&quot;
+    cd &quot;${WORK_DIR}&quot;
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+}
+
+teardown() {
+    rm -rf &quot;${WORK_DIR}&quot;
+}
+
+@test &quot;plcc-parse is on PATH&quot; { command -v plcc-parse; }
+
+@test &quot;plcc-parse --help exits 0&quot; {
+    run plcc-parse --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-parse parses input and prints tree&quot; {
+    run bash -c &quot;echo '42' | plcc-parse&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;program&quot;* ]]
+}
+
+@test &quot;plcc-parse reads from source file&quot; {
+    run plcc-parse &quot;${FIXTURES}/trivial_input.txt&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;program&quot;* ]]
+}
+
+@test &quot;plcc-parse accepts -v&quot; {
+    run bash -c &quot;echo '42' | plcc-parse -v&quot;
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-parse includes location on token leaves&quot; {
+    cp &quot;${FIXTURES}/arith.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-parse&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ NUM\ \'42\'\ \[-:1:1\] ]]
+}
+
+@test &quot;plcc-parse brief usage mentions --help&quot; {
+    run --separate-stderr bash -c &quot;cd '${WORK_DIR}' &amp;&amp; rm grammar.plcc &amp;&amp; plcc-parse&quot;
+    [[ &quot;$stderr&quot; == *&quot;--help&quot;* ]]
+}
+
+@test &quot;plcc-parse accepts '-' as stdin&quot; {
+    run bash -c &quot;echo '42' | plcc-parse -&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;program&quot;* ]]
+}
+
+@test &quot;plcc-parse --grammar-file uses specified grammar&quot; {
+    run bash -c &quot;echo '42' | plcc-parse --grammar-file='${FIXTURES}/trivial.plcc'&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;program&quot;* ]]
+}
+
+@test &quot;plcc-parse exits nonzero when grammar has syntax error&quot; {
+    printf 'token BAD @@@\n' &gt; grammar.plcc
+    run --separate-stderr bash -c &quot;echo '42' | plcc-parse&quot;
+    [ &quot;$status&quot; -ne 0 ]
+}
+
+@test &quot;plcc-parse triggers rebuild when grammar changes&quot; {
+    echo '42' | plcc-parse &gt; /dev/null
+    cp &quot;${FIXTURES}/arith.plcc&quot; grammar.plcc
+    run bash -c &quot;echo '42' | plcc-parse&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; =~ NUM ]]
+}
+
+@test &quot;plcc-parse works with lexical+syntactic grammar and no semantics&quot; {
+    run bash -c &quot;echo '42' | plcc-parse&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;program&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run the bats tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash tests/bats/commands/plcc-parse.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/parse.py tests/bats/commands/plcc-parse.bats
+git commit -m &quot;feat: plcc-parse uses build/ via plcc-make, drops positional GRAMMAR arg&quot;
+</code></pre>
+<hr />
+<h2 id="task-7-update-plcc-rep">Task 7: Update <code>plcc-rep</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/rep.py</code>
+- Modify: <code>tests/bats/commands/plcc-rep.bats</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Rewrite <code>rep.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/rep.py</code> entirely:</p>
+<pre><code class="language-python">import enum
+import json
+import os
+import subprocess
+import sys
+
+from docopt import docopt, DocoptExit
+
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+
+__doc__ = &quot;&quot;&quot;plcc-rep
+    REPL — read, eval, print loop for a PLCC grammar.
+
+Usage:
+    plcc-rep [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to evaluate before entering interactive mode.
+
+Options:
+    --grammar-file=&lt;path&gt;   Path to the PLCC grammar file [default: grammar.plcc].
+    --tool=NAME             Semantic section to run (inferred if only one exists).
+    -h --help               Show this message.
+&quot;&quot;&quot; + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = &quot;started&quot;
+    FINISHED = &quot;finished&quot;
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    try:
+        args = docopt(__doc__, argv)
+    except DocoptExit as e:
+        print(str(e), file=sys.stderr)
+        print(file=sys.stderr)
+        print(&quot;Run 'plcc-rep --help' for more information.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    verbose = VerboseContext.from_args(&quot;plcc-rep&quot;, Events, args)
+    grammar_file = args['--grammar-file'] or 'grammar.plcc'
+    sources = args['SOURCE']
+    tool_name = args['--tool']
+    verbose_format = args['--verbose-format'] or 'text'
+
+    verbose.emit(Events.STARTED, message='starting rep')
+    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+
+    # Ensure full build is current
+    make_result = subprocess.run(
+        ['plcc-make', f'--grammar-file={grammar_file}'] + child_flags,
+        stderr=subprocess.PIPE,
+    )
+    if make_result.stderr:
+        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+        verbose.reformat_child_events(events)
+    if make_result.returncode != 0:
+        sys.exit(make_result.returncode)
+
+    spec_path = os.path.join('build', 'spec.json')
+    ll1_path = os.path.join('build', 'll1.json')
+
+    with open(spec_path) as f:
+        spec = json.load(f)
+
+    tool_name, language = _resolve_tool(spec, tool_name)
+    tool_dir = os.path.join('build', tool_name)
+
+    if not os.path.exists(tool_dir):
+        print(f'plcc-rep: build/{tool_name}/ not found. Run plcc-make first.', file=sys.stderr)
+        sys.exit(1)
+
+    interpreter = subprocess.Popen(
+        ['plcc-lang-run', f'--target={language}', f'--output={tool_dir}'],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=None,
+    )
+
+    try:
+        for src in sources:
+            with open(src, 'rb') as f:
+                chunk = f.read()
+            _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
+
+        if not sources:
+            interactive = sys.stdin.isatty()
+            if interactive:
+                while True:
+                    try:
+                        print('&gt;&gt;&gt; ', end='', flush=True, file=sys.stderr)
+                        line = sys.stdin.readline()
+                        if not line:
+                            break
+                        chunk = line.encode()
+                        _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
+                    except KeyboardInterrupt:
+                        print(file=sys.stderr)
+                        break
+            else:
+                chunk = sys.stdin.buffer.read()
+                _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format)
+    finally:
+        try:
+            interpreter.stdin.close()
+        except BrokenPipeError:
+            pass
+        interpreter.wait()
+
+    verbose.emit(Events.FINISHED, message='done')
+
+
+def _resolve_tool(spec, tool_name):
+    sections = spec.get('semantics', [])
+    if tool_name:
+        for s in sections:
+            if s['tool'] == tool_name:
+                return s['tool'], s['language']
+        print(f&quot;plcc-rep: no semantic section with tool '{tool_name}'&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    if len(sections) == 0:
+        print(&quot;plcc-rep: no semantic sections found in grammar.&quot;, file=sys.stderr)
+        sys.exit(1)
+
+    if len(sections) == 1:
+        return sections[0]['tool'], sections[0]['language']
+
+    names = [s['tool'] for s in sections]
+    print(f&quot;plcc-rep: multiple semantic sections: {names}. Use --tool=NAME.&quot;, file=sys.stderr)
+    sys.exit(1)
+
+
+def _eval_chunk(chunk, interpreter, spec_path, ll1_path, verbose_format):
+    tokens_proc = subprocess.Popen(
+        ['plcc-tokens', spec_path],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    tree_proc = subprocess.Popen(
+        ['plcc-tree', f'--ll1={ll1_path}'],
+        stdin=tokens_proc.stdout,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    tokens_proc.stdout.close()
+    tokens_proc.stdin.write(chunk)
+    tokens_proc.stdin.close()
+
+    tree_out, tree_err = tree_proc.communicate()
+    tokens_err = tokens_proc.stderr.read()
+    tokens_proc.wait()
+
+    if tokens_proc.returncode != 0 or tree_proc.returncode != 0:
+        for msg in [tokens_err, tree_err]:
+            if msg:
+                sys.stderr.buffer.write(msg)
+        return
+
+    tree_line = tree_out.strip()
+    if not tree_line:
+        return
+
+    try:
+        interpreter.stdin.write(tree_line + b'\n')
+        interpreter.stdin.flush()
+    except BrokenPipeError:
+        print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+        sys.exit(1)
+
+    _read_response(interpreter.stdout, verbose_format)
+
+
+def _read_response(stdout, verbose_format):
+    while True:
+        raw = stdout.readline()
+        if not raw:
+            print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
+            sys.exit(1)
+        line = raw.decode('utf-8', errors='replace').rstrip('\n')
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            print(line)
+            continue
+        if 'kind' not in record:
+            print(line)
+            continue
+        _render_record(record, verbose_format)
+        return
+
+
+def _render_record(record, verbose_format):
+    if verbose_format == 'json':
+        print(json.dumps(record))
+        return
+    if record['kind'] == 'result':
+        value = record.get('value')
+        if value is not None:
+            print(value)
+    elif record['kind'] == 'error':
+        print(f&quot;error: {record.get('type')}: {record.get('message')}&quot;, file=sys.stderr)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>plcc-rep.bats</code></strong></li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+setup() {
+    FIXTURES=&quot;$(git rev-parse --show-toplevel)/tests/fixtures&quot;
+    WORK_DIR=&quot;$(mktemp -d)&quot;
+    cd &quot;${WORK_DIR}&quot;
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc
+}
+
+teardown() {
+    rm -rf &quot;${WORK_DIR}&quot;
+}
+
+@test &quot;plcc-rep is on PATH&quot; { command -v plcc-rep; }
+
+@test &quot;plcc-rep --help exits 0&quot; {
+    run plcc-rep --help
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-rep evaluates with Python tool&quot; {
+    run bash -c &quot;echo '42' | plcc-rep --tool=py&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;42&quot; ]]
+}
+
+@test &quot;plcc-rep errors on missing tool&quot; {
+    run bash -c &quot;echo '42' | plcc-rep --tool=nonexistent 2&gt;&amp;1&quot;
+    [ &quot;$status&quot; -ne 0 ]
+    [[ &quot;$output&quot; == *&quot;no semantic section&quot;* ]]
+}
+
+@test &quot;plcc-rep accepts -v&quot; {
+    run bash -c &quot;echo '42' | plcc-rep --tool=py -v&quot;
+    [ &quot;$status&quot; -eq 0 ]
+}
+
+@test &quot;plcc-rep brief usage mentions --help&quot; {
+    run --separate-stderr bash -c &quot;cd '${WORK_DIR}' &amp;&amp; rm grammar.plcc &amp;&amp; plcc-rep&quot;
+    [[ &quot;$stderr&quot; == *&quot;--help&quot;* ]]
+}
+
+@test &quot;plcc-rep --grammar-file uses specified grammar&quot; {
+    run bash -c &quot;echo '42' | plcc-rep --grammar-file='${FIXTURES}/trivial-python.plcc' --tool=py&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;42&quot; ]]
+}
+
+@test &quot;plcc-rep rebuilds when grammar changes&quot; {
+    echo '42' | plcc-rep --tool=py &gt; /dev/null  # prime build
+    cp &quot;${FIXTURES}/trivial-python.plcc&quot; grammar.plcc  # same grammar, but touch it
+    run bash -c &quot;echo '42' | plcc-rep --tool=py&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;42&quot; ]]
+}
+
+@test &quot;plcc-rep exits nonzero when grammar has syntax error&quot; {
+    printf 'token BAD @@@\n' &gt; grammar.plcc
+    run --separate-stderr bash -c &quot;echo '42' | plcc-rep&quot;
+    [ &quot;$status&quot; -ne 0 ]
+}
+
+@test &quot;plcc-rep exits nonzero when grammar has no semantics&quot; {
+    cp &quot;${FIXTURES}/trivial.plcc&quot; grammar.plcc
+    run --separate-stderr bash -c &quot;echo '42' | plcc-rep&quot;
+    [ &quot;$status&quot; -ne 0 ]
+    [[ &quot;$stderr&quot; == *&quot;no semantic sections&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run the bats tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash tests/bats/commands/plcc-rep.bats
+</code></pre>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/rep.py tests/bats/commands/plcc-rep.bats
+git commit -m &quot;feat: plcc-rep uses build/ via plcc-make, drops positional GRAMMAR arg&quot;
+</code></pre>
+<hr />
+<h2 id="task-8-full-functional-test-pass">Task 8: Full functional test pass</h2>
+<ul>
+<li>[ ] <strong>Step 1: Run all functional tests</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/functional.bash
+</code></pre>
+<p>Expected: all tiers pass (units, commands, integration, e2e).</p>
+<ul>
+<li>[ ] <strong>Step 2: Fix any failures</strong></li>
+</ul>
+<p>If any existing integration or e2e tests reference the old positional <code>GRAMMAR</code> argument, update them to use <code>--grammar-file=&lt;path&gt;</code> or copy grammar.plcc to the working directory.</p>
+<p>Check:</p>
+<pre><code class="language-bash">grep -r 'plcc-make\|plcc-scan\|plcc-parse\|plcc-rep' tests/bats/integration/ tests/bats/e2e/ | grep -v 'grammar-file'
+</code></pre>
+<p>Update any matches that pass a grammar path as a positional argument.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit any fixes</strong></li>
+</ul>
+<pre><code class="language-bash">git add tests/bats/
+git commit -m &quot;test: update integration and e2e tests for new grammar-file interface&quot;
+</code></pre>
+<hr />
+<h2 id="self-review">Self-Review</h2>
+<p><strong>Spec coverage check:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Spec section</th>
+<th>Covered by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>§4 <code>build/</code> structure</td>
+<td>Task 4 tests verify <code>spec.json</code>, <code>ll1.json</code>, <code>model.json</code>, <code>.spec-hash</code></td>
+</tr>
+<tr>
+<td>§5.2 sentinel invariant</td>
+<td>Task 2 (unit), Task 4 (staleness bats)</td>
+</tr>
+<tr>
+<td>§5.3 algorithm (temp file, hash, fast/slow path)</td>
+<td>Task 3 (implementation), Task 4 (bats)</td>
+</tr>
+<tr>
+<td>§5.4 pitfalls (corruption, repeated failure, includes, partial build, level comparison)</td>
+<td>Task 4 bats: <code>plcc-spec fails</code>, <code>re-fails</code>, <code>rebuild after fix</code>, <code>scan→all level comparison</code></td>
+</tr>
+<tr>
+<td>§5.5 <code>--through</code> levels</td>
+<td>Task 4 bats: <code>--through=scan/parse/all</code> artifact checks</td>
+</tr>
+<tr>
+<td>§6 grammar file resolution</td>
+<td>Task 4 bats: default <code>grammar.plcc</code>, <code>--grammar-file</code>, missing file</td>
+</tr>
+<tr>
+<td>§7 scan/parse/rep changes</td>
+<td>Tasks 5, 6, 7</td>
+</tr>
+<tr>
+<td>§8 partial grammars</td>
+<td>Task 4 bats: <code>lexical-only</code>, <code>lexical+syntactic</code></td>
+</tr>
+<tr>
+<td>§9 error handling</td>
+<td>Task 4 bats: failure cases; Tasks 5-7 bats: syntax error propagation</td>
+</tr>
+<tr>
+<td>§10 test plan (hash unit tests)</td>
+<td>Task 2</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Gap:</strong> The spec mentions testing that include-file changes are detected. The bats test suite does not include a test for this because the fixtures don't use <code>include</code> directives. This is an acceptable gap for now — the unit tests for <code>compute_hash</code> verify that content changes are detected, and <code>plcc-spec</code> resolves includes before <code>compute_hash</code> runs. If include support becomes a priority, add a fixture with includes and a corresponding bats test.</p>
+<p><strong>Placeholder scan:</strong> No TBD or TODO present. All code steps are complete.</p>
+<p><strong>Type consistency:</strong> <code>compute_hash</code>, <code>read_sentinel</code>, <code>write_sentinel</code>, <code>delete_sentinel</code>, <code>is_current</code> defined in Task 2 and imported in Task 3 with matching signatures throughout.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
