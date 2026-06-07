@@ -46,6 +46,7 @@ jobs:
 
   deploy-dev-docs:
     name: Deploy developer docs
+    needs: [deploy-user-docs]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
