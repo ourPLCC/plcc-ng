@@ -17,10 +17,15 @@ jobs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
@@ -28,7 +33,7 @@ jobs:
         id: release
         uses: python-semantic-release/python-semantic-release@v9
         with:
-          github_token: ${{ secrets.RELEASE_TOKEN }}
+          github_token: ${{ steps.app-token.outputs.token }}
           push: "true"
           changelog: "true"
           vcs_release: "false"
