@@ -1,0 +1,61 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-user-docs:
+    name: Deploy user docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Install dependencies
+        run: pdm install
+      - name: Configure git for mike
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Deploy dev docs preview (on push to main)
+        if: github.event_name == 'push'
+        run: pdm run mike deploy --push dev
+      - name: Deploy versioned docs (on release)
+        if: github.event_name == 'release'
+        run: |
+          VERSION="${{ github.ref_name }}"
+          # Strip leading 'v' (v1.2.3 → 1.2.3), then take major.minor (1.2)
+          MAJOR_MINOR=$(echo "${VERSION#v}" | cut -d. -f1,2)
+          pdm run mike deploy --push --update-aliases "${MAJOR_MINOR}" latest
+
+  deploy-dev-docs:
+    name: Deploy developer docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Install PDM
+        run: pip install pdm
+      - name: Install dependencies
+        run: pdm install
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Deploy developer docs
+        run: pdm run mkdocs gh-deploy --config-file mkdocs-dev.yml --dest-dir dev-docs --force
