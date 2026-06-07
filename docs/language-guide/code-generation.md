@@ -103,18 +103,14 @@ Append the hook name to the class name with a colon:
 ```text
 WholeExp:import
 %%%
-from collections import defaultdict
+import sys
 %%%
 
 WholeExp
 %%%
-seen = defaultdict(int)
-
 def eval(self):
     x = int(self.whole.lexeme)
-    if self.seen[x]:
-        print(f"Duplicate: {x}")
-    self.seen[x] += 1
+    sys.stderr.write(f"eval: {x}\n")
     return x
 %%%
 ```
