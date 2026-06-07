@@ -28,24 +28,28 @@ skip  WS  '\s+'
 **Step 2.** Test scanner:
 
 ```bash
-echo "42" | plcc-scan -g hello.plcc --no-banner
+echo "42" | plcc-scan -g hello.plcc
 ```
 
 Expected:
 
 ```text
+plcc-ng x.y.z
+grammar: hello.plcc
 -:1:1 NUM '42'
 ```
 
 **Step 3.** Test parser:
 
 ```bash
-echo "42" | plcc-parse -g hello.plcc --no-banner
+echo "42" | plcc-parse -g hello.plcc
 ```
 
 Expected:
 
 ```text
+plcc-ng x.y.z
+grammar: hello.plcc
 Program
   NUM '42' [-:1:1]
 ```
