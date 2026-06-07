@@ -111,3 +111,4 @@ version_variables = []
 version_toml = []
 major_on_zero = false
 changelog_file = "CHANGELOG.md"
+commit_message = "chore(release): v{version} [skip ci]"
