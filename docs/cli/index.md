@@ -1,7 +1,19 @@
 # CLI Reference
 
-plcc-ng provides two groups of commands: **Level 0 primitives** and
-**Level 2 orchestrators**.
+plcc-ng provides two groups of commands: **Level 2 orchestrators** and
+**Level 0 primitives**.
+
+## Level 2 orchestrators
+
+High-level commands for common workflows. These are the commands most users
+run day-to-day.
+
+| Command | Purpose |
+|---|---|
+| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a grammar file |
+| [`plcc-scan`](orchestrators.md#plcc-scan) | Tokenize source input and print tokens |
+| [`plcc-parse`](orchestrators.md#plcc-parse) | Parse source input and print the parse tree |
+| [`plcc-rep`](orchestrators.md#plcc-rep) | Read-eval-print loop using generated semantics |
 
 ## Level 0 primitives
 
@@ -16,17 +28,6 @@ write JSON, making them composable with other tools.
 | [`plcc-model`](primitives.md#plcc-model) | Transform spec JSON into a language-neutral code model |
 | [`plcc-lang-emit`](primitives.md#plcc-lang-emit) | Dispatch to the appropriate language emitter |
 | [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a grammar file |
-
-## Level 2 orchestrators
-
-High-level commands that compose the primitives for common workflows.
-
-| Command | Purpose |
-|---|---|
-| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a grammar file |
-| [`plcc-scan`](orchestrators.md#plcc-scan) | Tokenize source input and print tokens |
-| [`plcc-parse`](orchestrators.md#plcc-parse) | Parse source input and print the parse tree |
-| [`plcc-rep`](orchestrators.md#plcc-rep) | Read-eval-print loop using generated semantics |
 
 ## Common options
 

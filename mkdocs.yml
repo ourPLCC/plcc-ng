@@ -27,8 +27,8 @@ nav:
     - Examples: language-guide/examples.md
   - CLI Reference:
     - Overview: cli/index.md
-    - Primitives: cli/primitives.md
     - Orchestrators: cli/orchestrators.md
+    - Primitives: cli/primitives.md
   - Instructor Guide:
     - Overview: instructor-guide/index.md
     - Evaluating plcc-ng: instructor-guide/evaluating.md
