@@ -14,21 +14,31 @@ pip install plcc-ng
 
 ## Quickstart
 
-This quickstart builds a minimal language that recognizes integers.
+Let's build a language that sums a sequence of integers.
 
 **Step 1.** Create a grammar file `hello.plcc`:
 
 ```text
 token NUM '\d+'
 skip  WS  '\s+'
+
 %
-<Program> ::= <NUM:num>
+
+<Program> **= <NUM:num>
+
+% sum Python
+
+Program
+%%%
+def _run(self):
+  print(sum(int(num.lexeme) for num in self.numList))
+%%%
 ```
 
 **Step 2.** Test scanner:
 
 ```bash
-echo "42" | plcc-scan -g hello.plcc
+echo "42 36 2" | plcc-scan -g hello.plcc
 ```
 
 Expected:
@@ -42,7 +52,22 @@ grammar: hello.plcc
 **Step 3.** Test parser:
 
 ```bash
-echo "42" | plcc-parse -g hello.plcc
+echo "42 36 2" | plcc-parse
+```
+
+Expected:
+
+```text
+plcc-ng x.y.z
+grammar: hello.plcc
+Program
+  NUM '42' [-:1:1]
+```
+
+**Step 3.** Test semantics:
+
+```bash
+echo "42 36 2" | plcc-rep
 ```
 
 Expected:
