@@ -5,28 +5,27 @@
 - Python 3.12 or later
 - Java JDK 21 or later (only necessary if implementing semantics in Java)
 
-
 ## Install
 
 ```bash
 pip install plcc-ng
 ```
 
-## Quickstart
+## Test Drive
 
 Let's build a language that sums a sequence of integers.
 
-**Step 1.** Create a grammar file `hello.plcc`:
+**Step 1.** Create a grammar file `sum.plcc`:
 
 ```text
+skip  WHITESPACE '\s+'
 token NUM '\d+'
-skip  WS  '\s+'
 
 %
 
 <Program> **= <NUM:num>
 
-% sum Python
+% Summation Python
 
 Program
 %%%
@@ -44,8 +43,6 @@ echo "42 36 2" | plcc-scan -g hello.plcc
 Expected:
 
 ```text
-plcc-ng x.y.z
-grammar: hello.plcc
 -:1:1 NUM '42'
 -:1:4 NUM '36'
 -:1:7 NUM '2'
@@ -60,8 +57,6 @@ echo "42 36 2" | plcc-parse
 Expected:
 
 ```text
-plcc-ng x.y.z
-grammar: hello.plcc
 Program
   NUM '42' [-:1:1]
   NUM '36' [-:1:4]
@@ -77,12 +72,10 @@ echo "42 36 2" | plcc-rep
 Expected:
 
 ```text
-plcc-ng x.y.z
-grammar: hello.plcc
-Running sum with Python.
 80
 ```
 
-From here, see the [Language Guide](language-guide/index.md) to add grammar
-rules and semantic code, or the [CLI Reference](cli/index.md) for all available
-commands.
+## What Next
+
+- [Language Guide](language-guide/index.md) - Learn to specify languages.
+- [CLI Reference](cli/index.md) - Learn about commands.
