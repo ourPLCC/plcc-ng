@@ -36,7 +36,7 @@ External files can be included in any section using:
 
 ## Pages in this guide
 
-- [Token Rules](tokens.md) — `token` and `skip` syntax, scanning algorithm
+- [Lexical Rules](lexical.md) — `token` and `skip` syntax, scanning algorithm
 - [Grammar Rules](grammar.md) — BNF rules, parse tree class hierarchy
 - [Code Generation](code-generation.md) — embedding code, hooks, target language selection
 - [Examples](examples.md) — worked examples of increasing complexity

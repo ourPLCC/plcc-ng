@@ -21,7 +21,7 @@ nav:
   - Getting Started: getting-started.md
   - Language Guide:
     - Overview: language-guide/index.md
-    - Token Rules: language-guide/tokens.md
+    - Lexical Rules: language-guide/lexical.md
     - Grammar Rules: language-guide/grammar.md
     - Code Generation: language-guide/code-generation.md
     - Examples: language-guide/examples.md
