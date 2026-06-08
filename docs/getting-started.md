@@ -47,6 +47,8 @@ Expected:
 plcc-ng x.y.z
 grammar: hello.plcc
 -:1:1 NUM '42'
+-:1:4 NUM '36'
+-:1:7 NUM '2'
 ```
 
 **Step 3.** Test parser:
@@ -62,6 +64,8 @@ plcc-ng x.y.z
 grammar: hello.plcc
 Program
   NUM '42' [-:1:1]
+  NUM '36' [-:1:4]
+  NUM '2' [-:1:7]
 ```
 
 **Step 3.** Test semantics:
@@ -75,8 +79,8 @@ Expected:
 ```text
 plcc-ng x.y.z
 grammar: hello.plcc
-Program
-  NUM '42' [-:1:1]
+Running sum with Python.
+80
 ```
 
 From here, see the [Language Guide](language-guide/index.md) to add grammar
