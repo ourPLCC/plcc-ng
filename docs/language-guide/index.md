@@ -28,11 +28,10 @@ You can write a grammar with only a lexical section (no `%` needed), or a
 grammar with lexical and syntactic sections but no semantic section. Add
 sections as your language grows.
 
-<!-- TODO: verify that include FILENAME works in plcc-ng (original PLCC supported it) -->
 External files can be included in any section using:
 
 ```
-include FILENAME
+%include FILENAME
 ```
 
 ## Pages in this guide
