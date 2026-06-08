@@ -13,34 +13,48 @@ pip install plcc-ng
 
 ## Test Drive
 
-Let's build a language that sums a sequence of integers.
+Let's build a tiny language whose programs consist of a sequence of integers.
+Running a program will print their sum.
 
-**Step 1.** Create a grammar file `sum.plcc`:
+### 1. Define the language
+
+Create a file named `grammar.plcc`:
 
 ```text
+# Define the tokens of the language.
 skip  WHITESPACE '\s+'
 token NUM '\d+'
 
 %
 
+# Define the structure of the language.
+# A program consists of a sequence of numbers.
 <Program> **= <NUM:num>
 
-% Summation Python
+% Python
 
+# Define what happens when a program is run.
 Program
 %%%
 def _run(self):
-  print(sum(int(num.lexeme) for num in self.numList))
+  print(sum(int(str(num)) for num in self.numList))
 %%%
 ```
 
-**Step 2.** Test scanner:
+PLCC-ng automatically generates fields such as `numList` from the grammar.
+The [Language Guide](language-guide/index.md) explains how this mapping works.
+
+### 2. Scan source text
+
+In the same directory as `grammar.plcc`:
 
 ```bash
-echo "42 36 2" | plcc-scan -g hello.plcc
+echo "42 36 2" | plcc-scan
 ```
 
-Expected:
+`plcc-scan` automatically discovers the grammar file.
+
+Output:
 
 ```text
 -:1:1 NUM '42'
@@ -48,13 +62,15 @@ Expected:
 -:1:7 NUM '2'
 ```
 
-**Step 3.** Test parser:
+### 3. Parse source text
+
+In the same directory:
 
 ```bash
 echo "42 36 2" | plcc-parse
 ```
 
-Expected:
+Output:
 
 ```text
 Program
@@ -63,17 +79,23 @@ Program
   NUM '2' [-:1:7]
 ```
 
-**Step 3.** Test semantics:
+### 4. Run the program
+
+In the same directory:
 
 ```bash
 echo "42 36 2" | plcc-rep
 ```
 
-Expected:
+Output:
 
 ```text
 80
 ```
+
+Congratulations! You've defined a language,
+scanned it with `plcc-scan`, parsed it with `plcc-parse`,
+and executed it with `plcc-rep`.
 
 ## What Next
 

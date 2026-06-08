@@ -1,13 +1,14 @@
 # PLCC-ng
 
 PLCC-ng is the next generation of
-the Programming Languages Compiler Compiler ([PLCC](https://github.com/ourPLCC/plcc)).
-It is a tool for teaching and learning programming language concepts.
+the Programming Languages Compiler Compiler
+([PLCC](https://github.com/ourPLCC/plcc)), an educational tool
+for teaching and learning programming language concepts.
 
 With PLCC-ng, students can describe a language's syntax using regular
 expressions and BNF, implement its semantics in Java or Python,
-and immediately explore each stage of execution using dedicated tools
-for scanning, parsing, and semantic evaluation.
+and immediately experiment with scanning, parsing, and semantic evaluation
+using dedicated command-line tools.
 
 ## Where to start
 
@@ -23,5 +24,5 @@ for scanning, parsing, and semantic evaluation.
 
 ## Licenses
 
-- AGPL 3.0 or later.
-- Non-code: Creative Commons, CC-BY-SA 4.0.
+- Code: AGPL 3.0 or later.
+- Documentation and other non-code content: CC BY-SA 4.0.
