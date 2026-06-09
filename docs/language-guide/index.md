@@ -3,6 +3,8 @@
 A plcc-ng grammar file describes a language's tokens, syntax, and semantics.
 
 ```text
+# grammar.plcc
+
 # Lexical section
 skip WHITESPACE /\s+/
 token NUM /\d+/
