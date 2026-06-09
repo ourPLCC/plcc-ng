@@ -5,4 +5,5 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 PROJECT_ROOT="$( cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd )"
 cd "${PROJECT_ROOT}"
 
+export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
 mkdocs serve
