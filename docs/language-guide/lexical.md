@@ -1,4 +1,4 @@
-# Lexical Rules
+# Lexical Section
 
 The lexical section of a `.plcc` file defines what the scanner recognizes.
 Each line is either a `token` rule, a `skip` rule, or a comment.

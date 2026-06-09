@@ -1,42 +1,57 @@
 # Language Guide
 
-A plcc-ng grammar file describes a language in three sections, separated by
-lines containing a single `%`:
+A plcc-ng grammar file describes a language's tokens, syntax, and semantics.
 
 ```text
-[Lexical specification]
+# Lexical section
+skip WHITESPACE /\s+/
+token NUM /\d+/
+
 %
-[Syntactic specification]
-%
-[Semantic specification]
+
+# Syntactic section
+<Exp> ::= <NUM>
+
+% Python
+
+# Semantic section
+Exp
+%%%
+def __run__(self):
+    print("Hello")
+%%%
 ```
 
-| Section | What it describes | Pipeline stage it drives |
-|---|---|---|
-| Lexical | Token and skip rules | Scanner (`plcc-scan`) |
-| Syntactic | Grammar rules (BNF) | Parser (`plcc-parse`) |
-| Semantic | Target-language code embedded in generated classes | Interpreter (`plcc-rep`) |
+The Lexical and Syntactic sections are separated by a line with a single `%`.
 
-Each stage depends on the one before it:
+The semantic section begins with a separator that specifies
+the implementation language, such as `% Python` or `% Java`.
 
+The sections build on one another:
+
+- The lexical section defines the tokens recognized by the scanner.
+- The syntactic section uses those tokens to define the language grammar.
+- The semantic section attaches behavior to the parse tree produced by the grammar.
+
+You can start with only a lexical section (no `%` separator is needed),
+or add a syntactic section without defining semantics. This makes it easy
+to develop and test a language incrementally.
+
+Although you can define an entire language in a single file, larger
+languages are often easier to maintain when split across multiple files
+using the `%include` statement.
+
+```text
+%include FILE_PATH
 ```
-plcc-rep  →  plcc-parse  →  plcc-scan
-Semantic  →  Syntactic   →  Lexical
-```
 
-You can write a grammar with only a lexical section (no `%` needed), or a
-grammar with lexical and syntactic sections but no semantic section. Add
-sections as your language grows.
-
-External files can be included in any section using:
-
-```
-%include FILENAME
-```
+`%include` is valid in any section, but may not appear in a code block
+within the semantic section. `FILE_PATH` is relative to the directory
+containing the file it appears in.
 
 ## Pages in this guide
 
-- [Lexical Rules](lexical.md) — `token` and `skip` syntax, scanning algorithm
-- [Grammar Rules](grammar.md) — BNF rules, parse tree class hierarchy
-- [Code Generation](code-generation.md) — embedding code, hooks, target language selection
+- [Lexical Section](lexical.md) — `token` and `skip` syntax, scanning algorithm
+- [Syntactic Section](syntactic.md) — BNF rules, parse tree class hierarchy
+- [Semantic Section](semantic.md) — embedding code, hooks, target language selection
 - [Examples](examples.md) — worked examples of increasing complexity

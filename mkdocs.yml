@@ -21,9 +21,9 @@ nav:
   - Getting Started: getting-started.md
   - Language Guide:
     - Overview: language-guide/index.md
-    - Lexical Rules: language-guide/lexical.md
-    - Grammar Rules: language-guide/grammar.md
-    - Code Generation: language-guide/code-generation.md
+    - Lexical Section: language-guide/lexical.md
+    - Syntactic Section: language-guide/syntactic.md
+    - Semantic Section: language-guide/semantic.md
     - Examples: language-guide/examples.md
   - CLI Reference:
     - Overview: cli/index.md

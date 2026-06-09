@@ -1,4 +1,4 @@
-# Code Generation
+# Semantic Section
 
 The semantic section of a `.plcc` file embeds target-language code into the
 classes generated from the grammar. plcc-ng supports multiple target

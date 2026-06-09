@@ -1,4 +1,4 @@
-# Grammar Rules
+# Syntactic Section
 
 The syntactic section of a `.plcc` file defines the grammar of your language
 in a BNF-flavored notation. Each rule maps a non-terminal to a sequence of
