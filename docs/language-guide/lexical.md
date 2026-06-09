@@ -6,9 +6,8 @@ Each line is either a `token` rule, a `skip` rule, or a comment.
 ## Syntax
 
 ```text
-skip  NAME 'pattern'
-token NAME 'pattern'
-# This is a comment
+skip  NAME_1 'pattern'
+token NAME_2 'pattern'
 ```
 
 `token` rules emit a token when matched. `skip` rules consume input silently
@@ -20,32 +19,38 @@ Token names must be all uppercase letters, digits, and underscores, starting
 with a letter:
 
 ```text
-skip  SPACE  '\s+'
+skip  WHITE_SPACE  '\s+'
 skip  COMMENT '#[^\n]*'
 token PLUS   '\+'
+token PLUS_2 '\+\+'
 token WHOLE  '\d+'
 ```
 
 ### Patterns
 
 Patterns are regular expressions enclosed in single or double quotes.
-They use Python's `re` syntax (the scanner runs in Python).
+They use [Python's `re` syntax](https://docs.python.org/3/library/re.html)
+(the scanner runs in Python).
+
+Patterns may be enclosed in double or single quotes. This is useful when
+trying to match those same characters while avoiding escape characters.
 
 A few common patterns:
 
 | Pattern | Matches |
 | --- | --- |
-| `'\d+'` | One or more digits |
-| `'\s+'` | One or more whitespace characters, including a newline |
-| `'\w+'` | A word containing only alphabetic, numeric, or underscore characters |
+| `'\d+'` | Whole Numbers |
+| `'\s+'` | Whitespace including a newline |
+| `'\w+'` | A word (only alphabetic, numeric, and underscore characters) |
 | `'\n'` | A newline character |
-| `'[a-zA-Z_]\w*'` | An identifier that does not begin with a digit |
+| `'[a-zA-Z_]\w*'` | An word that does not begin with a digit |
 | `'\+'` | A literal `+` (escaped) |
 | `'\*'` | A literal `*` (escaped) |
 | `'"[^"]*"'` | A double-quoted string |
-| `'.*'` | Zero or more non-newline characters (so almost anything) |
+| `'.*'` | Zero or more non-newline characters |
 
-Patterns cannot span multiple lines. The scanner processes input one line at
+Patterns cannot match across multiple lines.
+The scanner processes input one line at
 a time, so every match is limited to the current line.
 
 A pattern may still match the newline character at the end of the current
@@ -76,14 +81,14 @@ Let's look at some examples.
 
 Rules:
 
-```
+```text
 token EQ '='
 token EQEQ '=='
 ```
 
 Input:
 
-```
+```text
 ==
 ```
 
@@ -100,14 +105,14 @@ EQEQ wins because it matches more characters.
 
 Rules:
 
-```
+```text
 token WORD '[a-z]+'
 token IF 'if'
 ```
 
 Input:
 
-```
+```text
 if
 ```
 
@@ -123,14 +128,14 @@ So, an `WORD` token containing the lexeme "if" would be emitted.
 
 #### Example: skips compete with tokens
 
-```
+```text
 skip WORD '[a-z]+'
 token IF 'if'
 ```
 
 And suppose our input is:
 
-```
+```text
 if
 ```
 
