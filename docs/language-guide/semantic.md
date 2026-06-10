@@ -6,21 +6,22 @@ languages; the section header declares which language to use.
 
 ## Section header
 
-The semantic section begins with a header line that names the tool and the
-target language:
+The line that separates the previous section and a semantic section
+identifies the langauge the code blocks in this semantics section.
 
 ```text
-% toolname Language
+% Java
 ```
 
-- `toolname` is a short label used to select this tool at runtime
-  (e.g. with `plcc-rep --tool=toolname`).
-- `Language` is the target language (e.g. `Python`, `Java`).
+The supported languages are:
 
-A grammar file may contain multiple semantic sections with different tool
-names. When only one exists, `plcc-rep` uses it automatically.
+- Java
+- Python
 
 ## Code blocks
+
+The semantics section allows you to inject code blocks into code
+generated from the syntactic rules.
 
 Inside the semantic section, each class gets a block:
 

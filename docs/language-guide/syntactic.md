@@ -1,51 +1,118 @@
 # Syntactic Section
 
-The syntactic section of a `.plcc` file defines the grammar of your language
-in a BNF-flavored notation. Each rule maps a non-terminal to a sequence of
-symbols on its right-hand side.
+The syntactic section of a grammar defines the structure of your language
+in a BNF-flavored notation. Each production rule maps a nonterminal to
+a sequence of symbols on its right-hand side.
+
+```text
+<Greeting> ::= <Salutation> COMMA <NAME>
+<Salutation> ::= HI
+```
 
 ## Naming conventions
 
 | Kind | Format | Example |
 | --- | --- | --- |
-| Non-terminal (class name) | PascalCase, angle-bracketed | `<Expr>`, `<Program>` |
+| Nonterminal (class name) | PascalCase, angle-bracketed | `<Expr>`, `<Program>` |
 | Terminal (token name) | UPPER_CASE | `PLUS`, `NUM` |
 | Field name (captured symbol) | camelCase | `expr`, `num`, `rest` |
-| Alt-name (subclass) | PascalCase | `AddExpr`, `NilRest` |
+| Subclass name | PascalCase | `AddExpr`, `NilRest` |
+
+Literals such as "+" and "," are not supported. Instead, define the literal
+as a token in the lexical section and refer to it here.
 
 ## Basic rules
 
+The first rule defines the start symbol.
+
 ```text
-<Program> ::= <Expr:expr>
-<Expr>    ::= <Term:term> <ExprRest:rest>
-<Term>    ::= <NUM:num>
+<Greeting> ::= <Salutation> COMMA <NAME>
+<Salutation> ::= HI
 ```
 
-Each rule becomes a class. Captured symbols (those inside `<...>` with a
-field name) become instance variables on that class.
+It's also possible for a production to produce nothing (A.K.A. epsilon):
+
+```text
+<OptElse:HasElse> ::= ELSE <Stmt:stmt>
+<OptElse:NoElse>  ::=
+```
+
+Each production rule defines the structure for the nonterminal named
+on the left-hand side, and generates a class. Returing to our Greeting
+example.
+
+```Java
+class Greeting {
+    Salutation salutation;
+    Token name;
+}
+```
+
+```Python
+@dataclass
+class Greeting:
+    salutation: Salutation
+    name: Token
+```
+
+Symbols enclosed in angle brackets become fields in the generated class.
+A field name may be supplied explicitly using :fieldname;
+otherwise plcc-ng generates one automatically.
 
 ### Capturing terminals
 
-Wrap a terminal in angle brackets and give it a field name to capture it:
+Wrap a terminal in angle brackets to capture it.
+The name of a field is the lower-cased name of the terminal. You may
+provide a different field name using `:fieldname`.
 
 ```text
-<Term> ::= <NUM:num>   # captures NUM as field `num`
 <Term> ::= NUM         # matches NUM but does not capture it
+<Term> ::= <NUM>       # captures NUM as field `num`
+<Term> ::= <NUM:age>   # captures NUM as field `age`
 ```
 
-### Capturing non-terminals
-
-Give a non-terminal a field name with `:fieldname`:
+Providing a different field name is especially important when a rule
+has two terms on the right-hand side that would
+generate two fields with the same name.
 
 ```text
-<Program> ::= <Expr:expr>   # captures Expr as field `expr`
-<Program> ::= <Expr>        # matches Expr but does not capture it
+<Pair> ::= <NUM:x> <NUM:y>
 ```
+
+If we did not provide the names `x` and `y`, plcc-ng would have generated
+two fields with the same name `num`, which would not compile and run.
+
+The type of a capture token field is `Token`.
+
+### Capturing nonterminals
+
+All nonterminals are captured. Their field names will be the nonterminal
+name lower-cased. You may provide a different field name using `:fieldname`.
+
+```text
+<Program> ::= <Expr>              # captures Expr as field `expr`
+<Program> ::= <Expr:expression>   # captures Expr as field `expression`
+```
+
+Providing a different field name is especially important when a rule
+has two terms on the right-hand side that would
+generate two fields with the same name.
+
+```text
+<Pair> ::= <Expr:left> <Expr:right>
+```
+
+If we did not provide the names `left` and `right`, plcc-ng would have generated
+two fields with the same name `expr`, which would not compile and run.
+
+The type of a capture nonterminal field is the class with the same name
+as the nonterminal.
 
 ## Alternative rules and subclasses
 
-When a non-terminal has multiple rules, each alternative gets an alt-name
-that becomes a subclass:
+When a nonterminal has multiple rules, each alternative must be given
+a name. This name will be the class generated for that rule and will
+be a subclass of the nonterminal class.
 
 ```text
 <Expr:LitExpr> ::= <NUM:num>
@@ -54,47 +121,72 @@ that becomes a subclass:
 
 This generates:
 
-```
-abstract class Expr
+```java
+abstract class Expr { }
 class LitExpr extends Expr  { Token num; }
 class AddExpr extends Expr  { Expr left; Expr right; }
 ```
 
-<!-- TODO: verify the exact generated class hierarchy for plcc-ng (may differ from PLCC's Java) -->
+```python
+class Expr:
+    pass
 
-The first rule in the file defines the start symbol.
+@dataclass
+class LitExpr(Expr):
+    num: Token
+
+@dataclass
+class AddExpr(Expr):
+    left: Expr
+    right: Expr
+```
+
+Subclass names are required only when a non-terminal
+has more than one production.
 
 ## Repetition rules
 
-The `**=` form matches zero or more occurrences of a pattern, with an optional
-separator:
+The `**=` form matches zero or more occurrences of a pattern,
+with an optional separator:
 
 ```text
-<Args>    **= <Expr:expr>
-<ArgList> **= <Expr:expr> +COMMA
+<Args>  **= <Expr:expr>
+<Pairs> **= <WHOLE:x> <WHOLE:y> +COMMA
 ```
 
 Captured symbols become parallel lists:
 
-```text
-<Args> **= <Expr:expr>
-# generates: Args { List<Expr> exprList; }
-
-<Pairs> **= <WHOLE:x> <WHOLE:y> +COMMA
-# generates: Pairs { List<Token> xList; List<Token> yList; }
+```java
+class Args { List<Expr> exprList; }
+class Pairs { List<Token> xList; List<Token> yList; }
 ```
 
-The `+SEPARATOR` token is consumed between repetitions but not captured.
+```python
+class Args:
+    def __init__(self, exprList: List[Expr]):
+        self.exprList = exprList
 
-<!-- TODO: verify repetition rule syntax and generated field names in plcc-ng -->
+class Pairs:
+    def __init__(self, xList: List[Token], yList: List[Token]):
+        self.xList = xList
+        self.yList = yList
+```
+
+When given, the separator token must appear between each ocurrance of the
+right-hand side. Assuming WHOLE matches an integer token, valid inputs for
+Pairs include:
+
+```text
+1 2
+3 4, 5 6
+7 8,9 10  , 11 12
+```
+
+The separator token is not captured in the parse tree.
 
 ## Parse algorithm
 
-plcc-ng uses recursive-descent LL(1) parsing. Each non-terminal gets a parse
-method. The method reads the next token and dispatches to the correct
-alternative, then matches the RHS left-to-right: tokens are consumed directly,
-non-terminals call their own parse methods.
-
-A grammar is valid only if it is LL(1): each alternative must be
-distinguishable by a single lookahead token. plcc-ng reports LL(1) conflicts
-when it detects them.
+plcc-ng generates a top-down LL(1) parser.
+Every parsing decision must be resolvable using a single lookahead token.
+If multiple alternatives can match the same lookahead token,
+plcc-ng reports an LL(1) conflict.
