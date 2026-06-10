@@ -161,14 +161,27 @@ class Pairs { List<Token> xList; List<Token> yList; }
 ```
 
 ```python
+@dataclass
 class Args:
-    def __init__(self, exprList: List[Expr]):
-        self.exprList = exprList
+    exprList: List[Expr]
 
+@dataclass
 class Pairs:
-    def __init__(self, xList: List[Token], yList: List[Token]):
-        self.xList = xList
-        self.yList = yList
+    xList: List[Token]
+    yList: List[Token]
+```
+
+For example, for Pairs, assuming WHOLE matches an integer token, given this input:
+
+```text
+2 3, 5 6, 7 8
+```
+
+xList and yList would contains the following:
+
+```python
+xList = [Token("2"), Token("5"), Token("7")]
+yList = [Token("3"), Token("6"), Token("8")]
 ```
 
 When given, the separator token must appear between each ocurrance of the
