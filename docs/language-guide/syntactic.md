@@ -33,7 +33,7 @@ The first rule defines the start symbol.
 It's also possible for a production to produce nothing (A.K.A. epsilon):
 
 ```text
-<OptElse:HasElse> ::= ELSE <Stmt:stmt>
+<OptElse:HasElse> ::= ELSE <Stmt>
 <OptElse:NoElse>  ::=
 ```
 
@@ -55,9 +55,8 @@ class Greeting:
     name: Token
 ```
 
-Symbols enclosed in angle brackets become fields in the generated class.
-A field name may be supplied explicitly using :fieldname;
-otherwise plcc-ng generates one automatically.
+An the right-hand side, anything written in angle brackets becomes a field.
+If you don't specify a field name, plcc-ng generates one.
 
 ### Capturing terminals
 
