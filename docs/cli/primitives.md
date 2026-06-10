@@ -1,3 +1,129 @@
 # Level 0 Primitives
 
-*Content coming soon.*
+These commands each perform one step of the pipeline. They are the building
+blocks that the [Level 2 orchestrators](orchestrators.md) use internally.
+
+---
+
+## plcc-spec
+
+Parse, validate, and print a PLCC grammar file as JSON.
+
+```text
+plcc-spec [-v ...] [options] FILE
+```
+
+| Argument/Option | Description |
+|---|---|
+| `FILE` | `.plcc` grammar file. Use `-` to read from stdin. |
+| `--no-json` | Validate only; do not print JSON to stdout. |
+
+**Example:**
+
+```bash
+plcc-spec grammar.plcc
+```
+
+---
+
+## plcc-tokens
+
+Tokenize source files given a spec JSON file; emit token JSONL.
+
+```text
+plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
+```
+
+| Argument/Option | Description |
+|---|---|
+| `SPEC_JSON` | Path to spec JSON (output of `plcc-spec`). |
+| `SOURCE` | Source files to tokenize. Use `-` for stdin. Defaults to stdin. |
+| `-t`, `--trace` | Include regex, source line, attempts; emit skip records. |
+| `--source-name=LABEL` | Override the source label for stdin. |
+
+**Example:**
+
+```bash
+plcc-spec grammar.plcc | plcc-tokens - samples
+```
+
+---
+
+## plcc-trees
+
+Dispatch to a parser plugin. Reads token JSONL; emits a parse tree.
+
+```text
+plcc-trees [-v ...] [options] --ll1=LL1_JSON
+```
+
+| Option | Description |
+|---|---|
+| `--ll1=LL1_JSON` | Path to LL(1) analysis JSON (required). |
+| `--parser=KIND` | Parser plugin to use. Default: `table`. |
+| `-t`, `--trace` | Forward trace flag to the parser plugin. |
+
+<!-- TODO: document how to obtain LL1_JSON (output of plcc-ll1) -->
+
+---
+
+## plcc-model
+
+Transform spec JSON into a language-neutral code model.
+
+```text
+plcc-model [-v ...] [options] [SPEC_JSON]
+```
+
+| Argument | Description |
+|---|---|
+| `SPEC_JSON` | Path to spec JSON. Use `-` or omit to read from stdin. |
+
+**Example:**
+
+```bash
+plcc-spec grammar.plcc | plcc-model
+```
+
+---
+
+## plcc-lang-emit
+
+Dispatch to the appropriate language emitter.
+
+```text
+plcc-lang-emit [-v ...] --target=LANG --output=DIR
+```
+
+| Option | Description |
+|---|---|
+| `--target=LANG` | Target language (e.g. `Python`, `Java`). |
+| `--output=DIR` | Directory to write output files into. |
+
+**Example:**
+
+```bash
+plcc-spec grammar.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
+```
+
+---
+
+## plcc-diagram
+
+Generate and display a class diagram from a PLCC grammar file.
+
+```text
+plcc-diagram [-v ...] [options]
+```
+
+| Option | Description |
+|---|---|
+| `-g PATH`, `--grammar=PATH` | Grammar file. Remembers across invocations. Defaults to `grammar.plcc`. |
+| `--format=FMT` | Diagram format. Default: `plantuml`. |
+| `--no-banner` | Suppress the version and grammar banner. |
+
+**Example:**
+
+```bash
+plcc-diagram -g mylang.plcc
+```
