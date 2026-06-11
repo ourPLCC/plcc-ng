@@ -1,13 +1,12 @@
 # Semantic Section
 
-The semantic section of a `.plcc` file embeds target-language code into the
-classes generated from the grammar. plcc-ng supports multiple target
-languages; the section header declares which language to use.
+The semantic section lets you implement language semantics by injecting
+target-language code into classes generated from the syntactic section.
 
 ## Section header
 
-The line that separates the previous section and a semantic section
-identifies the langauge the code blocks in this semantics section.
+The line that separates the previous section from the semantic section
+identifies the language used by the code blocks.
 
 ```text
 % Java
@@ -20,84 +19,71 @@ The supported languages are:
 
 ## Code blocks
 
-The semantics section allows you to inject code blocks into code
-generated from the syntactic rules.
+The semantic section allows you to inject code blocks into the classes generated
+from the production rules given in the syntactic section.
+The [syntactic section](syntactic.md) describes the classes
+and their fields that are generated from production rules.
 
-Inside the semantic section, each class gets a block:
-
-```text
-ClassName
-%%%
-...target-language code...
-%%%
-```
-
-The code is injected into the generated class. The start symbol's class
-should define a `_run` method — this is the entry point called by `plcc-rep`.
-
-### Example (Python)
+To inject code into a class, use the following construct.
 
 ```text
-% subtract Python
-Prog
+% Python
+Exp
 %%%
 def _run(self):
-    print(self.exp.eval())
-%%%
-
-WholeExp
-%%%
-def eval(self):
-    return int(self.whole.lexeme)
-%%%
-
-SubExp
-%%%
-def eval(self):
-    return self.exp1.eval() - self.exp2.eval()
+    print("Hello")
 %%%
 ```
 
-### Example (Java)
-
-<!-- TODO: verify Java semantic syntax in plcc-ng matches the example below -->
 ```text
-% subtract Java
-Prog
+% Java
+Exp
 %%%
-    public void _run() {
-        System.out.println(exp.eval());
-    }
-%%%
-
-WholeExp
-%%%
-    public int eval() {
-        return Integer.parseInt(whole.toString());
-    }
-%%%
-
-SubExp
-%%%
-    public int eval() {
-        return exp1.eval() - exp2.eval();
-    }
+public void _run() {
+    System.out.println("Hello");
+}
 %%%
 ```
+
+Since whatever you put within the `%%%` lines is injected into the body
+of the class, you can add static or instance methods, class or instance variables,
+or even inner classes. Anything you can place in the body of a class, you
+can place inside `%%%`.
+
+## Field Access
+
+Fields generated from production rules become public instance variables.
+
+For example, if the syntactic section contains:
+
+```text
+<AddExp> ::= <Exp:left> <PLUS> <Exp:right>
+```
+
+the generated class contain fields such as `left`, `plus`, and `right`,
+which can be accessed from semantic code.
+
+## Entry point method `_run`
+
+The code between the `%%%` lines is injected into the body of the named class.
+The start symbol's class inherits from `_Start`, which defines
+a `_run` method that serves as the entry point called by `plcc-rep`.
+The default implementation of
+`_run` prints a string representation of the root of the parse tree.
+You'll want to override the `_run` method to implement the semantics of
+your language.
 
 ## Hooks
 
 Hooks inject code at specific locations within a generated class file.
 Append the hook name to the class name with a colon:
 
-| Hook | Where code is injected |
-| --- | --- |
-| `ClassName:top` | Top of the generated file |
-| `ClassName:import` | Import section |
-| `ClassName:class` | Class declaration (extend/implement) |
-| `ClassName:init` | Constructor / initializer |
-
-<!-- TODO: verify hook syntax and availability in plcc-ng -->
+| Hook | Where code is injected | Uses |
+| --- | --- | --- |
+| `ClassName:top` | Top of the generated file | Package declarations, module directives, file-level code or comments |
+| `ClassName:import` | File-level import section | Add imports |
+| `ClassName:class` | Class declaration (extend/implement) | Declare class or interface inheritance |
+| `ClassName:init` | Constructor / initializer | Add statements to the generated constructor/initializer |
 
 ### Example
 
@@ -116,14 +102,21 @@ def eval(self):
 %%%
 ```
 
+You can have multiple code blocks that refer to the same class.
+The blocks are injected in the order they appear in the semantic section.
+
 ## Adding standalone classes
 
-A class not derived from the grammar can be defined by giving it a name that
-does not appear in the syntactic section:
+Standalone classes are useful for helper code that does not naturally
+belong to a generated grammar class.
 
-<!-- TODO: verify standalone class support in plcc-ng -->
+You may declare a new class or module that is not derived from
+a nonterminal in the syntactic section.
+When you do, plcc-ng creates a file based on the class name.
+The block contents are written verbatim to that file.
+
 ```text
-Helper
+Helper      # Creates a file named Helper.py
 %%%
 class Helper:
     @staticmethod
@@ -132,6 +125,13 @@ class Helper:
 %%%
 ```
 
-## JSON AST
+## Packages and imports/includes
 
-<!-- TODO: verify JSON AST support in plcc-ng (original PLCC used --json_ast flag on plccmk and parse) -->
+Each generated class is placed in a separate file with the same name
+as the class. All files are placed in the same package.
+
+For Java, this means that all classes can access all other classes without
+explicitly importing them.
+
+In Python, code that refers to another generated class by name must
+add an appropriate relative import.
