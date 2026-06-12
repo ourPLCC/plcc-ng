@@ -31,22 +31,14 @@ the implementation language, such as `% Python` or `% Java`.
 
 The sections build on one another:
 
-- The lexical section defines the tokens recognized by the scanner.
-- The syntactic section uses those tokens to define the language grammar.
-- The semantic section attaches behavior to the parse tree produced by the grammar.
-
 ```plantuml
 @startuml
 left to right direction
-skinparam rectangle {
-  BackgroundColor #f0f4ff
-  BorderColor #336699
-}
 rectangle "Lexical" as lex
 rectangle "Syntactic" as syn
 rectangle "Semantic" as sem
-lex -right-> syn
-syn -right-> sem
+lex --> syn
+syn --> sem
 @enduml
 ```
 
