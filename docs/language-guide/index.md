@@ -1,10 +1,9 @@
 # Language Guide
 
-A plcc-ng grammar file describes a language's tokens, syntax, and semantics.
+A plcc-ng specification describes
+a language's tokens, syntax, and semantics.
 
 ```text
-# grammar.plcc
-
 # Lexical section
 skip WHITESPACE /\s+/
 token NUM /\d+/
@@ -14,9 +13,11 @@ token NUM /\d+/
 # Syntactic section
 <Exp> ::= <NUM>
 
-% Python
+%
 
-# Semantic section
+# Semantic secction
+Python
+
 Exp
 %%%
 def __run__(self):
@@ -24,27 +25,16 @@ def __run__(self):
 %%%
 ```
 
-The Lexical and Syntactic sections are separated by a line with a single `%`.
+## Comments
 
-The semantic section begins with a separator that specifies
-the implementation language, such as `% Python` or `% Java`.
+Comments start with `#` and end at the end of the current line.
+Comments may appear anywhere except in semantic section code blocks.
 
-The sections build on one another:
+## Section separators
 
-```plantuml
-@startuml
-left to right direction
-rectangle "Lexical" as lex
-rectangle "Syntactic" as syn
-rectangle "Semantic" as sem
-lex --> syn
-syn --> sem
-@enduml
-```
+Each section is separated by a line with a single `%`.
 
-You can start with only a lexical section (no `%` separator is needed),
-or add a syntactic section without defining semantics. This makes it easy
-to develop and test a language incrementally.
+## Includes
 
 Although you can define an entire language in a single file, larger
 languages are often easier to maintain when split across multiple files
@@ -58,7 +48,26 @@ using the `%include` statement.
 within the semantic section. `FILE_PATH` is relative to the directory
 containing the file it appears in.
 
-## Pages in this guide
+## Optional sections
+
+Sections build on one another:
+
+```plantuml
+@startuml
+left to right direction
+rectangle "Lexical" as lex
+rectangle "Syntactic" as syn
+rectangle "Semantic" as sem
+lex --> syn : tokens/terminals
+syn --> sem : class hiearchy
+@enduml
+```
+
+You can start with only a lexical section (no `%` separator is needed),
+or add a syntactic section without defining semantics. This makes it easy
+to develop and test a language incrementally.
+
+## What next
 
 - [Lexical Section](lexical.md) — `token` and `skip` syntax, scanning algorithm
 - [Syntactic Section](syntactic.md) — BNF rules, parse tree class hierarchy

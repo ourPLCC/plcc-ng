@@ -12,7 +12,7 @@ using dedicated command-line tools.
 
 ## Where to start
 
-- [Getting Started](getting-started.md) — Install and run your first grammar in under 10 minutes.
+- [Getting Started](getting-started.md) — Install plcc-ng and run your first specification in under 10 minutes.
 - [Language Guide](language-guide/index.md) — Token rules, BNF syntax, code generation, worked examples.
 - [CLI Reference](cli/index.md) — Every command, every flag.
 - [Instructor Guide](instructor-guide/index.md) — What students need to know, what they can learn, what materials and support exist.

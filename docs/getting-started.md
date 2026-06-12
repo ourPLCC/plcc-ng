@@ -18,7 +18,7 @@ Running a program will print their sum.
 
 ### 1. Define the language
 
-Create a file named `grammar.plcc`:
+Create a file named `spec.plcc`:
 
 ```text
 # Define the tokens of the language.
@@ -31,9 +31,11 @@ token NUM '\d+'
 # A program consists of a sequence of numbers.
 <Program> **= <NUM:num>
 
-% Python
+%
 
 # Define what happens when a program is run.
+Python
+
 Program
 %%%
 def _run(self):
@@ -46,13 +48,13 @@ The [Language Guide](language-guide/index.md) explains how this mapping works.
 
 ### 2. Scan source text
 
-In the same directory as `grammar.plcc`:
+In the same directory as `plcc.plcc`:
 
 ```bash
 echo "42 36 2" | plcc-scan
 ```
 
-`plcc-scan` automatically discovers the grammar file.
+`plcc-scan` automatically discovers the specification file.
 
 Output:
 

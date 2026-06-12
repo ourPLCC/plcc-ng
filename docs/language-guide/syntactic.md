@@ -1,17 +1,27 @@
-# Syntactic Section
+# Syntactic Specification
 
-The syntactic section of a grammar defines the structure of your language
-in a BNF-flavored notation. Each production rule maps a nonterminal to
+The syntactic specification defines the structure of your language
+in a dialect of BNF. Each production rule maps a nonterminal to
 a sequence of symbols on its right-hand side.
 
+Here is an example that will be referenced in the sections below.
+
 ```text
+# Standard production rules
+<Monologue> ::= <Greeting> <Words>
 <Greeting> ::= <Salutation> COMMA <NAME>
-<Salutation> ::= HI
+
+# Alternative productions for `Salutation`.
+<Salutation:Hi> ::= HI
+<Salutation:Hello> ::= HELLO
+
+# Matche zero or more `WORD`s.
+<Words> **= <WORD>
 ```
 
-## Naming conventions
+## Names
 
-| Kind | Format | Example |
+| Kind | Format | Examples |
 | --- | --- | --- |
 | Nonterminal (class name) | PascalCase, angle-bracketed | `<Expr>`, `<Program>` |
 | Terminal (token name) | UPPER_CASE | `PLUS`, `NUM` |
@@ -21,14 +31,13 @@ a sequence of symbols on its right-hand side.
 Literals such as "+" and "," are not supported. Instead, define the literal
 as a token in the lexical section and refer to it here.
 
-## Basic rules
+## Start Symbol
 
 The first rule defines the start symbol.
 
-```text
-<Greeting> ::= <Salutation> COMMA <NAME>
-<Salutation> ::= HI
-```
+`Monologue` is the start symbol in the Monologue example above.
+
+## Matching nothing
 
 It's also possible for a production to produce nothing (A.K.A. epsilon):
 
@@ -37,22 +46,32 @@ It's also possible for a production to produce nothing (A.K.A. epsilon):
 <OptElse:NoElse>  ::=
 ```
 
+## Generated class/object structure
+
 Each production rule defines the structure for the nonterminal named
-on the left-hand side, and generates a class. Returing to our Greeting
+on the left-hand side, and generates a class. Returning to our Monologue
 example.
 
-```Java
-class Greeting {
-    Salutation salutation;
-    Token name;
+```plantuml
+@startuml
+class Monologue {
+    greeting: Greeting
+    words: Words
 }
-```
-
-```Python
-@dataclass
-class Greeting:
+class Greeting {
     salutation: Salutation
     name: Token
+}
+
+abstract class Salutation { }
+
+class Hi extends Salutation { }
+class Hello extends Slautation { }
+
+class Words {
+    wordList: List<Token>
+}
+@enduml
 ```
 
 An the right-hand side, anything written in angle brackets becomes a field.
@@ -107,7 +126,7 @@ two fields with the same name `expr`, which would not compile and run.
 The type of a capture nonterminal field is the class with the same name
 as the nonterminal.
 
-## Alternative rules and subclasses
+### Alternative rules and subclasses
 
 When a nonterminal has multiple rules, each alternative must be given
 a name. This name will be the class generated for that rule and will
@@ -143,7 +162,7 @@ class AddExpr(Expr):
 Subclass names are required only when a non-terminal
 has more than one production.
 
-## Repetition rules
+### Repetition rules
 
 The `**=` form matches zero or more occurrences of a pattern,
 with an optional separator:

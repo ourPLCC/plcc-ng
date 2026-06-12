@@ -1,7 +1,7 @@
-# Lexical Section
+# Lexical Specification
 
-The lexical section of a `.plcc` file defines what the scanner recognizes.
-Each line is either a `token` rule, a `skip` rule, or a comment.
+The lexical specification defines what the scanner recognizes and which
+matches it should emit as a token.
 
 ## Syntax
 
@@ -13,18 +13,24 @@ token NAME_2 'pattern'
 `token` rules emit a token when matched. `skip` rules consume input silently
 (useful for whitespace and comments in the language you are implementing).
 
-### Naming rules
+### Token names
 
-Token names must be all uppercase letters, digits, and underscores, starting
-with a letter:
+Token names are composed of capital letters, underscore, and digits.
+They must start with a letter.
 
-```text
-skip  WHITE_SPACE  '\s+'
-skip  COMMENT '#[^\n]*'
-token PLUS   '\+'
-token PLUS_2 '\+\+'
-token WHOLE  '\d+'
-```
+Examples of valid token names:
+
+- `NAME`
+- `FIRST_NAME`
+- `NAME_1`
+
+Examples of invalid token names:
+
+- `name`
+- `name`
+- `FIRST-NAME`
+- `_NAME`
+- `1_NAME`
 
 ### Patterns
 
