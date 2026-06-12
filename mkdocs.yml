@@ -15,6 +15,7 @@ plugins:
   - search
   - include-markdown
   - mike
+  - kroki
 
 nav:
   - Home: index.md
