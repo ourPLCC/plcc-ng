@@ -35,6 +35,21 @@ The sections build on one another:
 - The syntactic section uses those tokens to define the language grammar.
 - The semantic section attaches behavior to the parse tree produced by the grammar.
 
+```plantuml
+@startuml
+left to right direction
+skinparam rectangle {
+  BackgroundColor #f0f4ff
+  BorderColor #336699
+}
+rectangle "Lexical" as lex
+rectangle "Syntactic" as syn
+rectangle "Semantic" as sem
+lex -right-> syn
+syn -right-> sem
+@enduml
+```
+
 You can start with only a lexical section (no `%` separator is needed),
 or add a syntactic section without defining semantics. This makes it easy
 to develop and test a language incrementally.
