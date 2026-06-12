@@ -15,7 +15,9 @@ plugins:
   - search
   - include-markdown
   - mike
-  - kroki
+  - kroki:
+      fence_prefix: ''
+      tag_format: svg
 
 nav:
   - Home: index.md
