@@ -8,7 +8,7 @@ from docopt import docopt, DocoptExit
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
 from plcc.build.grammar import read_grammar
-from .output import print_version_line, print_grammar_line
+from .output import print_banner
 
 __doc__ = """plcc-diagram
     Generate and display a class diagram from a PLCC grammar file.
@@ -21,7 +21,7 @@ Options:
                             Grammar to build from. Once set, remembered for subsequent
                             commands until changed. Defaults to grammar.plcc on first use.
     --format=FMT            Diagram format [default: plantuml].
-    --no-banner             Suppress the version and grammar banner.
+    -b --banner             Show the version and grammar banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -37,8 +37,6 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    if "--no-banner" not in argv:
-        print_version_line(get_version())
     try:
         args = docopt(__doc__, argv)
     except DocoptExit as e:
@@ -47,7 +45,7 @@ def main(argv=None):
         print("Run 'plcc-diagram --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
-    no_banner = args["--no-banner"]
+    banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-diagram", Events, args)
     grammar_file = args['--grammar']
     fmt = args['--format']
@@ -62,7 +60,7 @@ def main(argv=None):
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
-        ['plcc-make', '--through=model', '--no-banner']
+        ['plcc-make', '--through=model']
         + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
         + child_flags,
         stderr=subprocess.PIPE,
@@ -73,8 +71,8 @@ def main(argv=None):
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
-    if not no_banner:
-        print_grammar_line(os.path.abspath(read_grammar('build')))
+    if banner:
+        print_banner(get_version(), os.path.abspath(read_grammar('build')))
 
     source_ext = _SOURCE_EXT.get(fmt, fmt)
     build_diagram_dir = os.path.join('build', 'diagram')

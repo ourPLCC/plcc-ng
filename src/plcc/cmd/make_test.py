@@ -274,46 +274,59 @@ def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
     assert read_grammar(build) == "bad.plcc"
 
 
-def test_make_main_version_line_appears_before_grammar_error(tmp_path, monkeypatch, capsys):
+def test_make_main_default_prints_no_banner_to_stdout(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     with pytest.raises(SystemExit):
-        run_main([])  # no grammar.plcc — fails early
-    out, _ = capsys.readouterr()
-    assert "plcc-ng 1.2.3" in out
-
-
-def test_make_main_no_banner_suppresses_version_line(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
-    with pytest.raises(SystemExit):
-        run_main(["--no-banner"])  # no grammar.plcc — fails, but no version
+        run_main([])
     out, _ = capsys.readouterr()
     assert "plcc-ng" not in out
 
 
-def test_make_main_grammar_line_appears_after_grammar_resolved(tmp_path, monkeypatch, capsys):
+def test_make_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "grammar.plcc").write_text("")
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
+    monkeypatch.setattr("subprocess.run",
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
+    with pytest.raises(SystemExit):
+        run_main(["--banner"])
+    _, err = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in err
+
+
+def test_make_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("")
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     monkeypatch.setattr("subprocess.run",
                         lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
-    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     with pytest.raises(SystemExit):
-        run_main([])
-    out, _ = capsys.readouterr()
-    assert "grammar:" in out
-    assert str(grammar) in out
+        run_main(["--banner"])
+    _, err = capsys.readouterr()
+    assert "grammar:" in err
+    assert str(grammar) in err
 
 
-def test_make_main_no_banner_suppresses_grammar_line(tmp_path, monkeypatch, capsys):
+def test_make_main_banner_short_flag_works(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    grammar = tmp_path / "grammar.plcc"
-    grammar.write_text("")
+    (tmp_path / "grammar.plcc").write_text("")
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     monkeypatch.setattr("subprocess.run",
                         lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
-    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     with pytest.raises(SystemExit):
-        run_main(["--no-banner"])
-    out, _ = capsys.readouterr()
-    assert "grammar:" not in out
+        run_main(["-b"])
+    _, err = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in err
+
+
+def test_make_main_banner_is_plain_text_with_json_format(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "grammar.plcc").write_text("")
+    monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
+    monkeypatch.setattr("subprocess.run",
+                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
+    with pytest.raises(SystemExit):
+        run_main(["--banner", "--verbose-format=json"])
+    _, err = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in err  # plain "plcc-ng X.Y.Z", not a JSON object

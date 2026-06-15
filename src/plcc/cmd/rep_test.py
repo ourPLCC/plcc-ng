@@ -354,36 +354,8 @@ def _setup_rep_main(monkeypatch, tmp_path):
     monkeypatch.setattr("plcc.cmd.rep.get_version", lambda: "1.2.3")
 
 
-def test_rep_main_banner_contains_version(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc"])
-    out, _ = capsys.readouterr()
-    assert "plcc-ng 1.2.3" in out
 
-
-def test_rep_main_banner_contains_grammar_path(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc"])
-    out, _ = capsys.readouterr()
-    assert str(tmp_path / "grammar.plcc") in out
-
-
-def test_rep_main_banner_contains_running_line(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc"])
-    out, _ = capsys.readouterr()
-    assert "Running calc with python." in out
-
-
-def test_rep_main_banner_goes_to_stdout(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc"])
-    _, err = capsys.readouterr()
-    assert "plcc-ng" not in err
-    assert "Running" not in err
-
-
-def test_rep_main_version_line_appears_even_when_make_fails(monkeypatch, tmp_path, capsys):
+def test_rep_main_default_prints_no_banner_to_stdout(monkeypatch, tmp_path, capsys):
     monkeypatch.chdir(tmp_path)
     (tmp_path / "grammar.plcc").write_text("")
     monkeypatch.setattr(
@@ -394,38 +366,26 @@ def test_rep_main_version_line_appears_even_when_make_fails(monkeypatch, tmp_pat
     with pytest.raises(SystemExit):
         _rep_module.main([])
     out, _ = capsys.readouterr()
-    assert "plcc-ng 1.2.3" in out
-
-
-def test_rep_main_no_banner_suppresses_version_line(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc", "--no-banner"])
-    out, _ = capsys.readouterr()
     assert "plcc-ng" not in out
 
 
-def test_rep_main_no_banner_suppresses_grammar_line(monkeypatch, tmp_path, capsys):
+def test_rep_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
     _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc", "--no-banner"])
-    out, _ = capsys.readouterr()
-    assert "grammar:" not in out
+    _rep_module.main(["--tool=calc", "--banner"])
+    _, err = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in err
 
 
-def test_rep_main_no_banner_suppresses_running_line(monkeypatch, tmp_path, capsys):
+def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
     _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc", "--no-banner"])
-    out, _ = capsys.readouterr()
-    assert "Running" not in out
+    _rep_module.main(["--tool=calc", "--banner"])
+    _, err = capsys.readouterr()
+    assert "grammar:" in err
+    assert str(tmp_path / "grammar.plcc") in err
 
 
-def test_rep_main_make_call_includes_no_banner(monkeypatch, tmp_path):
+def test_rep_main_banner_prints_running_line_to_stderr(monkeypatch, tmp_path, capsys):
     _setup_rep_main(monkeypatch, tmp_path)
-    calls = []
-    def capturing_run(cmd, **kw):
-        calls.append(list(cmd))
-        return _MagicMock(returncode=0, stderr=b"")
-    monkeypatch.setattr("subprocess.run", capturing_run)
-    _rep_module.main(["--tool=calc"])
-    make_calls = [c for c in calls if c and c[0] == "plcc-make"]
-    assert make_calls, "plcc-make was not called"
-    assert any("--no-banner" in c for c in make_calls)
+    _rep_module.main(["--tool=calc", "--banner"])
+    _, err = capsys.readouterr()
+    assert "Running calc with python." in err
