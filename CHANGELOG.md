@@ -1,6 +1,77 @@
 # CHANGELOG
 
 
+## v0.40.1 (2026-06-15)
+
+### Bug Fixes
+
+- **rep**: Flush message and harden SIGINT test
+  ([`3a23635`](https://github.com/ourPLCC/plcc-ng/commit/3a236350115f0cda1118c1f6306f2ff154c69c90))
+
+Add flush=True to the KeyboardInterrupt print to match all other protocol writes. Replace
+  stderr==b'' assertion with 'Traceback' not in stderr and add TimeoutExpired cleanup to the SIGINT
+  test.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **rep**: Suppress KeyboardInterrupt stack trace in generated main.py
+  ([`18cd3b5`](https://github.com/ourPLCC/plcc-ng/commit/18cd3b5f97b745d0726284f08610f13ed3e6e1b7))
+
+On ^C, generated Python interpreters now print 'User interrupted execution by ^C.' and exit 130
+  instead of crashing with a traceback.
+
+Strip COV_CORE_* env vars from the test subprocess so pytest-cov's .pth injection does not interfere
+  with SIGINT exit-code assertions.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **rep**: Suppress KeyboardInterrupt stack trace in generated main.py
+  ([`d7aecdd`](https://github.com/ourPLCC/plcc-ng/commit/d7aecdd1886fe1a6a42dd8517524fbc3595f5176))
+
+On ^C, generated Python interpreters now print 'User interrupted execution by ^C.' and exit 130
+  instead of crashing with a traceback.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Continuous Integration
+
+- **docs**: Set mike default version so site root doesn't 404
+  ([`49d80f2`](https://github.com/ourPLCC/plcc-ng/commit/49d80f28bc43913c57ad322b1b6e6c3ece5d7d9b))
+
+Only set the default to dev if latest doesn't exist yet, so a release-promoted latest isn't
+  overwritten on the next push to main.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Fix typos and remove resolved TODOs [skip ci]
+  ([`4f1a111`](https://github.com/ourPLCC/plcc-ng/commit/4f1a111a711ef41de8b9b4b2c3b028c881a5cdc3))
+
+- Update examples.md to new semantic section format [skip ci]
+  ([`6cd2e59`](https://github.com/ourPLCC/plcc-ng/commit/6cd2e59828b32da6487ed971c3fcae6ab92771c2))
+
+- **085**: Add design spec for KeyboardInterrupt fix in generated main.py [skip ci]
+  ([`8eb3ab9`](https://github.com/ourPLCC/plcc-ng/commit/8eb3ab9a30457d8030018d3267361b058b78bef8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **085**: Add implementation plan for KeyboardInterrupt fix [skip ci]
+  ([`e47ad19`](https://github.com/ourPLCC/plcc-ng/commit/e47ad19eb9aefa63fb600f7f5892d9551493f7b5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Consolidate semantic section issues 087/090/091/092 into 095 [skip ci]
+  ([`0c24145`](https://github.com/ourPLCC/plcc-ng/commit/0c241459895e0c7c6447faa74a68675cab9433fd))
+
+Issues 087, 090, 091, and 092 approached the semantic section redesign piecemeal and partially
+  contradicted each other. Replace them with a single authoritative issue describing the final
+  design: bare % divider, language declared as first non-blank line of the semantics body,
+  case-sensitive, no tool naming.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.40.0 (2026-06-15)
 
 ### Bug Fixes
