@@ -15,3 +15,8 @@ def test_token_stores_kind_and_lexeme():
 def test_token_is_not_node():
     t = Token(kind='NUM', lexeme='1')
     assert not isinstance(t, Node)
+
+
+def test_token_str_returns_lexeme():
+    t = Token(kind='NUM', lexeme='42')
+    assert str(t) == '42'
