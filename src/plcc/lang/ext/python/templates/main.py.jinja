@@ -10,13 +10,17 @@ from runtime.registry import Registry
 registry = Registry()
 registry.register({% for cls in classes if not cls.abstract %}{{ cls.name }}{% if not loop.last %}, {% endif %}{% endfor %})
 
-for line in sys.stdin:
-    line = line.strip()
-    if not line:
-        continue
-    try:
-        tree = registry.deserialize(json.loads(line))
-        result = tree.{{ entry_point }}()
-        print(json.dumps({"kind": "result", "value": repr(result) if result is not None else None}), flush=True)
-    except Exception as e:
-        print(json.dumps({"kind": "error", "type": type(e).__name__, "message": str(e)}), flush=True)
+try:
+    for line in sys.stdin:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            tree = registry.deserialize(json.loads(line))
+            result = tree.{{ entry_point }}()
+            print(json.dumps({"kind": "result", "value": repr(result) if result is not None else None}), flush=True)
+        except Exception as e:
+            print(json.dumps({"kind": "error", "type": type(e).__name__, "message": str(e)}), flush=True)
+except KeyboardInterrupt:
+    print("User interrupted execution by ^C.", flush=True)
+    sys.exit(130)
