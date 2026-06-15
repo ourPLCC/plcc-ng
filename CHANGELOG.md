@@ -1,6 +1,57 @@
 # CHANGELOG
 
 
+## v0.42.0 (2026-06-15)
+
+### Documentation
+
+- **084**: Design spec for opt-in banner via --banner/-b [skip ci]
+  ([`34be57d`](https://github.com/ourPLCC/plcc-ng/commit/34be57dbf08b33ff66e3705639388491fa33ed00))
+
+- **084**: Implementation plan for --banner/-b opt-in [skip ci]
+  ([`aa3d84f`](https://github.com/ourPLCC/plcc-ng/commit/aa3d84f7070ab58ea0c9135af2489359ce4f5bc8))
+
+### Features
+
+- **084**: Add print_banner() writing version+grammar to stderr
+  ([`2a29435`](https://github.com/ourPLCC/plcc-ng/commit/2a294358f4c6ba2e9c33267d35cb2a10acc1d03f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **084**: Replace --no-banner with --banner/-b in plcc-diagram
+  ([`97246e3`](https://github.com/ourPLCC/plcc-ng/commit/97246e324d8eb7c70351dc9f2ac88bc9fee216d6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **084**: Replace --no-banner with --banner/-b in plcc-make
+  ([`64ce31a`](https://github.com/ourPLCC/plcc-ng/commit/64ce31aa4d49c3d2b7d497733fc93fc8ef1d92c2))
+
+Banner is now opt-in via --banner/-b and prints to stderr instead of defaulting to stdout.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **084**: Replace --no-banner with --banner/-b in plcc-parse
+  ([`ced110b`](https://github.com/ourPLCC/plcc-ng/commit/ced110b92049fc07edf488b8ae2b30f566b567f0))
+
+- **084**: Replace --no-banner with --banner/-b in plcc-rep
+  ([`2e696c1`](https://github.com/ourPLCC/plcc-ng/commit/2e696c10324d6cbb7c318f23ac3755a2580ce7ea))
+
+Banner is now opt-in via -b/--banner (stderr), matching plcc-make/scan/parse.
+
+- **084**: Replace --no-banner with --banner/-b in plcc-scan
+  ([`3dd7e69`](https://github.com/ourPLCC/plcc-ng/commit/3dd7e694a5149635c0860a838d6b77d5570643d5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Refactoring
+
+- **084**: Consolidate print_banner import at top of output_test.py
+  ([`027ea69`](https://github.com/ourPLCC/plcc-ng/commit/027ea69f8afb7a02baa04d5712705ce96fdf9c56))
+
+- **084**: Remove dead print_version_line and print_grammar_line
+  ([`a3f115f`](https://github.com/ourPLCC/plcc-ng/commit/a3f115f5f01850d115cdd9d687165ceb20864a85))
+
+
 ## v0.41.0 (2026-06-15)
 
 ### Documentation
