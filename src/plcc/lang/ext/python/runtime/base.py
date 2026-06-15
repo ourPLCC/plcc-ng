@@ -9,3 +9,6 @@ class Token:
 
     def __str__(self):
         return self.lexeme
+
+    def __repr__(self):
+        return self.lexeme

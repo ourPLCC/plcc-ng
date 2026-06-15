@@ -20,3 +20,8 @@ def test_token_is_not_node():
 def test_token_str_returns_lexeme():
     t = Token(kind='NUM', lexeme='42')
     assert str(t) == '42'
+
+
+def test_token_repr_returns_lexeme():
+    t = Token(kind='NUM', lexeme='42')
+    assert repr(t) == '42'
