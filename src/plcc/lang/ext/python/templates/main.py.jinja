@@ -22,5 +22,5 @@ try:
         except Exception as e:
             print(json.dumps({"kind": "error", "type": type(e).__name__, "message": str(e)}), flush=True)
 except KeyboardInterrupt:
-    print("User interrupted execution by ^C.")
+    print("User interrupted execution by ^C.", flush=True)
     sys.exit(130)

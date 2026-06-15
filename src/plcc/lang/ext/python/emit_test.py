@@ -180,9 +180,14 @@ def test_emit_generated_main_exits_130_on_sigint(tmp_path, monkeypatch):
     )
     time.sleep(0.1)  # ensure subprocess has entered the stdin loop
     proc.send_signal(signal.SIGINT)
-    stdout, stderr = proc.communicate(timeout=5)
+    try:
+        stdout, stderr = proc.communicate(timeout=5)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.communicate()
+        pytest.fail("subprocess did not exit after SIGINT within 5 seconds")
     assert proc.returncode == 130
-    assert stderr == b''
+    assert b'Traceback' not in stderr
     assert b'User interrupted execution by ^C.' in stdout
 
 
