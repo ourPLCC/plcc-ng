@@ -1,8 +1,28 @@
-# plcc-ng
+# PLCC-ng
 
-plcc-ng is a tool for teaching and learning programming language concepts.
+PLCC-ng is the next generation of
+the Programming Languages Compiler Compiler
+([PLCC](https://github.com/ourPLCC/plcc)), an educational tool
+for teaching and learning programming language concepts.
 
-- [Getting Started](getting-started.md)
-- [Language Guide](language-guide/index.md)
-- [CLI Reference](cli/index.md)
-- [Instructor Guide](instructor-guide/index.md)
+With PLCC-ng, students can describe a language's syntax using regular
+expressions and BNF, implement its semantics in Java or Python,
+and immediately experiment with scanning, parsing, and semantic evaluation
+using dedicated command-line tools.
+
+## Where to start
+
+- [Getting Started](getting-started.md) — Install plcc-ng and run your first specification in under 10 minutes.
+- [Language Guide](language-guide/index.md) — Token rules, BNF syntax, code generation, worked examples.
+- [CLI Reference](cli/index.md) — Every command, every flag.
+- [Instructor Guide](instructor-guide/index.md) — What students need to know, what they can learn, what materials and support exist.
+
+## Join Our Community
+
+- [Discord server](https://discord.gg/EVtNSxS9E2): get help and receive announcements.
+- [GitHub](https://github.com/ourPLCC/plcc-ng): report bugs, view the source, make a contribution.
+
+## Licenses
+
+- Code: AGPL 3.0 or later.
+- Documentation and other non-code content: CC BY-SA 4.0.
