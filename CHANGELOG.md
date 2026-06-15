@@ -1,6 +1,309 @@
 # CHANGELOG
 
 
+## v0.40.0 (2026-06-15)
+
+### Bug Fixes
+
+- **docs**: Set fence_prefix and tag_format on kroki plugin [skip ci]
+  ([`6e60c26`](https://github.com/ourPLCC/plcc-ng/commit/6e60c266117e0a85d7db901c8172c18eac6ac1d2))
+
+fence_prefix: '' — use plain ```plantuml blocks (default is kroki-plantuml)
+
+tag_format: svg — embed SVG inline at build time, not img tags pointing to kroki.io
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Chores
+
+- **docs**: Add bin/docs/serve.bash to start the MkDocs dev server [skip ci]
+  ([`a6b497f`](https://github.com/ourPLCC/plcc-ng/commit/a6b497f2d1e1f84dd824f163e3a70740e83b7f62))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **docs**: Add project venv to PATH in serve.bash [skip ci]
+  ([`6256eb3`](https://github.com/ourPLCC/plcc-ng/commit/6256eb3292985e75a153d68a2a4136ee458c2a1c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **docs**: Fix serve.bash to find .venv in main repo root [skip ci]
+  ([`ffc17f3`](https://github.com/ourPLCC/plcc-ng/commit/ffc17f3fb6080d1d851c506f8284563618204ab8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 084 make no-banner the default [skip ci]
+  ([`11e8bb3`](https://github.com/ourPLCC/plcc-ng/commit/11e8bb3f311774efcf1a86ac2d351c31694ebc4d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 085 plcc-rep KeyboardInterrupt on ^C [skip ci]
+  ([`0814d3e`](https://github.com/ourPLCC/plcc-ng/commit/0814d3ea5573b9c3229b2efc9efc22b4de2fdee9))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 086 Token string conversion method [skip ci]
+  ([`ca19fe2`](https://github.com/ourPLCC/plcc-ng/commit/ca19fe204d222ba5699e3835cb8d894f1976aa2e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Move 075 and 082 to done [skip ci]
+  ([`931e632`](https://github.com/ourPLCC/plcc-ng/commit/931e632378dfaa24a34eab5b6414d1a1dec3058d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add What's New section to home page [skip ci]
+  ([`39ea3dd`](https://github.com/ourPLCC/plcc-ng/commit/39ea3dd24d3b919bd44ad95da828558a80250b27))
+
+Closes #075
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Draft getting started page [skip ci]
+  ([`cf8296e`](https://github.com/ourPLCC/plcc-ng/commit/cf8296e76fa97fff3593baff0cbcd0f14414b3a7))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Draft home page [skip ci]
+  ([`c0471ed`](https://github.com/ourPLCC/plcc-ng/commit/c0471ed32ea6f003d7f34b1ec4494aa72e774795))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Expand test drive section and refine home page copy [skip ci]
+  ([`9e84eab`](https://github.com/ourPLCC/plcc-ng/commit/9e84eab54553723650db87c17874a4f83dc6b8a3))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Fix quickstart output with real verified output [skip ci]
+  ([`36cdaaa`](https://github.com/ourPLCC/plcc-ng/commit/36cdaaaca4992d77f5c41ada08351bc299f758eb))
+
+Closes #074
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Fix typos and broken link on home page [skip ci]
+  ([`fee522b`](https://github.com/ourPLCC/plcc-ng/commit/fee522b0fa7c1e8598a9444fd80027a34d043001))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Remove --no-banner from quickstart examples [skip ci]
+  ([`9ba4666`](https://github.com/ourPLCC/plcc-ng/commit/9ba4666f518efc20d75b04c57ec3843ee63ecc02))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Revise getting started (rename section, update grammar, clean output) [skip ci]
+  ([`c761cf1`](https://github.com/ourPLCC/plcc-ng/commit/c761cf1a066e2d5817027259d1c6f8596991d5f8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Revise home page description and simplify licenses section [skip ci]
+  ([`963dd1f`](https://github.com/ourPLCC/plcc-ng/commit/963dd1f63b48e59ab38ddad9a7495f6c577c9e39))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Rewrite home page with project description and features [skip ci]
+  ([`8b000df`](https://github.com/ourPLCC/plcc-ng/commit/8b000df5a56e1d7fa79b3f7703e3958606e02217))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update docs to reflect new spec file syntax and terminology [skip ci]
+  ([`0aaae1c`](https://github.com/ourPLCC/plcc-ng/commit/0aaae1c489218afb13c0e0e60e514b077e603acc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update home page navigation link descriptions [skip ci]
+  ([`e0f9270`](https://github.com/ourPLCC/plcc-ng/commit/e0f9270d9f018f0adb6f21a3473019a7b26f33f3))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update quickstart to sum-integers example with semantics [skip ci]
+  ([`ec7b1c3`](https://github.com/ourPLCC/plcc-ng/commit/ec7b1c3ac22ef888055fe6d3720fee0841f9df3d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update quickstart with verified command output [skip ci]
+  ([`7854d76`](https://github.com/ourPLCC/plcc-ng/commit/7854d76b2fd623a2d9d34038bb467b8706c6002e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Draft CLI overview page [skip ci]
+  ([`9f97321`](https://github.com/ourPLCC/plcc-ng/commit/9f9732163f93746415542b09a1a835c8551380f5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Draft orchestrators page [skip ci]
+  ([`0353f93`](https://github.com/ourPLCC/plcc-ng/commit/0353f9341a3838e3beb1031806d39f4b78f8f7cf))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Draft primitives page [skip ci]
+  ([`46e9422`](https://github.com/ourPLCC/plcc-ng/commit/46e942246f83f5b3be800c8d3975bd754766fad8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Show Level 2 orchestrators before Level 0 primitives [skip ci]
+  ([`747b5c6`](https://github.com/ourPLCC/plcc-ng/commit/747b5c6fbcb04cea701b24bf10f35691aec76c58))
+
+Closes #082
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 093 incremental parsing in plcc-rep interactive mode [skip ci]
+  ([`feafd76`](https://github.com/ourPLCC/plcc-ng/commit/feafd76156f7acb331e78f9ce9c3974d6f55269f))
+
+- **issues**: Add documentation issues 070-083 and move 065 to done [skip ci]
+  ([`c743ac4`](https://github.com/ourPLCC/plcc-ng/commit/c743ac4f71c7dc50b2ffcc4e2de21ff45f56c3a2))
+
+- **issues**: Add issue 087 — swap semantic divider to % Language tool [skip ci]
+  ([`b2e62f4`](https://github.com/ourPLCC/plcc-ng/commit/b2e62f4294e18f4a0746479a4414b395bd549d87))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 088 — require token or skip keyword in lexical rules [skip ci]
+  ([`a472902`](https://github.com/ourPLCC/plcc-ng/commit/a472902cdb571354c5f51284da0c27dab38ebae9))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 089 — rename grammar file to specification file [skip ci]
+  ([`b1255ab`](https://github.com/ourPLCC/plcc-ng/commit/b1255aba835305986dd5887e47bc1290b861ddfa))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 090 — case-sensitive language name in separator [skip ci]
+  ([`63db460`](https://github.com/ourPLCC/plcc-ng/commit/63db4607512f675b4ce2c76b641b0cf433fb84c6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 091 — remove multiple semantic sections and tool name [skip ci]
+  ([`6c66f3c`](https://github.com/ourPLCC/plcc-ng/commit/6c66f3c400d0d3298fbb32606e29f4ff84a1d847))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 092 — move language specifier to first line of semantics section [skip ci]
+  ([`3f2be08`](https://github.com/ourPLCC/plcc-ng/commit/3f2be0892b73dbca1ece96d28280f8e0b405b4ff))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Add filename comment to overview example [skip ci]
+  ([`a0ae70d`](https://github.com/ourPLCC/plcc-ng/commit/a0ae70da882ae5f37069fe73abdbce191554baad))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Add pipeline diagram to overview [skip ci]
+  ([`b8d69fe`](https://github.com/ourPLCC/plcc-ng/commit/b8d69fee18b3401dec2c357195cf59add5be9234))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Draft code generation page [skip ci]
+  ([`8d8c0a1`](https://github.com/ourPLCC/plcc-ng/commit/8d8c0a132d4a9468febda83895ec45f3c3104fb8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Draft examples page [skip ci]
+  ([`6c3b7a8`](https://github.com/ourPLCC/plcc-ng/commit/6c3b7a80598a78a5e21934fbaa4547f870e5d2f5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Draft grammar rules page [skip ci]
+  ([`f136d66`](https://github.com/ourPLCC/plcc-ng/commit/f136d66289ba44bc48990e3eca7e61bd7a1afd87))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Draft language guide overview [skip ci]
+  ([`42e2c01`](https://github.com/ourPLCC/plcc-ng/commit/42e2c01b1d7ae1ff14f7c59028f8d6d088bb40b8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Draft token rules page [skip ci]
+  ([`66d6b18`](https://github.com/ourPLCC/plcc-ng/commit/66d6b18e79b10c6d13a3814a555aca84d07c8b68))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Expand lexical rules and scanning algorithm [skip ci]
+  ([`36ef2fc`](https://github.com/ourPLCC/plcc-ng/commit/36ef2fc978b9706a6708875e7cf3c838af860c16))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Expand semantic section with field access, entry point, and packaging [skip
+  ci]
+  ([`ae90d63`](https://github.com/ourPLCC/plcc-ng/commit/ae90d638311b6ab7b1e880b48cf28ae3e74a927e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Expand syntactic and semantic section docs [skip ci]
+  ([`c0951c4`](https://github.com/ourPLCC/plcc-ng/commit/c0951c48edb4910e3d68ef5536eb5d9110193779))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Fix samples line numbers to match scanner output [skip ci]
+  ([`140f295`](https://github.com/ourPLCC/plcc-ng/commit/140f295f28c242c6bb840bd8b7bf6538abceaacf))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Improve repetition rule example with xList/yList values [skip ci]
+  ([`a95fe0f`](https://github.com/ourPLCC/plcc-ng/commit/a95fe0f60a0adf9b1ec8258f9c33b5fa7940acb2))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Minor wording fixes in syntactic section [skip ci]
+  ([`6befdfd`](https://github.com/ourPLCC/plcc-ng/commit/6befdfdd9b123a802804c664373097e4749d40ce))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Refine lexical section content and examples [skip ci]
+  ([`916f544`](https://github.com/ourPLCC/plcc-ng/commit/916f5448b69074b318471115bb4537072a41c6a5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Rename tokens.md to lexical.md [skip ci]
+  ([`74a1d5d`](https://github.com/ourPLCC/plcc-ng/commit/74a1d5d1d64a3e48f607d287eea4b0312d2df2fd))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Restructure sections as lexical/syntactic/semantic [skip ci]
+  ([`aafc966`](https://github.com/ourPLCC/plcc-ng/commit/aafc966a899c4fd6dc1aad19f6ce291a9c3df825))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Simplify hooks example [skip ci]
+  ([`4de477c`](https://github.com/ourPLCC/plcc-ng/commit/4de477c8b949962e11a0dd4d524823359ee2c0f2))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Simplify pipeline diagram, remove duplicate prose [skip ci]
+  ([`46e5d91`](https://github.com/ourPLCC/plcc-ng/commit/46e5d91530e590e727d0d22d21036d980da8249f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Add initial user docs implementation plan [skip ci]
+  ([`2a76d36`](https://github.com/ourPLCC/plcc-ng/commit/2a76d363dcd540727188f2012108feaf6b922933))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add initial user docs mapping plan [skip ci]
+  ([`812e0db`](https://github.com/ourPLCC/plcc-ng/commit/812e0db62acc535c2cc71e683cd5cd77bcff66f5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add PlantUML docs diagrams design [skip ci]
+  ([`0589a4d`](https://github.com/ourPLCC/plcc-ng/commit/0589a4d6538ed71f3fcf125106e5d614f5bc5120))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add PlantUML docs diagrams implementation plan [skip ci]
+  ([`d7fda69`](https://github.com/ourPLCC/plcc-ng/commit/d7fda699d1cfa8e0845686ed685aa1f0d3772394))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **docs**: Add mkdocs-kroki-plugin for PlantUML diagram support [skip ci]
+  ([`336fc97`](https://github.com/ourPLCC/plcc-ng/commit/336fc97fa6b2d0f03f1b299c914a2a614b1b7cf9))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.39.2 (2026-06-07)
 
 ### Bug Fixes
