@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v0.41.0 (2026-06-15)
+
+### Documentation
+
+- **086**: Design spec for Token __str__ and __repr__ [skip ci]
+  ([`c53f671`](https://github.com/ourPLCC/plcc-ng/commit/c53f67197e5f01dabcb273b48ebaa33df6167e49))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **086**: Implementation plan for Token __str__ and __repr__ [skip ci]
+  ([`964b8d1`](https://github.com/ourPLCC/plcc-ng/commit/964b8d15a26ad13e7489978d43b8dc43bd61d1e6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **086**: Token.__repr__ returns lexeme
+  ([`2b4d2e8`](https://github.com/ourPLCC/plcc-ng/commit/2b4d2e8fcc4fccf7ff1292a7fe38123acfc20410))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **086**: Token.__str__ returns lexeme
+  ([`885d8a7`](https://github.com/ourPLCC/plcc-ng/commit/885d8a7708d1fedc5e8985705346fbf087483a7a))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.40.1 (2026-06-15)
 
 ### Bug Fixes
