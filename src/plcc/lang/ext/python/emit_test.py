@@ -1,7 +1,9 @@
 import io
 import json
+import signal
 import subprocess
 import sys
+import time
 
 import pytest
 from docopt import DocoptExit
@@ -162,6 +164,23 @@ def test_emit_generated_main_is_runnable(tmp_path, monkeypatch):
         text=True,
     )
     assert result.returncode == 0
+
+
+def test_emit_generated_main_exits_130_on_sigint(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
+    run_main([f'--output={tmp_path}'])
+    proc = subprocess.Popen(
+        [sys.executable, str(tmp_path / 'main.py')],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    time.sleep(0.1)  # ensure subprocess has entered the stdin loop
+    proc.send_signal(signal.SIGINT)
+    stdout, stderr = proc.communicate(timeout=5)
+    assert proc.returncode == 130
+    assert stderr == b''
+    assert b'User interrupted execution by ^C.' in stdout
 
 
 def test_emit_class_file_contains_body_fragment_when_language_is_lowercase(tmp_path, monkeypatch):
