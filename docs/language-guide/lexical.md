@@ -125,7 +125,7 @@ if
 Matches:
 
 - WORD matches 2 characters.
-- ID matches 2 characters.
+- IF matches 2 characters.
 
 Result:
 

@@ -44,5 +44,3 @@ All commands accept:
 The Level 2 orchestrators remember the grammar path between invocations.
 Pass `-g <path>` once; subsequent commands in the same directory use the same
 grammar automatically.
-
-<!-- TODO: verify grammar memory behavior (sticky grammar) and where it is stored -->
