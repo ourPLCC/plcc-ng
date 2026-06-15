@@ -15,7 +15,7 @@ token NUM /\d+/
 
 %
 
-# Semantic secction
+# Semantic section
 Python
 
 Exp

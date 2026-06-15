@@ -48,7 +48,7 @@ The [Language Guide](language-guide/index.md) explains how this mapping works.
 
 ### 2. Scan source text
 
-In the same directory as `plcc.plcc`:
+In the same directory as `spec.plcc`:
 
 ```bash
 echo "42 36 2" | plcc-scan

@@ -66,7 +66,7 @@ class Greeting {
 abstract class Salutation { }
 
 class Hi extends Salutation { }
-class Hello extends Slautation { }
+class Hello extends Salutation { }
 
 class Words {
     wordList: List<Token>
