@@ -11,17 +11,17 @@
         <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/cli/orchestrators/">
       
       
-        <link rel="prev" href="../primitives/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../../instructor-guide/">
+        <link rel="next" href="../primitives/">
       
       
         
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
@@ -492,14 +492,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/tokens/" class="md-nav__link">
+      <a href="../../language-guide/lexical/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Token Rules
+    Lexical Section
   
 
     
@@ -520,14 +520,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/grammar/" class="md-nav__link">
+      <a href="../../language-guide/syntactic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Grammar Rules
+    Syntactic Section
   
 
     
@@ -548,14 +548,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/code-generation/" class="md-nav__link">
+      <a href="../../language-guide/semantic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Code Generation
+    Semantic Section
   
 
     
@@ -693,6 +693,125 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrators
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-make" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-make
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-scan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-parse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-parse
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-rep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-rep
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
@@ -712,44 +831,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Orchestrators
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
     </li>
   
 
@@ -953,7 +1034,144 @@
 
 
 <h1 id="level-2-orchestrators">Level 2 Orchestrators</h1>
-<p><em>Content coming soon.</em></p>
+<p>These commands compose the <a href="../primitives/">Level 0 primitives</a> for the most
+common workflows. They are the commands students use day-to-day.</p>
+<hr />
+<h2 id="plcc-make">plcc-make</h2>
+<p>Build a PLCC project from a grammar file.</p>
+<pre><code class="language-text">plcc-make [-v ...] [options]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-g PATH</code>, <code>--grammar=PATH</code></td>
+<td>Grammar to build from. Remembered across invocations. Defaults to <code>grammar.plcc</code> on first use.</td>
+</tr>
+<tr>
+<td><code>--through=LEVEL</code></td>
+<td>Build up to this level: <code>scan</code>, <code>parse</code>, <code>model</code>, or <code>all</code>. Default: <code>all</code>.</td>
+</tr>
+<tr>
+<td><code>--no-banner</code></td>
+<td>Suppress the version and grammar banner.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-make -g subtract.plcc
+</code></pre>
+<p>Run <code>plcc-make</code> again after editing your grammar to rebuild.</p>
+<hr />
+<h2 id="plcc-scan">plcc-scan</h2>
+<p>Tokenize source input and print tokens in human-readable format.</p>
+<pre><code class="language-text">plcc-scan [-v ...] [options] [SOURCE ...]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to tokenize. Reads stdin if none given.</td>
+</tr>
+<tr>
+<td><code>-g PATH</code>, <code>--grammar=PATH</code></td>
+<td>Grammar to build from. Remembered across invocations.</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Show detailed scanning output.</td>
+</tr>
+<tr>
+<td><code>--no-banner</code></td>
+<td>Suppress the version and grammar banner.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-scan -g subtract.plcc samples
+echo &quot;42&quot; | plcc-scan
+</code></pre>
+<hr />
+<h2 id="plcc-parse">plcc-parse</h2>
+<p>Parse source input and print the parse tree in human-readable format.</p>
+<pre><code class="language-text">plcc-parse [-v ...] [options] [SOURCE ...]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to parse. Reads stdin if none given.</td>
+</tr>
+<tr>
+<td><code>-g PATH</code>, <code>--grammar=PATH</code></td>
+<td>Grammar to build from. Remembered across invocations.</td>
+</tr>
+<tr>
+<td><code>--no-banner</code></td>
+<td>Suppress the version and grammar banner.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-parse -g subtract.plcc samples
+echo &quot;42&quot; | plcc-parse
+</code></pre>
+<hr />
+<h2 id="plcc-rep">plcc-rep</h2>
+<p>REPL — read, eval, print loop for a PLCC grammar.</p>
+<pre><code class="language-text">plcc-rep [-v ...] [options] [SOURCE ...]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to evaluate before entering interactive mode.</td>
+</tr>
+<tr>
+<td><code>-g PATH</code>, <code>--grammar=PATH</code></td>
+<td>Grammar to build from. Remembered across invocations.</td>
+</tr>
+<tr>
+<td><code>--tool=NAME</code></td>
+<td>Semantic section to run. Inferred automatically when only one exists.</td>
+</tr>
+<tr>
+<td><code>--no-banner</code></td>
+<td>Suppress the version and grammar banner.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash"># Run the 'subtract' semantic section against samples, then enter interactive mode
+plcc-rep -g subtract.plcc --tool=subtract samples
+
+# Evaluate a file only (no interactive mode)
+plcc-rep -g subtract.plcc samples &lt; /dev/null
+</code></pre>
+<!-- TODO: verify how to suppress interactive mode (< /dev/null or EOF behavior) -->
 
 
 

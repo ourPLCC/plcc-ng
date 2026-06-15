@@ -2,58 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/changelog/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/getting-started/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/orchestrators/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/primitives/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/adopting/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/evaluating/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/</loc>
-         <lastmod>2026-06-07</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/code-generation/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/examples/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/grammar/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/lexical/</loc>
+         <lastmod>2026-06-15</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/tokens/</loc>
-         <lastmod>2026-06-07</lastmod>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/semantic/</loc>
+         <lastmod>2026-06-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/syntactic/</loc>
+         <lastmod>2026-06-15</lastmod>
     </url>
 </urlset>

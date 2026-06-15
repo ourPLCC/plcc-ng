@@ -8,10 +8,10 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/language-guide/code-generation/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/language-guide/semantic/">
       
       
-        <link rel="prev" href="../grammar/">
+        <link rel="prev" href="../syntactic/">
       
       
         <link rel="next" href="../examples/">
@@ -21,11 +21,11 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
-        <title>Code Generation - plcc-ng</title>
+        <title>Semantic Section - plcc-ng</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#code-generation" class="md-skip">
+        <a href="#semantic-section" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Code Generation
+              Semantic Section
             
           </span>
         </div>
@@ -497,14 +497,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../tokens/" class="md-nav__link">
+      <a href="../lexical/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Token Rules
+    Lexical Section
   
 
     
@@ -525,14 +525,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../grammar/" class="md-nav__link">
+      <a href="../syntactic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Grammar Rules
+    Syntactic Section
   
 
     
@@ -562,6 +562,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -569,7 +587,7 @@
   <span class="md-ellipsis">
     
   
-    Code Generation
+    Semantic Section
   
 
     
@@ -578,6 +596,119 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#section-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section header
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#field-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entry-point-method-_run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entry point method _run
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-standalone-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding standalone classes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packages-and-importsincludes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packages and imports/includes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -706,14 +837,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/primitives/" class="md-nav__link">
+      <a href="../../cli/orchestrators/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Primitives
+    Orchestrators
   
 
     
@@ -734,14 +865,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/orchestrators/" class="md-nav__link">
+      <a href="../../cli/primitives/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Orchestrators
+    Primitives
   
 
     
@@ -952,8 +1083,131 @@
   
 
 
-<h1 id="code-generation">Code Generation</h1>
-<p><em>Content coming soon.</em></p>
+<h1 id="semantic-section">Semantic Section</h1>
+<p>The semantic section lets you implement language semantics by injecting
+target-language code into classes generated from the syntactic section.</p>
+<h2 id="section-header">Section header</h2>
+<p>The line that separates the previous section from the semantic section
+identifies the language used by the code blocks.</p>
+<pre><code class="language-text">% Java
+</code></pre>
+<p>The supported languages are:</p>
+<ul>
+<li>Java</li>
+<li>Python</li>
+</ul>
+<h2 id="code-blocks">Code blocks</h2>
+<p>The semantic section allows you to inject code blocks into the classes generated
+from the production rules given in the syntactic section.
+The <a href="../syntactic/">syntactic section</a> describes the classes
+and their fields that are generated from production rules.</p>
+<p>To inject code into a class, use the following construct.</p>
+<pre><code class="language-text">% Python
+Exp
+%%%
+def _run(self):
+    print(&quot;Hello&quot;)
+%%%
+</code></pre>
+<pre><code class="language-text">% Java
+Exp
+%%%
+public void _run() {
+    System.out.println(&quot;Hello&quot;);
+}
+%%%
+</code></pre>
+<p>Since whatever you put within the <code>%%%</code> lines is injected into the body
+of the class, you can add static or instance methods, class or instance variables,
+or even inner classes. Anything you can place in the body of a class, you
+can place inside <code>%%%</code>.</p>
+<h2 id="field-access">Field Access</h2>
+<p>Fields generated from production rules become public instance variables.</p>
+<p>For example, if the syntactic section contains:</p>
+<pre><code class="language-text">&lt;AddExp&gt; ::= &lt;Exp:left&gt; &lt;PLUS&gt; &lt;Exp:right&gt;
+</code></pre>
+<p>the generated class contain fields such as <code>left</code>, <code>plus</code>, and <code>right</code>,
+which can be accessed from semantic code.</p>
+<h2 id="entry-point-method-_run">Entry point method <code>_run</code></h2>
+<p>The code between the <code>%%%</code> lines is injected into the body of the named class.
+The start symbol's class inherits from <code>_Start</code>, which defines
+a <code>_run</code> method that serves as the entry point called by <code>plcc-rep</code>.
+The default implementation of
+<code>_run</code> prints a string representation of the root of the parse tree.
+You'll want to override the <code>_run</code> method to implement the semantics of
+your language.</p>
+<h2 id="hooks">Hooks</h2>
+<p>Hooks inject code at specific locations within a generated class file.
+Append the hook name to the class name with a colon:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Where code is injected</th>
+<th>Uses</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ClassName:top</code></td>
+<td>Top of the generated file</td>
+<td>Package declarations, module directives, file-level code or comments</td>
+</tr>
+<tr>
+<td><code>ClassName:import</code></td>
+<td>File-level import section</td>
+<td>Add imports</td>
+</tr>
+<tr>
+<td><code>ClassName:class</code></td>
+<td>Class declaration (extend/implement)</td>
+<td>Declare class or interface inheritance</td>
+</tr>
+<tr>
+<td><code>ClassName:init</code></td>
+<td>Constructor / initializer</td>
+<td>Add statements to the generated constructor/initializer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example</h3>
+<pre><code class="language-text">WholeExp:import
+%%%
+import sys
+%%%
+
+WholeExp
+%%%
+def eval(self):
+    x = int(self.whole.lexeme)
+    sys.stderr.write(f&quot;eval: {x}\n&quot;)
+    return x
+%%%
+</code></pre>
+<p>You can have multiple code blocks that refer to the same class.
+The blocks are injected in the order they appear in the semantic section.</p>
+<h2 id="adding-standalone-classes">Adding standalone classes</h2>
+<p>Standalone classes are useful for helper code that does not naturally
+belong to a generated grammar class.</p>
+<p>You may declare a new class or module that is not derived from
+a nonterminal in the syntactic section.
+When you do, plcc-ng creates a file based on the class name.
+The block contents are written verbatim to that file.</p>
+<pre><code class="language-text">Helper      # Creates a file named Helper.py
+%%%
+class Helper:
+    @staticmethod
+    def double(x):
+        return x * 2
+%%%
+</code></pre>
+<h2 id="packages-and-importsincludes">Packages and imports/includes</h2>
+<p>Each generated class is placed in a separate file with the same name
+as the class. All files are placed in the same package.</p>
+<p>For Java, this means that all classes can access all other classes without
+explicitly importing them.</p>
+<p>In Python, code that refers to another generated class by name must
+add an appropriate relative import.</p>
 
 
 

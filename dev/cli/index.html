@@ -14,14 +14,14 @@
         <link rel="prev" href="../language-guide/examples/">
       
       
-        <link rel="next" href="primitives/">
+        <link rel="next" href="orchestrators/">
       
       
         
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
@@ -492,14 +492,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../language-guide/tokens/" class="md-nav__link">
+      <a href="../language-guide/lexical/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Token Rules
+    Lexical Section
   
 
     
@@ -520,14 +520,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../language-guide/grammar/" class="md-nav__link">
+      <a href="../language-guide/syntactic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Grammar Rules
+    Syntactic Section
   
 
     
@@ -548,14 +548,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../language-guide/code-generation/" class="md-nav__link">
+      <a href="../language-guide/semantic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Code Generation
+    Semantic Section
   
 
     
@@ -677,6 +677,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -694,34 +712,69 @@
 
       </a>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="primitives/" class="md-nav__link">
         
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  <span class="md-ellipsis">
+  
     
   
-    Primitives
   
-
-    
-  </span>
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#level-2-orchestrators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2 orchestrators
+      
+    </span>
+  </a>
   
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-0-primitives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 0 primitives
+      
+    </span>
+  </a>
   
-
-      </a>
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grammar-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grammar memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -742,6 +795,34 @@
     
   
     Orchestrators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primitives
   
 
     
@@ -953,7 +1034,103 @@
 
 
 <h1 id="cli-reference">CLI Reference</h1>
-<p><em>Content coming soon.</em></p>
+<p>plcc-ng provides two groups of commands: <strong>Level 2 orchestrators</strong> and
+<strong>Level 0 primitives</strong>.</p>
+<h2 id="level-2-orchestrators">Level 2 orchestrators</h2>
+<p>High-level commands for common workflows. These are the commands most users
+run day-to-day.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="orchestrators/#plcc-make"><code>plcc-make</code></a></td>
+<td>Build a PLCC project from a grammar file</td>
+</tr>
+<tr>
+<td><a href="orchestrators/#plcc-scan"><code>plcc-scan</code></a></td>
+<td>Tokenize source input and print tokens</td>
+</tr>
+<tr>
+<td><a href="orchestrators/#plcc-parse"><code>plcc-parse</code></a></td>
+<td>Parse source input and print the parse tree</td>
+</tr>
+<tr>
+<td><a href="orchestrators/#plcc-rep"><code>plcc-rep</code></a></td>
+<td>Read-eval-print loop using generated semantics</td>
+</tr>
+</tbody>
+</table>
+<h2 id="level-0-primitives">Level 0 primitives</h2>
+<p>Low-level commands that each perform one step of the pipeline. They read and
+write JSON, making them composable with other tools.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="primitives/#plcc-spec"><code>plcc-spec</code></a></td>
+<td>Parse and validate a <code>.plcc</code> grammar file; emit spec JSON</td>
+</tr>
+<tr>
+<td><a href="primitives/#plcc-tokens"><code>plcc-tokens</code></a></td>
+<td>Tokenize source files given a spec JSON; emit token JSONL</td>
+</tr>
+<tr>
+<td><a href="primitives/#plcc-trees"><code>plcc-trees</code></a></td>
+<td>Parse token JSONL using an LL(1) table; emit parse trees</td>
+</tr>
+<tr>
+<td><a href="primitives/#plcc-model"><code>plcc-model</code></a></td>
+<td>Transform spec JSON into a language-neutral code model</td>
+</tr>
+<tr>
+<td><a href="primitives/#plcc-lang-emit"><code>plcc-lang-emit</code></a></td>
+<td>Dispatch to the appropriate language emitter</td>
+</tr>
+<tr>
+<td><a href="primitives/#plcc-diagram"><code>plcc-diagram</code></a></td>
+<td>Generate a class diagram from a grammar file</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-options">Common options</h2>
+<p>All commands accept:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>)</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> or <code>json</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="grammar-memory">Grammar memory</h2>
+<p>The Level 2 orchestrators remember the grammar path between invocations.
+Pass <code>-g &lt;path&gt;</code> once; subsequent commands in the same directory use the same
+grammar automatically.</p>
+<!-- TODO: verify grammar memory behavior (sticky grammar) and where it is stored -->
 
 
 

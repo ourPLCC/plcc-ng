@@ -8,24 +8,24 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/language-guide/grammar/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/language-guide/lexical/">
       
       
-        <link rel="prev" href="../tokens/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../code-generation/">
+        <link rel="next" href="../syntactic/">
       
       
         
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
-        <title>Grammar Rules - plcc-ng</title>
+        <title>Lexical Section - plcc-ng</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#grammar-rules" class="md-skip">
+        <a href="#lexical-specification" class="md-skip">
           Skip to content
         </a>
       
@@ -104,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Grammar Rules
+              Lexical Section
             
           </span>
         </div>
@@ -494,34 +494,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../tokens/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Token Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -534,6 +506,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -541,7 +531,7 @@
   <span class="md-ellipsis">
     
   
-    Grammar Rules
+    Lexical Section
   
 
     
@@ -550,6 +540,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#syntax" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Syntax
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Syntax">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#token-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scanning-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scanning algorithm
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scanning algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-longest-match-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-longest-match rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="First-longest-match rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-longest-match-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: longest match wins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-the-first-longest-match-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: the first, longest-match wins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-skips-compete-with-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: skips compete with tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -563,14 +678,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../code-generation/" class="md-nav__link">
+      <a href="../syntactic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Code Generation
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
   
 
     
@@ -706,14 +849,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/primitives/" class="md-nav__link">
+      <a href="../../cli/orchestrators/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Primitives
+    Orchestrators
   
 
     
@@ -734,14 +877,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/orchestrators/" class="md-nav__link">
+      <a href="../../cli/primitives/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Orchestrators
+    Primitives
   
 
     
@@ -952,8 +1095,147 @@
   
 
 
-<h1 id="grammar-rules">Grammar Rules</h1>
-<p><em>Content coming soon.</em></p>
+<h1 id="lexical-specification">Lexical Specification</h1>
+<p>The lexical specification defines what the scanner recognizes and which
+matches it should emit as a token.</p>
+<h2 id="syntax">Syntax</h2>
+<pre><code class="language-text">skip  NAME_1 'pattern'
+token NAME_2 'pattern'
+</code></pre>
+<p><code>token</code> rules emit a token when matched. <code>skip</code> rules consume input silently
+(useful for whitespace and comments in the language you are implementing).</p>
+<h3 id="token-names">Token names</h3>
+<p>Token names are composed of capital letters, underscore, and digits.
+They must start with a letter.</p>
+<p>Examples of valid token names:</p>
+<ul>
+<li><code>NAME</code></li>
+<li><code>FIRST_NAME</code></li>
+<li><code>NAME_1</code></li>
+</ul>
+<p>Examples of invalid token names:</p>
+<ul>
+<li><code>name</code></li>
+<li><code>name</code></li>
+<li><code>FIRST-NAME</code></li>
+<li><code>_NAME</code></li>
+<li><code>1_NAME</code></li>
+</ul>
+<h3 id="patterns">Patterns</h3>
+<p>Patterns are regular expressions enclosed in single or double quotes.
+They use <a href="https://docs.python.org/3/library/re.html">Python's <code>re</code> syntax</a>
+(the scanner runs in Python).</p>
+<p>Patterns may be enclosed in double or single quotes. This is useful when
+trying to match those same characters while avoiding escape characters.</p>
+<p>A few common patterns:</p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>'\d+'</code></td>
+<td>Whole Numbers</td>
+</tr>
+<tr>
+<td><code>'\s+'</code></td>
+<td>Whitespace including a newline</td>
+</tr>
+<tr>
+<td><code>'\w+'</code></td>
+<td>A word (only alphabetic, numeric, and underscore characters)</td>
+</tr>
+<tr>
+<td><code>'\n'</code></td>
+<td>A newline character</td>
+</tr>
+<tr>
+<td><code>'[a-zA-Z_]\w*'</code></td>
+<td>An word that does not begin with a digit</td>
+</tr>
+<tr>
+<td><code>'\+'</code></td>
+<td>A literal <code>+</code> (escaped)</td>
+</tr>
+<tr>
+<td><code>'\*'</code></td>
+<td>A literal <code>*</code> (escaped)</td>
+</tr>
+<tr>
+<td><code>'"[^"]*"'</code></td>
+<td>A double-quoted string</td>
+</tr>
+<tr>
+<td><code>'.*'</code></td>
+<td>Zero or more non-newline characters</td>
+</tr>
+</tbody>
+</table>
+<p>Patterns cannot match across multiple lines.
+The scanner processes input one line at
+a time, so every match is limited to the current line.</p>
+<p>A pattern may still match the newline character at the end of the current
+line. For example, '\n' matches a single newline character.</p>
+<h2 id="scanning-algorithm">Scanning algorithm</h2>
+<p>The scanner processes input from left to right, performing the following steps:</p>
+<ol>
+<li>Use the first-longest-match rule to select a scanner rule, or raise an error if no rule matches.</li>
+<li>Consume the matching text from the front of the input.</li>
+<li>If the selected rule is a token rule, emit a token. If it is a skip rule, emit nothing.</li>
+</ol>
+<h3 id="first-longest-match-rule">First-longest-match rule</h3>
+<p>To select a scanner rule:</p>
+<ol>
+<li>Match every scanner rule against the front of the input.</li>
+<li>The rule whose pattern matches the most characters wins.</li>
+<li>If multiple rules match the same number of characters, the rule that appears first in the grammar wins.</li>
+</ol>
+<p>In short, to determine which lexical rule to apply, the scanner uses a first-longest-match rule:
+it first prefers the longest matching rule, and uses rule order only to break ties.</p>
+<p>Let's look at some examples.</p>
+<h4 id="example-longest-match-wins">Example: longest match wins</h4>
+<p>Rules:</p>
+<pre><code class="language-text">token EQ '='
+token EQEQ '=='
+</code></pre>
+<p>Input:</p>
+<pre><code class="language-text">==
+</code></pre>
+<p>Matches:</p>
+<ul>
+<li>EQ matches 1 character.</li>
+<li>EQEQ matches 2 characters.</li>
+</ul>
+<p>Result:</p>
+<p>EQEQ wins because it matches more characters.</p>
+<h4 id="example-the-first-longest-match-wins">Example: the first, longest-match wins</h4>
+<p>Rules:</p>
+<pre><code class="language-text">token WORD '[a-z]+'
+token IF 'if'
+</code></pre>
+<p>Input:</p>
+<pre><code class="language-text">if
+</code></pre>
+<p>Matches:</p>
+<ul>
+<li>WORD matches 2 characters.</li>
+<li>ID matches 2 characters.</li>
+</ul>
+<p>Result:</p>
+<p>The match lengths are equal, so the rule that appears first in the grammar wins.
+So, an <code>WORD</code> token containing the lexeme "if" would be emitted.</p>
+<h4 id="example-skips-compete-with-tokens">Example: skips compete with tokens</h4>
+<pre><code class="language-text">skip WORD '[a-z]+'
+token IF 'if'
+</code></pre>
+<p>And suppose our input is:</p>
+<pre><code class="language-text">if
+</code></pre>
+<p>Again the WORD rule would win, but since it is now a skip rule, no token would
+be emitted.</p>
 
 
 

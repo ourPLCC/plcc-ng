@@ -11,17 +11,17 @@
         <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/cli/primitives/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../orchestrators/">
       
       
-        <link rel="next" href="../orchestrators/">
+        <link rel="next" href="../../instructor-guide/">
       
       
         
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
@@ -492,14 +492,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/tokens/" class="md-nav__link">
+      <a href="../../language-guide/lexical/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Token Rules
+    Lexical Section
   
 
     
@@ -520,14 +520,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/grammar/" class="md-nav__link">
+      <a href="../../language-guide/syntactic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Grammar Rules
+    Syntactic Section
   
 
     
@@ -548,14 +548,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/code-generation/" class="md-nav__link">
+      <a href="../../language-guide/semantic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Code Generation
+    Semantic Section
   
 
     
@@ -693,44 +693,6 @@
                 
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Primitives
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
   
   
     <li class="md-nav__item">
@@ -750,6 +712,147 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primitives
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-spec
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-tokens
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-trees
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-lang-emit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-lang-emit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -953,7 +1056,175 @@
 
 
 <h1 id="level-0-primitives">Level 0 Primitives</h1>
-<p><em>Content coming soon.</em></p>
+<p>These commands each perform one step of the pipeline. They are the building
+blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use internally.</p>
+<hr />
+<h2 id="plcc-spec">plcc-spec</h2>
+<p>Parse, validate, and print a PLCC grammar file as JSON.</p>
+<pre><code class="language-text">plcc-spec [-v ...] [options] FILE
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FILE</code></td>
+<td><code>.plcc</code> grammar file. Use <code>-</code> to read from stdin.</td>
+</tr>
+<tr>
+<td><code>--no-json</code></td>
+<td>Validate only; do not print JSON to stdout.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-spec grammar.plcc
+</code></pre>
+<hr />
+<h2 id="plcc-tokens">plcc-tokens</h2>
+<p>Tokenize source files given a spec JSON file; emit token JSONL.</p>
+<pre><code class="language-text">plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SPEC_JSON</code></td>
+<td>Path to spec JSON (output of <code>plcc-spec</code>).</td>
+</tr>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to tokenize. Use <code>-</code> for stdin. Defaults to stdin.</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Include regex, source line, attempts; emit skip records.</td>
+</tr>
+<tr>
+<td><code>--source-name=LABEL</code></td>
+<td>Override the source label for stdin.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-spec grammar.plcc | plcc-tokens - samples
+</code></pre>
+<hr />
+<h2 id="plcc-trees">plcc-trees</h2>
+<p>Dispatch to a parser plugin. Reads token JSONL; emits a parse tree.</p>
+<pre><code class="language-text">plcc-trees [-v ...] [options] --ll1=LL1_JSON
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--ll1=LL1_JSON</code></td>
+<td>Path to LL(1) analysis JSON (required).</td>
+</tr>
+<tr>
+<td><code>--parser=KIND</code></td>
+<td>Parser plugin to use. Default: <code>table</code>.</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Forward trace flag to the parser plugin.</td>
+</tr>
+</tbody>
+</table>
+<!-- TODO: document how to obtain LL1_JSON (output of plcc-ll1) -->
+
+<hr />
+<h2 id="plcc-model">plcc-model</h2>
+<p>Transform spec JSON into a language-neutral code model.</p>
+<pre><code class="language-text">plcc-model [-v ...] [options] [SPEC_JSON]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SPEC_JSON</code></td>
+<td>Path to spec JSON. Use <code>-</code> or omit to read from stdin.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-spec grammar.plcc | plcc-model
+</code></pre>
+<hr />
+<h2 id="plcc-lang-emit">plcc-lang-emit</h2>
+<p>Dispatch to the appropriate language emitter.</p>
+<pre><code class="language-text">plcc-lang-emit [-v ...] --target=LANG --output=DIR
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target=LANG</code></td>
+<td>Target language (e.g. <code>Python</code>, <code>Java</code>).</td>
+</tr>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory to write output files into.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-spec grammar.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
+</code></pre>
+<hr />
+<h2 id="plcc-diagram">plcc-diagram</h2>
+<p>Generate and display a class diagram from a PLCC grammar file.</p>
+<pre><code class="language-text">plcc-diagram [-v ...] [options]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-g PATH</code>, <code>--grammar=PATH</code></td>
+<td>Grammar file. Remembers across invocations. Defaults to <code>grammar.plcc</code>.</td>
+</tr>
+<tr>
+<td><code>--format=FMT</code></td>
+<td>Diagram format. Default: <code>plantuml</code>.</td>
+</tr>
+<tr>
+<td><code>--no-banner</code></td>
+<td>Suppress the version and grammar banner.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre><code class="language-bash">plcc-diagram -g mylang.plcc
+</code></pre>
 
 
 
