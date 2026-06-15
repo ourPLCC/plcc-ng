@@ -93,10 +93,6 @@
          <lastmod>2026-06-15</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/087-divider-language-first/</loc>
-         <lastmod>2026-06-15</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/088-lexical-rule-keyword-required/</loc>
          <lastmod>2026-06-15</lastmod>
     </url>
@@ -105,23 +101,15 @@
          <lastmod>2026-06-15</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/090-separator-language-case-sensitive/</loc>
-         <lastmod>2026-06-15</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/091-single-semantic-section/</loc>
-         <lastmod>2026-06-15</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/092-language-as-first-line-of-semantics/</loc>
-         <lastmod>2026-06-15</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/093-incremental-parsing-repl/</loc>
          <lastmod>2026-06-15</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/094-docs-status-after-initial-branch/</loc>
+         <lastmod>2026-06-15</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/095-semantic-section-redesign/</loc>
          <lastmod>2026-06-15</lastmod>
     </url>
     <url>
