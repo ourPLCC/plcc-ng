@@ -35,7 +35,9 @@ token COMMA     ','
 <Exp:WholeExp> ::= <WHOLE:whole>
 <Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
 %
-% subtract Python
+%
+Python
+
 Prog
 %%%
 def _run(self):
