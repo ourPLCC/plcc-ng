@@ -1,5 +1,6 @@
 import io
 import json
+import os
 import signal
 import subprocess
 import sys
@@ -169,11 +170,13 @@ def test_emit_generated_main_is_runnable(tmp_path, monkeypatch):
 def test_emit_generated_main_exits_130_on_sigint(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
     run_main([f'--output={tmp_path}'])
+    env = {k: v for k, v in os.environ.items() if not k.startswith('COV_CORE')}
     proc = subprocess.Popen(
         [sys.executable, str(tmp_path / 'main.py')],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        env=env,
     )
     time.sleep(0.1)  # ensure subprocess has entered the stdin loop
     proc.send_signal(signal.SIGINT)
