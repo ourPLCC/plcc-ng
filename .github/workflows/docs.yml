@@ -35,7 +35,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Deploy dev docs preview (on push to main)
         if: github.event_name == 'push'
-        run: pdm run mike deploy --push dev
+        run: |
+          pdm run mike deploy --push dev
+          if ! pdm run mike list 2>/dev/null | grep -qw 'latest'; then
+            pdm run mike set-default --push dev
+          fi
       - name: Deploy versioned docs (on release)
         if: github.event_name == 'release'
         run: |
@@ -43,6 +47,7 @@ jobs:
           # Strip leading 'v' (v1.2.3 → 1.2.3), then take major.minor (1.2)
           MAJOR_MINOR=$(echo "${VERSION#v}" | cut -d. -f1,2)
           pdm run mike deploy --push --update-aliases "${MAJOR_MINOR}" latest
+          pdm run mike set-default --push latest
 
   deploy-dev-docs:
     name: Deploy developer docs
