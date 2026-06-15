@@ -1,4 +1,4 @@
-from .output import print_user_error, print_version_line, print_grammar_line
+from .output import print_user_error, print_version_line, print_grammar_line, print_banner
 
 
 def test_print_user_error_writes_to_stdout(capsys):
@@ -66,9 +66,6 @@ def test_print_grammar_line_with_tool_prints_two_lines(capsys):
     print_grammar_line("/abs/path/grammar.plcc", tool="calc", language="python")
     out, _ = capsys.readouterr()
     assert out.count("\n") == 2
-
-
-from .output import print_banner
 
 
 def test_print_banner_version_goes_to_stderr(capsys):
