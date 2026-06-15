@@ -66,3 +66,36 @@ def test_print_grammar_line_with_tool_prints_two_lines(capsys):
     print_grammar_line("/abs/path/grammar.plcc", tool="calc", language="python")
     out, _ = capsys.readouterr()
     assert out.count("\n") == 2
+
+
+from .output import print_banner
+
+
+def test_print_banner_version_goes_to_stderr(capsys):
+    print_banner("1.2.3", "/abs/grammar.plcc")
+    _, err = capsys.readouterr()
+    assert "plcc-ng 1.2.3" in err
+
+
+def test_print_banner_grammar_goes_to_stderr(capsys):
+    print_banner("1.2.3", "/abs/grammar.plcc")
+    _, err = capsys.readouterr()
+    assert "grammar: /abs/grammar.plcc" in err
+
+
+def test_print_banner_nothing_on_stdout(capsys):
+    print_banner("1.2.3", "/abs/grammar.plcc")
+    out, _ = capsys.readouterr()
+    assert out == ""
+
+
+def test_print_banner_with_tool_running_line_on_stderr(capsys):
+    print_banner("1.2.3", "/abs/grammar.plcc", tool="calc", language="python")
+    _, err = capsys.readouterr()
+    assert "Running calc with python." in err
+
+
+def test_print_banner_without_tool_no_running_line(capsys):
+    print_banner("1.2.3", "/abs/grammar.plcc")
+    _, err = capsys.readouterr()
+    assert "Running" not in err
