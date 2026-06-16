@@ -15,7 +15,8 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
-from plcc.build.grammar import read_grammar, write_grammar
+from plcc.build.grammar import read_grammar, write_grammar, resolve_grammar_path
+from plcc.cmd.grammar import GRAMMAR_OPTION
 from plcc.ll1.format_conflict_message import format_conflict_message
 from plcc.version import get_version
 from .output import print_banner
@@ -27,9 +28,7 @@ Usage:
     plcc-make [-v ...] [options]
 
 Options:
-    -g <path> --grammar=<path>
-                            Grammar to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to grammar.plcc on first use.
+""" + GRAMMAR_OPTION + """\
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
     -b --banner             Show the version and grammar banner on stderr.
     -h --help               Show this message.
@@ -63,12 +62,7 @@ def main(argv=None):
 
     stored_grammar = read_grammar(build_dir) if build_dir.is_dir() else None
 
-    if explicit_grammar is not None:
-        grammar = explicit_grammar
-    elif stored_grammar is not None:
-        grammar = stored_grammar
-    else:
-        grammar = 'grammar.plcc'
+    grammar = resolve_grammar_path(explicit_grammar, stored_grammar)
 
     if through not in ('scan', 'parse', 'model', 'all'):
         print(
