@@ -30,7 +30,7 @@ Usage:
 Options:
 """ + GRAMMAR_OPTION + """\
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
