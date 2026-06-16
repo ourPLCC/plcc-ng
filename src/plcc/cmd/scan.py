@@ -8,8 +8,8 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .output import print_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
@@ -32,7 +32,7 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-""" + GRAMMAR_OPTION + """\
+""" + SPEC_OPTION + """\
     -t --trace                  Show detailed scanning output.
     -b --banner                 Show the version and spec banner on stderr.
 """ + VERBOSE_OPTIONS
@@ -140,14 +140,14 @@ def main(argv=None):
     sources = args["SOURCE"]
     trace = args["--trace"]
 
-    validate_grammar_flag('plcc-scan', args)
+    validate_spec_flag('plcc-scan', args)
 
     verbose.emit(Events.STARTED, message="scanning")
     child_flags = verbose.child_flags()
 
     make_result = subprocess.run(
         ["plcc-make", "--through=scan"]
-        + grammar_flag_for_child(args)
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=None,
     )
@@ -155,7 +155,7 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar("build")))
+        print_banner(get_version(), os.path.abspath(read_spec("build")))
 
     spec_path = os.path.join("build", "spec.json")
     tokens_flags = child_flags + (["--trace"] if trace else [])
