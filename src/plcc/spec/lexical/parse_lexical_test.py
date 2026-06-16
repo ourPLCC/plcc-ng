@@ -1,7 +1,7 @@
 import pytest
 
 from .parseLexicalSpec import parseLexicalSpec
-from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent, KeywordExpected
+from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent, KeywordExpected, PatternCompilationError
 from .check_for_duplicate_names import DuplicateName
 from .TokenRule import TokenRule
 from .SkipRule import SkipRule
@@ -56,7 +56,7 @@ def test_token_rule():
     assert not spec.ruleList[0].isSkip
 
 
-def test_implicit_token_rule():
+def test_keyword_missing_produces_error():
     spec, errors = parseLexicalSpec('''
         SPACE ' '
     ''')
@@ -76,9 +76,10 @@ def test_choice_of_pattern_delimiter():
 
 def test_pattern_must_compile():
     spec, errors = parseLexicalSpec('''
-        SPACE '[ '
+        token SPACE '[ '
     ''')
     assert len(errors) == 1
+    assert errors[0].__class__ == PatternCompilationError
     assert len(spec.ruleList) == 0
 
 
