@@ -60,14 +60,14 @@ def test_implicit_token_rule():
     spec, errors = parseLexicalSpec('''
         SPACE ' '
     ''')
-    assert errors == []
-    assert len(spec.ruleList) == 1
-    assert not spec.ruleList[0].isSkip
+    assert len(errors) == 1
+    assert errors[0].__class__ == KeywordExpected
+    assert len(spec.ruleList) == 0
 
 
 def test_choice_of_pattern_delimiter():
     spec, errors = parseLexicalSpec('''
-        SPACE [ [
+        token SPACE [ [
     ''')
     assert errors == []
     assert len(spec.ruleList) == 1
@@ -84,7 +84,7 @@ def test_pattern_must_compile():
 
 def test_trailing_comment():
     spec, errors = parseLexicalSpec('''
-        SPACE ' ' # comment
+        token SPACE ' ' # comment
     ''')
     assert errors == []
     assert len(spec.ruleList) == 1
@@ -102,14 +102,14 @@ def test_no_space():
 
 def test_names_start_with_uppercase_or_underscore_and_may_contain_numbers():
     spec, errors = parseLexicalSpec('''
-        SPACE_3 ' '
+        token SPACE_3 ' '
     ''')
     assert errors == []
     assert len(spec.ruleList) == 1
     assert not spec.ruleList[0].isSkip
 
     spec, errors = parseLexicalSpec('''
-        _SPACE3_ ' '
+        token _SPACE3_ ' '
     ''')
     assert errors == []
     assert len(spec.ruleList) == 1
@@ -118,7 +118,7 @@ def test_names_start_with_uppercase_or_underscore_and_may_contain_numbers():
 
 def test_names_must_be_uppercase():
     spec, errors = parseLexicalSpec('''
-        space ' '
+        token space ' '
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == NameExpected
@@ -127,14 +127,14 @@ def test_names_must_be_uppercase():
 
 def test_names_must_start_with_uppercase():
     spec, errors = parseLexicalSpec('''
-        3SPACE ' '
+        token 3SPACE ' '
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == NameExpected
     assert len(spec.ruleList) == 0
 
     spec, errors = parseLexicalSpec('''
-        :SPACE ' '
+        token :SPACE ' '
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == NameExpected
@@ -143,7 +143,7 @@ def test_names_must_start_with_uppercase():
 
 def test_pattern_is_required():
     spec, errors = parseLexicalSpec('''
-        SPACE
+        token SPACE
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == PatternExpected
@@ -152,7 +152,7 @@ def test_pattern_is_required():
 
 def test_pattern_must_have_closing_delimiter():
     spec, errors = parseLexicalSpec('''
-        SPACE '
+        token SPACE '
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == PatternDelimiterExpected
@@ -168,7 +168,7 @@ def test_keyword_is_required():
 
 def test_junk_at_the_end_of_a_line():
     spec, errors = parseLexicalSpec('''
-        SPACE ' ' junk
+        token SPACE ' ' junk
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == UnexpectedContent
@@ -177,7 +177,7 @@ def test_junk_at_the_end_of_a_line():
 
 def test_hash_in_pattern_is_not_a_comment():
     spec, errors = parseLexicalSpec('''
-        HASH '#'
+        token HASH '#'
     ''')
     assert len(errors) == 0
     assert len(spec.ruleList) == 1
@@ -185,7 +185,7 @@ def test_hash_in_pattern_is_not_a_comment():
 
 def test_no_leading_space_required():
     spec, errors = parseLexicalSpec('''
-HASH '#'
+token HASH '#'
     ''')
     assert len(errors) == 0
     assert len(spec.ruleList) == 1
@@ -232,11 +232,11 @@ def test_no_duplicate_skip_token_names():
 
 def test_two_duplicate_names():
     spec, errors = parseLexicalSpec('''
-        ONE 'one1'
-        TWO 'two1'
-        NOT 'duplicate'
-        ONE 'one2'
-        TWO 'two2'
+        token ONE 'one1'
+        token TWO 'two1'
+        token NOT 'duplicate'
+        token ONE 'one2'
+        token TWO 'two2'
     ''')
     assert len(errors) == 2
     assert errors[0].__class__ == DuplicateName
@@ -246,9 +246,9 @@ def test_two_duplicate_names():
 
 def test_multiple_of_same_duplication():
     spec, errors = parseLexicalSpec('''
-        ONE 'one1'
-        ONE 'one2'
-        ONE 'one3'
+        token ONE 'one1'
+        token ONE 'one2'
+        token ONE 'one3'
     ''')
     assert len(errors) == 2
     assert errors[0].__class__ == DuplicateName
@@ -268,9 +268,5 @@ def test_skip_rule_produces_SkipRule():
     assert isinstance(spec.ruleList[0], SkipRule)
 
 
-def test_implicit_token_produces_TokenRule():
-    spec, errors = parseLexicalSpec("SPACE ' '")
-    assert errors == []
-    assert isinstance(spec.ruleList[0], TokenRule)
 
 

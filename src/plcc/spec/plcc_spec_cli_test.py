@@ -34,7 +34,7 @@ token NUM '\\d+'
 
 
 def test_lexical_rules_present(capsys, fs):
-    fs.create_file('/trivial.plcc', contents="NUM '\\d+'\n")
+    fs.create_file('/trivial.plcc', contents="token NUM '\\d+'\n")
     run_main(['/trivial.plcc'])
     out, err = capsys.readouterr()
     data = json.loads(out)
