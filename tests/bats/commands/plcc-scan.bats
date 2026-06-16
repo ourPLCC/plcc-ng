@@ -6,7 +6,7 @@ setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     WORK_DIR="$(mktemp -d)"
     cd "${WORK_DIR}"
-    cp "${FIXTURES}/trivial.plcc" grammar.plcc
+    cp "${FIXTURES}/trivial.plcc" spec.plcc
 }
 
 teardown() {
@@ -55,9 +55,9 @@ teardown() {
     [[ "$output" == *"error"* ]]
 }
 
-@test "plcc-scan reports grammar file error from plcc-make" {
-    run --separate-stderr bash -c "cd '${WORK_DIR}' && rm grammar.plcc && plcc-scan"
-    [[ "$stderr" == *"grammar file not found"* ]]
+@test "plcc-scan reports spec file error from plcc-make" {
+    run --separate-stderr bash -c "cd '${WORK_DIR}' && rm spec.plcc && plcc-scan"
+    [[ "$stderr" == *"spec file not found"* ]]
 }
 
 @test "plcc-scan accepts '-' as stdin" {
@@ -100,8 +100,8 @@ teardown() {
     [ "$status" -ne 0 ]
 }
 
-@test "plcc-scan --grammar uses specified grammar" {
-    run bash -c "echo '42' | plcc-scan --grammar='${FIXTURES}/trivial.plcc'"
+@test "plcc-scan --spec uses specified spec" {
+    run bash -c "echo '42' | plcc-scan --spec='${FIXTURES}/trivial.plcc'"
     [ "$status" -eq 0 ]
     [[ "$output" == *"NUM"* ]]
 }
@@ -113,7 +113,7 @@ teardown() {
 
 
 @test "plcc-scan --trace produces source line, cursor, candidates, and token line" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" == *"42"* ]]
@@ -123,42 +123,42 @@ teardown() {
 }
 
 @test "plcc-scan --trace shows Candidates: heading" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" == *"Candidates:"* ]]
 }
 
 @test "plcc-scan --trace marks winner with ->" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" == *"-> NUM"* ]]
 }
 
 @test "plcc-scan --trace excludes zero-match candidates" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" != *"   WS"* ]]
 }
 
 @test "plcc-scan --trace token line uses token: disposition" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" =~ -:1:1:\ token:\ NUM\ \'42\' ]]
 }
 
 @test "plcc-scan --trace skip line uses skip: disposition" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42 99' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" =~ -:1:3:\ skip:\ WS ]]
 }
 
 @test "plcc-scan --trace token line has no regex" {
-    cp "${FIXTURES}/scan-verbosity.plcc" grammar.plcc
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     token_line=$(echo "$output" | grep "token: NUM")
@@ -200,29 +200,29 @@ teardown() {
     [[ "$stderr" != *"Press ^D"* ]]
 }
 
-@test "plcc-scan triggers rebuild when grammar changes" {
+@test "plcc-scan triggers rebuild when spec changes" {
     echo '42' | plcc-scan > /dev/null  # prime build
-    cp "${FIXTURES}/trivial-python.plcc" grammar.plcc  # change grammar
+    cp "${FIXTURES}/trivial-python.plcc" spec.plcc  # change spec
     run bash -c "echo '42' | plcc-scan"
     [ "$status" -eq 0 ]
     [[ "$output" == *"NUM"* ]]
 }
 
-@test "plcc-scan exits nonzero when grammar has syntax error" {
-    printf 'token BAD @@@\n' > grammar.plcc
+@test "plcc-scan exits nonzero when spec has syntax error" {
+    printf 'token BAD @@@\n' > spec.plcc
     run --separate-stderr bash -c "echo '42' | plcc-scan"
     [ "$status" -ne 0 ]
 }
 
-@test "plcc-scan works with lexical-only grammar" {
-    cp "${FIXTURES}/lexical-only.plcc" grammar.plcc
+@test "plcc-scan works with lexical-only spec" {
+    cp "${FIXTURES}/lexical-only.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan"
     [ "$status" -eq 0 ]
     [[ "$output" == *"NUM"* ]]
 }
 
 @test "plcc-scan does not hang when skip pattern matches empty string" {
-    cp "${FIXTURES}/zero-length-skip.plcc" grammar.plcc
+    cp "${FIXTURES}/zero-length-skip.plcc" spec.plcc
     run bash -c "echo '2' | timeout 5 plcc-scan"
     [ "$status" -eq 0 ]
     [[ "$output" == *"NUM"* ]]

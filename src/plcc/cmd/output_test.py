@@ -20,10 +20,10 @@ def test_print_banner_version_goes_to_stderr(capsys):
     assert "plcc-ng 1.2.3" in err
 
 
-def test_print_banner_grammar_goes_to_stderr(capsys):
+def test_print_banner_spec_goes_to_stderr(capsys):
     print_banner("1.2.3", "/abs/grammar.plcc")
     _, err = capsys.readouterr()
-    assert "grammar: /abs/grammar.plcc" in err
+    assert "spec: /abs/grammar.plcc" in err
 
 
 def test_print_banner_nothing_on_stdout(capsys):

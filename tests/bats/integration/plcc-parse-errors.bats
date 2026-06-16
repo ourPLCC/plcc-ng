@@ -11,7 +11,7 @@ token NUM '\d+'
 %
 % diagram PlantUML
 EOF
-    run --separate-stderr bash -c "echo 'abc' | plcc-parse --grammar='$tmp/trivial.plcc'"
+    run --separate-stderr bash -c "echo 'abc' | plcc-parse --spec='$tmp/trivial.plcc'"
     [ "$status" -ne 0 ]
     # User-facing error: plcc-tokens is responsible, rendered via reformat_child_events
     [[ "$output" == *"plcc-tokens"* ]]
