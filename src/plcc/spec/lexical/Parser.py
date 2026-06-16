@@ -4,6 +4,7 @@ from .check_for_duplicate_names import check_for_duplicate_names
 from .TokenRule import TokenRule
 from .SkipRule import SkipRule
 from .LexicalSpec import LexicalSpec
+from .KeywordExpected import KeywordExpected
 from .NameExpected import NameExpected
 from .PatternCompilationError import PatternCompilationError
 from .PatternDelimiterExpected import PatternDelimiterExpected

@@ -1,4 +1,5 @@
 from .DuplicateName import DuplicateName
+from .KeywordExpected import KeywordExpected
 from .LexicalRule import LexicalRule
 from .LexicalSpec import LexicalSpec
 from .LexicalSpecError import LexicalSpecError

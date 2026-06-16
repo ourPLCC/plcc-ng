@@ -1,7 +1,7 @@
 import pytest
 
 from .parseLexicalSpec import parseLexicalSpec
-from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent
+from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent, KeywordExpected
 from .check_for_duplicate_names import DuplicateName
 from .TokenRule import TokenRule
 from .SkipRule import SkipRule
@@ -156,6 +156,13 @@ def test_pattern_must_have_closing_delimiter():
     ''')
     assert len(errors) == 1
     assert errors[0].__class__ == PatternDelimiterExpected
+    assert len(spec.ruleList) == 0
+
+
+def test_keyword_is_required():
+    spec, errors = parseLexicalSpec("NUM '\\d+'")
+    assert len(errors) == 1
+    assert errors[0].__class__ == KeywordExpected
     assert len(spec.ruleList) == 0
 
 
