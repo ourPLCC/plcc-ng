@@ -47,7 +47,7 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
         lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
     )
 
-    _rep_module.main(["--grammar=grammar.plcc", "--tool=calc"])
+    _rep_module.main(["--spec=grammar.plcc", "--tool=calc"])
 
     assert captured["submit_on"] is SubmitOn.EOF
 

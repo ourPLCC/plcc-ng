@@ -17,7 +17,7 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     with pytest.raises(SystemExit):
         run_main([])
     _, err = capsys.readouterr()
-    assert "grammar file not found" in err
+    assert "spec file not found" in err
 
 
 def test_calls_plcc_make_with_through_model(tmp_path, monkeypatch, capsys):

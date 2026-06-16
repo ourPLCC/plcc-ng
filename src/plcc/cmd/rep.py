@@ -152,7 +152,7 @@ def _resolve_tool(spec, tool_name):
         sys.exit(1)
 
     if len(sections) == 0:
-        print("plcc-rep: no semantic sections found in grammar.", file=sys.stderr)
+        print("plcc-rep: no semantic sections found in spec.", file=sys.stderr)
         sys.exit(1)
 
     if len(sections) == 1:
