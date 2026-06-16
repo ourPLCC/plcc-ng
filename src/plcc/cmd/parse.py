@@ -7,6 +7,7 @@ from docopt import docopt, DocoptExit
 
 from plcc.version import get_version
 from plcc.build.grammar import read_grammar
+from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from .pipeline import TreePipeline, print_parse_error, location_str
 from .output import print_banner
@@ -23,8 +24,7 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-    -g <path> --grammar=<path>  Grammar to build from. Once set, remembered for subsequent
-                                commands until changed. Defaults to grammar.plcc on first use.
+""" + GRAMMAR_OPTION + """\
     -b --banner                 Show the version and grammar banner on stderr.
 """ + VERBOSE_OPTIONS
 
@@ -70,21 +70,16 @@ def main(argv=None):
         sys.exit(1)
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-parse", Events, args)
-    grammar_file = args["--grammar"]
     sources = args["SOURCE"]
 
-    if grammar_file is not None and not os.path.exists(grammar_file):
-        print(f"plcc-parse: grammar file not found: {grammar_file}", file=sys.stderr)
-        print(file=sys.stderr)
-        print("Run 'plcc-parse --help' for more information.", file=sys.stderr)
-        sys.exit(1)
+    validate_grammar_flag('plcc-parse', args)
 
     verbose.emit(Events.STARTED, message="parsing")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ["plcc-make", "--through=parse"]
-        + ([f"--grammar={grammar_file}"] if grammar_file is not None else [])
+        + grammar_flag_for_child(args)
         + child_flags,
         stderr=subprocess.PIPE,
     )
