@@ -12,7 +12,7 @@ from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag
 from .output import print_banner
 
 __doc__ = """plcc-diagram
-    Generate and display a class diagram from a PLCC grammar file.
+    Generate and display a class diagram from a PLCC spec file.
 
 Usage:
     plcc-diagram [-v ...] [options]
@@ -20,7 +20,7 @@ Usage:
 Options:
 """ + GRAMMAR_OPTION + """\
     --format=FMT            Diagram format [default: plantuml].
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 

@@ -22,7 +22,7 @@ from plcc.version import get_version
 from .output import print_banner
 
 __doc__ = """plcc-make
-    Build a PLCC project from a grammar file.
+    Build a PLCC project from a spec file.
 
 Usage:
     plcc-make [-v ...] [options]
@@ -30,7 +30,7 @@ Usage:
 Options:
 """ + GRAMMAR_OPTION + """\
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -56,7 +56,7 @@ def main(argv=None):
 
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-make", Events, args)
-    explicit_grammar = args['--grammar']
+    explicit_grammar = args['--spec']
     through = args['--through']
     build_dir = Path('build')
 
@@ -73,16 +73,16 @@ def main(argv=None):
         sys.exit(1)
 
     if explicit_grammar is None and stored_grammar is not None and not os.path.exists(grammar):
-        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
+        print(f"plcc-make: spec file not found: {grammar}", file=sys.stderr)
         print(
-            "(the active grammar was set by a previous run; "
-            "use --grammar to specify a different one)",
+            "(the active spec was set by a previous run; "
+            "use --spec to specify a different one)",
             file=sys.stderr,
         )
         sys.exit(1)
 
     if not os.path.exists(grammar):
-        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
+        print(f"plcc-make: spec file not found: {grammar}", file=sys.stderr)
         sys.exit(1)
 
     if banner:
@@ -96,7 +96,7 @@ def main(argv=None):
         shutil.rmtree(build_dir)
         build_dir.mkdir()
 
-    verbose.emit(Events.STARTED, message=f"grammar: {grammar}")
+    verbose.emit(Events.STARTED, message=f"spec: {grammar}")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     build_dir.mkdir(exist_ok=True)

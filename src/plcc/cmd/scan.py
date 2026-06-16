@@ -34,7 +34,7 @@ Options:
     -h --help                   Show this message.
 """ + GRAMMAR_OPTION + """\
     -t --trace                  Show detailed scanning output.
-    -b --banner                 Show the version and grammar banner on stderr.
+    -b --banner                 Show the version and spec banner on stderr.
 """ + VERBOSE_OPTIONS
 
 

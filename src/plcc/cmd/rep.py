@@ -15,7 +15,7 @@ from .output import print_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-rep
-    REPL — read, eval, print loop for a PLCC grammar.
+    REPL — read, eval, print loop for a PLCC spec.
 
 Usage:
     plcc-rep [-v ...] [options] [SOURCE ...]
@@ -26,7 +26,7 @@ Arguments:
 Options:
 """ + GRAMMAR_OPTION + """\
     --tool=NAME             Semantic section to run (inferred if only one exists).
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -152,7 +152,7 @@ def _resolve_tool(spec, tool_name):
         sys.exit(1)
 
     if len(sections) == 0:
-        print("plcc-rep: no semantic sections found in grammar.", file=sys.stderr)
+        print("plcc-rep: no semantic sections found in spec.", file=sys.stderr)
         sys.exit(1)
 
     if len(sections) == 1:

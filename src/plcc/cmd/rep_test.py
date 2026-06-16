@@ -47,7 +47,7 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
         lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
     )
 
-    _rep_module.main(["--grammar=grammar.plcc", "--tool=calc"])
+    _rep_module.main(["--spec=grammar.plcc", "--tool=calc"])
 
     assert captured["submit_on"] is SubmitOn.EOF
 
@@ -380,7 +380,7 @@ def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys)
     _setup_rep_main(monkeypatch, tmp_path)
     _rep_module.main(["--tool=calc", "--banner"])
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(tmp_path / "grammar.plcc") in err
 
 

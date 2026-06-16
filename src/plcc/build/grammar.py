@@ -2,7 +2,7 @@
 from pathlib import Path
 
 _GRAMMAR_FILE = ".grammar"
-DEFAULT_GRAMMAR_FILE = "grammar.plcc"
+DEFAULT_GRAMMAR_FILE = "spec.plcc"
 
 
 def read_grammar(build_dir):
