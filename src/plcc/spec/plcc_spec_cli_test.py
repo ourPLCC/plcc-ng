@@ -91,7 +91,7 @@ def test_malformed_syntactic_rule_stderr_includes_caret_at_correct_column(capsys
 
 
 def test_lexical_error_stderr_includes_source_line(capsys, fs):
-    # "num 'bad'" is invalid (lowercase token name triggers NameExpected)
+    # "num 'bad'" is invalid (no 'token' or 'skip' keyword — triggers KeywordExpected)
     fs.create_file('/bad.plcc', contents="num 'bad'\n")
     with pytest.raises(SystemExit):
         run_main(['/bad.plcc'])
