@@ -132,7 +132,7 @@ def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, cap
         run_main(["--banner"])
 
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(grammar) in err
 
 

@@ -131,5 +131,5 @@ def test_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
     run_main(["--banner"])
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(tmp_path / "grammar.plcc") in err

@@ -380,7 +380,7 @@ def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys)
     _setup_rep_main(monkeypatch, tmp_path)
     _rep_module.main(["--tool=calc", "--banner"])
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(tmp_path / "grammar.plcc") in err
 
 

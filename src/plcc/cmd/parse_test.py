@@ -262,7 +262,7 @@ def test_parse_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsy
     from .parse import main as parse_main
     parse_main(["--banner"])
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(tmp_path / "grammar.plcc") in err
 
 
