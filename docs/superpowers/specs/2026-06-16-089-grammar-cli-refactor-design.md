@@ -5,7 +5,7 @@
 
 ## Goal
 
-Centralize the scattered `--grammar`/`-g` CLI option text, validation logic, default file name, and path resolution before the user-facing rename in issue 089. Nothing changes for the user — same flags, same defaults, same error messages, same behavior.
+Centralize the scattered `--grammar`/`-g` CLI option text, validation logic, default file name, and path resolution before the user-facing rename in issue 089. No functional or behavioral changes for the user — same flags, same defaults, same error messages. The `--help` formatting for `plcc-scan` and `plcc-parse` changes cosmetically: those two commands previously had the grammar option description inline on the same line; after the refactor they use the same two-line format as the other three commands.
 
 ## Motivation
 
@@ -97,4 +97,9 @@ Those are all reserved for issue 089.
 
 ## Testing
 
-No new tests needed for this refactor. The existing unit and bats test suites fully cover the behavior being restructured. All tests must pass without modification after the refactor.
+New unit tests are added for the two new modules:
+
+- `src/plcc/build/grammar_test.py` — 3 tests covering each branch of `resolve_grammar_path`
+- `src/plcc/cmd/grammar_test.py` — tests covering `GRAMMAR_OPTION`, `validate_grammar_flag`, and `grammar_flag_for_child`
+
+The existing bats command and integration tests cover the end-to-end behavior without modification, confirming no behavioral regression.
