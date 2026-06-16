@@ -197,17 +197,17 @@ teardown() {
 
 # ── Sticky spec ────────────────────────────────────────────────────────────────
 
-@test "plcc-make writes build/.grammar after successful build" {
+@test "plcc-make writes build/.spec after successful build" {
     cp "${FIXTURES}/trivial.plcc" spec.plcc
     plcc-make --through=scan
-    [ -f "build/.grammar" ]
-    [[ "$(cat build/.grammar)" == "spec.plcc" ]]
+    [ -f "build/.spec" ]
+    [[ "$(cat build/.spec)" == "spec.plcc" ]]
 }
 
-@test "plcc-make with --spec writes that path to build/.grammar" {
+@test "plcc-make with --spec writes that path to build/.spec" {
     run plcc-make --through=scan "--spec=${FIXTURES}/trivial.plcc"
     [ "$status" -eq 0 ]
-    [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
+    [[ "$(cat build/.spec)" == "${FIXTURES}/trivial.plcc" ]]
 }
 
 @test "plcc-make without --spec uses stored spec" {
@@ -215,11 +215,11 @@ teardown() {
     # → should use stored path, not look for spec.plcc in CWD
     run plcc-make --through=scan "--spec=${FIXTURES}/trivial.plcc"
     [ "$status" -eq 0 ]
-    [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
+    [[ "$(cat build/.spec)" == "${FIXTURES}/trivial.plcc" ]]
     # Now run with no --spec from a dir with no spec.plcc
     run --separate-stderr plcc-make --through=scan
     [ "$status" -eq 0 ]
-    [[ "$(cat build/.grammar)" == "${FIXTURES}/trivial.plcc" ]]
+    [[ "$(cat build/.spec)" == "${FIXTURES}/trivial.plcc" ]]
 }
 
 @test "plcc-make with --spec differing from stored wipes build" {
@@ -228,12 +228,12 @@ teardown() {
     cp "${FIXTURES}/trivial-python.plcc" other.plcc
     plcc-make --through=scan --spec=other.plcc
     # build/ was wiped and rebuilt from other.plcc
-    [[ "$(cat build/.grammar)" == "other.plcc" ]]
+    [[ "$(cat build/.spec)" == "other.plcc" ]]
 }
 
 @test "plcc-make stored spec missing gives error to stderr with hint" {
     mkdir -p build
-    echo "ghost.plcc" > build/.grammar
+    echo "ghost.plcc" > build/.spec
     run --separate-stderr plcc-make
     [ "$status" -ne 0 ]
     [[ "$stderr" == *"spec file not found"* ]]
@@ -241,16 +241,16 @@ teardown() {
     [[ "$stderr" == *"--spec"* ]]
 }
 
-@test "plcc-make no build/.grammar no --spec falls back to spec.plcc" {
+@test "plcc-make no build/.spec no --spec falls back to spec.plcc" {
     run --separate-stderr plcc-make
     [ "$status" -ne 0 ]
     [[ "$stderr" == *"spec.plcc"* ]]
 }
 
-@test "plcc-make writes build/.grammar even when plcc-spec fails" {
+@test "plcc-make writes build/.spec even when plcc-spec fails" {
     printf 'token BAD @@@\n' > bad.plcc
     run plcc-make --spec=bad.plcc
     [ "$status" -ne 0 ]
-    [ -f "build/.grammar" ]
-    [[ "$(cat build/.grammar)" == "bad.plcc" ]]
+    [ -f "build/.spec" ]
+    [[ "$(cat build/.spec)" == "bad.plcc" ]]
 }
