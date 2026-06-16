@@ -36,7 +36,7 @@ class Parser():
         string = line.string
         index = 0
 
-        m = re.compile(r'^\s*(token|skip)').match(string, index)
+        m = re.compile(r'^\s*(token|skip)(?=\s|[A-Z_]|$)').match(string, index)
         if m is None:
             wsl = self._getLengthOfLeadingWhitespace(string, index)
             self.errors.append(KeywordExpected(line=line, index=index + wsl))

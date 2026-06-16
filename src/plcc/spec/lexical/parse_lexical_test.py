@@ -167,6 +167,13 @@ def test_keyword_is_required():
     assert len(spec.ruleList) == 0
 
 
+def test_keyword_prefix_word_produces_keyword_error():
+    spec, errors = parseLexicalSpec("tokenize '\\d+'")
+    assert len(errors) == 1
+    assert errors[0].__class__ == KeywordExpected
+    assert len(spec.ruleList) == 0
+
+
 def test_junk_at_the_end_of_a_line():
     spec, errors = parseLexicalSpec('''
         token SPACE ' ' junk
