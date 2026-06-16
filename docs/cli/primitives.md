@@ -7,7 +7,7 @@ blocks that the [Level 2 orchestrators](orchestrators.md) use internally.
 
 ## plcc-spec
 
-Parse, validate, and print a PLCC grammar file as JSON.
+Parse, validate, and print a PLCC spec file as JSON.
 
 ```text
 plcc-spec [-v ...] [options] FILE
@@ -15,13 +15,13 @@ plcc-spec [-v ...] [options] FILE
 
 | Argument/Option | Description |
 |---|---|
-| `FILE` | `.plcc` grammar file. Use `-` to read from stdin. |
+| `FILE` | `.plcc` spec file. Use `-` to read from stdin. |
 | `--no-json` | Validate only; do not print JSON to stdout. |
 
 **Example:**
 
 ```bash
-plcc-spec grammar.plcc
+plcc-spec spec.plcc
 ```
 
 ---
@@ -44,7 +44,7 @@ plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
 **Example:**
 
 ```bash
-plcc-spec grammar.plcc | plcc-tokens - samples
+plcc-spec spec.plcc | plcc-tokens - samples
 ```
 
 ---
@@ -82,7 +82,7 @@ plcc-model [-v ...] [options] [SPEC_JSON]
 **Example:**
 
 ```bash
-plcc-spec grammar.plcc | plcc-model
+plcc-spec spec.plcc | plcc-model
 ```
 
 ---
@@ -103,14 +103,14 @@ plcc-lang-emit [-v ...] --target=LANG --output=DIR
 **Example:**
 
 ```bash
-plcc-spec grammar.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
+plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
 ```
 
 ---
 
 ## plcc-diagram
 
-Generate and display a class diagram from a PLCC grammar file.
+Generate and display a class diagram from a PLCC spec file.
 
 ```text
 plcc-diagram [-v ...] [options]
@@ -118,12 +118,12 @@ plcc-diagram [-v ...] [options]
 
 | Option | Description |
 |---|---|
-| `-g PATH`, `--grammar=PATH` | Grammar file. Remembers across invocations. Defaults to `grammar.plcc`. |
+| `-s PATH`, `--spec=PATH` | Spec file. Remembers across invocations. Defaults to `spec.plcc`. |
 | `--format=FMT` | Diagram format. Default: `plantuml`. |
-| `--no-banner` | Suppress the version and grammar banner. |
+| `--no-banner` | Suppress the version and spec banner. |
 
 **Example:**
 
 ```bash
-plcc-diagram -g mylang.plcc
+plcc-diagram -s mylang.plcc
 ```
