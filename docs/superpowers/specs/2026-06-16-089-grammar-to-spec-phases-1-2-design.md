@@ -31,7 +31,7 @@ The centralization work already merged into `cmd/grammar.py` and `build/grammar.
 
 ### Not touched
 
-- `src/plcc/cmd/scan.py`, `parse.py`, `diagram.py` — use only the helper functions; cascade automatically from `cmd/grammar.py` changes with no direct edits needed
+- `src/plcc/cmd/scan.py`, `parse.py`, `diagram.py` — the flag name and args key cascade automatically from `cmd/grammar.py`, but module-level `--help` text (banner description, command description) requires direct edits to each file
 - `_GRAMMAR_FILE = ".grammar"` — hidden build-dir storage file (internal identifier, phase 4)
 - `ll1/Grammar.py` — LL(1) grammar data structure, unrelated to the spec file concept
 - `"grammar is not LL(1)"` in `make.py` — refers to grammatical structure, not the file
