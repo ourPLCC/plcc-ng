@@ -1,6 +1,76 @@
 # CHANGELOG
 
 
+## v0.43.0 (2026-06-16)
+
+### Bug Fixes
+
+- **ci**: Trigger
+  ([`2345b45`](https://github.com/ourPLCC/plcc-ng/commit/2345b452e083b97c900114a7f9d93d606ad52800))
+
+- **lexical**: Reject keyword-prefix words like tokenize with KeywordExpected
+  ([`927e8f5`](https://github.com/ourPLCC/plcc-ng/commit/927e8f5470bda5bcf79faefc2c6c41fd889972c7))
+
+### Chores
+
+- **bin**: Add close-worktree.bash utility script
+  ([`eb05296`](https://github.com/ourPLCC/plcc-ng/commit/eb05296a54b01c5c6a1ecbdb8fde524f93a7d69b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- **088**: Add design spec for required token/skip keyword [skip ci]
+  ([`e85f3fa`](https://github.com/ourPLCC/plcc-ng/commit/e85f3fa0e305483de3619755d330ca16877ffc36))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **088**: Add implementation plan for required lexical keyword [skip ci]
+  ([`eb41547`](https://github.com/ourPLCC/plcc-ng/commit/eb415472ee8e5ec017c465962e912051a6490f58))
+
+### Features
+
+- **lexical**: Add KeywordExpected error class [skip ci]
+  ([`af6a03d`](https://github.com/ourPLCC/plcc-ng/commit/af6a03d4eb78f2adc7d713273e9350b9281e10d5))
+
+- Create KeywordExpected class following the established pattern of other error classes
+  (NameExpected, PatternExpected, etc.) - Export from __init__.py and Parser.py for use in parser
+  and tests - Add test_keyword_is_required test (currently failing as parser enforcement is not yet
+  implemented in Task 2)
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **lexical**: Require token or skip keyword in lexical rules [skip ci]
+  ([`69046aa`](https://github.com/ourPLCC/plcc-ng/commit/69046aacf661b80c3fa272782d1d525b76eabd56))
+
+### Testing
+
+- **lexical**: Fix pattern compile test and rename implicit token test [skip ci]
+  ([`25938c0`](https://github.com/ourPLCC/plcc-ng/commit/25938c08e60dfcb7e6c4096cf6e7487af91004d6))
+
+- Fix test_pattern_must_compile to test the actual PatternCompilationError instead of relying on the
+  side effect of missing keyword - Rename test_implicit_token_rule to
+  test_keyword_missing_produces_error to accurately reflect what the test validates - Add
+  PatternCompilationError to imports
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **lexical**: Fix stale comment in cli test [skip ci]
+  ([`e6ae3da`](https://github.com/ourPLCC/plcc-ng/commit/e6ae3da70ea0c75fa195e160e6dbd7749098f659))
+
+- **lexical**: Update tests for required token/skip keyword
+  ([`5431d92`](https://github.com/ourPLCC/plcc-ng/commit/5431d9252843e72d91134e53a75bfa7410ff20f0))
+
+- Repurpose test_implicit_token_rule to verify bare syntax now produces KeywordExpected error -
+  Remove test_implicit_token_produces_TokenRule (behavior no longer exists) - Add 'token' keyword to
+  tests whose purpose was testing other behaviors (name validation, pattern errors, duplicates,
+  etc.) - Updates cover all affected tests in parse_lexical_test.py and plcc_spec_cli_test.py
+
+All 984 unit tests pass.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.42.0 (2026-06-15)
 
 ### Documentation
