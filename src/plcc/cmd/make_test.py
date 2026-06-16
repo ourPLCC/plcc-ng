@@ -3,7 +3,7 @@ import docopt
 from types import SimpleNamespace
 
 from .make import main as run_main, validate_tool_name, _report_ll1_failure
-from plcc.build.grammar import read_grammar, write_grammar
+from plcc.build.spec import read_spec, write_spec
 
 
 def test_help(capsys):
@@ -217,7 +217,7 @@ def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monke
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
-    write_grammar(build, "missing.plcc")
+    write_spec(build, "missing.plcc")
     with pytest.raises(SystemExit) as exc:
         run_main([])
     assert exc.value.code != 0
@@ -232,7 +232,7 @@ def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys)
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
-    write_grammar(build, "a.plcc")
+    write_spec(build, "a.plcc")
     with pytest.raises(SystemExit):
         run_main([])
     _, err = capsys.readouterr()
@@ -246,7 +246,7 @@ def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch)
     build = tmp_path / "build"
     build.mkdir()
     (build / "marker.txt").write_text("from old grammar")
-    write_grammar(build, "old.plcc")
+    write_spec(build, "old.plcc")
     (tmp_path / "new.plcc").write_text("")  # valid but empty grammar
     run_main(["--spec=new.plcc"])
     # build/ was wiped when grammar changed, marker should not exist
@@ -258,7 +258,7 @@ def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     build = tmp_path / "build"
     build.mkdir()
     (build / "marker.txt").write_text("from current grammar")
-    write_grammar(build, "same.plcc")
+    write_spec(build, "same.plcc")
     (tmp_path / "same.plcc").write_text("")  # valid but empty grammar
     run_main(["--spec=same.plcc"])
     # No wipe — marker is still present because grammar didn't change
@@ -271,7 +271,7 @@ def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
     (tmp_path / "bad.plcc").write_text("token BAD @@@\n")
     with pytest.raises(SystemExit):
         run_main(["--spec=bad.plcc"])
-    assert read_grammar(build) == "bad.plcc"
+    assert read_spec(build) == "bad.plcc"
 
 
 def test_make_main_default_prints_no_banner_to_stdout(tmp_path, monkeypatch, capsys):
