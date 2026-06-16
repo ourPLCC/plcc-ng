@@ -25,20 +25,20 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     with pytest.raises(SystemExit):
         run_main([])
     _, err = capsys.readouterr()
-    assert "grammar file not found" in err
+    assert "spec file not found" in err
 
 
 def test_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
-        run_main(['--grammar=nonexistent.plcc'])
+        run_main(['--spec=nonexistent.plcc'])
     assert exc.value.code != 0
 
 
 def test_short_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
-        run_main(['-g', 'nonexistent.plcc'])
+        run_main(['-s', 'nonexistent.plcc'])
     assert exc.value.code != 0
 
 
@@ -202,14 +202,14 @@ def test_report_ll1_failure_blank_line_between_conflicts(capsys):
     assert len(blocks) == 3  # header + conflict1 + conflict2
 
 
-def test_no_grammar_flag_no_stored_falls_back_to_grammar_plcc(tmp_path, monkeypatch, capsys):
-    # Fresh directory, no grammar.plcc → error names grammar.plcc
+def test_no_spec_flag_no_stored_falls_back_to_spec_plcc(tmp_path, monkeypatch, capsys):
+    # Fresh directory, no spec.plcc → error names spec.plcc
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main([])
     assert exc.value.code != 0
     _, err = capsys.readouterr()
-    assert "grammar.plcc" in err
+    assert "spec.plcc" in err
 
 
 def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
@@ -222,13 +222,13 @@ def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monke
         run_main([])
     assert exc.value.code != 0
     _, err = capsys.readouterr()
-    assert "grammar file not found" in err
+    assert "spec file not found" in err
     assert "missing.plcc" in err
-    assert "--grammar" in err
+    assert "--spec" in err
 
 
 def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys):
-    # build/.grammar set to a.plcc (missing) — error names a.plcc, not grammar.plcc
+    # build/.grammar set to a.plcc (missing) — error names a.plcc, not spec.plcc
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
@@ -237,8 +237,8 @@ def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys)
         run_main([])
     _, err = capsys.readouterr()
     assert "a.plcc" in err
-    # Must NOT fall back to grammar.plcc
-    assert "grammar.plcc" not in err
+    # Must NOT fall back to spec.plcc
+    assert "spec.plcc" not in err
 
 
 def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch):
@@ -248,7 +248,7 @@ def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch)
     (build / "marker.txt").write_text("from old grammar")
     write_grammar(build, "old.plcc")
     (tmp_path / "new.plcc").write_text("")  # valid but empty grammar
-    run_main(["--grammar=new.plcc"])
+    run_main(["--spec=new.plcc"])
     # build/ was wiped when grammar changed, marker should not exist
     assert not (build / "marker.txt").exists()
 
@@ -260,7 +260,7 @@ def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     (build / "marker.txt").write_text("from current grammar")
     write_grammar(build, "same.plcc")
     (tmp_path / "same.plcc").write_text("")  # valid but empty grammar
-    run_main(["--grammar=same.plcc"])
+    run_main(["--spec=same.plcc"])
     # No wipe — marker is still present because grammar didn't change
     assert (build / "marker.txt").exists()
 
@@ -270,7 +270,7 @@ def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
     build = tmp_path / "build"
     (tmp_path / "bad.plcc").write_text("token BAD @@@\n")
     with pytest.raises(SystemExit):
-        run_main(["--grammar=bad.plcc"])
+        run_main(["--spec=bad.plcc"])
     assert read_grammar(build) == "bad.plcc"
 
 
@@ -284,7 +284,7 @@ def test_make_main_default_prints_no_banner_to_stdout(tmp_path, monkeypatch, cap
 
 def test_make_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    (tmp_path / "grammar.plcc").write_text("")
+    (tmp_path / "spec.plcc").write_text("")
     monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     monkeypatch.setattr("subprocess.run",
                         lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
@@ -294,23 +294,23 @@ def test_make_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys
     assert "plcc-ng 1.2.3" in err
 
 
-def test_make_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, capsys):
+def test_make_main_banner_prints_spec_to_stderr(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    grammar = tmp_path / "grammar.plcc"
-    grammar.write_text("")
+    spec = tmp_path / "spec.plcc"
+    spec.write_text("")
     monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     monkeypatch.setattr("subprocess.run",
                         lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
     with pytest.raises(SystemExit):
         run_main(["--banner"])
     _, err = capsys.readouterr()
-    assert "grammar:" in err
-    assert str(grammar) in err
+    assert "spec:" in err
+    assert str(spec) in err
 
 
 def test_make_main_banner_short_flag_works(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    (tmp_path / "grammar.plcc").write_text("")
+    (tmp_path / "spec.plcc").write_text("")
     monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     monkeypatch.setattr("subprocess.run",
                         lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
@@ -322,7 +322,7 @@ def test_make_main_banner_short_flag_works(tmp_path, monkeypatch, capsys):
 
 def test_make_main_banner_is_plain_text_with_json_format(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
-    (tmp_path / "grammar.plcc").write_text("")
+    (tmp_path / "spec.plcc").write_text("")
     monkeypatch.setattr("plcc.cmd.make.get_version", lambda: "1.2.3")
     monkeypatch.setattr("subprocess.run",
                         lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b""))
