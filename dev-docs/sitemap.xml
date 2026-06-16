@@ -2,1010 +2,1010 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/architecture/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/code-of-conduct/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/contributing/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issue-conventions/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/release-sop/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/066-extend-to-another-language/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/070-docs-dark-mode/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/071-docs-upgrade-guide/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/072-docs-pin-version/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/073-docs-java-jdk-prerequisite/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/074-docs-simplify-quickstart/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/076-docs-home-install-redundancy/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/077-docs-licensing/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/078-docs-content-license/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/079-docs-diagrams/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/080-docs-tabbed-code-blocks/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/081-docs-remove-plcc-make-from-examples/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/083-fix-plcc-diagram-misclassified/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/084-no-banner-default/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/085-rep-ctrl-c-keyboard-interrupt/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/086-token-str-method/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/088-lexical-rule-keyword-required/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/089-grammar-to-spec-rename/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/093-incremental-parsing-repl/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/094-docs-status-after-initial-branch/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/095-semantic-section-redesign/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/TEMPLATE/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/002-scan-tokens-missing-file-info/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/003-scan-verbosity-levels-2-3-unused/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/004-verbosity-short-flag/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/005-scan-no-tty-hint/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/006-scan-trace-output-format/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/007-scan-remove-show-flags/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/008-parse-multi-program-streaming/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/009-model-generator-token-type-wrong/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/010-bats-flaky-spec-tree-full-suite/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/011-parse-verbose-child-events-uncaptured/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/012-parser-table-error-record-missing-position/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/013-ctrl-c-does-not-exit-interactive-shell/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/014-blank-line-ends-multiline-input/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/015-default-generated-code-should-run/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/016-interactive-session-drops-whitespace-only-lines/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/017-tokens-unrecognized-character-missing-detail/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/018-ctrl-d-exit-missing-newline/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/019-parse-error-not-student-friendly/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/020-ctrl-d-behavior-in-continuation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/021-blank-line-submit-silently-discards-incomplete-input/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/022-extra-tokens-after-complete-parse-suppresses-tree/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/023-tree-empty-production-annotation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/024-parser-table-silent-on-premature-eof/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/025-interactive-first-line-attempt-before-continuation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/026-parse-error-jsonl-suppressed-without-verbose/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/027-parse-incomplete-input-errors-instead-of-continuation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/028-plcc-rep-baseclass-semantics-block-injection/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/029-rep-ctrl-c-shows-error-trace/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/030-parse-trace-flag/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/031-custom-entry-point-no-default-implementation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/032-scanner-hangs-on-zero-length-skip-match/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/033-rep-switch-to-submit-on-eof/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/034-plcc-version-command/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/035-plcc-diagram-output-build-hangs/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/035-python-emitter-missing-semantics-blocks/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/036-ll1-conflict-error-messages/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/037-spec-parser-syntax-error-messages/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/038-plcc-rep-stale-build-confusion/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/039-level-2-errors-to-stdout/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/039-prefix-solution-generated-code-ignores-semantics/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/040-semantics-comments-create-empty-files/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/041-diagram-build-not-during-make-all/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/042-diagram-orchestrator-stderr-forwarding/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/043-ll1-conflict-message-whitespace/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/043-parsespec-drops-rough-parse-errors/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/044-syntax-error-caret-wrong-column/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/045-altname-lost-in-ll1-pipeline/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/046-sticky-grammar/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/047-sticky-grammar-not-persisted-on-syntax-error/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/048-ll1-conflict-detection-misses-identical-predict-sets/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/049-level-2-startup-info/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/050-rename-grammar-file-to-grammar/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/051-remove-pplc-pprc-bracket-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/052-require-colon-in-name-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/053-render-ll1-json/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/054-reconsider-bnf-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/055-reconsider-block-delimiters/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/056-reconsider-scanner-algorithm/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/057-java-emitter-underscore-prefix/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/058-collocate-lexical-patterns/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/059-plcc-generated-spec-parser/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/060-block-lexical-rule/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/061-scanner-block-double-newline/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/062-tokens-cli-unclosed-block-error/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/063-plcc-scan-multiline-mode/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/064-block-rule-discards-delimiters/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/065-design-end-user-documentation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/067-version-header-prints-first/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/068-remove-lexical-second-pattern/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/069-improve-parse-trace/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/075-docs-whats-new-section/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/082-docs-reorder-level1-level2-commands/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-13-phase-1-walking-skeleton/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-16-skeleton-update/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-17-error-handling-1-docs-opus/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-17-error-handling-2-code-sonnet/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-17-error-handling-3-orchestrators-opus/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-19-plan-1-ll1-analysis/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-19-plan-2-parser-table/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-25-phase-2-part-2-model-diagram/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-28-phase-2-part-4-arbno/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-04-29-phase-3-java-emitter/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-02-phase-4-packaging-and-release/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-06-issue-tracker/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-06-plcc-scan-issues-plan/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-07-scan-errors-inline/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-07-scan-tokens-file-provenance/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-07-verbosity-short-flag/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-08-scan-verbosity-redesign/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-11-unified-build/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-12-plcc-scan-trace-cleanup/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-12-scan-tty-hint/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-12-source-runner/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-14-fix-009-token-type-wrong/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-14-interactive-ctrl-d-blank-line/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-14-interactive-shell-ux/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-15-plcc-trees-error-handling/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-17-interactive-session/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-18-fix-026-027/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-19-028-baseclass-body-injection/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-20-011-parse-verbose-child-events/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-20-issues-017-023-029/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-21-stop-error-cascade/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-22-issue-015-start-class-default/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-22-scanner-newline-support/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-23-033-rep-submit-on-eof/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-23-ctrl-d-handling/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-23-fix-032-scanner-zero-length-skip/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-24-035-diagram-redesign/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-24-first-error-wins/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-24-language-case-normalization/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-25-diagram-decouple-from-make/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-25-plantuml-pip-default/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-25-semantics-comments-empty-files/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-26-037-spec-parser-syntax-error-messages/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-26-043-044-spec-error-improvements/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-26-045-altname-ll1-pipeline/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-26-plcc-version/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-27-043-ll1-message-format/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-27-ll1-conflict-messages/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-28-030-parse-trace/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-28-039-level-2-errors-to-stdout-plan/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-29-046-sticky-grammar/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-29-fix-047-sticky-grammar-on-syntax-error/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-30-048-ll1-identical-predict-sets/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-05-30-050-rename-grammar-file-to-grammar/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-01-remove-entry-point-from-grammar-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-01-remove-pplc-pprc-bracket-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-01-require-colon-rhs-alt-name/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-02-049-level-2-startup-info/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-04-062-tokens-cli-unclosed-block-error/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-04-block-lexical-rule/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-04-issue-061-line-string-newline-normalization/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-04-scanner-first-longest-match/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-042-diagram-stderr-forwarding/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-064-block-rule-discards-delimiters/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-067-version-header-prints-first/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-java-emitter-underscore-prefix/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-plcc-scan-multiline-mode/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-05-remove-lexical-second-pattern/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-06-054-reconsider-bnf-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-06-parse-trace/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-07-065-documentation/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-06-07-066-initial-user-docs/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/reviews/2026-04-13-phase-1-plan-review/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-12-language-plugin-command-contract-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-12-multi-lang-implementation-plan/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-12-multi-lang-pipeline/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-13-phase-1-walking-skeleton/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-16-phase-2-part-1-ll1-parser-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-16-skeleton-update-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-25-phase-2-part-2-model-diagram-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-25-phase-2-part-3-python-emit-rep-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-25-phase-2-part-3-python-emit-rep-plan/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-28-phase-2-part-4-arbno-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-04-29-phase-3-java-emitter-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-01-phase-4-packaging-and-release-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-06-issue-tracker-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-06-plcc-scan-issues-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-07-scan-errors-inline-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-07-scan-tokens-file-provenance-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-07-verbosity-short-flag-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-08-scan-verbosity-redesign-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-11-unified-build-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-12-plcc-scan-trace-cleanup-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-12-scan-tty-hint-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-12-source-runner-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-14-fix-009-token-type-wrong-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-14-interactive-ctrl-d-blank-line-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-14-interactive-shell-ux-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-15-plcc-trees-error-handling-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-17-interactive-session-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-18-fix-026-027-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-19-028-baseclass-body-injection-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-19-rep-pipeline-alignment-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-20-011-parse-verbose-child-events-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-20-issues-017-023-029-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-21-stop-error-cascade-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-22-issue-015-default-generated-code-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-22-scanner-newline-support-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-23-033-rep-submit-on-eof-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-23-ctrl-d-handling-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-23-fix-032-scanner-zero-length-skip-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-24-035-diagram-redesign/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-24-first-error-wins-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-24-language-case-normalization-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-25-diagram-decouple-from-make-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-25-plantuml-pip-default-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-25-semantics-comments-empty-files-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-26-037-spec-parser-syntax-error-messages-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-26-043-044-spec-error-improvements-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-26-045-altname-ll1-pipeline-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-26-plcc-version-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-27-043-ll1-message-format-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-27-ll1-conflict-messages-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-28-030-parse-trace-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-28-039-level-2-errors-to-stdout-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-29-046-sticky-grammar-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-29-fix-047-sticky-grammar-on-syntax-error-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-30-048-ll1-identical-predict-sets-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-05-30-050-rename-grammar-file-to-grammar-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-01-049-level-2-startup-info-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-01-remove-entry-point-from-grammar-syntax/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-01-remove-pplc-pprc-bracket-syntax-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-01-require-colon-rhs-alt-name-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-04-062-tokens-cli-unclosed-block-error-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-04-block-lexical-rule-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-04-issue-061-line-string-newline-normalization-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-04-scanner-first-longest-match-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-05-042-diagram-stderr-forwarding-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-05-064-block-rule-discards-delimiters-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-05-067-version-header-prints-first-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-05-java-emitter-underscore-prefix-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-05-plcc-scan-multiline-mode-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-05-remove-lexical-second-pattern-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-06-054-reconsider-bnf-syntax-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-06-parse-trace-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-07-065-documentation-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-07-066-initial-user-docs-plan/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-10-plantuml-docs-diagrams-design/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-06-10-plantuml-docs-diagrams-plan/</loc>
-         <lastmod>2026-06-15</lastmod>
+         <lastmod>2026-06-16</lastmod>
     </url>
 </urlset>
