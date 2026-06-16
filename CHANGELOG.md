@@ -1,6 +1,104 @@
 # CHANGELOG
 
 
+## v0.44.0 (2026-06-16)
+
+### Documentation
+
+- **089**: Add design spec for phases 1 & 2 of grammar-to-spec rename [skip ci]
+  ([`a60a8a4`](https://github.com/ourPLCC/plcc-ng/commit/a60a8a441381a5938f1334715e283d14c4f935cc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Add grammar CLI refactor design spec [skip ci]
+  ([`e8c607e`](https://github.com/ourPLCC/plcc-ng/commit/e8c607ec9273965d45ce4bacec4db44fe74391aa))
+
+- **089**: Add grammar CLI refactor implementation plan [skip ci]
+  ([`b24486e`](https://github.com/ourPLCC/plcc-ng/commit/b24486e1523c29864a85f0a06b52c34cb4ef6e94))
+
+- **089**: Add implementation plan for phases 1 & 2 [skip ci]
+  ([`0604913`](https://github.com/ourPLCC/plcc-ng/commit/06049132f736f88a01833a550ed98bc9a0a95818))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Correct design spec per code review [skip ci]
+  ([`12e81e8`](https://github.com/ourPLCC/plcc-ng/commit/12e81e84b99c1d31bd82b32560fa0467860684a6))
+
+### Features
+
+- **089**: Fix stale 'grammar banner' in make --help text
+  ([`a46c2a0`](https://github.com/ourPLCC/plcc-ng/commit/a46c2a0c67072d4f1af4482df0132a0fb04cf0c4))
+
+- **089**: Rename CLI flag --grammar/-g → --spec/-s
+  ([`8216e72`](https://github.com/ourPLCC/plcc-ng/commit/8216e724b3324ba1ae0c4380f32a2672a26eeff9))
+
+- **089**: Rename default spec file grammar.plcc → spec.plcc
+  ([`92b5e5a`](https://github.com/ourPLCC/plcc-ng/commit/92b5e5a6836f9f64dfb18473087617f9d66d0d3b))
+
+- **089**: Update banner test assertions grammar: → spec:
+  ([`ebe21e7`](https://github.com/ourPLCC/plcc-ng/commit/ebe21e714525966bf565a936825d1da8289e0e73))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update help text in scan, parse, rep, diagram docstrings
+  ([`4e7c133`](https://github.com/ourPLCC/plcc-ng/commit/4e7c13368d5f979f597562251dfcb610fc7a7f0b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update make error messages, banner, and default spec filename
+  ([`2cb1fa1`](https://github.com/ourPLCC/plcc-ng/commit/2cb1fa1c23a174cdb0313a8c8b2160d34ec21caf))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update rep error message and remaining stale test assertions
+  ([`b6fba4c`](https://github.com/ourPLCC/plcc-ng/commit/b6fba4c123de4fdc81738a035d9e0502f510b746))
+
+### Refactoring
+
+- **build**: Add DEFAULT_GRAMMAR_FILE and resolve_grammar_path
+  ([`580a078`](https://github.com/ourPLCC/plcc-ng/commit/580a078cf5ec9f2c9e488b48c0dd0d5980094574))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **build**: Fix import placement in grammar_test.py
+  ([`13307d4`](https://github.com/ourPLCC/plcc-ng/commit/13307d4f902dcedd0b9b66197b71291fb476c10d))
+
+- **cmd**: Add shared grammar CLI helpers
+  ([`d265700`](https://github.com/ourPLCC/plcc-ng/commit/d265700aaa4e3423cf293388caac2c8d3b8954c0))
+
+- **diagram**: Use shared grammar CLI helpers
+  ([`3a7f7cc`](https://github.com/ourPLCC/plcc-ng/commit/3a7f7cc6b4f5eda548994f3257f6b46c2a668662))
+
+- **make**: Use resolve_grammar_path and GRAMMAR_OPTION
+  ([`4cddb25`](https://github.com/ourPLCC/plcc-ng/commit/4cddb251f13512756a642ba38d1e5298822fd824))
+
+- **parse**: Use shared grammar CLI helpers
+  ([`bc92046`](https://github.com/ourPLCC/plcc-ng/commit/bc92046a34ae5009d5850fe5c2782e3858e95b81))
+
+- **rep**: Use shared grammar CLI helpers
+  ([`f76d598`](https://github.com/ourPLCC/plcc-ng/commit/f76d598ce5e4d2030749dd550803470a28d4ae2c))
+
+- **scan**: Use shared grammar CLI helpers
+  ([`4d30896`](https://github.com/ourPLCC/plcc-ng/commit/4d3089606716b96780711379f1dbea7d1be96f62))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Testing
+
+- **089**: Update bats and pytest assertions for grammar-to-spec rename
+  ([`b9823e2`](https://github.com/ourPLCC/plcc-ng/commit/b9823e2dd05f0dff58e52021f0d9cb3ee7e6e257))
+
+Replace all --grammar/-g flags with --spec/-s, grammar.plcc with spec.plcc, and "grammar file not
+  found" with "spec file not found" across all bats and pytest test files.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update packaging smoke test to use spec.plcc
+  ([`02d07bc`](https://github.com/ourPLCC/plcc-ng/commit/02d07bc6b658a1207f42c80df6b68faa8f03061c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.43.0 (2026-06-16)
 
 ### Bug Fixes
