@@ -2,6 +2,7 @@
 from pathlib import Path
 
 _GRAMMAR_FILE = ".grammar"
+DEFAULT_GRAMMAR_FILE = "grammar.plcc"
 
 
 def read_grammar(build_dir):
@@ -14,3 +15,12 @@ def read_grammar(build_dir):
 
 def write_grammar(build_dir, path):
     (Path(build_dir) / _GRAMMAR_FILE).write_text(path)
+
+
+def resolve_grammar_path(explicit, stored):
+    if explicit is not None:
+        return explicit
+    elif stored is not None:
+        return stored
+    else:
+        return DEFAULT_GRAMMAR_FILE
