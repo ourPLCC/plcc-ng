@@ -4,6 +4,7 @@ from .check_for_duplicate_names import check_for_duplicate_names
 from .TokenRule import TokenRule
 from .SkipRule import SkipRule
 from .LexicalSpec import LexicalSpec
+from .KeywordExpected import KeywordExpected
 from .NameExpected import NameExpected
 from .PatternCompilationError import PatternCompilationError
 from .PatternDelimiterExpected import PatternDelimiterExpected
@@ -35,8 +36,12 @@ class Parser():
         string = line.string
         index = 0
 
-        m = re.compile(r'^\s*(token|skip)?').match(string, index)
-        type_ = m[1] if m[1] is not None else 'token'
+        m = re.compile(r'^\s*(token|skip)(?=\s|[A-Z_]|$)').match(string, index)
+        if m is None:
+            wsl = self._getLengthOfLeadingWhitespace(string, index)
+            self.errors.append(KeywordExpected(line=line, index=index + wsl))
+            return
+        type_ = m[1]
         index += len(m[0])
 
         m = re.compile(r'\s*([A-Z_][A-Z0-9_]*)').match(string, index)
