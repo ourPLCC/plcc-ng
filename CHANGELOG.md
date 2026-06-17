@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.45.1 (2026-06-17)
+
+### Bug Fixes
+
+- **cd**: Update smoke test from --grammar to --spec
+  ([`d85e841`](https://github.com/ourPLCC/plcc-ng/commit/d85e841bd750e315f8ffbe52c5c57424ea1ee003))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.45.0 (2026-06-17)
 
 ### Bug Fixes
