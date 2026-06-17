@@ -41,5 +41,4 @@ chord is needed.
 
 When this issue lands, update `docs/cli/orchestrators.md`:
 
-- Resolve the `<!-- TODO: verify how to suppress interactive mode (< /dev/null or EOF behavior) -->` comment in the `plcc-rep` section.
-- Update the "Evaluate a file only (no interactive mode)" example to reflect the new behavior.
+- Update the `plcc-rep` examples to reflect any changes to interactive mode entry conditions or ^D behavior.

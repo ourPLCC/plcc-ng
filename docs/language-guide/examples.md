@@ -133,7 +133,7 @@ Prog
 ### Interpreter
 
 ```bash
-plcc-rep -s subtract.plcc samples < /dev/null
+plcc-rep -s subtract.plcc samples
 ```
 
 Expected output:

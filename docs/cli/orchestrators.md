@@ -86,18 +86,16 @@ plcc-rep [-v ...] [options] [SOURCE ...]
 
 | Argument/Option | Description |
 |---|---|
-| `SOURCE` | Source files to evaluate before entering interactive mode. |
+| `SOURCE` | Source files to evaluate. Omit (or pass `-`) to enter interactive mode. |
 | `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
 | `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 
 ```bash
-# Run against samples, then enter interactive mode
+# Evaluate files and exit
 plcc-rep -s subtract.plcc samples
 
-# Evaluate a file only (no interactive mode)
-plcc-rep -s subtract.plcc samples < /dev/null
+# Enter interactive mode (no files given)
+plcc-rep -s subtract.plcc
 ```
-
-<!-- TODO: verify how to suppress interactive mode (< /dev/null or EOF behavior) -->
