@@ -88,14 +88,13 @@ plcc-rep [-v ...] [options] [SOURCE ...]
 |---|---|
 | `SOURCE` | Source files to evaluate before entering interactive mode. |
 | `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
-| `--tool=NAME` | Semantic section to run. Inferred automatically when only one exists. |
 | `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 
 ```bash
-# Run the 'subtract' semantic section against samples, then enter interactive mode
-plcc-rep -s subtract.plcc --tool=subtract samples
+# Run against samples, then enter interactive mode
+plcc-rep -s subtract.plcc samples
 
 # Evaluate a file only (no interactive mode)
 plcc-rep -s subtract.plcc samples < /dev/null
