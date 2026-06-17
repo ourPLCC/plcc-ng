@@ -13,14 +13,14 @@ def test_help(capsys):
     assert 'Usage' in out
 
 
-def test_grammar_file_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_spec_file_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main([])
     assert exc.value.code != 0
 
 
-def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
+def test_spec_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit):
         run_main([])
@@ -28,14 +28,14 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     assert "spec file not found" in err
 
 
-def test_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_spec_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main(['--spec=nonexistent.plcc'])
     assert exc.value.code != 0
 
 
-def test_short_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_short_spec_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main(['-s', 'nonexistent.plcc'])
@@ -212,8 +212,8 @@ def test_no_spec_flag_no_stored_falls_back_to_spec_plcc(tmp_path, monkeypatch, c
     assert "spec.plcc" in err
 
 
-def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
-    # build/.grammar points to a file that does not exist
+def test_no_spec_flag_stored_spec_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
+    # build/.spec points to a file that does not exist
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
@@ -227,8 +227,8 @@ def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monke
     assert "--spec" in err
 
 
-def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys):
-    # build/.grammar set to a.plcc (missing) — error names a.plcc, not spec.plcc
+def test_no_spec_flag_uses_stored_spec_path(tmp_path, monkeypatch, capsys):
+    # build/.spec set to a.plcc (missing) — error names a.plcc, not spec.plcc
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
@@ -241,7 +241,7 @@ def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys)
     assert "spec.plcc" not in err
 
 
-def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch):
+def test_explicit_spec_differs_from_stored_wipes_build(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
@@ -253,7 +253,7 @@ def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch)
     assert not (build / "marker.txt").exists()
 
 
-def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
+def test_explicit_spec_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
@@ -265,7 +265,7 @@ def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     assert (build / "marker.txt").exists()
 
 
-def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
+def test_spec_written_before_build_stages_run(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     (tmp_path / "bad.plcc").write_text("token BAD @@@\n")
