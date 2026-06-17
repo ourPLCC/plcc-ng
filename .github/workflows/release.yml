@@ -83,11 +83,11 @@ jobs:
             --index-url https://test.pypi.org/simple/ \
             --extra-index-url https://pypi.org/simple/ \
             "plcc-ng==${VERSION}"
-          GRAMMAR="$(pwd)/tests/fixtures/trivial.plcc"
+          SPEC="$(pwd)/tests/fixtures/trivial.plcc"
           WORK=$(mktemp -d)
           cd "${WORK}"
           export PATH="/tmp/smoke-venv/bin:${PATH}"
-          plcc-make --grammar="${GRAMMAR}"
+          plcc-make --spec="${SPEC}"
           test -f build/spec.json || { echo "FAIL: build/spec.json missing"; exit 1; }
           echo "TestPyPI smoke test passed"
 
