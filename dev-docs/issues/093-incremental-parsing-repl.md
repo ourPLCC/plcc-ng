@@ -36,3 +36,9 @@ Requires the generated parser to distinguish "unexpected end of input" from
 This resolves the ^D dilemma: ^D always exits the current context (REPL or
 continuation), satisfying the Linux convention that ^D exits. No special submit
 chord is needed.
+
+## Docs responsibility
+
+When this issue lands, update `docs/cli/orchestrators.md`:
+
+- Update the `plcc-rep` examples to reflect any changes to interactive mode entry conditions or ^D behavior.

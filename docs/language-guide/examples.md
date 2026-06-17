@@ -35,7 +35,6 @@ token COMMA     ','
 <Exp:WholeExp> ::= <WHOLE:whole>
 <Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
 %
-%
 Python
 
 Prog
@@ -60,92 +59,83 @@ def eval(self):
 ### Build
 
 ```bash
-plcc-make -g subtract.plcc
+plcc-make -s subtract.plcc
 ```
 
-<!-- TODO: verify plcc-make output format (below adapted from PLCC's plccmk output) -->
-Expected output:
-
-```text
-plcc-ng 0.39.2 | subtract.plcc
-Nonterminals (* indicates start symbol):
-  <Exp>
- *<Prog>
-
-Abstract classes:
-  Exp
-```
+Exits silently on success.
 
 ### Scanner
 
 ```bash
-plcc-scan -g subtract.plcc samples
+plcc-scan -s subtract.plcc samples
 ```
 
-<!-- TODO: verify plcc-scan output format -->
 Expected output:
 
 ```text
-   1: WHOLE '3'
-   3: MINUS '-'
-   3: LP '('
-   3: WHOLE '3'
-   3: COMMA ','
-   3: WHOLE '2'
-   3: RP ')'
-   5: MINUS '-'
-   5: LP '('
-   5: MINUS '-'
-   5: LP '('
-   5: WHOLE '4'
-   5: COMMA ','
-   5: WHOLE '1'
-   5: RP ')'
-   5: COMMA ','
-   5: MINUS '-'
-   5: LP '('
-   5: WHOLE '3'
-   5: COMMA ','
-   5: WHOLE '2'
-   5: RP ')'
-   5: RP ')'
+samples:1:1 WHOLE '3'
+samples:3:1 MINUS '-'
+samples:3:2 LP '('
+samples:3:3 WHOLE '3'
+samples:3:4 COMMA ','
+samples:3:5 WHOLE '2'
+samples:3:6 RP ')'
+samples:5:1 MINUS '-'
+samples:5:2 LP '('
+samples:5:3 MINUS '-'
+samples:5:4 LP '('
+samples:5:5 WHOLE '4'
+samples:5:6 COMMA ','
+samples:5:7 WHOLE '1'
+samples:5:8 RP ')'
+samples:5:9 COMMA ','
+samples:5:11 MINUS '-'
+samples:5:12 LP '('
+samples:5:13 WHOLE '3'
+samples:5:14 COMMA ','
+samples:5:15 WHOLE '2'
+samples:5:16 RP ')'
+samples:5:17 RP ')'
 ```
 
 ### Parser
 
 ```bash
-plcc-parse -g subtract.plcc samples
+plcc-parse -s subtract.plcc samples
 ```
 
-<!-- TODO: verify plcc-parse output format and flags -->
 Expected output:
 
 ```text
-<Prog>
-| <Exp:WholeExp>
-| | WHOLE "3"
-<Prog>
-| <Exp:SubExp>
-| | MINUS "-"
-| | LP "("
-| | <Exp:WholeExp>
-| | | WHOLE "3"
-| | COMMA ","
-| | <Exp:WholeExp>
-| | | WHOLE "2"
-| | RP ")"
-<Prog>
-| <Exp:SubExp>
-...
+Prog
+  WholeExp
+    WHOLE '3' [-:1:1]
+Prog
+  SubExp
+    WholeExp
+      WHOLE '3' [-:3:3]
+    WholeExp
+      WHOLE '2' [-:3:5]
+Prog
+  SubExp
+    SubExp
+      WholeExp
+        WHOLE '4' [-:5:5]
+      WholeExp
+        WHOLE '1' [-:5:7]
+    SubExp
+      WholeExp
+        WHOLE '3' [-:5:13]
+      WholeExp
+        WHOLE '2' [-:5:15]
 ```
 
 ### Interpreter
 
 ```bash
-plcc-rep -g subtract.plcc --tool=subtract samples
+plcc-rep -s subtract.plcc samples
 ```
 
-<!-- TODO: verify plcc-rep output format -->
 Expected output:
 
 ```text
