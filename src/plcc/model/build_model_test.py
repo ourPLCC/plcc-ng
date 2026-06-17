@@ -29,9 +29,7 @@ _TRIVIAL_SPEC = {
             }
         ]
     },
-    "semantics": [
-        {"language": "PlantUML", "tool": "diagram", "codeFragmentList": []}
-    ]
+    "semantics": {"language": "PlantUML", "tool": "diagram", "codeFragmentList": []}
 }
 
 
@@ -95,9 +93,7 @@ _ARITH_SPEC = {
             }
         ]
     },
-    "semantics": [
-        {"language": "Python", "tool": "calculate", "codeFragmentList": []}
-    ]
+    "semantics": {"language": "Python", "tool": "calculate", "codeFragmentList": []}
 }
 
 
@@ -201,11 +197,10 @@ _ARITH_SPEC_WITH_FRAGMENTS = {
             }
         ]
     },
-    "semantics": [
-        {
-            "language": "Python",
-            "tool": "calculate",
-            "codeFragmentList": [
+    "semantics": {
+        "language": "Python",
+        "tool": "calculate",
+        "codeFragmentList": [
                 {
                     "targetLocator": {"className": "AddRest", "modifier": None},
                     "block": {"lines": [
@@ -245,7 +240,6 @@ _ARITH_SPEC_WITH_FRAGMENTS = {
                 }
             ]
         }
-    ]
 }
 
 
@@ -317,7 +311,7 @@ def test_empty_codeFragmentList_gives_empty_fragments():
     spec = {
         "lexical": {"ruleList": []},
         "syntax": {"rules": []},
-        "semantics": [{"language": "Java", "tool": "Java", "codeFragmentList": []}]
+        "semantics": {"language": "Java", "tool": "Java", "codeFragmentList": []}
     }
     model = build_model(spec)
     assert model['semantic_sections'][0]['fragments'] == []
@@ -378,7 +372,7 @@ _ARBNO_SPEC = {
             }
         ]
     },
-    "semantics": []
+    "semantics": None
 }
 
 
@@ -420,7 +414,7 @@ def test_arbno_token_field_has_correct_type():
                 }
             ]
         },
-        "semantics": []
+        "semantics": None
     }
     model = build_model(spec)
     items = next(c for c in model['classes'] if c['name'] == 'Items')
@@ -454,7 +448,7 @@ def test_semantic_section_language_normalized_to_lowercase():
     spec = {
         "lexical": {"ruleList": []},
         "syntax": {"rules": []},
-        "semantics": [{"language": "PYTHON", "tool": "calc", "codeFragmentList": []}]
+        "semantics": {"language": "PYTHON", "tool": "calc", "codeFragmentList": []}
     }
     model = build_model(spec)
     assert model['semantic_sections'][0]['language'] == 'python'

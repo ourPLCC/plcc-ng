@@ -25,7 +25,7 @@ _TRIVIAL_SPEC_JSON = json.dumps({
             ]
         }
     ]},
-    "semantics": [{"language": "PlantUML", "tool": "diagram", "codeFragmentList": []}]
+    "semantics": {"language": "PlantUML", "tool": "diagram", "codeFragmentList": []}
 })
 
 

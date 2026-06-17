@@ -143,11 +143,12 @@ def main(argv=None):
 
 
 def _resolve_tool(spec, tool_name):
-    sections = spec.get('semantics', [])
+    sem = spec.get('semantics')
+    sections = [sem] if sem is not None else []
     if tool_name:
         for s in sections:
-            if s['tool'] == tool_name:
-                return s['tool'], s['language']
+            if s.get('tool') == tool_name:
+                return s.get('tool'), s['language']
         print(f"plcc-rep: no semantic section with tool '{tool_name}'", file=sys.stderr)
         sys.exit(1)
 
@@ -155,12 +156,7 @@ def _resolve_tool(spec, tool_name):
         print("plcc-rep: no semantic sections found in spec.", file=sys.stderr)
         sys.exit(1)
 
-    if len(sections) == 1:
-        return sections[0]['tool'], sections[0]['language']
-
-    names = [s['tool'] for s in sections]
-    print(f"plcc-rep: multiple semantic sections: {names}. Use --tool=NAME.", file=sys.stderr)
-    sys.exit(1)
+    return sections[0].get('tool'), sections[0]['language']
 
 
 def _read_response(stdout, interpreter, verbose_format):

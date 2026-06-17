@@ -110,18 +110,18 @@ def _extract_fields(rhs_symbol_list):
 
 
 def _build_semantic_sections(spec, known_class_names):
-    sections = []
-    for s in spec.get('semantics', []):
-        fragments = [
-            _build_fragment(frag, known_class_names)
-            for frag in s.get('codeFragmentList', [])
-        ]
-        sections.append({
-            'language': s['language'].lower(),
-            'tool': s['tool'],
-            'fragments': fragments,
-        })
-    return sections
+    s = spec.get('semantics')
+    if s is None:
+        return []
+    fragments = [
+        _build_fragment(frag, known_class_names)
+        for frag in s.get('codeFragmentList', [])
+    ]
+    return [{
+        'language': s['language'].lower(),
+        'tool': s.get('tool'),
+        'fragments': fragments,
+    }]
 
 
 def _build_fragment(frag, known_class_names):

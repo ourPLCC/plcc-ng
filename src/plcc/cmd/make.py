@@ -133,7 +133,7 @@ def main(argv=None):
 
     with open(tmp_spec) as f:
         spec_data = json.load(f)
-    tool_stages = {s['tool'] for s in spec_data.get('semantics', [])}
+    tool_stages = set()  # semantics is now a single SemanticSpec | None, no tool stages
 
     _REQUIRED = {
         'scan':  {'scan'},
@@ -170,8 +170,10 @@ def main(argv=None):
         _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
 
     if through == 'all':
-        for section in spec_data.get('semantics', []):
-            tool = section['tool']
+        _sem = spec_data.get('semantics')
+        _sections = [_sem] if _sem is not None else []
+        for section in _sections:
+            tool = section.get('tool')
             lang = section['language']
             try:
                 validate_tool_name(tool)
