@@ -5,11 +5,13 @@ target-language code into classes generated from the syntactic section.
 
 ## Section header
 
-The line that separates the previous section from the semantic section
-identifies the language used by the code blocks.
+A bare `%` line separates the previous section from the semantic section.
+The first non-blank line of the semantic section body names the language
+used by the code blocks.
 
 ```text
-% Java
+%
+Java
 ```
 
 The supported languages are:
@@ -27,7 +29,9 @@ and their fields that are generated from production rules.
 To inject code into a class, use the following construct.
 
 ```text
-% Python
+%
+Python
+
 Exp
 %%%
 def _run(self):
@@ -36,7 +40,9 @@ def _run(self):
 ```
 
 ```text
-% Java
+%
+Java
+
 Exp
 %%%
 public void _run() {
