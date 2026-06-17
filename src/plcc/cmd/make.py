@@ -15,23 +15,22 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
-from plcc.build.grammar import read_grammar, write_grammar
+from plcc.build.spec import read_spec, write_spec, resolve_spec_path
+from plcc.cmd.spec import SPEC_OPTION
 from plcc.ll1.format_conflict_message import format_conflict_message
 from plcc.version import get_version
 from .output import print_banner
 
 __doc__ = """plcc-make
-    Build a PLCC project from a grammar file.
+    Build a PLCC project from a spec file.
 
 Usage:
     plcc-make [-v ...] [options]
 
 Options:
-    -g <path> --grammar=<path>
-                            Grammar to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to grammar.plcc on first use.
+""" + SPEC_OPTION + """\
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -57,18 +56,13 @@ def main(argv=None):
 
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-make", Events, args)
-    explicit_grammar = args['--grammar']
+    explicit_spec = args['--spec']
     through = args['--through']
     build_dir = Path('build')
 
-    stored_grammar = read_grammar(build_dir) if build_dir.is_dir() else None
+    stored_spec = read_spec(build_dir) if build_dir.is_dir() else None
 
-    if explicit_grammar is not None:
-        grammar = explicit_grammar
-    elif stored_grammar is not None:
-        grammar = stored_grammar
-    else:
-        grammar = 'grammar.plcc'
+    spec = resolve_spec_path(explicit_spec, stored_spec)
 
     if through not in ('scan', 'parse', 'model', 'all'):
         print(
@@ -78,35 +72,35 @@ def main(argv=None):
         )
         sys.exit(1)
 
-    if explicit_grammar is None and stored_grammar is not None and not os.path.exists(grammar):
-        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
+    if explicit_spec is None and stored_spec is not None and not os.path.exists(spec):
+        print(f"plcc-make: spec file not found: {spec}", file=sys.stderr)
         print(
-            "(the active grammar was set by a previous run; "
-            "use --grammar to specify a different one)",
+            "(the active spec was set by a previous run; "
+            "use --spec to specify a different one)",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    if not os.path.exists(grammar):
-        print(f"plcc-make: grammar file not found: {grammar}", file=sys.stderr)
+    if not os.path.exists(spec):
+        print(f"plcc-make: spec file not found: {spec}", file=sys.stderr)
         sys.exit(1)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(grammar))
+        print_banner(get_version(), os.path.abspath(spec))
 
     if (
-        explicit_grammar is not None
-        and stored_grammar is not None
-        and explicit_grammar != stored_grammar
+        explicit_spec is not None
+        and stored_spec is not None
+        and explicit_spec != stored_spec
     ):
         shutil.rmtree(build_dir)
         build_dir.mkdir()
 
-    verbose.emit(Events.STARTED, message=f"grammar: {grammar}")
+    verbose.emit(Events.STARTED, message=f"spec: {spec}")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     build_dir.mkdir(exist_ok=True)
-    write_grammar(build_dir, grammar)
+    write_spec(build_dir, spec)
 
     # Run plcc-spec into a temp file to avoid corrupting build/spec.json on failure.
     # Temp file lives inside build/ so os.replace() is guaranteed atomic (same filesystem).
@@ -116,7 +110,7 @@ def main(argv=None):
     try:
         with open(tmp_spec, 'w') as spec_out:
             result = subprocess.run(
-                ['plcc-spec', grammar] + child_flags,
+                ['plcc-spec', spec] + child_flags,
                 stdout=spec_out,
                 stderr=subprocess.PIPE,
             )

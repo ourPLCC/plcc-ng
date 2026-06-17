@@ -54,7 +54,7 @@ Tests are organized into tiers by scope. Each tier has its own directory and its
 | **Unit** | Alongside the code under test in `src/`, named `<module>_test.py` (pytest) | A single Python function, class, or module in isolation. No subprocesses. Must run in milliseconds. This is where most tests live. Co-locating the test with the code it tests keeps the two in sync and makes the test the first thing a reader sees when opening a module's directory. |
 | **Commands** | `tests/bats/commands/` | A single command exercised as a black box via its installed entry point. Stdin/stdout/exit-code contract. Level 2 orchestrators live here too even though they internally compose other commands — what distinguishes this tier is that only one installed command is invoked per test. |
 | **Integration** | `tests/bats/integration/` | Adjacent pipeline stages composed together (e.g. `plcc-tokens` piped into `plcc-trees`). Exercises the contract between two stages. |
-| **End-to-end** | `tests/bats/e2e/` | The full pipeline from grammar file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
+| **End-to-end** | `tests/bats/e2e/` | The full pipeline from spec file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
 | **Packaging** | [bin/test/packaging.bash](bin/test/packaging.bash) | Builds a wheel, installs it into a fresh venv, and verifies entry points and a smoke test. Catches `pyproject.toml` regressions. |
 
 Rules of thumb:

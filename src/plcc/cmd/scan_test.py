@@ -85,7 +85,7 @@ def test_scan_handler_renders_token_records(monkeypatch, capsys):
 def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
     build = tmp_path / "build"
     build.mkdir()
-    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     captured = {}
     def fake_runner(**kw):
         captured.update(kw)
@@ -110,7 +110,7 @@ def test_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
-    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0))
     monkeypatch.setattr(_scan_module, "SourceRunner",
                         lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
@@ -124,12 +124,12 @@ def test_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
-    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0))
     monkeypatch.setattr(_scan_module, "SourceRunner",
                         lambda **kw: type("R", (), {"run": lambda self, s, h: True})())
     monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "1.2.3")
     run_main(["--banner"])
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(tmp_path / "grammar.plcc") in err

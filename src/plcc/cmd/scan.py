@@ -8,7 +8,8 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .output import print_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
@@ -31,10 +32,9 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-    -g <path> --grammar=<path>  Grammar to build from. Once set, remembered for subsequent
-                                commands until changed. Defaults to grammar.plcc on first use.
+""" + SPEC_OPTION + """\
     -t --trace                  Show detailed scanning output.
-    -b --banner                 Show the version and grammar banner on stderr.
+    -b --banner                 Show the version and spec banner on stderr.
 """ + VERBOSE_OPTIONS
 
 
@@ -137,22 +137,17 @@ def main(argv=None):
 
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-scan", Events, args)
-    grammar_file = args["--grammar"]
     sources = args["SOURCE"]
     trace = args["--trace"]
 
-    if grammar_file is not None and not os.path.exists(grammar_file):
-        print(f"plcc-scan: grammar file not found: {grammar_file}", file=sys.stderr)
-        print(file=sys.stderr)
-        print("Run 'plcc-scan --help' for more information.", file=sys.stderr)
-        sys.exit(1)
+    validate_spec_flag('plcc-scan', args)
 
     verbose.emit(Events.STARTED, message="scanning")
     child_flags = verbose.child_flags()
 
     make_result = subprocess.run(
         ["plcc-make", "--through=scan"]
-        + ([f"--grammar={grammar_file}"] if grammar_file is not None else [])
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=None,
     )
@@ -160,7 +155,7 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar("build")))
+        print_banner(get_version(), os.path.abspath(read_spec("build")))
 
     spec_path = os.path.join("build", "spec.json")
     tokens_flags = child_flags + (["--trace"] if trace else [])

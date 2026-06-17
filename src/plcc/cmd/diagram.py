@@ -7,21 +7,20 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .output import print_banner
 
 __doc__ = """plcc-diagram
-    Generate and display a class diagram from a PLCC grammar file.
+    Generate and display a class diagram from a PLCC spec file.
 
 Usage:
     plcc-diagram [-v ...] [options]
 
 Options:
-    -g <path> --grammar=<path>
-                            Grammar to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to grammar.plcc on first use.
+""" + SPEC_OPTION + """\
     --format=FMT            Diagram format [default: plantuml].
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -47,21 +46,16 @@ def main(argv=None):
 
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-diagram", Events, args)
-    grammar_file = args['--grammar']
     fmt = args['--format']
 
-    if grammar_file is not None and not os.path.exists(grammar_file):
-        print(f"plcc-diagram: grammar file not found: {grammar_file}", file=sys.stderr)
-        print(file=sys.stderr)
-        print("Run 'plcc-diagram --help' for more information.", file=sys.stderr)
-        sys.exit(1)
+    validate_spec_flag('plcc-diagram', args)
 
     verbose.emit(Events.STARTED, message="generating diagram")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ['plcc-make', '--through=model']
-        + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=subprocess.PIPE,
     )
@@ -72,7 +66,7 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar('build')))
+        print_banner(get_version(), os.path.abspath(read_spec('build')))
 
     source_ext = _SOURCE_EXT.get(fmt, fmt)
     build_diagram_dir = os.path.join('build', 'diagram')

@@ -10,7 +10,7 @@ run day-to-day.
 
 | Command | Purpose |
 |---|---|
-| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a grammar file |
+| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a spec file |
 | [`plcc-scan`](orchestrators.md#plcc-scan) | Tokenize source input and print tokens |
 | [`plcc-parse`](orchestrators.md#plcc-parse) | Parse source input and print the parse tree |
 | [`plcc-rep`](orchestrators.md#plcc-rep) | Read-eval-print loop using generated semantics |
@@ -22,12 +22,12 @@ write JSON, making them composable with other tools.
 
 | Command | Purpose |
 |---|---|
-| [`plcc-spec`](primitives.md#plcc-spec) | Parse and validate a `.plcc` grammar file; emit spec JSON |
+| [`plcc-spec`](primitives.md#plcc-spec) | Parse and validate a `.plcc` spec file; emit spec JSON |
 | [`plcc-tokens`](primitives.md#plcc-tokens) | Tokenize source files given a spec JSON; emit token JSONL |
 | [`plcc-trees`](primitives.md#plcc-trees) | Parse token JSONL using an LL(1) table; emit parse trees |
 | [`plcc-model`](primitives.md#plcc-model) | Transform spec JSON into a language-neutral code model |
 | [`plcc-lang-emit`](primitives.md#plcc-lang-emit) | Dispatch to the appropriate language emitter |
-| [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a grammar file |
+| [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a spec file |
 
 ## Common options
 
@@ -39,8 +39,8 @@ All commands accept:
 | `-v` | Increase verbosity (repeat for more: `-v`, `-vv`, `-vvv`) |
 | `--verbose-format=FMT` | Verbosity output format: `text` or `json` |
 
-## Grammar memory
+## Spec memory
 
-The Level 2 orchestrators remember the grammar path between invocations.
-Pass `-g <path>` once; subsequent commands in the same directory use the same
-grammar automatically.
+The Level 2 orchestrators remember the spec path between invocations.
+Pass `-s <path>` once; subsequent commands in the same directory use the same
+spec automatically.

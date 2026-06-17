@@ -17,7 +17,7 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     with pytest.raises(SystemExit):
         run_main([])
     _, err = capsys.readouterr()
-    assert "grammar file not found" in err
+    assert "spec file not found" in err
 
 
 def test_calls_plcc_make_with_through_model(tmp_path, monkeypatch, capsys):
@@ -48,7 +48,7 @@ def test_calls_emit_build_run_after_make(tmp_path, monkeypatch):
     build_dir = tmp_path / 'build'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
+    (build_dir / '.spec').write_text(str(grammar))
     monkeypatch.chdir(tmp_path)
     calls = []
 
@@ -95,7 +95,7 @@ def test_diagram_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, cap
     build_dir = tmp_path / 'build'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
+    (build_dir / '.spec').write_text(str(grammar))
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("plcc.cmd.diagram.get_version", lambda: "1.2.3")
 
@@ -118,7 +118,7 @@ def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, cap
     build_dir = tmp_path / 'build'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
+    (build_dir / '.spec').write_text(str(grammar))
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("plcc.cmd.diagram.get_version", lambda: "1.2.3")
 
@@ -132,7 +132,7 @@ def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, cap
         run_main(["--banner"])
 
     _, err = capsys.readouterr()
-    assert "grammar:" in err
+    assert "spec:" in err
     assert str(grammar) in err
 
 

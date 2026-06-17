@@ -8,13 +8,14 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .pipeline import TreePipeline, print_parse_error
 from .output import print_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
 __doc__ = """plcc-rep
-    REPL — read, eval, print loop for a PLCC grammar.
+    REPL — read, eval, print loop for a PLCC spec.
 
 Usage:
     plcc-rep [-v ...] [options] [SOURCE ...]
@@ -23,11 +24,9 @@ Arguments:
     SOURCE      Source files to evaluate before entering interactive mode.
 
 Options:
-    -g <path> --grammar=<path>
-                            Grammar to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to grammar.plcc on first use.
+""" + SPEC_OPTION + """\
     --tool=NAME             Semantic section to run (inferred if only one exists).
-    -b --banner             Show the version and grammar banner on stderr.
+    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -75,23 +74,18 @@ def main(argv=None):
         sys.exit(1)
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-rep", Events, args)
-    grammar_file = args['--grammar']
     sources = args['SOURCE']
     tool_name = args['--tool']
     verbose_format = args['--verbose-format'] or 'text'
 
-    if grammar_file is not None and not os.path.exists(grammar_file):
-        print(f"plcc-rep: grammar file not found: {grammar_file}", file=sys.stderr)
-        print(file=sys.stderr)
-        print("Run 'plcc-rep --help' for more information.", file=sys.stderr)
-        sys.exit(1)
+    validate_spec_flag('plcc-rep', args)
 
     verbose.emit(Events.STARTED, message='starting')
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ['plcc-make']
-        + ([f'--grammar={grammar_file}'] if grammar_file is not None else [])
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=subprocess.PIPE,
     )
@@ -111,7 +105,7 @@ def main(argv=None):
     if banner:
         print_banner(
             get_version(),
-            os.path.abspath(read_grammar('build')),
+            os.path.abspath(read_spec('build')),
             tool=tool_name,
             language=language,
         )
@@ -158,7 +152,7 @@ def _resolve_tool(spec, tool_name):
         sys.exit(1)
 
     if len(sections) == 0:
-        print("plcc-rep: no semantic sections found in grammar.", file=sys.stderr)
+        print("plcc-rep: no semantic sections found in spec.", file=sys.stderr)
         sys.exit(1)
 
     if len(sections) == 1:

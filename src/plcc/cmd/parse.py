@@ -6,7 +6,8 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from .pipeline import TreePipeline, print_parse_error, location_str
 from .output import print_banner
@@ -23,9 +24,8 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-    -g <path> --grammar=<path>  Grammar to build from. Once set, remembered for subsequent
-                                commands until changed. Defaults to grammar.plcc on first use.
-    -b --banner                 Show the version and grammar banner on stderr.
+""" + SPEC_OPTION + """\
+    -b --banner                 Show the version and spec banner on stderr.
 """ + VERBOSE_OPTIONS
 
 
@@ -70,21 +70,16 @@ def main(argv=None):
         sys.exit(1)
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-parse", Events, args)
-    grammar_file = args["--grammar"]
     sources = args["SOURCE"]
 
-    if grammar_file is not None and not os.path.exists(grammar_file):
-        print(f"plcc-parse: grammar file not found: {grammar_file}", file=sys.stderr)
-        print(file=sys.stderr)
-        print("Run 'plcc-parse --help' for more information.", file=sys.stderr)
-        sys.exit(1)
+    validate_spec_flag('plcc-parse', args)
 
     verbose.emit(Events.STARTED, message="parsing")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ["plcc-make", "--through=parse"]
-        + ([f"--grammar={grammar_file}"] if grammar_file is not None else [])
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=subprocess.PIPE,
     )
@@ -95,7 +90,7 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar("build")))
+        print_banner(get_version(), os.path.abspath(read_spec("build")))
 
     spec_path = os.path.join("build", "spec.json")
     ll1_path = os.path.join("build", "ll1.json")
