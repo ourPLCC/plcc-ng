@@ -170,6 +170,11 @@ def main(argv=None):
         section = spec_data.get('semantics')
         if section:
             lang = section['language']
+            try:
+                validate_language_name(lang)
+            except ValueError as e:
+                print(f"plcc-make: {e}", file=sys.stderr)
+                sys.exit(1)
             output_dir = str(build_dir / lang)
             os.makedirs(output_dir, exist_ok=True)
             verbose.emit(Events.PHASE, message=f"emit {lang}")
@@ -186,6 +191,14 @@ def main(argv=None):
 
     write_sentinel(build_dir, new_hash, required_stages)
     verbose.emit(Events.FINISHED, message="done")
+
+
+def validate_language_name(name):
+    if not name or '..' in name or '/' in name or '\\' in name:
+        raise ValueError(
+            f"Invalid language name '{name}'. "
+            "Language names must not contain path separators."
+        )
 
 
 def _report_ll1_failure(ll1):

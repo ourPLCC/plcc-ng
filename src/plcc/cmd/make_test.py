@@ -2,7 +2,7 @@ import pytest
 import docopt
 from types import SimpleNamespace
 
-from .make import main as run_main, _report_ll1_failure
+from .make import main as run_main, validate_language_name, _report_ll1_failure
 from plcc.build.spec import read_spec, write_spec
 
 
@@ -310,3 +310,23 @@ def test_make_main_banner_is_plain_text_with_json_format(tmp_path, monkeypatch, 
         run_main(["--banner", "--verbose-format=json"])
     _, err = capsys.readouterr()
     assert "plcc-ng 1.2.3" in err  # plain "plcc-ng X.Y.Z", not a JSON object
+
+
+def test_validate_language_name_accepts_valid():
+    validate_language_name('Python')
+    validate_language_name('Java')
+    validate_language_name('PlantUML')
+
+
+def test_validate_language_name_rejects_path_traversal():
+    with pytest.raises(ValueError):
+        validate_language_name('../etc')
+    with pytest.raises(ValueError):
+        validate_language_name('foo/bar')
+    with pytest.raises(ValueError):
+        validate_language_name('foo\\bar')
+
+
+def test_validate_language_name_rejects_empty():
+    with pytest.raises(ValueError):
+        validate_language_name('')

@@ -100,6 +100,11 @@ def main(argv=None):
         spec = json.load(f)
 
     language = _resolve_language(spec)
+    try:
+        _validate_language_name(language)
+    except ValueError as e:
+        print(f"plcc-rep: {e}", file=sys.stderr)
+        sys.exit(1)
     if banner:
         print_banner(
             get_version(),
@@ -137,6 +142,14 @@ def main(argv=None):
     if not completed:
         sys.exit(1)
     verbose.emit(Events.FINISHED, message='done')
+
+
+def _validate_language_name(name):
+    if not name or '..' in name or '/' in name or '\\' in name:
+        raise ValueError(
+            f"Invalid language name '{name}'. "
+            "Language names must not contain path separators."
+        )
 
 
 def _resolve_language(spec):
