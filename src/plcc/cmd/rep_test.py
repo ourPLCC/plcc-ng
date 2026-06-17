@@ -25,7 +25,7 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
     build = tmp_path / "build"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
-    spec = {"semantics": {"tool": "calc", "language": "python"}}
+    spec = {"semantics": {"language": "Python"}}
     (build / "spec.json").write_text(_json.dumps(spec))
     (build / "ll1.json").write_text("{}")
 
@@ -47,7 +47,7 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
         lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
     )
 
-    _rep_module.main(["--spec=grammar.plcc", "--tool=calc"])
+    _rep_module.main(["--spec=grammar.plcc"])
 
     assert captured["submit_on"] is SubmitOn.EOF
 
@@ -338,7 +338,7 @@ def _setup_rep_main(monkeypatch, tmp_path):
     build = tmp_path / "build"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
-    spec = {"semantics": {"tool": "calc", "language": "python"}}
+    spec = {"semantics": {"language": "Python"}}
     (build / "spec.json").write_text(_j.dumps(spec))
     (build / "ll1.json").write_text("{}")
     monkeypatch.setattr(
@@ -371,14 +371,14 @@ def test_rep_main_default_prints_no_banner_to_stdout(monkeypatch, tmp_path, caps
 
 def test_rep_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
     _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc", "--banner"])
+    _rep_module.main(["--banner"])
     _, err = capsys.readouterr()
     assert "plcc-ng 1.2.3" in err
 
 
 def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
     _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc", "--banner"])
+    _rep_module.main(["--banner"])
     _, err = capsys.readouterr()
     assert "spec:" in err
     assert str(tmp_path / "grammar.plcc") in err
@@ -386,6 +386,6 @@ def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys)
 
 def test_rep_main_banner_prints_running_line_to_stderr(monkeypatch, tmp_path, capsys):
     _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main(["--tool=calc", "--banner"])
+    _rep_module.main(["--banner"])
     _, err = capsys.readouterr()
-    assert "Running calc with python." in err
+    assert "Running Python." in err

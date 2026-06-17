@@ -32,10 +32,10 @@ def test_print_banner_nothing_on_stdout(capsys):
     assert out == ""
 
 
-def test_print_banner_with_tool_running_line_on_stderr(capsys):
-    print_banner("1.2.3", "/abs/grammar.plcc", tool="calc", language="python")
+def test_print_banner_with_language_running_line_on_stderr(capsys):
+    print_banner("1.2.3", "/abs/grammar.plcc", language="Python")
     _, err = capsys.readouterr()
-    assert "Running calc with python." in err
+    assert "Running Python." in err
 
 
 def test_print_banner_without_tool_no_running_line(capsys):
