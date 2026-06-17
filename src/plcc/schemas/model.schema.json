@@ -34,9 +34,8 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["tool", "language", "fragments"],
+        "required": ["language", "fragments"],
         "properties": {
-          "tool":        { "type": "string" },
           "language":    { "type": "string" },
           "fragments": {
             "type": "array",

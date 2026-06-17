@@ -29,7 +29,7 @@ _TRIVIAL_SPEC = {
             }
         ]
     },
-    "semantics": {"language": "PlantUML", "tool": "diagram", "codeFragmentList": []}
+    "semantics": {"language": "PlantUML", "codeFragmentList": []}
 }
 
 
@@ -53,7 +53,9 @@ def test_class_has_num_field():
 def test_semantic_sections_present():
     model = build_model(_TRIVIAL_SPEC)
     sections = model['semantic_sections']
-    assert any(s['tool'] == 'diagram' and s['language'] == 'plantuml' for s in sections)
+    assert len(sections) == 1
+    assert sections[0]['language'] == 'plantuml'
+    assert 'tool' not in sections[0]
 
 
 _ARITH_SPEC = {
@@ -93,7 +95,7 @@ _ARITH_SPEC = {
             }
         ]
     },
-    "semantics": {"language": "Python", "tool": "calculate", "codeFragmentList": []}
+    "semantics": {"language": "Python", "codeFragmentList": []}
 }
 
 
@@ -199,7 +201,6 @@ _ARITH_SPEC_WITH_FRAGMENTS = {
     },
     "semantics": {
         "language": "Python",
-        "tool": "calculate",
         "codeFragmentList": [
                 {
                     "targetLocator": {"className": "AddRest", "modifier": None},
@@ -311,7 +312,7 @@ def test_empty_codeFragmentList_gives_empty_fragments():
     spec = {
         "lexical": {"ruleList": []},
         "syntax": {"rules": []},
-        "semantics": {"language": "Java", "tool": "Java", "codeFragmentList": []}
+        "semantics": {"language": "Java", "codeFragmentList": []}
     }
     model = build_model(spec)
     assert model['semantic_sections'][0]['fragments'] == []
@@ -448,7 +449,7 @@ def test_semantic_section_language_normalized_to_lowercase():
     spec = {
         "lexical": {"ruleList": []},
         "syntax": {"rules": []},
-        "semantics": {"language": "PYTHON", "tool": "calc", "codeFragmentList": []}
+        "semantics": {"language": "PYTHON", "codeFragmentList": []}
     }
     model = build_model(spec)
     assert model['semantic_sections'][0]['language'] == 'python'

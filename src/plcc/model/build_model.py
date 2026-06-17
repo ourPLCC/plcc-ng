@@ -117,11 +117,7 @@ def _build_semantic_sections(spec, known_class_names):
         _build_fragment(frag, known_class_names)
         for frag in s.get('codeFragmentList', [])
     ]
-    return [{
-        'language': s['language'].lower(),
-        'tool': s.get('tool'),
-        'fragments': fragments,
-    }]
+    return [{'language': s['language'].lower(), 'fragments': fragments}]
 
 
 def _build_fragment(frag, known_class_names):

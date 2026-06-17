@@ -31,15 +31,16 @@
       }
     },
     "semantics": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["language", "tool"],
-        "properties": {
-          "language":    { "type": "string" },
-          "tool":        { "type": "string" }
-        }
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["language"],
+          "properties": {
+            "language": { "type": "string" }
+          }
+        },
+        { "type": "null" }
+      ]
     }
   }
 }
