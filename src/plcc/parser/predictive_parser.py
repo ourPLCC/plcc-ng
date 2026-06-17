@@ -92,13 +92,14 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
     tokens — list of token dicts (may include a trailing 'eof' sentinel)
     tracer — optional Tracer; records predict/shift/complete events when provided
 
-    Returns (tree_dict, consumed_count).
+    Returns (tree_dict, consumed_count, extensible).
     Raises ParseError on any syntax error.
     """
     parse_table = ll1["parse_table"]
     arbno = ll1.get("arbno", {})
     start = ll1["start_symbol"]
     cursor = [0]
+    extensible = [False]
 
     SENTINEL = {"name": "eof", "lexeme": "", "source": {"file": "", "line": 0, "column": 0}}
 
@@ -146,6 +147,10 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
                 source=current()["source"],
                 found=lookahead,
             )
+        # The parse reached eof here but a real terminal could have continued
+        # this nonterminal — the sentence is a prefix of a longer one.
+        if lookahead == "eof" and any(k != "eof" for k in nt_table):
+            extensible[0] = True
         production_name = production.get("alt") or sym
         if tracer:
             tracer.predict(sym, lookahead, production_name)
@@ -216,7 +221,11 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
         for field, values in list_fields.items():
             builder.children.append([field, values])
 
+        # Sitting at eof where another iteration could have started: extensible.
+        if current()["name"] == "eof" and lookahead_set:
+            extensible[0] = True
+
         return builder
 
     root_builder = parse_nt(start)
-    return root_builder.to_node(), cursor[0]
+    return root_builder.to_node(), cursor[0], extensible[0]

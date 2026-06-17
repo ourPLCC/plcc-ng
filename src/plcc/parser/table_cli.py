@@ -77,7 +77,7 @@ def main(argv=None):
         attempted = True
         tracer = Tracer()
         try:
-            tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)
+            tree, consumed, extensible = parse(ll1, tokens[cursor:], tracer=tracer)
             if consumed == 0:
                 # Grammar matched epsilon but couldn't incorporate this token;
                 # emit an error record so the user sees feedback, then skip it.
@@ -113,7 +113,7 @@ def main(argv=None):
         # No non-sentinel tokens: try one epsilon parse for grammars that accept empty input
         tracer = Tracer()
         try:
-            tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)
+            tree, consumed, extensible = parse(ll1, tokens[cursor:], tracer=tracer)
             if consumed == 0:
                 if trace:
                     _emit_trace(tracer.events)
