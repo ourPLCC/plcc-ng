@@ -8,28 +8,24 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/cli/primitives/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-094-docs-follow-up-design/">
       
       
-        <link rel="prev" href="../orchestrators/">
-      
-      
-        <link rel="next" href="../../instructor-guide/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
-        <title>Primitives - plcc-ng</title>
+        <title>Design: Issue 094 Docs Follow-Up - plcc-ng</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -48,7 +44,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -66,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#level-0-primitives" class="md-skip">
+        <a href="#design-issue-094-docs-follow-up" class="md-skip">
           Skip to content
         </a>
       
@@ -84,7 +80,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -104,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Primitives
+              Design: Issue 094 Docs Follow-Up
             
           </span>
         </div>
@@ -191,7 +187,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -210,7 +206,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../getting-started/" class="md-tabs__link">
+      <a href="../../../getting-started/" class="md-tabs__link">
         
   
   
@@ -231,7 +227,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../language-guide/" class="md-tabs__link">
+        <a href="../../../language-guide/" class="md-tabs__link">
           
   
   
@@ -247,13 +243,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
           
   
   
@@ -273,7 +267,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../instructor-guide/" class="md-tabs__link">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
           
   
   
@@ -291,7 +285,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../changelog/" class="md-tabs__link">
+      <a href="../../../changelog/" class="md-tabs__link">
         
   
   
@@ -328,7 +322,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -358,7 +352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -385,7 +379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/" class="md-nav__link">
+      <a href="../../../getting-started/" class="md-nav__link">
         
   
   
@@ -464,7 +458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/" class="md-nav__link">
+      <a href="../../../language-guide/" class="md-nav__link">
         
   
   
@@ -492,7 +486,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/lexical/" class="md-nav__link">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
         
   
   
@@ -520,7 +514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/syntactic/" class="md-nav__link">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
         
   
   
@@ -548,7 +542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/semantic/" class="md-nav__link">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
         
   
   
@@ -576,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/examples/" class="md-nav__link">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
         
   
   
@@ -608,31 +602,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -650,7 +639,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -668,7 +657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../../cli/" class="md-nav__link">
         
   
   
@@ -696,7 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../orchestrators/" class="md-nav__link">
+      <a href="../../../cli/orchestrators/" class="md-nav__link">
         
   
   
@@ -721,37 +710,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Primitives
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../cli/primitives/" class="md-nav__link">
         
   
   
@@ -767,103 +729,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-spec" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-spec
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-tokens
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-ll1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-ll1
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-trees" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-trees
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-lang-emit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-lang-emit
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-diagram
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -935,7 +800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../instructor-guide/" class="md-nav__link">
+      <a href="../../../instructor-guide/" class="md-nav__link">
         
   
   
@@ -963,7 +828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../instructor-guide/evaluating/" class="md-nav__link">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
         
   
   
@@ -991,7 +856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../instructor-guide/adopting/" class="md-nav__link">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
         
   
   
@@ -1026,7 +891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+      <a href="../../../changelog/" class="md-nav__link">
         
   
   
@@ -1066,189 +931,61 @@
   
 
 
-<h1 id="level-0-primitives">Level 0 Primitives</h1>
-<p>These commands each perform one step of the pipeline. They are the building
-blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use internally.</p>
-<hr />
-<h2 id="plcc-spec">plcc-spec</h2>
-<p>Parse, validate, and print a PLCC spec file as JSON.</p>
-<pre><code class="language-text">plcc-spec [-v ...] [options] FILE
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Argument/Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>FILE</code></td>
-<td><code>.plcc</code> spec file. Use <code>-</code> to read from stdin.</td>
-</tr>
-<tr>
-<td><code>--no-json</code></td>
-<td>Validate only; do not print JSON to stdout.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec spec.plcc
-</code></pre>
-<hr />
-<h2 id="plcc-tokens">plcc-tokens</h2>
-<p>Tokenize source files given a spec JSON file; emit token JSONL.</p>
-<pre><code class="language-text">plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Argument/Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SPEC_JSON</code></td>
-<td>Path to spec JSON (output of <code>plcc-spec</code>).</td>
-</tr>
-<tr>
-<td><code>SOURCE</code></td>
-<td>Source files to tokenize. Use <code>-</code> for stdin. Defaults to stdin.</td>
-</tr>
-<tr>
-<td><code>-t</code>, <code>--trace</code></td>
-<td>Include regex, source line, attempts; emit skip records.</td>
-</tr>
-<tr>
-<td><code>--source-name=LABEL</code></td>
-<td>Override the source label for stdin.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec spec.plcc | plcc-tokens - samples
-</code></pre>
-<hr />
-<h2 id="plcc-ll1">plcc-ll1</h2>
-<p>Perform LL(1) analysis on a grammar spec.</p>
-<pre><code class="language-text">plcc-ll1 [-v ...]
-</code></pre>
-<p>Reads spec JSON from stdin (output of <code>plcc-spec</code>); emits LL(1) analysis JSON to stdout.</p>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec spec.plcc &gt; spec.json
-plcc-ll1 &lt; spec.json &gt; ll1.json
-</code></pre>
-<hr />
-<h2 id="plcc-trees">plcc-trees</h2>
-<p>Dispatch to a parser plugin. Reads token JSONL; emits a parse tree.</p>
-<pre><code class="language-text">plcc-trees [-v ...] [options] --ll1=LL1_JSON
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--ll1=LL1_JSON</code></td>
-<td>Path to LL(1) analysis JSON (required).</td>
-</tr>
-<tr>
-<td><code>--parser=KIND</code></td>
-<td>Parser plugin to use. Default: <code>table</code>.</td>
-</tr>
-<tr>
-<td><code>-t</code>, <code>--trace</code></td>
-<td>Forward trace flag to the parser plugin.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec spec.plcc &gt; spec.json
-plcc-ll1 &lt; spec.json &gt; ll1.json
-plcc-tokens spec.json samples | plcc-trees --ll1=ll1.json
-</code></pre>
-<hr />
-<h2 id="plcc-model">plcc-model</h2>
-<p>Transform spec JSON into a language-neutral code model.</p>
-<pre><code class="language-text">plcc-model [-v ...] [options] [SPEC_JSON]
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SPEC_JSON</code></td>
-<td>Path to spec JSON. Use <code>-</code> or omit to read from stdin.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model
-</code></pre>
-<hr />
-<h2 id="plcc-lang-emit">plcc-lang-emit</h2>
-<p>Dispatch to the appropriate language emitter.</p>
-<pre><code class="language-text">plcc-lang-emit [-v ...] --target=LANG --output=DIR
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--target=LANG</code></td>
-<td>Target language (e.g. <code>Python</code>, <code>Java</code>).</td>
-</tr>
-<tr>
-<td><code>--output=DIR</code></td>
-<td>Directory to write output files into.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
-</code></pre>
-<hr />
-<h2 id="plcc-diagram">plcc-diagram</h2>
-<p>Generate and display a class diagram from a PLCC spec file.</p>
-<pre><code class="language-text">plcc-diagram [-v ...] [options]
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
-<td>Spec file. Remembers across invocations. Defaults to <code>spec.plcc</code>.</td>
-</tr>
-<tr>
-<td><code>--format=FMT</code></td>
-<td>Diagram format. Default: <code>plantuml</code>.</td>
-</tr>
-<tr>
-<td><code>-b</code>, <code>--banner</code></td>
-<td>Show the version and spec banner on stderr.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-diagram -s mylang.plcc
-</code></pre>
+<h1 id="design-issue-094-docs-follow-up">Design: Issue 094 Docs Follow-Up</h1>
+<p><strong>Date:</strong> 2026-06-17
+<strong>Issue:</strong> 094 — Docs status after initial documentation branch</p>
+<h2 id="summary">Summary</h2>
+<p>Four targeted changes to close out the remaining follow-up items identified in
+issue 094. Instructor-guide placeholder pages are out of scope; those will be
+addressed separately.</p>
+<h2 id="changes">Changes</h2>
+<h3 id="1-dev-docsissues093-incremental-parsing-replmd">1. <code>dev-docs/issues/093-incremental-parsing-repl.md</code></h3>
+<p>Add a <strong>Docs responsibility</strong> section noting that when 093 lands, it must
+update <code>cli/orchestrators.md</code>: resolve the <code>&lt;!-- TODO: verify how to suppress
+interactive mode --&gt;</code> comment and update the <code>&lt; /dev/null</code> example if the
+behavior changes.</p>
+<h3 id="2-cliprimitivesmd-add-plcc-ll1-section-and-fix-plcc-trees">2. <code>cli/primitives.md</code> — add <code>plcc-ll1</code> section and fix <code>plcc-trees</code></h3>
+<p><code>plcc-ll1</code> is an undocumented primitive. It reads spec JSON from stdin (the
+output of <code>plcc-spec</code>) and emits LL(1) analysis JSON to stdout. Add it as a
+proper section in <code>primitives.md</code>, ordered between <code>plcc-tokens</code> and
+<code>plcc-trees</code> (its natural pipeline position).</p>
+<p>Remove the <code>&lt;!-- TODO: document how to obtain LL1_JSON --&gt;</code> comment from
+<code>plcc-trees</code> and add a pipeline example showing <code>plcc-spec</code> → <code>plcc-ll1</code> →
+<code>plcc-trees</code>.</p>
+<h3 id="3-cliorchestratorsmd-remove-tool-from-plcc-rep-095">3. <code>cli/orchestrators.md</code> — remove <code>--tool</code> from <code>plcc-rep</code> (095)</h3>
+<ul>
+<li>Remove the <code>--tool=NAME</code> row from the plcc-rep options table.</li>
+<li>Remove <code>--tool=subtract</code> from the plcc-rep examples.</li>
+<li>Leave the <code>&lt;!-- TODO: verify how to suppress interactive mode --&gt;</code> comment
+  untouched; 093 owns that.</li>
+</ul>
+<h3 id="4-language-guideexamplesmd-full-pass-for-089-095-verify-output">4. <code>language-guide/examples.md</code> — full pass for 089 + 095, verify output</h3>
+<p>Four sub-changes:</p>
+<p><strong>a. Spec file content (089 + 095)</strong>
+- Update the spec file shown in the example to use the 095 semantic section
+  format: bare <code>%</code> divider, language name (<code>Python</code>) on its own line as the
+  first line of the semantic section, <code>%%%</code> block delimiters.
+- Remove any stray <code>%</code> or old <code>% toolname Language</code> divider line left from the
+  old format.</p>
+<p><strong>b. CLI commands (089)</strong>
+- Replace <code>-g subtract.plcc</code> with <code>-s subtract.plcc</code> in all four commands
+  (<code>plcc-make</code>, <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>).</p>
+<p><strong>c. Remove <code>--tool</code> flag (095)</strong>
+- Remove <code>--tool=subtract</code> from the <code>plcc-rep</code> command.</p>
+<p><strong>d. Verify and replace output blocks</strong>
+- Run each command against the subtract example and replace every
+  <code>&lt;!-- TODO: verify ... --&gt;</code> output block with real, verified output.
+- Commands to run (in the worktree):
+  1. <code>plcc-make -s subtract.plcc</code>
+  2. <code>plcc-scan -s subtract.plcc samples</code>
+  3. <code>plcc-parse -s subtract.plcc samples</code>
+  4. <code>plcc-rep -s subtract.plcc samples &lt; /dev/null</code></p>
+<h2 id="out-of-scope">Out of scope</h2>
+<ul>
+<li><code>instructor-guide/index.md</code>, <code>instructor-guide/evaluating.md</code>,
+  <code>instructor-guide/adopting.md</code> — placeholder pages; tracked separately.</li>
+<li>Any other doc pages not listed above.</li>
+</ul>
 
 
 
@@ -1298,10 +1035,10 @@ plcc-tokens spec.json samples | plcc-trees --ll1=ll1.json
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

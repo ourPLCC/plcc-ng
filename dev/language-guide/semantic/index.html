@@ -1087,9 +1087,11 @@
 <p>The semantic section lets you implement language semantics by injecting
 target-language code into classes generated from the syntactic section.</p>
 <h2 id="section-header">Section header</h2>
-<p>The line that separates the previous section from the semantic section
-identifies the language used by the code blocks.</p>
-<pre><code class="language-text">% Java
+<p>A bare <code>%</code> line separates the previous section from the semantic section.
+The first non-blank line of the semantic section body names the language
+used by the code blocks.</p>
+<pre><code class="language-text">%
+Java
 </code></pre>
 <p>The supported languages are:</p>
 <ul>
@@ -1102,14 +1104,18 @@ from the production rules given in the syntactic section.
 The <a href="../syntactic/">syntactic section</a> describes the classes
 and their fields that are generated from production rules.</p>
 <p>To inject code into a class, use the following construct.</p>
-<pre><code class="language-text">% Python
+<pre><code class="language-text">%
+Python
+
 Exp
 %%%
 def _run(self):
     print(&quot;Hello&quot;)
 %%%
 </code></pre>
-<pre><code class="language-text">% Java
+<pre><code class="language-text">%
+Java
+
 Exp
 %%%
 public void _run() {

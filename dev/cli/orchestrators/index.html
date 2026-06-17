@@ -1148,15 +1148,11 @@ echo &quot;42&quot; | plcc-parse
 <tbody>
 <tr>
 <td><code>SOURCE</code></td>
-<td>Source files to evaluate before entering interactive mode.</td>
+<td>Source files to evaluate. Omit (or pass <code>-</code>) to enter interactive mode.</td>
 </tr>
 <tr>
 <td><code>-s PATH</code>, <code>--spec=PATH</code></td>
 <td>Spec to build from. Remembered across invocations.</td>
-</tr>
-<tr>
-<td><code>--tool=NAME</code></td>
-<td>Semantic section to run. Inferred automatically when only one exists.</td>
 </tr>
 <tr>
 <td><code>-b</code>, <code>--banner</code></td>
@@ -1165,13 +1161,12 @@ echo &quot;42&quot; | plcc-parse
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash"># Run the 'subtract' semantic section against samples, then enter interactive mode
-plcc-rep -s subtract.plcc --tool=subtract samples
+<pre><code class="language-bash"># Evaluate files and exit
+plcc-rep -s subtract.plcc samples
 
-# Evaluate a file only (no interactive mode)
-plcc-rep -s subtract.plcc samples &lt; /dev/null
+# Enter interactive mode (no files given)
+plcc-rep -s subtract.plcc
 </code></pre>
-<!-- TODO: verify how to suppress interactive mode (< /dev/null or EOF behavior) -->
 
 
 

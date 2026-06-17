@@ -1099,7 +1099,6 @@ token COMMA     ','
 &lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
 &lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
 %
-%
 Python
 
 Prog
@@ -1121,73 +1120,66 @@ def eval(self):
 %%%
 </code></pre>
 <h3 id="build">Build</h3>
-<pre><code class="language-bash">plcc-make -g subtract.plcc
+<pre><code class="language-bash">plcc-make -s subtract.plcc
 </code></pre>
-<!-- TODO: verify plcc-make output format (below adapted from PLCC's plccmk output) -->
-<p>Expected output:</p>
-<pre><code class="language-text">plcc-ng 0.39.2 | subtract.plcc
-Nonterminals (* indicates start symbol):
-  &lt;Exp&gt;
- *&lt;Prog&gt;
-
-Abstract classes:
-  Exp
-</code></pre>
+<p>Exits silently on success.</p>
 <h3 id="scanner">Scanner</h3>
-<pre><code class="language-bash">plcc-scan -g subtract.plcc samples
+<pre><code class="language-bash">plcc-scan -s subtract.plcc samples
 </code></pre>
-<!-- TODO: verify plcc-scan output format -->
 <p>Expected output:</p>
-<pre><code class="language-text">   1: WHOLE '3'
-   3: MINUS '-'
-   3: LP '('
-   3: WHOLE '3'
-   3: COMMA ','
-   3: WHOLE '2'
-   3: RP ')'
-   5: MINUS '-'
-   5: LP '('
-   5: MINUS '-'
-   5: LP '('
-   5: WHOLE '4'
-   5: COMMA ','
-   5: WHOLE '1'
-   5: RP ')'
-   5: COMMA ','
-   5: MINUS '-'
-   5: LP '('
-   5: WHOLE '3'
-   5: COMMA ','
-   5: WHOLE '2'
-   5: RP ')'
-   5: RP ')'
+<pre><code class="language-text">samples:1:1 WHOLE '3'
+samples:3:1 MINUS '-'
+samples:3:2 LP '('
+samples:3:3 WHOLE '3'
+samples:3:4 COMMA ','
+samples:3:5 WHOLE '2'
+samples:3:6 RP ')'
+samples:5:1 MINUS '-'
+samples:5:2 LP '('
+samples:5:3 MINUS '-'
+samples:5:4 LP '('
+samples:5:5 WHOLE '4'
+samples:5:6 COMMA ','
+samples:5:7 WHOLE '1'
+samples:5:8 RP ')'
+samples:5:9 COMMA ','
+samples:5:11 MINUS '-'
+samples:5:12 LP '('
+samples:5:13 WHOLE '3'
+samples:5:14 COMMA ','
+samples:5:15 WHOLE '2'
+samples:5:16 RP ')'
+samples:5:17 RP ')'
 </code></pre>
 <h3 id="parser">Parser</h3>
-<pre><code class="language-bash">plcc-parse -g subtract.plcc samples
+<pre><code class="language-bash">plcc-parse -s subtract.plcc samples
 </code></pre>
-<!-- TODO: verify plcc-parse output format and flags -->
 <p>Expected output:</p>
-<pre><code class="language-text">&lt;Prog&gt;
-| &lt;Exp:WholeExp&gt;
-| | WHOLE &quot;3&quot;
-&lt;Prog&gt;
-| &lt;Exp:SubExp&gt;
-| | MINUS &quot;-&quot;
-| | LP &quot;(&quot;
-| | &lt;Exp:WholeExp&gt;
-| | | WHOLE &quot;3&quot;
-| | COMMA &quot;,&quot;
-| | &lt;Exp:WholeExp&gt;
-| | | WHOLE &quot;2&quot;
-| | RP &quot;)&quot;
-&lt;Prog&gt;
-| &lt;Exp:SubExp&gt;
-...
+<pre><code class="language-text">Prog
+  WholeExp
+    WHOLE '3' [-:1:1]
+Prog
+  SubExp
+    WholeExp
+      WHOLE '3' [-:3:3]
+    WholeExp
+      WHOLE '2' [-:3:5]
+Prog
+  SubExp
+    SubExp
+      WholeExp
+        WHOLE '4' [-:5:5]
+      WholeExp
+        WHOLE '1' [-:5:7]
+    SubExp
+      WholeExp
+        WHOLE '3' [-:5:13]
+      WholeExp
+        WHOLE '2' [-:5:15]
 </code></pre>
 <h3 id="interpreter">Interpreter</h3>
-<pre><code class="language-bash">plcc-rep -g subtract.plcc --tool=subtract samples
+<pre><code class="language-bash">plcc-rep -s subtract.plcc samples
 </code></pre>
-<!-- TODO: verify plcc-rep output format -->
 <p>Expected output:</p>
 <pre><code class="language-text">3
 1
