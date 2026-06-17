@@ -62,7 +62,8 @@ Reads spec JSON from stdin (output of `plcc-spec`); emits LL(1) analysis JSON to
 **Example:**
 
 ```bash
-plcc-spec spec.plcc | plcc-ll1 > ll1.json
+plcc-spec spec.plcc > spec.json
+plcc-ll1 < spec.json > ll1.json
 ```
 
 ---
@@ -84,8 +85,9 @@ plcc-trees [-v ...] [options] --ll1=LL1_JSON
 **Example:**
 
 ```bash
-plcc-spec spec.plcc | plcc-ll1 > ll1.json
-plcc-spec spec.plcc | plcc-tokens - samples | plcc-trees --ll1=ll1.json
+plcc-spec spec.plcc > spec.json
+plcc-ll1 < spec.json > ll1.json
+plcc-tokens spec.json samples | plcc-trees --ll1=ll1.json
 ```
 
 ---
