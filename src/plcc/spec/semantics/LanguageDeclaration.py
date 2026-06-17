@@ -4,5 +4,6 @@ from ...lines import Line
 
 
 @dataclass
-class Divider:
+class LanguageDeclaration:
+    language: str
     line: Line

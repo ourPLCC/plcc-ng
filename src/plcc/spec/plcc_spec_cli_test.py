@@ -23,7 +23,7 @@ token NUM '\\d+'
 %
 <program> ::= NUM
 %
-% diagram PlantUML
+PlantUML
 """)
     run_main(['/trivial.plcc'])
     out, err = capsys.readouterr()

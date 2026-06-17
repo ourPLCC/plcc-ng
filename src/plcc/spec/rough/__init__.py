@@ -3,5 +3,5 @@ from .CircularIncludeError import CircularIncludeError
 from .Divider import Divider
 from .parseRough import parseRough
 from .Include import Include
-from .TooManyDividerTokensError import TooManyDividerTokensError
+from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
 from .UnclosedBlockError import UnclosedBlockError
