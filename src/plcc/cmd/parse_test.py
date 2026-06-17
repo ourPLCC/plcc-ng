@@ -24,19 +24,19 @@ def handler():
 def test_feed_returns_true_when_tree_produced(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert handler.feed(b"1+2\n", "-") is True
+    assert handler.feed(b"1+2\n", "-") == b""
 
 
 def test_feed_returns_false_when_stdout_empty(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=b"")])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert handler.feed(b"1+\n", "-") is False
+    assert handler.feed(b"1+\n", "-") == b"1+\n"
 
 
 def test_feed_returns_true_on_error_record(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert handler.feed(b"bad input\n", "-") is True
+    assert handler.feed(b"bad input\n", "-") == b""
 
 
 def test_feed_prints_tree(monkeypatch, handler, capsys):
@@ -108,13 +108,13 @@ def test_feed_error_with_no_location_shows_stage(monkeypatch, handler, capsys):
 def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=_eof_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert handler.feed(b"1+\n", "-", eof=False) is False
+    assert handler.feed(b"1+\n", "-", eof=False) == b"1+\n"
 
 
 def test_feed_returns_true_for_eof_only_error_when_force_submit(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=_eof_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert handler.feed(b"1+\n", "-", eof=True) is True
+    assert handler.feed(b"1+\n", "-", eof=True) == b""
 
 
 def test_feed_suppresses_output_for_eof_error_when_trial(monkeypatch, handler, capsys):
@@ -136,8 +136,8 @@ def test_feed_shows_output_for_eof_error_when_force_submit(monkeypatch, handler,
 def test_feed_returns_true_for_genuine_error_regardless_of_eof_param(monkeypatch, handler):
     procs = iter([_proc(), _proc(stdout=_error_record("bad token"))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    # _error_record has no "found" field → genuine error → always True
-    assert handler.feed(b"@\n", "-", eof=False) is True
+    # _error_record has no "found" field → genuine error → always b""
+    assert handler.feed(b"@\n", "-", eof=False) == b""
 
 
 def test_feed_prints_empty_annotation_for_childless_tree(monkeypatch, handler, capsys):

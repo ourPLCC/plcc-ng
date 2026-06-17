@@ -83,14 +83,14 @@ def test_feed_returns_false_when_no_tree(monkeypatch, handler):
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=b"")])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"1+\n", "-") is False
+    assert h.feed(b"1+\n", "-") == b"1+\n"
 
 
 def test_feed_returns_true_when_tree_produced(monkeypatch, handler):
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=_tree_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"42\n", "-") is True
+    assert h.feed(b"42\n", "-") == b""
 
 
 def test_feed_does_not_contact_interpreter_when_no_tree(monkeypatch, handler):
@@ -123,14 +123,14 @@ def test_feed_returns_true_on_error_record(monkeypatch, handler):
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"bad\n", "-") is True
+    assert h.feed(b"bad\n", "-") == b""
 
 
 def test_feed_accepts_eof_kwarg(monkeypatch, handler):
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=b"")])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"\n", "-", eof=True) is False
+    assert h.feed(b"\n", "-", eof=True) == b""
 
 
 def test_feed_handles_non_dict_json_number_from_interpreter(monkeypatch, handler, capsys):
@@ -165,14 +165,14 @@ def test_feed_returns_false_for_eof_only_error_when_trial(monkeypatch, handler):
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=_eof_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"1+\n", "-", eof=False) is False
+    assert h.feed(b"1+\n", "-", eof=False) == b"1+\n"
 
 
 def test_feed_returns_true_for_eof_only_error_when_force_submit(monkeypatch, handler):
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=_eof_error_record())])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"1+\n", "-", eof=True) is True
+    assert h.feed(b"1+\n", "-", eof=True) == b""
 
 
 def test_feed_suppresses_output_for_eof_error_when_trial(monkeypatch, handler, capsys):
@@ -197,7 +197,16 @@ def test_feed_returns_true_for_genuine_error_regardless_of_eof(monkeypatch, hand
     h, _ = handler
     procs = iter([_proc(), _proc(stdout=_error_record("bad token"))])
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
-    assert h.feed(b"@\n", "-", eof=False) is True
+    assert h.feed(b"@\n", "-", eof=False) == b""
+
+
+def test_feed_holds_trailing_extensible_without_dispatch(monkeypatch, handler):
+    from ._test_helpers import _hold_record
+    h, interp = handler
+    procs = iter([_proc(), _proc(stdout=_tree_record() + _hold_record(col=1))])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    assert h.feed(b"3\n", "-", eof=False) == b"3\n"
+    assert interp.stdin.tell() == 0  # extensible tree was NOT sent to interpreter
 
 
 # --- child_flags propagation ---

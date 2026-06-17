@@ -10,7 +10,7 @@ from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-from .pipeline import TreePipeline, print_parse_error
+from .pipeline import TreePipeline, print_parse_error, split_committed
 from .output import print_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
 
@@ -45,8 +45,9 @@ class RepHandler:
     def feed(self, content, source, eof=False):
         items = self._pipeline.run(content, eof)
         if items is None:
-            return False
-        for record, raw in items:
+            return b"" if eof else content
+        dispatch, remainder = split_committed(items, content, eof)
+        for record, raw in dispatch:
             if record.get("kind") == "error":
                 print_parse_error(record, default_stage="plcc-rep")
                 break
@@ -58,7 +59,7 @@ class RepHandler:
                     print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
                     sys.exit(1)
                 _read_response(self._interpreter.stdout, self._interpreter, self._verbose_format)
-        return True
+        return remainder
 
 
 def main(argv=None):
