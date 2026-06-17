@@ -7,4 +7,4 @@ from ..spec import lexical, semantics, syntax
 class Spec:
     lexical: lexical.LexicalSpec
     syntax: syntax.SyntacticSpec
-    semantics: list[semantics.SemanticSpec]
+    semantics: semantics.SemanticSpec | None

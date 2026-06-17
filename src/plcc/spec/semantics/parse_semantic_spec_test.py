@@ -1,44 +1,80 @@
-from pytest import raises
+import pytest
 
 from ...lines import Line
 from .. import rough
-from .parse_semantic_spec import parse_code_fragments, parse_semantic_spec
+from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
+from .parse_semantic_spec import parse_semantic_spec
 
 
-def test_basic():
-    lines_divider_and_blocks = [make_divider('Java', 'Java', make_line('%')), make_line('Class:init'), make_block()]
-    semantic_spec = parse_semantic_spec(lines_divider_and_blocks)
-    assert semantic_spec.language, semantic_spec.tool == 'Java'
-    assert semantic_spec.codeFragmentList == parse_code_fragments(lines_divider_and_blocks[1:])
+def test_language_extracted_from_first_non_blank_line():
+    section = [make_divider('%'), make_line('Python'), make_block()]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Python'
 
-def test_empty_list():
-    with raises(IndexError):
-        parse_semantic_spec([])
 
-def test_no_CodeFragments():
-    list_with_Divider = [make_divider('Java', 'Java', make_line('%'))]
-    semantic_spec = parse_semantic_spec(list_with_Divider)
-    assert semantic_spec.codeFragmentList == []
-    assert semantic_spec.language, semantic_spec.tool == 'Java'
+def test_language_extracted_skips_blank_lines():
+    section = [make_divider('%'), make_line(''), make_line('  '), make_line('Java')]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Java'
 
-# def make_block():
-#     return  Block(list(parse_lines.from_string('''\
-# %%%
-# block
-# %%%
-# ''')))
+
+def test_language_extracted_skips_comment_lines():
+    section = [make_divider('%'), make_line('# a comment'), make_line('Python')]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Python'
+
+
+def test_language_is_stripped():
+    section = [make_divider('%'), make_line('  Python  ')]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Python'
+
+
+def test_code_fragments_follow_language_line():
+    section = [make_divider('%'), make_line('Python'), make_line('Program'), make_block()]
+    spec = parse_semantic_spec(section)
+    assert len(spec.codeFragmentList) == 1
+    assert spec.codeFragmentList[0].targetLocator.className == 'Program'
+
+
+def test_no_code_fragments_is_valid():
+    section = [make_divider('%'), make_line('Python')]
+    spec = parse_semantic_spec(section)
+    assert spec.codeFragmentList == []
+
+
+def test_no_language_line_raises_error():
+    section = [make_divider('%')]
+    with pytest.raises(MissingLanguageDeclarationError):
+        parse_semantic_spec(section)
+
+
+def test_only_blank_lines_raises_error():
+    section = [make_divider('%'), make_line(''), make_line('  ')]
+    with pytest.raises(MissingLanguageDeclarationError):
+        parse_semantic_spec(section)
+
+
+def test_only_comment_lines_raises_error():
+    section = [make_divider('%'), make_line('# comment')]
+    with pytest.raises(MissingLanguageDeclarationError):
+        parse_semantic_spec(section)
+
+
+def test_spec_has_no_tool_attribute():
+    section = [make_divider('%'), make_line('Python')]
+    spec = parse_semantic_spec(section)
+    assert not hasattr(spec, 'tool')
+
+
+def make_divider(string, number=1):
+    return rough.Divider(line=make_line(string, number))
+
 
 def make_block():
-    rough_, errors = rough.parseRough('''\
-%%%
-block
-%%%
-''')
-    return  rough_[0]
+    rough_, _ = rough.parseRough('%%%\nblock\n%%%\n')
+    return rough_[0]
 
 
-def make_divider(tool, language, line):
-    return rough.Divider(tool=tool, language=language, line=line)
-
-def make_line(string, number=1, file=None):
-    return Line(string, number, file)
+def make_line(string, number=1):
+    return Line(string, number, None)

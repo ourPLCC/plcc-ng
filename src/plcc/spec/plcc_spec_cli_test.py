@@ -18,12 +18,12 @@ def test_help(capsys):
 
 
 def test_outputs_spec_json(capsys, fs):
-    fs.create_file('/trivial.plcc', contents="""
+    fs.create_file('/trivial.plcc', contents="""\
 token NUM '\\d+'
 %
 <program> ::= NUM
 %
-% diagram PlantUML
+PlantUML
 """)
     run_main(['/trivial.plcc'])
     out, err = capsys.readouterr()
@@ -31,6 +31,8 @@ token NUM '\\d+'
     assert 'lexical' in data
     assert 'syntax' in data
     assert 'semantics' in data
+    assert data['semantics'] is not None
+    assert data['semantics']['language'] == 'PlantUML'
 
 
 def test_lexical_rules_present(capsys, fs):

@@ -9,7 +9,7 @@ token NUM '\d+'
 %
 <Program> ::= NUM
 %
-% diagram PlantUML
+PlantUML
 EOF
     run --separate-stderr bash -c "echo 'abc' | plcc-parse --spec='$tmp/trivial.plcc'"
     [ "$status" -ne 0 ]

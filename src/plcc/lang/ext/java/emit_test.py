@@ -21,7 +21,6 @@ def _trivial_model():
         "semantic_sections": [
             {
                 "language": "Java",
-                "tool": "Java",
                 "fragments": [
                     {"class_name": "Program", "kind": "body",
                      "body": "    public void _run() {\n        System.out.println(expr.toString());\n    }"},

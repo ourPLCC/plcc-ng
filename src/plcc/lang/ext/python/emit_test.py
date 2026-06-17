@@ -32,7 +32,6 @@ def _arith_model():
         "semantic_sections": [
             {
                 "language": "Python",
-                "tool": "calculate",
                 "fragments": [
                     {"class_name": "Program", "kind": "body", "body": "def _run(self):\n    return self.expr.eval()"},
                     {"class_name": "AddRest", "kind": "body", "body": "def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())"},

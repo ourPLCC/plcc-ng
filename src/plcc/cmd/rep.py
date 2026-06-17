@@ -25,7 +25,6 @@ Arguments:
 
 Options:
 """ + SPEC_OPTION + """\
-    --tool=NAME             Semantic section to run (inferred if only one exists).
     -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
@@ -75,7 +74,6 @@ def main(argv=None):
     banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-rep", Events, args)
     sources = args['SOURCE']
-    tool_name = args['--tool']
     verbose_format = args['--verbose-format'] or 'text'
 
     validate_spec_flag('plcc-rep', args)
@@ -101,18 +99,22 @@ def main(argv=None):
     with open(spec_path) as f:
         spec = json.load(f)
 
-    tool_name, language = _resolve_tool(spec, tool_name)
+    language = _resolve_language(spec)
+    try:
+        _validate_language_name(language)
+    except ValueError as e:
+        print(f"plcc-rep: {e}", file=sys.stderr)
+        sys.exit(1)
     if banner:
         print_banner(
             get_version(),
             os.path.abspath(read_spec('build')),
-            tool=tool_name,
             language=language,
         )
-    tool_dir = os.path.join('build', tool_name)
+    output_dir = os.path.join('build', language)
 
     interpreter = subprocess.Popen(
-        ['plcc-lang-run', f'--target={language}', f'--output={tool_dir}'],
+        ['plcc-lang-run', f'--target={language}', f'--output={output_dir}'],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=None,
@@ -142,25 +144,20 @@ def main(argv=None):
     verbose.emit(Events.FINISHED, message='done')
 
 
-def _resolve_tool(spec, tool_name):
-    sections = spec.get('semantics', [])
-    if tool_name:
-        for s in sections:
-            if s['tool'] == tool_name:
-                return s['tool'], s['language']
-        print(f"plcc-rep: no semantic section with tool '{tool_name}'", file=sys.stderr)
+def _validate_language_name(name):
+    if not name or '..' in name or '/' in name or '\\' in name:
+        raise ValueError(
+            f"Invalid language name '{name}'. "
+            "Language names must not contain path separators."
+        )
+
+
+def _resolve_language(spec):
+    section = spec.get('semantics')
+    if not section:
+        print("plcc-rep: no semantic section found in spec.", file=sys.stderr)
         sys.exit(1)
-
-    if len(sections) == 0:
-        print("plcc-rep: no semantic sections found in spec.", file=sys.stderr)
-        sys.exit(1)
-
-    if len(sections) == 1:
-        return sections[0]['tool'], sections[0]['language']
-
-    names = [s['tool'] for s in sections]
-    print(f"plcc-rep: multiple semantic sections: {names}. Use --tool=NAME.", file=sys.stderr)
-    sys.exit(1)
+    return section['language']
 
 
 def _read_response(stdout, interpreter, verbose_format):
