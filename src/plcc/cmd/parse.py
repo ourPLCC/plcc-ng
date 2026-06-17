@@ -6,8 +6,8 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from .pipeline import TreePipeline, print_parse_error, location_str
 from .output import print_banner
@@ -24,7 +24,7 @@ Arguments:
 
 Options:
     -h --help                   Show this message.
-""" + GRAMMAR_OPTION + """\
+""" + SPEC_OPTION + """\
     -b --banner                 Show the version and spec banner on stderr.
 """ + VERBOSE_OPTIONS
 
@@ -72,14 +72,14 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-parse", Events, args)
     sources = args["SOURCE"]
 
-    validate_grammar_flag('plcc-parse', args)
+    validate_spec_flag('plcc-parse', args)
 
     verbose.emit(Events.STARTED, message="parsing")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ["plcc-make", "--through=parse"]
-        + grammar_flag_for_child(args)
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=subprocess.PIPE,
     )
@@ -90,7 +90,7 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar("build")))
+        print_banner(get_version(), os.path.abspath(read_spec("build")))
 
     spec_path = os.path.join("build", "spec.json")
     ll1_path = os.path.join("build", "ll1.json")

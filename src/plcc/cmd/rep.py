@@ -8,8 +8,8 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
-from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
+from plcc.build.spec import read_spec
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .pipeline import TreePipeline, print_parse_error
 from .output import print_banner, print_user_error
 from .source_runner import SourceRunner, SubmitOn
@@ -24,7 +24,7 @@ Arguments:
     SOURCE      Source files to evaluate before entering interactive mode.
 
 Options:
-""" + GRAMMAR_OPTION + """\
+""" + SPEC_OPTION + """\
     --tool=NAME             Semantic section to run (inferred if only one exists).
     -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
@@ -78,14 +78,14 @@ def main(argv=None):
     tool_name = args['--tool']
     verbose_format = args['--verbose-format'] or 'text'
 
-    validate_grammar_flag('plcc-rep', args)
+    validate_spec_flag('plcc-rep', args)
 
     verbose.emit(Events.STARTED, message='starting')
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     make_result = subprocess.run(
         ['plcc-make']
-        + grammar_flag_for_child(args)
+        + spec_flag_for_child(args)
         + child_flags,
         stderr=subprocess.PIPE,
     )
@@ -105,7 +105,7 @@ def main(argv=None):
     if banner:
         print_banner(
             get_version(),
-            os.path.abspath(read_grammar('build')),
+            os.path.abspath(read_spec('build')),
             tool=tool_name,
             language=language,
         )

@@ -3,7 +3,7 @@ import docopt
 from types import SimpleNamespace
 
 from .make import main as run_main, validate_tool_name, _report_ll1_failure
-from plcc.build.grammar import read_grammar, write_grammar
+from plcc.build.spec import read_spec, write_spec
 
 
 def test_help(capsys):
@@ -13,14 +13,14 @@ def test_help(capsys):
     assert 'Usage' in out
 
 
-def test_grammar_file_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_spec_file_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main([])
     assert exc.value.code != 0
 
 
-def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
+def test_spec_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit):
         run_main([])
@@ -28,14 +28,14 @@ def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
     assert "spec file not found" in err
 
 
-def test_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_spec_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main(['--spec=nonexistent.plcc'])
     assert exc.value.code != 0
 
 
-def test_short_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
+def test_short_spec_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
         run_main(['-s', 'nonexistent.plcc'])
@@ -212,12 +212,12 @@ def test_no_spec_flag_no_stored_falls_back_to_spec_plcc(tmp_path, monkeypatch, c
     assert "spec.plcc" in err
 
 
-def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
-    # build/.grammar points to a file that does not exist
+def test_no_spec_flag_stored_spec_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
+    # build/.spec points to a file that does not exist
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
-    write_grammar(build, "missing.plcc")
+    write_spec(build, "missing.plcc")
     with pytest.raises(SystemExit) as exc:
         run_main([])
     assert exc.value.code != 0
@@ -227,12 +227,12 @@ def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monke
     assert "--spec" in err
 
 
-def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys):
-    # build/.grammar set to a.plcc (missing) — error names a.plcc, not spec.plcc
+def test_no_spec_flag_uses_stored_spec_path(tmp_path, monkeypatch, capsys):
+    # build/.spec set to a.plcc (missing) — error names a.plcc, not spec.plcc
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
-    write_grammar(build, "a.plcc")
+    write_spec(build, "a.plcc")
     with pytest.raises(SystemExit):
         run_main([])
     _, err = capsys.readouterr()
@@ -241,37 +241,37 @@ def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys)
     assert "spec.plcc" not in err
 
 
-def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch):
+def test_explicit_spec_differs_from_stored_wipes_build(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
     (build / "marker.txt").write_text("from old grammar")
-    write_grammar(build, "old.plcc")
+    write_spec(build, "old.plcc")
     (tmp_path / "new.plcc").write_text("")  # valid but empty grammar
     run_main(["--spec=new.plcc"])
     # build/ was wiped when grammar changed, marker should not exist
     assert not (build / "marker.txt").exists()
 
 
-def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
+def test_explicit_spec_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     build.mkdir()
     (build / "marker.txt").write_text("from current grammar")
-    write_grammar(build, "same.plcc")
+    write_spec(build, "same.plcc")
     (tmp_path / "same.plcc").write_text("")  # valid but empty grammar
     run_main(["--spec=same.plcc"])
     # No wipe — marker is still present because grammar didn't change
     assert (build / "marker.txt").exists()
 
 
-def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
+def test_spec_written_before_build_stages_run(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     build = tmp_path / "build"
     (tmp_path / "bad.plcc").write_text("token BAD @@@\n")
     with pytest.raises(SystemExit):
         run_main(["--spec=bad.plcc"])
-    assert read_grammar(build) == "bad.plcc"
+    assert read_spec(build) == "bad.plcc"
 
 
 def test_make_main_default_prints_no_banner_to_stdout(tmp_path, monkeypatch, capsys):

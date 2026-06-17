@@ -48,7 +48,7 @@ def test_calls_emit_build_run_after_make(tmp_path, monkeypatch):
     build_dir = tmp_path / 'build'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
+    (build_dir / '.spec').write_text(str(grammar))
     monkeypatch.chdir(tmp_path)
     calls = []
 
@@ -95,7 +95,7 @@ def test_diagram_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, cap
     build_dir = tmp_path / 'build'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
+    (build_dir / '.spec').write_text(str(grammar))
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("plcc.cmd.diagram.get_version", lambda: "1.2.3")
 
@@ -118,7 +118,7 @@ def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, cap
     build_dir = tmp_path / 'build'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
+    (build_dir / '.spec').write_text(str(grammar))
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("plcc.cmd.diagram.get_version", lambda: "1.2.3")
 

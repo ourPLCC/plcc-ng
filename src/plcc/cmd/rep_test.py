@@ -24,7 +24,7 @@ def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
     grammar.write_text("")
     build = tmp_path / "build"
     build.mkdir()
-    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     spec = {"semantics": [{"tool": "calc", "language": "python"}]}
     (build / "spec.json").write_text(_json.dumps(spec))
     (build / "ll1.json").write_text("{}")
@@ -337,7 +337,7 @@ def _setup_rep_main(monkeypatch, tmp_path):
     (tmp_path / "grammar.plcc").write_text("")
     build = tmp_path / "build"
     build.mkdir()
-    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     spec = {"semantics": [{"tool": "calc", "language": "python"}]}
     (build / "spec.json").write_text(_j.dumps(spec))
     (build / "ll1.json").write_text("{}")

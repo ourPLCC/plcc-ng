@@ -227,7 +227,7 @@ def _setup_parse_main(monkeypatch, tmp_path):
     (tmp_path / "grammar.plcc").write_text("")
     build = tmp_path / "build"
     build.mkdir()
-    (build / ".grammar").write_text(str(tmp_path / "grammar.plcc"))
+    (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     (build / "spec.json").write_text("{}")
     (build / "ll1.json").write_text("{}")
     monkeypatch.setattr("subprocess.run",
