@@ -71,3 +71,10 @@ def _complete_step_record(rule="program", depth=0):
         "rule": rule,
         "depth": depth,
     }).encode() + b"\n"
+
+
+def _hold_record(line=1, col=1, file="-"):
+    return json.dumps({
+        "kind": "hold",
+        "source": {"file": file, "line": line, "column": col},
+    }).encode() + b"\n"
