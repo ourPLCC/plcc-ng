@@ -2,5 +2,5 @@ token NUM '\d+'
 skip WS '\s+'
 %
 <Program> ::= NUM
-% Java Java
-% py Python
+%
+Python

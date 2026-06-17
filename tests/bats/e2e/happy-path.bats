@@ -62,15 +62,13 @@ teardown() {
     [[ "$output" == *"plantuml"* ]]
 }
 
-@test "plcc-make trivial-full produces build output for Java and Python" {
-    if ! command -v javac &>/dev/null; then skip "JDK not available"; fi
+@test "plcc-make trivial-full produces build output for Python" {
     FULL_DIR="$(mktemp -d)"
     (
         cd "${FULL_DIR}"
         plcc-make --spec="${FIXTURES}/trivial-full.plcc"
         [ -f build/ll1.json ]
-        [ -d build/Java ]
-        [ -d build/py ]
+        [ -d build/Python ]
     )
     rm -rf "${FULL_DIR}"
 }
