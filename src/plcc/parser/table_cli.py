@@ -96,6 +96,9 @@ def main(argv=None):
             verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
             print(json.dumps(tree), flush=True)
             cursor += consumed
+            at_end = cursor >= len(tokens) or tokens[cursor]["name"] == "eof"
+            if at_end and extensible:
+                print(json.dumps({"kind": "hold", "source": tree.get("source", {})}), flush=True)
         except ParseError as e:
             _emit_trace(tracer.events)
             record = {
@@ -106,6 +109,8 @@ def main(argv=None):
             }
             if e.found:
                 record["found"] = e.found
+            if e.found == "eof" and cursor < len(tokens):
+                record["start"] = tokens[cursor].get("source", {})
             print(json.dumps(record), flush=True)
             break
 
