@@ -10,46 +10,40 @@ import pytest
 import plcc.cmd.rep as _rep_module
 from plcc.verbose import VerboseContext
 from .rep import RepHandler
-from .source_runner import SubmitOn
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
     _eof_error_record,
 )
 
 
-def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
-    """plcc-rep interactive mode must submit on ^D, not Enter (SubmitOn.EOF)."""
+def test_main_constructs_runner_without_submit_mode(monkeypatch, tmp_path):
+    """plcc-rep uses the single incremental SourceRunner (no SubmitOn)."""
     monkeypatch.chdir(tmp_path)
-    grammar = tmp_path / "grammar.plcc"
-    grammar.write_text("")
+    (tmp_path / "grammar.plcc").write_text("")
     build = tmp_path / "build"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
-    spec = {"semantics": {"language": "Python"}}
-    (build / "spec.json").write_text(_json.dumps(spec))
+    (build / "spec.json").write_text(_json.dumps({"semantics": {"language": "Python"}}))
     (build / "ll1.json").write_text("{}")
 
     captured = {}
 
-    def capturing_runner(submit_on, **kwargs):
-        captured["submit_on"] = submit_on
+    def capturing_runner(*args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
         m = _MagicMock()
-        m.run.return_value = True
+        m.run.return_value = None
         return m
 
     monkeypatch.setattr(_rep_module, "SourceRunner", capturing_runner)
-    monkeypatch.setattr(
-        "subprocess.run",
-        lambda *a, **kw: _MagicMock(returncode=0, stderr=b""),
-    )
-    monkeypatch.setattr(
-        "subprocess.Popen",
-        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
-    )
+    monkeypatch.setattr("subprocess.run", lambda *a, **kw: _MagicMock(returncode=0, stderr=b""))
+    monkeypatch.setattr("subprocess.Popen",
+                        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()))
 
     _rep_module.main(["--spec=grammar.plcc"])
 
-    assert captured["submit_on"] is SubmitOn.EOF
+    assert "submit_on" not in captured["kwargs"]
+    assert captured["args"] == ()
 
 
 def _make_interpreter(response=b'{"kind":"result","value":"42"}\n'):

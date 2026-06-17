@@ -11,7 +11,7 @@ from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from .pipeline import TreePipeline, print_parse_error, location_str, split_committed
 from .output import print_banner
-from .source_runner import SourceRunner, SubmitOn
+from .source_runner import SourceRunner
 
 __doc__ = """plcc-parse
     Parse source input and print parse tree in human-readable format.
@@ -98,10 +98,10 @@ def main(argv=None):
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
                            child_flags=child_flags, verbose=verbose)
-    runner = SourceRunner(submit_on=SubmitOn.EOF)
-    completed = runner.run(sources, handler)
+    runner = SourceRunner()
+    runner.run(sources, handler)
 
-    if not completed or handler.had_error:
+    if handler.had_error:
         sys.exit(1)
     verbose.emit(Events.FINISHED, message="done")
 

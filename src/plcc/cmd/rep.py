@@ -12,7 +12,7 @@ from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .pipeline import TreePipeline, print_parse_error, split_committed
 from .output import print_banner, print_user_error
-from .source_runner import SourceRunner, SubmitOn
+from .source_runner import SourceRunner
 
 __doc__ = """plcc-rep
     REPL — read, eval, print loop for a PLCC spec.
@@ -121,7 +121,6 @@ def main(argv=None):
         stderr=None,
     )
 
-    completed = True
     try:
         handler = RepHandler(
             spec_path=spec_path,
@@ -131,8 +130,8 @@ def main(argv=None):
             child_flags=child_flags,
             verbose=verbose,
         )
-        runner = SourceRunner(submit_on=SubmitOn.EOF)
-        completed = runner.run(sources, handler)
+        runner = SourceRunner()
+        runner.run(sources, handler)
     finally:
         try:
             interpreter.stdin.close()
@@ -140,8 +139,6 @@ def main(argv=None):
             pass
         interpreter.wait()
 
-    if not completed:
-        sys.exit(1)
     verbose.emit(Events.FINISHED, message='done')
 
 
