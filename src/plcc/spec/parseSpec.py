@@ -16,7 +16,7 @@ def parseSpec(string, file=None, startLineNumber=1):
     sem_ = None
     if len(rough_sems) > 1:
         second_divider = rough_sems[1][0]
-        sem_errors.append(MultipleSemanticsError(line=second_divider.line, column=1))
+        sem_errors.append(MultipleSemanticsError(line=second_divider.line, column=1, message="only one semantic section is allowed"))
     if rough_sems:
         try:
             sem_ = semantics.parse_semantic_spec(rough_sems[0])

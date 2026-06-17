@@ -2,7 +2,6 @@ import pytest
 
 from ...lines import Line
 from .. import rough
-from .LanguageDeclaration import LanguageDeclaration
 from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
 from .parse_semantic_spec import parse_semantic_spec
 

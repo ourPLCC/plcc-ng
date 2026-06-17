@@ -6,7 +6,7 @@ from .parse_code_fragments import parse_code_fragments
 from .SemanticSpec import SemanticSpec
 
 
-def parse_semantic_spec(semantic_spec: list) -> SemanticSpec:
+def parse_semantic_spec(semantic_spec: list[Divider | Line | Block]) -> SemanticSpec:
     divider = semantic_spec[0]
     rest = list(semantic_spec[1:])
     language_decl, body_start = _extract_language(rest, divider)
@@ -18,7 +18,7 @@ def _extract_language(items, divider):
     for i, item in enumerate(items):
         if isinstance(item, Line) and not _is_blank_or_comment(item.string):
             return LanguageDeclaration(language=item.string.strip(), line=item), i + 1
-    raise MissingLanguageDeclarationError(line=divider.line, column=1)
+    raise MissingLanguageDeclarationError(line=divider.line, column=1, message="first non-blank, non-comment line after '%' must be the language name")
 
 
 def _is_blank_or_comment(s):

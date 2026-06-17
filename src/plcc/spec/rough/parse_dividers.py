@@ -19,6 +19,6 @@ def parse_dividers(lines):
             else:
                 match = _FIRST_TOKEN.match(line.string)
                 col = match.start(1) + 1
-                raise UnexpectedTokensOnDividerError(line=line, column=col)
+                raise UnexpectedTokensOnDividerError(line=line, column=col, message="divider must be a bare '%' with nothing after it")
         else:
             yield line
