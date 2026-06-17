@@ -11,7 +11,7 @@ from plcc.version import get_version
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .output import print_banner, print_user_error
-from .source_runner import SourceRunner, SubmitOn
+from .source_runner import SourceRunner
 
 
 def _location_str(source):
@@ -161,7 +161,7 @@ def main(argv=None):
     tokens_flags = child_flags + (["--trace"] if trace else [])
 
     handler = ScanHandler(spec_path=spec_path, tokens_flags=tokens_flags)
-    runner = SourceRunner(submit_on=SubmitOn.EOF)
+    runner = SourceRunner()
     runner.run(sources, handler)
 
     verbose.emit(Events.FINISHED, message="done")

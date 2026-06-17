@@ -7,7 +7,6 @@ from types import SimpleNamespace
 import pytest
 
 from .scan import ScanHandler, main as run_main
-from .source_runner import SubmitOn
 import plcc.cmd.scan as _scan_module
 
 
@@ -82,18 +81,18 @@ def test_scan_handler_renders_token_records(monkeypatch, capsys):
 # --- main() banner ---
 
 
-def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
+def test_main_creates_source_runner(monkeypatch, tmp_path):
     build = tmp_path / "build"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
-    captured = {}
+    created = []
     def fake_runner(**kw):
-        captured.update(kw)
+        created.append(kw)
         return type("R", (), {"run": lambda self, s, h: True})()
     monkeypatch.setattr(_scan_module, "SourceRunner", fake_runner)
     monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "0")
     run_main([])
-    assert captured.get("submit_on") == SubmitOn.EOF
+    assert len(created) == 1
 
 
 
