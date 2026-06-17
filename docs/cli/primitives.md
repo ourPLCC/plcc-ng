@@ -120,7 +120,7 @@ plcc-diagram [-v ...] [options]
 |---|---|
 | `-s PATH`, `--spec=PATH` | Spec file. Remembers across invocations. Defaults to `spec.plcc`. |
 | `--format=FMT` | Diagram format. Default: `plantuml`. |
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 

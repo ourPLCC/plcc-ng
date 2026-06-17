@@ -102,11 +102,11 @@ to:
 
 Line 20 — change:
 ```
-| `--no-banner` | Suppress the version and grammar banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 to:
 ```
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 
 Line 25 — change:
@@ -138,11 +138,11 @@ to:
 
 Line 45 — change:
 ```
-| `--no-banner` | Suppress the version and grammar banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 to:
 ```
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 
 Lines 50–51 — change:
@@ -167,11 +167,11 @@ to:
 
 Line 68 — change:
 ```
-| `--no-banner` | Suppress the version and grammar banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 to:
 ```
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 
 Lines 73–74 — change:
@@ -205,11 +205,11 @@ to:
 
 Line 92 — change:
 ```
-| `--no-banner` | Suppress the version and grammar banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 to:
 ```
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 
 Lines 98–101 — change:
@@ -320,11 +320,11 @@ to:
 
 Line 123 — change:
 ```
-| `--no-banner` | Suppress the version and grammar banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 to:
 ```
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 ```
 
 Line 128 — change:

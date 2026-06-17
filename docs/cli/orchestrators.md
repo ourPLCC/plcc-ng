@@ -17,7 +17,7 @@ plcc-make [-v ...] [options]
 |---|---|
 | `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. Defaults to `spec.plcc` on first use. |
 | `--through=LEVEL` | Build up to this level: `scan`, `parse`, `model`, or `all`. Default: `all`. |
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 
@@ -42,7 +42,7 @@ plcc-scan [-v ...] [options] [SOURCE ...]
 | `SOURCE` | Source files to tokenize. Reads stdin if none given. |
 | `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
 | `-t`, `--trace` | Show detailed scanning output. |
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 
@@ -65,7 +65,7 @@ plcc-parse [-v ...] [options] [SOURCE ...]
 |---|---|
 | `SOURCE` | Source files to parse. Reads stdin if none given. |
 | `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 
@@ -89,7 +89,7 @@ plcc-rep [-v ...] [options] [SOURCE ...]
 | `SOURCE` | Source files to evaluate before entering interactive mode. |
 | `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
 | `--tool=NAME` | Semantic section to run. Inferred automatically when only one exists. |
-| `--no-banner` | Suppress the version and spec banner. |
+| `-b`, `--banner` | Show the version and spec banner on stderr. |
 
 **Example:**
 
