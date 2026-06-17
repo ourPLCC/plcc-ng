@@ -2,7 +2,7 @@ import pytest
 import docopt
 from types import SimpleNamespace
 
-from .make import main as run_main, validate_tool_name, _report_ll1_failure
+from .make import main as run_main, _report_ll1_failure
 from plcc.build.spec import read_spec, write_spec
 
 
@@ -56,26 +56,6 @@ def test_invalid_through_value_prints_error(tmp_path, monkeypatch, capsys):
     _, err = capsys.readouterr()
     assert "invalid --through" in err
 
-
-def test_validate_tool_name_accepts_valid():
-    validate_tool_name('diagram')
-    validate_tool_name('Java')
-    validate_tool_name('my-tool')
-    validate_tool_name('tool_123')
-
-
-def test_validate_tool_name_rejects_path_traversal():
-    with pytest.raises(ValueError):
-        validate_tool_name('../etc')
-    with pytest.raises(ValueError):
-        validate_tool_name('foo/bar')
-    with pytest.raises(ValueError):
-        validate_tool_name('/absolute')
-
-
-def test_validate_tool_name_rejects_empty():
-    with pytest.raises(ValueError):
-        validate_tool_name('')
 
 
 def test_report_ll1_failure_prints_error_and_conflicts(capsys):

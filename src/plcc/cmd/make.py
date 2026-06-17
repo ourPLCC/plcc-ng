@@ -2,7 +2,6 @@ import contextlib
 import enum
 import json
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -33,9 +32,6 @@ Options:
     -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
-
-_TOOL_NAME_RE = re.compile(r'^[a-zA-Z0-9_-]+$')
-
 
 class Events(enum.Enum):
     STARTED = "started"
@@ -133,13 +129,14 @@ def main(argv=None):
 
     with open(tmp_spec) as f:
         spec_data = json.load(f)
-    tool_stages = set()  # semantics is now a single SemanticSpec | None, no tool stages
+    sem = spec_data.get('semantics')
+    lang_stage = {sem['language']} if sem else set()
 
     _REQUIRED = {
         'scan':  {'scan'},
         'parse': {'scan', 'parse'},
         'model': {'scan', 'model'},
-        'all':   {'scan', 'parse', 'model'} | tool_stages,
+        'all':   {'scan', 'parse', 'model'} | lang_stage,
     }
     required_stages = _REQUIRED[through]
 
@@ -170,26 +167,18 @@ def main(argv=None):
         _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
 
     if through == 'all':
-        _sem = spec_data.get('semantics')
-        _sections = [_sem] if _sem is not None else []
-        for section in _sections:
-            tool = section.get('tool')
+        section = spec_data.get('semantics')
+        if section:
             lang = section['language']
-            try:
-                validate_tool_name(tool)
-            except ValueError as e:
-                print(f"plcc-make: {e}", file=sys.stderr)
-                delete_sentinel(build_dir)
-                sys.exit(1)
-            output_dir = str(build_dir / tool)
+            output_dir = str(build_dir / lang)
             os.makedirs(output_dir, exist_ok=True)
-            verbose.emit(Events.PHASE, message=f"emit {lang} -> {tool}")
+            verbose.emit(Events.PHASE, message=f"emit {lang}")
             _run_or_die(
                 ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'] + child_flags,
                 stdin_file=model_json,
                 verbose=verbose,
             )
-            verbose.emit(Events.PHASE, message=f"build {lang} -> {tool}")
+            verbose.emit(Events.PHASE, message=f"build {lang}")
             _run_or_die(
                 ['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'] + child_flags,
                 verbose=verbose,
@@ -197,14 +186,6 @@ def main(argv=None):
 
     write_sentinel(build_dir, new_hash, required_stages)
     verbose.emit(Events.FINISHED, message="done")
-
-
-def validate_tool_name(name):
-    if not name or not _TOOL_NAME_RE.match(name):
-        raise ValueError(
-            f"Invalid tool name '{name}'. "
-            "Tool names must match [a-zA-Z0-9_-]+ to prevent path traversal."
-        )
 
 
 def _report_ll1_failure(ll1):
