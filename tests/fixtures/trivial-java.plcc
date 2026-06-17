@@ -2,7 +2,8 @@ token NUM '\d+'
 skip SPACE '\s+'
 %
 <Program> ::= <NUM:num>
-% Java Java
+%
+Java
 Program
 %%%
     public void _run() {

@@ -7,13 +7,14 @@ from .validation import validate_semantic_spec
 
 
 def test_no_code_fragments_no_errors():
-    spec = parse('%')
+    spec = parse('%\nJava\n')
     errors = validate_semantic_spec(spec)
     assert len(errors) == 0
 
 def test_valid_and_invalid_names():
     spec = parse('''\
 %
+Java
 Valid
 %%%
 %%%
@@ -27,6 +28,7 @@ invalid
 def test_invalid_undefined_target_locator():
     spec = parse('''\
 %
+Java
 %%%
 %%%
 ''')
@@ -36,6 +38,7 @@ def test_invalid_undefined_target_locator():
 def test_invalid_block_and_target_locator_order():
     spec = parse('''\
 %
+Java
 %%%
 %%%
 Class
@@ -47,6 +50,7 @@ Class
 def test_undefined_block_error_multiple_code_fragments():
     spec = parse('''\
 %
+Java
 Class
 AnotherClass
 %%%
@@ -58,6 +62,7 @@ AnotherClass
 def test_undefined_block_error_single_code_fragment():
     spec = parse('''\
 %
+Java
 Class
 ''')
     errors = validate_semantic_spec(spec)
@@ -78,6 +83,7 @@ def assertValidClassNames(names: list[str]):
 def assertValidClassName(name: str):
     spec = parse(f'''\
 %
+Java
 {name}
 %%%
 %%%
@@ -92,6 +98,7 @@ def assertInvalidClassNames(names: list[str]):
 def assertInvalidClassName(name: str):
     spec = parse(f'''\
 %
+Java
 {name}
 %%%
 %%%

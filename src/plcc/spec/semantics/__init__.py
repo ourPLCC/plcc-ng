@@ -1,2 +1,4 @@
+from .LanguageDeclaration import LanguageDeclaration
+from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
 from .SemanticSpec import SemanticSpec
 from .parse_semantic_spec import parse_semantic_spec

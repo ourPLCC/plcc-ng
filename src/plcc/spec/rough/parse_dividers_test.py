@@ -2,7 +2,7 @@ from pytest import raises
 from ... import lines
 from .Block import Block
 from .Divider import Divider
-from .TooManyDividerTokensError import TooManyDividerTokensError
+from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
 from .parse_blocks import parse_blocks
 from .parse_dividers import parse_dividers
 
@@ -26,39 +26,36 @@ three
     assert list(parse_dividers(lines_)) == lines_
 
 
-def test_one_divider():
+def test_bare_percent_yields_divider():
     lines_ = list(lines.parseLines('%'))
-    assert list(parse_dividers(lines_)) == [
-        make_divider(tool='Java', language='Java', line=lines_[0])
-    ]
+    result = list(parse_dividers(lines_))
+    assert result == [Divider(line=lines_[0])]
 
 
-def test_one_divider_with_same_language_tool():
-    lines_ = list(lines.parseLines('% trailing'))
-    assert list(parse_dividers(lines_)) == [
-        make_divider(tool='trailing', language='trailing', line=lines_[0]),
-    ]
+def test_percent_with_trailing_whitespace_yields_divider():
+    lines_ = list(lines.parseLines('%  '))
+    result = list(parse_dividers(lines_))
+    assert result == [Divider(line=lines_[0])]
 
 
-def test_one_divider_with_different_language_tool():
-    lines_ = list(lines.parseLines('% linter python '))
-    assert list(parse_dividers(lines_)) == [
-        make_divider(tool='linter', language='python', line=lines_[0]),
-    ]
+def test_percent_with_token_raises_error():
+    with raises(UnexpectedTokensOnDividerError):
+        list(parse_dividers(list(lines.parseLines('% Java'))))
 
 
-def test_one_divider_with_different_but_same_language_tool():
-    lines_ = list(lines.parseLines('% python python'))
-    assert list(parse_dividers(lines_)) == [
-        make_divider(tool='python', language='python', line=lines_[0]),
-    ]
+def test_percent_with_two_tokens_raises_error():
+    with raises(UnexpectedTokensOnDividerError):
+        list(parse_dividers(list(lines.parseLines('% tool Java'))))
 
 
-def test_two_percents_does_not_match():
+def test_percent_with_three_tokens_raises_error():
+    with raises(UnexpectedTokensOnDividerError):
+        list(parse_dividers(list(lines.parseLines('% a b c'))))
+
+
+def test_double_percent_does_not_match():
     lines_ = list(lines.parseLines('%%'))
-    assert list(parse_dividers(lines_)) == [
-        lines.Line('%%', 1, None),
-    ]
+    assert list(parse_dividers(lines_)) == [lines.Line('%%', 1, None)]
 
 
 def test_blocks_mask_dividers():
@@ -70,12 +67,3 @@ def test_blocks_mask_dividers():
             lines_[0].lines[2]
         ])
     ]
-
-
-def test_divider_with_three_tokens_is_an_error():
-    with raises(TooManyDividerTokensError):
-        list(parse_dividers(list(lines.parseLines('% java python evaluate'))))
-
-
-def make_divider(tool, language, line):
-    return Divider(tool=tool, language=language, line=line)

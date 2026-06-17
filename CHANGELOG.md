@@ -1,6 +1,144 @@
 # CHANGELOG
 
 
+## v0.45.1 (2026-06-17)
+
+### Bug Fixes
+
+- **cd**: Update smoke test from --grammar to --spec
+  ([`d85e841`](https://github.com/ourPLCC/plcc-ng/commit/d85e841bd750e315f8ffbe52c5c57424ea1ee003))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
+## v0.45.0 (2026-06-17)
+
+### Bug Fixes
+
+- **095**: Add language name path-traversal guard; clean stale tool key in fixture
+  ([`221a77c`](https://github.com/ourPLCC/plcc-ng/commit/221a77ca592961506bc243f991102982e36a7327))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Update inline spec in plcc-parse-errors.bats to new format [skip ci]
+  ([`1a799e9`](https://github.com/ourPLCC/plcc-ng/commit/1a799e91533dcbc9801fa2c1e9fbb4c5cb846bd9))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Update test fixtures and bats tests to new semantic section format
+  ([`ba0fd1a`](https://github.com/ourPLCC/plcc-ng/commit/ba0fd1aa9953ca1fa7f475e40273ac55ff50f15b))
+
+All fixture .plcc files used the old '% tool Language' divider syntax. The new format uses a bare
+  '%' divider with the language name as the first line of the section body. Also removes '--tool='
+  flags from plcc-rep bats tests and updates output dir assertions from 'build/calculate' to
+  'build/Python'.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **ci**: Trigger
+  ([`c12c24d`](https://github.com/ourPLCC/plcc-ng/commit/c12c24d4d53694430c23a3fd6d8683f4edd0b2b4))
+
+### Documentation
+
+- **089**: Add design spec for phases 3 & 4 of grammar-to-spec rename [skip ci]
+  ([`b3ac48f`](https://github.com/ourPLCC/plcc-ng/commit/b3ac48fbb91323d68449ad40dcbfaf060e254a0e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Add implementation plan for phases 3 & 4 [skip ci]
+  ([`e107235`](https://github.com/ourPLCC/plcc-ng/commit/e107235fc431d4690edfa073b4ddef68d8db27a5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Fix --no-banner → -b/--banner in CLI docs and plan [skip ci]
+  ([`c0d3b25`](https://github.com/ourPLCC/plcc-ng/commit/c0d3b25cc856b1f6b68e096dc762faf61121b483))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update docs grammar-file references to spec-file [skip ci]
+  ([`271ee10`](https://github.com/ourPLCC/plcc-ng/commit/271ee1079bfda0eb2fededc385a4b057c030cd7e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Add semantic section redesign implementation plan [skip ci]
+  ([`f81cc44`](https://github.com/ourPLCC/plcc-ng/commit/f81cc44905c6676580aa2c046f2da651c04d51e6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Add semantic section redesign spec [skip ci]
+  ([`99eeb7f`](https://github.com/ourPLCC/plcc-ng/commit/99eeb7fa9a7a61a70c6c9b4dc10a018c46055f83))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **095**: Enforce single semantic section; Spec.semantics is now SemanticSpec | None
+  ([`5d8725e`](https://github.com/ourPLCC/plcc-ng/commit/5d8725e115f4c17009025989c76bf8635e99026f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Plcc-make uses language name as output dir, removes validate_tool_name
+  ([`f1d35fe`](https://github.com/ourPLCC/plcc-ng/commit/f1d35fe2d02853ca6c28ad7cd4358fe9339c434a))
+
+- **095**: Plcc-rep removes --tool flag, reads language from spec semantics
+  ([`312360f`](https://github.com/ourPLCC/plcc-ng/commit/312360fc689b6ccdd27be66826e37d47a5e6aadf))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Simplify Divider and extract language from semantic section body
+  ([`e79bddf`](https://github.com/ourPLCC/plcc-ng/commit/e79bddf13e9d9b5e78fc090176591b55fea8ed1a))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **095**: Update spec/model schemas and build_model — semantics is nullable object, no tool
+  ([`91d986f`](https://github.com/ourPLCC/plcc-ng/commit/91d986fc4f5867c13170a19079c80e75c79ab7af))
+
+### Refactoring
+
+- **089**: Rename build/grammar → build/spec, .grammar → .spec
+  ([`1517e3e`](https://github.com/ourPLCC/plcc-ng/commit/1517e3e21b11317630f192dd4ca954ff511fc97b))
+
+- **089**: Rename cmd/grammar → cmd/spec and its symbols
+  ([`21ebbd9`](https://github.com/ourPLCC/plcc-ng/commit/21ebbd9aeacf6262d1ba94ea74064bc622e6aed6))
+
+- **089**: Update consumer test files to use build/spec and cmd/spec
+  ([`ed242bc`](https://github.com/ourPLCC/plcc-ng/commit/ed242bc2f954b066ff80917a89621dc490466b11))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update make.py to use build/spec and cmd/spec
+  ([`3064f4b`](https://github.com/ourPLCC/plcc-ng/commit/3064f4b625f61fe38891d0c82be4a4300f2f8fb8))
+
+- **089**: Update scan, parse, rep, diagram to use build/spec and cmd/spec
+  ([`b9b9b35`](https://github.com/ourPLCC/plcc-ng/commit/b9b9b3532bbfc17466f48ba7e96f816e7362e0f5))
+
+- **095**: Add error messages and tighten type annotation per code review
+  ([`8f25c89`](https://github.com/ourPLCC/plcc-ng/commit/8f25c89719423c1b81e1968db5eb32732541c825))
+
+- UnexpectedTokensOnDividerError: add message explaining bare-% rule -
+  MissingLanguageDeclarationError: add message explaining language-name placement -
+  MultipleSemanticsError: add message stating only one section is allowed - parse_semantic_spec:
+  narrow parameter type from list to list[Divider|Line|Block] - parse_semantic_spec_test: remove
+  unused LanguageDeclaration import
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Testing
+
+- **089**: Rename stale grammar→spec in make_test.py function names
+  ([`5f9aa9c`](https://github.com/ourPLCC/plcc-ng/commit/5f9aa9c39957d19c5114f2507d9855d60f804fae))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **089**: Update bats tests to use .spec instead of .grammar
+  ([`354e10c`](https://github.com/ourPLCC/plcc-ng/commit/354e10cdb5f0ecff751c02a20d1b5bd826d93667))
+
+Replace all references to build/.grammar with build/.spec in the plcc-make bats test file, including
+  test names, assertions, and the seeded file used by the stored-spec-missing test.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.44.0 (2026-06-16)
 
 ### Documentation
