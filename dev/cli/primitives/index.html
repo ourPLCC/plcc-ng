@@ -1060,7 +1060,7 @@
 blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use internally.</p>
 <hr />
 <h2 id="plcc-spec">plcc-spec</h2>
-<p>Parse, validate, and print a PLCC grammar file as JSON.</p>
+<p>Parse, validate, and print a PLCC spec file as JSON.</p>
 <pre><code class="language-text">plcc-spec [-v ...] [options] FILE
 </code></pre>
 <table>
@@ -1073,7 +1073,7 @@ blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use intern
 <tbody>
 <tr>
 <td><code>FILE</code></td>
-<td><code>.plcc</code> grammar file. Use <code>-</code> to read from stdin.</td>
+<td><code>.plcc</code> spec file. Use <code>-</code> to read from stdin.</td>
 </tr>
 <tr>
 <td><code>--no-json</code></td>
@@ -1082,7 +1082,7 @@ blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use intern
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec grammar.plcc
+<pre><code class="language-bash">plcc-spec spec.plcc
 </code></pre>
 <hr />
 <h2 id="plcc-tokens">plcc-tokens</h2>
@@ -1116,7 +1116,7 @@ blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use intern
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec grammar.plcc | plcc-tokens - samples
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-tokens - samples
 </code></pre>
 <hr />
 <h2 id="plcc-trees">plcc-trees</h2>
@@ -1167,7 +1167,7 @@ blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use intern
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec grammar.plcc | plcc-model
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model
 </code></pre>
 <hr />
 <h2 id="plcc-lang-emit">plcc-lang-emit</h2>
@@ -1193,11 +1193,11 @@ blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use intern
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-spec grammar.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
 </code></pre>
 <hr />
 <h2 id="plcc-diagram">plcc-diagram</h2>
-<p>Generate and display a class diagram from a PLCC grammar file.</p>
+<p>Generate and display a class diagram from a PLCC spec file.</p>
 <pre><code class="language-text">plcc-diagram [-v ...] [options]
 </code></pre>
 <table>
@@ -1209,21 +1209,21 @@ blocks that the <a href="../orchestrators/">Level 2 orchestrators</a> use intern
 </thead>
 <tbody>
 <tr>
-<td><code>-g PATH</code>, <code>--grammar=PATH</code></td>
-<td>Grammar file. Remembers across invocations. Defaults to <code>grammar.plcc</code>.</td>
+<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
+<td>Spec file. Remembers across invocations. Defaults to <code>spec.plcc</code>.</td>
 </tr>
 <tr>
 <td><code>--format=FMT</code></td>
 <td>Diagram format. Default: <code>plantuml</code>.</td>
 </tr>
 <tr>
-<td><code>--no-banner</code></td>
-<td>Suppress the version and grammar banner.</td>
+<td><code>-b</code>, <code>--banner</code></td>
+<td>Show the version and spec banner on stderr.</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-diagram -g mylang.plcc
+<pre><code class="language-bash">plcc-diagram -s mylang.plcc
 </code></pre>
 
 
