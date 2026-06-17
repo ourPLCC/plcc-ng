@@ -49,6 +49,24 @@ plcc-spec spec.plcc | plcc-tokens - samples
 
 ---
 
+## plcc-ll1
+
+Perform LL(1) analysis on a grammar spec.
+
+```text
+plcc-ll1 [-v ...]
+```
+
+Reads spec JSON from stdin (output of `plcc-spec`); emits LL(1) analysis JSON to stdout.
+
+**Example:**
+
+```bash
+plcc-spec spec.plcc | plcc-ll1 > ll1.json
+```
+
+---
+
 ## plcc-trees
 
 Dispatch to a parser plugin. Reads token JSONL; emits a parse tree.
@@ -63,7 +81,12 @@ plcc-trees [-v ...] [options] --ll1=LL1_JSON
 | `--parser=KIND` | Parser plugin to use. Default: `table`. |
 | `-t`, `--trace` | Forward trace flag to the parser plugin. |
 
-<!-- TODO: document how to obtain LL1_JSON (output of plcc-ll1) -->
+**Example:**
+
+```bash
+plcc-spec spec.plcc | plcc-ll1 > ll1.json
+plcc-spec spec.plcc | plcc-tokens - samples | plcc-trees --ll1=ll1.json
+```
 
 ---
 
