@@ -81,26 +81,6 @@
          <lastmod>2026-06-17</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/084-no-banner-default/</loc>
-         <lastmod>2026-06-17</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/085-rep-ctrl-c-keyboard-interrupt/</loc>
-         <lastmod>2026-06-17</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/086-token-str-method/</loc>
-         <lastmod>2026-06-17</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/088-lexical-rule-keyword-required/</loc>
-         <lastmod>2026-06-17</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/089-grammar-to-spec-rename/</loc>
-         <lastmod>2026-06-17</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/093-incremental-parsing-repl/</loc>
          <lastmod>2026-06-17</lastmod>
     </url>
@@ -109,7 +89,11 @@
          <lastmod>2026-06-17</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/095-semantic-section-redesign/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/096-test-setup-deduplication/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/097-test-output-cache/</loc>
          <lastmod>2026-06-17</lastmod>
     </url>
     <url>
@@ -402,6 +386,30 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/082-docs-reorder-level1-level2-commands/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/084-no-banner-default/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/085-rep-ctrl-c-keyboard-interrupt/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/086-token-str-method/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/088-lexical-rule-keyword-required/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/089-grammar-to-spec-rename/</loc>
+         <lastmod>2026-06-17</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/095-semantic-section-redesign/</loc>
          <lastmod>2026-06-17</lastmod>
     </url>
     <url>
