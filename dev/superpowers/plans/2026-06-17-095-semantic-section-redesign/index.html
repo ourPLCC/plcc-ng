@@ -1,0 +1,2018 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-095-semantic-section-redesign/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>095 — Semantic Section Redesign Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#095-semantic-section-redesign-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              095 — Semantic Section Redesign Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/orchestrators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="095-semantic-section-redesign-implementation-plan">095 — Semantic Section Redesign Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Redesign the semantic section format so the divider is a bare <code>%</code>, the language name moves into the section body as its first non-blank non-comment line, and the tool concept is removed entirely.</p>
+<p><strong>Architecture:</strong> Work bottom-up through the parsing stack: (1) rough parser Divider + semantic parser, (2) single-section enforcement + Spec type, (3) JSON schema + model builder, (4) plcc-make, (5) plcc-rep. Each task leaves all tests green.</p>
+<p><strong>Tech Stack:</strong> Python 3.14, pytest (<code>bin/test/units.bash</code>), dataclasses, docopt.</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>No backward compatibility. Old <code>% Language</code> and <code>% tool Language</code> divider syntax → parse error.</li>
+<li>Only one semantic section allowed per spec file.</li>
+<li><code>semantics</code> in <code>spec.json</code> is now a nullable object, not an array.</li>
+<li><code>semantic_sections</code> in <code>model.json</code> remains an array (0 or 1 items), but <code>tool</code> is removed.</li>
+<li>Language name validation (canonical casing) is implicit at build time via <code>plcc-lang-emit</code>.</li>
+<li>Build output dir: <code>build/&lt;language&gt;/</code> (e.g., <code>build/Python</code>).</li>
+<li>Run tests with: <code>bin/test/units.bash</code> from the worktree root.</li>
+<li>Commit from the worktree root (branch <code>095-redesign-semantic-section-format</code>).</li>
+</ul>
+<hr />
+<h2 id="file-map">File Map</h2>
+<p><strong>Create:</strong>
+- <code>src/plcc/spec/rough/UnexpectedTokensOnDividerError.py</code>
+- <code>src/plcc/spec/semantics/LanguageDeclaration.py</code>
+- <code>src/plcc/spec/semantics/MissingLanguageDeclarationError.py</code>
+- <code>src/plcc/spec/MultipleSemanticsError.py</code></p>
+<p><strong>Delete:</strong>
+- <code>src/plcc/spec/rough/TooManyDividerTokensError.py</code></p>
+<p><strong>Modify:</strong>
+- <code>src/plcc/spec/rough/Divider.py</code> — remove <code>tool</code>, <code>language</code>
+- <code>src/plcc/spec/rough/parse_dividers.py</code> — bare <code>%</code> only, raise on tokens
+- <code>src/plcc/spec/rough/__init__.py</code> — swap exported error
+- <code>src/plcc/spec/semantics/SemanticSpec.py</code> — remove <code>tool</code>
+- <code>src/plcc/spec/semantics/parse_semantic_spec.py</code> — extract language from body
+- <code>src/plcc/spec/semantics/__init__.py</code> — export new types
+- <code>src/plcc/spec/Spec.py</code> — <code>semantics: SemanticSpec | None</code>
+- <code>src/plcc/spec/parseSpec.py</code> — enforce single section, catch MissingLanguageDeclarationError
+- <code>src/plcc/schemas/spec.schema.json</code> — semantics → nullable object, no tool
+- <code>src/plcc/schemas/model.schema.json</code> — remove <code>tool</code> from semantic_sections items
+- <code>src/plcc/model/build_model.py</code> — handle nullable semantics, drop tool
+- <code>src/plcc/cmd/make.py</code> — language as output dir, remove validate_tool_name
+- <code>src/plcc/cmd/rep.py</code> — remove --tool, simplify language resolution
+- <code>src/plcc/cmd/output.py</code> — simplify print_banner signature</p>
+<p><strong>Test files modified:</strong>
+- <code>src/plcc/spec/rough/parse_dividers_test.py</code>
+- <code>src/plcc/spec/semantics/parse_semantic_spec_test.py</code>
+- <code>src/plcc/spec/parseSpec_test.py</code>
+- <code>src/plcc/spec/plcc_spec_cli_test.py</code>
+- <code>src/plcc/model/build_model_test.py</code>
+- <code>src/plcc/lang/ext/python/emit_test.py</code>
+- <code>src/plcc/lang/ext/java/emit_test.py</code>
+- <code>src/plcc/cmd/make_test.py</code>
+- <code>src/plcc/cmd/rep_test.py</code></p>
+<hr />
+<h2 id="task-1-core-parsing-pipeline-divider-simplification-and-language-extraction-from-body">Task 1: Core parsing pipeline — Divider simplification and language extraction from body</h2>
+<p>Rewrites the path from raw <code>%</code> line through <code>SemanticSpec</code>. After this task, <code>Divider</code> has no metadata, <code>parse_dividers</code> rejects tokens after <code>%</code>, and <code>parse_semantic_spec</code> reads the language from the first non-blank/non-comment body line.</p>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/spec/rough/UnexpectedTokensOnDividerError.py</code>
+- Modify: <code>src/plcc/spec/rough/Divider.py</code>
+- Modify: <code>src/plcc/spec/rough/parse_dividers.py</code>
+- Modify: <code>src/plcc/spec/rough/__init__.py</code>
+- Delete: <code>src/plcc/spec/rough/TooManyDividerTokensError.py</code>
+- Create: <code>src/plcc/spec/semantics/LanguageDeclaration.py</code>
+- Create: <code>src/plcc/spec/semantics/MissingLanguageDeclarationError.py</code>
+- Modify: <code>src/plcc/spec/semantics/SemanticSpec.py</code>
+- Modify: <code>src/plcc/spec/semantics/parse_semantic_spec.py</code>
+- Modify: <code>src/plcc/spec/semantics/__init__.py</code>
+- Test: <code>src/plcc/spec/rough/parse_dividers_test.py</code>
+- Test: <code>src/plcc/spec/semantics/parse_semantic_spec_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Produces: <code>Divider(line: Line)</code> — no tool, no language
+- Produces: <code>LanguageDeclaration(language: str, line: Line)</code>
+- Produces: <code>MissingLanguageDeclarationError(SpecError)</code> — raised when body has no language line
+- Produces: <code>UnexpectedTokensOnDividerError(SpecError)</code> — raised when <code>%</code> has tokens
+- Produces: <code>SemanticSpec(language: str, codeFragmentList: list[CodeFragment])</code> — no tool
+- Consumes: <code>SpecError(line, column)</code> from <code>src/plcc/spec/SpecError.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Replace parse_dividers_test.py</strong></li>
+</ul>
+<p>Replace the full contents of <code>src/plcc/spec/rough/parse_dividers_test.py</code>:</p>
+<pre><code class="language-python">from pytest import raises
+from ... import lines
+from .Block import Block
+from .Divider import Divider
+from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
+from .parse_blocks import parse_blocks
+from .parse_dividers import parse_dividers
+
+
+def test_None_yields_nothing():
+    assert list(parse_dividers(None)) == []
+
+
+def test_empty_yields_nothing():
+    assert list(parse_dividers([])) == []
+
+
+def test_non_dividers_pass_through():
+    lines_ = list(parse_blocks(lines.parseLines('''\
+one
+%%%
+two
+%%%
+three
+''')))
+    assert list(parse_dividers(lines_)) == lines_
+
+
+def test_bare_percent_yields_divider():
+    lines_ = list(lines.parseLines('%'))
+    result = list(parse_dividers(lines_))
+    assert result == [Divider(line=lines_[0])]
+
+
+def test_percent_with_trailing_whitespace_yields_divider():
+    lines_ = list(lines.parseLines('%  '))
+    result = list(parse_dividers(lines_))
+    assert result == [Divider(line=lines_[0])]
+
+
+def test_percent_with_token_raises_error():
+    with raises(UnexpectedTokensOnDividerError):
+        list(parse_dividers(list(lines.parseLines('% Java'))))
+
+
+def test_percent_with_two_tokens_raises_error():
+    with raises(UnexpectedTokensOnDividerError):
+        list(parse_dividers(list(lines.parseLines('% tool Java'))))
+
+
+def test_percent_with_three_tokens_raises_error():
+    with raises(UnexpectedTokensOnDividerError):
+        list(parse_dividers(list(lines.parseLines('% a b c'))))
+
+
+def test_double_percent_does_not_match():
+    lines_ = list(lines.parseLines('%%'))
+    assert list(parse_dividers(lines_)) == [lines.Line('%%', 1, None)]
+
+
+def test_blocks_mask_dividers():
+    lines_ = list(parse_blocks(lines.parseLines('%%%\n%\n%%%')))
+    assert list(parse_dividers(lines_)) == [
+        Block([
+            lines_[0].lines[0],
+            lines_[0].lines[1],
+            lines_[0].lines[2]
+        ])
+    ]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests, confirm failures</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/spec/rough/parse_dividers_test.py -v
+</code></pre>
+<p>Expected: multiple failures — <code>UnexpectedTokensOnDividerError</code> not importable, <code>Divider</code> constructor mismatch.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>UnexpectedTokensOnDividerError.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/spec/rough/UnexpectedTokensOnDividerError.py</code>:</p>
+<pre><code class="language-python">from ..SpecError import SpecError
+
+
+class UnexpectedTokensOnDividerError(SpecError):
+    ...
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>Divider.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/rough/Divider.py</code>:</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+from ...lines import Line
+
+
+@dataclass
+class Divider:
+    line: Line
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Update <code>parse_dividers.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/rough/parse_dividers.py</code>:</p>
+<pre><code class="language-python">import re
+
+from ...lines import Line
+from .Divider import Divider
+from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
+
+_BARE_PERCENT = re.compile(r'^%\s*$')
+_PERCENT_PREFIX = re.compile(r'^%')
+_FIRST_TOKEN = re.compile(r'^%\s*(\S)')
+
+
+def parse_dividers(lines):
+    if not lines:
+        return
+    for line in lines:
+        if isinstance(line, Line) and _PERCENT_PREFIX.match(line.string):
+            if _BARE_PERCENT.match(line.string):
+                yield Divider(line=line)
+            else:
+                match = _FIRST_TOKEN.match(line.string)
+                col = match.start(1) + 1
+                raise UnexpectedTokensOnDividerError(line=line, column=col)
+        else:
+            yield line
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 6: Update <code>rough/__init__.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/rough/__init__.py</code>:</p>
+<pre><code class="language-python">from .Block import Block
+from .CircularIncludeError import CircularIncludeError
+from .Divider import Divider
+from .parseRough import parseRough
+from .Include import Include
+from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
+from .UnclosedBlockError import UnclosedBlockError
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Delete <code>TooManyDividerTokensError.py</code></strong></li>
+</ul>
+<pre><code class="language-bash">git rm src/plcc/spec/rough/TooManyDividerTokensError.py
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 8: Run divider tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/spec/rough/parse_dividers_test.py -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 9: Replace <code>parse_semantic_spec_test.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/semantics/parse_semantic_spec_test.py</code>:</p>
+<pre><code class="language-python">import pytest
+
+from ...lines import Line
+from .. import rough
+from .LanguageDeclaration import LanguageDeclaration
+from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
+from .parse_semantic_spec import parse_semantic_spec
+
+
+def test_language_extracted_from_first_non_blank_line():
+    section = [make_divider('%'), make_line('Python'), make_block()]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Python'
+
+
+def test_language_extracted_skips_blank_lines():
+    section = [make_divider('%'), make_line(''), make_line('  '), make_line('Java')]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Java'
+
+
+def test_language_extracted_skips_comment_lines():
+    section = [make_divider('%'), make_line('# a comment'), make_line('Python')]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Python'
+
+
+def test_language_is_stripped():
+    section = [make_divider('%'), make_line('  Python  ')]
+    spec = parse_semantic_spec(section)
+    assert spec.language == 'Python'
+
+
+def test_code_fragments_follow_language_line():
+    section = [make_divider('%'), make_line('Python'), make_line('Program'), make_block()]
+    spec = parse_semantic_spec(section)
+    assert len(spec.codeFragmentList) == 1
+    assert spec.codeFragmentList[0].targetLocator.className == 'Program'
+
+
+def test_no_code_fragments_is_valid():
+    section = [make_divider('%'), make_line('Python')]
+    spec = parse_semantic_spec(section)
+    assert spec.codeFragmentList == []
+
+
+def test_no_language_line_raises_error():
+    section = [make_divider('%')]
+    with pytest.raises(MissingLanguageDeclarationError):
+        parse_semantic_spec(section)
+
+
+def test_only_blank_lines_raises_error():
+    section = [make_divider('%'), make_line(''), make_line('  ')]
+    with pytest.raises(MissingLanguageDeclarationError):
+        parse_semantic_spec(section)
+
+
+def test_only_comment_lines_raises_error():
+    section = [make_divider('%'), make_line('# comment')]
+    with pytest.raises(MissingLanguageDeclarationError):
+        parse_semantic_spec(section)
+
+
+def test_spec_has_no_tool_attribute():
+    section = [make_divider('%'), make_line('Python')]
+    spec = parse_semantic_spec(section)
+    assert not hasattr(spec, 'tool')
+
+
+def make_divider(string, number=1):
+    return rough.Divider(line=make_line(string, number))
+
+
+def make_block():
+    rough_, _ = rough.parseRough('%%%\nblock\n%%%\n')
+    return rough_[0]
+
+
+def make_line(string, number=1):
+    return Line(string, number, None)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 10: Run semantic spec tests, confirm failures</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/spec/semantics/parse_semantic_spec_test.py -v
+</code></pre>
+<p>Expected: multiple failures — <code>LanguageDeclaration</code>, <code>MissingLanguageDeclarationError</code> not importable.</p>
+<ul>
+<li>[ ] <strong>Step 11: Create <code>LanguageDeclaration.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/spec/semantics/LanguageDeclaration.py</code>:</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+from ...lines import Line
+
+
+@dataclass
+class LanguageDeclaration:
+    language: str
+    line: Line
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 12: Create <code>MissingLanguageDeclarationError.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/spec/semantics/MissingLanguageDeclarationError.py</code>:</p>
+<pre><code class="language-python">from ..SpecError import SpecError
+
+
+class MissingLanguageDeclarationError(SpecError):
+    ...
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 13: Update <code>SemanticSpec.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/semantics/SemanticSpec.py</code>:</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+from .CodeFragment import CodeFragment
+
+
+@dataclass
+class SemanticSpec:
+    language: str
+    codeFragmentList: list[CodeFragment]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 14: Update <code>parse_semantic_spec.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/semantics/parse_semantic_spec.py</code>:</p>
+<pre><code class="language-python">from ...lines import Line
+from ..rough import Block, Divider
+from .LanguageDeclaration import LanguageDeclaration
+from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
+from .parse_code_fragments import parse_code_fragments
+from .SemanticSpec import SemanticSpec
+
+
+def parse_semantic_spec(semantic_spec: list) -&gt; SemanticSpec:
+    divider = semantic_spec[0]
+    rest = list(semantic_spec[1:])
+    language_decl, body_start = _extract_language(rest, divider)
+    code_fragments = parse_code_fragments(rest[body_start:])
+    return SemanticSpec(language=language_decl.language, codeFragmentList=code_fragments)
+
+
+def _extract_language(items, divider):
+    for i, item in enumerate(items):
+        if isinstance(item, Line) and not _is_blank_or_comment(item.string):
+            return LanguageDeclaration(language=item.string.strip(), line=item), i + 1
+    raise MissingLanguageDeclarationError(line=divider.line, column=1)
+
+
+def _is_blank_or_comment(s):
+    if s is None:
+        return True
+    stripped = s.strip()
+    return stripped == '' or stripped.startswith('#')
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 15: Update <code>semantics/__init__.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/semantics/__init__.py</code>:</p>
+<pre><code class="language-python">from .LanguageDeclaration import LanguageDeclaration
+from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
+from .SemanticSpec import SemanticSpec
+from .parse_semantic_spec import parse_semantic_spec
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 16: Run all unit tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash -v
+</code></pre>
+<p>Expected: 977+ pass, 0 failures.</p>
+<ul>
+<li>[ ] <strong>Step 17: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/spec/rough/UnexpectedTokensOnDividerError.py \
+        src/plcc/spec/rough/Divider.py \
+        src/plcc/spec/rough/parse_dividers.py \
+        src/plcc/spec/rough/__init__.py \
+        src/plcc/spec/rough/parse_dividers_test.py \
+        src/plcc/spec/semantics/LanguageDeclaration.py \
+        src/plcc/spec/semantics/MissingLanguageDeclarationError.py \
+        src/plcc/spec/semantics/SemanticSpec.py \
+        src/plcc/spec/semantics/parse_semantic_spec.py \
+        src/plcc/spec/semantics/__init__.py \
+        src/plcc/spec/semantics/parse_semantic_spec_test.py
+git commit -m &quot;feat(095): simplify Divider and extract language from semantic section body&quot;
+</code></pre>
+<hr />
+<h2 id="task-2-single-section-enforcement-and-spec-type-change">Task 2: Single-section enforcement and <code>Spec</code> type change</h2>
+<p>Adds <code>MultipleSemanticsError</code>, enforces one semantic section in <code>parseSpec</code>, changes <code>Spec.semantics</code> from <code>list</code> to <code>SemanticSpec | None</code>.</p>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/spec/MultipleSemanticsError.py</code>
+- Modify: <code>src/plcc/spec/Spec.py</code>
+- Modify: <code>src/plcc/spec/parseSpec.py</code>
+- Test: <code>src/plcc/spec/parseSpec_test.py</code>
+- Test: <code>src/plcc/spec/plcc_spec_cli_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>MissingLanguageDeclarationError</code> from Task 1
+- Consumes: <code>Divider.line</code> (bare <code>Line</code>) from Task 1
+- Produces: <code>MultipleSemanticsError(SpecError)</code> — raised when spec has 2+ semantic sections
+- Produces: <code>Spec.semantics: SemanticSpec | None</code> — single optional section</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace <code>parseSpec_test.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/parseSpec_test.py</code>:</p>
+<pre><code class="language-python">import pytest
+
+from .parseSpec import parseSpec
+from .MultipleSemanticsError import MultipleSemanticsError
+from .rough.UnclosedBlockError import UnclosedBlockError
+
+
+def test_rough_errors_are_returned():
+    _, errors = parseSpec(&quot;token NUM '\\d+'\n%\n&lt;a&gt; ::= NUM\n%\nPython\n%%%\nhi&quot;)
+    assert any(isinstance(e, UnclosedBlockError) for e in errors)
+
+
+def test_lex_only():
+    spec, errors = parseSpec(&quot;token A 'a'\nskip B 'b'\n&quot;)
+    assert len(spec.lexical) == 2
+    assert len(spec.syntax) == 0
+    assert spec.semantics is None
+
+
+def test_lexical_and_syntax_only():
+    spec, errors = parseSpec(
+        &quot;token A 'a'\nskip B 'b'\n%\n&lt;a&gt; ::= A &lt;b&gt;\n&lt;b&gt; ::= B\n&quot;
+    )
+    assert len(spec.lexical) == 2
+    assert len(spec.syntax) == 2
+    assert spec.semantics is None
+
+
+def test_full_with_single_semantic_section():
+    s = '''\
+token A 'a'
+skip B 'b'
+%
+&lt;a&gt; ::= A &lt;b&gt;
+&lt;b&gt; ::= B
+%
+Python
+A
+%%%
+Hi
+%%%
+'''
+    spec, errors = parseSpec(s)
+    assert errors == []
+    assert len(spec.lexical) == 2
+    assert len(spec.syntax) == 2
+    assert spec.semantics is not None
+    assert spec.semantics.language == 'Python'
+
+
+def test_multiple_semantic_sections_produces_error():
+    s = '''\
+token A 'a'
+%
+&lt;a&gt; ::= A
+%
+Python
+%%%
+one
+%%%
+%
+Java
+%%%
+two
+%%%
+'''
+    spec, errors = parseSpec(s)
+    assert any(isinstance(e, MultipleSemanticsError) for e in errors)
+
+
+def test_multiple_semantic_sections_returns_first_section():
+    s = '''\
+token A 'a'
+%
+&lt;a&gt; ::= A
+%
+Python
+%
+Java
+'''
+    spec, errors = parseSpec(s)
+    assert spec.semantics is not None
+    assert spec.semantics.language == 'Python'
+
+
+def test_missing_language_declaration_produces_error():
+    s = &quot;token A 'a'\n%\n&lt;a&gt; ::= A\n%\n&quot;
+    spec, errors = parseSpec(s)
+    assert len(errors) &gt; 0
+    assert spec.semantics is None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests, confirm failures</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/spec/parseSpec_test.py -v
+</code></pre>
+<p>Expected: failures — <code>MultipleSemanticsError</code> not importable, <code>spec.semantics is None</code> assertions fail (it's still a list).</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>MultipleSemanticsError.py</code></strong></li>
+</ul>
+<p>Create <code>src/plcc/spec/MultipleSemanticsError.py</code>:</p>
+<pre><code class="language-python">from .SpecError import SpecError
+
+
+class MultipleSemanticsError(SpecError):
+    ...
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>Spec.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/Spec.py</code>:</p>
+<pre><code class="language-python">from dataclasses import dataclass
+
+from ..spec import lexical, semantics, syntax
+
+
+@dataclass
+class Spec:
+    lexical: lexical.LexicalSpec
+    syntax: syntax.SyntacticSpec
+    semantics: semantics.SemanticSpec | None
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Update <code>parseSpec.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/spec/parseSpec.py</code>:</p>
+<pre><code class="language-python">from .MultipleSemanticsError import MultipleSemanticsError
+from .Spec import Spec
+from .semantics.MissingLanguageDeclarationError import MissingLanguageDeclarationError
+from .split_rough import split_rough
+from . import lexical, rough, semantics, syntax
+
+
+def parseSpec(string, file=None, startLineNumber=1):
+    rough_, rough_errors = rough.parseRough(string, file, startLineNumber)
+    rough_ = iter(rough_)
+    rough_lex, rough_syn, rough_sems = split_rough(rough_)
+    lex_, lex_errors = lexical.parseLexicalSpec(rough_lex)
+    syn_, syn_errors = syntax.parse_syntactic_spec(rough_syn)
+
+    sem_errors = []
+    sem_ = None
+    if len(rough_sems) &gt; 1:
+        second_divider = rough_sems[1][0]
+        sem_errors.append(MultipleSemanticsError(line=second_divider.line, column=1))
+    if rough_sems:
+        try:
+            sem_ = semantics.parse_semantic_spec(rough_sems[0])
+        except MissingLanguageDeclarationError as e:
+            sem_errors.append(e)
+
+    return (
+        Spec(lexical=lex_, syntax=syn_, semantics=sem_),
+        rough_errors + lex_errors + syn_errors + sem_errors,
+    )
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 6: Update <code>plcc_spec_cli_test.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/spec/plcc_spec_cli_test.py</code>, replace <code>test_outputs_spec_json</code>:</p>
+<pre><code class="language-python">def test_outputs_spec_json(capsys, fs):
+    fs.create_file('/trivial.plcc', contents=&quot;&quot;&quot;\
+token NUM '\\d+'
+%
+&lt;program&gt; ::= NUM
+%
+PlantUML
+&quot;&quot;&quot;)
+    run_main(['/trivial.plcc'])
+    out, err = capsys.readouterr()
+    data = json.loads(out)
+    assert 'lexical' in data
+    assert 'syntax' in data
+    assert 'semantics' in data
+    assert data['semantics'] is not None
+    assert data['semantics']['language'] == 'PlantUML'
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Run all unit tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 8: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/spec/MultipleSemanticsError.py \
+        src/plcc/spec/Spec.py \
+        src/plcc/spec/parseSpec.py \
+        src/plcc/spec/parseSpec_test.py \
+        src/plcc/spec/plcc_spec_cli_test.py
+git commit -m &quot;feat(095): enforce single semantic section; Spec.semantics is now SemanticSpec | None&quot;
+</code></pre>
+<hr />
+<h2 id="task-3-json-schema-and-model-builder">Task 3: JSON schema and model builder</h2>
+<p>Updates <code>spec.schema.json</code> (semantics → nullable object, no tool), <code>model.schema.json</code> (remove tool from semantic_sections items), <code>build_model.py</code> (handle nullable semantics), and all affected test fixtures.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/schemas/spec.schema.json</code>
+- Modify: <code>src/plcc/schemas/model.schema.json</code>
+- Modify: <code>src/plcc/model/build_model.py</code>
+- Test: <code>src/plcc/model/build_model_test.py</code>
+- Test: <code>src/plcc/lang/ext/python/emit_test.py</code>
+- Test: <code>src/plcc/lang/ext/java/emit_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>spec['semantics']</code> — now <code>null | {language, codeFragmentList}</code> (from Task 2)
+- Produces: <code>model['semantic_sections']</code> — array of <code>{language, fragments}</code>, no tool</p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>build_model_test.py</code> fixture and assertion</strong></li>
+</ul>
+<p>In <code>src/plcc/model/build_model_test.py</code>, replace <code>_TRIVIAL_SPEC</code> and <code>test_semantic_sections_present</code>:</p>
+<pre><code class="language-python">_TRIVIAL_SPEC = {
+    &quot;lexical&quot;: {
+        &quot;ruleList&quot;: [
+            {
+                &quot;name&quot;: &quot;NUM&quot;,
+                &quot;pattern&quot;: &quot;\\d+&quot;,
+                &quot;isSkip&quot;: False,
+                &quot;line&quot;: {&quot;string&quot;: &quot;token NUM '\\d+'&quot;, &quot;number&quot;: 1, &quot;file&quot;: None}
+            }
+        ]
+    },
+    &quot;syntax&quot;: {
+        &quot;rules&quot;: [
+            {
+                &quot;line&quot;: {&quot;string&quot;: &quot;&lt;Program&gt; ::= NUM&quot;, &quot;number&quot;: 3, &quot;file&quot;: None},
+                &quot;lhs&quot;: {&quot;name&quot;: &quot;Program&quot;, &quot;isTerminal&quot;: False, &quot;altName&quot;: None, &quot;isCapturing&quot;: False},
+                &quot;rhsSymbolList&quot;: [
+                    {&quot;name&quot;: &quot;NUM&quot;, &quot;isTerminal&quot;: True, &quot;isCapturing&quot;: True}
+                ]
+            }
+        ]
+    },
+    &quot;semantics&quot;: {&quot;language&quot;: &quot;PlantUML&quot;, &quot;codeFragmentList&quot;: []}
+}
+</code></pre>
+<pre><code class="language-python">def test_semantic_sections_present():
+    model = build_model(_TRIVIAL_SPEC)
+    sections = model['semantic_sections']
+    assert len(sections) == 1
+    assert sections[0]['language'] == 'plantuml'
+    assert 'tool' not in sections[0]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run failing test</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/model/build_model_test.py::test_semantic_sections_present -v
+</code></pre>
+<p>Expected: FAIL — <code>build_model</code> still reads <code>spec.get('semantics', [])</code> as list.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>build_model.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/model/build_model.py</code>, replace <code>_build_semantic_sections</code>:</p>
+<pre><code class="language-python">def _build_semantic_sections(spec, known_class_names):
+    sem = spec.get('semantics')
+    if not sem:
+        return []
+    fragments = [
+        _build_fragment(frag, known_class_names)
+        for frag in sem.get('codeFragmentList', [])
+    ]
+    return [{'language': sem['language'].lower(), 'fragments': fragments}]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run model tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/model/build_model_test.py -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Remove <code>tool</code> from emitter test fixtures</strong></li>
+</ul>
+<p>In <code>src/plcc/lang/ext/python/emit_test.py</code>, in <code>_arith_model()</code>, remove <code>"tool": "calculate"</code> from the semantic section:</p>
+<pre><code class="language-python">&quot;semantic_sections&quot;: [
+    {
+        &quot;language&quot;: &quot;Python&quot;,
+        &quot;fragments&quot;: [
+            {&quot;class_name&quot;: &quot;Program&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def _run(self):\n    return self.expr.eval()&quot;},
+            {&quot;class_name&quot;: &quot;AddRest&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())&quot;},
+            {&quot;class_name&quot;: &quot;NilRest&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self, acc):\n    return acc&quot;},
+            {&quot;class_name&quot;: &quot;Term&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self):\n    return int(self.num.lexeme)&quot;},
+            {&quot;class_name&quot;: &quot;Expr&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self):\n    return self.rest.eval(self.term.eval())&quot;},
+        ]
+    }
+]
+</code></pre>
+<p>In <code>src/plcc/lang/ext/java/emit_test.py</code>, in <code>_trivial_model()</code>, remove <code>"tool": "Java"</code>:</p>
+<pre><code class="language-python">&quot;semantic_sections&quot;: [
+    {
+        &quot;language&quot;: &quot;Java&quot;,
+        &quot;fragments&quot;: [
+            {&quot;class_name&quot;: &quot;Program&quot;, &quot;kind&quot;: &quot;body&quot;,
+             &quot;body&quot;: &quot;    public void _run() {\n        System.out.println(expr.toString());\n    }&quot;},
+        ]
+    }
+]
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 6: Update <code>spec.schema.json</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/schemas/spec.schema.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-07/schema#&quot;,
+  &quot;title&quot;: &quot;Spec&quot;,
+  &quot;description&quot;: &quot;Output of plcc-spec: a parsed PLCC grammar.&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;required&quot;: [&quot;lexical&quot;, &quot;syntax&quot;, &quot;semantics&quot;],
+  &quot;properties&quot;: {
+    &quot;lexical&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [&quot;ruleList&quot;],
+      &quot;properties&quot;: {
+        &quot;ruleList&quot;: {
+          &quot;type&quot;: &quot;array&quot;,
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;object&quot;,
+            &quot;required&quot;: [&quot;name&quot;, &quot;pattern&quot;, &quot;isSkip&quot;],
+            &quot;properties&quot;: {
+              &quot;name&quot;:    { &quot;type&quot;: &quot;string&quot; },
+              &quot;pattern&quot;: { &quot;type&quot;: &quot;string&quot; },
+              &quot;isSkip&quot;:  { &quot;type&quot;: &quot;boolean&quot; }
+            }
+          }
+        }
+      }
+    },
+    &quot;syntax&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;required&quot;: [&quot;rules&quot;],
+      &quot;properties&quot;: {
+        &quot;rules&quot;: { &quot;type&quot;: &quot;array&quot; }
+      }
+    },
+    &quot;semantics&quot;: {
+      &quot;oneOf&quot;: [
+        {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;required&quot;: [&quot;language&quot;],
+          &quot;properties&quot;: {
+            &quot;language&quot;: { &quot;type&quot;: &quot;string&quot; }
+          }
+        },
+        { &quot;type&quot;: &quot;null&quot; }
+      ]
+    }
+  }
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Update <code>model.schema.json</code></strong></li>
+</ul>
+<p>In <code>src/plcc/schemas/model.schema.json</code>, replace the <code>semantic_sections</code> items definition (remove <code>tool</code> from <code>required</code> and <code>properties</code>):</p>
+<pre><code class="language-json">&quot;semantic_sections&quot;: {
+  &quot;type&quot;: &quot;array&quot;,
+  &quot;items&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;required&quot;: [&quot;language&quot;, &quot;fragments&quot;],
+    &quot;properties&quot;: {
+      &quot;language&quot;:    { &quot;type&quot;: &quot;string&quot; },
+      &quot;fragments&quot;: {
+        &quot;type&quot;: &quot;array&quot;,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;required&quot;: [&quot;class_name&quot;, &quot;kind&quot;, &quot;body&quot;],
+          &quot;properties&quot;: {
+            &quot;class_name&quot;: { &quot;type&quot;: &quot;string&quot; },
+            &quot;kind&quot;: {
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;enum&quot;: [&quot;top&quot;, &quot;import&quot;, &quot;class&quot;, &quot;init&quot;, &quot;body&quot;, &quot;file&quot;]
+            },
+            &quot;body&quot;: { &quot;type&quot;: &quot;string&quot; }
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 8: Run all unit tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 9: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/schemas/spec.schema.json \
+        src/plcc/schemas/model.schema.json \
+        src/plcc/model/build_model.py \
+        src/plcc/model/build_model_test.py \
+        src/plcc/lang/ext/python/emit_test.py \
+        src/plcc/lang/ext/java/emit_test.py
+git commit -m &quot;feat(095): update spec/model schemas and build_model — semantics is nullable object, no tool&quot;
+</code></pre>
+<hr />
+<h2 id="task-4-update-plcc-make">Task 4: Update <code>plcc-make</code></h2>
+<p>Removes <code>validate_tool_name</code>, uses <code>section['language']</code> as build output directory, handles nullable semantics.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/make.py</code>
+- Test: <code>src/plcc/cmd/make_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>spec_data['semantics']</code> — <code>null | {language, ...}</code> (from Task 3)
+- Produces: output in <code>build/&lt;language&gt;/</code> (e.g., <code>build/Python</code>)</p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>make_test.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/make_test.py</code>:</p>
+<p>Change the import from:</p>
+<pre><code class="language-python">from .make import main as run_main, validate_tool_name, _report_ll1_failure
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">from .make import main as run_main, _report_ll1_failure
+</code></pre>
+<p>Delete the three <code>validate_tool_name</code> tests:
+- <code>test_validate_tool_name_accepts_valid</code>
+- <code>test_validate_tool_name_rejects_path_traversal</code>
+- <code>test_validate_tool_name_rejects_empty</code></p>
+<ul>
+<li>[ ] <strong>Step 2: Run make tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/make_test.py -v
+</code></pre>
+<p>Expected: all pass (the deleted tests were the only ones importing the deleted function).</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>make.py</code> — remove <code>validate_tool_name</code>, use language as dir</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/make.py</code>:</p>
+<ol>
+<li>
+<p>Delete <code>_TOOL_NAME_RE</code> and <code>validate_tool_name</code>.</p>
+</li>
+<li>
+<p>Replace the <code>tool_stages</code> line and <code>_REQUIRED</code> dict (around line 136):</p>
+</li>
+</ol>
+<pre><code class="language-python">sem = spec_data.get('semantics')
+lang_stage = {sem['language']} if sem else set()
+
+_REQUIRED = {
+    'scan':  {'scan'},
+    'parse': {'scan', 'parse'},
+    'model': {'scan', 'model'},
+    'all':   {'scan', 'parse', 'model'} | lang_stage,
+}
+</code></pre>
+<ol>
+<li>Replace the emit loop (the <code>if through == 'all':</code> block that iterates <code>spec_data.get('semantics', [])</code>):</li>
+</ol>
+<pre><code class="language-python">if through == 'all':
+    section = spec_data.get('semantics')
+    if section:
+        lang = section['language']
+        output_dir = str(build_dir / lang)
+        os.makedirs(output_dir, exist_ok=True)
+        verbose.emit(Events.PHASE, message=f&quot;emit {lang}&quot;)
+        _run_or_die(
+            ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'] + child_flags,
+            stdin_file=model_json,
+            verbose=verbose,
+        )
+        verbose.emit(Events.PHASE, message=f&quot;build {lang}&quot;)
+        _run_or_die(
+            ['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'] + child_flags,
+            verbose=verbose,
+        )
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run all unit tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
+git commit -m &quot;feat(095): plcc-make uses language name as output dir, removes validate_tool_name&quot;
+</code></pre>
+<hr />
+<h2 id="task-5-update-plcc-rep-and-print_banner">Task 5: Update <code>plcc-rep</code> and <code>print_banner</code></h2>
+<p>Removes <code>--tool</code> flag from <code>plcc-rep</code>, simplifies language resolution to read from nullable <code>spec['semantics']</code>, updates <code>print_banner</code> to accept only <code>language</code>.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/rep.py</code>
+- Modify: <code>src/plcc/cmd/output.py</code>
+- Test: <code>src/plcc/cmd/rep_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>spec['semantics']</code> — <code>null | {language}</code> (from Task 3)</p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>rep_test.py</code> fixtures and assertions</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep_test.py</code>:</p>
+<ol>
+<li>
+<p>Replace all occurrences of <code>{"semantics": [{"tool": "calc", "language": "python"}]}</code> with <code>{"semantics": {"language": "Python"}}</code>.</p>
+</li>
+<li>
+<p>Replace <code>_rep_module.main(["--spec=grammar.plcc", "--tool=calc"])</code> with <code>_rep_module.main(["--spec=grammar.plcc"])</code>.</p>
+</li>
+<li>
+<p>Replace <code>_rep_module.main(["--tool=calc", "--banner"])</code> with <code>_rep_module.main(["--banner"])</code> (two occurrences in <code>test_rep_main_banner_prints_version_to_stderr</code> and <code>test_rep_main_banner_prints_grammar_to_stderr</code>).</p>
+</li>
+<li>
+<p>In <code>test_rep_main_banner_prints_running_line_to_stderr</code>, replace <code>_rep_module.main(["--tool=calc", "--banner"])</code> with <code>_rep_module.main(["--banner"])</code> and change the assertion from:</p>
+</li>
+</ol>
+<pre><code class="language-python">assert &quot;Running calc with python.&quot; in err
+</code></pre>
+<p>to:</p>
+<pre><code class="language-python">assert &quot;Running Python.&quot; in err
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run rep tests, confirm failures</strong></li>
+</ul>
+<pre><code>bin/test/units.bash src/plcc/cmd/rep_test.py -v
+</code></pre>
+<p>Expected: failures around <code>--tool</code> arg and banner text.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>output.py</code></strong></li>
+</ul>
+<p>Replace <code>src/plcc/cmd/output.py</code>:</p>
+<pre><code class="language-python">import sys
+
+
+def print_user_error(message):
+    print(message, flush=True)
+
+
+def print_banner(version, grammar_path, language=None):
+    print(f&quot;plcc-ng {version}&quot;, file=sys.stderr, flush=True)
+    print(f&quot;spec: {grammar_path}&quot;, file=sys.stderr, flush=True)
+    if language is not None:
+        print(f&quot;Running {language}.&quot;, file=sys.stderr, flush=True)
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>rep.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep.py</code>:</p>
+<ol>
+<li>
+<p>Remove <code>--tool=NAME</code> from the docstring <code>__doc__</code>.</p>
+</li>
+<li>
+<p>Delete <code>tool_name = args['--tool']</code> from <code>main()</code>.</p>
+</li>
+<li>
+<p>Replace the <code>_resolve_tool</code> call and the <code>tool_dir</code> / <code>tool_name</code> / <code>language</code> variables with:</p>
+</li>
+</ol>
+<pre><code class="language-python">language = _resolve_language(spec)
+if banner:
+    print_banner(
+        get_version(),
+        os.path.abspath(read_spec('build')),
+        language=language,
+    )
+output_dir = os.path.join('build', language)
+
+interpreter = subprocess.Popen(
+    ['plcc-lang-run', f'--target={language}', f'--output={output_dir}'],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=None,
+)
+</code></pre>
+<ol>
+<li>Replace <code>_resolve_tool</code> with <code>_resolve_language</code>:</li>
+</ol>
+<pre><code class="language-python">def _resolve_language(spec):
+    section = spec.get('semantics')
+    if not section:
+        print(&quot;plcc-rep: no semantic section found in spec.&quot;, file=sys.stderr)
+        sys.exit(1)
+    return section['language']
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Run all unit tests, confirm they pass</strong></li>
+</ul>
+<pre><code>bin/test/units.bash -v
+</code></pre>
+<p>Expected: all pass.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add src/plcc/cmd/rep.py src/plcc/cmd/output.py src/plcc/cmd/rep_test.py
+git commit -m &quot;feat(095): plcc-rep removes --tool flag, reads language from spec semantics&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
