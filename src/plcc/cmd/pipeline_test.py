@@ -4,10 +4,10 @@ import sys
 
 import pytest
 
-from .pipeline import TreePipeline, print_parse_error
+from .pipeline import TreePipeline, print_parse_error, split_committed, slice_from_source
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
-    _eof_error_record,
+    _eof_error_record, _hold_record,
 )
 from plcc.verbose import VerboseContext
 
@@ -200,3 +200,69 @@ def test_print_parse_error_uses_default_stage_when_no_stage_and_no_location(caps
     print_parse_error(record, default_stage="plcc-test")
     out, _ = capsys.readouterr()
     assert "plcc-test: error: bad" in out
+
+
+# --- split_committed and slice_from_source ---
+
+
+def _items(*raws):
+    """Build (record, raw) pairs from raw JSONL byte chunks (one record each)."""
+    out = []
+    for raw in raws:
+        line = raw.strip()
+        out.append((json.loads(line), line))
+    return out
+
+
+def test_slice_from_source_single_line():
+    assert slice_from_source(b"3 + 4\n", {"line": 1, "column": 5}) == b"4\n"
+
+
+def test_slice_from_source_multiline():
+    assert slice_from_source(b"a\nbc\n", {"line": 2, "column": 2}) == b"c\n"
+
+
+def test_slice_from_source_without_position_returns_all():
+    assert slice_from_source(b"abc", {}) == b"abc"
+
+
+def test_split_eof_dispatches_all_and_strips_hold():
+    items = _items(_tree_record(), _hold_record())
+    dispatch, remainder = split_committed(items, b"3\n", eof=True)
+    assert [r.get("kind") for r, _ in dispatch] == ["tree"]
+    assert remainder == b""
+
+
+def test_split_trial_holds_trailing_extensible_tree():
+    items = _items(_tree_record(), _hold_record(line=1, col=1))
+    dispatch, remainder = split_committed(items, b"3\n", eof=False)
+    assert dispatch == []           # the extensible tree is held, not dispatched
+    assert remainder == b"3\n"
+
+
+def test_split_trial_commits_leading_tree_holds_incomplete():
+    # A committed final tree followed by a trailing incomplete fragment at col 3.
+    eof_err = json.dumps({
+        "kind": "error", "stage": "plcc-parser-table", "found": "eof",
+        "message": "unexpected end of input",
+        "source": {"file": "-", "line": 1, "column": 4},
+        "start": {"file": "-", "line": 1, "column": 3},
+    }).encode() + b"\n"
+    items = _items(_tree_record(), eof_err)
+    dispatch, remainder = split_committed(items, b"5;1+\n", eof=False)
+    assert [r.get("kind") for r, _ in dispatch] == ["tree"]
+    assert remainder == b"1+\n"
+
+
+def test_split_trial_commits_final_tree_no_remainder():
+    items = _items(_tree_record())   # final tree, no hold marker
+    dispatch, remainder = split_committed(items, b"42\n", eof=False)
+    assert [r.get("kind") for r, _ in dispatch] == ["tree"]
+    assert remainder == b""
+
+
+def test_split_trial_commits_genuine_error_no_remainder():
+    items = _items(_error_record("bad token"))
+    dispatch, remainder = split_committed(items, b"@\n", eof=False)
+    assert [r.get("kind") for r, _ in dispatch] == ["error"]
+    assert remainder == b""

@@ -66,22 +66,22 @@ def _tok(name, lexeme, line=1, col=1, file="<stdin>"):
 # --- trivial grammar tests ---
 
 def test_trivial_parse_returns_tree_kind():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
     assert tree["kind"] == "tree"
 
 
 def test_trivial_parse_rule_is_start_symbol():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
     assert tree["rule"] == "program"
 
 
 def test_trivial_parse_elided_symbol_not_in_children():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
     assert tree["children"] == []
 
 
 def test_trivial_parse_source_span():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", line=3, col=5)])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", line=3, col=5)])
     src = tree["source"]
     assert src["line"] == 3
     assert src["column"] == 5
@@ -90,31 +90,31 @@ def test_trivial_parse_source_span():
 
 
 def test_trivial_parse_source_file():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", file="prog.txt")])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42", file="prog.txt")])
     assert tree["source"]["file"] == "prog.txt"
 
 
 # --- alt name tests ---
 
 def test_alt_name_used_as_rule_in_tree():
-    tree, _ = parse(_PREFIX_LL1, [_tok("PLUS", "+"), _tok("NUM", "2"), _tok("NUM", "3")])
+    tree, _, _ = parse(_PREFIX_LL1, [_tok("PLUS", "+"), _tok("NUM", "2"), _tok("NUM", "3")])
     assert tree["rule"] == "Add"
 
 
 def test_alt_name_on_leaf_node():
-    tree, _ = parse(_PREFIX_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_PREFIX_LL1, [_tok("NUM", "42")])
     assert tree["rule"] == "Num"
 
 
 def test_no_alt_name_uses_nonterminal_name():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
     assert tree["rule"] == "program"
 
 
 # --- capturing symbol tests ---
 
 def test_capturing_child_in_children():
-    tree, _ = parse(_FLAT_EXPR_LL1, [
+    tree, _, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1", col=1),
         _tok("PLUS", "+", col=2),
         _tok("NUM", "2", col=3),
@@ -125,7 +125,7 @@ def test_capturing_child_in_children():
 
 
 def test_capturing_children_are_token_dicts():
-    tree, _ = parse(_FLAT_EXPR_LL1, [
+    tree, _, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1"),
         _tok("PLUS", "+"),
         _tok("NUM", "2"),
@@ -137,7 +137,7 @@ def test_capturing_children_are_token_dicts():
 
 
 def test_elided_plus_not_in_children():
-    tree, _ = parse(_FLAT_EXPR_LL1, [
+    tree, _, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1"),
         _tok("PLUS", "+"),
         _tok("NUM", "2"),
@@ -149,7 +149,7 @@ def test_elided_plus_not_in_children():
 # --- span across multiple tokens ---
 
 def test_span_covers_all_tokens_including_elided():
-    tree, _ = parse(_FLAT_EXPR_LL1, [
+    tree, _, _ = parse(_FLAT_EXPR_LL1, [
         _tok("NUM", "1", col=1),
         _tok("PLUS", "+", col=3),
         _tok("NUM", "2", col=5),
@@ -162,7 +162,7 @@ def test_span_covers_all_tokens_including_elided():
 # --- nested nonterminal tests ---
 
 def test_nested_nonterminal_child_is_tree():
-    tree, _ = parse(_EXPR_LL1, [
+    tree, _, _ = parse(_EXPR_LL1, [
         _tok("NUM", "3"),
     ])
     assert tree["rule"] == "E"
@@ -193,6 +193,27 @@ def test_empty_input_on_nonempty_grammar_raises_parse_error():
     with pytest.raises(ParseError):
         parse(_TRIVIAL_LL1, [])
 
+
+# E → NUM Tail ; Tail → PLUS NUM Tail | ε
+# A single NUM is a complete parse, but "NUM + NUM" is also valid, so NUM is extensible.
+_EXTENSIBLE_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "E",
+    "parse_table": {
+        "E": {"NUM": {"alt": None, "production": [
+            {"symbol": "NUM", "field": "n"},
+            {"symbol": "Tail", "field": "t"},
+        ]}},
+        "Tail": {
+            "PLUS": {"alt": None, "production": [
+                {"symbol": "PLUS", "field": None},
+                {"symbol": "NUM", "field": None},
+                {"symbol": "Tail", "field": None},
+            ]},
+            "eof": {"alt": None, "production": []},
+        },
+    },
+}
 
 # ll1 dict for: rands **= expr +COMMA, expr → NUM
 _RANDS_LL1 = {
@@ -232,7 +253,7 @@ _CMDS_LL1 = {
 
 
 def test_arbno_separator_two_items_produces_list():
-    tree, _ = parse(_RANDS_LL1, [
+    tree, _, _ = parse(_RANDS_LL1, [
         _tok("NUM", "1"),
         _tok("COMMA", ","),
         _tok("NUM", "2"),
@@ -244,7 +265,7 @@ def test_arbno_separator_two_items_produces_list():
 
 
 def test_arbno_separator_list_items_are_tree_nodes():
-    tree, _ = parse(_RANDS_LL1, [
+    tree, _, _ = parse(_RANDS_LL1, [
         _tok("NUM", "1"),
         _tok("COMMA", ","),
         _tok("NUM", "2"),
@@ -256,19 +277,19 @@ def test_arbno_separator_list_items_are_tree_nodes():
 
 
 def test_arbno_separator_zero_items_on_no_match():
-    tree, _ = parse(_RANDS_LL1, [])
+    tree, _, _ = parse(_RANDS_LL1, [])
     children_dict = dict(tree["children"])
     assert children_dict["exprList"] == []
 
 
 def test_arbno_separator_one_item():
-    tree, _ = parse(_RANDS_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_RANDS_LL1, [_tok("NUM", "42")])
     children_dict = dict(tree["children"])
     assert len(children_dict["exprList"]) == 1
 
 
 def test_arbno_plain_multiple_items():
-    tree, _ = parse(_CMDS_LL1, [
+    tree, _, _ = parse(_CMDS_LL1, [
         _tok("X", "a"),
         _tok("X", "b"),
         _tok("X", "c"),
@@ -278,13 +299,13 @@ def test_arbno_plain_multiple_items():
 
 
 def test_arbno_plain_zero_items():
-    tree, _ = parse(_CMDS_LL1, [])
+    tree, _, _ = parse(_CMDS_LL1, [])
     children_dict = dict(tree["children"])
     assert children_dict["cmdList"] == []
 
 
 def test_arbno_result_is_tree_kind():
-    tree, _ = parse(_RANDS_LL1, [_tok("NUM", "1")])
+    tree, _, _ = parse(_RANDS_LL1, [_tok("NUM", "1")])
     assert tree["kind"] == "tree"
     assert tree["rule"] == "rands"
 
@@ -322,12 +343,12 @@ def test_parse_error_carries_source():
 
 
 def test_parse_returns_consumed_count():
-    _, consumed = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    _, consumed, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
     assert consumed == 1
 
 
 def test_parse_stops_at_first_unconsumed_token():
-    tree, consumed = parse(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2")])
+    tree, consumed, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "1"), _tok("NUM", "2")])
     assert consumed == 1
     assert tree["kind"] == "tree"
 
@@ -486,7 +507,7 @@ def test_parse_with_tracer_complete_rule_matches_predict_production():
 
 
 def test_parse_with_no_tracer_still_works():
-    tree, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    tree, _, _ = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
     assert tree["kind"] == "tree"
 
 
@@ -543,4 +564,22 @@ def test_parse_with_tracer_arbno_predict_has_matching_complete():
     arbno_predicts = [e for e in t.events if e["event"] == "predict" and e["sym"] == "rands"]
     arbno_completes = [e for e in t.events if e["event"] == "complete" and e["rule"] == "rands"]
     assert len(arbno_predicts) == len(arbno_completes)
+
+
+def test_parse_returns_extensible_false_for_nonextensible_grammar():
+    # program -> NUM ; a single NUM is complete and cannot be extended.
+    _tree, _consumed, extensible = parse(_TRIVIAL_LL1, [_tok("NUM", "42")])
+    assert extensible is False
+
+
+def test_parse_returns_extensible_true_when_more_terminals_could_follow():
+    # Nullable tail: parsing "3" takes Tail -> eps on eof, but PLUS could follow.
+    _tree, _consumed, extensible = parse(_EXTENSIBLE_LL1, [_tok("NUM", "3")])
+    assert extensible is True
+
+
+def test_parse_returns_extensible_true_when_arbno_could_repeat():
+    # Arbno list: after consuming one operand at eof, another (COMMA NUM) could follow.
+    _tree, _consumed, extensible = parse(_RANDS_LL1, [_tok("NUM", "1")])
+    assert extensible is True
 

@@ -1,6 +1,151 @@
 # CHANGELOG
 
 
+## v0.46.0 (2026-06-18)
+
+### Bug Fixes
+
+- **093**: Add same-line split e2e test and tighten plcc-rep assertion
+  ([`ab6ca5d`](https://github.com/ourPLCC/plcc-ng/commit/ab6ca5d6db2b0f1f37ccb634a2050fd876c3633b))
+
+- Add test case for same-line split: multiple sentences on one line should produce multiple parse
+  trees - Tighten plcc-rep two-sentence test to assert exact output lines (3 and 4) instead of weak
+  substring match
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Gate hold-marker emission on --hold-markers flag
+  ([`52e7484`](https://github.com/ourPLCC/plcc-ng/commit/52e7484c58bed8e572b10955601c0379899fa38c))
+
+plcc-trees now only emits hold markers when called with --hold-markers. TreePipeline passes this
+  flag so orchestrators keep incremental behavior. Direct plcc-trees consumers (e.g. standalone test
+  harnesses) see the old byte-identical output without the extra hold record.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Plcc-trees forwards --hold-markers to parser plugin
+  ([`57c5100`](https://github.com/ourPLCC/plcc-ng/commit/57c51000e2dbc8596a7412c72766b047beb36d5a))
+
+TreePipeline passes --hold-markers to plcc-trees, but plcc-trees was not accepting or forwarding the
+  flag to plcc-parser-table. Add the flag to plcc-trees and forward it, restoring normal pipeline
+  output.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Scanhandler.feed returns bytes remainder not bool
+  ([`3f828f0`](https://github.com/ourPLCC/plcc-ng/commit/3f828f03611cf0176a78d909460de15e54c7322e))
+
+SourceRunner._incremental concatenates the returned remainder with the next line as bytes. Returning
+  True caused TypeError on the next input.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+### Documentation
+
+- **093**: Design for incremental parsing in interactive mode [skip ci]
+  ([`27d4dfe`](https://github.com/ourPLCC/plcc-ng/commit/27d4dfea87cbedf6d2074bf8be79a836abd34d1a))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Document incremental interactive mode and ^D [skip ci]
+  ([`96e8922`](https://github.com/ourPLCC/plcc-ng/commit/96e8922952dc22adebe0fcbb70da3319071501b5))
+
+Add Interactive mode paragraphs to both plcc-parse and plcc-rep sections describing line-by-line
+  evaluation, the >>> and ... prompts, and the single-press ^D behavior (exit at empty buffer;
+  force-submit at continuation).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Implementation plan for incremental parsing [skip ci]
+  ([`82daa00`](https://github.com/ourPLCC/plcc-ng/commit/82daa00e23a5f388c9c6c35d4abdb55691df0e14))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Note docs responsibility for orchestrators.md [skip ci]
+  ([`b28f9d3`](https://github.com/ourPLCC/plcc-ng/commit/b28f9d318e5fa1b1fc3055598f5c5898fd17e19c))
+
+- **094**: Add design spec for docs follow-up [skip ci]
+  ([`f0d348a`](https://github.com/ourPLCC/plcc-ng/commit/f0d348a519d5e2c71faa993f6b788e572c59303d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **094**: Add implementation plan [skip ci]
+  ([`7e18670`](https://github.com/ourPLCC/plcc-ng/commit/7e1867046184584303c692d38d586cf86107fd87))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **094**: Document plcc-ll1 and fix plcc-trees example [skip ci]
+  ([`d454699`](https://github.com/ourPLCC/plcc-ng/commit/d45469967dd927eed450467b86ee1f181cba420d))
+
+- **094**: Fix plcc-trees pipeline example (plcc-tokens needs file, not stdin) [skip ci]
+  ([`6606ce2`](https://github.com/ourPLCC/plcc-ng/commit/6606ce2c79270083d8d4333fd4accb74906f364a))
+
+- **094**: Remove --tool from plcc-rep (095) [skip ci]
+  ([`814a889`](https://github.com/ourPLCC/plcc-ng/commit/814a889fb8d93543293191aee941856b6ad8ff45))
+
+- **094**: Remove < /dev/null workaround; files-only means no interactive mode [skip ci]
+  ([`73d3ae6`](https://github.com/ourPLCC/plcc-ng/commit/73d3ae60446f80936228fc8418d9f02876c99b1e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **094**: Update examples for 089+095, verify all output [skip ci]
+  ([`da9d373`](https://github.com/ourPLCC/plcc-ng/commit/da9d37375f3a597246e9771cbb17db2607143d48))
+
+- **094**: Update semantic.md for 095 section format [skip ci]
+  ([`10c5f08`](https://github.com/ourPLCC/plcc-ng/commit/10c5f08f66cd523b4dfaf7a4b75ddb9593b76d02))
+
+- **issues**: Move 095 to done [skip ci]
+  ([`94254cc`](https://github.com/ourPLCC/plcc-ng/commit/94254ccf9d550d25c8032e2a9604fc4e429a01f9))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **093**: Add commit/hold split helper
+  ([`41019ba`](https://github.com/ourPLCC/plcc-ng/commit/41019ba4c09870b7195ac5c2e960550b38f85b78))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: E2e tests for multi-sentence pipe parsing; fix scan SubmitOn import
+  ([`fdeeaee`](https://github.com/ourPLCC/plcc-ng/commit/fdeeaee1aa18e60ea0bc17ef027527a0f8669b0a))
+
+Add bats tests verifying that piping multiple newline-separated sentences to plcc-parse and plcc-rep
+  produces one result per sentence (incremental split_committed with eof=True). Also fix scan.py and
+  scan_test.py which still imported the removed SubmitOn enum from source_runner after task 5
+  refactored it away.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Emit hold marker and incomplete-fragment start
+  ([`4708cb9`](https://github.com/ourPLCC/plcc-ng/commit/4708cb972936db7b944eb0b489f36d7d8a0fc50e))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Handlers return remainder bytes
+  ([`21acf94`](https://github.com/ourPLCC/plcc-ng/commit/21acf94dbd76977d39e3f258a011f4d3dc018e25))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Incremental SourceRunner with single-press ^D
+  ([`6cb3fe4`](https://github.com/ourPLCC/plcc-ng/commit/6cb3fe4c97db7d680b2ca23160438fd219345668))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Parser reports sentence extensibility
+  ([`7169672`](https://github.com/ourPLCC/plcc-ng/commit/7169672c180ce773399def898bfc89cc4a312312))
+
+The parse() function now returns a third value, extensible, indicating whether the parser stopped at
+  eof where real terminals could have continued the sentence. This enables incremental parsing and
+  completion. Tests added for extensibility detection in nullable tails and arbno.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **093**: Wire orchestrators to incremental runner
+  ([`4cd24c4`](https://github.com/ourPLCC/plcc-ng/commit/4cd24c4bcbc838be5c724d243848b407bf6e04f1))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+
 ## v0.45.1 (2026-06-17)
 
 ### Bug Fixes
@@ -67,6 +212,16 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 - **095**: Add semantic section redesign spec [skip ci]
   ([`99eeb7f`](https://github.com/ourPLCC/plcc-ng/commit/99eeb7fa9a7a61a70c6c9b4dc10a018c46055f83))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 096 and 097 for test infrastructure improvements [skip ci]
+  ([`3b79d97`](https://github.com/ourPLCC/plcc-ng/commit/3b79d971d86388fd5435545f46edeadf087b108d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Move 085, 086, and 089 to done [skip ci]
+  ([`95ff879`](https://github.com/ourPLCC/plcc-ng/commit/95ff879bdc9f3ecee31d18f0c015959c4e56af7a))
 
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
@@ -161,6 +316,11 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 - **089**: Correct design spec per code review [skip ci]
   ([`12e81e8`](https://github.com/ourPLCC/plcc-ng/commit/12e81e84b99c1d31bd82b32560fa0467860684a6))
+
+- **issues**: Move 084 and 088 to done [skip ci]
+  ([`8978a7d`](https://github.com/ourPLCC/plcc-ng/commit/8978a7dde43b5640857499cb182b23328f985001))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ### Features
 

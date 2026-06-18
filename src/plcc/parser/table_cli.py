@@ -16,6 +16,7 @@ Usage:
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
     -t --trace              Emit parse-step records tracing predict/shift/complete.
+    --hold-markers          Emit a hold marker after a trailing extensible parse.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -36,6 +37,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-parser-table", Events, args)
     ll1_path = args["--ll1"]
     trace = args["--trace"]
+    hold_markers = args["--hold-markers"]
     verbose.emit(Events.STARTED, ll1_path=ll1_path)
 
     # Load ll1.json
@@ -77,7 +79,7 @@ def main(argv=None):
         attempted = True
         tracer = Tracer()
         try:
-            tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)
+            tree, consumed, extensible = parse(ll1, tokens[cursor:], tracer=tracer)
             if consumed == 0:
                 # Grammar matched epsilon but couldn't incorporate this token;
                 # emit an error record so the user sees feedback, then skip it.
@@ -96,6 +98,9 @@ def main(argv=None):
             verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
             print(json.dumps(tree), flush=True)
             cursor += consumed
+            at_end = cursor >= len(tokens) or tokens[cursor]["name"] == "eof"
+            if at_end and extensible and hold_markers:
+                print(json.dumps({"kind": "hold", "source": tree.get("source", {})}), flush=True)
         except ParseError as e:
             _emit_trace(tracer.events)
             record = {
@@ -106,6 +111,8 @@ def main(argv=None):
             }
             if e.found:
                 record["found"] = e.found
+            if e.found == "eof" and cursor < len(tokens):
+                record["start"] = tokens[cursor].get("source", {})
             print(json.dumps(record), flush=True)
             break
 
@@ -113,7 +120,7 @@ def main(argv=None):
         # No non-sentinel tokens: try one epsilon parse for grammars that accept empty input
         tracer = Tracer()
         try:
-            tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)
+            tree, consumed, extensible = parse(ll1, tokens[cursor:], tracer=tracer)
             if consumed == 0:
                 if trace:
                     _emit_trace(tracer.events)
