@@ -3,7 +3,7 @@
 bats_require_minimum_version 1.5.0
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
-CACHE_STATS="${PROJECT_ROOT}/bin/test/cache-stats.bash"
+CACHE_STATS="${PROJECT_ROOT}/bin/test/cache/stats.bash"
 
 setup() {
     STATS_DIR="$(mktemp -d)"
