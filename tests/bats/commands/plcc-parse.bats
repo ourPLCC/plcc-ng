@@ -134,3 +134,10 @@ SPEC
     count=$(echo "$output" | grep -c "^Program")
     [ "$count" -eq 1 ]
 }
+
+@test "plcc-parse splits multiple sentences on same line" {
+    run bash -c "printf '3 4\n' | plcc-parse"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | grep -c "^Program")
+    [ "$count" -eq 2 ]
+}

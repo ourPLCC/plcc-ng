@@ -71,6 +71,6 @@ teardown() {
 @test "plcc-rep pipe with two sentences evaluates both" {
     run --separate-stderr bash -c "printf '3\n4\n' | plcc-rep"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"3"* ]]
-    [[ "$output" == *"4"* ]]
+    [[ "${lines[0]}" == "3" ]]
+    [[ "${lines[1]}" == "4" ]]
 }
