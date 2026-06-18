@@ -81,19 +81,15 @@
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/093-incremental-parsing-repl/</loc>
-         <lastmod>2026-06-18</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/094-docs-status-after-initial-branch/</loc>
-         <lastmod>2026-06-18</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/096-test-setup-deduplication/</loc>
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/097-test-output-cache/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/098-rep-ctrl-d-non-empty-line/</loc>
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
@@ -406,6 +402,14 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/089-grammar-to-spec-rename/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/093-incremental-parsing-repl/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/094-docs-status-after-initial-branch/</loc>
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
