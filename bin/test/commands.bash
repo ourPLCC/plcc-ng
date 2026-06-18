@@ -7,10 +7,15 @@ echo "----------------------"
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 PROJECT_ROOT="$( cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd )"
 
-cd "${PROJECT_ROOT}"
+# shellcheck source=bin/test/_cache.bash
+source "${SCRIPT_DIR}/_cache.bash"
 
-"${PROJECT_ROOT}/bin/install/bats.bash"
-pdm install
-export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
+_run() {
+    cd "${PROJECT_ROOT}"
+    "${PROJECT_ROOT}/bin/install/bats.bash"
+    pdm install
+    export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
+    bats tests/bats/commands/
+}
 
-bats tests/bats/commands/
+run_cached /tmp/plcc-test-commands.log _run

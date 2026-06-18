@@ -16,10 +16,16 @@ jobs:
       - name: Install PDM
         run: pip install pdm
       - name: Run unit tests
+        env:
+          PLCC_NO_TEST_CACHE: "1"
         run: bin/test/units.bash
       - name: Run command tests
+        env:
+          PLCC_NO_TEST_CACHE: "1"
         run: bin/test/commands.bash
       - name: Run integration tests
+        env:
+          PLCC_NO_TEST_CACHE: "1"
         run: bin/test/integration.bash
 
   languages-corpus:
@@ -45,6 +51,7 @@ jobs:
       - name: Run e2e corpus tests
         env:
           LANGUAGES_REPO_PATH: /tmp/languages
+          PLCC_NO_TEST_CACHE: "1"
         run: bin/test/e2e.bash
 
   packaging:
@@ -65,4 +72,6 @@ jobs:
       - name: Validate metadata and README
         run: pip install twine && twine check dist/*
       - name: Run packaging smoke test
+        env:
+          PLCC_NO_TEST_CACHE: "1"
         run: bin/test/packaging.bash
