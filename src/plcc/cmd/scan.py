@@ -121,7 +121,7 @@ class ScanHandler:
             print(f"plcc-scan: plcc-tokens failed (exit {proc.returncode})",
                   file=sys.stderr)
             sys.exit(proc.returncode)
-        return True
+        return b""
 
 
 def main(argv=None):

@@ -44,11 +44,11 @@ def test_scan_handler_passes_source_name_to_plcc_tokens(monkeypatch):
     assert any("--source-name=myfile.txt" in arg for arg in calls[0])
 
 
-def test_scan_handler_always_returns_true(monkeypatch):
+def test_scan_handler_returns_empty_remainder(monkeypatch):
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: _make_proc())
     handler = ScanHandler(spec_path="build/spec.json", tokens_flags=[])
-    assert handler.feed(b"", "-") is True
-    assert handler.feed(b"anything\n", "foo.txt") is True
+    assert handler.feed(b"", "-") == b""
+    assert handler.feed(b"anything\n", "foo.txt") == b""
 
 
 def test_scan_handler_renders_error_records(monkeypatch, capsys):
