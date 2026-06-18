@@ -715,6 +715,43 @@
 </tr>
 </tbody>
 </table>
+<h3 id="test-output-cache">Test output cache</h3>
+<p>All test scripts cache their output to <code>/tmp</code> so agents and tools can grep results without re-running the suite. The cache is keyed on git state (<code>git status --porcelain</code> + <code>git rev-parse HEAD</code>) and is invalidated automatically whenever the working tree or HEAD changes.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../bin/test/cache/stats.bash">bin/test/cache/stats.bash</a></td>
+<td>Print a hit/miss/skip summary, overall and per-script.</td>
+</tr>
+<tr>
+<td><a href="../bin/test/cache/clear.bash">bin/test/cache/clear.bash</a></td>
+<td>Remove all cached test output files from <code>/tmp</code>.</td>
+</tr>
+<tr>
+<td><a href="../bin/test/cache/clear-stats.bash">bin/test/cache/clear-stats.bash</a></td>
+<td>Clear the cache statistics log.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Environment variable:</strong> set <code>PLCC_NO_TEST_CACHE=1</code> to bypass the cache for a single run — the test suite runs live and the cache is neither read nor written (the run is still logged as a skip in the stats).</p>
+<p><strong>When the cache helps:</strong></p>
+<ul>
+<li>Grepping test output after a run without re-running the suite.</li>
+<li>Quickly re-running a script to check something when you know the code hasn't changed.</li>
+<li>Agents that call a test script multiple times to inspect different slices of output.</li>
+</ul>
+<p><strong>When to bypass the cache (<code>PLCC_NO_TEST_CACHE=1</code>):</strong></p>
+<ul>
+<li>When you want to force a fresh run regardless of git state (e.g. after changing a fixture file that git doesn't track, or when debugging a flaky test).</li>
+<li>In CI — the variable is set automatically for all test steps.</li>
+<li>When you suspect the cache is stale and <code>bin/test/cache/clear.bash</code> is more than you need.</li>
+</ul>
 <h2 id="tdd-inner-loop">TDD inner loop</h2>
 <p>plcc-ng is built test-first.</p>
 <ol>
