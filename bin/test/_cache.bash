@@ -49,11 +49,8 @@ run_cached() {
 
     _cache_log_event "miss" "${name}"
     local exit_code=0
-    local _exit_tmp
-    _exit_tmp=$(mktemp)
-    { "$@" 2>&1; echo "$?" > "${_exit_tmp}"; } | tee "${cache_file}"
-    exit_code=$(cat "${_exit_tmp}")
-    rm -f "${_exit_tmp}"
+    set -o pipefail
+    "$@" 2>&1 | tee "${cache_file}" || exit_code="${PIPESTATUS[0]}"
     printf 'KEY=%s\nEXIT=%s\n' "${key}" "${exit_code}" > "${meta}"
     exit "${exit_code}"
 }
