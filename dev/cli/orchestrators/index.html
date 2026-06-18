@@ -1133,6 +1133,13 @@ echo &quot;42&quot; | plcc-scan
 <pre><code class="language-bash">plcc-parse -s subtract.plcc samples
 echo &quot;42&quot; | plcc-parse
 </code></pre>
+<p><strong>Interactive mode:</strong> When no source files are given and stdin is a terminal,
+<code>plcc-parse</code> reads input line by line at the <code>&gt;&gt;&gt;</code> prompt. After each line,
+complete sentences are parsed and printed immediately. If the input so far is a
+valid prefix that could be extended (e.g., <code>3</code> in a grammar that also allows
+<code>3 + 4</code>), parsing is deferred and the <code>...</code> continuation prompt appears. Press
+<code>^D</code> at the <code>&gt;&gt;&gt;</code> prompt (empty buffer) to exit. Press <code>^D</code> at the <code>...</code>
+prompt to force-submit the buffered input and return to <code>&gt;&gt;&gt;</code>.</p>
 <hr />
 <h2 id="plcc-rep">plcc-rep</h2>
 <p>REPL — read, eval, print loop for a PLCC spec.</p>
@@ -1167,6 +1174,13 @@ plcc-rep -s subtract.plcc samples
 # Enter interactive mode (no files given)
 plcc-rep -s subtract.plcc
 </code></pre>
+<p><strong>Interactive mode:</strong> When no source files are given and stdin is a terminal,
+<code>plcc-rep</code> reads input line by line at the <code>&gt;&gt;&gt;</code> prompt. After each line,
+complete sentences are evaluated and their results printed immediately. If the
+input so far is a valid prefix that could be extended, evaluation is deferred
+and the <code>...</code> continuation prompt appears. Press <code>^D</code> at the <code>&gt;&gt;&gt;</code> prompt
+(empty buffer) to exit. Press <code>^D</code> at the <code>...</code> prompt to force-submit the
+buffered input and return to <code>&gt;&gt;&gt;</code>.</p>
 
 
 
