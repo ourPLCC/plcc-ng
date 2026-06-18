@@ -13,7 +13,7 @@
 - All scripts must remain independently runnable (i.e., work when called directly without `SKIP_SETUP` set).
 - `SKIP_SETUP=1` is the only tested/documented value for the guard variable.
 - Pass `SKIP_SETUP=1` inline on each leaf invocation in `functional.bash` (not via `export`) to avoid leaking into the surrounding environment.
-- All files live under `bin/test/` and `bin/install/` — do not create new files.
+- All implementation changes are limited to shell scripts under `bin/test/` and `bin/install/` — do not create new files there.
 - Commit messages follow the project convention: `chore(096): <description>`.
 
 ---
@@ -310,7 +310,7 @@ Full file after edit:
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "bin/test/funcional.bash"
+echo "bin/test/funcional.bash"  # pre-existing typo in the script — leave as-is
 echo "-----------------------"
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
