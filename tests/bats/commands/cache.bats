@@ -99,11 +99,17 @@ teardown() {
 }
 
 @test "fallback: runs uncached when git is unavailable" {
+    local fake_bin
+    fake_bin=$(mktemp -d)
+    printf '#!/usr/bin/env bash\nexit 1\n' > "${fake_bin}/git"
+    chmod +x "${fake_bin}/git"
     run bash -c "
-        export PATH=/usr/bin:/bin  # strip git from PATH
+        export PATH='${fake_bin}':\"${PATH}\"
         source '${CACHE_HELPER}'
         run_cached '${CACHE_FILE}' echo fallback-output 2>/dev/null
     "
     [ "$status" -eq 0 ]
     [[ "$output" == "fallback-output" ]]
+    [ ! -f "${CACHE_FILE}" ]
+    rm -rf "${fake_bin}"
 }

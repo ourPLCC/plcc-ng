@@ -13,10 +13,10 @@ invisible to callers — existing invocation patterns are unchanged.
 
 ## Architecture
 
-One new sourced helper: `bin/test/_cache.bash`. Each of the six existing test
+One new sourced helper: `bin/test/_cache.bash`. Each of the seven existing test
 scripts sources it and wraps its main command in a `run_cached` call. No other
-files change except those six scripts and the addition of
-`bin/test/cache-stats.bash`.
+files change except those seven scripts and the addition of
+`bin/test/cache/stats.bash`.
 
 `_cache.bash` is not executable and not meant to be run directly. The leading
 underscore signals that it is a sourced helper, consistent with the convention
@@ -98,20 +98,22 @@ On every invocation `run_cached` does two things:
    2026-06-18T10:23:45 hit units
    ```
 
-`bin/test/cache-stats.bash` reads the stats log and prints:
+`bin/test/cache/stats.bash` reads the stats log and prints:
 
 - Total runs, hits, misses, skips, and overall hit rate
 - Per-script breakdown of the same counts
 
 The stats log persists across runs until `/tmp` is cleared (reboot).
-`cache-stats.bash` handles a missing log gracefully (prints "no stats yet").
+`stats.bash` handles a missing log gracefully (prints "no stats yet").
 
 ## Files changed
 
 | File | Change |
 | --- | --- |
 | `bin/test/_cache.bash` | New sourced helper |
-| `bin/test/cache-stats.bash` | New summary script |
+| `bin/test/cache/stats.bash` | New summary script |
+| `bin/test/cache/clear.bash` | Remove all cached output files |
+| `bin/test/cache/clear-stats.bash` | Remove the stats log |
 | `bin/test/units.bash` | Source helper, wrap command in `run_cached` |
 | `bin/test/commands.bash` | Source helper, wrap command in `run_cached` |
 | `bin/test/integration.bash` | Source helper, wrap command in `run_cached` |

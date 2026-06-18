@@ -233,10 +233,10 @@ git commit -m "feat(097): add _cache.bash with run_cached helper"
 
 ---
 
-### Task 2: `bin/test/cache-stats.bash` — stats summary script
+### Task 2: `bin/test/cache/stats.bash` — stats summary script
 
 **Files:**
-- Create: `bin/test/cache-stats.bash`
+- Create: `bin/test/cache/stats.bash`
 - Create: `tests/bats/commands/cache-stats.bats`
 
 **Interfaces:**
@@ -255,7 +255,7 @@ Create `tests/bats/commands/cache-stats.bats`:
 bats_require_minimum_version 1.5.0
 
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
-CACHE_STATS="${PROJECT_ROOT}/bin/test/cache-stats.bash"
+CACHE_STATS="${PROJECT_ROOT}/bin/test/cache/stats.bash"
 
 setup() {
     STATS_DIR="$(mktemp -d)"
@@ -308,7 +308,7 @@ bin/test/commands.bash 2>&1 | grep -A3 "cache-stats.bats"
 
 Expected: failures — `cache-stats.bash` not found
 
-- [ ] **Step 3: Create `bin/test/cache-stats.bash`**
+- [ ] **Step 3: Create `bin/test/cache/stats.bash`**
 
 ```bash
 #!/usr/bin/env bash
@@ -354,7 +354,7 @@ END {
 - [ ] **Step 4: Make executable and run tests**
 
 ```bash
-chmod +x bin/test/cache-stats.bash
+chmod +x bin/test/cache/stats.bash
 bin/test/commands.bash 2>&1 | grep -A3 "cache-stats.bats"
 ```
 
@@ -363,7 +363,7 @@ Expected: all cache-stats.bats tests pass
 - [ ] **Step 5: Commit**
 
 ```bash
-git add bin/test/cache-stats.bash tests/bats/commands/cache-stats.bats
+git add bin/test/cache/stats.bash tests/bats/commands/cache-stats.bats
 git commit -m "feat(097): add cache-stats.bash summary script"
 ```
 
