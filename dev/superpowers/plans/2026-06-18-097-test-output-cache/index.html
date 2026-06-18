@@ -1,0 +1,1690 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-18-097-test-output-cache/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Test Output Cache Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#test-output-cache-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Test Output Cache Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/orchestrators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="test-output-cache-implementation-plan">Test Output Cache Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Add transparent output caching to all <code>bin/test/</code> scripts so agents can grep cached output instead of re-running the full suite.</p>
+<p><strong>Architecture:</strong> A sourced helper <code>bin/test/_cache.bash</code> provides a <code>run_cached</code> function. Each test script sources the helper and wraps its main command in <code>run_cached</code>. The cache is keyed on git state; a sidecar <code>.meta</code> file stores the key and exit code. Caching is bypassed with <code>PLCC_NO_TEST_CACHE=1</code>.</p>
+<p><strong>Tech Stack:</strong> bash, bats (≥1.5.0), git, sha256sum, awk</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>All bash scripts: <code>set -euo pipefail</code>, absolute-path resolution via <code>SCRIPT_DIR</code>/<code>PROJECT_ROOT</code>, <code>.bash</code> extension</li>
+<li>Cache files: <code>/tmp/plcc-test-&lt;name&gt;.log</code> and <code>/tmp/plcc-test-&lt;name&gt;.log.meta</code></li>
+<li>Stats log: <code>${PLCC_TEST_STATS_LOG:-/tmp/plcc-test-cache-stats.log}</code> (env-overridable for tests)</li>
+<li>Escape hatch env var: <code>PLCC_NO_TEST_CACHE=1</code></li>
+<li><code>_cache.bash</code> is sourced, not executed — no shebang, no <code>set -euo pipefail</code> (inherits caller's shell state)</li>
+<li>Bats tests live in <code>tests/bats/commands/</code></li>
+<li>Run unit tests with: <code>bin/test/units.bash</code></li>
+<li>Run bats commands tests with: <code>bin/test/commands.bash</code></li>
+</ul>
+<hr />
+<h3 id="task-1-bintest_cachebash-core-caching-helper">Task 1: <code>bin/test/_cache.bash</code> — core caching helper</h3>
+<p><strong>Files:</strong>
+- Create: <code>bin/test/_cache.bash</code>
+- Create: <code>tests/bats/commands/cache.bats</code></p>
+<p><strong>Interfaces:</strong>
+- Produces: <code>run_cached &lt;cache-file&gt; &lt;command&gt; [args...]</code> — sources into any bash script; exits with cached or live exit code</p>
+<hr />
+<ul>
+<li>[ ] <strong>Step 1: Create the bats test file</strong></li>
+</ul>
+<p>Create <code>tests/bats/commands/cache.bats</code>:</p>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+PROJECT_ROOT=&quot;$(git rev-parse --show-toplevel)&quot;
+CACHE_HELPER=&quot;${PROJECT_ROOT}/bin/test/_cache.bash&quot;
+
+setup() {
+    CACHE_DIR=&quot;$(mktemp -d)&quot;
+    CACHE_FILE=&quot;${CACHE_DIR}/plcc-test-units.log&quot;
+    export PLCC_TEST_STATS_LOG=&quot;${CACHE_DIR}/stats.log&quot;
+    unset PLCC_NO_TEST_CACHE
+}
+
+teardown() {
+    rm -rf &quot;${CACHE_DIR}&quot;
+}
+
+@test &quot;cache miss: runs command and creates cache and meta files&quot; {
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;hello&quot; ]]
+    [ -f &quot;${CACHE_FILE}&quot; ]
+    [ -f &quot;${CACHE_FILE}.meta&quot; ]
+}
+
+@test &quot;cache miss: output is stored in cache file&quot; {
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo cached-output 2&gt;/dev/null&quot; || true
+    grep -q &quot;cached-output&quot; &quot;${CACHE_FILE}&quot;
+}
+
+@test &quot;cache hit: replays cached output without re-running command&quot; {
+    # Prime the cache
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo first-run 2&gt;/dev/null&quot; || true
+    # Second run — command would print &quot;second-run&quot; but cache should return &quot;first-run&quot;
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo second-run 2&gt;/dev/null&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;first-run&quot; ]]
+}
+
+@test &quot;cache hit: replays non-zero exit code&quot; {
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' bash -c 'echo fail-output; exit 42' 2&gt;/dev/null&quot; || true
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo should-not-run 2&gt;/dev/null&quot;
+    [ &quot;$status&quot; -eq 42 ]
+}
+
+@test &quot;cache miss: non-zero exit code is preserved&quot; {
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' bash -c 'exit 7' 2&gt;/dev/null&quot;
+    [ &quot;$status&quot; -eq 7 ]
+}
+
+@test &quot;stale cache: reruns command when git state changes&quot; {
+    # Prime the cache with a known (wrong) key
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo first-run 2&gt;/dev/null&quot; || true
+    printf 'KEY=stalekey\nEXIT=0\n' &gt; &quot;${CACHE_FILE}.meta&quot;
+    # Next run should be a miss (stale key) and run the new command
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo fresh-run 2&gt;/dev/null&quot;
+    [[ &quot;$output&quot; == &quot;fresh-run&quot; ]]
+}
+
+@test &quot;PLCC_NO_TEST_CACHE=1: runs command live without caching&quot; {
+    export PLCC_NO_TEST_CACHE=1
+    run bash -c &quot;export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo live-run 2&gt;/dev/null&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;live-run&quot; ]]
+    [ ! -f &quot;${CACHE_FILE}&quot; ]
+}
+
+@test &quot;stats log: miss event is written&quot; {
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
+    grep -q &quot; miss units&quot; &quot;${PLCC_TEST_STATS_LOG}&quot;
+}
+
+@test &quot;stats log: hit event is written&quot; {
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
+    grep -q &quot; hit units&quot; &quot;${PLCC_TEST_STATS_LOG}&quot;
+}
+
+@test &quot;stats log: skip event is written with PLCC_NO_TEST_CACHE=1&quot; {
+    bash -c &quot;export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
+    grep -q &quot; skip units&quot; &quot;${PLCC_TEST_STATS_LOG}&quot;
+}
+
+@test &quot;stderr: prints [cache miss] on miss&quot; {
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;&amp;1 &gt;/dev/null&quot;
+    [[ &quot;$output&quot; == *&quot;[cache miss] units&quot;* ]]
+}
+
+@test &quot;stderr: prints [cache hit] on hit&quot; {
+    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
+    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;&amp;1 &gt;/dev/null&quot;
+    [[ &quot;$output&quot; == *&quot;[cache hit] units&quot;* ]]
+}
+
+@test &quot;stderr: prints [cache skip] with PLCC_NO_TEST_CACHE=1&quot; {
+    run bash -c &quot;export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo hello 2&gt;&amp;1 &gt;/dev/null&quot;
+    [[ &quot;$output&quot; == *&quot;[cache skip] units&quot;* ]]
+}
+
+@test &quot;fallback: runs uncached when git is unavailable&quot; {
+    run bash -c &quot;
+        export PATH=/usr/bin:/bin  # strip git from PATH
+        source '${CACHE_HELPER}'
+        run_cached '${CACHE_FILE}' echo fallback-output 2&gt;/dev/null
+    &quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == &quot;fallback-output&quot; ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they all fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache.bats&quot;
+</code></pre>
+<p>Expected: failures like <code>_cache.bash: No such file or directory</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>bin/test/_cache.bash</code></strong></li>
+</ul>
+<pre><code class="language-bash"># Sourced by bin/test/*.bash scripts. Not executable.
+# Provides run_cached &lt;cache-file&gt; &lt;command&gt; [args...].
+
+_cache_log_event() {
+    local event=&quot;$1&quot; name=&quot;$2&quot;
+    local stats_log=&quot;${PLCC_TEST_STATS_LOG:-/tmp/plcc-test-cache-stats.log}&quot;
+    echo &quot;[cache ${event}] ${name}&quot; &gt;&amp;2
+    printf '%s %s %s\n' &quot;$(date -u +%Y-%m-%dT%H:%M:%S)&quot; &quot;${event}&quot; &quot;${name}&quot; \
+        &gt;&gt; &quot;${stats_log}&quot;
+}
+
+_cache_key() {
+    local head status
+    head=$(git rev-parse HEAD 2&gt;/dev/null) || return 1
+    status=$(git status --porcelain 2&gt;/dev/null) || return 1
+    printf '%s\n%s' &quot;${head}&quot; &quot;${status}&quot; | sha256sum | cut -d' ' -f1
+}
+
+run_cached() {
+    local cache_file=&quot;$1&quot;
+    shift
+    local name
+    name=$(basename &quot;${cache_file}&quot; .log)
+    name=&quot;${name#plcc-test-}&quot;
+
+    if [[ &quot;${PLCC_NO_TEST_CACHE:-}&quot; == &quot;1&quot; ]]; then
+        _cache_log_event &quot;skip&quot; &quot;${name}&quot;
+        &quot;$@&quot;
+        return
+    fi
+
+    local key
+    if ! key=$(_cache_key); then
+        &quot;$@&quot;
+        return
+    fi
+
+    local meta=&quot;${cache_file}.meta&quot;
+    if [[ -f &quot;${cache_file}&quot; &amp;&amp; -f &quot;${meta}&quot; ]]; then
+        local stored_key stored_exit
+        stored_key=$(grep '^KEY=' &quot;${meta}&quot; 2&gt;/dev/null | cut -d= -f2-) || true
+        stored_exit=$(grep '^EXIT=' &quot;${meta}&quot; 2&gt;/dev/null | cut -d= -f2-) || true
+        if [[ &quot;${stored_key}&quot; == &quot;${key}&quot; &amp;&amp; &quot;${stored_exit}&quot; =~ ^[0-9]+$ ]]; then
+            _cache_log_event &quot;hit&quot; &quot;${name}&quot;
+            cat &quot;${cache_file}&quot;
+            exit &quot;${stored_exit}&quot;
+        fi
+    fi
+
+    _cache_log_event &quot;miss&quot; &quot;${name}&quot;
+    local exit_code=0
+    &quot;$@&quot; 2&gt;&amp;1 | tee &quot;${cache_file}&quot; || exit_code=$?
+    printf 'KEY=%s\nEXIT=%s\n' &quot;${key}&quot; &quot;${exit_code}&quot; &gt; &quot;${meta}&quot;
+    exit &quot;${exit_code}&quot;
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache.bats&quot;
+</code></pre>
+<p>Expected: all cache.bats tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/_cache.bash tests/bats/commands/cache.bats
+git commit -m &quot;feat(097): add _cache.bash with run_cached helper&quot;
+</code></pre>
+<hr />
+<h3 id="task-2-bintestcachestatsbash-stats-summary-script">Task 2: <code>bin/test/cache/stats.bash</code> — stats summary script</h3>
+<p><strong>Files:</strong>
+- Create: <code>bin/test/cache/stats.bash</code>
+- Create: <code>tests/bats/commands/cache-stats.bats</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: stats log at <code>${PLCC_TEST_STATS_LOG:-/tmp/plcc-test-cache-stats.log}</code>, one line per event: <code>&lt;timestamp&gt; &lt;event&gt; &lt;script&gt;</code>
+- Produces: summary printed to stdout; exit 0 always</p>
+<hr />
+<ul>
+<li>[ ] <strong>Step 1: Create the bats test file</strong></li>
+</ul>
+<p>Create <code>tests/bats/commands/cache-stats.bats</code>:</p>
+<pre><code class="language-bash">#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+
+PROJECT_ROOT=&quot;$(git rev-parse --show-toplevel)&quot;
+CACHE_STATS=&quot;${PROJECT_ROOT}/bin/test/cache/stats.bash&quot;
+
+setup() {
+    STATS_DIR=&quot;$(mktemp -d)&quot;
+    export PLCC_TEST_STATS_LOG=&quot;${STATS_DIR}/stats.log&quot;
+}
+
+teardown() {
+    rm -rf &quot;${STATS_DIR}&quot;
+}
+
+@test &quot;cache-stats: prints 'no stats yet' when log is missing&quot; {
+    run bash &quot;${CACHE_STATS}&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;no stats yet&quot;* ]]
+}
+
+@test &quot;cache-stats: counts hits, misses, skips correctly&quot; {
+    printf '2026-06-18T10:00:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    printf '2026-06-18T10:01:00 miss units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    printf '2026-06-18T10:02:00 skip e2e\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    run bash &quot;${CACHE_STATS}&quot;
+    [ &quot;$status&quot; -eq 0 ]
+    [[ &quot;$output&quot; == *&quot;Hits: 1&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;Misses: 1&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;Skips: 1&quot;* ]]
+}
+
+@test &quot;cache-stats: computes hit rate&quot; {
+    printf '2026-06-18T10:00:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    printf '2026-06-18T10:01:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    printf '2026-06-18T10:02:00 miss units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    run bash &quot;${CACHE_STATS}&quot;
+    [[ &quot;$output&quot; == *&quot;67%&quot;* ]]
+}
+
+@test &quot;cache-stats: shows per-script breakdown&quot; {
+    printf '2026-06-18T10:00:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    printf '2026-06-18T10:01:00 miss e2e\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
+    run bash &quot;${CACHE_STATS}&quot;
+    [[ &quot;$output&quot; == *&quot;units&quot;* ]]
+    [[ &quot;$output&quot; == *&quot;e2e&quot;* ]]
+}
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache-stats.bats&quot;
+</code></pre>
+<p>Expected: failures — <code>cache-stats.bash</code> not found</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>bin/test/cache/stats.bash</code></strong></li>
+</ul>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+STATS_LOG=&quot;${PLCC_TEST_STATS_LOG:-/tmp/plcc-test-cache-stats.log}&quot;
+
+if [[ ! -f &quot;${STATS_LOG}&quot; ]]; then
+    echo &quot;no stats yet&quot;
+    exit 0
+fi
+
+awk '
+{
+    event = $2
+    script = $3
+    total++
+    events[event]++
+    per_script_total[script]++
+    per_script_event[script &quot;_&quot; event]++
+}
+END {
+    hits   = events[&quot;hit&quot;]   + 0
+    misses = events[&quot;miss&quot;]  + 0
+    skips  = events[&quot;skip&quot;]  + 0
+    rate   = (total &gt; 0) ? int(hits / total * 100 + 0.5) : 0
+    printf &quot;Total: %d  Hits: %d  Misses: %d  Skips: %d  Hit rate: %d%%\n&quot;,
+        total, hits, misses, skips, rate
+    print &quot;&quot;
+    print &quot;Per-script breakdown:&quot;
+    for (s in per_script_total) {
+        h = per_script_event[s &quot;_hit&quot;]   + 0
+        m = per_script_event[s &quot;_miss&quot;]  + 0
+        k = per_script_event[s &quot;_skip&quot;]  + 0
+        t = per_script_total[s]
+        printf &quot;  %-20s  total=%-4d  hits=%-4d  misses=%-4d  skips=%-4d\n&quot;,
+            s, t, h, m, k
+    }
+}
+' &quot;${STATS_LOG}&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Make executable and run tests</strong></li>
+</ul>
+<pre><code class="language-bash">chmod +x bin/test/cache/stats.bash
+bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache-stats.bats&quot;
+</code></pre>
+<p>Expected: all cache-stats.bats tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/cache/stats.bash tests/bats/commands/cache-stats.bats
+git commit -m &quot;feat(097): add cache-stats.bash summary script&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-update-simple-test-scripts">Task 3: Update simple test scripts</h3>
+<p>Add caching to <code>units.bash</code>, <code>commands.bash</code>, <code>integration.bash</code>, <code>e2e.bash</code>, and <code>packaging.bash</code>. Each follows the same pattern: source the helper, wrap the main command(s) in <code>run_cached</code>.</p>
+<p><strong>Files:</strong>
+- Modify: <code>bin/test/units.bash</code>
+- Modify: <code>bin/test/commands.bash</code>
+- Modify: <code>bin/test/integration.bash</code>
+- Modify: <code>bin/test/e2e.bash</code>
+- Modify: <code>bin/test/packaging.bash</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>run_cached</code> from <code>bin/test/_cache.bash</code></p>
+<hr />
+<ul>
+<li>[ ] <strong>Step 1: Update <code>bin/test/units.bash</code></strong></li>
+</ul>
+<p>Replace:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo &quot;bin/test/units.bash&quot;
+echo &quot;-------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+&quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
+pdm install
+pdm test -v &quot;$@&quot;
+</code></pre>
+<p>With:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo &quot;bin/test/units.bash&quot;
+echo &quot;-------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+run_cached /tmp/plcc-test-units.log \
+    bash -c '&quot;${SCRIPT_DIR}/../install/pdm.bash&quot; &amp;&amp; pdm install &amp;&amp; pdm test -v &quot;$@&quot;' \
+    -- &quot;$@&quot;
+</code></pre>
+<p>Wait — the above passes <code>$@</code> through to <code>pdm test</code>, but wrapping multiple commands in a <code>bash -c</code> string with <code>"$@"</code> is tricky. A cleaner approach: wrap in a local function.</p>
+<p>Replace <code>bin/test/units.bash</code> with:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo &quot;bin/test/units.bash&quot;
+echo &quot;-------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
+    pdm install
+    pdm test -v &quot;$@&quot;
+}
+
+run_cached /tmp/plcc-test-units.log _run &quot;$@&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>bin/test/commands.bash</code></strong></li>
+</ul>
+<p>Replace the file with:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/commands.bash&quot;
+echo &quot;----------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    cd &quot;${PROJECT_ROOT}&quot;
+    &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
+    pdm install
+    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
+    bats tests/bats/commands/
+}
+
+run_cached /tmp/plcc-test-commands.log _run
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>bin/test/integration.bash</code></strong></li>
+</ul>
+<p>Replace the file with:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/integration.bash&quot;
+echo &quot;-------------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    cd &quot;${PROJECT_ROOT}&quot;
+    &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
+    pdm install
+    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
+    bats tests/bats/integration/
+}
+
+run_cached /tmp/plcc-test-integration.log _run
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>bin/test/e2e.bash</code></strong></li>
+</ul>
+<p>Replace the file with:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/e2e.bash&quot;
+echo &quot;-----------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    cd &quot;${PROJECT_ROOT}&quot;
+    &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
+    pdm install
+    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
+    bats $(find tests/bats/e2e/ -name &quot;*.bats&quot; ! -name &quot;languages-java.bats&quot; | sort)
+    if [ -n &quot;${LANGUAGES_REPO_PATH:-}&quot; ]; then
+        &quot;${PROJECT_ROOT}/bin/install/java.bash&quot;
+        echo &quot;&quot;
+        echo &quot;Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})&quot;
+        bats tests/bats/e2e/languages-java.bats
+    fi
+}
+
+run_cached /tmp/plcc-test-e2e.log _run
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Update <code>bin/test/packaging.bash</code></strong></li>
+</ul>
+<p>Add the source and wrapper at the top, wrap the body in <code>_run</code>, and call <code>run_cached</code>. The file is long — make these structural changes:</p>
+<p>At the top, after the <code>cd "${PROJECT_ROOT}"</code> line, add:</p>
+<pre><code class="language-bash"># shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+</code></pre>
+<p>And just before the final <code>echo "packaging: all checks passed"</code> line, close the function and add:</p>
+<pre><code class="language-bash">}
+
+run_cached /tmp/plcc-test-packaging.log _run
+</code></pre>
+<p>The complete updated <code>bin/test/packaging.bash</code>:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/packaging.bash&quot;
+echo &quot;-----------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+cd &quot;${PROJECT_ROOT}&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    VENV=$(mktemp -d)
+    trap 'rm -rf &quot;${VENV}&quot;' EXIT
+
+    &quot;${PROJECT_ROOT}/.venv/bin/python&quot; -m venv &quot;${VENV}&quot;
+    &quot;${VENV}/bin/pip&quot; install --quiet dist/*.whl
+
+    for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
+               plcc-lang-emit plcc-lang-build plcc-lang-list \
+               plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
+               plcc-plantuml-diagram-emit plcc-plantuml-diagram-build plcc-plantuml-diagram-run \
+               plcc-make plcc-scan plcc-parse plcc-rep; do
+        test -x &quot;${VENV}/bin/${cmd}&quot; || { echo &quot;FAIL: ${cmd} not installed&quot;; exit 1; }
+        echo &quot;OK: ${cmd}&quot;
+    done
+
+    export PATH=&quot;${VENV}/bin:${PATH}&quot;
+
+    LANG_LIST=$(&quot;${VENV}/bin/plcc-lang-list&quot;)
+    echo &quot;${LANG_LIST}&quot; | grep -q &quot;python&quot; || { echo &quot;FAIL: plcc-lang-list missing 'python'&quot;; exit 1; }
+    echo &quot;${LANG_LIST}&quot; | grep -q &quot;java&quot;   || { echo &quot;FAIL: plcc-lang-list missing 'java'&quot;;   exit 1; }
+    echo &quot;OK: plcc-lang-list reports python and java&quot;
+
+    DIAGRAM_LIST=$(&quot;${VENV}/bin/plcc-diagram-list&quot;)
+    echo &quot;${DIAGRAM_LIST}&quot; | grep -q &quot;plantuml&quot; || { echo &quot;FAIL: plcc-diagram-list missing 'plantuml'&quot;; exit 1; }
+    echo &quot;OK: plcc-diagram-list reports plantuml&quot;
+
+    WORK_DIR=&quot;$(mktemp -d)&quot;
+    trap 'rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot;' EXIT
+    (
+        cd &quot;${WORK_DIR}&quot;
+        cp &quot;${PROJECT_ROOT}/tests/fixtures/trivial.plcc&quot; spec.plcc
+        plcc-make
+        test -f build/spec.json   || { echo &quot;FAIL: build/spec.json missing&quot;; exit 1; }
+        test -f build/model.json  || { echo &quot;FAIL: build/model.json missing&quot;; exit 1; }
+    )
+    DIAGRAM_DIR=&quot;$(mktemp -d)&quot;
+    trap 'rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot; &quot;${DIAGRAM_DIR}&quot;' EXIT
+    plcc-spec &quot;${PROJECT_ROOT}/tests/fixtures/arith.plcc&quot; | plcc-model | plcc-plantuml-diagram-emit --output=&quot;${DIAGRAM_DIR}&quot;
+    test -f &quot;${DIAGRAM_DIR}/diagram.puml&quot; || { echo &quot;FAIL: diagram.puml missing&quot;; exit 1; }
+    echo &quot;packaging: all checks passed&quot;
+}
+
+run_cached /tmp/plcc-test-packaging.log _run
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 6: Run units to verify nothing is broken</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: 972 passed (or similar), <code>[cache miss] units</code> on stderr, <code>/tmp/plcc-test-units.log</code> created</p>
+<ul>
+<li>[ ] <strong>Step 7: Run units a second time to verify cache hit</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: output replayed instantly, <code>[cache hit] units</code> on stderr</p>
+<ul>
+<li>[ ] <strong>Step 8: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/units.bash bin/test/commands.bash bin/test/integration.bash \
+        bin/test/e2e.bash bin/test/packaging.bash
+git commit -m &quot;feat(097): add run_cached to simple test scripts&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-update-composite-test-scripts">Task 4: Update composite test scripts</h3>
+<p><code>functional.bash</code> and <code>all.bash</code> call other test scripts. Each sub-script now uses <code>run_cached</code> internally. The composites need the same treatment: source the helper, wrap their call sequence in a local function, and pass it to <code>run_cached</code>.</p>
+<p><strong>Files:</strong>
+- Modify: <code>bin/test/functional.bash</code>
+- Modify: <code>bin/test/all.bash</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>run_cached</code> from <code>bin/test/_cache.bash</code></p>
+<hr />
+<ul>
+<li>[ ] <strong>Step 1: Update <code>bin/test/functional.bash</code></strong></li>
+</ul>
+<p>Replace the file with:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/funcional.bash&quot;
+echo &quot;-----------------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    &quot;${SCRIPT_DIR}/units.bash&quot;
+    &quot;${SCRIPT_DIR}/commands.bash&quot;
+    &quot;${SCRIPT_DIR}/integration.bash&quot;
+    &quot;${SCRIPT_DIR}/e2e.bash&quot;
+}
+
+run_cached /tmp/plcc-test-functional.log _run
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>bin/test/all.bash</code></strong></li>
+</ul>
+<p>Replace the file with:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/all.bash&quot;
+echo &quot;-----------------&quot;
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+# shellcheck source=bin/test/_cache.bash
+source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+
+_run() {
+    &quot;${SCRIPT_DIR}/functional.bash&quot;
+    &quot;${SCRIPT_DIR}/packaging.bash&quot;
+}
+
+run_cached /tmp/plcc-test-all.log _run
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run units to verify they still pass</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: pass (cache hit if nothing changed)</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/functional.bash bin/test/all.bash
+git commit -m &quot;feat(097): add run_cached to composite test scripts&quot;
+</code></pre>
+<hr />
+<h3 id="task-5-update-ci-to-disable-caching">Task 5: Update CI to disable caching</h3>
+<p>All test steps in <code>.github/workflows/ci.yml</code> must set <code>PLCC_NO_TEST_CACHE=1</code>. This prevents CI from ever reading or writing a cache (the <code>/tmp</code> dir is ephemeral per job anyway) and keeps logs free of cache noise.</p>
+<p><strong>Files:</strong>
+- Modify: <code>.github/workflows/ci.yml</code></p>
+<hr />
+<ul>
+<li>[ ] <strong>Step 1: Update <code>.github/workflows/ci.yml</code></strong></li>
+</ul>
+<p>Add <code>env: PLCC_NO_TEST_CACHE: "1"</code> to each test step. Replace the test steps section with:</p>
+<pre><code class="language-yaml">      - name: Run unit tests
+        env:
+          PLCC_NO_TEST_CACHE: &quot;1&quot;
+        run: bin/test/units.bash
+      - name: Run command tests
+        env:
+          PLCC_NO_TEST_CACHE: &quot;1&quot;
+        run: bin/test/commands.bash
+      - name: Run integration tests
+        env:
+          PLCC_NO_TEST_CACHE: &quot;1&quot;
+        run: bin/test/integration.bash
+</code></pre>
+<p>For the <code>languages-corpus</code> job:</p>
+<pre><code class="language-yaml">      - name: Run e2e corpus tests
+        env:
+          LANGUAGES_REPO_PATH: /tmp/languages
+          PLCC_NO_TEST_CACHE: &quot;1&quot;
+        run: bin/test/e2e.bash
+</code></pre>
+<p>For the <code>packaging</code> job:</p>
+<pre><code class="language-yaml">      - name: Run packaging smoke test
+        env:
+          PLCC_NO_TEST_CACHE: &quot;1&quot;
+        run: bin/test/packaging.bash
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Run units to verify nothing broke</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash
+</code></pre>
+<p>Expected: pass</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add .github/workflows/ci.yml
+git commit -m &quot;ci(097): disable test output cache in CI with PLCC_NO_TEST_CACHE&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
