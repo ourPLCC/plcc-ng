@@ -74,6 +74,14 @@ plcc-parse -s subtract.plcc samples
 echo "42" | plcc-parse
 ```
 
+**Interactive mode:** When no source files are given and stdin is a terminal,
+`plcc-parse` reads input line by line at the `>>>` prompt. After each line,
+complete sentences are parsed and printed immediately. If the input so far is a
+valid prefix that could be extended (e.g., `3` in a grammar that also allows
+`3 + 4`), parsing is deferred and the `...` continuation prompt appears. Press
+`^D` at the `>>>` prompt (empty buffer) to exit. Press `^D` at the `...`
+prompt to force-submit the buffered input and return to `>>>`.
+
 ---
 
 ## plcc-rep
@@ -99,3 +107,11 @@ plcc-rep -s subtract.plcc samples
 # Enter interactive mode (no files given)
 plcc-rep -s subtract.plcc
 ```
+
+**Interactive mode:** When no source files are given and stdin is a terminal,
+`plcc-rep` reads input line by line at the `>>>` prompt. After each line,
+complete sentences are evaluated and their results printed immediately. If the
+input so far is a valid prefix that could be extended, evaluation is deferred
+and the `...` continuation prompt appears. Press `^D` at the `>>>` prompt
+(empty buffer) to exit. Press `^D` at the `...` prompt to force-submit the
+buffered input and return to `>>>`.

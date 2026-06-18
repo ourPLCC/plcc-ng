@@ -7,7 +7,6 @@ from types import SimpleNamespace
 import pytest
 
 from .scan import ScanHandler, main as run_main
-from .source_runner import SubmitOn
 import plcc.cmd.scan as _scan_module
 
 
@@ -45,11 +44,11 @@ def test_scan_handler_passes_source_name_to_plcc_tokens(monkeypatch):
     assert any("--source-name=myfile.txt" in arg for arg in calls[0])
 
 
-def test_scan_handler_always_returns_true(monkeypatch):
+def test_scan_handler_returns_empty_remainder(monkeypatch):
     monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: _make_proc())
     handler = ScanHandler(spec_path="build/spec.json", tokens_flags=[])
-    assert handler.feed(b"", "-") is True
-    assert handler.feed(b"anything\n", "foo.txt") is True
+    assert handler.feed(b"", "-") == b""
+    assert handler.feed(b"anything\n", "foo.txt") == b""
 
 
 def test_scan_handler_renders_error_records(monkeypatch, capsys):
@@ -82,18 +81,18 @@ def test_scan_handler_renders_token_records(monkeypatch, capsys):
 # --- main() banner ---
 
 
-def test_main_uses_eof_submit_mode(monkeypatch, tmp_path):
+def test_main_creates_source_runner(monkeypatch, tmp_path):
     build = tmp_path / "build"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
-    captured = {}
+    created = []
     def fake_runner(**kw):
-        captured.update(kw)
+        created.append(kw)
         return type("R", (), {"run": lambda self, s, h: True})()
     monkeypatch.setattr(_scan_module, "SourceRunner", fake_runner)
     monkeypatch.setattr("plcc.cmd.scan.get_version", lambda: "0")
     run_main([])
-    assert captured.get("submit_on") == SubmitOn.EOF
+    assert len(created) == 1
 
 
 

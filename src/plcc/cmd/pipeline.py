@@ -25,6 +25,45 @@ def print_parse_error(record, default_stage):
     print_user_error(f"{prefix}: error: {message}")
 
 
+def slice_from_source(content, source):
+    """Return content from the 1-based (line, column) in source to the end.
+
+    Returns all of content when source lacks position info, so the caller
+    holds the whole buffer rather than losing input."""
+    if not source or "line" not in source or "column" not in source:
+        return content
+    text = content.decode("utf-8", errors="replace")
+    lines = text.split("\n")
+    line = source["line"]
+    column = source["column"]
+    offset = sum(len(l) + 1 for l in lines[: line - 1]) + (column - 1)
+    return text[offset:].encode("utf-8")
+
+
+def split_committed(items, content, eof):
+    """Split pipeline.run() output into records to dispatch and bytes to retain.
+
+    items     — list of (record, raw) pairs from TreePipeline.run().
+    content   — the buffer that produced these records.
+    eof       — True to force-submit (commit everything, retain nothing).
+
+    Returns (dispatch_items, remainder_bytes).
+    """
+    if eof:
+        dispatch = [(r, raw) for (r, raw) in items if r.get("kind") != "hold"]
+        return dispatch, b""
+
+    last = items[-1][0]
+    if last.get("kind") == "hold":
+        # Trailing complete-but-extensible sentence: hold the tree before it.
+        return items[:-2], slice_from_source(content, last.get("source", {}))
+    if last.get("kind") == "error" and last.get("found") == "eof":
+        # Trailing incomplete fragment: commit leading trees, hold the fragment.
+        return items[:-1], slice_from_source(content, last.get("start", {}))
+    # Trailing is a final tree or a genuine error: commit everything.
+    return items, b""
+
+
 class TreePipeline:
     """Runs plcc-tokens | plcc-trees and classifies the output."""
 
@@ -49,7 +88,7 @@ class TreePipeline:
             stderr=stderr_mode,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._trees_flags,
+            ["plcc-trees", f"--ll1={self._ll1_path}", "--hold-markers"] + self._trees_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=stderr_mode,

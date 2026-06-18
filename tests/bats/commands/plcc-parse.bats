@@ -120,3 +120,24 @@ SPEC
     error_line=$(echo "$output" | grep -n "error:" | head -1 | cut -d: -f1)
     [ "$rule_line" -lt "$error_line" ]
 }
+
+@test "plcc-parse pipe with two sentences produces two trees" {
+    run bash -c "printf '3\n4\n' | plcc-parse"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | grep -c "^Program")
+    [ "$count" -eq 2 ]
+}
+
+@test "plcc-parse pipe with one sentence exits 0 and prints one tree" {
+    run bash -c "echo '42' | plcc-parse"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | grep -c "^Program")
+    [ "$count" -eq 1 ]
+}
+
+@test "plcc-parse splits multiple sentences on same line" {
+    run bash -c "printf '3 4\n' | plcc-parse"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | grep -c "^Program")
+    [ "$count" -eq 2 ]
+}

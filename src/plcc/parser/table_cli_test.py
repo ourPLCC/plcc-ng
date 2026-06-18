@@ -47,6 +47,25 @@ _ADDITION_LL1 = {
     },
 }
 
+_EXTENSIBLE_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "E",
+    "parse_table": {
+        "E": {"NUM": {"alt": None, "production": [
+            {"symbol": "NUM", "field": "n"},
+            {"symbol": "Tail", "field": "t"},
+        ]}},
+        "Tail": {
+            "PLUS": {"alt": None, "production": [
+                {"symbol": "PLUS", "field": None},
+                {"symbol": "NUM", "field": None},
+                {"symbol": "Tail", "field": None},
+            ]},
+            "eof": {"alt": None, "production": []},
+        },
+    },
+}
+
 def _tok(name, lexeme, line=1, col=1, file="<stdin>"):
     return {"kind": "token", "name": name, "lexeme": lexeme,
             "source": {"file": file, "line": line, "column": col}}
@@ -573,3 +592,56 @@ def test_trace_resets_between_programs(capsys):
     second_tree_idx = next(i for i, r in enumerate(records) if r.get("kind") == "tree" and i > first_tree_idx)
     assert any(records[i].get("kind") == "parse-step" for i in range(first_tree_idx))
     assert any(records[i].get("kind") == "parse-step" for i in range(first_tree_idx + 1, second_tree_idx))
+
+
+def test_trailing_extensible_parse_emits_hold_marker(capsys, monkeypatch):
+    # Nullable tail: "3" is complete but extensible -> tree then a hold marker.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_EXTENSIBLE_LL1, ll1_file)
+        ll1_file.flush(); ll1_file.close()
+        tokens = [_tok("NUM", "3", col=1), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main(["--hold-markers", f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        kinds = [r.get("kind") for r in records]
+        assert "tree" in kinds
+        assert kinds[-1] == "hold"
+        assert records[-1]["source"]["column"] == 1
+    finally:
+        os.unlink(ll1_file.name)
+
+
+def test_nonextensible_parse_emits_no_hold_marker(capsys, monkeypatch):
+    # program -> NUM : "42" is final, no hold marker.
+    code = _run(_TRIVIAL_LL1, [_tok("NUM", "42"), _sentinel()])
+    out, _ = capsys.readouterr()
+    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+    assert all(r.get("kind") != "hold" for r in records)
+
+
+def test_trailing_incomplete_error_carries_start_source(capsys, monkeypatch):
+    # program -> NUM PLUS NUM ; "1 +" at col 1 is incomplete.
+    ll1_file = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+    try:
+        json.dump(_ADDITION_LL1, ll1_file)
+        ll1_file.flush(); ll1_file.close()
+        tokens = [_tok("NUM", "1", col=1), _tok("PLUS", "+", col=3), _sentinel()]
+        stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
+        monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
+        try:
+            run_main([f"--ll1={ll1_file.name}"])
+        except SystemExit:
+            pass
+        out, _ = capsys.readouterr()
+        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
+        err = [r for r in records if r.get("kind") == "error"][0]
+        assert err["found"] == "eof"
+        assert err["start"]["column"] == 1
+    finally:
+        os.unlink(ll1_file.name)

@@ -17,6 +17,7 @@ Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
     --parser=KIND           Parser plugin to use [default: table].
     -t --trace              Forward trace flag to parser plugin.
+    --hold-markers          Forward hold-markers flag to parser plugin.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -34,6 +35,7 @@ def main(argv=None):
     ll1_path = args["--ll1"]
     parser_kind = args["--parser"]
     trace = args["--trace"]
+    hold_markers = args["--hold-markers"]
     cmd = f"plcc-parser-{parser_kind}"
     if not shutil.which(cmd):
         print(
@@ -46,6 +48,8 @@ def main(argv=None):
     child_flags = verbose.child_flags()
     if trace:
         child_flags.append("--trace")
+    if hold_markers:
+        child_flags.append("--hold-markers")
     child_cmd = [cmd, f"--ll1={ll1_path}"] + child_flags
     result = subprocess.run(child_cmd, stdin=sys.stdin)
     verbose.emit(Events.FINISHED, message=f"exit {result.returncode}")
