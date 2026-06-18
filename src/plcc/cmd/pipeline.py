@@ -88,7 +88,7 @@ class TreePipeline:
             stderr=stderr_mode,
         )
         tree_proc = subprocess.Popen(
-            ["plcc-trees", f"--ll1={self._ll1_path}"] + self._trees_flags,
+            ["plcc-trees", f"--ll1={self._ll1_path}", "--hold-markers"] + self._trees_flags,
             stdin=tokens_proc.stdout,
             stdout=subprocess.PIPE,
             stderr=stderr_mode,

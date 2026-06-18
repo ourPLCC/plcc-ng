@@ -604,7 +604,7 @@ def test_trailing_extensible_parse_emits_hold_marker(capsys, monkeypatch):
         stdin_data = "\n".join(json.dumps(t) for t in tokens) + "\n"
         monkeypatch.setattr("sys.stdin", io.StringIO(stdin_data))
         try:
-            run_main([f"--ll1={ll1_file.name}"])
+            run_main(["--hold-markers", f"--ll1={ll1_file.name}"])
         except SystemExit:
             pass
         out, _ = capsys.readouterr()

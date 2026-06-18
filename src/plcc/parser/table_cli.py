@@ -16,6 +16,7 @@ Usage:
 Options:
     --ll1=LL1_JSON          Path to LL(1) analysis JSON (required).
     -t --trace              Emit parse-step records tracing predict/shift/complete.
+    --hold-markers          Emit a hold marker after a trailing extensible parse.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
@@ -36,6 +37,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-parser-table", Events, args)
     ll1_path = args["--ll1"]
     trace = args["--trace"]
+    hold_markers = args["--hold-markers"]
     verbose.emit(Events.STARTED, ll1_path=ll1_path)
 
     # Load ll1.json
@@ -97,7 +99,7 @@ def main(argv=None):
             print(json.dumps(tree), flush=True)
             cursor += consumed
             at_end = cursor >= len(tokens) or tokens[cursor]["name"] == "eof"
-            if at_end and extensible:
+            if at_end and extensible and hold_markers:
                 print(json.dumps({"kind": "hold", "source": tree.get("source", {})}), flush=True)
         except ParseError as e:
             _emit_trace(tracer.events)
