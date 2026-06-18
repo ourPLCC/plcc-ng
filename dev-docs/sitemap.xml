@@ -81,15 +81,15 @@
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/096-test-setup-deduplication/</loc>
-         <lastmod>2026-06-18</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/097-test-output-cache/</loc>
-         <lastmod>2026-06-18</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/098-rep-ctrl-d-non-empty-line/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/099-docs-link-to-source/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/100-docs-cli-command-classification/</loc>
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
@@ -414,6 +414,14 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/095-semantic-section-redesign/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/096-test-setup-deduplication/</loc>
+         <lastmod>2026-06-18</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/097-test-output-cache/</loc>
          <lastmod>2026-06-18</lastmod>
     </url>
     <url>
