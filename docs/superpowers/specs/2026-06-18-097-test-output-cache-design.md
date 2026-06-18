@@ -28,7 +28,7 @@ used elsewhere in `bin/`.
 
 **Behavior:**
 
-1. If `PLCC_NO_CACHE=1` is set, log a skip event and exec the command directly
+1. If `PLCC_NO_TEST_CACHE=1` is set, log a skip event and exec the command directly
    with no tee and no cache interaction.
 2. Compute a cache key from `git status --porcelain` and `git rev-parse HEAD`.
    Compare against the key stored in `<cache-file>.meta`.
@@ -77,9 +77,13 @@ switching to a different model (e.g. file-mtime) is a one-function change in
 
 ## Escape hatch
 
-Setting `PLCC_NO_CACHE=1` bypasses the cache for that run entirely. The command
+Setting `PLCC_NO_TEST_CACHE=1` bypasses the cache for that run entirely. The command
 runs live and the cache is neither read nor written. The skip is still logged
 (see Observability).
+
+CI sets `PLCC_NO_TEST_CACHE=1` unconditionally — `/tmp` is ephemeral per job
+so caching would always miss anyway, and this keeps CI logs free of cache
+noise.
 
 ## Observability
 
@@ -115,3 +119,4 @@ The stats log persists across runs until `/tmp` is cleared (reboot).
 | `bin/test/functional.bash` | Source helper, wrap command in `run_cached` |
 | `bin/test/packaging.bash` | Source helper, wrap command in `run_cached` |
 | `bin/test/all.bash` | Source helper, wrap command in `run_cached` |
+| `.github/workflows/ci.yml` | Set `PLCC_NO_TEST_CACHE=1` on all test steps |
