@@ -33,6 +33,30 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 | [bin/test/packaging.bash](bin/test/packaging.bash) | Build a wheel, install it into a throwaway venv, verify all entry points resolve, and run a smoke test against the installed package. | After changes to `pyproject.toml`, entry points, or packaging layout. |
 | [bin/test/all.bash](bin/test/all.bash) | Run `functional.bash` then `packaging.bash`. | Full local pre-push check. |
 
+### Test output cache
+
+All test scripts cache their output to `/tmp` so agents and tools can grep results without re-running the suite. The cache is keyed on git state (`git status --porcelain` + `git rev-parse HEAD`) and is invalidated automatically whenever the working tree or HEAD changes.
+
+| Command | What it does |
+|---|---|
+| [bin/test/cache/stats.bash](bin/test/cache/stats.bash) | Print a hit/miss/skip summary, overall and per-script. |
+| [bin/test/cache/clear.bash](bin/test/cache/clear.bash) | Remove all cached test output files from `/tmp`. |
+| [bin/test/cache/clear-stats.bash](bin/test/cache/clear-stats.bash) | Clear the cache statistics log. |
+
+**Environment variable:** set `PLCC_NO_TEST_CACHE=1` to bypass the cache for a single run — the test suite runs live and the cache is neither read nor written (the run is still logged as a skip in the stats).
+
+**When the cache helps:**
+
+- Grepping test output after a run without re-running the suite.
+- Quickly re-running a script to check something when you know the code hasn't changed.
+- Agents that call a test script multiple times to inspect different slices of output.
+
+**When to bypass the cache (`PLCC_NO_TEST_CACHE=1`):**
+
+- When you want to force a fresh run regardless of git state (e.g. after changing a fixture file that git doesn't track, or when debugging a flaky test).
+- In CI — the variable is set automatically for all test steps.
+- When you suspect the cache is stale and `bin/test/cache/clear.bash` is more than you need.
+
 ## TDD inner loop
 
 plcc-ng is built test-first.

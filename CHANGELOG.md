@@ -1,6 +1,89 @@
 # CHANGELOG
 
 
+## v0.46.1 (2026-06-18)
+
+### Bug Fixes
+
+- **097**: Use PIPESTATUS to eliminate exit-code race in run_cached
+  ([`0c15039`](https://github.com/ourPLCC/plcc-ng/commit/0c150398cdaaca96eaa44b9d70a0470ddc4ce353))
+
+Replaced the temp-file approach to capture exit codes with PIPESTATUS, which is more reliable and
+  eliminates the race condition where the temp file write in a subshell might not be visible to the
+  parent before reading. The fix:
+
+- Removed mktemp and rm of _exit_tmp temp file - Removed trap on EXIT (no longer needed) - Added set
+  -o pipefail inside run_cached to enable PIPESTATUS[0] access - Changed pattern from '{ "$@" 2>&1;
+  echo "$?" > file }' to '"$@" 2>&1 | tee output || exit_code=PIPESTATUS[0]'
+
+This is safe because callers source this file into scripts with set -euo pipefail active, but the
+  function itself now explicitly sets pipefail to handle both cases correctly.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Continuous Integration
+
+- **097**: Disable test output cache in CI with PLCC_NO_TEST_CACHE
+  ([`207f5d7`](https://github.com/ourPLCC/plcc-ng/commit/207f5d76a3a884f57d5328667ec921ed50edcabb))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- **097**: Add test output cache design spec [skip ci]
+  ([`af42838`](https://github.com/ourPLCC/plcc-ng/commit/af428382f7752afe8e03faea3e345817e9955b41))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **097**: Add test output cache implementation plan [skip ci]
+  ([`cfa749a`](https://github.com/ourPLCC/plcc-ng/commit/cfa749acc1dad9564b7df4564a57356452854785))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **097**: Update spec — rename env var, add CI update [skip ci]
+  ([`e078749`](https://github.com/ourPLCC/plcc-ng/commit/e0787493b667733e12c9e1d2810becb8646c8f4c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 098 for ^D on non-empty line in plcc-rep [skip ci]
+  ([`a85aeae`](https://github.com/ourPLCC/plcc-ng/commit/a85aeaec3a7bffe1e2fb745b772a95edd31a49a5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Move 093 to done [skip ci]
+  ([`6a537a7`](https://github.com/ourPLCC/plcc-ng/commit/6a537a77d4561b6ab4efc35006dde90daa7d118e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Refactoring
+
+- **097**: Wrap composite test scripts with run_cached
+  ([`7282014`](https://github.com/ourPLCC/plcc-ng/commit/7282014962677365887a87cd14af492a1492abf6))
+
+- **097**: Wrap simple test scripts with run_cached
+  ([`e864274`](https://github.com/ourPLCC/plcc-ng/commit/e864274cd2a61dd6437e16b322ceb7ef44e09066))
+
+### Testing
+
+- **097**: Add _cache.bash with run_cached helper
+  ([`b3dfea6`](https://github.com/ourPLCC/plcc-ng/commit/b3dfea695d7f90ee89b32b28846a33f4193b28a1))
+
+- **097**: Add cache management scripts and document test output cache
+  ([`16349fa`](https://github.com/ourPLCC/plcc-ng/commit/16349fa4661ad1f67f6d5f83cf4f3caecc9fba68))
+
+- **097**: Add cache/stats.bash summary script
+  ([`ac5f79d`](https://github.com/ourPLCC/plcc-ng/commit/ac5f79dfe4e8e240617d7b1e52e2ff900ee517ef))
+
+- **097**: Fix fallback test; sync docs to final file layout [skip ci]
+  ([`d498f3e`](https://github.com/ourPLCC/plcc-ng/commit/d498f3eb16b7389f19e774e9f43614b616c6926a))
+
+- Shadow git with a failing stub so the fallback path is deterministically exercised and assert no
+  cache files are written - Update spec and plan docs to reference bin/test/cache/stats.bash (moved
+  from bin/test/cache-stats.bash) and correct script count from six to seven
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.46.0 (2026-06-18)
 
 ### Bug Fixes
@@ -93,6 +176,11 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 - **094**: Update semantic.md for 095 section format [skip ci]
   ([`10c5f08`](https://github.com/ourPLCC/plcc-ng/commit/10c5f08f66cd523b4dfaf7a4b75ddb9593b76d02))
+
+- **issues**: Move 094 to done [skip ci]
+  ([`511c1cf`](https://github.com/ourPLCC/plcc-ng/commit/511c1cf67ca5407939c220aafc3d9ce5bfbfe9f7))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 - **issues**: Move 095 to done [skip ci]
   ([`94254cc`](https://github.com/ourPLCC/plcc-ng/commit/94254ccf9d550d25c8032e2a9604fc4e429a01f9))
