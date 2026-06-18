@@ -12,8 +12,10 @@ source "${SCRIPT_DIR}/_cache.bash"
 
 _run() {
     cd "${PROJECT_ROOT}"
-    "${PROJECT_ROOT}/bin/install/bats.bash"
-    pdm install
+    if [[ -z "${SKIP_SETUP:-}" ]]; then
+        "${PROJECT_ROOT}/bin/install/bats.bash"
+        pdm install
+    fi
     export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
     bats tests/bats/commands/
 }
