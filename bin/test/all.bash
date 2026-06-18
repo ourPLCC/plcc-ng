@@ -6,5 +6,12 @@ echo "-----------------"
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-"${SCRIPT_DIR}/functional.bash"
-"${SCRIPT_DIR}/packaging.bash"
+# shellcheck source=bin/test/_cache.bash
+source "${SCRIPT_DIR}/_cache.bash"
+
+_run() {
+    "${SCRIPT_DIR}/functional.bash"
+    "${SCRIPT_DIR}/packaging.bash"
+}
+
+run_cached /tmp/plcc-test-all.log _run
