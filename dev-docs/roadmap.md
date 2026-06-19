@@ -1,6 +1,6 @@
 # Roadmap
 
-14 open issues as of 2026-06-19. Grouped by theme; within a theme the order reflects dependencies.
+16 open issues as of 2026-06-19. Grouped by theme; within a theme the order reflects dependencies.
 
 ## Phase 1 — Docs: structural decisions (resolve first)
 
@@ -21,9 +21,11 @@ Each of these can be done without waiting on Phase 1 decisions.
 |---|---|---|
 | [099](issues/099-docs-link-to-source.md) | Add link to source repo | Likely a one-line config change in the doc framework |
 | [073](issues/073-docs-java-jdk-prerequisite.md) | Java JDK as optional prerequisite | Add to the prerequisites section |
+| [101](issues/101-docs-acknowledgments-page.md) | Acknowledgments page | Credit contributors, institutions, and key dependencies |
 | [078](issues/078-docs-content-license.md) | Content license | Finalize once 077 is resolved; add notice + LICENSE coverage |
 | [071](issues/071-docs-upgrade-guide.md) | Upgrade guide | New page near the install docs |
 | [072](issues/072-docs-pin-version.md) | Version-pinning instructions | Pair with 071 — same page or adjacent |
+| [102](issues/102-docs-migration-from-plcc.md) | Migration guide from PLCC to PLCC-ng | Pair with 071/072 — all belong in the same "getting/staying on PLCC-ng" cluster |
 
 ## Phase 3 — Docs: quickstart and examples (sequential)
 
