@@ -1,6 +1,61 @@
 # CHANGELOG
 
 
+## v0.47.0 (2026-06-19)
+
+### Chores
+
+- **096**: Guard setup in commands, integration, e2e with SKIP_SETUP
+  ([`3774519`](https://github.com/ourPLCC/plcc-ng/commit/37745191c4e4e81fdaa4ea311fdddf92c694f8eb))
+
+- **096**: Guard setup in units.bash with SKIP_SETUP
+  ([`0fec840`](https://github.com/ourPLCC/plcc-ng/commit/0fec8408cccfaa23e8aa21672a1b7f14f390115a))
+
+- **096**: Hoist setup into functional.bash; pass SKIP_SETUP=1 to leaf scripts
+  ([`8c09c47`](https://github.com/ourPLCC/plcc-ng/commit/8c09c47148c51244d24cbb491deee635c625630f))
+
+- **ci**: Trigger
+  ([`0fa49b4`](https://github.com/ourPLCC/plcc-ng/commit/0fa49b407e491dc165d5bb673c852c7cb9720dcd))
+
+### Documentation
+
+- **096**: Add design spec for hoisting test setup [skip ci]
+  ([`2b80e11`](https://github.com/ourPLCC/plcc-ng/commit/2b80e11a955582b0dd77c73345c58d467bd2ce89))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **096**: Add implementation plan for hoisting test setup [skip ci]
+  ([`e8663a7`](https://github.com/ourPLCC/plcc-ng/commit/e8663a734f5a76fd19a58d32cf8b70825cdc67f5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **096**: Clarify plan constraint scope; note pre-existing typo [skip ci]
+  ([`2d4253d`](https://github.com/ourPLCC/plcc-ng/commit/2d4253df3170f085f61a0917a7e3ec95efae37af))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 100 for CLI command classification discussion [skip ci]
+  ([`d8027be`](https://github.com/ourPLCC/plcc-ng/commit/d8027be99e8481b2aff33bfdb8a8e717a294b08e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Move 096 and 097 to done [skip ci]
+  ([`579d19a`](https://github.com/ourPLCC/plcc-ng/commit/579d19a7168f64cbc835fcbbc0acb491321ffdfb))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Add dark mode implementation plan [skip ci]
+  ([`35eb4d4`](https://github.com/ourPLCC/plcc-ng/commit/35eb4d4b929652509be630f35dc857646c48626d))
+
+- **specs**: Add dark mode design for issue 070 [skip ci]
+  ([`1b27077`](https://github.com/ourPLCC/plcc-ng/commit/1b27077197848441cf1c9ae57203cbf0fe4989ad))
+
+### Features
+
+- **docs**: Add dark mode with system-preference detection and toggle
+  ([`669d763`](https://github.com/ourPLCC/plcc-ng/commit/669d763d566cc8ef34710d2738115f9332efe42e))
+
+
 ## v0.46.1 (2026-06-18)
 
 ### Bug Fixes
@@ -47,6 +102,11 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 - **issues**: Add 098 for ^D on non-empty line in plcc-rep [skip ci]
   ([`a85aeae`](https://github.com/ourPLCC/plcc-ng/commit/a85aeaec3a7bffe1e2fb745b772a95edd31a49a5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 099 for link from docs to source repository [skip ci]
+  ([`3b4de2f`](https://github.com/ourPLCC/plcc-ng/commit/3b4de2ff4394998d0f2b89ed18a705189007eabc))
 
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
