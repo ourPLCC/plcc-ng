@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v0.47.1 (2026-06-19)
+
+### Bug Fixes
+
+- **098**: Replace readline with read1 so one ^D submits partial line
+  ([`1711e01`](https://github.com/ourPLCC/plcc-ng/commit/1711e014c6de6e72bdb2745bd69b8f253511cf03))
+
+On a real TTY in canonical mode, readline() blocks after the first ^D flushes buffered content
+  because it loops calling read() until it sees a newline or an empty read. A second ^D was required
+  to produce the empty read that caused readline() to return. read1(65536) makes exactly one OS
+  read() call and returns immediately with whatever was flushed.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- **098**: Design spec for ^D partial-line regression fix [skip ci]
+  ([`1291836`](https://github.com/ourPLCC/plcc-ng/commit/129183647cc80d0ac0284b574d65104ce4b4c23b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **098**: Implementation plan for ^D partial-line fix [skip ci]
+  ([`e911059`](https://github.com/ourPLCC/plcc-ng/commit/e911059d4c9a9c3ec3f143965b0866c3a58d03c8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.47.0 (2026-06-19)
 
 ### Chores
