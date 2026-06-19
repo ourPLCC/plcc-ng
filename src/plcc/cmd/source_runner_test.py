@@ -83,9 +83,17 @@ def test_file_source_passes_eof_true(tmp_path, runner):
 # --- Interactive (TTY) stdin ---
 
 def _tty_stdin(lines):
-    """Fake TTY stdin yielding lines from a list; empty bytes signals EOF."""
-    buf = io.BytesIO(b"".join(l if isinstance(l, bytes) else l.encode() for l in lines))
-    return SimpleNamespace(isatty=lambda: True, buffer=buf)
+    """Simulate canonical TTY: each read1() call returns the next item from lines."""
+    _iter = iter(lines)
+
+    class _TtyBuffer:
+        def read1(self, n=-1):
+            try:
+                return next(_iter)
+            except StopIteration:
+                return b""
+
+    return SimpleNamespace(isatty=lambda: True, buffer=_TtyBuffer())
 
 
 def test_interactive_prints_hint(monkeypatch, runner, capsys):
@@ -141,6 +149,15 @@ def test_ctrl_d_empty_buffer_prints_newline(monkeypatch, runner, capsys):
     assert err.endswith(">>> \n")
 
 
+def test_ctrl_d_partial_line_at_top_level_prompt_force_submits(monkeypatch, runner):
+    # 098 regression: at >>>, type "hello" then ^D (no Enter) — force-submit immediately.
+    monkeypatch.setattr(sys, "stdin", _tty_stdin([b"hello", b""]))
+    handler = RecordingHandler(results=[b""])
+    runner.run(["-"], handler)
+    assert handler.calls == [(b"hello", "-")]
+    assert handler.eof_flags == [True]
+
+
 def test_ctrl_d_nonempty_buffer_force_submits_and_returns_to_prompt(monkeypatch, runner, capsys):
     # line1 is held; ^D on the continuation prompt force-submits with eof=True.
     monkeypatch.setattr(sys, "stdin", _tty_stdin([b"line1\n", b""]))
@@ -184,7 +201,7 @@ def test_ctrl_c_with_empty_buffer_exits_130(monkeypatch, runner):
         def buffer(self):
             return self
 
-        def readline(self):
+        def read1(self, n=-1):
             raise KeyboardInterrupt
 
     monkeypatch.setattr(sys, "stdin", ImmediateInterrupt())
@@ -204,7 +221,7 @@ def test_ctrl_c_with_buffer_clears_and_continues(monkeypatch, runner, capsys):
         def buffer(self):
             return self
 
-        def readline(self):
+        def read1(self, n=-1):
             self._calls += 1
             if self._calls == 1:
                 return b"partial\n"   # builds the buffer
@@ -269,7 +286,7 @@ def test_ctrl_d_in_continuation_submits_and_continues(monkeypatch, runner):
         def buffer(self):
             return self
 
-        def readline(self):
+        def read1(self, n=-1):
             self._calls += 1
             if self._calls == 1:
                 return b"hello\n"      # held in buffer
