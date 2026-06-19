@@ -48,7 +48,7 @@ class SourceRunner:
     def _read_line(self, prompt):
         try:
             print(prompt, end="", flush=True, file=sys.stderr)
-            return sys.stdin.buffer.readline()
+            return sys.stdin.buffer.read1(65536)
         except KeyboardInterrupt:
             return None
 
