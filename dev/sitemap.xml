@@ -2,170 +2,170 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/changelog/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/getting-started/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/orchestrators/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/primitives/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/adopting/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/evaluating/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/examples/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/lexical/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/semantic/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/syntactic/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-15-084-banner-opt-in/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-15-085-keyboard-interrupt/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-15-token-str-repr/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-089-grammar-cli-refactor/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-089-grammar-to-spec-phases-1-2/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-089-grammar-to-spec-phases-3-4/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-lexical-keyword-required/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-093-incremental-parsing-repl/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-094-docs-follow-up/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-095-semantic-section-redesign/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-18-096-hoist-test-setup/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-18-097-test-output-cache/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-19-098-rep-ctrl-d-non-empty-line/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-19-dark-mode/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-085-keyboard-interrupt-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-token-str-repr-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-cli-refactor-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-to-spec-phases-1-2-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-to-spec-phases-3-4-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-lexical-keyword-required-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-093-incremental-parsing-repl-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-094-docs-follow-up-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-095-semantic-section-redesign-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-18-096-hoist-test-setup-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-18-097-test-output-cache-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-19-098-rep-ctrl-d-non-empty-line-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-19-dark-mode-design/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
 </urlset>
