@@ -613,42 +613,9 @@
 
 
 <h1 id="roadmap">Roadmap</h1>
-<p>16 open issues as of 2026-06-19. Grouped by theme; within a theme the order reflects dependencies.</p>
-<h2 id="phase-1-docs-structural-decisions-resolve-first">Phase 1 — Docs: structural decisions (resolve first)</h2>
-<p>These issues ask a question or make an architectural call that blocks or shapes downstream work.</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Issue</th>
-<th>Why it blocks</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../issues/100-docs-cli-command-classification/">100</a></td>
-<td>Reconsider CLI command classification</td>
-<td>Determines how all CLI reference pages are organized; supersedes 083</td>
-</tr>
-<tr>
-<td><a href="../issues/076-docs-home-install-redundancy/">076</a></td>
-<td>Home page install redundancy</td>
-<td>Determines whether a standalone Install page exists or install lives only in the quickstart</td>
-</tr>
-<tr>
-<td><a href="../issues/077-docs-licensing/">077</a></td>
-<td>Should the docs include a licensing page?</td>
-<td>Policy decision that 078 depends on</td>
-</tr>
-<tr>
-<td><a href="../issues/079-docs-diagrams/">079</a></td>
-<td>Diagrams: Mermaid vs PlantUML</td>
-<td>Tooling choice needed before any diagram content is added (080 also depends on framework)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="phase-2-docs-quick-wins-independent-any-order">Phase 2 — Docs: quick wins (independent, any order)</h2>
-<p>Each of these can be done without waiting on Phase 1 decisions.</p>
+<p>8 open issues as of 2026-06-20. Grouped by theme; within a theme the order reflects dependencies.</p>
+<h2 id="phase-1-docs-cli-reference-implement-the-100-decision">Phase 1 — Docs: CLI reference (implement the #100 decision)</h2>
+<p>The classification and doc structure were decided in #100. This phase implements that decision.</p>
 <table>
 <thead>
 <tr>
@@ -659,24 +626,31 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../issues/099-docs-link-to-source/">099</a></td>
-<td>Add link to source repo</td>
-<td>Likely a one-line config change in the doc framework</td>
+<td><a href="../issues/100-docs-cli-command-classification/">100</a></td>
+<td>Implement CLI command classification</td>
+<td>Restructure <code>docs/cli/</code> into per-group pages with an overview</td>
 </tr>
+</tbody>
+</table>
+<h2 id="phase-2-docs-quick-wins-independent-any-order">Phase 2 — Docs: quick wins (independent, any order)</h2>
+<table>
+<thead>
 <tr>
-<td><a href="../issues/073-docs-java-jdk-prerequisite/">073</a></td>
-<td>Java JDK as optional prerequisite</td>
-<td>Add to the prerequisites section</td>
+<th>#</th>
+<th>Issue</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../issues/081-docs-remove-plcc-make-from-examples/">081</a></td>
+<td>Remove <code>plcc-make</code> from examples</td>
+<td><code>examples.md</code> still tells users to run it directly</td>
 </tr>
 <tr>
 <td><a href="../issues/101-docs-acknowledgments-page/">101</a></td>
 <td>Acknowledgments page</td>
 <td>Credit contributors, institutions, and key dependencies</td>
-</tr>
-<tr>
-<td><a href="../issues/078-docs-content-license/">078</a></td>
-<td>Content license</td>
-<td>Finalize once 077 is resolved; add notice + LICENSE coverage</td>
 </tr>
 <tr>
 <td><a href="../issues/071-docs-upgrade-guide/">071</a></td>
@@ -695,47 +669,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="phase-3-docs-quickstart-and-examples-sequential">Phase 3 — Docs: quickstart and examples (sequential)</h2>
-<p>074 must land before the broader audit in 081.</p>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Issue</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../issues/074-docs-simplify-quickstart/">074</a></td>
-<td>Simplify quickstart and fix sample output</td>
-<td>Remove <code>plcc-make</code> step; re-run for real output</td>
-</tr>
-<tr>
-<td><a href="../issues/081-docs-remove-plcc-make-from-examples/">081</a></td>
-<td>Remove <code>plcc-make</code> from all other examples</td>
-<td>Audit the rest of the docs after quickstart is fixed</td>
-</tr>
-</tbody>
-</table>
-<h2 id="phase-4-docs-cli-reference-depends-on-phase-1">Phase 4 — Docs: CLI reference (depends on Phase 1)</h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Issue</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../issues/083-fix-plcc-diagram-misclassified/">083</a></td>
-<td>Reclassify <code>plcc-diagram</code> as Level 2</td>
-<td>May be absorbed into 100 depending on how classification is resolved</td>
-</tr>
-</tbody>
-</table>
-<h2 id="phase-5-docs-site-features-depends-on-frameworktooling-decisions">Phase 5 — Docs: site features (depends on framework/tooling decisions)</h2>
+<h2 id="phase-3-docs-site-features">Phase 3 — Docs: site features</h2>
+<p>Framework and tooling decisions are resolved (MkDocs Material + PlantUML via Kroki).</p>
 <table>
 <thead>
 <tr>
@@ -748,11 +683,11 @@
 <tr>
 <td><a href="../issues/080-docs-tabbed-code-blocks/">080</a></td>
 <td>Tabbed code blocks for language variants</td>
-<td>Implementation depends on the doc framework in use</td>
+<td>MkDocs Material content tabs; enable <code>content.tabs</code> feature</td>
 </tr>
 </tbody>
 </table>
-<h2 id="phase-6-feature-new-language-emitter">Phase 6 — Feature: new language emitter</h2>
+<h2 id="phase-4-feature-new-language-emitter">Phase 4 — Feature: new language emitter</h2>
 <table>
 <thead>
 <tr>
