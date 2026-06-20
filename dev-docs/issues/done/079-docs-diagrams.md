@@ -14,6 +14,8 @@ Which diagramming tool should we adopt? Two leading options:
 - **Mermaid** — rendered natively by many static-site frameworks (MkDocs Material, Docusaurus) and GitHub. No build-time dependency. Diagrams live as fenced code blocks in Markdown.
 - **PlantUML** — more expressive for UML-style diagrams but requires a Java build-time dependency or an external render server.
 
-## Notes
+## Decision
 
-Mermaid is likely the lower-friction choice given its native support in common doc frameworks and GitHub previews. PlantUML may be worth it if we need richer UML diagrams. The decision should account for whatever doc framework is in use.
+Keep PlantUML via the existing Kroki plugin. PlantUML is already integrated and
+has proven more capable in practice. Mermaid is easy to add via MkDocs Material
+if a specific need arises, but there is no reason to switch now.
