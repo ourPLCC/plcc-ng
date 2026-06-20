@@ -45,11 +45,76 @@ or explicitly asks students to use them. These are closer to plumbing.
   labels imply equal weight across groups, whereas what we really want is for
   students to immediately understand these three commands are their world.
 
-## Open Question
+## Decision
 
-Which approach best serves students who are new to the tool? Is a category
-label the right mechanism at all, or does prose framing do a better job of
-directing attention to the commands that matter most?
+Use the following classification, presented in this order in the docs:
+
+### Student-facing (daily drivers)
+
+| Command | Summary |
+| --- | --- |
+| `plcc-scan` | Tokenize source input and print tokens in human-readable format. |
+| `plcc-parse` | Parse source input and print the parse tree in human-readable format. |
+| `plcc-rep` | REPL — read, eval, print loop for a PLCC spec. |
+
+### Visualization
+
+| Command | Summary |
+| --- | --- |
+| `plcc-diagram` | Generate and display a class diagram from a PLCC spec file. |
+
+### Build orchestrator
+
+| Command | Summary |
+| --- | --- |
+| `plcc-make` | Build a PLCC project from a spec file (full pipeline). |
+
+### Pipeline stages (plumbing)
+
+| Command | Summary |
+| --- | --- |
+| `plcc-spec` | Parse, validate, and print a PLCC grammar file as JSON. |
+| `plcc-tokens` | Tokenize source files given a spec JSON, output token JSONL. |
+| `plcc-trees` | Dispatch to a parser plugin; reads token JSONL, emits a parse tree. |
+| `plcc-model` | Transform spec JSON into a language-neutral code model. |
+| `plcc-lang-emit` | Dispatch to the appropriate language emitter plugin. |
+| `plcc-lang-build` | Dispatch to the appropriate language builder plugin. |
+| `plcc-lang-run` | Dispatch to the appropriate language runner plugin. |
+
+### Plugin discovery
+
+| Command | Summary |
+| --- | --- |
+| `plcc-lang-list` | List installed language emitter plugins. |
+| `plcc-diagram-list` | List installed diagram plugins. |
+| `plcc-parser-list` | List installed parser plugins. |
+
+### Diagram sub-pipeline (plumbing)
+
+| Command | Summary |
+| --- | --- |
+| `plcc-diagram-emit` | Dispatch model JSON to the appropriate diagram emitter. |
+| `plcc-diagram-build` | Dispatch to the appropriate diagram builder (source → image). |
+| `plcc-diagram-run` | Dispatch to the appropriate diagram runner (display image). |
+| `plcc-mermaid-diagram-emit` | Emit a Mermaid class diagram from model JSON. |
+| `plcc-mermaid-diagram-build` | Render a Mermaid source file to a PNG image. |
+| `plcc-mermaid-diagram-run` | Print the path to the rendered Mermaid diagram image. |
+| `plcc-plantuml-diagram-emit` | Emit a PlantUML class diagram from model JSON. |
+| `plcc-plantuml-diagram-build` | Render a PlantUML source file to a PNG via plantuml.com. |
+| `plcc-plantuml-diagram-run` | Print the path to the rendered PlantUML diagram image. |
+
+### Parser sub-pipeline (plumbing)
+
+| Command | Summary |
+| --- | --- |
+| `plcc-parser-table` | Table-driven LL(1) parser; reads token JSONL, emits a parse tree. |
+
+## Doc Structure
+
+Each group gets its own page. The overview page (`docs/cli/index.md`) serves
+as a table of contents and explains the relationships between command groups
+and the user — who uses what and why — so readers can orient quickly without
+wading through individual command pages.
 
 ## Notes
 
