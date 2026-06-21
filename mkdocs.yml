@@ -39,10 +39,47 @@ nav:
     - Syntactic Section: language-guide/syntactic.md
     - Semantic Section: language-guide/semantic.md
     - Examples: language-guide/examples.md
-  - CLI Reference:
+  - CLI:
     - Overview: cli/index.md
-    - Orchestrators: cli/orchestrators.md
-    - Primitives: cli/primitives.md
+    - Guide:
+      - Author-facing commands: cli/guide/author-commands.md
+      - Under the hood: cli/guide/under-the-hood.md
+      - Language extensions: cli/guide/language-extensions.md
+      - Parser extensions: cli/guide/parser-extensions.md
+      - Diagram extensions: cli/guide/diagram-extensions.md
+    - All Commands:
+      - plcc-diagram: cli/commands/plcc-diagram.md
+      - plcc-diagram-build: cli/commands/plcc-diagram-build.md
+      - plcc-diagram-emit: cli/commands/plcc-diagram-emit.md
+      - plcc-diagram-list: cli/commands/plcc-diagram-list.md
+      - plcc-diagram-run: cli/commands/plcc-diagram-run.md
+      - plcc-java-build: cli/commands/plcc-java-build.md
+      - plcc-java-emit: cli/commands/plcc-java-emit.md
+      - plcc-java-run: cli/commands/plcc-java-run.md
+      - plcc-lang-build: cli/commands/plcc-lang-build.md
+      - plcc-lang-emit: cli/commands/plcc-lang-emit.md
+      - plcc-lang-list: cli/commands/plcc-lang-list.md
+      - plcc-lang-run: cli/commands/plcc-lang-run.md
+      - plcc-ll1: cli/commands/plcc-ll1.md
+      - plcc-make: cli/commands/plcc-make.md
+      - plcc-mermaid-diagram-build: cli/commands/plcc-mermaid-diagram-build.md
+      - plcc-mermaid-diagram-emit: cli/commands/plcc-mermaid-diagram-emit.md
+      - plcc-mermaid-diagram-run: cli/commands/plcc-mermaid-diagram-run.md
+      - plcc-model: cli/commands/plcc-model.md
+      - plcc-parse: cli/commands/plcc-parse.md
+      - plcc-parser-list: cli/commands/plcc-parser-list.md
+      - plcc-parser-table: cli/commands/plcc-parser-table.md
+      - plcc-plantuml-diagram-build: cli/commands/plcc-plantuml-diagram-build.md
+      - plcc-plantuml-diagram-emit: cli/commands/plcc-plantuml-diagram-emit.md
+      - plcc-plantuml-diagram-run: cli/commands/plcc-plantuml-diagram-run.md
+      - plcc-python-emit: cli/commands/plcc-python-emit.md
+      - plcc-python-run: cli/commands/plcc-python-run.md
+      - plcc-rep: cli/commands/plcc-rep.md
+      - plcc-scan: cli/commands/plcc-scan.md
+      - plcc-spec: cli/commands/plcc-spec.md
+      - plcc-tokens: cli/commands/plcc-tokens.md
+      - plcc-trees: cli/commands/plcc-trees.md
+      - plcc-version: cli/commands/plcc-version.md
   - Instructor Guide:
     - Overview: instructor-guide/index.md
     - Evaluating plcc-ng: instructor-guide/evaluating.md
