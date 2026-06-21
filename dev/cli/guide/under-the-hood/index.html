@@ -1,0 +1,2308 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/cli/guide/under-the-hood/">
+      
+      
+        <link rel="prev" href="../author-commands/">
+      
+      
+        <link rel="next" href="../language-extensions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Under the hood - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#under-the-hood" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Under the hood
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency diagram
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The core pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-diagram-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The diagram pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-mermaid-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-mermaid-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-mermaid-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-plantuml-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-plantuml-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-plantuml-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="under-the-hood">Under the Hood</h1>
+<p>The commands you use every day — <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>, and
+<code>plcc-diagram</code> — each orchestrate a pipeline of lower-level commands. This
+page shows how the pieces fit together.</p>
+<h2 id="dependency-diagram">Dependency diagram</h2>
+<p>The diagram below shows which commands call which. An arrow from A to B means
+A calls B.</p>
+<div><svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="CLASS" height="1485px" preserveAspectRatio="xMaxYMax meet" style="width:1198px;height:1485px;background:#FFFFFF;" version="1.1" viewBox="0 0 1198 1485" width="1198px" zoomAndPan="magnify" id="Kroki"><defs /><g><g class="cluster" data-qualified-name="language-extensions" data-source-line="5" id="ent0001"><path d="M952.11,258 L1117.8151,258 A3.75,3.75 0 0 1 1120.3151,260.5 L1127.3151,280.2969 L1180.78,280.2969 A2.5,2.5 0 0 1 1183.28,282.7969 L1183.28,876.5 A2.5,2.5 0 0 1 1180.78,879 L952.11,879 A2.5,2.5 0 0 1 949.61,876.5 L949.61,260.5 A2.5,2.5 0 0 1 952.11,258" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="949.61" x2="1127.3151" y1="280.2969" y2="280.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="164.7051" x="953.61" y="272.9951">language-extensions</text></g><g class="cluster" data-qualified-name="language-extensions.plcc-java" data-source-line="6" id="ent0002"><path d="M985.93,301 L1056.9779,301 A3.75,3.75 0 0 1 1059.4779,303.5 L1066.4779,323.2969 L1146.96,323.2969 A2.5,2.5 0 0 1 1149.46,325.7969 L1149.46,563.5 A2.5,2.5 0 0 1 1146.96,566 L985.93,566 A2.5,2.5 0 0 1 983.43,563.5 L983.43,303.5 A2.5,2.5 0 0 1 985.93,301" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="983.43" x2="1066.4779" y1="323.2969" y2="323.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="70.0479" x="987.43" y="315.9951">plcc-java</text></g><g class="cluster" data-qualified-name="language-extensions.plcc-python" data-source-line="12" id="ent0006"><path d="M976.11,590 L1069.7301,590 A3.75,3.75 0 0 1 1072.2301,592.5 L1079.2301,612.2969 L1156.78,612.2969 A2.5,2.5 0 0 1 1159.28,614.7969 L1159.28,852.5 A2.5,2.5 0 0 1 1156.78,855 L976.11,855 A2.5,2.5 0 0 1 973.61,852.5 L973.61,592.5 A2.5,2.5 0 0 1 976.11,590" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="973.61" x2="1079.2301" y1="612.2969" y2="612.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="92.6201" x="977.61" y="604.9951">plcc-python</text></g><g class="cluster" data-qualified-name="parser-extensions" data-source-line="19" id="ent0010"><path d="M657.32,544 L800.9655,544 A3.75,3.75 0 0 1 803.4655,546.5 L810.4655,566.2969 L882.93,566.2969 A2.5,2.5 0 0 1 885.43,568.7969 L885.43,707.5 A2.5,2.5 0 0 1 882.93,710 L657.32,710 A2.5,2.5 0 0 1 654.82,707.5 L654.82,546.5 A2.5,2.5 0 0 1 657.32,544" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="654.82" x2="810.4655" y1="566.2969" y2="566.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="142.6455" x="658.82" y="558.9951">parser-extensions</text></g><g class="cluster" data-qualified-name="parser-extensions.plcc-parser-table" data-source-line="20" id="ent0011"><path d="M681.32,587 L816.9196,587 A3.75,3.75 0 0 1 819.4196,589.5 L826.4196,609.2969 L858.93,609.2969 A2.5,2.5 0 0 1 861.43,611.7969 L861.43,683.5 A2.5,2.5 0 0 1 858.93,686 L681.32,686 A2.5,2.5 0 0 1 678.82,683.5 L678.82,589.5 A2.5,2.5 0 0 1 681.32,587" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="678.82" x2="826.4196" y1="609.2969" y2="609.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="134.5996" x="682.82" y="601.9951">plcc-parser-table</text></g><g class="cluster" data-qualified-name="diagram-extensions" data-source-line="25" id="ent0013"><path d="M617.14,849 L774.9086,849 A3.75,3.75 0 0 1 777.4086,851.5 L784.4086,871.2969 L923.11,871.2969 A2.5,2.5 0 0 1 925.61,873.7969 L925.61,1467.5 A2.5,2.5 0 0 1 923.11,1470 L617.14,1470 A2.5,2.5 0 0 1 614.64,1467.5 L614.64,851.5 A2.5,2.5 0 0 1 617.14,849" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="614.64" x2="784.4086" y1="871.2969" y2="871.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="156.7686" x="618.64" y="863.9951">diagram-extensions</text></g><g class="cluster" data-qualified-name="diagram-extensions.plcc-mermaid-diagram" data-source-line="26" id="ent0014"><path d="M641.14,1181 L820.2504,1181 A3.75,3.75 0 0 1 822.7504,1183.5 L829.7504,1203.2969 L899.11,1203.2969 A2.5,2.5 0 0 1 901.61,1205.7969 L901.61,1443.5 A2.5,2.5 0 0 1 899.11,1446 L641.14,1446 A2.5,2.5 0 0 1 638.64,1443.5 L638.64,1183.5 A2.5,2.5 0 0 1 641.14,1181" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="638.64" x2="829.7504" y1="1203.2969" y2="1203.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="178.1104" x="642.64" y="1195.9951">plcc-mermaid-diagram</text></g><g class="cluster" data-qualified-name="diagram-extensions.plcc-plantuml-diagram" data-source-line="32" id="ent0018"><path d="M641.58,892 L821.1279,892 A3.75,3.75 0 0 1 823.6279,894.5 L830.6279,914.2969 L898.67,914.2969 A2.5,2.5 0 0 1 901.17,916.7969 L901.17,1154.5 A2.5,2.5 0 0 1 898.67,1157 L641.58,1157 A2.5,2.5 0 0 1 639.08,1154.5 L639.08,894.5 A2.5,2.5 0 0 1 641.58,892" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="639.08" x2="830.6279" y1="914.2969" y2="914.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="178.5479" x="643.08" y="906.9951">plcc-plantuml-diagram</text></g><g class="cluster" data-qualified-name="core" data-source-line="39" id="ent0022"><path d="M179.84,6 L215.1564,6 A3.75,3.75 0 0 1 217.6564,8.5 L224.6564,28.2969 L851.09,28.2969 A2.5,2.5 0 0 1 853.59,30.7969 L853.59,517.5 A2.5,2.5 0 0 1 851.09,520 L179.84,520 A2.5,2.5 0 0 1 177.34,517.5 L177.34,8.5 A2.5,2.5 0 0 1 179.84,6" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="177.34" x2="224.6564" y1="28.2969" y2="28.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="34.3164" x="181.34" y="20.9951">core</text></g><g class="cluster" data-qualified-name="plcc-diagram" data-source-line="74" id="ent0059"><path d="M165.17,876 L268.627,876 A3.75,3.75 0 0 1 271.127,878.5 L278.127,898.2969 L580.14,898.2969 A2.5,2.5 0 0 1 582.64,900.7969 L582.64,1162.5 A2.5,2.5 0 0 1 580.14,1165 L165.17,1165 A2.5,2.5 0 0 1 162.67,1162.5 L162.67,878.5 A2.5,2.5 0 0 1 165.17,876" fill="none" style="stroke:#000000;stroke-width:1.5;" /><line style="stroke:#000000;stroke-width:1.5;" x1="162.67" x2="278.127" y1="898.2969" y2="898.2969" /><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="700" lengthAdjust="spacing" textLength="102.457" x="166.67" y="890.9951">plcc-diagram</text></g><g class="entity" data-qualified-name="language-extensions.plcc-java.plcc-java-emit" data-source-line="7" id="ent0003"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="131.2373" x="1000.83" y="336" /><ellipse cx="1015.83" cy="352" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M1018.7988,357.6406 Q1018.2206,357.9375 1017.58,358.0781 Q1016.9394,358.2344 1016.2363,358.2344 Q1013.7363,358.2344 1012.4081,356.5938 Q1011.0956,354.9375 1011.0956,351.8125 Q1011.0956,348.6875 1012.4081,347.0313 Q1013.7363,345.375 1016.2363,345.375 Q1016.9394,345.375 1017.58,345.5313 Q1018.2363,345.6875 1018.7988,345.9844 L1018.7988,348.7031 Q1018.1738,348.125 1017.58,347.8594 Q1016.9863,347.5781 1016.3613,347.5781 Q1015.0175,347.5781 1014.33,348.6563 Q1013.6425,349.7188 1013.6425,351.8125 Q1013.6425,353.9063 1014.33,354.9844 Q1015.0175,356.0469 1016.3613,356.0469 Q1016.9863,356.0469 1017.58,355.7813 Q1018.1738,355.5 1018.7988,354.9219 L1018.7988,357.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="99.2373" x="1029.83" y="356.8467">plcc-java-emit</text><line style="stroke:#181818;stroke-width:0.5;" x1="1001.83" x2="1131.0673" y1="368" y2="368" /><line style="stroke:#181818;stroke-width:0.5;" x1="1001.83" x2="1131.0673" y1="376" y2="376" /></g><g class="entity" data-qualified-name="language-extensions.plcc-java.plcc-java-build" data-source-line="8" id="ent0004"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="134.0332" x="999.43" y="419" /><ellipse cx="1014.43" cy="435" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M1017.3988,440.6406 Q1016.8206,440.9375 1016.18,441.0781 Q1015.5394,441.2344 1014.8363,441.2344 Q1012.3363,441.2344 1011.0081,439.5938 Q1009.6956,437.9375 1009.6956,434.8125 Q1009.6956,431.6875 1011.0081,430.0313 Q1012.3363,428.375 1014.8363,428.375 Q1015.5394,428.375 1016.18,428.5313 Q1016.8363,428.6875 1017.3988,428.9844 L1017.3988,431.7031 Q1016.7738,431.125 1016.18,430.8594 Q1015.5863,430.5781 1014.9613,430.5781 Q1013.6175,430.5781 1012.93,431.6563 Q1012.2425,432.7188 1012.2425,434.8125 Q1012.2425,436.9063 1012.93,437.9844 Q1013.6175,439.0469 1014.9613,439.0469 Q1015.5863,439.0469 1016.18,438.7813 Q1016.7738,438.5 1017.3988,437.9219 L1017.3988,440.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.0332" x="1028.43" y="439.8467">plcc-java-build</text><line style="stroke:#181818;stroke-width:0.5;" x1="1000.43" x2="1132.4632" y1="451" y2="451" /><line style="stroke:#181818;stroke-width:0.5;" x1="1000.43" x2="1132.4632" y1="459" y2="459" /></g><g class="entity" data-qualified-name="language-extensions.plcc-java.plcc-java-run" data-source-line="9" id="ent0005"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="123.1094" x="1004.89" y="502" /><ellipse cx="1019.89" cy="518" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M1022.8588,523.6406 Q1022.2806,523.9375 1021.64,524.0781 Q1020.9994,524.2344 1020.2963,524.2344 Q1017.7963,524.2344 1016.4681,522.5938 Q1015.1556,520.9375 1015.1556,517.8125 Q1015.1556,514.6875 1016.4681,513.0313 Q1017.7963,511.375 1020.2963,511.375 Q1020.9994,511.375 1021.64,511.5313 Q1022.2963,511.6875 1022.8588,511.9844 L1022.8588,514.7031 Q1022.2338,514.125 1021.64,513.8594 Q1021.0463,513.5781 1020.4213,513.5781 Q1019.0775,513.5781 1018.39,514.6563 Q1017.7025,515.7188 1017.7025,517.8125 Q1017.7025,519.9063 1018.39,520.9844 Q1019.0775,522.0469 1020.4213,522.0469 Q1021.0463,522.0469 1021.64,521.7813 Q1022.2338,521.5 1022.8588,520.9219 L1022.8588,523.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.1094" x="1033.89" y="522.8467">plcc-java-run</text><line style="stroke:#181818;stroke-width:0.5;" x1="1005.89" x2="1126.9994" y1="534" y2="534" /><line style="stroke:#181818;stroke-width:0.5;" x1="1005.89" x2="1126.9994" y1="542" y2="542" /></g><g class="entity" data-qualified-name="language-extensions.plcc-python.plcc-python-emit" data-source-line="13" id="ent0007"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="150.877" x="991.01" y="625" /><ellipse cx="1006.01" cy="641" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M1008.9788,646.6406 Q1008.4006,646.9375 1007.76,647.0781 Q1007.1194,647.2344 1006.4163,647.2344 Q1003.9163,647.2344 1002.5881,645.5938 Q1001.2756,643.9375 1001.2756,640.8125 Q1001.2756,637.6875 1002.5881,636.0313 Q1003.9163,634.375 1006.4163,634.375 Q1007.1194,634.375 1007.76,634.5313 Q1008.4163,634.6875 1008.9788,634.9844 L1008.9788,637.7031 Q1008.3538,637.125 1007.76,636.8594 Q1007.1663,636.5781 1006.5413,636.5781 Q1005.1975,636.5781 1004.51,637.6563 Q1003.8225,638.7188 1003.8225,640.8125 Q1003.8225,642.9063 1004.51,643.9844 Q1005.1975,645.0469 1006.5413,645.0469 Q1007.1663,645.0469 1007.76,644.7813 Q1008.3538,644.5 1008.9788,643.9219 L1008.9788,646.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="118.877" x="1020.01" y="645.8467">plcc-python-emit</text><line style="stroke:#181818;stroke-width:0.5;" x1="992.01" x2="1140.887" y1="657" y2="657" /><line style="stroke:#181818;stroke-width:0.5;" x1="992.01" x2="1140.887" y1="665" y2="665" /></g><g class="entity" data-qualified-name="language-extensions.plcc-python.plcc-python-build" data-source-line="14" id="ent0008"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="153.6729" x="989.61" y="708" /><ellipse cx="1004.61" cy="724" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M1007.5788,729.6406 Q1007.0006,729.9375 1006.36,730.0781 Q1005.7194,730.2344 1005.0163,730.2344 Q1002.5163,730.2344 1001.1881,728.5938 Q999.8756,726.9375 999.8756,723.8125 Q999.8756,720.6875 1001.1881,719.0313 Q1002.5163,717.375 1005.0163,717.375 Q1005.7194,717.375 1006.36,717.5313 Q1007.0163,717.6875 1007.5788,717.9844 L1007.5788,720.7031 Q1006.9538,720.125 1006.36,719.8594 Q1005.7663,719.5781 1005.1413,719.5781 Q1003.7975,719.5781 1003.11,720.6563 Q1002.4225,721.7188 1002.4225,723.8125 Q1002.4225,725.9063 1003.11,726.9844 Q1003.7975,728.0469 1005.1413,728.0469 Q1005.7663,728.0469 1006.36,727.7813 Q1006.9538,727.5 1007.5788,726.9219 L1007.5788,729.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="121.6729" x="1018.61" y="728.8467">plcc-python-build</text><line style="stroke:#181818;stroke-width:0.5;" x1="990.61" x2="1142.2829" y1="740" y2="740" /><line style="stroke:#181818;stroke-width:0.5;" x1="990.61" x2="1142.2829" y1="748" y2="748" /></g><g class="entity" data-qualified-name="language-extensions.plcc-python.plcc-python-run" data-source-line="15" id="ent0009"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="142.749" x="995.07" y="791" /><ellipse cx="1010.07" cy="807" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M1013.0388,812.6406 Q1012.4606,812.9375 1011.82,813.0781 Q1011.1794,813.2344 1010.4763,813.2344 Q1007.9763,813.2344 1006.6481,811.5938 Q1005.3356,809.9375 1005.3356,806.8125 Q1005.3356,803.6875 1006.6481,802.0313 Q1007.9763,800.375 1010.4763,800.375 Q1011.1794,800.375 1011.82,800.5313 Q1012.4763,800.6875 1013.0388,800.9844 L1013.0388,803.7031 Q1012.4138,803.125 1011.82,802.8594 Q1011.2263,802.5781 1010.6013,802.5781 Q1009.2575,802.5781 1008.57,803.6563 Q1007.8825,804.7188 1007.8825,806.8125 Q1007.8825,808.9063 1008.57,809.9844 Q1009.2575,811.0469 1010.6013,811.0469 Q1011.2263,811.0469 1011.82,810.7813 Q1012.4138,810.5 1013.0388,809.9219 L1013.0388,812.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110.749" x="1024.07" y="811.8467">plcc-python-run</text><line style="stroke:#181818;stroke-width:0.5;" x1="996.07" x2="1136.819" y1="823" y2="823" /><line style="stroke:#181818;stroke-width:0.5;" x1="996.07" x2="1136.819" y1="831" y2="831" /></g><g class="entity" data-qualified-name="parser-extensions.plcc-parser-table.plcc-parser-table" data-source-line="21" id="ent0012"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="150.6172" x="694.82" y="622" /><ellipse cx="709.82" cy="638" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M712.7888,643.6406 Q712.2106,643.9375 711.57,644.0781 Q710.9294,644.2344 710.2263,644.2344 Q707.7263,644.2344 706.3981,642.5938 Q705.0856,640.9375 705.0856,637.8125 Q705.0856,634.6875 706.3981,633.0313 Q707.7263,631.375 710.2263,631.375 Q710.9294,631.375 711.57,631.5313 Q712.2263,631.6875 712.7888,631.9844 L712.7888,634.7031 Q712.1638,634.125 711.57,633.8594 Q710.9763,633.5781 710.3513,633.5781 Q709.0075,633.5781 708.32,634.6563 Q707.6325,635.7188 707.6325,637.8125 Q707.6325,639.9063 708.32,640.9844 Q709.0075,642.0469 710.3513,642.0469 Q710.9763,642.0469 711.57,641.7813 Q712.1638,641.5 712.7888,640.9219 L712.7888,643.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="118.6172" x="723.82" y="642.8467">plcc-parser-table</text><line style="stroke:#181818;stroke-width:0.5;" x1="695.82" x2="844.4372" y1="654" y2="654" /><line style="stroke:#181818;stroke-width:0.5;" x1="695.82" x2="844.4372" y1="662" y2="662" /></g><g class="entity" data-qualified-name="diagram-extensions.plcc-mermaid-diagram.plcc-mermaid-diagram-emit" data-source-line="27" id="ent0015"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="228.1709" x="656.04" y="1299" /><ellipse cx="671.04" cy="1315" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M674.0088,1320.6406 Q673.4306,1320.9375 672.79,1321.0781 Q672.1494,1321.2344 671.4463,1321.2344 Q668.9463,1321.2344 667.6181,1319.5938 Q666.3056,1317.9375 666.3056,1314.8125 Q666.3056,1311.6875 667.6181,1310.0313 Q668.9463,1308.375 671.4463,1308.375 Q672.1494,1308.375 672.79,1308.5313 Q673.4463,1308.6875 674.0088,1308.9844 L674.0088,1311.7031 Q673.3838,1311.125 672.79,1310.8594 Q672.1963,1310.5781 671.5713,1310.5781 Q670.2275,1310.5781 669.54,1311.6563 Q668.8525,1312.7188 668.8525,1314.8125 Q668.8525,1316.9063 669.54,1317.9844 Q670.2275,1319.0469 671.5713,1319.0469 Q672.1963,1319.0469 672.79,1318.7813 Q673.3838,1318.5 674.0088,1317.9219 L674.0088,1320.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="196.1709" x="685.04" y="1319.8467">plcc-mermaid-diagram-emit</text><line style="stroke:#181818;stroke-width:0.5;" x1="657.04" x2="883.2109" y1="1331" y2="1331" /><line style="stroke:#181818;stroke-width:0.5;" x1="657.04" x2="883.2109" y1="1339" y2="1339" /></g><g class="entity" data-qualified-name="diagram-extensions.plcc-mermaid-diagram.plcc-mermaid-diagram-build" data-source-line="28" id="ent0016"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="230.9668" x="654.64" y="1216" /><ellipse cx="669.64" cy="1232" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M672.6088,1237.6406 Q672.0306,1237.9375 671.39,1238.0781 Q670.7494,1238.2344 670.0463,1238.2344 Q667.5463,1238.2344 666.2181,1236.5938 Q664.9056,1234.9375 664.9056,1231.8125 Q664.9056,1228.6875 666.2181,1227.0313 Q667.5463,1225.375 670.0463,1225.375 Q670.7494,1225.375 671.39,1225.5313 Q672.0463,1225.6875 672.6088,1225.9844 L672.6088,1228.7031 Q671.9838,1228.125 671.39,1227.8594 Q670.7963,1227.5781 670.1713,1227.5781 Q668.8275,1227.5781 668.14,1228.6563 Q667.4525,1229.7188 667.4525,1231.8125 Q667.4525,1233.9063 668.14,1234.9844 Q668.8275,1236.0469 670.1713,1236.0469 Q670.7963,1236.0469 671.39,1235.7813 Q671.9838,1235.5 672.6088,1234.9219 L672.6088,1237.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="198.9668" x="683.64" y="1236.8467">plcc-mermaid-diagram-build</text><line style="stroke:#181818;stroke-width:0.5;" x1="655.64" x2="884.6068" y1="1248" y2="1248" /><line style="stroke:#181818;stroke-width:0.5;" x1="655.64" x2="884.6068" y1="1256" y2="1256" /></g><g class="entity" data-qualified-name="diagram-extensions.plcc-mermaid-diagram.plcc-mermaid-diagram-run" data-source-line="29" id="ent0017"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="220.043" x="660.1" y="1382" /><ellipse cx="675.1" cy="1398" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M678.0688,1403.6406 Q677.4906,1403.9375 676.85,1404.0781 Q676.2094,1404.2344 675.5063,1404.2344 Q673.0063,1404.2344 671.6781,1402.5938 Q670.3656,1400.9375 670.3656,1397.8125 Q670.3656,1394.6875 671.6781,1393.0313 Q673.0063,1391.375 675.5063,1391.375 Q676.2094,1391.375 676.85,1391.5313 Q677.5063,1391.6875 678.0688,1391.9844 L678.0688,1394.7031 Q677.4438,1394.125 676.85,1393.8594 Q676.2563,1393.5781 675.6313,1393.5781 Q674.2875,1393.5781 673.6,1394.6563 Q672.9125,1395.7188 672.9125,1397.8125 Q672.9125,1399.9063 673.6,1400.9844 Q674.2875,1402.0469 675.6313,1402.0469 Q676.2563,1402.0469 676.85,1401.7813 Q677.4438,1401.5 678.0688,1400.9219 L678.0688,1403.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="188.043" x="689.1" y="1402.8467">plcc-mermaid-diagram-run</text><line style="stroke:#181818;stroke-width:0.5;" x1="661.1" x2="879.143" y1="1414" y2="1414" /><line style="stroke:#181818;stroke-width:0.5;" x1="661.1" x2="879.143" y1="1422" y2="1422" /></g><g class="entity" data-qualified-name="diagram-extensions.plcc-plantuml-diagram.plcc-plantuml-diagram-emit" data-source-line="33" id="ent0019"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="227.2891" x="656.48" y="1010" /><ellipse cx="671.48" cy="1026" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M674.4488,1031.6406 Q673.8706,1031.9375 673.23,1032.0781 Q672.5894,1032.2344 671.8863,1032.2344 Q669.3863,1032.2344 668.0581,1030.5938 Q666.7456,1028.9375 666.7456,1025.8125 Q666.7456,1022.6875 668.0581,1021.0313 Q669.3863,1019.375 671.8863,1019.375 Q672.5894,1019.375 673.23,1019.5313 Q673.8863,1019.6875 674.4488,1019.9844 L674.4488,1022.7031 Q673.8238,1022.125 673.23,1021.8594 Q672.6363,1021.5781 672.0113,1021.5781 Q670.6675,1021.5781 669.98,1022.6563 Q669.2925,1023.7188 669.2925,1025.8125 Q669.2925,1027.9063 669.98,1028.9844 Q670.6675,1030.0469 672.0113,1030.0469 Q672.6363,1030.0469 673.23,1029.7813 Q673.8238,1029.5 674.4488,1028.9219 L674.4488,1031.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="195.2891" x="685.48" y="1030.8467">plcc-plantuml-diagram-emit</text><line style="stroke:#181818;stroke-width:0.5;" x1="657.48" x2="882.7691" y1="1042" y2="1042" /><line style="stroke:#181818;stroke-width:0.5;" x1="657.48" x2="882.7691" y1="1050" y2="1050" /></g><g class="entity" data-qualified-name="diagram-extensions.plcc-plantuml-diagram.plcc-plantuml-diagram-build" data-source-line="34" id="ent0020"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="230.085" x="655.08" y="927" /><ellipse cx="670.08" cy="943" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M673.0488,948.6406 Q672.4706,948.9375 671.83,949.0781 Q671.1894,949.2344 670.4863,949.2344 Q667.9863,949.2344 666.6581,947.5938 Q665.3456,945.9375 665.3456,942.8125 Q665.3456,939.6875 666.6581,938.0313 Q667.9863,936.375 670.4863,936.375 Q671.1894,936.375 671.83,936.5313 Q672.4863,936.6875 673.0488,936.9844 L673.0488,939.7031 Q672.4238,939.125 671.83,938.8594 Q671.2363,938.5781 670.6113,938.5781 Q669.2675,938.5781 668.58,939.6563 Q667.8925,940.7188 667.8925,942.8125 Q667.8925,944.9063 668.58,945.9844 Q669.2675,947.0469 670.6113,947.0469 Q671.2363,947.0469 671.83,946.7813 Q672.4238,946.5 673.0488,945.9219 L673.0488,948.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="198.085" x="684.08" y="947.8467">plcc-plantuml-diagram-build</text><line style="stroke:#181818;stroke-width:0.5;" x1="656.08" x2="884.165" y1="959" y2="959" /><line style="stroke:#181818;stroke-width:0.5;" x1="656.08" x2="884.165" y1="967" y2="967" /></g><g class="entity" data-qualified-name="diagram-extensions.plcc-plantuml-diagram.plcc-plantuml-diagram-run" data-source-line="35" id="ent0021"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="219.1611" x="660.54" y="1093" /><ellipse cx="675.54" cy="1109" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M678.5088,1114.6406 Q677.9306,1114.9375 677.29,1115.0781 Q676.6494,1115.2344 675.9463,1115.2344 Q673.4463,1115.2344 672.1181,1113.5938 Q670.8056,1111.9375 670.8056,1108.8125 Q670.8056,1105.6875 672.1181,1104.0313 Q673.4463,1102.375 675.9463,1102.375 Q676.6494,1102.375 677.29,1102.5313 Q677.9463,1102.6875 678.5088,1102.9844 L678.5088,1105.7031 Q677.8838,1105.125 677.29,1104.8594 Q676.6963,1104.5781 676.0713,1104.5781 Q674.7275,1104.5781 674.04,1105.6563 Q673.3525,1106.7188 673.3525,1108.8125 Q673.3525,1110.9063 674.04,1111.9844 Q674.7275,1113.0469 676.0713,1113.0469 Q676.6963,1113.0469 677.29,1112.7813 Q677.8838,1112.5 678.5088,1111.9219 L678.5088,1114.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="187.1611" x="689.54" y="1113.8467">plcc-plantuml-diagram-run</text><line style="stroke:#181818;stroke-width:0.5;" x1="661.54" x2="878.7011" y1="1125" y2="1125" /><line style="stroke:#181818;stroke-width:0.5;" x1="661.54" x2="878.7011" y1="1133" y2="1133" /></g><g class="entity" data-qualified-name="core.plcc-version" data-source-line="41" id="ent0023"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="116.499" x="202.95" y="456" /><ellipse cx="217.95" cy="472" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M220.9188,477.6406 Q220.3406,477.9375 219.7,478.0781 Q219.0594,478.2344 218.3563,478.2344 Q215.8563,478.2344 214.5281,476.5938 Q213.2156,474.9375 213.2156,471.8125 Q213.2156,468.6875 214.5281,467.0313 Q215.8563,465.375 218.3563,465.375 Q219.0594,465.375 219.7,465.5313 Q220.3563,465.6875 220.9188,465.9844 L220.9188,468.7031 Q220.2938,468.125 219.7,467.8594 Q219.1063,467.5781 218.4813,467.5781 Q217.1375,467.5781 216.45,468.6563 Q215.7625,469.7188 215.7625,471.8125 Q215.7625,473.9063 216.45,474.9844 Q217.1375,476.0469 218.4813,476.0469 Q219.1063,476.0469 219.7,475.7813 Q220.2938,475.5 220.9188,474.9219 L220.9188,477.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="84.499" x="231.95" y="476.8467">plcc-version</text><line style="stroke:#181818;stroke-width:0.5;" x1="203.95" x2="318.449" y1="488" y2="488" /><line style="stroke:#181818;stroke-width:0.5;" x1="203.95" x2="318.449" y1="496" y2="496" /></g><g class="entity" data-qualified-name="core.plcc-lang-list" data-source-line="42" id="ent0024"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="121.0654" x="200.67" y="373" /><ellipse cx="215.67" cy="389" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M218.6388,394.6406 Q218.0606,394.9375 217.42,395.0781 Q216.7794,395.2344 216.0763,395.2344 Q213.5763,395.2344 212.2481,393.5938 Q210.9356,391.9375 210.9356,388.8125 Q210.9356,385.6875 212.2481,384.0313 Q213.5763,382.375 216.0763,382.375 Q216.7794,382.375 217.42,382.5313 Q218.0763,382.6875 218.6388,382.9844 L218.6388,385.7031 Q218.0138,385.125 217.42,384.8594 Q216.8263,384.5781 216.2013,384.5781 Q214.8575,384.5781 214.17,385.6563 Q213.4825,386.7188 213.4825,388.8125 Q213.4825,390.9063 214.17,391.9844 Q214.8575,393.0469 216.2013,393.0469 Q216.8263,393.0469 217.42,392.7813 Q218.0138,392.5 218.6388,391.9219 L218.6388,394.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="89.0654" x="229.67" y="393.8467">plcc-lang-list</text><line style="stroke:#181818;stroke-width:0.5;" x1="201.67" x2="320.7354" y1="405" y2="405" /><line style="stroke:#181818;stroke-width:0.5;" x1="201.67" x2="320.7354" y1="413" y2="413" /></g><g class="entity" data-qualified-name="core.plcc-parser-list" data-source-line="43" id="ent0025"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="135.7217" x="193.34" y="290" /><ellipse cx="208.34" cy="306" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M211.3088,311.6406 Q210.7306,311.9375 210.09,312.0781 Q209.4494,312.2344 208.7463,312.2344 Q206.2463,312.2344 204.9181,310.5938 Q203.6056,308.9375 203.6056,305.8125 Q203.6056,302.6875 204.9181,301.0313 Q206.2463,299.375 208.7463,299.375 Q209.4494,299.375 210.09,299.5313 Q210.7463,299.6875 211.3088,299.9844 L211.3088,302.7031 Q210.6838,302.125 210.09,301.8594 Q209.4963,301.5781 208.8713,301.5781 Q207.5275,301.5781 206.84,302.6563 Q206.1525,303.7188 206.1525,305.8125 Q206.1525,307.9063 206.84,308.9844 Q207.5275,310.0469 208.8713,310.0469 Q209.4963,310.0469 210.09,309.7813 Q210.6838,309.5 211.3088,308.9219 L211.3088,311.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="103.7217" x="222.34" y="310.8467">plcc-parser-list</text><line style="stroke:#181818;stroke-width:0.5;" x1="194.34" x2="328.0617" y1="322" y2="322" /><line style="stroke:#181818;stroke-width:0.5;" x1="194.34" x2="328.0617" y1="330" y2="330" /></g><g class="entity" data-qualified-name="core.plcc-scan" data-source-line="45" id="ent0026"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="97.666" x="212.37" y="41" /><ellipse cx="227.37" cy="57" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M230.3388,62.6406 Q229.7606,62.9375 229.12,63.0781 Q228.4794,63.2344 227.7763,63.2344 Q225.2763,63.2344 223.9481,61.5938 Q222.6356,59.9375 222.6356,56.8125 Q222.6356,53.6875 223.9481,52.0313 Q225.2763,50.375 227.7763,50.375 Q228.4794,50.375 229.12,50.5313 Q229.7763,50.6875 230.3388,50.9844 L230.3388,53.7031 Q229.7138,53.125 229.12,52.8594 Q228.5263,52.5781 227.9013,52.5781 Q226.5575,52.5781 225.87,53.6563 Q225.1825,54.7188 225.1825,56.8125 Q225.1825,58.9063 225.87,59.9844 Q226.5575,61.0469 227.9013,61.0469 Q228.5263,61.0469 229.12,60.7813 Q229.7138,60.5 230.3388,59.9219 L230.3388,62.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.666" x="241.37" y="61.8467">plcc-scan</text><line style="stroke:#181818;stroke-width:0.5;" x1="213.37" x2="309.036" y1="73" y2="73" /><line style="stroke:#181818;stroke-width:0.5;" x1="213.37" x2="309.036" y1="81" y2="81" /></g><g class="entity" data-qualified-name="core.plcc-make" data-source-line="45" id="ent0027"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="104.1602" x="425.1" y="207" /><ellipse cx="440.1" cy="223" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M443.0688,228.6406 Q442.4906,228.9375 441.85,229.0781 Q441.2094,229.2344 440.5063,229.2344 Q438.0063,229.2344 436.6781,227.5938 Q435.3656,225.9375 435.3656,222.8125 Q435.3656,219.6875 436.6781,218.0313 Q438.0063,216.375 440.5063,216.375 Q441.2094,216.375 441.85,216.5313 Q442.5063,216.6875 443.0688,216.9844 L443.0688,219.7031 Q442.4438,219.125 441.85,218.8594 Q441.2563,218.5781 440.6313,218.5781 Q439.2875,218.5781 438.6,219.6563 Q437.9125,220.7188 437.9125,222.8125 Q437.9125,224.9063 438.6,225.9844 Q439.2875,227.0469 440.6313,227.0469 Q441.2563,227.0469 441.85,226.7813 Q442.4438,226.5 443.0688,225.9219 L443.0688,228.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72.1602" x="454.1" y="227.8467">plcc-make</text><line style="stroke:#181818;stroke-width:0.5;" x1="426.1" x2="528.2602" y1="239" y2="239" /><line style="stroke:#181818;stroke-width:0.5;" x1="426.1" x2="528.2602" y1="247" y2="247" /></g><g class="entity" data-qualified-name="core.plcc-tokens" data-source-line="46" id="ent0029"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="112.165" x="421.1" y="124" /><ellipse cx="436.1" cy="140" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M439.0688,145.6406 Q438.4906,145.9375 437.85,146.0781 Q437.2094,146.2344 436.5063,146.2344 Q434.0063,146.2344 432.6781,144.5938 Q431.3656,142.9375 431.3656,139.8125 Q431.3656,136.6875 432.6781,135.0313 Q434.0063,133.375 436.5063,133.375 Q437.2094,133.375 437.85,133.5313 Q438.5063,133.6875 439.0688,133.9844 L439.0688,136.7031 Q438.4438,136.125 437.85,135.8594 Q437.2563,135.5781 436.6313,135.5781 Q435.2875,135.5781 434.6,136.6563 Q433.9125,137.7188 433.9125,139.8125 Q433.9125,141.9063 434.6,142.9844 Q435.2875,144.0469 436.6313,144.0469 Q437.2563,144.0469 437.85,143.7813 Q438.4438,143.5 439.0688,142.9219 L439.0688,145.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="80.165" x="450.1" y="144.8467">plcc-tokens</text><line style="stroke:#181818;stroke-width:0.5;" x1="422.1" x2="532.265" y1="156" y2="156" /><line style="stroke:#181818;stroke-width:0.5;" x1="422.1" x2="532.265" y1="164" y2="164" /></g><g class="entity" data-qualified-name="core.plcc-parse" data-source-line="48" id="ent0031"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="104.3516" x="209.02" y="124" /><ellipse cx="224.02" cy="140" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M226.9888,145.6406 Q226.4106,145.9375 225.77,146.0781 Q225.1294,146.2344 224.4263,146.2344 Q221.9263,146.2344 220.5981,144.5938 Q219.2856,142.9375 219.2856,139.8125 Q219.2856,136.6875 220.5981,135.0313 Q221.9263,133.375 224.4263,133.375 Q225.1294,133.375 225.77,133.5313 Q226.4263,133.6875 226.9888,133.9844 L226.9888,136.7031 Q226.3638,136.125 225.77,135.8594 Q225.1763,135.5781 224.5513,135.5781 Q223.2075,135.5781 222.52,136.6563 Q221.8325,137.7188 221.8325,139.8125 Q221.8325,141.9063 222.52,142.9844 Q223.2075,144.0469 224.5513,144.0469 Q225.1763,144.0469 225.77,143.7813 Q226.3638,143.5 226.9888,142.9219 L226.9888,145.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72.3516" x="238.02" y="144.8467">plcc-parse</text><line style="stroke:#181818;stroke-width:0.5;" x1="210.02" x2="312.3716" y1="156" y2="156" /><line style="stroke:#181818;stroke-width:0.5;" x1="210.02" x2="312.3716" y1="164" y2="164" /></g><g class="entity" data-qualified-name="core.plcc-trees" data-source-line="50" id="ent0034"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="100.9883" x="426.69" y="290" /><ellipse cx="441.69" cy="306" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M444.6588,311.6406 Q444.0806,311.9375 443.44,312.0781 Q442.7994,312.2344 442.0963,312.2344 Q439.5963,312.2344 438.2681,310.5938 Q436.9556,308.9375 436.9556,305.8125 Q436.9556,302.6875 438.2681,301.0313 Q439.5963,299.375 442.0963,299.375 Q442.7994,299.375 443.44,299.5313 Q444.0963,299.6875 444.6588,299.9844 L444.6588,302.7031 Q444.0338,302.125 443.44,301.8594 Q442.8463,301.5781 442.2213,301.5781 Q440.8775,301.5781 440.19,302.6563 Q439.5025,303.7188 439.5025,305.8125 Q439.5025,307.9063 440.19,308.9844 Q440.8775,310.0469 442.2213,310.0469 Q442.8463,310.0469 443.44,309.7813 Q444.0338,309.5 444.6588,308.9219 L444.6588,311.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="68.9883" x="455.69" y="310.8467">plcc-trees</text><line style="stroke:#181818;stroke-width:0.5;" x1="427.69" x2="526.6783" y1="322" y2="322" /><line style="stroke:#181818;stroke-width:0.5;" x1="427.69" x2="526.6783" y1="330" y2="330" /></g><g class="entity" data-qualified-name="core.plcc-rep" data-source-line="52" id="ent0036"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="88.4785" x="216.96" y="207" /><ellipse cx="231.96" cy="223" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M234.9288,228.6406 Q234.3506,228.9375 233.71,229.0781 Q233.0694,229.2344 232.3663,229.2344 Q229.8663,229.2344 228.5381,227.5938 Q227.2256,225.9375 227.2256,222.8125 Q227.2256,219.6875 228.5381,218.0313 Q229.8663,216.375 232.3663,216.375 Q233.0694,216.375 233.71,216.5313 Q234.3663,216.6875 234.9288,216.9844 L234.9288,219.7031 Q234.3038,219.125 233.71,218.8594 Q233.1163,218.5781 232.4913,218.5781 Q231.1475,218.5781 230.46,219.6563 Q229.7725,220.7188 229.7725,222.8125 Q229.7725,224.9063 230.46,225.9844 Q231.1475,227.0469 232.4913,227.0469 Q233.1163,227.0469 233.71,226.7813 Q234.3038,226.5 234.9288,225.9219 L234.9288,228.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56.4785" x="245.96" y="227.8467">plcc-rep</text><line style="stroke:#181818;stroke-width:0.5;" x1="217.96" x2="304.4385" y1="239" y2="239" /><line style="stroke:#181818;stroke-width:0.5;" x1="217.96" x2="304.4385" y1="247" y2="247" /></g><g class="entity" data-qualified-name="core.plcc-lang-run" data-source-line="55" id="ent0040"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="124.0049" x="415.18" y="456" /><ellipse cx="430.18" cy="472" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M433.1488,477.6406 Q432.5706,477.9375 431.93,478.0781 Q431.2894,478.2344 430.5863,478.2344 Q428.0863,478.2344 426.7581,476.5938 Q425.4456,474.9375 425.4456,471.8125 Q425.4456,468.6875 426.7581,467.0313 Q428.0863,465.375 430.5863,465.375 Q431.2894,465.375 431.93,465.5313 Q432.5863,465.6875 433.1488,465.9844 L433.1488,468.7031 Q432.5238,468.125 431.93,467.8594 Q431.3363,467.5781 430.7113,467.5781 Q429.3675,467.5781 428.68,468.6563 Q427.9925,469.7188 427.9925,471.8125 Q427.9925,473.9063 428.68,474.9844 Q429.3675,476.0469 430.7113,476.0469 Q431.3363,476.0469 431.93,475.7813 Q432.5238,475.5 433.1488,474.9219 L433.1488,477.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="92.0049" x="444.18" y="476.8467">plcc-lang-run</text><line style="stroke:#181818;stroke-width:0.5;" x1="416.18" x2="538.1849" y1="488" y2="488" /><line style="stroke:#181818;stroke-width:0.5;" x1="416.18" x2="538.1849" y1="496" y2="496" /></g><g class="entity" data-qualified-name="core.plcc-spec" data-source-line="57" id="ent0042"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="97.7139" x="721.27" y="253" /><ellipse cx="736.27" cy="269" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M739.2388,274.6406 Q738.6606,274.9375 738.02,275.0781 Q737.3794,275.2344 736.6763,275.2344 Q734.1763,275.2344 732.8481,273.5938 Q731.5356,271.9375 731.5356,268.8125 Q731.5356,265.6875 732.8481,264.0313 Q734.1763,262.375 736.6763,262.375 Q737.3794,262.375 738.02,262.5313 Q738.6763,262.6875 739.2388,262.9844 L739.2388,265.7031 Q738.6138,265.125 738.02,264.8594 Q737.4263,264.5781 736.8013,264.5781 Q735.4575,264.5781 734.77,265.6563 Q734.0825,266.7188 734.0825,268.8125 Q734.0825,270.9063 734.77,271.9844 Q735.4575,273.0469 736.8013,273.0469 Q737.4263,273.0469 738.02,272.7813 Q738.6138,272.5 739.2388,271.9219 L739.2388,274.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.7139" x="750.27" y="273.8467">plcc-spec</text><line style="stroke:#181818;stroke-width:0.5;" x1="722.27" x2="817.9839" y1="285" y2="285" /><line style="stroke:#181818;stroke-width:0.5;" x1="722.27" x2="817.9839" y1="293" y2="293" /></g><g class="entity" data-qualified-name="core.plcc-ll1" data-source-line="58" id="ent0044"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="81.9092" x="729.17" y="170" /><ellipse cx="744.17" cy="186" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M747.1388,191.6406 Q746.5606,191.9375 745.92,192.0781 Q745.2794,192.2344 744.5763,192.2344 Q742.0763,192.2344 740.7481,190.5938 Q739.4356,188.9375 739.4356,185.8125 Q739.4356,182.6875 740.7481,181.0313 Q742.0763,179.375 744.5763,179.375 Q745.2794,179.375 745.92,179.5313 Q746.5763,179.6875 747.1388,179.9844 L747.1388,182.7031 Q746.5138,182.125 745.92,181.8594 Q745.3263,181.5781 744.7013,181.5781 Q743.3575,181.5781 742.67,182.6563 Q741.9825,183.7188 741.9825,185.8125 Q741.9825,187.9063 742.67,188.9844 Q743.3575,190.0469 744.7013,190.0469 Q745.3263,190.0469 745.92,189.7813 Q746.5138,189.5 747.1388,188.9219 L747.1388,191.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="49.9092" x="758.17" y="190.8467">plcc-ll1</text><line style="stroke:#181818;stroke-width:0.5;" x1="730.17" x2="810.0792" y1="202" y2="202" /><line style="stroke:#181818;stroke-width:0.5;" x1="730.17" x2="810.0792" y1="210" y2="210" /></g><g class="entity" data-qualified-name="core.plcc-model" data-source-line="59" id="ent0046"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="108.8154" x="715.72" y="87" /><ellipse cx="730.72" cy="103" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M733.6888,108.6406 Q733.1106,108.9375 732.47,109.0781 Q731.8294,109.2344 731.1263,109.2344 Q728.6263,109.2344 727.2981,107.5938 Q725.9856,105.9375 725.9856,102.8125 Q725.9856,99.6875 727.2981,98.0313 Q728.6263,96.375 731.1263,96.375 Q731.8294,96.375 732.47,96.5313 Q733.1263,96.6875 733.6888,96.9844 L733.6888,99.7031 Q733.0638,99.125 732.47,98.8594 Q731.8763,98.5781 731.2513,98.5781 Q729.9075,98.5781 729.22,99.6563 Q728.5325,100.7188 728.5325,102.8125 Q728.5325,104.9063 729.22,105.9844 Q729.9075,107.0469 731.2513,107.0469 Q731.8763,107.0469 732.47,106.7813 Q733.0638,106.5 733.6888,105.9219 L733.6888,108.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="76.8154" x="744.72" y="107.8467">plcc-model</text><line style="stroke:#181818;stroke-width:0.5;" x1="716.72" x2="823.5354" y1="119" y2="119" /><line style="stroke:#181818;stroke-width:0.5;" x1="716.72" x2="823.5354" y1="127" y2="127" /></g><g class="entity" data-qualified-name="core.plcc-lang-emit" data-source-line="60" id="ent0048"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="132.1328" x="704.06" y="336" /><ellipse cx="719.06" cy="352" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M722.0288,357.6406 Q721.4506,357.9375 720.81,358.0781 Q720.1694,358.2344 719.4663,358.2344 Q716.9663,358.2344 715.6381,356.5938 Q714.3256,354.9375 714.3256,351.8125 Q714.3256,348.6875 715.6381,347.0313 Q716.9663,345.375 719.4663,345.375 Q720.1694,345.375 720.81,345.5313 Q721.4663,345.6875 722.0288,345.9844 L722.0288,348.7031 Q721.4038,348.125 720.81,347.8594 Q720.2163,347.5781 719.5913,347.5781 Q718.2475,347.5781 717.56,348.6563 Q716.8725,349.7188 716.8725,351.8125 Q716.8725,353.9063 717.56,354.9844 Q718.2475,356.0469 719.5913,356.0469 Q720.2163,356.0469 720.81,355.7813 Q721.4038,355.5 722.0288,354.9219 L722.0288,357.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="100.1328" x="733.06" y="356.8467">plcc-lang-emit</text><line style="stroke:#181818;stroke-width:0.5;" x1="705.06" x2="835.1928" y1="368" y2="368" /><line style="stroke:#181818;stroke-width:0.5;" x1="705.06" x2="835.1928" y1="376" y2="376" /></g><g class="entity" data-qualified-name="core.plcc-lang-build" data-source-line="61" id="ent0050"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="134.9287" x="702.66" y="419" /><ellipse cx="717.66" cy="435" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M720.6288,440.6406 Q720.0506,440.9375 719.41,441.0781 Q718.7694,441.2344 718.0663,441.2344 Q715.5663,441.2344 714.2381,439.5938 Q712.9256,437.9375 712.9256,434.8125 Q712.9256,431.6875 714.2381,430.0313 Q715.5663,428.375 718.0663,428.375 Q718.7694,428.375 719.41,428.5313 Q720.0663,428.6875 720.6288,428.9844 L720.6288,431.7031 Q720.0038,431.125 719.41,430.8594 Q718.8163,430.5781 718.1913,430.5781 Q716.8475,430.5781 716.16,431.6563 Q715.4725,432.7188 715.4725,434.8125 Q715.4725,436.9063 716.16,437.9844 Q716.8475,439.0469 718.1913,439.0469 Q718.8163,439.0469 719.41,438.7813 Q720.0038,438.5 720.6288,437.9219 L720.6288,440.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="102.9287" x="731.66" y="439.8467">plcc-lang-build</text><line style="stroke:#181818;stroke-width:0.5;" x1="703.66" x2="836.5887" y1="451" y2="451" /><line style="stroke:#181818;stroke-width:0.5;" x1="703.66" x2="836.5887" y1="459" y2="459" /></g><g class="entity" data-qualified-name="plcc-diagram.plcc-diagram-list" data-source-line="76" id="ent0060"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="149.0518" x="186.67" y="1021" /><ellipse cx="201.67" cy="1037" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M204.6388,1042.6406 Q204.0606,1042.9375 203.42,1043.0781 Q202.7794,1043.2344 202.0763,1043.2344 Q199.5763,1043.2344 198.2481,1041.5938 Q196.9356,1039.9375 196.9356,1036.8125 Q196.9356,1033.6875 198.2481,1032.0313 Q199.5763,1030.375 202.0763,1030.375 Q202.7794,1030.375 203.42,1030.5313 Q204.0763,1030.6875 204.6388,1030.9844 L204.6388,1033.7031 Q204.0138,1033.125 203.42,1032.8594 Q202.8263,1032.5781 202.2013,1032.5781 Q200.8575,1032.5781 200.17,1033.6563 Q199.4825,1034.7188 199.4825,1036.8125 Q199.4825,1038.9063 200.17,1039.9844 Q200.8575,1041.0469 202.2013,1041.0469 Q202.8263,1041.0469 203.42,1040.7813 Q204.0138,1040.5 204.6388,1039.9219 L204.6388,1042.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="117.0518" x="215.67" y="1041.8467">plcc-diagram-list</text><line style="stroke:#181818;stroke-width:0.5;" x1="187.67" x2="334.7218" y1="1053" y2="1053" /><line style="stroke:#181818;stroke-width:0.5;" x1="187.67" x2="334.7218" y1="1061" y2="1061" /></g><g class="entity" data-qualified-name="plcc-diagram.plcc-diagram" data-source-line="78" id="ent0061"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="123.4375" x="199.48" y="938" /><ellipse cx="214.48" cy="954" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M217.4488,959.6406 Q216.8706,959.9375 216.23,960.0781 Q215.5894,960.2344 214.8863,960.2344 Q212.3863,960.2344 211.0581,958.5938 Q209.7456,956.9375 209.7456,953.8125 Q209.7456,950.6875 211.0581,949.0313 Q212.3863,947.375 214.8863,947.375 Q215.5894,947.375 216.23,947.5313 Q216.8863,947.6875 217.4488,947.9844 L217.4488,950.7031 Q216.8238,950.125 216.23,949.8594 Q215.6363,949.5781 215.0113,949.5781 Q213.6675,949.5781 212.98,950.6563 Q212.2925,951.7188 212.2925,953.8125 Q212.2925,955.9063 212.98,956.9844 Q213.6675,958.0469 215.0113,958.0469 Q215.6363,958.0469 216.23,957.7813 Q216.8238,957.5 217.4488,956.9219 L217.4488,959.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91.4375" x="228.48" y="958.8467">plcc-diagram</text><line style="stroke:#181818;stroke-width:0.5;" x1="200.48" x2="321.9175" y1="970" y2="970" /><line style="stroke:#181818;stroke-width:0.5;" x1="200.48" x2="321.9175" y1="978" y2="978" /></g><g class="entity" data-qualified-name="plcc-diagram.plcc-diagram-emit" data-source-line="79" id="ent0063"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="160.1191" x="397.12" y="1010" /><ellipse cx="412.12" cy="1026" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M415.0888,1031.6406 Q414.5106,1031.9375 413.87,1032.0781 Q413.2294,1032.2344 412.5263,1032.2344 Q410.0263,1032.2344 408.6981,1030.5938 Q407.3856,1028.9375 407.3856,1025.8125 Q407.3856,1022.6875 408.6981,1021.0313 Q410.0263,1019.375 412.5263,1019.375 Q413.2294,1019.375 413.87,1019.5313 Q414.5263,1019.6875 415.0888,1019.9844 L415.0888,1022.7031 Q414.4638,1022.125 413.87,1021.8594 Q413.2763,1021.5781 412.6513,1021.5781 Q411.3075,1021.5781 410.62,1022.6563 Q409.9325,1023.7188 409.9325,1025.8125 Q409.9325,1027.9063 410.62,1028.9844 Q411.3075,1030.0469 412.6513,1030.0469 Q413.2763,1030.0469 413.87,1029.7813 Q414.4638,1029.5 415.0888,1028.9219 L415.0888,1031.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128.1191" x="426.12" y="1030.8467">plcc-diagram-emit</text><line style="stroke:#181818;stroke-width:0.5;" x1="398.12" x2="556.2391" y1="1042" y2="1042" /><line style="stroke:#181818;stroke-width:0.5;" x1="398.12" x2="556.2391" y1="1050" y2="1050" /></g><g class="entity" data-qualified-name="plcc-diagram.plcc-diagram-build" data-source-line="80" id="ent0065"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="162.915" x="395.73" y="927" /><ellipse cx="410.73" cy="943" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M413.6988,948.6406 Q413.1206,948.9375 412.48,949.0781 Q411.8394,949.2344 411.1363,949.2344 Q408.6363,949.2344 407.3081,947.5938 Q405.9956,945.9375 405.9956,942.8125 Q405.9956,939.6875 407.3081,938.0313 Q408.6363,936.375 411.1363,936.375 Q411.8394,936.375 412.48,936.5313 Q413.1363,936.6875 413.6988,936.9844 L413.6988,939.7031 Q413.0738,939.125 412.48,938.8594 Q411.8863,938.5781 411.2613,938.5781 Q409.9175,938.5781 409.23,939.6563 Q408.5425,940.7188 408.5425,942.8125 Q408.5425,944.9063 409.23,945.9844 Q409.9175,947.0469 411.2613,947.0469 Q411.8863,947.0469 412.48,946.7813 Q413.0738,946.5 413.6988,945.9219 L413.6988,948.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="130.915" x="424.73" y="947.8467">plcc-diagram-build</text><line style="stroke:#181818;stroke-width:0.5;" x1="396.73" x2="557.645" y1="959" y2="959" /><line style="stroke:#181818;stroke-width:0.5;" x1="396.73" x2="557.645" y1="967" y2="967" /></g><g class="entity" data-qualified-name="plcc-diagram.plcc-diagram-run" data-source-line="81" id="ent0067"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="151.9912" x="401.19" y="1093" /><ellipse cx="416.19" cy="1109" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;" /><path d="M419.1588,1114.6406 Q418.5806,1114.9375 417.94,1115.0781 Q417.2994,1115.2344 416.5963,1115.2344 Q414.0963,1115.2344 412.7681,1113.5938 Q411.4556,1111.9375 411.4556,1108.8125 Q411.4556,1105.6875 412.7681,1104.0313 Q414.0963,1102.375 416.5963,1102.375 Q417.2994,1102.375 417.94,1102.5313 Q418.5963,1102.6875 419.1588,1102.9844 L419.1588,1105.7031 Q418.5338,1105.125 417.94,1104.8594 Q417.3463,1104.5781 416.7213,1104.5781 Q415.3775,1104.5781 414.69,1105.6563 Q414.0025,1106.7188 414.0025,1108.8125 Q414.0025,1110.9063 414.69,1111.9844 Q415.3775,1113.0469 416.7213,1113.0469 Q417.3463,1113.0469 417.94,1112.7813 Q418.5338,1112.5 419.1588,1111.9219 L419.1588,1114.6406 Z " fill="#000000" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="119.9912" x="430.19" y="1113.8467">plcc-diagram-run</text><line style="stroke:#181818;stroke-width:0.5;" x1="402.19" x2="552.1812" y1="1125" y2="1125" /><line style="stroke:#181818;stroke-width:0.5;" x1="402.19" x2="552.1812" y1="1133" y2="1133" /></g><g class="entity" data-qualified-name="author" data-source-line="92" id="ent0075"><ellipse cx="66.3374" cy="326.35" fill="#F1F1F1" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;" /><path d="M66.3374,334.35 L66.3374,361.35 M53.3374,342.35 L79.3374,342.35 M66.3374,361.35 L53.3374,376.35 M66.3374,361.35 L79.3374,376.35" fill="none" style="stroke:#181818;stroke-width:0.5;" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="120.6748" x="6" y="390.8451">Language Author</text></g><g class="link" data-entity-1="ent0026" data-entity-2="ent0027" data-link-type="dependency" data-source-line="45" id="lnk28"><path codeLine="45" d="M310.16,87.68 C319.15,93.02 328.1,99.18 335.73,106 C369.93,136.58 360.96,160.06 395.73,190 C404.4,197.47 410.2714,201.6326 420.5214,207.1726" fill="none" id="plcc-scan-to-plcc-make" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="424.92,209.55,418.9044,201.7518,420.5214,207.1726,415.1005,208.7896,424.92,209.55" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0026" data-entity-2="ent0029" data-link-type="dependency" data-source-line="46" id="lnk30"><path codeLine="46" d="M310.49,83.73 C343.28,96.45 382.0585,111.4916 416.2385,124.7516" fill="none" id="plcc-scan-to-plcc-tokens" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="420.9,126.56,413.956,119.5757,416.2385,124.7516,411.0626,127.0341,420.9,126.56" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0031" data-entity-2="ent0027" data-link-type="dependency" data-source-line="48" id="lnk32"><path codeLine="48" d="M313.73,167.99 C347.36,181.03 386.4484,196.1919 420.0684,209.2319" fill="none" id="plcc-parse-to-plcc-make" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="424.73,211.04,417.7855,204.0561,420.0684,209.2319,414.8926,211.5148,424.73,211.04" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0031" data-entity-2="ent0029" data-link-type="dependency" data-source-line="49" id="lnk33"><path codeLine="49" d="M313.73,148 C346,148 382.59,148 415.61,148" fill="none" id="plcc-parse-to-plcc-tokens" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="420.61,148,411.61,144,415.61,148,411.61,152,420.61,148" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0031" data-entity-2="ent0034" data-link-type="dependency" data-source-line="50" id="lnk35"><path codeLine="50" d="M312.86,172.31 C320.92,177.26 328.86,182.86 335.73,189 C369.93,219.58 360.96,243.06 395.73,273 C404.87,280.88 411.3832,285.3766 422.1832,291.1066" fill="none" id="plcc-parse-to-plcc-trees" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="426.6,293.45,420.5244,285.6984,422.1832,291.1066,416.775,292.7654,426.6,293.45" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0036" data-entity-2="ent0027" data-link-type="dependency" data-source-line="52" id="lnk37"><path codeLine="52" d="M305.76,231 C340.22,231 383.42,231 419.77,231" fill="none" id="plcc-rep-to-plcc-make" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="424.77,231,415.77,227,419.77,231,415.77,235,424.77,231" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0036" data-entity-2="ent0029" data-link-type="dependency" data-source-line="53" id="lnk38"><path codeLine="53" d="M305.76,214.1 C339,201.21 380.3583,185.168 416.1983,171.268" fill="none" id="plcc-rep-to-plcc-tokens" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="420.86,169.46,411.0226,168.985,416.1983,171.268,413.9153,176.4437,420.86,169.46" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0036" data-entity-2="ent0034" data-link-type="dependency" data-source-line="54" id="lnk39"><path codeLine="54" d="M305.76,247.9 C340.71,261.45 385.1286,278.6813 421.6486,292.8513" fill="none" id="plcc-rep-to-plcc-trees" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="426.31,294.66,419.3664,287.6753,421.6486,292.8513,416.4725,295.1335,426.31,294.66" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0036" data-entity-2="ent0040" data-link-type="dependency" data-source-line="55" id="lnk41"><path codeLine="55" d="M305.69,250.84 C316.18,256.77 326.9,263.89 335.73,272 C343.75,279.37 422.2204,398.0039 457.3604,451.3739" fill="none" id="plcc-rep-to-plcc-lang-run" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="460.11,455.55,458.5015,445.8334,457.3604,451.3739,451.8198,450.2328,460.11,455.55" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0027" data-entity-2="ent0042" data-link-type="dependency" data-source-line="57" id="lnk43"><path codeLine="57" d="M529.53,239.12 C583.69,247.68 663.4113,260.2896 716.2513,268.6396" fill="none" id="plcc-make-to-plcc-spec" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="721.19,269.42,712.9247,264.0642,716.2513,268.6396,711.676,271.9662,721.19,269.42" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0027" data-entity-2="ent0044" data-link-type="dependency" data-source-line="58" id="lnk45"><path codeLine="58" d="M529.53,224.47 C586.46,217.23 672.1399,206.3302 724.0899,199.7302" fill="none" id="plcc-make-to-plcc-ll1" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="729.05,199.1,719.6176,196.2662,724.0899,199.7302,720.6259,204.2024,729.05,199.1" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0027" data-entity-2="ent0046" data-link-type="dependency" data-source-line="59" id="lnk47"><path codeLine="59" d="M529.47,225.31 C553.72,220 581.13,209.76 598.64,190 C610.09,177.08 594.68,164.44 606.64,152 C634.56,122.95 674.8444,113.7088 710.5144,110.9988" fill="none" id="plcc-make-to-plcc-model" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="715.5,110.62,706.2228,107.3133,710.5144,110.9988,706.8289,115.2903,715.5,110.62" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0027" data-entity-2="ent0048" data-link-type="dependency" data-source-line="60" id="lnk49"><path codeLine="60" d="M529.5,236.33 C553.91,241.55 581.45,251.82 598.64,272 C612.38,288.13 592.26,303.44 606.64,319 C631.13,345.49 665.0505,355.3882 698.6405,359.1182" fill="none" id="plcc-make-to-plcc-lang-emit" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="703.61,359.67,695.1064,354.7011,698.6405,359.1182,694.2235,362.6523,703.61,359.67" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0027" data-entity-2="ent0050" data-link-type="dependency" data-source-line="61" id="lnk51"><path codeLine="61" d="M529.51,235.39 C554.39,240.35 582.35,250.67 598.64,272 C616.21,295 588.16,379.72 606.64,402 C629.68,429.76 663.5454,439.7471 697.4754,443.1771" fill="none" id="plcc-make-to-plcc-lang-build" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="702.45,443.68,693.8979,438.7951,697.4754,443.1771,693.0933,446.7545,702.45,443.68" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0034" data-entity-2="ent0012" data-link-type="dependency" data-source-line="63" id="lnk52"><path codeLine="63" d="M512.45,338.5 C540.84,360.89 579.52,396.75 598.64,438 C614.04,471.22 588.95,487.94 606.64,520 C631.91,565.79 677.1128,597.9774 714.8828,619.2374" fill="none" id="plcc-trees-to-plcc-parser-table" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="719.24,621.69,713.3591,613.7896,714.8828,619.2374,709.435,620.7611,719.24,621.69" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0048" data-entity-2="ent0007" data-link-type="dependency" data-source-line="65" id="lnk53"><path codeLine="65" d="M836.31,359.04 C870.66,362.26 910.39,372.64 933.61,401 C945.24,415.2 932.58,550.02 941.61,566 C956.19,591.8 978.1147,608.7181 1002.7447,622.2081" fill="none" id="plcc-lang-emit-to-plcc-python-emit" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="1007.13,624.61,1001.1579,616.7784,1002.7447,622.2081,997.3149,623.7949,1007.13,624.61" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0048" data-entity-2="ent0003" data-link-type="dependency" data-source-line="66" id="lnk54"><path codeLine="66" d="M836.44,360 C885.3,360 946.81,360 995.56,360" fill="none" id="plcc-lang-emit-to-plcc-java-emit" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="1000.56,360,991.56,356,995.56,360,991.56,364,1000.56,360" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0050" data-entity-2="ent0004" data-link-type="dependency" data-source-line="67" id="lnk55"><path codeLine="67" d="M837.91,443 C886.16,443 946.04,443 994.18,443" fill="none" id="plcc-lang-build-to-plcc-java-build" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="999.18,443,990.18,439,994.18,443,990.18,447,999.18,443" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0050" data-entity-2="ent0008" data-link-type="dependency" data-source-line="68" id="lnk56"><path codeLine="68" d="M807.15,467.27 C845.83,495.55 905.51,546.14 933.61,606 C941.67,623.17 929.79,676.16 941.61,691 C953.53,705.97 966.3287,713.9426 984.4887,720.0226" fill="none" id="plcc-lang-build-to-plcc-python-build" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="989.23,721.61,981.9655,714.9596,984.4887,720.0226,979.4257,722.5457,989.23,721.61" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0040" data-entity-2="ent0009" data-link-type="dependency" data-source-line="69" id="lnk57"><path codeLine="69" d="M481.51,504.16 C490.49,559.22 520.62,694.13 606.64,757 C721.7,841.09 892.8004,837.0103 989.9704,826.2503" fill="none" id="plcc-lang-run-to-plcc-python-run" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="994.94,825.7,985.5544,822.7149,989.9704,826.2503,986.4349,830.6662,994.94,825.7" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0040" data-entity-2="ent0005" data-link-type="dependency" data-source-line="70" id="lnk58"><path codeLine="70" d="M484.88,504.47 C498.81,549.99 535.7,646.63 606.64,686 C733.71,756.51 825.67,783.3 933.61,686 C946.39,674.48 932.74,623.74 941.61,609 C957.03,583.39 979.3586,566.399 1004.0386,552.829" fill="none" id="plcc-lang-run-to-plcc-java-run" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="1008.42,550.42,998.6063,551.2512,1004.0386,552.829,1002.4608,558.2614,1008.42,550.42" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0061" data-entity-2="ent0027" data-link-type="dependency" data-source-line="78" id="lnk62"><path codeLine="78" d="M323.17,945.6 C327.95,942.4 332.26,938.57 335.73,934 C424.96,816.29 312.94,394.33 395.73,272 C402.84,261.48 409.0941,255.8652 420.3541,249.8852" fill="none" id="plcc-diagram-to-plcc-make" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="424.77,247.54,414.9452,248.2287,420.3541,249.8852,418.6976,255.2941,424.77,247.54" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0061" data-entity-2="ent0063" data-link-type="dependency" data-source-line="79" id="lnk64"><path codeLine="79" d="M323.23,982.54 C348.31,990.97 372.8111,999.2153 398.9611,1008.0153" fill="none" id="plcc-diagram-to-plcc-diagram-emit" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="403.7,1009.61,396.4458,1002.9484,398.9611,1008.0153,393.8943,1010.5306,403.7,1009.61" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0061" data-entity-2="ent0065" data-link-type="dependency" data-source-line="80" id="lnk66"><path codeLine="80" d="M323.23,958.86 C345.72,957.71 366.5466,956.6364 390.4966,955.4064" fill="none" id="plcc-diagram-to-plcc-diagram-build" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="395.49,955.15,386.2967,951.6169,390.4966,955.4064,386.707,959.6063,395.49,955.15" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0061" data-entity-2="ent0067" data-link-type="dependency" data-source-line="81" id="lnk68"><path codeLine="81" d="M312.12,986.48 C320.36,991.44 328.55,997 335.73,1003 C367.96,1029.92 362.99,1049.69 395.73,1076 C403.3,1082.09 407.5732,1085.1768 416.2932,1090.0868" fill="none" id="plcc-diagram-to-plcc-diagram-run" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="420.65,1092.54,414.7703,1084.6388,416.2932,1090.0868,410.8452,1091.6097,420.65,1092.54" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0063" data-entity-2="ent0015" data-link-type="dependency" data-source-line="83" id="lnk69"><path codeLine="83" d="M557.59,1046.1 C573.53,1052.22 588.47,1061.36 598.64,1075 C612.4,1093.45 592.15,1264.12 606.64,1282 C619.28,1297.59 632.1812,1306.1356 651.1912,1312.6656" fill="none" id="plcc-diagram-emit-to-plcc-mermaid-diagram-emit" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="655.92,1314.29,648.7077,1307.5831,651.1912,1312.6656,646.1087,1315.1492,655.92,1314.29" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0063" data-entity-2="ent0019" data-link-type="dependency" data-source-line="84" id="lnk70"><path codeLine="84" d="M557.68,1034 C588.05,1034 618.29,1034 651.18,1034" fill="none" id="plcc-diagram-emit-to-plcc-plantuml-diagram-emit" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="656.18,1034,647.18,1030,651.18,1034,647.18,1038,656.18,1034" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0065" data-entity-2="ent0016" data-link-type="dependency" data-source-line="85" id="lnk71"><path codeLine="85" d="M559.04,963.78 C574.4,969.89 588.74,978.85 598.64,992 C620.73,1021.32 586.72,1126.16 606.64,1157 C624.26,1184.27 649.2354,1201.0146 678.3454,1213.6846" fill="none" id="plcc-diagram-build-to-plcc-mermaid-diagram-build" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="682.93,1215.68,676.2741,1208.4206,678.3454,1213.6846,673.0814,1215.7559,682.93,1215.68" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0065" data-entity-2="ent0020" data-link-type="dependency" data-source-line="86" id="lnk72"><path codeLine="86" d="M558.84,951 C588.52,951 617.73,951 649.81,951" fill="none" id="plcc-diagram-build-to-plcc-plantuml-diagram-build" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="654.81,951,645.81,947,649.81,951,645.81,955,654.81,951" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0067" data-entity-2="ent0017" data-link-type="dependency" data-source-line="87" id="lnk73"><path codeLine="87" d="M483.67,1141.37 C496.24,1191.38 531.96,1305.83 606.64,1365 C622.03,1377.2 635.8472,1384.2884 654.8472,1390.3584" fill="none" id="plcc-diagram-run-to-plcc-mermaid-diagram-run" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="659.61,1391.88,652.2542,1385.3308,654.8472,1390.3584,649.8196,1392.9514,659.61,1391.88" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0067" data-entity-2="ent0021" data-link-type="dependency" data-source-line="88" id="lnk74"><path codeLine="88" d="M553.49,1117 C585.98,1117 619.62,1117 655.15,1117" fill="none" id="plcc-diagram-run-to-plcc-plantuml-diagram-run" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="660.15,1117,651.15,1113,655.15,1117,651.15,1121,660.15,1117" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0026" data-link-type="dependency" data-source-line="94" id="lnk76"><path codeLine="94" d="M69.22,317.7 C73.9,263.57 90.18,164.76 146.67,106 C163.89,88.1 184.6426,79.2158 207.1826,73.5158" fill="none" id="author-to-plcc-scan" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="212.03,72.29,202.324,70.6186,207.1826,73.5158,204.2853,78.3744,212.03,72.29" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0031" data-link-type="dependency" data-source-line="95" id="lnk77"><path codeLine="95" d="M76.5,317.37 C87.29,279.77 108.76,223.41 146.67,189 C163.9,173.37 182.7219,164.9518 203.9619,158.8918" fill="none" id="author-to-plcc-parse" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="208.77,157.52,199.0179,156.1428,203.9619,158.8918,201.2128,163.8358,208.77,157.52" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0036" data-link-type="dependency" data-source-line="96" id="lnk78"><path codeLine="96" d="M96.94,317.43 C110.66,301.62 128.05,284.21 146.67,272 C167.88,258.1 189.6094,249.612 211.6894,243.012" fill="none" id="author-to-plcc-rep" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="216.48,241.58,206.7114,240.3251,211.6894,243.012,209.0026,247.99,216.48,241.58" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0023" data-link-type="dependency" data-source-line="97" id="lnk79"><path codeLine="97" d="M97.39,394.52 C111.07,410.03 128.3,427.03 146.67,439 C163.62,450.04 179.1858,456.9716 197.9058,463.3316" fill="none" id="author-to-plcc-version" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="202.64,464.94,195.4051,458.2574,197.9058,463.3316,192.8316,465.8322,202.64,464.94" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0024" data-link-type="dependency" data-source-line="98" id="lnk80"><path codeLine="98" d="M127.04,368.69 C150.38,373.65 172.2096,378.2891 195.5596,383.2591" fill="none" id="author-to-plcc-lang-list" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="200.45,384.3,192.4799,378.514,195.5596,383.2591,190.8145,386.3387,200.45,384.3" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0025" data-link-type="dependency" data-source-line="99" id="lnk81"><path codeLine="99" d="M127.04,343 C147.95,338.45 166.6847,334.3649 188.1547,329.6849" fill="none" id="author-to-plcc-parser-list" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="193.04,328.62,183.3946,326.6286,188.1547,329.6849,185.0984,334.445,193.04,328.62" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0059" data-link-type="dependency" data-source-line="100" id="lnk82"><path codeLine="100" d="M80.9,394.46 C102.68,456.23 146.9775,581.87 186.0913,692.8063 C205.6481,748.2744 223.9091,800.0666 237.4114,838.3611 C240.787,847.9347 243.8652,856.6648 246.5918,864.3977 C247.9552,868.2642 247.5679,867.166 248.7487,870.5147" fill="none" id="author-to-plcc-diagram" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="250.4114,875.2302,251.1909,865.4122,248.7487,870.5147,243.6462,868.0726,250.4114,875.2302" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g><g class="link" data-entity-1="ent0075" data-entity-2="ent0060" data-link-type="dependency" data-source-line="101" id="lnk83"><path codeLine="101" d="M66.94,394.51 C66.42,519.16 70.99,909.06 146.67,1004 C156.8,1016.7 166.5566,1023.6157 181.7066,1029.6657" fill="none" id="author-to-plcc-diagram-list" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="186.35,1031.52,179.4753,1024.4675,181.7066,1029.6657,176.5084,1031.897,186.35,1031.52" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /></g></g></svg></div>
+
+<h2 id="the-core-pipeline">The core pipeline</h2>
+<p><code>plcc-make</code> is the build orchestrator at the centre of the core package. Every
+author-facing command calls it before doing its own work.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Input → Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../commands/plcc-make/"><code>plcc-make</code></a></td>
+<td><code>.plcc</code> spec file → build artifacts in <code>build/</code></td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-spec/"><code>plcc-spec</code></a></td>
+<td><code>.plcc</code> file → spec JSON</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-ll1/"><code>plcc-ll1</code></a></td>
+<td>spec JSON → LL(1) analysis JSON</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-tokens/"><code>plcc-tokens</code></a></td>
+<td>spec JSON + source files → token JSONL</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-trees/"><code>plcc-trees</code></a></td>
+<td>token JSONL + LL(1) JSON → parse tree JSON (dispatches to parser plugin)</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-model/"><code>plcc-model</code></a></td>
+<td>spec JSON → language-neutral model JSON</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-lang-emit/"><code>plcc-lang-emit</code></a></td>
+<td>model JSON → language source files (dispatches to language plugin)</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-lang-build/"><code>plcc-lang-build</code></a></td>
+<td>language source files → compiled output (dispatches to language plugin)</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-lang-run/"><code>plcc-lang-run</code></a></td>
+<td>compiled output + parse tree JSON → evaluation result (dispatches to language plugin)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-diagram-pipeline">The diagram pipeline</h2>
+<p><code>plcc-diagram</code> (in the <code>plcc-diagram</code> package) calls <code>plcc-make</code> to build the
+model, then runs its own sub-pipeline:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Input → Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../commands/plcc-diagram-emit/"><code>plcc-diagram-emit</code></a></td>
+<td>model JSON → diagram source (dispatches to diagram plugin)</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-diagram-build/"><code>plcc-diagram-build</code></a></td>
+<td>diagram source → PNG image (dispatches to diagram plugin)</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-diagram-run/"><code>plcc-diagram-run</code></a></td>
+<td>PNG path → prints path to stdout (dispatches to diagram plugin)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

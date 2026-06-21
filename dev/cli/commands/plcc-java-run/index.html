@@ -8,31 +8,31 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/cli/orchestrators/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-run/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../plcc-java-emit/">
       
       
-        <link rel="next" href="../primitives/">
+        <link rel="next" href="../plcc-lang-build/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
-        <title>Orchestrators - plcc-ng</title>
+        <title>plcc-java-run - plcc-ng</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,7 +51,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#level-2-orchestrators" class="md-skip">
+        <a href="#plcc-java-run" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Orchestrators
+              plcc-java-run
             
           </span>
         </div>
@@ -227,7 +227,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -246,7 +246,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../getting-started/" class="md-tabs__link">
+      <a href="../../../getting-started/" class="md-tabs__link">
         
   
   
@@ -267,7 +267,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../language-guide/" class="md-tabs__link">
+        <a href="../../../language-guide/" class="md-tabs__link">
           
   
   
@@ -289,11 +289,11 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+        <a href="../../" class="md-tabs__link">
           
   
   
-  CLI Reference
+  CLI
 
         </a>
       </li>
@@ -309,7 +309,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../instructor-guide/" class="md-tabs__link">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
           
   
   
@@ -327,7 +327,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../changelog/" class="md-tabs__link">
+      <a href="../../../changelog/" class="md-tabs__link">
         
   
   
@@ -364,7 +364,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -394,7 +394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -421,7 +421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/" class="md-nav__link">
+      <a href="../../../getting-started/" class="md-nav__link">
         
   
   
@@ -500,7 +500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/" class="md-nav__link">
+      <a href="../../../language-guide/" class="md-nav__link">
         
   
   
@@ -528,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/lexical/" class="md-nav__link">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
         
   
   
@@ -556,7 +556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/syntactic/" class="md-nav__link">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
         
   
   
@@ -584,7 +584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/semantic/" class="md-nav__link">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
         
   
   
@@ -612,7 +612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../language-guide/examples/" class="md-nav__link">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
         
   
   
@@ -675,7 +675,7 @@
   <span class="md-ellipsis">
     
   
-    CLI Reference
+    CLI
   
 
     
@@ -691,7 +691,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    CLI Reference
+    CLI
   
 
           </label>
@@ -704,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../" class="md-nav__link">
         
   
   
@@ -712,6 +712,462 @@
     
   
     Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
   
 
     
@@ -748,7 +1204,7 @@
   <span class="md-ellipsis">
     
   
-    Orchestrators
+    plcc-java-run
   
 
     
@@ -766,7 +1222,7 @@
   <span class="md-ellipsis">
     
   
-    Orchestrators
+    plcc-java-run
   
 
     
@@ -792,10 +1248,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#plcc-make" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        plcc-make
+        Usage
       
     </span>
   </a>
@@ -803,10 +1259,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plcc-scan" class="md-nav__link">
+  <a href="#arguments-and-options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        plcc-scan
+        Arguments and Options
       
     </span>
   </a>
@@ -814,21 +1270,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plcc-parse" class="md-nav__link">
+  <a href="#examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        plcc-parse
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plcc-rep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-rep
+        Examples
       
     </span>
   </a>
@@ -851,14 +1296,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../primitives/" class="md-nav__link">
+      <a href="../plcc-lang-build/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Primitives
+    plcc-lang-build
   
 
     
@@ -867,6 +1312,658 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-mermaid-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-mermaid-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-mermaid-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-plantuml-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-plantuml-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-plantuml-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -938,7 +2035,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../instructor-guide/" class="md-nav__link">
+      <a href="../../../instructor-guide/" class="md-nav__link">
         
   
   
@@ -966,7 +2063,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../instructor-guide/evaluating/" class="md-nav__link">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
         
   
   
@@ -994,7 +2091,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../instructor-guide/adopting/" class="md-nav__link">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
         
   
   
@@ -1029,7 +2126,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+      <a href="../../../changelog/" class="md-nav__link">
         
   
   
@@ -1069,14 +2166,15 @@
   
 
 
-<h1 id="level-2-orchestrators">Level 2 Orchestrators</h1>
-<p>These commands compose the <a href="../primitives/">Level 0 primitives</a> for the most
-common workflows. They are the commands students use day-to-day.</p>
-<hr />
-<h2 id="plcc-make">plcc-make</h2>
-<p>Build a PLCC project from a spec file.</p>
-<pre><code class="language-text">plcc-make [-v ...] [options]
+<h1 id="plcc-java-run">plcc-java-run</h1>
+<p>Run a compiled Java interpreter. Reads parse tree JSON from stdin and passes
+it to the <code>Main</code> class in the output directory.</p>
+<p>Called by <a href="../plcc-lang-run/"><code>plcc-lang-run --target=Java</code></a>.</p>
+<p>Requires Java JDK 21 or later on <code>PATH</code>.</p>
+<h2 id="usage">Usage</h2>
+<pre><code class="language-text">plcc-java-run --output=DIR [-v ...] [options]
 </code></pre>
+<h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
 <tr>
@@ -1086,137 +2184,26 @@ common workflows. They are the commands students use day-to-day.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
-<td>Spec to build from. Remembered across invocations. Defaults to <code>spec.plcc</code> on first use.</td>
+<td><code>--output=DIR</code></td>
+<td>Directory containing compiled Java class files. Required.</td>
 </tr>
 <tr>
-<td><code>--through=LEVEL</code></td>
-<td>Build up to this level: <code>scan</code>, <code>parse</code>, <code>model</code>, or <code>all</code>. Default: <code>all</code>.</td>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
 </tr>
 <tr>
-<td><code>-b</code>, <code>--banner</code></td>
-<td>Show the version and spec banner on stderr.</td>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-make -s subtract.plcc
+<h2 id="examples">Examples</h2>
+<pre><code class="language-bash">plcc-java-run --output=build/Java
 </code></pre>
-<p>Run <code>plcc-make</code> again after editing your spec to rebuild.</p>
-<hr />
-<h2 id="plcc-scan">plcc-scan</h2>
-<p>Tokenize source input and print tokens in human-readable format.</p>
-<pre><code class="language-text">plcc-scan [-v ...] [options] [SOURCE ...]
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Argument/Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SOURCE</code></td>
-<td>Source files to tokenize. Reads stdin if none given.</td>
-</tr>
-<tr>
-<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
-<td>Spec to build from. Remembered across invocations.</td>
-</tr>
-<tr>
-<td><code>-t</code>, <code>--trace</code></td>
-<td>Show detailed scanning output.</td>
-</tr>
-<tr>
-<td><code>-b</code>, <code>--banner</code></td>
-<td>Show the version and spec banner on stderr.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-scan -s subtract.plcc samples
-echo &quot;42&quot; | plcc-scan
-</code></pre>
-<hr />
-<h2 id="plcc-parse">plcc-parse</h2>
-<p>Parse source input and print the parse tree in human-readable format.</p>
-<pre><code class="language-text">plcc-parse [-v ...] [options] [SOURCE ...]
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Argument/Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SOURCE</code></td>
-<td>Source files to parse. Reads stdin if none given.</td>
-</tr>
-<tr>
-<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
-<td>Spec to build from. Remembered across invocations.</td>
-</tr>
-<tr>
-<td><code>-b</code>, <code>--banner</code></td>
-<td>Show the version and spec banner on stderr.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash">plcc-parse -s subtract.plcc samples
-echo &quot;42&quot; | plcc-parse
-</code></pre>
-<p><strong>Interactive mode:</strong> When no source files are given and stdin is a terminal,
-<code>plcc-parse</code> reads input line by line at the <code>&gt;&gt;&gt;</code> prompt. After each line,
-complete sentences are parsed and printed immediately. If the input so far is a
-valid prefix that could be extended (e.g., <code>3</code> in a grammar that also allows
-<code>3 + 4</code>), parsing is deferred and the <code>...</code> continuation prompt appears. Press
-<code>^D</code> at the <code>&gt;&gt;&gt;</code> prompt (empty buffer) to exit. Press <code>^D</code> at the <code>...</code>
-prompt to force-submit the buffered input and return to <code>&gt;&gt;&gt;</code>.</p>
-<hr />
-<h2 id="plcc-rep">plcc-rep</h2>
-<p>REPL — read, eval, print loop for a PLCC spec.</p>
-<pre><code class="language-text">plcc-rep [-v ...] [options] [SOURCE ...]
-</code></pre>
-<table>
-<thead>
-<tr>
-<th>Argument/Option</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SOURCE</code></td>
-<td>Source files to evaluate. Omit (or pass <code>-</code>) to enter interactive mode.</td>
-</tr>
-<tr>
-<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
-<td>Spec to build from. Remembered across invocations.</td>
-</tr>
-<tr>
-<td><code>-b</code>, <code>--banner</code></td>
-<td>Show the version and spec banner on stderr.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Example:</strong></p>
-<pre><code class="language-bash"># Evaluate files and exit
-plcc-rep -s subtract.plcc samples
-
-# Enter interactive mode (no files given)
-plcc-rep -s subtract.plcc
-</code></pre>
-<p><strong>Interactive mode:</strong> When no source files are given and stdin is a terminal,
-<code>plcc-rep</code> reads input line by line at the <code>&gt;&gt;&gt;</code> prompt. After each line,
-complete sentences are evaluated and their results printed immediately. If the
-input so far is a valid prefix that could be extended, evaluation is deferred
-and the <code>...</code> continuation prompt appears. Press <code>^D</code> at the <code>&gt;&gt;&gt;</code> prompt
-(empty buffer) to exit. Press <code>^D</code> at the <code>...</code> prompt to force-submit the
-buffered input and return to <code>&gt;&gt;&gt;</code>.</p>
 
 
 
@@ -1266,10 +2253,10 @@ buffered input and return to <code>&gt;&gt;&gt;</code>.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

@@ -1,0 +1,4487 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-21-100-docs-cli-restructure/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>CLI Documentation Restructure Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cli-documentation-restructure-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CLI Documentation Restructure Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-mermaid-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-mermaid-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-mermaid-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-mermaid-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="cli-documentation-restructure-implementation-plan">CLI Documentation Restructure Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Replace the "Level 0 / Level 2" CLI doc structure with a guide + flat reference architecture that documents all 32 commands (31 real + <code>plcc-python-build</code> does not yet exist — skip its reference page) and presents them from the language author's perspective.</p>
+<p><strong>Architecture:</strong> A <code>cli/guide/</code> directory holds five narrative pages (author-facing commands, under the hood, and three extension pages). A <code>cli/commands/</code> directory holds one flat reference page per command (32 files). <code>cli/index.md</code> is a minimal landing page linking to both. The old <code>primitives.md</code> and <code>orchestrators.md</code> are deleted.</p>
+<p><strong>Tech Stack:</strong> MkDocs Material, Kroki plugin (plantuml fence blocks), Markdown.</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>All work in worktree <code>.worktrees/issue-100</code> on branch <code>issue-100-docs-cli-command-classification</code></li>
+<li><code>docs(...)</code> commit subjects must end with <code>[skip ci]</code></li>
+<li>Verify with <code>mkdocs build</code> (run from repo root) after each task — it must exit 0</li>
+<li>Do NOT create <code>plcc-python-build.md</code> — this command does not exist yet in <code>pyproject.toml</code></li>
+<li>Kroki plantuml fence format: <code>```plantuml</code> (no prefix, produces SVG)</li>
+<li>Common options (<code>-h/--help</code>, <code>-v</code>, <code>--verbose-format=FMT</code>) appear in the options table of every reference page and are summarised once in <code>cli/guide/author-commands.md</code></li>
+</ul>
+<hr />
+<h3 id="task-1-infrastructure-directories-nav-stubs-delete-old-files">Task 1: Infrastructure — directories, nav, stubs, delete old files</h3>
+<p><strong>Files:</strong>
+- Create: <code>docs/cli/guide/</code> (directory)
+- Create: <code>docs/cli/commands/</code> (directory)
+- Create: stub <code>.md</code> for every new page (heading only — see step 1)
+- Modify: <code>mkdocs.yml</code>
+- Delete: <code>docs/cli/primitives.md</code>, <code>docs/cli/orchestrators.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create all stub files</strong></li>
+</ul>
+<pre><code class="language-bash">mkdir -p docs/cli/guide docs/cli/commands
+
+# Landing page (replace existing)
+echo &quot;# CLI&quot; &gt; docs/cli/index.md
+
+# Guide stubs
+for page in author-commands under-the-hood language-extensions parser-extensions diagram-extensions; do
+  echo &quot;# $page&quot; &gt; docs/cli/guide/$page.md
+done
+
+# Reference stubs — one per command (note: no plcc-python-build)
+for cmd in \
+  plcc-diagram plcc-diagram-build plcc-diagram-emit plcc-diagram-list plcc-diagram-run \
+  plcc-java-build plcc-java-emit plcc-java-run \
+  plcc-lang-build plcc-lang-emit plcc-lang-list plcc-lang-run \
+  plcc-ll1 plcc-make \
+  plcc-mermaid-diagram-build plcc-mermaid-diagram-emit plcc-mermaid-diagram-run \
+  plcc-model plcc-parse plcc-parser-list plcc-parser-table \
+  plcc-plantuml-diagram-build plcc-plantuml-diagram-emit plcc-plantuml-diagram-run \
+  plcc-python-emit plcc-python-run \
+  plcc-rep plcc-scan plcc-spec plcc-tokens plcc-trees plcc-version; do
+  echo &quot;# $cmd&quot; &gt; docs/cli/commands/$cmd.md
+done
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Delete old files</strong></li>
+</ul>
+<pre><code class="language-bash">rm docs/cli/primitives.md docs/cli/orchestrators.md
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Update mkdocs.yml nav</strong></li>
+</ul>
+<p>Replace the entire <code>- CLI Reference:</code> block in <code>mkdocs.yml</code> with:</p>
+<pre><code class="language-yaml">  - CLI:
+    - Overview: cli/index.md
+    - Guide:
+      - Author-facing commands: cli/guide/author-commands.md
+      - Under the hood: cli/guide/under-the-hood.md
+      - Language extensions: cli/guide/language-extensions.md
+      - Parser extensions: cli/guide/parser-extensions.md
+      - Diagram extensions: cli/guide/diagram-extensions.md
+    - All Commands:
+      - plcc-diagram: cli/commands/plcc-diagram.md
+      - plcc-diagram-build: cli/commands/plcc-diagram-build.md
+      - plcc-diagram-emit: cli/commands/plcc-diagram-emit.md
+      - plcc-diagram-list: cli/commands/plcc-diagram-list.md
+      - plcc-diagram-run: cli/commands/plcc-diagram-run.md
+      - plcc-java-build: cli/commands/plcc-java-build.md
+      - plcc-java-emit: cli/commands/plcc-java-emit.md
+      - plcc-java-run: cli/commands/plcc-java-run.md
+      - plcc-lang-build: cli/commands/plcc-lang-build.md
+      - plcc-lang-emit: cli/commands/plcc-lang-emit.md
+      - plcc-lang-list: cli/commands/plcc-lang-list.md
+      - plcc-lang-run: cli/commands/plcc-lang-run.md
+      - plcc-ll1: cli/commands/plcc-ll1.md
+      - plcc-make: cli/commands/plcc-make.md
+      - plcc-mermaid-diagram-build: cli/commands/plcc-mermaid-diagram-build.md
+      - plcc-mermaid-diagram-emit: cli/commands/plcc-mermaid-diagram-emit.md
+      - plcc-mermaid-diagram-run: cli/commands/plcc-mermaid-diagram-run.md
+      - plcc-model: cli/commands/plcc-model.md
+      - plcc-parse: cli/commands/plcc-parse.md
+      - plcc-parser-list: cli/commands/plcc-parser-list.md
+      - plcc-parser-table: cli/commands/plcc-parser-table.md
+      - plcc-plantuml-diagram-build: cli/commands/plcc-plantuml-diagram-build.md
+      - plcc-plantuml-diagram-emit: cli/commands/plcc-plantuml-diagram-emit.md
+      - plcc-plantuml-diagram-run: cli/commands/plcc-plantuml-diagram-run.md
+      - plcc-python-emit: cli/commands/plcc-python-emit.md
+      - plcc-python-run: cli/commands/plcc-python-run.md
+      - plcc-rep: cli/commands/plcc-rep.md
+      - plcc-scan: cli/commands/plcc-scan.md
+      - plcc-spec: cli/commands/plcc-spec.md
+      - plcc-tokens: cli/commands/plcc-tokens.md
+      - plcc-trees: cli/commands/plcc-trees.md
+      - plcc-version: cli/commands/plcc-version.md
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Verify build</strong></li>
+</ul>
+<pre><code class="language-bash">mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<p>Expected: <code>INFO - Documentation built in ...</code> with exit 0. Fix any broken nav references before continuing.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/ mkdocs.yml
+git commit -m &quot;docs(cli): restructure directories and nav for issue 100 [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-2-landing-page-docscliindexmd">Task 2: Landing page (<code>docs/cli/index.md</code>)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/index.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the landing page</strong></li>
+</ul>
+<pre><code class="language-markdown"># CLI Reference
+
+plcc-ng provides a set of command-line tools for defining, building, and
+experimenting with programming languages. Most language authors interact with
+only a handful of them day-to-day.
+
+- [Guide](guide/author-commands.md) — start here to understand which commands
+  to use and how they fit together.
+- [All Commands](commands/plcc-scan.md) — jump straight to the reference for a
+  specific command.
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Verify build</strong></li>
+</ul>
+<pre><code class="language-bash">mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/index.md
+git commit -m &quot;docs(cli): write CLI landing page [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-guide-author-facing-commands-docscliguideauthor-commandsmd">Task 3: Guide — author-facing commands (<code>docs/cli/guide/author-commands.md</code>)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/guide/author-commands.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the page</strong></li>
+</ul>
+<pre><code class="language-markdown"># Author-Facing Commands
+
+These are the commands you interact with directly when working with plcc-ng.
+Everything else runs behind the scenes.
+
+## Daily drivers
+
+Use these to experiment with your language spec at each stage of the pipeline.
+They all remember the spec file path between invocations — pass `-s &lt;path&gt;`
+once and subsequent commands in the same directory pick it up automatically.
+
+### plcc-scan
+
+Tokenize source input and print each token in human-readable format. Useful
+for checking that your lexical rules match what you expect.
+
+```bash
+echo &quot;42 36 2&quot; | plcc-scan
+plcc-scan -s subtract.plcc samples/
+</code></pre>
+<h3 id="plcc-parse">plcc-parse</h3>
+<p>Parse source input and print the parse tree. Useful for verifying that your
+grammar accepts the input you intend and rejects what it shouldn't.</p>
+<pre><code class="language-bash">echo &quot;42 36 2&quot; | plcc-parse
+plcc-parse -s subtract.plcc samples/
+</code></pre>
+<p><code>plcc-parse</code> also has an interactive mode: when no source files are given and
+stdin is a terminal, it reads input at a <code>&gt;&gt;&gt;</code> prompt and parses each line as
+you type.</p>
+<h3 id="plcc-rep">plcc-rep</h3>
+<p>Read-eval-print loop. Runs your full language spec — scanning, parsing, and
+executing semantics — and prints the result of each input.</p>
+<pre><code class="language-bash">plcc-rep -s subtract.plcc samples/   # evaluate files and exit
+plcc-rep -s subtract.plcc            # enter interactive mode
+</code></pre>
+<h2 id="common-options">Common options</h2>
+<p>All commands accept these options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more detail: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>)</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="visualization">Visualization</h2>
+<h3 id="plcc-diagram">plcc-diagram</h3>
+<p>Generate and display a class diagram from your spec file. Shows the classes
+and inheritance relationships that plcc-ng derives from your syntactic
+grammar — useful for understanding the object model you'll program against
+when writing semantics.</p>
+<pre><code class="language-bash">plcc-diagram -s subtract.plcc
+</code></pre>
+<blockquote>
+<p><strong>Requires the <code>plcc-diagram</code> package.</strong> If <code>plcc-diagram</code> is not
+installed, this command will not be available.</p>
+</blockquote>
+<h2 id="metadata-and-extension-discovery">Metadata and extension discovery</h2>
+<h3 id="plcc-version">plcc-version</h3>
+<p>Print the installed plcc-ng version.</p>
+<pre><code class="language-bash">plcc-version
+</code></pre>
+<h3 id="plcc-lang-list">plcc-lang-list</h3>
+<p>List the language plugins installed on your system. plcc-ng ships with
+<code>python</code> and <code>java</code> support; this command shows what is available.</p>
+<pre><code class="language-bash">plcc-lang-list
+</code></pre>
+<h3 id="plcc-parser-list">plcc-parser-list</h3>
+<p>List the parser plugins installed on your system. plcc-ng ships with the
+<code>table</code> parser (LL(1) table-driven); this command shows what is available.</p>
+<pre><code class="language-bash">plcc-parser-list
+</code></pre>
+<h3 id="plcc-diagram-list">plcc-diagram-list</h3>
+<p>List the diagram format plugins installed on your system. plcc-ng ships with
+<code>mermaid</code> and <code>plantuml</code> support.</p>
+<pre><code class="language-bash">plcc-diagram-list
+</code></pre>
+<blockquote>
+<p><strong>Requires the <code>plcc-diagram</code> package.</strong></p>
+</blockquote>
+<h2 id="extension-points">Extension points</h2>
+<p>plcc-ng is built around extension points. The language, parser, and diagram
+plugins you see above are the built-in implementations, but the system is
+designed so that new plugins can be installed alongside plcc-ng and discovered
+automatically. See the <a href="language-extensions.md">Language extensions</a>,
+<a href="parser-extensions.md">Parser extensions</a>, and
+<a href="diagram-extensions.md">Diagram extensions</a> guides for details.</p>
+<pre><code>
+- [ ] **Step 2: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/guide/author-commands.md
+git commit -m &quot;docs(cli): write author-facing commands guide page [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-guide-under-the-hood-docscliguideunder-the-hoodmd">Task 4: Guide — under the hood (<code>docs/cli/guide/under-the-hood.md</code>)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/guide/under-the-hood.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the page</strong></li>
+</ul>
+<p>The dependency diagram to embed is at <code>dev-docs/diagrams/cli-command-dependencies.puml</code>. Copy its full PlantUML content (the <code>@startuml ... @enduml</code> block) into the fenced block below.</p>
+<pre><code class="language-markdown"># Under the Hood
+
+The commands you use every day — `plcc-scan`, `plcc-parse`, `plcc-rep`, and
+`plcc-diagram` — each orchestrate a pipeline of lower-level commands. This
+page shows how the pieces fit together.
+
+## Dependency diagram
+
+The diagram below shows which commands call which. An arrow from A to B means
+A calls B.
+
+```plantuml
+@startuml
+allowmixing
+
+left to right direction
+
+package language-extensions {
+  package plcc-java {
+    class plcc-java-emit
+    class plcc-java-build
+    class plcc-java-run
+  }
+
+  package plcc-python {
+    class plcc-python-emit
+    class plcc-python-build
+    class plcc-python-run
+  }
+}
+
+package parser-extensions {
+  package plcc-parser-table {
+    class plcc-parser-table
+  }
+}
+
+package diagram-extensions {
+  package plcc-mermaid-diagram {
+    class plcc-mermaid-diagram-emit
+    class plcc-mermaid-diagram-build
+    class plcc-mermaid-diagram-run
+  }
+
+  package plcc-plantuml-diagram {
+    class plcc-plantuml-diagram-emit
+    class plcc-plantuml-diagram-build
+    class plcc-plantuml-diagram-run
+  }
+}
+
+package core {
+
+  class plcc-version
+  class plcc-lang-list
+  class plcc-parser-list
+
+  plcc-scan --&gt; plcc-make
+  plcc-scan --&gt; plcc-tokens
+
+  plcc-parse --&gt; plcc-make
+  plcc-parse --&gt; plcc-tokens
+  plcc-parse --&gt; plcc-trees
+
+  plcc-rep --&gt; plcc-make
+  plcc-rep --&gt; plcc-tokens
+  plcc-rep --&gt; plcc-trees
+  plcc-rep --&gt; plcc-lang-run
+
+  plcc-make --&gt; plcc-spec
+  plcc-make --&gt; plcc-ll1
+  plcc-make --&gt; plcc-model
+  plcc-make --&gt; plcc-lang-emit
+  plcc-make --&gt; plcc-lang-build
+
+  plcc-trees --&gt; parser-extensions.plcc-parser-table.plcc-parser-table
+
+  plcc-lang-emit --&gt; plcc-python-emit
+  plcc-lang-emit --&gt; plcc-java-emit
+  plcc-lang-build --&gt; plcc-java-build
+  plcc-lang-build --&gt; plcc-python-build
+  plcc-lang-run --&gt; plcc-python-run
+  plcc-lang-run --&gt; plcc-java-run
+
+}
+
+package plcc-diagram {
+
+  class plcc-diagram-list
+
+  plcc-diagram --&gt; plcc-make
+  plcc-diagram --&gt; plcc-diagram-emit
+  plcc-diagram --&gt; plcc-diagram-build
+  plcc-diagram --&gt; plcc-diagram-run
+
+  plcc-diagram-emit --&gt; plcc-mermaid-diagram-emit
+  plcc-diagram-emit --&gt; plcc-plantuml-diagram-emit
+  plcc-diagram-build --&gt; plcc-mermaid-diagram-build
+  plcc-diagram-build --&gt; plcc-plantuml-diagram-build
+  plcc-diagram-run --&gt; plcc-mermaid-diagram-run
+  plcc-diagram-run --&gt; plcc-plantuml-diagram-run
+
+}
+
+actor &quot;Language Author&quot; as author
+
+author --&gt; plcc-scan
+author --&gt; plcc-parse
+author --&gt; plcc-rep
+author --&gt; plcc-version
+author --&gt; plcc-lang-list
+author --&gt; plcc-parser-list
+author --&gt; plcc-diagram
+author --&gt; plcc-diagram-list
+
+@enduml
+```
+
+## The core pipeline
+
+`plcc-make` is the build orchestrator at the centre of the core package. Every
+author-facing command calls it before doing its own work.
+
+| Command | Input → Output |
+|---|---|
+| [`plcc-make`](../commands/plcc-make.md) | `.plcc` spec file → build artifacts in `build/` |
+| [`plcc-spec`](../commands/plcc-spec.md) | `.plcc` file → spec JSON |
+| [`plcc-ll1`](../commands/plcc-ll1.md) | spec JSON → LL(1) analysis JSON |
+| [`plcc-tokens`](../commands/plcc-tokens.md) | spec JSON + source files → token JSONL |
+| [`plcc-trees`](../commands/plcc-trees.md) | token JSONL + LL(1) JSON → parse tree JSON (dispatches to parser plugin) |
+| [`plcc-model`](../commands/plcc-model.md) | spec JSON → language-neutral model JSON |
+| [`plcc-lang-emit`](../commands/plcc-lang-emit.md) | model JSON → language source files (dispatches to language plugin) |
+| [`plcc-lang-build`](../commands/plcc-lang-build.md) | language source files → compiled output (dispatches to language plugin) |
+| [`plcc-lang-run`](../commands/plcc-lang-run.md) | compiled output + parse tree JSON → evaluation result (dispatches to language plugin) |
+
+## The diagram pipeline
+
+`plcc-diagram` (in the `plcc-diagram` package) calls `plcc-make` to build the
+model, then runs its own sub-pipeline:
+
+| Command | Input → Output |
+|---|---|
+| [`plcc-diagram-emit`](../commands/plcc-diagram-emit.md) | model JSON → diagram source (dispatches to diagram plugin) |
+| [`plcc-diagram-build`](../commands/plcc-diagram-build.md) | diagram source → PNG image (dispatches to diagram plugin) |
+| [`plcc-diagram-run`](../commands/plcc-diagram-run.md) | PNG path → prints path to stdout (dispatches to diagram plugin) |
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Verify build</strong></li>
+</ul>
+<pre><code class="language-bash">mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/guide/under-the-hood.md
+git commit -m &quot;docs(cli): write under-the-hood guide page [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-5-guide-extension-pages-3-pages">Task 5: Guide — extension pages (3 pages)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/guide/language-extensions.md</code>
+- Modify: <code>docs/cli/guide/parser-extensions.md</code>
+- Modify: <code>docs/cli/guide/diagram-extensions.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>language-extensions.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># Language Extensions
+
+Language extensions provide the emit, build, and run steps for a specific
+target language. plcc-ng ships with Python and Java support.
+
+## How language extensions plug in
+
+When `plcc-make` (or any command that calls it) builds a spec with a semantic
+section, it runs three dispatch commands in sequence:
+
+1. [`plcc-lang-emit --target=LANG`](../commands/plcc-lang-emit.md) — calls `plcc-&lt;lang&gt;-emit`
+2. [`plcc-lang-build --target=LANG`](../commands/plcc-lang-build.md) — calls `plcc-&lt;lang&gt;-build` (no-op if not found)
+3. [`plcc-lang-run --target=LANG`](../commands/plcc-lang-run.md) — calls `plcc-&lt;lang&gt;-run`
+
+The `LANG` value comes from the `language` declaration in the spec's semantic
+section. Use [`plcc-lang-list`](../commands/plcc-lang-list.md) to see what is
+installed.
+
+## plcc-python
+
+Emits a Python interpreter from model JSON, then runs it with the system
+Python.
+
+| Command | What it does |
+|---|---|
+| [`plcc-python-emit`](../commands/plcc-python-emit.md) | Writes `.py` class files and a `main.py` entry point to the output directory |
+| [`plcc-python-run`](../commands/plcc-python-run.md) | Runs `main.py` with the system Python interpreter |
+
+No build step is required for Python — `plcc-lang-build` exits silently if
+`plcc-python-build` is not found.
+
+## plcc-java
+
+Emits a Java interpreter from model JSON, compiles it with `javac`, then
+runs it with `java`.
+
+| Command | What it does |
+|---|---|
+| [`plcc-java-emit`](../commands/plcc-java-emit.md) | Writes `.java` class files and a `Main.java` entry point to the output directory |
+| [`plcc-java-build`](../commands/plcc-java-build.md) | Compiles all `.java` files with `javac`; requires Java JDK 21+ on `PATH` |
+| [`plcc-java-run`](../commands/plcc-java-run.md) | Runs `Main` with `java`; requires Java JDK 21+ on `PATH` |
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Write <code>parser-extensions.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># Parser Extensions
+
+Parser extensions implement the parsing step. plcc-ng ships with a single
+built-in parser: `plcc-parser-table`, an LL(1) table-driven parser.
+
+## How parser extensions plug in
+
+[`plcc-trees`](../commands/plcc-trees.md) dispatches to a parser plugin via
+the `--parser=KIND` flag (default: `table`). It calls `plcc-parser-&lt;kind&gt;`,
+passing the LL(1) analysis JSON and token JSONL on stdin.
+
+Use [`plcc-parser-list`](../commands/plcc-parser-list.md) to see what is
+installed.
+
+&gt; **Note:** there is no dedicated `plcc-parser` dispatch command — `plcc-trees`
+&gt; handles dispatch directly.
+
+## plcc-parser-table
+
+The default LL(1) table-driven parser. Reads token JSONL from stdin and the
+LL(1) analysis JSON from `--ll1`, emits parse tree JSON to stdout.
+
+| Command | What it does |
+|---|---|
+| [`plcc-parser-table`](../commands/plcc-parser-table.md) | Table-driven LL(1) parse; emits parse tree JSON or error records |
+
+`plcc-parser-table` also supports `--trace`, which emits `parse-step` records
+interleaved with the parse tree for debugging.
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Write <code>diagram-extensions.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># Diagram Extensions
+
+Diagram extensions implement the emit, build, and run steps for a specific
+diagram format. plcc-ng ships with Mermaid and PlantUML support.
+
+## How diagram extensions plug in
+
+[`plcc-diagram`](../commands/plcc-diagram.md) runs three dispatch commands:
+
+1. [`plcc-diagram-emit --format=FMT`](../commands/plcc-diagram-emit.md) — calls `plcc-&lt;fmt&gt;-diagram-emit`
+2. [`plcc-diagram-build --format=FMT`](../commands/plcc-diagram-build.md) — calls `plcc-&lt;fmt&gt;-diagram-build`
+3. [`plcc-diagram-run --format=FMT`](../commands/plcc-diagram-run.md) — calls `plcc-&lt;fmt&gt;-diagram-run`
+
+The default format is `plantuml`. Use [`plcc-diagram-list`](../commands/plcc-diagram-list.md)
+to see what is installed.
+
+## plcc-mermaid-diagram
+
+Generates a Mermaid class diagram. Requires the `mmdc` CLI
+(`npm install -g @mermaid-js/mermaid-cli`).
+
+| Command | What it does |
+|---|---|
+| [`plcc-mermaid-diagram-emit`](../commands/plcc-mermaid-diagram-emit.md) | Reads model JSON from stdin; writes a `.mmd` Mermaid source file |
+| [`plcc-mermaid-diagram-build`](../commands/plcc-mermaid-diagram-build.md) | Renders `.mmd` to PNG using `mmdc` |
+| [`plcc-mermaid-diagram-run`](../commands/plcc-mermaid-diagram-run.md) | Prints the path to the rendered PNG |
+
+## plcc-plantuml-diagram
+
+Generates a PlantUML class diagram. Rendering is done via the public
+`plantuml.com` API — no local PlantUML installation required.
+
+| Command | What it does |
+|---|---|
+| [`plcc-plantuml-diagram-emit`](../commands/plcc-plantuml-diagram-emit.md) | Reads model JSON from stdin; writes a `.puml` PlantUML source file |
+| [`plcc-plantuml-diagram-build`](../commands/plcc-plantuml-diagram-build.md) | Sends `.puml` to plantuml.com and writes the returned PNG |
+| [`plcc-plantuml-diagram-run`](../commands/plcc-plantuml-diagram-run.md) | Prints the path to the rendered PNG |
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Verify build</strong></li>
+</ul>
+<pre><code class="language-bash">mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/guide/language-extensions.md docs/cli/guide/parser-extensions.md docs/cli/guide/diagram-extensions.md
+git commit -m &quot;docs(cli): write extension guide pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-6-reference-pages-daily-drivers-plcc-scan-plcc-parse-plcc-rep">Task 6: Reference pages — daily drivers (plcc-scan, plcc-parse, plcc-rep)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-scan.md</code>
+- Modify: <code>docs/cli/commands/plcc-parse.md</code>
+- Modify: <code>docs/cli/commands/plcc-rep.md</code></p>
+<p>Source for migration: <code>docs/cli/orchestrators.md</code> (existing content). Also read <code>src/plcc/cmd/scan.py</code>, <code>src/plcc/cmd/parse.py</code>, <code>src/plcc/cmd/rep.py</code> for the full docstrings.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-scan.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-scan
+
+Tokenize source input and print tokens in human-readable format.
+
+## Usage
+
+```text
+plcc-scan [-v ...] [options] [SOURCE ...]
+</code></pre>
+<h2 id="arguments-and-options">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to tokenize. Reads stdin if none given.</td>
+</tr>
+<tr>
+<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
+<td>Spec file to build from. Remembered across invocations in the same directory. Defaults to <code>spec.plcc</code>.</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Show detailed scanning output including regex candidates and source lines.</td>
+</tr>
+<tr>
+<td><code>-b</code>, <code>--banner</code></td>
+<td>Print the plcc-ng version and spec path to stderr.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-bash"># Tokenize stdin
+echo &quot;42 36 2&quot; | plcc-scan
+
+# Tokenize files
+plcc-scan -s subtract.plcc samples/
+
+# After setting spec once, subsequent calls remember it
+plcc-scan -s subtract.plcc
+plcc-scan samples/
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Write `plcc-parse.md`**
+
+```markdown
+# plcc-parse
+
+Parse source input and print the parse tree in human-readable format.
+
+## Usage
+
+```text
+plcc-parse [-v ...] [options] [SOURCE ...]
+</code></pre>
+<h2 id="arguments-and-options_1">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to parse. Reads stdin if none given.</td>
+</tr>
+<tr>
+<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
+<td>Spec file to build from. Remembered across invocations in the same directory. Defaults to <code>spec.plcc</code>.</td>
+</tr>
+<tr>
+<td><code>-b</code>, <code>--banner</code></td>
+<td>Print the plcc-ng version and spec path to stderr.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_1">Examples</h2>
+<pre><code class="language-bash"># Parse stdin
+echo &quot;42 36 2&quot; | plcc-parse
+
+# Parse files
+plcc-parse -s subtract.plcc samples/
+</code></pre>
+<h2 id="interactive-mode">Interactive mode</h2>
+<p>When no source files are given and stdin is a terminal, <code>plcc-parse</code> reads
+input at a <code>&gt;&gt;&gt;</code> prompt. After each line, complete sentences are parsed and
+printed immediately. If the input so far is a valid prefix that could be
+extended (e.g., <code>3</code> in a grammar that also accepts <code>3 + 4</code>), parsing is
+deferred and a <code>...</code> continuation prompt appears.</p>
+<ul>
+<li>Press <code>^D</code> at the <code>&gt;&gt;&gt;</code> prompt (empty buffer) to exit.</li>
+<li>Press <code>^D</code> at the <code>...</code> prompt to force-submit the buffered input and return to <code>&gt;&gt;&gt;</code>.</li>
+</ul>
+<pre><code>
+- [ ] **Step 3: Write `plcc-rep.md`**
+
+```markdown
+# plcc-rep
+
+REPL — read, eval, print loop for a PLCC spec. Scans and parses source input,
+then evaluates it using the generated semantics.
+
+## Usage
+
+```text
+plcc-rep [-v ...] [options] [SOURCE ...]
+</code></pre>
+<h2 id="arguments-and-options_2">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to evaluate. Omit (or pass <code>-</code>) to enter interactive mode.</td>
+</tr>
+<tr>
+<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
+<td>Spec file to build from. Remembered across invocations in the same directory. Defaults to <code>spec.plcc</code>.</td>
+</tr>
+<tr>
+<td><code>-b</code>, <code>--banner</code></td>
+<td>Print the plcc-ng version, spec path, and target language to stderr.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_2">Examples</h2>
+<pre><code class="language-bash"># Evaluate files and exit
+plcc-rep -s subtract.plcc samples/
+
+# Enter interactive mode
+plcc-rep -s subtract.plcc
+</code></pre>
+<h2 id="interactive-mode_1">Interactive mode</h2>
+<p>When no source files are given and stdin is a terminal, <code>plcc-rep</code> reads
+input at a <code>&gt;&gt;&gt;</code> prompt. After each line, complete sentences are evaluated
+and their results printed. Continuation prompts (<code>...</code>) appear when the input
+so far is a valid prefix.</p>
+<ul>
+<li>Press <code>^D</code> at the <code>&gt;&gt;&gt;</code> prompt (empty buffer) to exit.</li>
+<li>Press <code>^D</code> at the <code>...</code> prompt to force-submit the buffered input and return to <code>&gt;&gt;&gt;</code>.</li>
+</ul>
+<pre><code>
+- [ ] **Step 4: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-scan.md docs/cli/commands/plcc-parse.md docs/cli/commands/plcc-rep.md
+git commit -m &quot;docs(cli): write plcc-scan, plcc-parse, plcc-rep reference pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-7-reference-page-build-orchestrator-plcc-make">Task 7: Reference page — build orchestrator (plcc-make)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-make.md</code></p>
+<p>Source for migration: <code>docs/cli/orchestrators.md</code> (existing content) and <code>src/plcc/cmd/make.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-make.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-make
+
+Build a PLCC project from a spec file. Runs the full pipeline — spec parsing,
+LL(1) analysis, code model generation, language emit, and language build —
+stopping at the stage specified by `--through`.
+
+Called internally by `plcc-scan`, `plcc-parse`, `plcc-rep`, and `plcc-diagram`.
+You can also call it directly to pre-build before running other commands.
+
+## Usage
+
+```text
+plcc-make [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_3">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
+<td>Spec file to build from. Remembered across invocations in the same directory. Defaults to <code>spec.plcc</code> on first use.</td>
+</tr>
+<tr>
+<td><code>--through=LEVEL</code></td>
+<td>Build up to this level: <code>scan</code>, <code>parse</code>, <code>model</code>, or <code>all</code>. Default: <code>all</code>.</td>
+</tr>
+<tr>
+<td><code>-b</code>, <code>--banner</code></td>
+<td>Print the plcc-ng version and spec path to stderr.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_3">Examples</h2>
+<pre><code class="language-bash"># Build everything
+plcc-make -s subtract.plcc
+
+# Rebuild after editing the spec (spec remembered from previous run)
+plcc-make
+
+# Build only through the scan stage
+plcc-make --through=scan
+</code></pre>
+<h2 id="build-levels">Build levels</h2>
+<table>
+<thead>
+<tr>
+<th><code>--through</code> value</th>
+<th>Stages run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>scan</code></td>
+<td><code>plcc-spec</code></td>
+</tr>
+<tr>
+<td><code>parse</code></td>
+<td><code>plcc-spec</code>, <code>plcc-ll1</code></td>
+</tr>
+<tr>
+<td><code>model</code></td>
+<td><code>plcc-spec</code>, <code>plcc-model</code></td>
+</tr>
+<tr>
+<td><code>all</code> (default)</td>
+<td><code>plcc-spec</code>, <code>plcc-ll1</code>, <code>plcc-model</code>, <code>plcc-lang-emit</code>, <code>plcc-lang-build</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>plcc-make</code> caches its output in <code>build/</code> and skips stages whose inputs
+haven't changed since the last successful run.</p>
+<pre><code>
+- [ ] **Step 2: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-make.md
+git commit -m &quot;docs(cli): write plcc-make reference page [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-8-reference-pages-core-pipeline-plcc-spec-plcc-ll1-plcc-tokens-plcc-trees-plcc-model">Task 8: Reference pages — core pipeline (plcc-spec, plcc-ll1, plcc-tokens, plcc-trees, plcc-model)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-spec.md</code>
+- Modify: <code>docs/cli/commands/plcc-ll1.md</code>
+- Modify: <code>docs/cli/commands/plcc-tokens.md</code>
+- Modify: <code>docs/cli/commands/plcc-trees.md</code>
+- Modify: <code>docs/cli/commands/plcc-model.md</code></p>
+<p>Existing content for plcc-spec, plcc-tokens, plcc-trees, plcc-model: <code>docs/cli/primitives.md</code> (already deleted in Task 1 — use git show HEAD~:docs/cli/primitives.md to recover or read from source files).
+Source files: <code>src/plcc/spec/plcc_spec_cli.py</code>, <code>src/plcc/ll1/ll1_cli.py</code>, <code>src/plcc/tokens/tokens_cli.py</code>, <code>src/plcc/tree/tree_cli.py</code>, <code>src/plcc/model/model_cli.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-spec.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-spec
+
+Parse, validate, and print a PLCC grammar file as JSON.
+
+## Usage
+
+```text
+plcc-spec [-v ...] [options] FILE
+</code></pre>
+<h2 id="arguments-and-options_4">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FILE</code></td>
+<td>PLCC grammar file (<code>.plcc</code>). Use <code>-</code> to read from stdin.</td>
+</tr>
+<tr>
+<td><code>--no-json</code></td>
+<td>Validate only; do not print JSON to stdout.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_4">Examples</h2>
+<pre><code class="language-bash"># Parse and print spec as JSON
+plcc-spec spec.plcc
+
+# Validate only (no output on success)
+plcc-spec --no-json spec.plcc
+
+# Pipe into another command
+plcc-spec spec.plcc | plcc-ll1
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Write `plcc-ll1.md`**
+
+```markdown
+# plcc-ll1
+
+Perform LL(1) analysis on a grammar spec. Reads spec JSON from stdin and
+emits LL(1) analysis JSON to stdout, including FIRST sets, FOLLOW sets,
+PREDICT sets, any conflicts, and any left-recursion cycles.
+
+## Usage
+
+```text
+plcc-ll1 [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_5">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>). Higher verbosity emits FIRST/FOLLOW/PREDICT sets and conflict details.</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_5">Examples</h2>
+<pre><code class="language-bash"># Analyse a spec and print LL(1) JSON
+plcc-spec spec.plcc | plcc-ll1
+
+# Save to file for use with plcc-trees
+plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
+</code></pre>
+<pre><code>
+- [ ] **Step 3: Write `plcc-tokens.md`**
+
+Read `src/plcc/tokens/tokens_cli.py` for the exact `__doc__` string, then write:
+
+```markdown
+# plcc-tokens
+
+Tokenize source files given a spec JSON file; emit token JSONL (one JSON
+record per line, each record representing a token, skip, or error).
+
+## Usage
+
+```text
+plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
+</code></pre>
+<h2 id="arguments-and-options_6">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SPEC_JSON</code></td>
+<td>Path to spec JSON (output of <code>plcc-spec</code>).</td>
+</tr>
+<tr>
+<td><code>SOURCE</code></td>
+<td>Source files to tokenize. Use <code>-</code> for stdin. Defaults to stdin.</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Include regex candidates, source lines, and skip records in output.</td>
+</tr>
+<tr>
+<td><code>--source-name=LABEL</code></td>
+<td>Override the source label used for stdin.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_6">Examples</h2>
+<pre><code class="language-bash"># Tokenize stdin using a spec JSON piped from plcc-spec
+plcc-spec spec.plcc | plcc-tokens - samples/
+
+# Save spec JSON first, then tokenize
+plcc-spec spec.plcc &gt; build/spec.json
+plcc-tokens build/spec.json samples/
+</code></pre>
+<pre><code>
+- [ ] **Step 4: Write `plcc-trees.md`**
+
+```markdown
+# plcc-trees
+
+Dispatch to a parser plugin. Reads token JSONL from stdin and emits parse
+tree JSON to stdout. The parser plugin is selected with `--parser`.
+
+## Usage
+
+```text
+plcc-trees [-v ...] [options] --ll1=LL1_JSON
+</code></pre>
+<h2 id="arguments-and-options_7">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--ll1=LL1_JSON</code></td>
+<td>Path to LL(1) analysis JSON (output of <code>plcc-ll1</code>). Required.</td>
+</tr>
+<tr>
+<td><code>--parser=KIND</code></td>
+<td>Parser plugin to use. Default: <code>table</code> (calls <code>plcc-parser-table</code>).</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Forward trace flag to the parser plugin.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_7">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc &gt; build/spec.json
+plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
+plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
+</code></pre>
+<h2 id="parser-plugins">Parser plugins</h2>
+<p><code>plcc-trees</code> calls <code>plcc-parser-&lt;kind&gt;</code> for the given <code>--parser</code> value.
+Use <a href="plcc-parser-list.md"><code>plcc-parser-list</code></a> to see available plugins.
+See <a href="../guide/parser-extensions.md">Parser extensions</a> for details.</p>
+<pre><code>
+- [ ] **Step 5: Write `plcc-model.md`**
+
+```markdown
+# plcc-model
+
+Transform spec JSON into a language-neutral code model. The model describes
+the classes, fields, and inheritance relationships that the language emitter
+uses to generate source code.
+
+## Usage
+
+```text
+plcc-model [-v ...] [options] [SPEC_JSON]
+</code></pre>
+<h2 id="arguments-and-options_8">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Argument/Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SPEC_JSON</code></td>
+<td>Path to spec JSON (output of <code>plcc-spec</code>). Use <code>-</code> or omit to read from stdin.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_8">Examples</h2>
+<pre><code class="language-bash"># Pipe from plcc-spec
+plcc-spec spec.plcc | plcc-model
+
+# From a saved spec JSON
+plcc-model build/spec.json
+</code></pre>
+<pre><code>
+- [ ] **Step 6: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-spec.md docs/cli/commands/plcc-ll1.md docs/cli/commands/plcc-tokens.md docs/cli/commands/plcc-trees.md docs/cli/commands/plcc-model.md
+git commit -m &quot;docs(cli): write core pipeline reference pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-9-reference-pages-dispatch-commands-plcc-lang-emit-plcc-lang-build-plcc-lang-run">Task 9: Reference pages — dispatch commands (plcc-lang-emit, plcc-lang-build, plcc-lang-run)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-lang-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-lang-build.md</code>
+- Modify: <code>docs/cli/commands/plcc-lang-run.md</code></p>
+<p>Source files: <code>src/plcc/lang/emit.py</code>, <code>src/plcc/lang/build.py</code>, <code>src/plcc/lang/run.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-lang-emit.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-lang-emit
+
+Dispatch to the appropriate language emitter. Reads model JSON from stdin
+and calls `plcc-&lt;lang&gt;-emit` for the specified target language.
+
+## Usage
+
+```text
+plcc-lang-emit [-v ...] --target=LANG --output=DIR
+</code></pre>
+<h2 id="arguments-and-options_9">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target=LANG</code></td>
+<td>Target language (e.g. <code>Python</code>, <code>Java</code>). Required.</td>
+</tr>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory to write emitted source files into. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_9">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=build/Python
+</code></pre>
+<h2 id="language-plugins">Language plugins</h2>
+<p><code>plcc-lang-emit</code> calls <code>plcc-&lt;lang&gt;-emit</code> for the target language.
+Use <a href="plcc-lang-list.md"><code>plcc-lang-list</code></a> to see available plugins.
+See <a href="../guide/language-extensions.md">Language extensions</a> for details.</p>
+<pre><code>
+- [ ] **Step 2: Write `plcc-lang-build.md`**
+
+```markdown
+# plcc-lang-build
+
+Dispatch to the appropriate language build step. Calls `plcc-&lt;lang&gt;-build`
+for the target language. If no build command is found, exits silently with
+success — not all languages require a build step (Python does not).
+
+## Usage
+
+```text
+plcc-lang-build [-v ...] --target=LANG --output=DIR
+</code></pre>
+<h2 id="arguments-and-options_10">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target=LANG</code></td>
+<td>Target language (e.g. <code>Python</code>, <code>Java</code>). Required.</td>
+</tr>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Output directory (already populated by <code>plcc-lang-emit</code>). Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_10">Examples</h2>
+<pre><code class="language-bash">plcc-lang-build --target=Java --output=build/Java
+</code></pre>
+<pre><code>
+- [ ] **Step 3: Write `plcc-lang-run.md`**
+
+```markdown
+# plcc-lang-run
+
+Dispatch to the appropriate language runner. Reads parse tree JSON from stdin
+and calls `plcc-&lt;lang&gt;-run` for the target language.
+
+## Usage
+
+```text
+plcc-lang-run --target=LANG --output=DIR [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_11">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target=LANG</code></td>
+<td>Target language (e.g. <code>Python</code>, <code>Java</code>). Required.</td>
+</tr>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory containing built artifacts. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_11">Examples</h2>
+<pre><code class="language-bash">plcc-lang-run --target=Python --output=build/Python
+</code></pre>
+<pre><code>
+- [ ] **Step 4: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-lang-emit.md docs/cli/commands/plcc-lang-build.md docs/cli/commands/plcc-lang-run.md
+git commit -m &quot;docs(cli): write lang dispatch reference pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-10-reference-pages-discovery-and-utility-plcc-lang-list-plcc-parser-list-plcc-version">Task 10: Reference pages — discovery and utility (plcc-lang-list, plcc-parser-list, plcc-version)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-lang-list.md</code>
+- Modify: <code>docs/cli/commands/plcc-parser-list.md</code>
+- Modify: <code>docs/cli/commands/plcc-version.md</code></p>
+<p>Source files: <code>src/plcc/lang/list.py</code>, <code>src/plcc/parser/list_cli.py</code>, <code>src/plcc/version.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-lang-list.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-lang-list
+
+List installed language emitter plugins. Scans `PATH` for `plcc-*-emit`
+commands and prints each discovered language name, one per line.
+
+## Usage
+
+```text
+plcc-lang-list [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_12">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_12">Examples</h2>
+<pre><code class="language-bash">plcc-lang-list
+# java
+# python
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Write `plcc-parser-list.md`**
+
+```markdown
+# plcc-parser-list
+
+List installed parser plugins. Scans `PATH` for `plcc-parser-*` commands
+and prints each discovered parser kind, one per line.
+
+## Usage
+
+```text
+plcc-parser-list [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_13">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_13">Examples</h2>
+<pre><code class="language-bash">plcc-parser-list
+# table
+</code></pre>
+<pre><code>
+- [ ] **Step 3: Write `plcc-version.md`**
+
+```markdown
+# plcc-version
+
+Print the installed plcc-ng version.
+
+## Usage
+
+```text
+plcc-version
+</code></pre>
+<h2 id="examples_14">Examples</h2>
+<pre><code class="language-bash">plcc-version
+# plcc-ng 1.2.3
+</code></pre>
+<pre><code>
+- [ ] **Step 4: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-lang-list.md docs/cli/commands/plcc-parser-list.md docs/cli/commands/plcc-version.md
+git commit -m &quot;docs(cli): write discovery and utility reference pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-11-reference-pages-plcc-diagram-package-5-pages">Task 11: Reference pages — plcc-diagram package (5 pages)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-diagram.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-list.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-build.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-run.md</code></p>
+<p>Source files: <code>src/plcc/cmd/diagram.py</code>, <code>src/plcc/diagram/list.py</code>, <code>src/plcc/diagram/emit.py</code>, <code>src/plcc/diagram/build.py</code>, <code>src/plcc/diagram/run.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-diagram.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-diagram
+
+Generate and display a class diagram from a PLCC spec file. Shows the classes
+and inheritance relationships derived from the syntactic grammar.
+
+Requires the `plcc-diagram` package.
+
+## Usage
+
+```text
+plcc-diagram [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_14">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-s PATH</code>, <code>--spec=PATH</code></td>
+<td>Spec file. Remembered across invocations. Defaults to <code>spec.plcc</code>.</td>
+</tr>
+<tr>
+<td><code>--format=FMT</code></td>
+<td>Diagram format plugin to use. Default: <code>plantuml</code>.</td>
+</tr>
+<tr>
+<td><code>-b</code>, <code>--banner</code></td>
+<td>Print the plcc-ng version and spec path to stderr.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_15">Examples</h2>
+<pre><code class="language-bash">plcc-diagram -s subtract.plcc
+plcc-diagram --format=mermaid
+</code></pre>
+<h2 id="diagram-formats">Diagram formats</h2>
+<p><code>plcc-diagram</code> dispatches to diagram extension plugins via <code>--format</code>.
+Use <a href="plcc-diagram-list.md"><code>plcc-diagram-list</code></a> to see installed formats.
+See <a href="../guide/diagram-extensions.md">Diagram extensions</a> for details.</p>
+<pre><code>
+- [ ] **Step 2: Write `plcc-diagram-list.md`**
+
+```markdown
+# plcc-diagram-list
+
+List installed diagram format plugins. Scans `PATH` for
+`plcc-*-diagram-emit` commands and prints each format name, one per line.
+
+Requires the `plcc-diagram` package.
+
+## Usage
+
+```text
+plcc-diagram-list [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_15">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_16">Examples</h2>
+<pre><code class="language-bash">plcc-diagram-list
+# mermaid
+# plantuml
+</code></pre>
+<pre><code>
+- [ ] **Step 3: Write `plcc-diagram-emit.md`**
+
+```markdown
+# plcc-diagram-emit
+
+Dispatch model JSON to the appropriate diagram emitter. Reads model JSON from
+stdin and calls `plcc-&lt;fmt&gt;-diagram-emit` for the specified format.
+
+Requires the `plcc-diagram` package.
+
+## Usage
+
+```text
+plcc-diagram-emit [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_16">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--format=FMT</code></td>
+<td>Diagram format plugin to use. Default: <code>plantuml</code>.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_17">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-diagram-emit --format=mermaid
+</code></pre>
+<pre><code>
+- [ ] **Step 4: Write `plcc-diagram-build.md`**
+
+```markdown
+# plcc-diagram-build
+
+Dispatch to the appropriate diagram build step. Calls
+`plcc-&lt;fmt&gt;-diagram-build` for the specified format, converting a diagram
+source file into a PNG image.
+
+Requires the `plcc-diagram` package.
+
+## Usage
+
+```text
+plcc-diagram-build --input=FILE --output=FILE [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_17">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--format=FMT</code></td>
+<td>Diagram format plugin to use. Default: <code>plantuml</code>.</td>
+</tr>
+<tr>
+<td><code>--input=FILE</code></td>
+<td>Path to diagram source file. Required.</td>
+</tr>
+<tr>
+<td><code>--output=FILE</code></td>
+<td>Path to write PNG image. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_18">Examples</h2>
+<pre><code class="language-bash">plcc-diagram-build --format=plantuml --input=build/diagram/diagram.puml --output=build/diagram/diagram.png
+</code></pre>
+<pre><code>
+- [ ] **Step 5: Write `plcc-diagram-run.md`**
+
+```markdown
+# plcc-diagram-run
+
+Dispatch to the appropriate diagram runner. Calls
+`plcc-&lt;fmt&gt;-diagram-run` for the specified format. Currently, all built-in
+runners print the path to the rendered image file to stdout.
+
+Requires the `plcc-diagram` package.
+
+## Usage
+
+```text
+plcc-diagram-run --input=FILE [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_18">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--format=FMT</code></td>
+<td>Diagram format plugin to use. Default: <code>plantuml</code>.</td>
+</tr>
+<tr>
+<td><code>--input=FILE</code></td>
+<td>Path to PNG image file. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_19">Examples</h2>
+<pre><code class="language-bash">plcc-diagram-run --format=plantuml --input=build/diagram/diagram.png
+</code></pre>
+<pre><code>
+- [ ] **Step 6: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-diagram.md docs/cli/commands/plcc-diagram-list.md docs/cli/commands/plcc-diagram-emit.md docs/cli/commands/plcc-diagram-build.md docs/cli/commands/plcc-diagram-run.md
+git commit -m &quot;docs(cli): write plcc-diagram package reference pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-12-reference-pages-language-extensions-plcc-java-plcc-python-">Task 12: Reference pages — language extensions (plcc-java-<em>, plcc-python-</em>)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-java-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-java-build.md</code>
+- Modify: <code>docs/cli/commands/plcc-java-run.md</code>
+- Modify: <code>docs/cli/commands/plcc-python-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-python-run.md</code></p>
+<p>Source files: <code>src/plcc/lang/ext/java/emit.py</code>, <code>src/plcc/lang/ext/java/build.py</code>, <code>src/plcc/lang/ext/java/run.py</code>, <code>src/plcc/lang/ext/python/emit.py</code>, <code>src/plcc/lang/ext/python/run.py</code>.</p>
+<p>Note: <code>plcc-python-build</code> does not exist — do not create a reference page for it.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-java-emit.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-java-emit
+
+Emit a Java interpreter from model JSON. Reads model JSON from stdin and
+writes `.java` source files and a `Main.java` entry point to the output
+directory.
+
+Called by [`plcc-lang-emit --target=Java`](plcc-lang-emit.md).
+
+## Usage
+
+```text
+plcc-java-emit --output=DIR [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_19">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory to write generated Java files into. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_20">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-java-emit --output=build/Java
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Write `plcc-java-build.md`**
+
+```markdown
+# plcc-java-build
+
+Compile generated Java source files. Runs `javac` on all `.java` files in the
+output directory.
+
+Called by [`plcc-lang-build --target=Java`](plcc-lang-build.md).
+
+Requires Java JDK 21 or later on `PATH`.
+
+## Usage
+
+```text
+plcc-java-build --output=DIR [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_20">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory containing generated Java files (from <code>plcc-java-emit</code>). Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_21">Examples</h2>
+<pre><code class="language-bash">plcc-java-build --output=build/Java
+</code></pre>
+<pre><code>
+- [ ] **Step 3: Write `plcc-java-run.md`**
+
+```markdown
+# plcc-java-run
+
+Run a compiled Java interpreter. Reads parse tree JSON from stdin and passes
+it to the `Main` class in the output directory.
+
+Called by [`plcc-lang-run --target=Java`](plcc-lang-run.md).
+
+Requires Java JDK 21 or later on `PATH`.
+
+## Usage
+
+```text
+plcc-java-run --output=DIR [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_21">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory containing compiled Java class files. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_22">Examples</h2>
+<pre><code class="language-bash">plcc-java-run --output=build/Java
+</code></pre>
+<pre><code>
+- [ ] **Step 4: Write `plcc-python-emit.md`**
+
+```markdown
+# plcc-python-emit
+
+Emit a Python interpreter from model JSON. Reads model JSON from stdin and
+writes `.py` class files and a `main.py` entry point to the output directory.
+
+Called by [`plcc-lang-emit --target=Python`](plcc-lang-emit.md).
+
+## Usage
+
+```text
+plcc-python-emit --output=DIR [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_22">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory to write generated Python files into. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_23">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-python-emit --output=build/Python
+</code></pre>
+<pre><code>
+- [ ] **Step 5: Write `plcc-python-run.md`**
+
+```markdown
+# plcc-python-run
+
+Run a generated Python interpreter. Reads parse tree JSON from stdin and runs
+`main.py` in the output directory using the system Python.
+
+Called by [`plcc-lang-run --target=Python`](plcc-lang-run.md).
+
+## Usage
+
+```text
+plcc-python-run --output=DIR [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_23">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory containing generated Python files (from <code>plcc-python-emit</code>). Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_24">Examples</h2>
+<pre><code class="language-bash">plcc-python-run --output=build/Python
+</code></pre>
+<pre><code>
+- [ ] **Step 6: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-java-emit.md docs/cli/commands/plcc-java-build.md docs/cli/commands/plcc-java-run.md docs/cli/commands/plcc-python-emit.md docs/cli/commands/plcc-python-run.md
+git commit -m &quot;docs(cli): write language extension reference pages [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-13-reference-page-parser-extension-plcc-parser-table">Task 13: Reference page — parser extension (plcc-parser-table)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-parser-table.md</code></p>
+<p>Source file: <code>src/plcc/parser/table_cli.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-parser-table.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-parser-table
+
+Table-driven LL(1) parser. Reads token JSONL from stdin and emits parse tree
+JSON to stdout. Called by [`plcc-trees --parser=table`](plcc-trees.md)
+(this is the default parser).
+
+## Usage
+
+```text
+plcc-parser-table [-v ...] [options] --ll1=LL1_JSON
+</code></pre>
+<h2 id="arguments-and-options_24">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--ll1=LL1_JSON</code></td>
+<td>Path to LL(1) analysis JSON (output of <code>plcc-ll1</code>). Required.</td>
+</tr>
+<tr>
+<td><code>-t</code>, <code>--trace</code></td>
+<td>Emit <code>parse-step</code> records tracing predict, shift, and complete events.</td>
+</tr>
+<tr>
+<td><code>--hold-markers</code></td>
+<td>Emit a hold marker after a trailing extensible parse (used by interactive mode).</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_25">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
+plcc-tokens build/spec.json samples/ | plcc-parser-table --ll1=build/ll1.json
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-parser-table.md
+git commit -m &quot;docs(cli): write plcc-parser-table reference page [skip ci]&quot;
+</code></pre>
+<hr />
+<h3 id="task-14-reference-pages-diagram-extensions-mermaid-and-plantuml-6-pages">Task 14: Reference pages — diagram extensions (mermaid and plantuml, 6 pages)</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/commands/plcc-mermaid-diagram-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-mermaid-diagram-build.md</code>
+- Modify: <code>docs/cli/commands/plcc-mermaid-diagram-run.md</code>
+- Modify: <code>docs/cli/commands/plcc-plantuml-diagram-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-plantuml-diagram-build.md</code>
+- Modify: <code>docs/cli/commands/plcc-plantuml-diagram-run.md</code></p>
+<p>Source files: <code>src/plcc/diagram/mermaid/emit.py</code>, <code>src/plcc/diagram/mermaid/build.py</code>, <code>src/plcc/diagram/mermaid/run.py</code>, <code>src/plcc/diagram/plantuml/emit.py</code>, <code>src/plcc/diagram/plantuml/build.py</code>, <code>src/plcc/diagram/plantuml/run.py</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write <code>plcc-mermaid-diagram-emit.md</code></strong></li>
+</ul>
+<pre><code class="language-markdown"># plcc-mermaid-diagram-emit
+
+Emit a Mermaid class diagram from model JSON. Reads model JSON from stdin
+and writes a Mermaid `classDiagram` source to stdout.
+
+Called by [`plcc-diagram-emit --format=mermaid`](plcc-diagram-emit.md).
+
+## Usage
+
+```text
+plcc-mermaid-diagram-emit [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_25">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_26">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-mermaid-diagram-emit &gt; diagram.mmd
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Write `plcc-mermaid-diagram-build.md`**
+
+```markdown
+# plcc-mermaid-diagram-build
+
+Render a Mermaid diagram source file to a PNG image using `mmdc`.
+
+Called by [`plcc-diagram-build --format=mermaid`](plcc-diagram-build.md).
+
+Requires `mmdc` on `PATH`: `npm install -g @mermaid-js/mermaid-cli`.
+
+## Usage
+
+```text
+plcc-mermaid-diagram-build --input=FILE --output=FILE [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_26">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--input=FILE</code></td>
+<td>Path to <code>.mmd</code> Mermaid source file. Required.</td>
+</tr>
+<tr>
+<td><code>--output=FILE</code></td>
+<td>Path to write PNG image. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_27">Examples</h2>
+<pre><code class="language-bash">plcc-mermaid-diagram-build --input=diagram.mmd --output=diagram.png
+</code></pre>
+<pre><code>
+- [ ] **Step 3: Write `plcc-mermaid-diagram-run.md`**
+
+```markdown
+# plcc-mermaid-diagram-run
+
+Print the path to the rendered Mermaid diagram image.
+
+Called by [`plcc-diagram-run --format=mermaid`](plcc-diagram-run.md).
+
+## Usage
+
+```text
+plcc-mermaid-diagram-run --input=FILE [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_27">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--input=FILE</code></td>
+<td>Path to PNG image file. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_28">Examples</h2>
+<pre><code class="language-bash">plcc-mermaid-diagram-run --input=diagram.png
+# /path/to/diagram.png
+</code></pre>
+<pre><code>
+- [ ] **Step 4: Write `plcc-plantuml-diagram-emit.md`**
+
+```markdown
+# plcc-plantuml-diagram-emit
+
+Emit a PlantUML class diagram from model JSON. Reads model JSON from stdin
+and writes PlantUML source to stdout (or to a file if `--output` is given).
+
+Called by [`plcc-diagram-emit --format=plantuml`](plcc-diagram-emit.md).
+
+## Usage
+
+```text
+plcc-plantuml-diagram-emit [--output=DIR] [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_28">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Write <code>diagram.puml</code> into this directory. Writes to stdout if omitted.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_29">Examples</h2>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-model | plcc-plantuml-diagram-emit &gt; diagram.puml
+</code></pre>
+<pre><code>
+- [ ] **Step 5: Write `plcc-plantuml-diagram-build.md`**
+
+```markdown
+# plcc-plantuml-diagram-build
+
+Render a PlantUML diagram source file to a PNG image. Sends the source to the
+public `plantuml.com` API and writes the returned PNG to disk. No local
+PlantUML installation required.
+
+Called by [`plcc-diagram-build --format=plantuml`](plcc-diagram-build.md).
+
+## Usage
+
+```text
+plcc-plantuml-diagram-build --input=FILE --output=FILE [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_29">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--input=FILE</code></td>
+<td>Path to <code>.puml</code> PlantUML source file. Required.</td>
+</tr>
+<tr>
+<td><code>--output=FILE</code></td>
+<td>Path to write PNG image. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_30">Examples</h2>
+<pre><code class="language-bash">plcc-plantuml-diagram-build --input=diagram.puml --output=diagram.png
+</code></pre>
+<pre><code>
+- [ ] **Step 6: Write `plcc-plantuml-diagram-run.md`**
+
+```markdown
+# plcc-plantuml-diagram-run
+
+Print the path to the rendered PlantUML diagram image.
+
+Called by [`plcc-diagram-run --format=plantuml`](plcc-diagram-run.md).
+
+## Usage
+
+```text
+plcc-plantuml-diagram-run --input=FILE [-v ...] [options]
+</code></pre>
+<h2 id="arguments-and-options_30">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--input=FILE</code></td>
+<td>Path to PNG image file. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_31">Examples</h2>
+<pre><code class="language-bash">plcc-plantuml-diagram-run --input=diagram.png
+# /path/to/diagram.png
+</code></pre>
+<pre><code>
+- [ ] **Step 7: Verify build**
+
+```bash
+mkdocs build --strict 2&gt;&amp;1 | tail -5
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 8: Final commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/cli/commands/plcc-mermaid-diagram-emit.md docs/cli/commands/plcc-mermaid-diagram-build.md docs/cli/commands/plcc-mermaid-diagram-run.md docs/cli/commands/plcc-plantuml-diagram-emit.md docs/cli/commands/plcc-plantuml-diagram-build.md docs/cli/commands/plcc-plantuml-diagram-run.md
+git commit -m &quot;docs(cli): write diagram extension reference pages [skip ci]&quot;
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
