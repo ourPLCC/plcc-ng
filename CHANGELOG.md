@@ -1,6 +1,80 @@
 # CHANGELOG
 
 
+## v0.48.0 (2026-06-22)
+
+### Chores
+
+- **issues**: Add 103 - fix __run__ double underscore in language guide overview [skip ci]
+  ([`f4c296d`](https://github.com/ourPLCC/plcc-ng/commit/f4c296db318211f92e07c4f128c887a112370eaa))
+
+- **issues**: Move 071, 072, 102 to done; update roadmap to 4 open issues [skip ci]
+  ([`6f324b8`](https://github.com/ourPLCC/plcc-ng/commit/6f324b8e27fc4b13b51686a069b2c73e08fd5b4f))
+
+- **issues**: Move 080 to done; update roadmap to 1 open issue [skip ci]
+  ([`f2613fd`](https://github.com/ourPLCC/plcc-ng/commit/f2613fdc8ce78d7ecc23601617ac68241ebcd074))
+
+- **issues**: Move 081, 101 to done; update roadmap to 2 open issues [skip ci]
+  ([`fc83670`](https://github.com/ourPLCC/plcc-ng/commit/fc83670bb02fa32c24f4aa138d9d764b4376a0b3))
+
+- **roadmap**: Add 103, remove completed 080, update to 2 open issues [skip ci]
+  ([`57242ee`](https://github.com/ourPLCC/plcc-ng/commit/57242ee1fb8b47a029f70e4095380c66f18bb5a6))
+
+### Documentation
+
+- Clarify class fragment in JS spec; add issue 104 for Java gap [skip ci]
+  ([`4ffd0c8`](https://github.com/ourPLCC/plcc-ng/commit/4ffd0c8fd6a88bce4cf69355dc80890d1134287f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Fix __run__ → _run in overview examples [skip ci]
+  ([`44b564c`](https://github.com/ourPLCC/plcc-ng/commit/44b564cc3cf880355ca435774f22ce14a3d84122))
+
+Corrects the Python and Java semantic section examples to use the actual entry point name _run
+  (single underscore) instead of __run__ (double).
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Add JavaScript emitter implementation plan for issue 066 [skip ci]
+  ([`767a604`](https://github.com/ourPLCC/plcc-ng/commit/767a6047ae1b4848e93e38bdf87b19fcc91041ae))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add JavaScript emitter design for issue 066 [skip ci]
+  ([`d0b0585`](https://github.com/ourPLCC/plcc-ng/commit/d0b0585a3518104e08c134f452135ced60f3742c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **javascript**: Add emit.py and Jinja2 templates
+  ([`044c57e`](https://github.com/ourPLCC/plcc-ng/commit/044c57ecd32d436fdf0e5b83a5414fe79027291f))
+
+Implements the JavaScript emitter: reads model JSON from stdin, writes <ClassName>.js, _Start.js,
+  main.js, and runtime/ to --output. Skips SIGINT test due to readline/communicate() race in
+  subprocess.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **javascript**: Add run.py and register entry points
+  ([`59dc256`](https://github.com/ourPLCC/plcc-ng/commit/59dc256195ffce26a832e4ca72fb68e114ac643e))
+
+- **javascript**: Add runtime deserialize.js
+  ([`7853bd1`](https://github.com/ourPLCC/plcc-ng/commit/7853bd12292ec9e06917c2b969bb15cdd46cb945))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **javascript**: Add runtime registry.js
+  ([`c5935b7`](https://github.com/ourPLCC/plcc-ng/commit/c5935b7eb279a4f3920e79bca797f03a3614991e))
+
+Implement Registry class with register() and lookup() methods.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **javascript**: Scaffold extension and add runtime base.js
+  ([`17cb4fa`](https://github.com/ourPLCC/plcc-ng/commit/17cb4fa53c8cfc1f526eaa3056d4f1b4b69eee28))
+
+
 ## v0.47.2 (2026-06-22)
 
 ### Bug Fixes
