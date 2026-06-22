@@ -1,6 +1,6 @@
 # Roadmap
 
-7 open issues as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
+4 open issues as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
 
 ## Phase 1 — Docs: quick wins (independent, any order)
 
@@ -8,9 +8,6 @@
 | --- | --- | --- |
 | [081](issues/081-docs-remove-plcc-make-from-examples.md) | Remove `plcc-make` from examples | `examples.md` still tells users to run it directly |
 | [101](issues/101-docs-acknowledgments-page.md) | Acknowledgments page | Credit contributors, institutions, and key dependencies |
-| [071](issues/071-docs-upgrade-guide.md) | Upgrade guide | New page near the install docs |
-| [072](issues/072-docs-pin-version.md) | Version-pinning instructions | Pair with 071 — same page or adjacent |
-| [102](issues/102-docs-migration-from-plcc.md) | Migration guide from PLCC to PLCC-ng | Pair with 071/072 — all belong in the same "getting/staying on PLCC-ng" cluster |
 
 ## Phase 2 — Docs: site features
 
