@@ -625,24 +625,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -659,80 +641,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#comments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-separators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section separators
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#includes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Includes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional sections
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What next
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -2321,26 +2229,47 @@
 <h1 id="language-guide">Language Guide</h1>
 <p>A plcc-ng specification describes
 a language's tokens, syntax, and semantics.</p>
-<pre><code class="language-text"># Lexical section
-skip WHITESPACE /\s+/
-token NUM /\d+/
-
-%
-
-# Syntactic section
-&lt;Exp&gt; ::= &lt;NUM&gt;
-
-%
-
-# Semantic section
-Python
-
-Exp
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>```text</p>
+<h1 id="lexical-section">Lexical section</h1>
+<p>skip WHITESPACE /\s+/
+token NUM /\d+/</p>
+<p>%</p>
+<h1 id="syntactic-section">Syntactic section</h1>
+<p><Exp> ::= <NUM></p>
+<p>%</p>
+<h1 id="semantic-section">Semantic section</h1>
+<p>Python</p>
+<p>Exp
 %%%
-def __run__(self):
-    print(&quot;Hello&quot;)
+def <strong>run</strong>(self):
+    print("Hello")
 %%%
-</code></pre>
+```</p>
+</div>
+<div class="tabbed-block">
+<p>```text</p>
+<h1 id="lexical-section_1">Lexical section</h1>
+<p>skip WHITESPACE /\s+/
+token NUM /\d+/</p>
+<p>%</p>
+<h1 id="syntactic-section_1">Syntactic section</h1>
+<p><Exp> ::= <NUM></p>
+<p>%</p>
+<h1 id="semantic-section_1">Semantic section</h1>
+<p>Java</p>
+<p>Exp
+%%%
+public void <strong>run</strong>() {
+    System.out.println("Hello");
+}
+%%%
+```</p>
+</div>
+</div>
+</div>
 <h2 id="comments">Comments</h2>
 <p>Comments start with <code>#</code> and end at the end of the current line.
 Comments may appear anywhere except in semantic section code blocks.</p>
@@ -2386,6 +2315,8 @@ to develop and test a language incrementally.</p>
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -2418,7 +2349,7 @@ to develop and test a language incrementally.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

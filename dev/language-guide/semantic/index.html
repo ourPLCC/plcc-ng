@@ -2378,25 +2378,33 @@ from the production rules given in the syntactic section.
 The <a href="../syntactic/">syntactic section</a> describes the classes
 and their fields that are generated from production rules.</p>
 <p>To inject code into a class, use the following construct.</p>
-<pre><code class="language-text">%
-Python
-
-Exp
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>```text
+%
+Python</p>
+<p>Exp
 %%%
 def _run(self):
-    print(&quot;Hello&quot;)
+    print("Hello")
 %%%
-</code></pre>
-<pre><code class="language-text">%
-Java
-
-Exp
+```</p>
+</div>
+<div class="tabbed-block">
+<p>```text
+%
+Java</p>
+<p>Exp
 %%%
 public void _run() {
-    System.out.println(&quot;Hello&quot;);
+    System.out.println("Hello");
 }
 %%%
-</code></pre>
+```</p>
+</div>
+</div>
+</div>
 <p>Since whatever you put within the <code>%%%</code> lines is injected into the body
 of the class, you can add static or instance methods, class or instance variables,
 or even inner classes. Anything you can place in the body of a class, you
@@ -2451,19 +2459,41 @@ Append the hook name to the class name with a colon:</p>
 </tbody>
 </table>
 <h3 id="example">Example</h3>
-<pre><code class="language-text">WholeExp:import
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Python</label><label for="__tabbed_2_2">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>```text
+WholeExp:import
 %%%
 import sys
-%%%
-
-WholeExp
+%%%</p>
+<p>WholeExp
 %%%
 def eval(self):
     x = int(self.whole.lexeme)
-    sys.stderr.write(f&quot;eval: {x}\n&quot;)
+    sys.stderr.write(f"eval: {x}\n")
     return x
 %%%
-</code></pre>
+```</p>
+</div>
+<div class="tabbed-block">
+<p>```text
+WholeExp:import
+%%%
+import java.io.*;
+%%%</p>
+<p>WholeExp
+%%%
+public int eval() {
+    int x = Integer.parseInt(whole.lexeme);
+    System.err.println("eval: " + x);
+    return x;
+}
+%%%
+```</p>
+</div>
+</div>
+</div>
 <p>You can have multiple code blocks that refer to the same class.
 The blocks are injected in the order they appear in the semantic section.</p>
 <h2 id="adding-standalone-classes">Adding standalone classes</h2>
@@ -2473,14 +2503,31 @@ belong to a generated grammar class.</p>
 a nonterminal in the syntactic section.
 When you do, plcc-ng creates a file based on the class name.
 The block contents are written verbatim to that file.</p>
-<pre><code class="language-text">Helper      # Creates a file named Helper.py
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Python</label><label for="__tabbed_3_2">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><code>text
+Helper      # Creates a file named Helper.py
 %%%
 class Helper:
     @staticmethod
     def double(x):
         return x * 2
+%%%</code></p>
+</div>
+<div class="tabbed-block">
+<p><code>text
+Helper      # Creates a file named Helper.java
 %%%
-</code></pre>
+public class Helper {
+    public static int doubled(int x) {
+        return x * 2;
+    }
+}
+%%%</code></p>
+</div>
+</div>
+</div>
 <h2 id="packages-and-importsincludes">Packages and imports/includes</h2>
 <p>Each generated class is placed in a separate file with the same name
 as the class. All files are placed in the same package.</p>
@@ -2505,6 +2552,8 @@ add an appropriate relative import.</p>
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -2537,7 +2586,7 @@ add an appropriate relative import.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>

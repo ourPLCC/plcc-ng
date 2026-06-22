@@ -582,52 +582,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#2-scan-source-text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Scan source text
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-parse-source-text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Parse source text
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-run-the-program" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Run the program
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Next
-      
-    </span>
-  </a>
   
 </li>
       
@@ -2367,27 +2323,53 @@
 Running a program will print their sum.</p>
 <h3 id="1-define-the-language">1. Define the language</h3>
 <p>Create a file named <code>spec.plcc</code>:</p>
-<pre><code class="language-text"># Define the tokens of the language.
-skip  WHITESPACE '\s+'
-token NUM '\d+'
-
-%
-
-# Define the structure of the language.
-# A program consists of a sequence of numbers.
-&lt;Program&gt; **= &lt;NUM:num&gt;
-
-%
-
-# Define what happens when a program is run.
-Python
-
-Program
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>```text</p>
+<h1 id="define-the-tokens-of-the-language">Define the tokens of the language.</h1>
+<p>skip  WHITESPACE '\s+'
+token NUM '\d+'</p>
+<p>%</p>
+<h1 id="define-the-structure-of-the-language">Define the structure of the language.</h1>
+<h1 id="a-program-consists-of-a-sequence-of-numbers">A program consists of a sequence of numbers.</h1>
+<p><Program> **= <NUM:num></p>
+<p>%</p>
+<h1 id="define-what-happens-when-a-program-is-run">Define what happens when a program is run.</h1>
+<p>Python</p>
+<p>Program
 %%%
 def _run(self):
   print(sum(int(str(num)) for num in self.numList))
 %%%
-</code></pre>
+```</p>
+</div>
+<div class="tabbed-block">
+<p>```text</p>
+<h1 id="define-the-tokens-of-the-language_1">Define the tokens of the language.</h1>
+<p>skip  WHITESPACE '\s+'
+token NUM '\d+'</p>
+<p>%</p>
+<h1 id="define-the-structure-of-the-language_1">Define the structure of the language.</h1>
+<h1 id="a-program-consists-of-a-sequence-of-numbers_1">A program consists of a sequence of numbers.</h1>
+<p><Program> **= <NUM:num></p>
+<p>%</p>
+<h1 id="define-what-happens-when-a-program-is-run_1">Define what happens when a program is run.</h1>
+<p>Java</p>
+<p>Program
+%%%
+public void _run() {
+    int sum = 0;
+    for (NUM num : numList) {
+        sum += Integer.parseInt(num.lexeme);
+    }
+    System.out.println(sum);
+}
+%%%
+```</p>
+</div>
+</div>
+</div>
 <p>PLCC-ng automatically generates fields such as <code>numList</code> from the grammar.
 The <a href="../language-guide/">Language Guide</a> explains how this mapping works.</p>
 <h3 id="2-scan-source-text">2. Scan source text</h3>
@@ -2442,6 +2424,8 @@ and executed it with <code>plcc-rep</code>.</p>
             </div>
           
           
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
@@ -2474,7 +2458,7 @@ and executed it with <code>plcc-rep</code>.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>

@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-094-docs-follow-up/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-080-tabbed-code-blocks/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Issue 094 Docs Follow-Up Implementation Plan - plcc-ng</title>
+        <title>Tabbed Code Blocks Implementation Plan - plcc-ng</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#issue-094-docs-follow-up-implementation-plan" class="md-skip">
+        <a href="#tabbed-code-blocks-implementation-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Issue 094 Docs Follow-Up Implementation Plan
+              Tabbed Code Blocks Implementation Plan
             
           </span>
         </div>
@@ -2205,310 +2205,656 @@
   
 
 
-<h1 id="issue-094-docs-follow-up-implementation-plan">Issue 094 Docs Follow-Up Implementation Plan</h1>
+<h1 id="tabbed-code-blocks-implementation-plan">Tabbed Code Blocks Implementation Plan</h1>
 <blockquote>
 <p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
 </blockquote>
-<p><strong>Goal:</strong> Update docs and the 093 issue file to reflect landed changes from issues 084, 089, and 095, and verify all output examples against the real tool.</p>
-<p><strong>Architecture:</strong> Four independent file edits. No new code. Each task modifies one file and commits. Order: 093 note → primitives.md → orchestrators.md → examples.md.</p>
-<p><strong>Tech Stack:</strong> Markdown docs, PLCC CLI tools (<code>plcc-make</code>, <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>, <code>plcc-ll1</code>).</p>
+<p><strong>Goal:</strong> Add Python/Java content tabs to every page with a semantic section example so users can view only the language they care about.</p>
+<p><strong>Architecture:</strong> Enable MkDocs Material's native content tabs feature (<code>content.tabs</code> + <code>content.tabs.link</code>) and the required <code>pymdownx.tabbed</code> Markdown extension; then convert or augment code blocks on four pages. Tab labels are exactly <code>"Python"</code> and <code>"Java"</code> so that cross-page tab linking works automatically.</p>
+<p><strong>Tech Stack:</strong> MkDocs Material 9.x, pymdownx.tabbed (bundled with mkdocs-material), Markdown</p>
 <h2 id="global-constraints">Global Constraints</h2>
 <ul>
-<li>All work happens in the <code>.worktrees/094-docs-status-after-initial-branch</code> worktree on branch <code>094-docs-status-after-initial-branch</code>.</li>
-<li>Commit subjects must include <code>[skip ci]</code> for docs-only commits.</li>
-<li>Do not modify any files outside the four listed below.</li>
+<li>Python tab always appears first (works out of the box; Java requires a separate JDK install)</li>
+<li>Tab labels are exactly the strings <code>Python</code> and <code>Java</code> — no variation — so <code>content.tabs.link</code> syncs them across pages</li>
+<li>Commits on this branch: conventional-commit style; all commits affecting <code>docs/</code> or <code>mkdocs.yml</code> must NOT append <code>[skip ci]</code> — the docs deployment workflow must run</li>
+<li>Build command for verification: <code>PATH=/workspaces/plcc-ng/.venv/bin:$PATH mkdocs build --strict</code></li>
+<li>Working directory for all commands: <code>/workspaces/plcc-ng/.worktrees/issue-080-tabbed-code-blocks</code></li>
+<li>pymdownx.tabbed requires <code>alternate_style: true</code> for MkDocs Material v9+</li>
 </ul>
 <hr />
-<h3 id="task-1-add-docs-responsibility-note-to-093-issue">Task 1: Add docs responsibility note to 093 issue</h3>
+<h3 id="task-1-enable-content-tabs-in-mkdocsyml">Task 1: Enable content tabs in mkdocs.yml</h3>
 <p><strong>Files:</strong>
-- Modify: <code>dev-docs/issues/093-incremental-parsing-repl.md</code></p>
+- Modify: <code>mkdocs.yml</code></p>
 <p><strong>Interfaces:</strong>
-- Consumes: nothing
-- Produces: nothing (standalone docs edit)</p>
+- Produces: <code>content.tabs</code> and <code>content.tabs.link</code> features active; <code>pymdownx.tabbed</code> extension registered. All subsequent tasks depend on this.</p>
 <ul>
-<li>[ ] <strong>Step 1: Open the file and read it</strong></li>
+<li>[ ] <strong>Step 1: Add features and markdown_extensions to mkdocs.yml</strong></li>
 </ul>
-<p>Read <code>dev-docs/issues/093-incremental-parsing-repl.md</code> in full.</p>
+<p>Open <code>mkdocs.yml</code>. Make two edits:</p>
+<ol>
+<li>In <code>theme.features</code>, add the two new entries after <code>search.suggest</code>:</li>
+</ol>
+<pre><code class="language-yaml">theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - content.tabs
+    - content.tabs.link
+</code></pre>
+<ol>
+<li>Append a new top-level <code>markdown_extensions</code> block at the end of the file (after the <code>extra:</code> block):</li>
+</ol>
+<pre><code class="language-yaml">markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true
+</code></pre>
+<p>The complete final <code>mkdocs.yml</code> looks like this:</p>
+<pre><code class="language-yaml">site_name: plcc-ng
+site_url: https://ourplcc.github.io/plcc-ng/
+repo_url: https://github.com/ourPLCC/plcc-ng
+repo_name: ourPLCC/plcc-ng
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - content.tabs
+    - content.tabs.link
+  palette:
+    - media: &quot;(prefers-color-scheme: light)&quot;
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: &quot;(prefers-color-scheme: dark)&quot;
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - include-markdown
+  - mike
+  - kroki:
+      fence_prefix: ''
+      tag_format: svg
+
+nav:
+  - Home: index.md
+  - Quick Start: quick-start.md
+  - Installation: installation.md
+  - Migration from PLCC: migration.md
+  - Language Guide:
+    - Overview: language-guide/index.md
+    - Lexical Section: language-guide/lexical.md
+    - Syntactic Section: language-guide/syntactic.md
+    - Semantic Section: language-guide/semantic.md
+    - Examples: language-guide/examples.md
+  - CLI:
+    - Overview: cli/index.md
+    - Guide:
+      - Author-facing commands: cli/guide/author-commands.md
+      - Under the hood: cli/guide/under-the-hood.md
+      - Language extensions: cli/guide/language-extensions.md
+      - Parser extensions: cli/guide/parser-extensions.md
+      - Diagram extensions: cli/guide/diagram-extensions.md
+    - All Commands:
+      - plcc-diagram: cli/commands/plcc-diagram.md
+      - plcc-diagram-build: cli/commands/plcc-diagram-build.md
+      - plcc-diagram-emit: cli/commands/plcc-diagram-emit.md
+      - plcc-diagram-list: cli/commands/plcc-diagram-list.md
+      - plcc-diagram-run: cli/commands/plcc-diagram-run.md
+      - plcc-java-build: cli/commands/plcc-java-build.md
+      - plcc-java-emit: cli/commands/plcc-java-emit.md
+      - plcc-java-run: cli/commands/plcc-java-run.md
+      - plcc-lang-build: cli/commands/plcc-lang-build.md
+      - plcc-lang-emit: cli/commands/plcc-lang-emit.md
+      - plcc-lang-list: cli/commands/plcc-lang-list.md
+      - plcc-lang-run: cli/commands/plcc-lang-run.md
+      - plcc-ll1: cli/commands/plcc-ll1.md
+      - plcc-make: cli/commands/plcc-make.md
+      - plcc-mermaid-diagram-build: cli/commands/plcc-mermaid-diagram-build.md
+      - plcc-mermaid-diagram-emit: cli/commands/plcc-mermaid-diagram-emit.md
+      - plcc-mermaid-diagram-run: cli/commands/plcc-mermaid-diagram-run.md
+      - plcc-model: cli/commands/plcc-model.md
+      - plcc-parse: cli/commands/plcc-parse.md
+      - plcc-parser-list: cli/commands/plcc-parser-list.md
+      - plcc-parser-table: cli/commands/plcc-parser-table.md
+      - plcc-plantuml-diagram-build: cli/commands/plcc-plantuml-diagram-build.md
+      - plcc-plantuml-diagram-emit: cli/commands/plcc-plantuml-diagram-emit.md
+      - plcc-plantuml-diagram-run: cli/commands/plcc-plantuml-diagram-run.md
+      - plcc-python-emit: cli/commands/plcc-python-emit.md
+      - plcc-python-run: cli/commands/plcc-python-run.md
+      - plcc-rep: cli/commands/plcc-rep.md
+      - plcc-scan: cli/commands/plcc-scan.md
+      - plcc-spec: cli/commands/plcc-spec.md
+      - plcc-tokens: cli/commands/plcc-tokens.md
+      - plcc-trees: cli/commands/plcc-trees.md
+      - plcc-version: cli/commands/plcc-version.md
+  - Instructor Guide:
+    - Overview: instructor-guide/index.md
+    - Evaluating plcc-ng: instructor-guide/evaluating.md
+    - Adopting plcc-ng: instructor-guide/adopting.md
+  - Changelog: changelog.md
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true
+</code></pre>
 <ul>
-<li>[ ] <strong>Step 2: Append the docs responsibility section</strong></li>
+<li>[ ] <strong>Step 2: Verify the build succeeds</strong></li>
 </ul>
-<p>Add the following at the end of the file (after the last existing section):</p>
-<p>```markdown</p>
-<p>## Docs responsibility</p>
-<p>When this issue lands, update <code>docs/cli/orchestrators.md</code>:</p>
-<ul>
-<li>Resolve the <code>&lt;!-- TODO: verify how to suppress interactive mode (&lt; /dev/null or EOF behavior) --&gt;</code> comment in the <code>plcc-rep</code> section.</li>
-<li>
-<p>Update the "Evaluate a file only (no interactive mode)" example to reflect the new behavior.
-  ```</p>
-</li>
-<li>
-<p>[ ] <strong>Step 3: Commit</strong></p>
-</li>
-</ul>
-<p><code>bash
-  git add dev-docs/issues/093-incremental-parsing-repl.md
-  git commit -m "docs(093): note docs responsibility for orchestrators.md [skip ci]"</code></p>
-<hr />
-<h3 id="task-2-document-plcc-ll1-in-primitivesmd-and-fix-plcc-trees">Task 2: Document <code>plcc-ll1</code> in <code>primitives.md</code> and fix <code>plcc-trees</code></h3>
-<p><strong>Files:</strong>
-- Modify: <code>docs/cli/primitives.md</code></p>
-<p><strong>Interfaces:</strong>
-- Consumes: nothing
-- Produces: nothing (standalone docs edit)</p>
-<p><code>plcc-ll1</code> reads spec JSON from stdin (output of <code>plcc-spec</code>) and emits LL(1) analysis JSON to stdout. It belongs between <code>plcc-tokens</code> and <code>plcc-trees</code> in the doc.</p>
-<ul>
-<li>[ ] <strong>Step 1: Add <code>plcc-ll1</code> section after <code>plcc-tokens</code></strong></li>
-</ul>
-<p>Insert the following block between the <code>plcc-tokens</code> section and the <code>plcc-trees</code> section (after the <code>---</code> that follows <code>plcc-tokens</code>'s example):</p>
-<p>````markdown
-  ## plcc-ll1</p>
-<p>Perform LL(1) analysis on a grammar spec.</p>
-<p><code>text
-  plcc-ll1 [-v ...]</code></p>
-<p>Reads spec JSON from stdin (output of <code>plcc-spec</code>); emits LL(1) analysis JSON to stdout.</p>
-<p><strong>Example:</strong></p>
-<p><code>bash
-  plcc-spec spec.plcc | plcc-ll1 &gt; ll1.json</code></p>
-<hr />
-<p>````</p>
-<ul>
-<li>[ ] <strong>Step 2: Remove the TODO comment from <code>plcc-trees</code> and add a pipeline example</strong></li>
-</ul>
-<p>In the <code>plcc-trees</code> section, replace:</p>
-<p>```markdown
-  <!-- TODO: document how to obtain LL1_JSON (output of plcc-ll1) --></p>
-<p>```</p>
-<p>with:</p>
-<p>````markdown
-  <strong>Example:</strong></p>
-<p><code>bash
-  plcc-spec spec.plcc | plcc-ll1 &gt; ll1.json
-  plcc-spec spec.plcc | plcc-tokens - samples | plcc-trees --ll1=ll1.json</code>
-  ````</p>
+<pre><code class="language-bash">PATH=/workspaces/plcc-ng/.venv/bin:$PATH mkdocs build --strict 2&gt;&amp;1
+</code></pre>
+<p>Expected: exits 0, last line is <code>INFO    -  Documentation built in X.XX seconds</code>.</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add docs/cli/primitives.md
-  git commit -m "docs(094): document plcc-ll1 and fix plcc-trees example [skip ci]"</code></p>
+<pre><code class="language-bash">git add mkdocs.yml
+git commit -m &quot;docs(mkdocs): enable content tabs feature and pymdownx.tabbed extension&quot;
+</code></pre>
 <hr />
-<h3 id="task-3-remove-tool-from-plcc-rep-in-orchestratorsmd">Task 3: Remove <code>--tool</code> from <code>plcc-rep</code> in <code>orchestrators.md</code></h3>
+<h3 id="task-2-tab-the-quick-start-grammar">Task 2: Tab the quick-start grammar</h3>
 <p><strong>Files:</strong>
-- Modify: <code>docs/cli/orchestrators.md</code></p>
+- Modify: <code>docs/quick-start.md</code></p>
 <p><strong>Interfaces:</strong>
-- Consumes: nothing
-- Produces: nothing (standalone docs edit)</p>
-<p>Issue 095 removed named tools and the <code>--tool</code> flag entirely.</p>
+- Consumes: <code>content.tabs</code> + <code>pymdownx.tabbed</code> from Task 1
+- Produces: <code>spec.plcc</code> shown in two tabs, Python and Java, both copy-pasteable</p>
 <ul>
-<li>[ ] <strong>Step 1: Remove the <code>--tool=NAME</code> row from the plcc-rep options table</strong></li>
+<li>[ ] <strong>Step 1: Replace the single grammar block with a tabbed block</strong></li>
 </ul>
-<p>In the <code>plcc-rep</code> section, the options table currently contains:</p>
-<p><code>markdown
-  | `--tool=NAME` | Semantic section to run. Inferred automatically when only one exists. |</code></p>
-<p>Delete that entire row.</p>
+<p>Find this block in <code>docs/quick-start.md</code> (the entire fenced code block beginning with <code># Define the tokens</code>):</p>
+<pre><code class="language-markdown">```text
+# Define the tokens of the language.
+skip  WHITESPACE '\s+'
+token NUM '\d+'
+
+%
+
+# Define the structure of the language.
+# A program consists of a sequence of numbers.
+&lt;Program&gt; **= &lt;NUM:num&gt;
+
+%
+
+# Define what happens when a program is run.
+Python
+
+Program
+%%%
+def _run(self):
+  print(sum(int(str(num)) for num in self.numList))
+%%%
+```
+</code></pre>
+<p>Replace it with:</p>
+<pre><code class="language-markdown">=== &quot;Python&quot;
+    ```text
+    # Define the tokens of the language.
+    skip  WHITESPACE '\s+'
+    token NUM '\d+'
+
+    %
+
+    # Define the structure of the language.
+    # A program consists of a sequence of numbers.
+    &lt;Program&gt; **= &lt;NUM:num&gt;
+
+    %
+
+    # Define what happens when a program is run.
+    Python
+
+    Program
+    %%%
+    def _run(self):
+      print(sum(int(str(num)) for num in self.numList))
+    %%%
+    ```
+
+=== &quot;Java&quot;
+    ```text
+    # Define the tokens of the language.
+    skip  WHITESPACE '\s+'
+    token NUM '\d+'
+
+    %
+
+    # Define the structure of the language.
+    # A program consists of a sequence of numbers.
+    &lt;Program&gt; **= &lt;NUM:num&gt;
+
+    %
+
+    # Define what happens when a program is run.
+    Java
+
+    Program
+    %%%
+    public void _run() {
+        int sum = 0;
+        for (NUM num : numList) {
+            sum += Integer.parseInt(num.lexeme);
+        }
+        System.out.println(sum);
+    }
+    %%%
+    ```
+</code></pre>
+<p><strong>Indentation note:</strong> The <code>=== "Python"</code> and <code>=== "Java"</code> lines are at column 0. Everything inside each tab block is indented exactly 4 spaces (including the opening and closing <code>```</code> fence markers).</p>
 <ul>
-<li>[ ] <strong>Step 2: Update the plcc-rep examples</strong></li>
+<li>[ ] <strong>Step 2: Verify the build succeeds</strong></li>
 </ul>
-<p>Replace the current example block:</p>
-<p>```markdown
-  <strong>Example:</strong></p>
-<p>```bash
-  # Run the 'subtract' semantic section against samples, then enter interactive mode
-  plcc-rep -s subtract.plcc --tool=subtract samples</p>
-<p># Evaluate a file only (no interactive mode)
-  plcc-rep -s subtract.plcc samples &lt; /dev/null
-  <code></code></p>
-<p>with:</p>
-<p>````markdown
-  <strong>Example:</strong></p>
-<p>```bash
-  # Run against samples, then enter interactive mode
-  plcc-rep -s subtract.plcc samples</p>
-<p># Evaluate a file only (no interactive mode)
-  plcc-rep -s subtract.plcc samples &lt; /dev/null
-  ```
-  ````</p>
-<p>Leave the <code>&lt;!-- TODO: verify how to suppress interactive mode (&lt; /dev/null or EOF behavior) --&gt;</code> comment in place — 093 owns that.</p>
+<pre><code class="language-bash">PATH=/workspaces/plcc-ng/.venv/bin:$PATH mkdocs build --strict 2&gt;&amp;1
+</code></pre>
+<p>Expected: exits 0.</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add docs/cli/orchestrators.md
-  git commit -m "docs(094): remove --tool from plcc-rep (095) [skip ci]"</code></p>
+<pre><code class="language-bash">git add docs/quick-start.md
+git commit -m &quot;docs(quick-start): add Java tab to semantic section example&quot;
+</code></pre>
 <hr />
-<h3 id="task-4-full-pass-on-language-guideexamplesmd">Task 4: Full pass on <code>language-guide/examples.md</code></h3>
+<h3 id="task-3-tab-the-language-guide-overview-grammar">Task 3: Tab the language-guide overview grammar</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/language-guide/index.md</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>content.tabs</code> + <code>pymdownx.tabbed</code> from Task 1
+- Produces: introductory grammar example shown in two tabs</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace the single grammar block with a tabbed block</strong></li>
+</ul>
+<p>Find this block in <code>docs/language-guide/index.md</code>:</p>
+<pre><code class="language-markdown">```text
+# Lexical section
+skip WHITESPACE /\s+/
+token NUM /\d+/
+
+%
+
+# Syntactic section
+&lt;Exp&gt; ::= &lt;NUM&gt;
+
+%
+
+# Semantic section
+Python
+
+Exp
+%%%
+def __run__(self):
+    print(&quot;Hello&quot;)
+%%%
+```
+</code></pre>
+<p>Replace it with:</p>
+<pre><code class="language-markdown">=== &quot;Python&quot;
+    ```text
+    # Lexical section
+    skip WHITESPACE /\s+/
+    token NUM /\d+/
+
+    %
+
+    # Syntactic section
+    &lt;Exp&gt; ::= &lt;NUM&gt;
+
+    %
+
+    # Semantic section
+    Python
+
+    Exp
+    %%%
+    def __run__(self):
+        print(&quot;Hello&quot;)
+    %%%
+    ```
+
+=== &quot;Java&quot;
+    ```text
+    # Lexical section
+    skip WHITESPACE /\s+/
+    token NUM /\d+/
+
+    %
+
+    # Syntactic section
+    &lt;Exp&gt; ::= &lt;NUM&gt;
+
+    %
+
+    # Semantic section
+    Java
+
+    Exp
+    %%%
+    public void __run__() {
+        System.out.println(&quot;Hello&quot;);
+    }
+    %%%
+    ```
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Verify the build succeeds</strong></li>
+</ul>
+<pre><code class="language-bash">PATH=/workspaces/plcc-ng/.venv/bin:$PATH mkdocs build --strict 2&gt;&amp;1
+</code></pre>
+<p>Expected: exits 0.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/language-guide/index.md
+git commit -m &quot;docs(language-guide): add Java tab to overview grammar example&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-tab-the-semantic-section-page">Task 4: Tab the semantic section page</h3>
+<p><strong>Files:</strong>
+- Modify: <code>docs/language-guide/semantic.md</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>content.tabs</code> + <code>pymdownx.tabbed</code> from Task 1
+- Produces: three code block groups on semantic.md converted to tabs</p>
+<p>There are three places to change on this page. Make all three edits before running the build.</p>
+<ul>
+<li>[ ] <strong>Step 1: Tab the basic code injection example</strong></li>
+</ul>
+<p>Find this content (two consecutive fenced blocks starting after "use the following construct"):</p>
+<pre><code class="language-markdown">```text
+%
+Python
+
+Exp
+%%%
+def _run(self):
+    print(&quot;Hello&quot;)
+%%%
+```
+
+```text
+%
+Java
+
+Exp
+%%%
+public void _run() {
+    System.out.println(&quot;Hello&quot;);
+}
+%%%
+```
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-markdown">=== &quot;Python&quot;
+    ```text
+    %
+    Python
+
+    Exp
+    %%%
+    def _run(self):
+        print(&quot;Hello&quot;)
+    %%%
+    ```
+
+=== &quot;Java&quot;
+    ```text
+    %
+    Java
+
+    Exp
+    %%%
+    public void _run() {
+        System.out.println(&quot;Hello&quot;);
+    }
+    %%%
+    ```
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Tab the hooks example</strong></li>
+</ul>
+<p>Find this block (under the <code>### Example</code> heading in the Hooks section):</p>
+<pre><code class="language-markdown">```text
+WholeExp:import
+%%%
+import sys
+%%%
+
+WholeExp
+%%%
+def eval(self):
+    x = int(self.whole.lexeme)
+    sys.stderr.write(f&quot;eval: {x}\n&quot;)
+    return x
+%%%
+```
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-markdown">=== &quot;Python&quot;
+    ```text
+    WholeExp:import
+    %%%
+    import sys
+    %%%
+
+    WholeExp
+    %%%
+    def eval(self):
+        x = int(self.whole.lexeme)
+        sys.stderr.write(f&quot;eval: {x}\n&quot;)
+        return x
+    %%%
+    ```
+
+=== &quot;Java&quot;
+    ```text
+    WholeExp:import
+    %%%
+    import java.io.*;
+    %%%
+
+    WholeExp
+    %%%
+    public int eval() {
+        int x = Integer.parseInt(whole.lexeme);
+        System.err.println(&quot;eval: &quot; + x);
+        return x;
+    }
+    %%%
+    ```
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Tab the standalone classes example</strong></li>
+</ul>
+<p>Find this block (under "## Adding standalone classes"):</p>
+<pre><code class="language-markdown">```text
+Helper      # Creates a file named Helper.py
+%%%
+class Helper:
+    @staticmethod
+    def double(x):
+        return x * 2
+%%%
+```
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-markdown">=== &quot;Python&quot;
+    ```text
+    Helper      # Creates a file named Helper.py
+    %%%
+    class Helper:
+        @staticmethod
+        def double(x):
+            return x * 2
+    %%%
+    ```
+
+=== &quot;Java&quot;
+    ```text
+    Helper      # Creates a file named Helper.java
+    %%%
+    public class Helper {
+        public static int doubled(int x) {
+            return x * 2;
+        }
+    }
+    %%%
+    ```
+</code></pre>
+<p>Note: the Java method name is <code>doubled</code> (not <code>double</code>) because <code>double</code> is a reserved keyword in Java.</p>
+<ul>
+<li>[ ] <strong>Step 4: Verify the build succeeds</strong></li>
+</ul>
+<pre><code class="language-bash">PATH=/workspaces/plcc-ng/.venv/bin:$PATH mkdocs build --strict 2&gt;&amp;1
+</code></pre>
+<p>Expected: exits 0.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/language-guide/semantic.md
+git commit -m &quot;docs(language-guide): add Java tabs to semantic section examples&quot;
+</code></pre>
+<hr />
+<h3 id="task-5-tab-the-examples-page">Task 5: Tab the examples page</h3>
 <p><strong>Files:</strong>
 - Modify: <code>docs/language-guide/examples.md</code></p>
 <p><strong>Interfaces:</strong>
-- Consumes: nothing
-- Produces: nothing (standalone docs edit)</p>
-<p>Three categories of change: (a) spec file syntax, (b) CLI flags, (c) verified output.</p>
+- Consumes: <code>content.tabs</code> + <code>pymdownx.tabbed</code> from Task 1
+- Produces: <code>subtract.plcc</code> shown as two complete, copy-pasteable grammar files</p>
 <ul>
-<li>[ ] <strong>Step 1: Update the spec file block</strong></li>
+<li>[ ] <strong>Step 1: Replace the single grammar block with a tabbed block</strong></li>
 </ul>
-<p>Find the <code>Create \</code>subtract.plcc`:` fenced code block. Replace its entire contents with:</p>
-<p>```text
-  # Subtraction language
-  skip WHITESPACE '\s+'
-  token WHOLE     '\d+'
-  token MINUS     '-'
-  token LP        '('
-  token RP        ')'
-  token COMMA     ','
-  %
-  <Prog>         ::= <Exp:exp>
-  <Exp:WholeExp> ::= <WHOLE:whole>
-  <Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
-  %
-  Python</p>
-<p>Prog
-  %%%
-  def _run(self):
-      print(self.exp.eval())
-  %%%</p>
-<p>WholeExp
-  %%%
-  def eval(self):
-      return int(self.whole.lexeme)
-  %%%</p>
-<p>SubExp
-  %%%
-  def eval(self):
-      return self.exp1.eval() - self.exp2.eval()
-  %%%
-  ```</p>
-<p>Key changes from current file:
-  - Remove the stray <code>%</code> line that appeared directly before <code>Python</code> (leftover from old <code>% subtract Python</code> divider syntax).
-  - Result: exactly one <code>%</code> divider between the syntactic and semantic sections, followed by <code>Python</code> as the first line of the semantic section.</p>
-<ul>
-<li>[ ] <strong>Step 2: Update the Build section</strong></li>
-</ul>
-<p>Replace the entire Build section (heading through closing fence) with:</p>
-<p>````markdown
-  ### Build</p>
-<p><code>bash
-  plcc-make -s subtract.plcc</code></p>
-<p>Exits silently on success.
-  ````</p>
-<p>(<code>plcc-make</code> produces no stdout output; the banner moved to stderr via <code>-b</code> in issue 084.)</p>
-<ul>
-<li>[ ] <strong>Step 3: Update the Scanner section command and output</strong></li>
-</ul>
-<p>Replace:</p>
-<p><code>`markdown</code>bash
-  plcc-scan -g subtract.plcc samples
-  ```</p>
-<!-- TODO: verify plcc-scan output format -->
-<p>Expected output:</p>
-<p><code>text
-     1: WHOLE '3'
-     3: MINUS '-'
-  ...</code>
-  ````</p>
-<p>with:</p>
-<p><code>`markdown</code>bash
-  plcc-scan -s subtract.plcc samples
-  ```</p>
-<p>Expected output:</p>
-<p><code>text
-  samples:1:1 WHOLE '3'
-  samples:3:1 MINUS '-'
-  samples:3:2 LP '('
-  samples:3:3 WHOLE '3'
-  samples:3:4 COMMA ','
-  samples:3:5 WHOLE '2'
-  samples:3:6 RP ')'
-  samples:5:1 MINUS '-'
-  samples:5:2 LP '('
-  samples:5:3 MINUS '-'
-  samples:5:4 LP '('
-  samples:5:5 WHOLE '4'
-  samples:5:6 COMMA ','
-  samples:5:7 WHOLE '1'
-  samples:5:8 RP ')'
-  samples:5:9 COMMA ','
-  samples:5:11 MINUS '-'
-  samples:5:12 LP '('
-  samples:5:13 WHOLE '3'
-  samples:5:14 COMMA ','
-  samples:5:15 WHOLE '2'
-  samples:5:16 RP ')'
-  samples:5:17 RP ')'</code>
-  ````</p>
-<ul>
-<li>[ ] <strong>Step 4: Update the Parser section command and output</strong></li>
-</ul>
-<p>Replace:</p>
-<p><code>`markdown</code>bash
-  plcc-parse -g subtract.plcc samples
-  ```</p>
-<!-- TODO: verify plcc-parse output format and flags -->
-<p>Expected output:</p>
-<p><code>text
-  &lt;Prog&gt;
-  | &lt;Exp:WholeExp&gt;
-  ...</code>
-  ````</p>
-<p>with:</p>
-<p><code>`markdown</code>bash
-  plcc-parse -s subtract.plcc samples
-  ```</p>
-<p>Expected output:</p>
-<p><code>text
-  Prog
+<p>Find this block in <code>docs/language-guide/examples.md</code> (the fenced block under "### Grammar file"):</p>
+<pre><code class="language-markdown">```text
+# Subtraction language
+skip WHITESPACE '\s+'
+token WHOLE     '\d+'
+token MINUS     '\-'
+token LP        '\('
+token RP        '\)'
+token COMMA     ','
+%
+&lt;Prog&gt;         ::= &lt;Exp:exp&gt;
+&lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
+&lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
+%
+Python
+
+Prog
+%%%
+def _run(self):
+    print(self.exp.eval())
+%%%
+
+WholeExp
+%%%
+def eval(self):
+    return int(self.whole.lexeme)
+%%%
+
+SubExp
+%%%
+def eval(self):
+    return self.exp1.eval() - self.exp2.eval()
+%%%
+```
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-markdown">=== &quot;Python&quot;
+    ```text
+    # Subtraction language
+    skip WHITESPACE '\s+'
+    token WHOLE     '\d+'
+    token MINUS     '\-'
+    token LP        '\('
+    token RP        '\)'
+    token COMMA     ','
+    %
+    &lt;Prog&gt;         ::= &lt;Exp:exp&gt;
+    &lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
+    &lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
+    %
+    Python
+
+    Prog
+    %%%
+    def _run(self):
+        print(self.exp.eval())
+    %%%
+
     WholeExp
-      WHOLE '3' [-:1:1]
-  Prog
+    %%%
+    def eval(self):
+        return int(self.whole.lexeme)
+    %%%
+
     SubExp
-      WholeExp
-        WHOLE '3' [-:3:3]
-      WholeExp
-        WHOLE '2' [-:3:5]
-  Prog
+    %%%
+    def eval(self):
+        return self.exp1.eval() - self.exp2.eval()
+    %%%
+    ```
+
+=== &quot;Java&quot;
+    ```text
+    # Subtraction language
+    skip WHITESPACE '\s+'
+    token WHOLE     '\d+'
+    token MINUS     '\-'
+    token LP        '\('
+    token RP        '\)'
+    token COMMA     ','
+    %
+    &lt;Prog&gt;         ::= &lt;Exp:exp&gt;
+    &lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
+    &lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
+    %
+    Java
+
+    Prog
+    %%%
+    public void _run() {
+        System.out.println(exp.eval());
+    }
+    %%%
+
+    WholeExp
+    %%%
+    public int eval() {
+        return Integer.parseInt(whole.lexeme);
+    }
+    %%%
+
     SubExp
-      SubExp
-        WholeExp
-          WHOLE '4' [-:5:5]
-        WholeExp
-          WHOLE '1' [-:5:7]
-      SubExp
-        WholeExp
-          WHOLE '3' [-:5:13]
-        WholeExp
-          WHOLE '2' [-:5:15]</code>
-  ````</p>
+    %%%
+    public int eval() {
+        return exp1.eval() - exp2.eval();
+    }
+    %%%
+    ```
+</code></pre>
+<p>The sections after the grammar file (Build, Scanner, Parser, Interpreter) use the same <code>plcc-make</code>, <code>plcc-scan</code>, <code>plcc-parse</code>, and <code>plcc-rep</code> commands for both languages — leave them unchanged.</p>
 <ul>
-<li>[ ] <strong>Step 5: Update the Interpreter section command and output</strong></li>
+<li>[ ] <strong>Step 2: Verify the build succeeds</strong></li>
 </ul>
-<p>Replace:</p>
-<p><code>`markdown</code>bash
-  plcc-rep -g subtract.plcc --tool=subtract samples
-  ```</p>
-<!-- TODO: verify plcc-rep output format -->
-<p>Expected output:</p>
-<p><code>text
-  3
-  1
-  2</code>
-  ````</p>
-<p>with:</p>
-<p><code>`markdown</code>bash
-  plcc-rep -s subtract.plcc samples &lt; /dev/null
-  ```</p>
-<p>Expected output:</p>
-<p><code>text
-  3
-  1
-  2</code>
-  ````</p>
-<p>Note: <code>&lt; /dev/null</code> suppresses interactive mode. This will be updated once issue 093 lands and the interactive mode behavior is finalized.</p>
+<pre><code class="language-bash">PATH=/workspaces/plcc-ng/.venv/bin:$PATH mkdocs build --strict 2&gt;&amp;1
+</code></pre>
+<p>Expected: exits 0.</p>
 <ul>
-<li>[ ] <strong>Step 6: Commit</strong></li>
+<li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add docs/language-guide/examples.md
-  git commit -m "docs(094): update examples for 089+095, verify all output [skip ci]"</code></p>
+<pre><code class="language-bash">git add docs/language-guide/examples.md
+git commit -m &quot;docs(language-guide): add Java tab to subtract.plcc example&quot;
+</code></pre>
 
 
 
