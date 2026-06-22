@@ -2373,9 +2373,9 @@
 <p>The lexical specification defines what the scanner recognizes and which
 matches it should emit as a token.</p>
 <h2 id="syntax">Syntax</h2>
-<pre><code class="language-text">skip  NAME_1 'pattern'
-token NAME_2 'pattern'
-</code></pre>
+<div class="highlight"><pre><span></span><code>skip  NAME_1 &#39;pattern&#39;
+token NAME_2 &#39;pattern&#39;
+</code></pre></div>
 <p><code>token</code> rules emit a token when matched. <code>skip</code> rules consume input silently
 (useful for whitespace and comments in the language you are implementing).</p>
 <h3 id="token-names">Token names</h3>
@@ -2472,12 +2472,12 @@ it first prefers the longest matching rule, and uses rule order only to break ti
 <p>Let's look at some examples.</p>
 <h4 id="example-longest-match-wins">Example: longest match wins</h4>
 <p>Rules:</p>
-<pre><code class="language-text">token EQ '='
-token EQEQ '=='
-</code></pre>
+<div class="highlight"><pre><span></span><code>token EQ &#39;=&#39;
+token EQEQ &#39;==&#39;
+</code></pre></div>
 <p>Input:</p>
-<pre><code class="language-text">==
-</code></pre>
+<div class="highlight"><pre><span></span><code>==
+</code></pre></div>
 <p>Matches:</p>
 <ul>
 <li>EQ matches 1 character.</li>
@@ -2487,12 +2487,12 @@ token EQEQ '=='
 <p>EQEQ wins because it matches more characters.</p>
 <h4 id="example-the-first-longest-match-wins">Example: the first, longest-match wins</h4>
 <p>Rules:</p>
-<pre><code class="language-text">token WORD '[a-z]+'
-token IF 'if'
-</code></pre>
+<div class="highlight"><pre><span></span><code>token WORD &#39;[a-z]+&#39;
+token IF &#39;if&#39;
+</code></pre></div>
 <p>Input:</p>
-<pre><code class="language-text">if
-</code></pre>
+<div class="highlight"><pre><span></span><code>if
+</code></pre></div>
 <p>Matches:</p>
 <ul>
 <li>WORD matches 2 characters.</li>
@@ -2502,12 +2502,12 @@ token IF 'if'
 <p>The match lengths are equal, so the rule that appears first in the grammar wins.
 So, an <code>WORD</code> token containing the lexeme "if" would be emitted.</p>
 <h4 id="example-skips-compete-with-tokens">Example: skips compete with tokens</h4>
-<pre><code class="language-text">skip WORD '[a-z]+'
-token IF 'if'
-</code></pre>
+<div class="highlight"><pre><span></span><code>skip WORD &#39;[a-z]+&#39;
+token IF &#39;if&#39;
+</code></pre></div>
 <p>And suppose our input is:</p>
-<pre><code class="language-text">if
-</code></pre>
+<div class="highlight"><pre><span></span><code>if
+</code></pre></div>
 <p>Again the WORD rule would win, but since it is now a skip rule, no token would
 be emitted.</p>
 

@@ -2322,8 +2322,8 @@ stopping at the stage specified by <code>--through</code>.</p>
 <p>Called internally by <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>, and <code>plcc-diagram</code>.
 You can also call it directly to pre-build before running other commands.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-make [-v ...] [options]
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-make [-v ...] [options]
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2360,15 +2360,15 @@ You can also call it directly to pre-build before running other commands.</p>
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Build everything
-plcc-make -s subtract.plcc
+<div class="highlight"><pre><span></span><code><span class="c1"># Build everything</span>
+plcc-make<span class="w"> </span>-s<span class="w"> </span>subtract.plcc
 
-# Rebuild after editing the spec (spec remembered from previous run)
+<span class="c1"># Rebuild after editing the spec (spec remembered from previous run)</span>
 plcc-make
 
-# Build only through the scan stage
-plcc-make --through=scan
-</code></pre>
+<span class="c1"># Build only through the scan stage</span>
+plcc-make<span class="w"> </span>--through<span class="o">=</span>scan
+</code></pre></div>
 <h2 id="build-levels">Build levels</h2>
 <table>
 <thead>

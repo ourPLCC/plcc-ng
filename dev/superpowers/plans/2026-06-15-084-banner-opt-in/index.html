@@ -2281,83 +2281,83 @@
 <li>[ ] <strong>Step 1: Write failing tests for <code>print_banner</code></strong></li>
 </ul>
 <p>Append to <code>src/plcc/cmd/output_test.py</code>:</p>
-<pre><code class="language-python">from .output import print_banner
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.output</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_banner</span>
 
 
-def test_print_banner_version_goes_to_stderr(capsys):
-    print_banner(&quot;1.2.3&quot;, &quot;/abs/grammar.plcc&quot;)
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_print_banner_version_goes_to_stderr</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="n">print_banner</span><span class="p">(</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span> <span class="s2">&quot;/abs/grammar.plcc&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_print_banner_grammar_goes_to_stderr(capsys):
-    print_banner(&quot;1.2.3&quot;, &quot;/abs/grammar.plcc&quot;)
-    _, err = capsys.readouterr()
-    assert &quot;grammar: /abs/grammar.plcc&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_print_banner_grammar_goes_to_stderr</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="n">print_banner</span><span class="p">(</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span> <span class="s2">&quot;/abs/grammar.plcc&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;grammar: /abs/grammar.plcc&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_print_banner_nothing_on_stdout(capsys):
-    print_banner(&quot;1.2.3&quot;, &quot;/abs/grammar.plcc&quot;)
-    out, _ = capsys.readouterr()
-    assert out == &quot;&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_print_banner_nothing_on_stdout</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="n">print_banner</span><span class="p">(</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span> <span class="s2">&quot;/abs/grammar.plcc&quot;</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">out</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span>
 
 
-def test_print_banner_with_tool_running_line_on_stderr(capsys):
-    print_banner(&quot;1.2.3&quot;, &quot;/abs/grammar.plcc&quot;, tool=&quot;calc&quot;, language=&quot;python&quot;)
-    _, err = capsys.readouterr()
-    assert &quot;Running calc with python.&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_print_banner_with_tool_running_line_on_stderr</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="n">print_banner</span><span class="p">(</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span> <span class="s2">&quot;/abs/grammar.plcc&quot;</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="s2">&quot;calc&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;Running calc with python.&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_print_banner_without_tool_no_running_line(capsys):
-    print_banner(&quot;1.2.3&quot;, &quot;/abs/grammar.plcc&quot;)
-    _, err = capsys.readouterr()
-    assert &quot;Running&quot; not in err
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_print_banner_without_tool_no_running_line</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="n">print_banner</span><span class="p">(</span><span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span> <span class="s2">&quot;/abs/grammar.plcc&quot;</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;Running&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/output_test.py -k &quot;print_banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/output_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;print_banner&quot;</span>
+</code></pre></div>
 <p>Expected: <code>ImportError</code> or <code>5 failed</code> — <code>print_banner</code> does not exist yet.</p>
 <ul>
 <li>[ ] <strong>Step 3: Implement <code>print_banner</code> in <code>output.py</code></strong></li>
 </ul>
 <p>Replace the entire file:</p>
-<pre><code class="language-python">import sys
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 
-def print_user_error(message):
-    print(message, flush=True)
+<span class="k">def</span><span class="w"> </span><span class="nf">print_user_error</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-def print_version_line(version):
-    print(f&quot;plcc-ng {version}&quot;, flush=True)
+<span class="k">def</span><span class="w"> </span><span class="nf">print_version_line</span><span class="p">(</span><span class="n">version</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-ng </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-def print_grammar_line(grammar_path, tool=None, language=None):
-    print(f&quot;grammar: {grammar_path}&quot;, flush=True)
-    if tool is not None and language is not None:
-        print(f&quot;Running {tool} with {language}.&quot;, flush=True)
+<span class="k">def</span><span class="w"> </span><span class="nf">print_grammar_line</span><span class="p">(</span><span class="n">grammar_path</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grammar: </span><span class="si">{</span><span class="n">grammar_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">language</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running </span><span class="si">{</span><span class="n">tool</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">language</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-def print_banner(version, grammar_path, tool=None, language=None):
-    print(f&quot;plcc-ng {version}&quot;, file=sys.stderr, flush=True)
-    print(f&quot;grammar: {grammar_path}&quot;, file=sys.stderr, flush=True)
-    if tool is not None and language is not None:
-        print(f&quot;Running {tool} with {language}.&quot;, file=sys.stderr, flush=True)
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_banner</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">grammar_path</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-ng </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;grammar: </span><span class="si">{</span><span class="n">grammar_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">language</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running </span><span class="si">{</span><span class="n">tool</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">language</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run tests to confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/output_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/output_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/output.py src/plcc/cmd/output_test.py
-git commit -m &quot;feat(084): add print_banner() writing version+grammar to stderr&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/output.py<span class="w"> </span>src/plcc/cmd/output_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(084): add print_banner() writing version+grammar to stderr&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-2-update-plcc-make">Task 2: Update <code>plcc-make</code></h2>
 <p><strong>Files:</strong>
@@ -2367,102 +2367,102 @@ git commit -m &quot;feat(084): add print_banner() writing version+grammar to std
 <li>[ ] <strong>Step 1: Write 3 failing tests</strong></li>
 </ul>
 <p>Append to <code>src/plcc/cmd/make_test.py</code>:</p>
-<pre><code class="language-python">def test_make_main_default_prints_no_banner_to_stdout(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit):
-        run_main([])
-    out, _ = capsys.readouterr()
-    assert &quot;plcc-ng&quot; not in out
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_default_prints_no_banner_to_stdout</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span>
 
 
-def test_make_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;grammar.plcc&quot;).write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_prints_version_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_make_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    grammar = tmp_path / &quot;grammar.plcc&quot;
-    grammar.write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;grammar:&quot; in err
-    assert str(grammar) in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+    <span class="n">grammar</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;grammar:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_make_main_banner_short_flag_works(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;grammar.plcc&quot;).write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;-b&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_short_flag_works</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;-b&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_make_main_banner_is_plain_text_with_json_format(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;grammar.plcc&quot;).write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;--banner&quot;, &quot;--verbose-format=json&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err  # plain &quot;plcc-ng X.Y.Z&quot;, not a JSON object
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_is_plain_text_with_json_format</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose-format=json&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>  <span class="c1"># plain &quot;plcc-ng X.Y.Z&quot;, not a JSON object</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: <code>test_make_main_default_prints_no_banner_to_stdout</code> fails (stdout currently has the version line); <code>test_make_main_banner_prints_version_to_stderr</code> and <code>test_make_main_banner_prints_grammar_to_stderr</code> fail with docopt error (<code>--banner</code> unknown).</p>
 <ul>
 <li>[ ] <strong>Step 3: Implement the change in <code>make.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/cmd/make.py</code>, apply these changes:</p>
-<p><strong>a) Update import</strong> (line 21):</p>
-<pre><code class="language-python">from .output import print_banner
-</code></pre>
-<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:</p>
-<pre><code>    -b --banner             Show the version and grammar banner on stderr.
-</code></pre>
-<p><strong>c) Remove the pre-docopt version print</strong> (lines 50–51 in the original):</p>
-<pre><code class="language-python"># DELETE these two lines:
-    if &quot;--no-banner&quot; not in argv:
-        print_version_line(get_version())
-</code></pre>
-<p><strong>d) Replace the <code>no_banner</code> variable and grammar-line print</strong> — find and replace:</p>
-<pre><code class="language-python"># OLD (lines 60, 96–97):
-    no_banner = args[&quot;--no-banner&quot;]
-    ...
-    if not no_banner:
-        print_grammar_line(os.path.abspath(grammar))
+<p><strong>a) Update import</strong> (line 21):
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.output</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_banner</span>
+</code></pre></div></p>
+<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:
+<div class="highlight"><pre><span></span><code>    -b --banner             Show the version and grammar banner on stderr.
+</code></pre></div></p>
+<p><strong>c) Remove the pre-docopt version print</strong> (lines 50–51 in the original):
+<div class="highlight"><pre><span></span><code><span class="c1"># DELETE these two lines:</span>
+    <span class="k">if</span> <span class="s2">&quot;--no-banner&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+        <span class="n">print_version_line</span><span class="p">(</span><span class="n">get_version</span><span class="p">())</span>
+</code></pre></div></p>
+<p><strong>d) Replace the <code>no_banner</code> variable and grammar-line print</strong> — find and replace:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD (lines 60, 96–97):</span>
+    <span class="n">no_banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_banner</span><span class="p">:</span>
+        <span class="n">print_grammar_line</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">grammar</span><span class="p">))</span>
 
-# NEW:
-    banner = args[&quot;--banner&quot;]
-    ...
-    if banner:
-        print_banner(get_version(), os.path.abspath(grammar))
-</code></pre>
+<span class="c1"># NEW:</span>
+    <span class="n">banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">grammar</span><span class="p">))</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Run tests to confirm new tests pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: the 3 new tests pass. The old <code>--no-banner</code> tests now fail because the flag is removed.</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the 4 old banner tests from <code>make_test.py</code></strong></li>
@@ -2475,15 +2475,15 @@ def test_make_main_banner_is_plain_text_with_json_format(tmp_path, monkeypatch, 
 <ul>
 <li>[ ] <strong>Step 6: Run the full make test file</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
-git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-make&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/make.py<span class="w"> </span>src/plcc/cmd/make_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(084): replace --no-banner with --banner/-b in plcc-make&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-3-update-plcc-scan">Task 3: Update <code>plcc-scan</code></h2>
 <p><strong>Files:</strong>
@@ -2493,90 +2493,90 @@ git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-make
 <li>[ ] <strong>Step 1: Write 3 failing tests</strong></li>
 </ul>
 <p>Append to <code>src/plcc/cmd/scan_test.py</code>:</p>
-<pre><code class="language-python">def test_main_default_prints_no_banner_to_stdout(monkeypatch, capsys):
-    monkeypatch.setattr(subprocess, &quot;run&quot;, lambda *a, **kw: SimpleNamespace(returncode=1))
-    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    with pytest.raises(SystemExit):
-        run_main([])
-    out, _ = capsys.readouterr()
-    assert &quot;plcc-ng&quot; not in out
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_main_default_prints_no_banner_to_stdout</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.scan.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span>
 
 
-def test_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    (build / &quot;.grammar&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
-    monkeypatch.setattr(subprocess, &quot;run&quot;, lambda *a, **kw: SimpleNamespace(returncode=0))
-    monkeypatch.setattr(_scan_module, &quot;SourceRunner&quot;,
-                        lambda **kw: type(&quot;R&quot;, (), {&quot;run&quot;: lambda self, s, h: True})())
-    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_main_banner_prints_version_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;.grammar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">_scan_module</span><span class="p">,</span> <span class="s2">&quot;SourceRunner&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="kc">True</span><span class="p">})())</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.scan.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    (build / &quot;.grammar&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
-    monkeypatch.setattr(subprocess, &quot;run&quot;, lambda *a, **kw: SimpleNamespace(returncode=0))
-    monkeypatch.setattr(_scan_module, &quot;SourceRunner&quot;,
-                        lambda **kw: type(&quot;R&quot;, (), {&quot;run&quot;: lambda self, s, h: True})())
-    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;grammar:&quot; in err
-    assert str(tmp_path / &quot;grammar.plcc&quot;) in err
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;.grammar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">_scan_module</span><span class="p">,</span> <span class="s2">&quot;SourceRunner&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="kc">True</span><span class="p">})())</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.scan.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;grammar:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/scan_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: <code>test_main_default_prints_no_banner_to_stdout</code> fails (stdout currently has version); the two <code>--banner</code> tests fail with docopt error.</p>
 <ul>
 <li>[ ] <strong>Step 3: Implement the change in <code>scan.py</code></strong></li>
 </ul>
 <p><strong>a) Update import</strong> — replace <code>print_version_line, print_grammar_line</code> with <code>print_banner</code>.</p>
-<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:</p>
-<pre><code>    -b --banner                 Show the version and grammar banner on stderr.
-</code></pre>
-<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:</p>
-<pre><code class="language-python">    _opts = argv[:argv.index(&quot;--&quot;)] if &quot;--&quot; in argv else argv
-    if &quot;--no-banner&quot; not in _opts:
-        print_version_line(get_version())
-</code></pre>
-<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>:</p>
-<pre><code class="language-python"># OLD:
-    no_banner = args[&quot;--no-banner&quot;]
-    ...
-    if not no_banner:
-        print_grammar_line(os.path.abspath(read_grammar(&quot;build&quot;)))
+<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:
+<div class="highlight"><pre><span></span><code>    -b --banner                 Show the version and grammar banner on stderr.
+</code></pre></div></p>
+<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:
+<div class="highlight"><pre><span></span><code>    <span class="n">_opts</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[:</span><span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="s2">&quot;--&quot;</span> <span class="ow">in</span> <span class="n">argv</span> <span class="k">else</span> <span class="n">argv</span>
+    <span class="k">if</span> <span class="s2">&quot;--no-banner&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_opts</span><span class="p">:</span>
+        <span class="n">print_version_line</span><span class="p">(</span><span class="n">get_version</span><span class="p">())</span>
+</code></pre></div></p>
+<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">no_banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_banner</span><span class="p">:</span>
+        <span class="n">print_grammar_line</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">)))</span>
 
-# NEW:
-    banner = args[&quot;--banner&quot;]
-    ...
-    if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar(&quot;build&quot;)))
-</code></pre>
-<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:</p>
-<pre><code class="language-python"># OLD:
-    make_result = subprocess.run(
-        [&quot;plcc-make&quot;, &quot;--through=scan&quot;, &quot;--no-banner&quot;]
-        + ...
+<span class="c1"># NEW:</span>
+    <span class="n">banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">)))</span>
+</code></pre></div></p>
+<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=scan&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
 
-# NEW:
-    make_result = subprocess.run(
-        [&quot;plcc-make&quot;, &quot;--through=scan&quot;]
-        + ...
-</code></pre>
+<span class="c1"># NEW:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=scan&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Run tests to confirm new tests pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/scan_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: 3 new tests pass; old <code>--no-banner</code> tests fail.</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the 4 old banner tests from <code>scan_test.py</code></strong></li>
@@ -2589,15 +2589,15 @@ def test_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
 <ul>
 <li>[ ] <strong>Step 6: Run the full scan test file</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/scan_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/scan_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/scan.py src/plcc/cmd/scan_test.py
-git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-scan&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/scan.py<span class="w"> </span>src/plcc/cmd/scan_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(084): replace --no-banner with --banner/-b in plcc-scan&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-4-update-plcc-parse">Task 4: Update <code>plcc-parse</code></h2>
 <p><strong>Files:</strong>
@@ -2607,77 +2607,77 @@ git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-scan
 <li>[ ] <strong>Step 1: Write 3 failing tests</strong></li>
 </ul>
 <p>Append to <code>src/plcc/cmd/parse_test.py</code>:</p>
-<pre><code class="language-python">def test_parse_main_default_prints_no_banner_to_stdout(monkeypatch, tmp_path, capsys):
-    _setup_parse_main(monkeypatch, tmp_path)
-    from .parse import main as parse_main
-    parse_main([])
-    out, _ = capsys.readouterr()
-    assert &quot;plcc-ng&quot; not in out
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_parse_main_default_prints_no_banner_to_stdout</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_parse_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">parse_main</span>
+    <span class="n">parse_main</span><span class="p">([])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span>
 
 
-def test_parse_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_parse_main(monkeypatch, tmp_path)
-    from .parse import main as parse_main
-    parse_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_main_banner_prints_version_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_parse_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">parse_main</span>
+    <span class="n">parse_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_parse_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_parse_main(monkeypatch, tmp_path)
-    from .parse import main as parse_main
-    parse_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;grammar:&quot; in err
-    assert str(tmp_path / &quot;grammar.plcc&quot;) in err
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_parse_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">parse_main</span>
+    <span class="n">parse_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;grammar:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/parse_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: <code>test_parse_main_default_prints_no_banner_to_stdout</code> fails; the two <code>--banner</code> tests fail with docopt error.</p>
 <ul>
 <li>[ ] <strong>Step 3: Implement the change in <code>parse.py</code></strong></li>
 </ul>
 <p><strong>a) Update import</strong> — replace <code>print_version_line, print_grammar_line</code> with <code>print_banner</code>.</p>
-<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:</p>
-<pre><code>    -b --banner                 Show the version and grammar banner on stderr.
-</code></pre>
-<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:</p>
-<pre><code class="language-python">    _opts = argv[:argv.index(&quot;--&quot;)] if &quot;--&quot; in argv else argv
-    if &quot;--no-banner&quot; not in _opts:
-        print_version_line(get_version())
-</code></pre>
-<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>:</p>
-<pre><code class="language-python"># OLD:
-    no_banner = args[&quot;--no-banner&quot;]
-    ...
-    if not no_banner:
-        print_grammar_line(os.path.abspath(read_grammar(&quot;build&quot;)))
+<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:
+<div class="highlight"><pre><span></span><code>    -b --banner                 Show the version and grammar banner on stderr.
+</code></pre></div></p>
+<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:
+<div class="highlight"><pre><span></span><code>    <span class="n">_opts</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[:</span><span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="s2">&quot;--&quot;</span> <span class="ow">in</span> <span class="n">argv</span> <span class="k">else</span> <span class="n">argv</span>
+    <span class="k">if</span> <span class="s2">&quot;--no-banner&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_opts</span><span class="p">:</span>
+        <span class="n">print_version_line</span><span class="p">(</span><span class="n">get_version</span><span class="p">())</span>
+</code></pre></div></p>
+<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">no_banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_banner</span><span class="p">:</span>
+        <span class="n">print_grammar_line</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">)))</span>
 
-# NEW:
-    banner = args[&quot;--banner&quot;]
-    ...
-    if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar(&quot;build&quot;)))
-</code></pre>
-<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:</p>
-<pre><code class="language-python"># OLD:
-    make_result = subprocess.run(
-        [&quot;plcc-make&quot;, &quot;--through=parse&quot;, &quot;--no-banner&quot;]
-        + ...
+<span class="c1"># NEW:</span>
+    <span class="n">banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">)))</span>
+</code></pre></div></p>
+<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
 
-# NEW:
-    make_result = subprocess.run(
-        [&quot;plcc-make&quot;, &quot;--through=parse&quot;]
-        + ...
-</code></pre>
+<span class="c1"># NEW:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=parse&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Run new tests to confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/parse_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: 3 new tests pass; old <code>--no-banner</code> and old stdout-asserting banner tests fail.</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the 7 old banner tests from <code>parse_test.py</code></strong></li>
@@ -2693,15 +2693,15 @@ def test_parse_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsy
 <ul>
 <li>[ ] <strong>Step 6: Run the full parse test file</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/parse_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/parse_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/parse.py src/plcc/cmd/parse_test.py
-git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-parse&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/parse.py<span class="w"> </span>src/plcc/cmd/parse_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(084): replace --no-banner with --banner/-b in plcc-parse&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-5-update-plcc-rep">Task 5: Update <code>plcc-rep</code></h2>
 <p><strong>Files:</strong>
@@ -2711,86 +2711,86 @@ git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-pars
 <li>[ ] <strong>Step 1: Write 4 failing tests</strong></li>
 </ul>
 <p>Append to <code>src/plcc/cmd/rep_test.py</code>:</p>
-<pre><code class="language-python">def test_rep_main_default_prints_no_banner_to_stdout(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main([&quot;--tool=calc&quot;])
-    out, _ = capsys.readouterr()
-    assert &quot;plcc-ng&quot; not in out
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_rep_main_default_prints_no_banner_to_stdout</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_rep_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--tool=calc&quot;</span><span class="p">])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span>
 
 
-def test_rep_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main([&quot;--tool=calc&quot;, &quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_rep_main_banner_prints_version_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_rep_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--tool=calc&quot;</span><span class="p">,</span> <span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main([&quot;--tool=calc&quot;, &quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;grammar:&quot; in err
-    assert str(tmp_path / &quot;grammar.plcc&quot;) in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_rep_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_rep_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--tool=calc&quot;</span><span class="p">,</span> <span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;grammar:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_rep_main_banner_prints_running_line_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main([&quot;--tool=calc&quot;, &quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;Running calc with python.&quot; in err
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_rep_main_banner_prints_running_line_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_rep_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--tool=calc&quot;</span><span class="p">,</span> <span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;Running calc with python.&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/rep_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: <code>test_rep_main_default_prints_no_banner_to_stdout</code> fails (stdout currently has version); the three <code>--banner</code> tests fail with docopt error.</p>
 <ul>
 <li>[ ] <strong>Step 3: Implement the change in <code>rep.py</code></strong></li>
 </ul>
 <p><strong>a) Update import</strong> — replace <code>print_version_line, print_grammar_line, print_user_error</code> with <code>print_banner, print_user_error</code>.</p>
-<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:</p>
-<pre><code>    -b --banner             Show the version and grammar banner on stderr.
-</code></pre>
-<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:</p>
-<pre><code class="language-python">    _opts = argv[:argv.index(&quot;--&quot;)] if &quot;--&quot; in argv else argv
-    if &quot;--no-banner&quot; not in _opts:
-        print_version_line(get_version())
-</code></pre>
-<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>. The grammar line in <code>rep.py</code> also accepts <code>tool</code> and <code>language</code>:</p>
-<pre><code class="language-python"># OLD:
-    no_banner = args[&quot;--no-banner&quot;]
-    ...
-    if not no_banner:
-        print_grammar_line(
-            os.path.abspath(read_grammar('build')),
-            tool=tool_name,
-            language=language,
-        )
+<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:
+<div class="highlight"><pre><span></span><code>    -b --banner             Show the version and grammar banner on stderr.
+</code></pre></div></p>
+<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:
+<div class="highlight"><pre><span></span><code>    <span class="n">_opts</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[:</span><span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;--&quot;</span><span class="p">)]</span> <span class="k">if</span> <span class="s2">&quot;--&quot;</span> <span class="ow">in</span> <span class="n">argv</span> <span class="k">else</span> <span class="n">argv</span>
+    <span class="k">if</span> <span class="s2">&quot;--no-banner&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_opts</span><span class="p">:</span>
+        <span class="n">print_version_line</span><span class="p">(</span><span class="n">get_version</span><span class="p">())</span>
+</code></pre></div></p>
+<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>. The grammar line in <code>rep.py</code> also accepts <code>tool</code> and <code>language</code>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">no_banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_banner</span><span class="p">:</span>
+        <span class="n">print_grammar_line</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)),</span>
+            <span class="n">tool</span><span class="o">=</span><span class="n">tool_name</span><span class="p">,</span>
+            <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">,</span>
+        <span class="p">)</span>
 
-# NEW:
-    banner = args[&quot;--banner&quot;]
-    ...
-    if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar('build')),
-                     tool=tool_name, language=language)
-</code></pre>
-<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:</p>
-<pre><code class="language-python"># OLD:
-    make_result = subprocess.run(
-        ['plcc-make', '--no-banner']
-        + ...
+<span class="c1"># NEW:</span>
+    <span class="n">banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)),</span>
+                     <span class="n">tool</span><span class="o">=</span><span class="n">tool_name</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-banner&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
 
-# NEW:
-    make_result = subprocess.run(
-        ['plcc-make']
-        + ...
-</code></pre>
+<span class="c1"># NEW:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Run new tests to confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/rep_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: 4 new tests pass; old <code>--no-banner</code> and old stdout-asserting banner tests fail.</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the 9 old banner tests from <code>rep_test.py</code></strong></li>
@@ -2808,15 +2808,15 @@ def test_rep_main_banner_prints_running_line_to_stderr(monkeypatch, tmp_path, ca
 <ul>
 <li>[ ] <strong>Step 6: Run the full rep test file</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/rep_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/rep_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/rep.py src/plcc/cmd/rep_test.py
-git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-rep&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/rep_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(084): replace --no-banner with --banner/-b in plcc-rep&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-6-update-plcc-diagram">Task 6: Update <code>plcc-diagram</code></h2>
 <p><strong>Files:</strong>
@@ -2826,118 +2826,118 @@ git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-rep&
 <li>[ ] <strong>Step 1: Write 3 failing tests</strong></li>
 </ul>
 <p>Append to <code>src/plcc/cmd/diagram_test.py</code>:</p>
-<pre><code class="language-python">def test_diagram_main_default_prints_no_banner_to_stdout(tmp_path, monkeypatch, capsys):
-    grammar = tmp_path / &quot;grammar.plcc&quot;
-    grammar.write_text(&quot;# stub&quot;)
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(&quot;plcc.cmd.diagram.get_version&quot;, lambda: &quot;1.2.3&quot;)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_diagram_main_default_prints_no_banner_to_stdout</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+    <span class="n">grammar</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;# stub&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.diagram.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
 
-    def fake_run(cmd, **kwargs):
-        m = MagicMock()
-        m.returncode = 1
-        m.stderr = b''
-        return m
+    <span class="k">def</span><span class="w"> </span><span class="nf">fake_run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">m</span>
 
-    with patch('subprocess.run', side_effect=fake_run):
-        with pytest.raises(SystemExit):
-            run_main([])
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;subprocess.run&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">fake_run</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+            <span class="n">run_main</span><span class="p">([])</span>
 
-    out, _ = capsys.readouterr()
-    assert &quot;plcc-ng&quot; not in out
-
-
-def test_diagram_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
-    grammar = tmp_path / &quot;grammar.plcc&quot;
-    grammar.write_text(&quot;# stub&quot;)
-    build_dir = tmp_path / 'build'
-    build_dir.mkdir()
-    (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(&quot;plcc.cmd.diagram.get_version&quot;, lambda: &quot;1.2.3&quot;)
-
-    def fake_run(cmd, **kwargs):
-        m = MagicMock()
-        m.returncode = 0
-        m.stderr = b''
-        return m
-
-    with patch('subprocess.run', side_effect=fake_run):
-        run_main([&quot;--banner&quot;])
-
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span>
 
 
-def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, capsys):
-    grammar = tmp_path / &quot;grammar.plcc&quot;
-    grammar.write_text(&quot;# stub&quot;)
-    build_dir = tmp_path / 'build'
-    build_dir.mkdir()
-    (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
-    monkeypatch.chdir(tmp_path)
-    monkeypatch.setattr(&quot;plcc.cmd.diagram.get_version&quot;, lambda: &quot;1.2.3&quot;)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_diagram_main_banner_prints_version_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+    <span class="n">grammar</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;# stub&quot;</span><span class="p">)</span>
+    <span class="n">build_dir</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;build&#39;</span>
+    <span class="n">build_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="s1">&#39;model.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="s1">&#39;.grammar&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.diagram.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
 
-    def fake_run(cmd, **kwargs):
-        m = MagicMock()
-        m.returncode = 0
-        m.stderr = b''
-        return m
+    <span class="k">def</span><span class="w"> </span><span class="nf">fake_run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">m</span>
 
-    with patch('subprocess.run', side_effect=fake_run):
-        run_main([&quot;--banner&quot;])
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;subprocess.run&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">fake_run</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
 
-    _, err = capsys.readouterr()
-    assert &quot;grammar:&quot; in err
-    assert str(grammar) in err
-</code></pre>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_diagram_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+    <span class="n">grammar</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;# stub&quot;</span><span class="p">)</span>
+    <span class="n">build_dir</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;build&#39;</span>
+    <span class="n">build_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="s1">&#39;model.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="s1">&#39;.grammar&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.diagram.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fake_run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">stderr</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">m</span>
+
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;subprocess.run&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">fake_run</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;grammar:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/diagram_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/diagram_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: <code>test_diagram_main_default_prints_no_banner_to_stdout</code> fails; the two <code>--banner</code> tests fail with docopt error.</p>
 <ul>
 <li>[ ] <strong>Step 3: Implement the change in <code>diagram.py</code></strong></li>
 </ul>
 <p><strong>a) Update import</strong> — replace <code>print_version_line, print_grammar_line</code> with <code>print_banner</code>.</p>
-<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:</p>
-<pre><code>    -b --banner             Show the version and grammar banner on stderr.
-</code></pre>
-<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:</p>
-<pre><code class="language-python">    if &quot;--no-banner&quot; not in argv:
-        print_version_line(get_version())
-</code></pre>
-<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>:</p>
-<pre><code class="language-python"># OLD:
-    no_banner = args[&quot;--no-banner&quot;]
-    ...
-    if not no_banner:
-        print_grammar_line(os.path.abspath(read_grammar('build')))
+<p><strong>b) Update <code>__doc__</code></strong> — replace <code>--no-banner</code> line with:
+<div class="highlight"><pre><span></span><code>    -b --banner             Show the version and grammar banner on stderr.
+</code></pre></div></p>
+<p><strong>c) Remove the pre-docopt check</strong> — delete these two lines from <code>main()</code>:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="s2">&quot;--no-banner&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argv</span><span class="p">:</span>
+        <span class="n">print_version_line</span><span class="p">(</span><span class="n">get_version</span><span class="p">())</span>
+</code></pre></div></p>
+<p><strong>d) Replace <code>no_banner</code> and grammar-line print</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">no_banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--no-banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">no_banner</span><span class="p">:</span>
+        <span class="n">print_grammar_line</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)))</span>
 
-# NEW:
-    banner = args[&quot;--banner&quot;]
-    ...
-    if banner:
-        print_banner(get_version(), os.path.abspath(read_grammar('build')))
-</code></pre>
-<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:</p>
-<pre><code class="language-python"># OLD:
-    make_result = subprocess.run(
-        ['plcc-make', '--through=model', '--no-banner']
-        + ...
+<span class="c1"># NEW:</span>
+    <span class="n">banner</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--banner&quot;</span><span class="p">]</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)))</span>
+</code></pre></div></p>
+<p><strong>e) Remove <code>--no-banner</code> from the <code>plcc-make</code> subprocess call</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">,</span> <span class="s1">&#39;--through=model&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-banner&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
 
-# NEW:
-    make_result = subprocess.run(
-        ['plcc-make', '--through=model']
-        + ...
-</code></pre>
+<span class="c1"># NEW:</span>
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">,</span> <span class="s1">&#39;--through=model&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="o">...</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Run new tests to confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/diagram_test.py -k &quot;banner&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/diagram_test.py<span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;banner&quot;</span>
+</code></pre></div>
 <p>Expected: 3 new tests pass; old <code>--no-banner</code> tests fail.</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the 4 old banner tests and fix 3 incidental tests in <code>diagram_test.py</code></strong></li>
@@ -2948,42 +2948,42 @@ def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, cap
 - <code>test_diagram_main_no_banner_suppresses_grammar_line</code>
 - <code>test_diagram_main_make_call_includes_no_banner</code></p>
 <p><strong>Update</strong> these three functions — remove <code>'--no-banner'</code> from their <code>run_main([...])</code> calls (the flag no longer exists; these tests verify stderr forwarding behavior unrelated to the banner):</p>
-<p>In <code>test_make_plain_text_stderr_forwarded</code>:</p>
-<pre><code class="language-python"># OLD:
-            run_main(['--no-banner'])
-# NEW:
-            run_main([])
-</code></pre>
-<p>In <code>test_make_jsonl_stderr_reformatted_as_text</code>:</p>
-<pre><code class="language-python"># OLD:
-            run_main(['-v', '--verbose-format=text', '--no-banner'])
-# NEW:
-            run_main(['-v', '--verbose-format=text'])
-</code></pre>
-<p>In <code>test_empty_child_stderr_produces_no_output</code>:</p>
-<pre><code class="language-python"># OLD:
-            run_main(['--no-banner'])
-# NEW:
-            run_main([])
-</code></pre>
+<p>In <code>test_make_plain_text_stderr_forwarded</code>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;--no-banner&#39;</span><span class="p">])</span>
+<span class="c1"># NEW:</span>
+            <span class="n">run_main</span><span class="p">([])</span>
+</code></pre></div></p>
+<p>In <code>test_make_jsonl_stderr_reformatted_as_text</code>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose-format=text&#39;</span><span class="p">,</span> <span class="s1">&#39;--no-banner&#39;</span><span class="p">])</span>
+<span class="c1"># NEW:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose-format=text&#39;</span><span class="p">])</span>
+</code></pre></div></p>
+<p>In <code>test_empty_child_stderr_produces_no_output</code>:
+<div class="highlight"><pre><span></span><code><span class="c1"># OLD:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;--no-banner&#39;</span><span class="p">])</span>
+<span class="c1"># NEW:</span>
+            <span class="n">run_main</span><span class="p">([])</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 6: Run the full diagram test file</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/diagram_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/diagram_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 7: Run the full test suite</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: all pass (984 tests or more).</p>
 <ul>
 <li>[ ] <strong>Step 8: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/diagram.py src/plcc/cmd/diagram_test.py
-git commit -m &quot;feat(084): replace --no-banner with --banner/-b in plcc-diagram&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/diagram.py<span class="w"> </span>src/plcc/cmd/diagram_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(084): replace --no-banner with --banner/-b in plcc-diagram&quot;</span>
+</code></pre></div>
 
 
 

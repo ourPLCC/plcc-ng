@@ -2234,55 +2234,55 @@
 <li>[ ] <strong>Step 2: Add the guard</strong></li>
 </ul>
 <p>Replace the <code>_run()</code> body so it reads:</p>
-<pre><code class="language-bash">_run() {
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-        pdm install
-    fi
-    pdm test -v &quot;$@&quot;
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code>_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>pdm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="o">}</span>
+</code></pre></div>
 <p>Full file after edit:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 
-set -euo pipefail
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/units.bash&quot;
-echo &quot;-------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/units.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-        pdm install
-    fi
-    pdm test -v &quot;$@&quot;
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span>pdm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-units.log _run &quot;$@&quot;
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-units.log<span class="w"> </span>_run<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Verify direct call still works</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: setup runs (pdm.bash + pdm install output), then <code>972 passed</code> (or similar count).</p>
 <ul>
 <li>[ ] <strong>Step 4: Verify SKIP_SETUP skips setup</strong></li>
 </ul>
-<pre><code class="language-bash">SKIP_SETUP=1 bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bin/test/units.bash
+</code></pre></div>
 <p>Expected: no <code>pdm install</code> output, tests still pass (pdm is already installed in the dev environment).</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/units.bash
-git commit -m &quot;chore(096): guard setup in units.bash with SKIP_SETUP&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/units.bash
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(096): guard setup in units.bash with SKIP_SETUP&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-2-guard-setup-in-commandsbash-integrationbash-e2ebash">Task 2: Guard setup in <code>commands.bash</code>, <code>integration.bash</code>, <code>e2e.bash</code></h3>
 <p><strong>Files:</strong>
@@ -2295,151 +2295,151 @@ git commit -m &quot;chore(096): guard setup in units.bash with SKIP_SETUP&quot;
 <li>[ ] <strong>Step 1: Edit <code>commands.bash</code></strong></li>
 </ul>
 <p>Replace the <code>_run()</code> body so <code>bats.bash</code> and <code>pdm install</code> are guarded:</p>
-<pre><code class="language-bash">_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-        pdm install
-    fi
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats tests/bats/commands/
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code>_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/commands/
+<span class="o">}</span>
+</code></pre></div>
 <p>Full file after edit:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/commands.bash&quot;
-echo &quot;----------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/commands.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;----------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-        pdm install
-    fi
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats tests/bats/commands/
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/commands/
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-commands.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-commands.log<span class="w"> </span>_run
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Edit <code>integration.bash</code></strong></li>
 </ul>
 <p>Same guard pattern:</p>
-<pre><code class="language-bash">_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-        pdm install
-    fi
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats tests/bats/integration/
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code>_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/integration/
+<span class="o">}</span>
+</code></pre></div>
 <p>Full file after edit:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/integration.bash&quot;
-echo &quot;-------------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/integration.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-------------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-        pdm install
-    fi
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats tests/bats/integration/
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/integration/
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-integration.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-integration.log<span class="w"> </span>_run
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Edit <code>e2e.bash</code></strong></li>
 </ul>
 <p>Same guard pattern around <code>bats.bash</code> + <code>pdm install</code> (the <code>LANGUAGES_REPO_PATH</code> block is not setup — leave it as-is):</p>
-<pre><code class="language-bash">_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-        pdm install
-    fi
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats $(find tests/bats/e2e/ -name &quot;*.bats&quot; ! -name &quot;languages-java.bats&quot; | sort)
-    if [ -n &quot;${LANGUAGES_REPO_PATH:-}&quot; ]; then
-        &quot;${PROJECT_ROOT}/bin/install/java.bash&quot;
-        echo &quot;&quot;
-        echo &quot;Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})&quot;
-        bats tests/bats/e2e/languages-java.bats
-    fi
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code>_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>tests/bats/e2e/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.bats&quot;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;languages-java.bats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="k">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LANGUAGES_REPO_PATH</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/java.bash&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running Java corpus tests (LANGUAGES_REPO_PATH=</span><span class="si">${</span><span class="nv">LANGUAGES_REPO_PATH</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="w">        </span>bats<span class="w"> </span>tests/bats/e2e/languages-java.bats
+<span class="w">    </span><span class="k">fi</span>
+<span class="o">}</span>
+</code></pre></div>
 <p>Full file after edit:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/e2e.bash&quot;
-echo &quot;-----------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/e2e.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-        &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-        pdm install
-    fi
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats $(find tests/bats/e2e/ -name &quot;*.bats&quot; ! -name &quot;languages-java.bats&quot; | sort)
-    if [ -n &quot;${LANGUAGES_REPO_PATH:-}&quot; ]; then
-        &quot;${PROJECT_ROOT}/bin/install/java.bash&quot;
-        echo &quot;&quot;
-        echo &quot;Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})&quot;
-        bats tests/bats/e2e/languages-java.bats
-    fi
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>tests/bats/e2e/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.bats&quot;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;languages-java.bats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="k">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LANGUAGES_REPO_PATH</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/java.bash&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running Java corpus tests (LANGUAGES_REPO_PATH=</span><span class="si">${</span><span class="nv">LANGUAGES_REPO_PATH</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="w">        </span>bats<span class="w"> </span>tests/bats/e2e/languages-java.bats
+<span class="w">    </span><span class="k">fi</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-e2e.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-e2e.log<span class="w"> </span>_run
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Verify direct calls still work</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/commands.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/commands.bash
+</code></pre></div>
 <p>Expected: setup runs, bats command tests pass.</p>
 <ul>
 <li>[ ] <strong>Step 5: Verify SKIP_SETUP skips setup in all three</strong></li>
 </ul>
-<pre><code class="language-bash">SKIP_SETUP=1 bin/test/commands.bash
-SKIP_SETUP=1 bin/test/integration.bash
-SKIP_SETUP=1 bin/test/e2e.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bin/test/commands.bash
+<span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bin/test/integration.bash
+<span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bin/test/e2e.bash
+</code></pre></div>
 <p>Expected: no <code>bats.bash</code> or <code>pdm install</code> output; tests pass (tools already installed in dev environment).</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/commands.bash bin/test/integration.bash bin/test/e2e.bash
-git commit -m &quot;chore(096): guard setup in commands, integration, e2e with SKIP_SETUP&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/commands.bash<span class="w"> </span>bin/test/integration.bash<span class="w"> </span>bin/test/e2e.bash
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(096): guard setup in commands, integration, e2e with SKIP_SETUP&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-3-hoist-setup-into-functionalbash">Task 3: Hoist setup into <code>functional.bash</code></h3>
 <p><strong>Files:</strong>
@@ -2454,59 +2454,59 @@ git commit -m &quot;chore(096): guard setup in commands, integration, e2e with S
 <li>[ ] <strong>Step 2: Add setup calls and pass SKIP_SETUP=1 to each leaf</strong></li>
 </ul>
 <p>Replace the <code>_run()</code> body:</p>
-<pre><code class="language-bash">_run() {
-    &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-    pdm install
-    &quot;${SCRIPT_DIR}/../install/bats.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/units.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/commands.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/integration.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/e2e.bash&quot;
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code>_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/bats.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/units.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/commands.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/integration.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/e2e.bash&quot;</span>
+<span class="o">}</span>
+</code></pre></div>
 <p>Full file after edit:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/funcional.bash&quot;  # pre-existing typo in the script — leave as-is
-echo &quot;-----------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/funcional.bash&quot;</span><span class="w">  </span><span class="c1"># pre-existing typo in the script — leave as-is</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-    pdm install
-    &quot;${SCRIPT_DIR}/../install/bats.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/units.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/commands.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/integration.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/e2e.bash&quot;
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/bats.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/units.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/commands.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/integration.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/e2e.bash&quot;</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-functional.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-functional.log<span class="w"> </span>_run
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Run the full functional suite</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/cache/clear.bash
+<div class="highlight"><pre><span></span><code>bin/test/cache/clear.bash
 bin/test/functional.bash
-</code></pre>
+</code></pre></div>
 <p>Clear the cache first so this is a live run. Expected: setup output appears once at the top, then all four leaf scripts run without repeating setup. All tests pass.</p>
 <ul>
 <li>[ ] <strong>Step 4: Confirm setup ran only once</strong></li>
 </ul>
-<pre><code class="language-bash">grep -c &quot;pdm install&quot; /tmp/plcc-test-functional.log
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;pdm install&quot;</span><span class="w"> </span>/tmp/plcc-test-functional.log
+</code></pre></div>
 <p>Expected output: <code>1</code></p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/functional.bash
-git commit -m &quot;chore(096): hoist setup into functional.bash; pass SKIP_SETUP=1 to leaf scripts&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/functional.bash
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(096): hoist setup into functional.bash; pass SKIP_SETUP=1 to leaf scripts&quot;</span>
+</code></pre></div>
 
 
 

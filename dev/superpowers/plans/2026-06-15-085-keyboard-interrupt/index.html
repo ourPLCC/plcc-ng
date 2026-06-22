@@ -2243,29 +2243,29 @@
 <li>[ ] <strong>Step 1: Add the test</strong></li>
 </ul>
 <p>Open <code>src/plcc/lang/ext/python/emit_test.py</code>. Add this test after <code>test_emit_generated_main_is_runnable</code> (around line 164):</p>
-<pre><code class="language-python">def test_emit_generated_main_exits_130_on_sigint(tmp_path, monkeypatch):
-    import signal
-    import time
-    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
-    run_main([f'--output={tmp_path}'])
-    proc = subprocess.Popen(
-        [sys.executable, str(tmp_path / 'main.py')],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    time.sleep(0.1)  # ensure subprocess has entered the stdin loop
-    proc.send_signal(signal.SIGINT)
-    stdout, stderr = proc.communicate(timeout=5)
-    assert proc.returncode == 130
-    assert stderr == b''
-    assert b'User interrupted execution by ^C.' in stdout
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_emit_generated_main_exits_130_on_sigint</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;main.py&#39;</span><span class="p">)],</span>
+        <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># ensure subprocess has entered the stdin loop</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">send_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">)</span>
+    <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">130</span>
+    <span class="k">assert</span> <span class="n">stderr</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+    <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;User interrupted execution by ^C.&#39;</span> <span class="ow">in</span> <span class="n">stdout</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run the test to verify it fails</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/lang/ext/python/emit_test.py::test_emit_generated_main_exits_130_on_sigint -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/python/emit_test.py::test_emit_generated_main_exits_130_on_sigint<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: FAIL. The generated <code>main.py</code> will crash with a <code>KeyboardInterrupt</code> traceback on stderr and a non-130 exit code.</p>
 <hr />
 <h3 id="task-2-implement-the-fix">Task 2: Implement the fix</h3>
@@ -2275,57 +2275,57 @@
 <li>[ ] <strong>Step 1: Wrap the stdin loop</strong></li>
 </ul>
 <p>Replace the entire content of <code>src/plcc/lang/ext/python/templates/main.py.jinja</code> with:</p>
-<pre><code class="language-jinja">import json
-import os
-import sys
+<div class="highlight"><pre><span></span><code><span class="x">import json</span>
+<span class="x">import os</span>
+<span class="x">import sys</span>
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+<span class="x">sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))</span>
 
-from runtime.registry import Registry
-{% for cls in classes %}from {{ cls.name }} import {{ cls.name }}
-{% endfor %}
-registry = Registry()
-registry.register({% for cls in classes if not cls.abstract %}{{ cls.name }}{% if not loop.last %}, {% endif %}{% endfor %})
+<span class="x">from runtime.registry import Registry</span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">cls</span> <span class="k">in</span> <span class="nv">classes</span> <span class="cp">%}</span><span class="x">from </span><span class="cp">{{</span> <span class="nv">cls.name</span> <span class="cp">}}</span><span class="x"> import </span><span class="cp">{{</span> <span class="nv">cls.name</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+<span class="x">registry = Registry()</span>
+<span class="x">registry.register(</span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">cls</span> <span class="k">in</span> <span class="nv">classes</span> <span class="k">if</span> <span class="k">not</span> <span class="nv">cls.abstract</span> <span class="cp">%}{{</span> <span class="nv">cls.name</span> <span class="cp">}}{%</span> <span class="k">if</span> <span class="k">not</span> <span class="nb">loop</span><span class="nv">.last</span> <span class="cp">%}</span><span class="x">, </span><span class="cp">{%</span> <span class="k">endif</span> <span class="cp">%}{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x">)</span>
 
-try:
-    for line in sys.stdin:
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            tree = registry.deserialize(json.loads(line))
-            result = tree.{{ entry_point }}()
-            print(json.dumps({&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: repr(result) if result is not None else None}), flush=True)
-        except Exception as e:
-            print(json.dumps({&quot;kind&quot;: &quot;error&quot;, &quot;type&quot;: type(e).__name__, &quot;message&quot;: str(e)}), flush=True)
-except KeyboardInterrupt:
-    print(&quot;User interrupted execution by ^C.&quot;)
-    sys.exit(130)
-</code></pre>
+<span class="x">try:</span>
+<span class="x">    for line in sys.stdin:</span>
+<span class="x">        line = line.strip()</span>
+<span class="x">        if not line:</span>
+<span class="x">            continue</span>
+<span class="x">        try:</span>
+<span class="x">            tree = registry.deserialize(json.loads(line))</span>
+<span class="x">            result = tree.</span><span class="cp">{{</span> <span class="nv">entry_point</span> <span class="cp">}}</span><span class="x">()</span>
+<span class="x">            print(json.dumps({&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: repr(result) if result is not None else None}), flush=True)</span>
+<span class="x">        except Exception as e:</span>
+<span class="x">            print(json.dumps({&quot;kind&quot;: &quot;error&quot;, &quot;type&quot;: type(e).__name__, &quot;message&quot;: str(e)}), flush=True)</span>
+<span class="x">except KeyboardInterrupt:</span>
+<span class="x">    print(&quot;User interrupted execution by ^C.&quot;)</span>
+<span class="x">    sys.exit(130)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run the new test to verify it passes</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/lang/ext/python/emit_test.py::test_emit_generated_main_exits_130_on_sigint -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/python/emit_test.py::test_emit_generated_main_exits_130_on_sigint<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: PASS</p>
 <ul>
 <li>[ ] <strong>Step 3: Run the full unit suite to check for regressions</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: all 981+ tests pass, 0 failures.</p>
 <ul>
 <li>[ ] <strong>Step 4: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/lang/ext/python/templates/main.py.jinja \
-        src/plcc/lang/ext/python/emit_test.py
-git commit -m &quot;fix(rep): suppress KeyboardInterrupt stack trace in generated main.py
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/python/templates/main.py.jinja<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/lang/ext/python/emit_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;fix(rep): suppress KeyboardInterrupt stack trace in generated main.py</span>
 
-On ^C, generated Python interpreters now print 'User interrupted
-execution by ^C.' and exit 130 instead of crashing with a traceback.
+<span class="s2">On ^C, generated Python interpreters now print &#39;User interrupted</span>
+<span class="s2">execution by ^C.&#39; and exit 130 instead of crashing with a traceback.</span>
 
-Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;&quot;
-</code></pre>
+<span class="s2">Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;&quot;</span>
+</code></pre></div>
 
 
 

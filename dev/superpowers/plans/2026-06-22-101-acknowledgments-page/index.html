@@ -2229,47 +2229,47 @@
 <li>[ ] <strong>Step 1: Create <code>docs/acknowledgments.md</code></strong></li>
 </ul>
 <p>Full file content:</p>
-<pre><code class="language-markdown"># Acknowledgments
+<div class="highlight"><pre><span></span><code><span class="gh"># Acknowledgments</span>
 
-## Contributors
+<span class="gu">## Contributors</span>
 
 &lt;!-- TODO: List named maintainers here before merging. --&gt;
 
 For a full list of contributors, see the
-[GitHub contributors page](https://github.com/ourPLCC/plcc-ng/graphs/contributors).
+[<span class="nt">GitHub contributors page</span>](<span class="na">https://github.com/ourPLCC/plcc-ng/graphs/contributors</span>).
 
-## Institutions &amp; Funding
+<span class="gu">## Institutions &amp; Funding</span>
 
 &lt;!-- TODO: Fill in institutions and funding sources before merging. --&gt;
 
-## Open-Source Dependencies
+<span class="gu">## Open-Source Dependencies</span>
 
 &lt;!-- TODO: List notable open-source dependencies before merging. --&gt;
-</code></pre>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Add nav entry to <code>mkdocs.yml</code></strong></li>
 </ul>
 <p>Find the existing <code>Changelog</code> nav entry:</p>
-<pre><code class="language-yaml">  - Changelog: changelog.md
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Changelog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">changelog.md</span>
+</code></pre></div>
 <p>Add the acknowledgments entry immediately after it:</p>
-<pre><code class="language-yaml">  - Changelog: changelog.md
-  - Acknowledgments: acknowledgments.md
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Changelog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">changelog.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Acknowledgments</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acknowledgments.md</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Verify the site builds without errors</strong></li>
 </ul>
-<pre><code class="language-bash">cd .worktrees/issue-101
-.venv/bin/mkdocs build --strict 2&gt;&amp;1 | tail -20
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>.worktrees/issue-101
+.venv/bin/mkdocs<span class="w"> </span>build<span class="w"> </span>--strict<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
 <p>Expected: build completes with no warnings or errors. The <code>site/</code> directory will contain <code>acknowledgments/index.html</code>.</p>
 <ul>
 <li>[ ] <strong>Step 4: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">cd .worktrees/issue-101
-git add docs/acknowledgments.md mkdocs.yml
-git commit -m &quot;docs(acknowledgments): add acknowledgments page placeholder [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>.worktrees/issue-101
+git<span class="w"> </span>add<span class="w"> </span>docs/acknowledgments.md<span class="w"> </span>mkdocs.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(acknowledgments): add acknowledgments page placeholder [skip ci]&quot;</span>
+</code></pre></div>
 
 
 

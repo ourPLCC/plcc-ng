@@ -2220,7 +2220,8 @@
 <li>Token <code>source</code> dicts use <strong>1-based</strong> <code>line</code> and <code>column</code> (confirmed in <code>src/plcc/tokens/jsonl_formatter.py</code>).</li>
 <li><code>docs(...)</code> commit subjects must end with <code>[skip ci]</code>.</li>
 <li>Commit message footer for every commit:
-  <code>Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</code></li>
+  <div class="highlight"><pre><span></span><code>Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;
+</code></pre></div></li>
 </ul>
 <hr />
 <h3 id="task-1-parser-reports-extensibility">Task 1: Parser reports extensibility</h3>
@@ -2235,44 +2236,44 @@
 <li>[ ] <strong>Step 1: Write the failing tests</strong></li>
 </ul>
 <p>Add to <code>src/plcc/parser/predictive_parser_test.py</code>. <code>_TRIVIAL_LL1</code> (<code>program → NUM</code>) and <code>_RANDS_LL1</code> (an arbno with a <code>COMMA</code> separator) already exist. The extensible-via-nullable-tail case needs a new grammar constant — add it near the other <code>_LL1</code> constants:</p>
-<pre><code class="language-python"># E → NUM Tail ; Tail → PLUS NUM Tail | ε
-# A single NUM is a complete parse, but &quot;NUM + NUM&quot; is also valid, so NUM is extensible.
-_EXTENSIBLE_LL1 = {
-    &quot;is_ll1&quot;: True,
-    &quot;start_symbol&quot;: &quot;E&quot;,
-    &quot;parse_table&quot;: {
-        &quot;E&quot;: {&quot;NUM&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
-            {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: &quot;n&quot;},
-            {&quot;symbol&quot;: &quot;Tail&quot;, &quot;field&quot;: &quot;t&quot;},
-        ]}},
-        &quot;Tail&quot;: {
-            &quot;PLUS&quot;: {&quot;alt&quot;: None, &quot;production&quot;: [
-                {&quot;symbol&quot;: &quot;PLUS&quot;, &quot;field&quot;: None},
-                {&quot;symbol&quot;: &quot;NUM&quot;, &quot;field&quot;: None},
-                {&quot;symbol&quot;: &quot;Tail&quot;, &quot;field&quot;: None},
-            ]},
-            &quot;eof&quot;: {&quot;alt&quot;: None, &quot;production&quot;: []},
-        },
-    },
-}
-</code></pre>
-<pre><code class="language-python">def test_parse_returns_extensible_false_for_nonextensible_grammar():
-    # program -&gt; NUM ; a single NUM is complete and cannot be extended.
-    _tree, _consumed, extensible = parse(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;)])
-    assert extensible is False
+<div class="highlight"><pre><span></span><code><span class="c1"># E → NUM Tail ; Tail → PLUS NUM Tail | ε</span>
+<span class="c1"># A single NUM is a complete parse, but &quot;NUM + NUM&quot; is also valid, so NUM is extensible.</span>
+<span class="n">_EXTENSIBLE_LL1</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;is_ll1&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;start_symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parse_table&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;NUM&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;n&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;Tail&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;t&quot;</span><span class="p">},</span>
+        <span class="p">]}},</span>
+        <span class="s2">&quot;Tail&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;PLUS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;PLUS&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;Tail&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="p">]},</span>
+            <span class="s2">&quot;eof&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_parse_returns_extensible_false_for_nonextensible_grammar</span><span class="p">():</span>
+    <span class="c1"># program -&gt; NUM ; a single NUM is complete and cannot be extended.</span>
+    <span class="n">_tree</span><span class="p">,</span> <span class="n">_consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">_TRIVIAL_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;42&quot;</span><span class="p">)])</span>
+    <span class="k">assert</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">False</span>
 
 
-def test_parse_returns_extensible_true_when_more_terminals_could_follow():
-    # Nullable tail: parsing &quot;3&quot; takes Tail -&gt; eps on eof, but PLUS could follow.
-    _tree, _consumed, extensible = parse(_EXTENSIBLE_LL1, [_tok(&quot;NUM&quot;, &quot;3&quot;)])
-    assert extensible is True
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_returns_extensible_true_when_more_terminals_could_follow</span><span class="p">():</span>
+    <span class="c1"># Nullable tail: parsing &quot;3&quot; takes Tail -&gt; eps on eof, but PLUS could follow.</span>
+    <span class="n">_tree</span><span class="p">,</span> <span class="n">_consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">_EXTENSIBLE_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">)])</span>
+    <span class="k">assert</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">True</span>
 
 
-def test_parse_returns_extensible_true_when_arbno_could_repeat():
-    # Arbno list: after consuming one operand at eof, another (COMMA NUM) could follow.
-    _tree, _consumed, extensible = parse(_RANDS_LL1, [_tok(&quot;NUM&quot;, &quot;1&quot;)])
-    assert extensible is True
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_returns_extensible_true_when_arbno_could_repeat</span><span class="p">():</span>
+    <span class="c1"># Arbno list: after consuming one operand at eof, another (COMMA NUM) could follow.</span>
+    <span class="n">_tree</span><span class="p">,</span> <span class="n">_consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">_RANDS_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)])</span>
+    <span class="k">assert</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
 </ul>
@@ -2282,45 +2283,45 @@ Expected: FAIL — <code>parse()</code> returns a 2-tuple, so unpacking three va
 <li>[ ] <strong>Step 3: Implement extensibility detection</strong></li>
 </ul>
 <p>In <code>src/plcc/parser/predictive_parser.py</code>, inside <code>parse()</code>, add a mutable flag right after <code>cursor = [0]</code>:</p>
-<pre><code class="language-python">    cursor = [0]
-    extensible = [False]
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="n">cursor</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">extensible</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
+</code></pre></div>
 <p>In <code>_parse_regular</code>, immediately after the <code>production is None</code> check (after the <code>raise ParseError(... "no production for" ...)</code> block), add:</p>
-<pre><code class="language-python">        # The parse reached eof here but a real terminal could have continued
-        # this nonterminal — the sentence is a prefix of a longer one.
-        if lookahead == &quot;eof&quot; and any(k != &quot;eof&quot; for k in nt_table):
-            extensible[0] = True
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="c1"># The parse reached eof here but a real terminal could have continued</span>
+        <span class="c1"># this nonterminal — the sentence is a prefix of a longer one.</span>
+        <span class="k">if</span> <span class="n">lookahead</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;eof&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">nt_table</span><span class="p">):</span>
+            <span class="n">extensible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
 <p>In <code>_parse_arbno</code>, just before <code>return builder</code>, add:</p>
-<pre><code class="language-python">        # Sitting at eof where another iteration could have started: extensible.
-        if current()[&quot;name&quot;] == &quot;eof&quot; and lookahead_set:
-            extensible[0] = True
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="c1"># Sitting at eof where another iteration could have started: extensible.</span>
+        <span class="k">if</span> <span class="n">current</span><span class="p">()[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span> <span class="ow">and</span> <span class="n">lookahead_set</span><span class="p">:</span>
+            <span class="n">extensible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
 <p>Change the final return of <code>parse()</code> from:</p>
-<pre><code class="language-python">    root_builder = parse_nt(start)
-    return root_builder.to_node(), cursor[0]
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="n">root_builder</span> <span class="o">=</span> <span class="n">parse_nt</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">root_builder</span><span class="o">.</span><span class="n">to_node</span><span class="p">(),</span> <span class="n">cursor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
 <p>to:</p>
-<pre><code class="language-python">    root_builder = parse_nt(start)
-    return root_builder.to_node(), cursor[0], extensible[0]
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="n">root_builder</span> <span class="o">=</span> <span class="n">parse_nt</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">root_builder</span><span class="o">.</span><span class="n">to_node</span><span class="p">(),</span> <span class="n">cursor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extensible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update the two production call sites in <code>table_cli.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/parser/table_cli.py</code>, change both <code>tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)</code> lines (around lines 80 and 116) to:</p>
-<pre><code class="language-python">            tree, consumed, extensible = parse(ll1, tokens[cursor:], tracer=tracer)
-</code></pre>
+<div class="highlight"><pre><span></span><code>            <span class="n">tree</span><span class="p">,</span> <span class="n">consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">ll1</span><span class="p">,</span> <span class="n">tokens</span><span class="p">[</span><span class="n">cursor</span><span class="p">:],</span> <span class="n">tracer</span><span class="o">=</span><span class="n">tracer</span><span class="p">)</span>
+</code></pre></div>
 <p>(The <code>extensible</code> value is consumed in Task 2; binding it now keeps the unpacking valid.)</p>
 <ul>
 <li>[ ] <strong>Step 5: Update existing test call sites mechanically</strong></li>
 </ul>
 <p>The existing tests unpack a 2-tuple. Update them in place:</p>
-<pre><code class="language-bash">cd /workspaces/plcc-ng/.worktrees/093
-sed -i 's/tree, _ = parse(/tree, _, _ = parse(/g; s/tree, consumed = parse(/tree, consumed, _ = parse(/g; s/_, consumed = parse(/_, consumed, _ = parse(/g' src/plcc/parser/predictive_parser_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/workspaces/plcc-ng/.worktrees/093
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/tree, _ = parse(/tree, _, _ = parse(/g; s/tree, consumed = parse(/tree, consumed, _ = parse(/g; s/_, consumed = parse(/_, consumed, _ = parse(/g&#39;</span><span class="w"> </span>src/plcc/parser/predictive_parser_test.py
+</code></pre></div>
 <p>Confirm no other file unpacks <code>parse()</code>:</p>
-<pre><code class="language-bash">grep -rn &quot;= parse(&quot; src/plcc --include=&quot;*.py&quot; | grep -v &quot;_, _ = parse\|consumed, _ = parse\|def parse\|ParseError&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;= parse(&quot;</span><span class="w"> </span>src/plcc<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;_, _ = parse\|consumed, _ = parse\|def parse\|ParseError&quot;</span>
+</code></pre></div>
 <p>Expected: only the bare <code>parse(...)</code> calls inside <code>pytest.raises</code>/tracer tests (no two-value unpacks) remain.</p>
 <ul>
 <li>[ ] <strong>Step 6: Run the parser suite to verify it passes</strong></li>
@@ -2330,9 +2331,9 @@ Expected: PASS (all tests, including the three new ones).</p>
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/parser/predictive_parser.py src/plcc/parser/predictive_parser_test.py src/plcc/parser/table_cli.py
-git commit -m &quot;$(printf 'feat(093): parser reports sentence extensibility\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/parser/predictive_parser.py<span class="w"> </span>src/plcc/parser/predictive_parser_test.py<span class="w"> </span>src/plcc/parser/table_cli.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): parser reports sentence extensibility\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-2-plcc-parser-table-surfaces-hold-marker-and-fragment-start">Task 2: <code>plcc-parser-table</code> surfaces hold marker and fragment start</h3>
 <p>For the trailing parse, emit a sibling <code>hold</code> marker when the sentence is complete-but-extensible (so the forwarded tree stays clean), and attach the fragment <code>start</code> source to a trailing incomplete (<code>found="eof"</code>) error.</p>
@@ -2348,58 +2349,58 @@ git commit -m &quot;$(printf 'feat(093): parser reports sentence extensibility\n
 <li>[ ] <strong>Step 1: Write the failing tests</strong></li>
 </ul>
 <p>Add to <code>src/plcc/parser/table_cli_test.py</code> (reuse the existing <code>_run</code>, <code>_tok</code>, <code>_sentinel</code>, <code>_TRIVIAL_LL1</code>, and <code>_ADDITION_LL1</code> helpers). This file does <strong>not</strong> have an extensible grammar — add the same <code>_EXTENSIBLE_LL1</code> constant defined in Task 1 (<code>E → NUM Tail ; Tail → PLUS NUM Tail | ε</code>) near the other <code>_LL1</code> constants:</p>
-<pre><code class="language-python">def test_trailing_extensible_parse_emits_hold_marker(capsys, monkeypatch):
-    # Nullable tail: &quot;3&quot; is complete but extensible -&gt; tree then a hold marker.
-    ll1_file = tempfile.NamedTemporaryFile(mode=&quot;w&quot;, suffix=&quot;.json&quot;, delete=False)
-    try:
-        json.dump(_EXTENSIBLE_LL1, ll1_file)
-        ll1_file.flush(); ll1_file.close()
-        tokens = [_tok(&quot;NUM&quot;, &quot;3&quot;, col=1), _sentinel()]
-        stdin_data = &quot;\n&quot;.join(json.dumps(t) for t in tokens) + &quot;\n&quot;
-        monkeypatch.setattr(&quot;sys.stdin&quot;, io.StringIO(stdin_data))
-        try:
-            run_main([f&quot;--ll1={ll1_file.name}&quot;])
-        except SystemExit:
-            pass
-        out, _ = capsys.readouterr()
-        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
-        kinds = [r.get(&quot;kind&quot;) for r in records]
-        assert &quot;tree&quot; in kinds
-        assert kinds[-1] == &quot;hold&quot;
-        assert records[-1][&quot;source&quot;][&quot;column&quot;] == 1
-    finally:
-        os.unlink(ll1_file.name)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_trailing_extensible_parse_emits_hold_marker</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="c1"># Nullable tail: &quot;3&quot; is complete but extensible -&gt; tree then a hold marker.</span>
+    <span class="n">ll1_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_EXTENSIBLE_LL1</span><span class="p">,</span> <span class="n">ll1_file</span><span class="p">)</span>
+        <span class="n">ll1_file</span><span class="o">.</span><span class="n">flush</span><span class="p">();</span> <span class="n">ll1_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">_sentinel</span><span class="p">()]</span>
+        <span class="n">stdin_data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;sys.stdin&quot;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">stdin_data</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--ll1=</span><span class="si">{</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+        <span class="n">kinds</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="s2">&quot;tree&quot;</span> <span class="ow">in</span> <span class="n">kinds</span>
+        <span class="k">assert</span> <span class="n">kinds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;hold&quot;</span>
+        <span class="k">assert</span> <span class="n">records</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;source&quot;</span><span class="p">][</span><span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
 
-def test_nonextensible_parse_emits_no_hold_marker(capsys, monkeypatch):
-    # program -&gt; NUM : &quot;42&quot; is final, no hold marker.
-    code = _run(_TRIVIAL_LL1, [_tok(&quot;NUM&quot;, &quot;42&quot;), _sentinel()])
-    out, _ = capsys.readouterr()
-    records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
-    assert all(r.get(&quot;kind&quot;) != &quot;hold&quot; for r in records)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_nonextensible_parse_emits_no_hold_marker</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="c1"># program -&gt; NUM : &quot;42&quot; is final, no hold marker.</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">_run</span><span class="p">(</span><span class="n">_TRIVIAL_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;42&quot;</span><span class="p">),</span> <span class="n">_sentinel</span><span class="p">()])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;hold&quot;</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">)</span>
 
 
-def test_trailing_incomplete_error_carries_start_source(capsys, monkeypatch):
-    # program -&gt; NUM PLUS NUM ; &quot;1 +&quot; at col 1 is incomplete.
-    ll1_file = tempfile.NamedTemporaryFile(mode=&quot;w&quot;, suffix=&quot;.json&quot;, delete=False)
-    try:
-        json.dump(_ADDITION_LL1, ll1_file)
-        ll1_file.flush(); ll1_file.close()
-        tokens = [_tok(&quot;NUM&quot;, &quot;1&quot;, col=1), _tok(&quot;PLUS&quot;, &quot;+&quot;, col=3), _sentinel()]
-        stdin_data = &quot;\n&quot;.join(json.dumps(t) for t in tokens) + &quot;\n&quot;
-        monkeypatch.setattr(&quot;sys.stdin&quot;, io.StringIO(stdin_data))
-        try:
-            run_main([f&quot;--ll1={ll1_file.name}&quot;])
-        except SystemExit:
-            pass
-        out, _ = capsys.readouterr()
-        records = [json.loads(l) for l in out.strip().splitlines() if l.strip()]
-        err = [r for r in records if r.get(&quot;kind&quot;) == &quot;error&quot;][0]
-        assert err[&quot;found&quot;] == &quot;eof&quot;
-        assert err[&quot;start&quot;][&quot;column&quot;] == 1
-    finally:
-        os.unlink(ll1_file.name)
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_trailing_incomplete_error_carries_start_source</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="c1"># program -&gt; NUM PLUS NUM ; &quot;1 +&quot; at col 1 is incomplete.</span>
+    <span class="n">ll1_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_ADDITION_LL1</span><span class="p">,</span> <span class="n">ll1_file</span><span class="p">)</span>
+        <span class="n">ll1_file</span><span class="o">.</span><span class="n">flush</span><span class="p">();</span> <span class="n">ll1_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;PLUS&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">_sentinel</span><span class="p">()]</span>
+        <span class="n">stdin_data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;sys.stdin&quot;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">stdin_data</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--ll1=</span><span class="si">{</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;found&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span>
+        <span class="k">assert</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">][</span><span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
 </ul>
@@ -2409,41 +2410,41 @@ Expected: FAIL — no <code>hold</code> record is emitted; the error has no <cod
 <li>[ ] <strong>Step 3: Implement the hold marker (success branch)</strong></li>
 </ul>
 <p>In <code>src/plcc/parser/table_cli.py</code>, in the main <code>while</code> loop, replace the success block (currently):</p>
-<pre><code class="language-python">            if trace:
-                _emit_trace(tracer.events)
-            verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
-            print(json.dumps(tree), flush=True)
-            cursor += consumed
-</code></pre>
+<div class="highlight"><pre><span></span><code>            <span class="k">if</span> <span class="n">trace</span><span class="p">:</span>
+                <span class="n">_emit_trace</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">,</span> <span class="n">token_count</span><span class="o">=</span><span class="n">consumed</span><span class="p">,</span> <span class="n">rule_count</span><span class="o">=</span><span class="n">_count_rules</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tree</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">+=</span> <span class="n">consumed</span>
+</code></pre></div>
 <p>with:</p>
-<pre><code class="language-python">            if trace:
-                _emit_trace(tracer.events)
-            verbose.emit(Events.COMPLETE, token_count=consumed, rule_count=_count_rules(tree))
-            print(json.dumps(tree), flush=True)
-            cursor += consumed
-            at_end = cursor &gt;= len(tokens) or tokens[cursor][&quot;name&quot;] == &quot;eof&quot;
-            if at_end and extensible:
-                print(json.dumps({&quot;kind&quot;: &quot;hold&quot;, &quot;source&quot;: tree.get(&quot;source&quot;, {})}), flush=True)
-</code></pre>
+<div class="highlight"><pre><span></span><code>            <span class="k">if</span> <span class="n">trace</span><span class="p">:</span>
+                <span class="n">_emit_trace</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">,</span> <span class="n">token_count</span><span class="o">=</span><span class="n">consumed</span><span class="p">,</span> <span class="n">rule_count</span><span class="o">=</span><span class="n">_count_rules</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tree</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">+=</span> <span class="n">consumed</span>
+            <span class="n">at_end</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tokens</span><span class="p">[</span><span class="n">cursor</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span>
+            <span class="k">if</span> <span class="n">at_end</span> <span class="ow">and</span> <span class="n">extensible</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;hold&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="p">{})}),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Implement the <code>start</code> source on the incomplete error (failure branch)</strong></li>
 </ul>
 <p>In the same loop, the <code>except ParseError as e:</code> block currently builds <code>record</code> and adds <code>record["found"] = e.found</code>. The first token of the failed attempt is <code>tokens[cursor]</code>. Update that block to:</p>
-<pre><code class="language-python">        except ParseError as e:
-            _emit_trace(tracer.events)
-            record = {
-                &quot;kind&quot;: &quot;error&quot;,
-                &quot;message&quot;: str(e),
-                &quot;stage&quot;: &quot;plcc-parser-table&quot;,
-                &quot;source&quot;: e.source,
-            }
-            if e.found:
-                record[&quot;found&quot;] = e.found
-            if e.found == &quot;eof&quot; and cursor &lt; len(tokens):
-                record[&quot;start&quot;] = tokens[cursor].get(&quot;source&quot;, {})
-            print(json.dumps(record), flush=True)
-            break
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="k">except</span> <span class="n">ParseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">_emit_trace</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;plcc-parser-table&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">found</span><span class="p">:</span>
+                <span class="n">record</span><span class="p">[</span><span class="s2">&quot;found&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">found</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">found</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span> <span class="ow">and</span> <span class="n">cursor</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+                <span class="n">record</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">cursor</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">record</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">break</span>
+</code></pre></div>
 <p>Leave the second (epsilon-grammar) <code>except ParseError</code> block near the bottom unchanged — it handles empty input where <code>cursor</code> has no first token to point at.</p>
 <ul>
 <li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
@@ -2453,9 +2454,9 @@ Expected: PASS (new tests plus all existing — <code>eof=True</code>-equivalent
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/parser/table_cli.py src/plcc/parser/table_cli_test.py
-git commit -m &quot;$(printf 'feat(093): emit hold marker and incomplete-fragment start\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/parser/table_cli.py<span class="w"> </span>src/plcc/parser/table_cli_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): emit hold marker and incomplete-fragment start\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-3-commithold-split-helper">Task 3: Commit/hold split helper</h3>
 <p>A pure function that, given <code>pipeline.run()</code> output, the original buffer bytes, and the <code>eof</code> flag, returns the records to dispatch and the remainder bytes to retain.</p>
@@ -2472,82 +2473,82 @@ git commit -m &quot;$(printf 'feat(093): emit hold marker and incomplete-fragmen
 <li>[ ] <strong>Step 1: Add a hold-marker test helper</strong></li>
 </ul>
 <p>Add to <code>src/plcc/cmd/_test_helpers.py</code>:</p>
-<pre><code class="language-python">def _hold_record(line=1, col=1, file=&quot;-&quot;):
-    return json.dumps({
-        &quot;kind&quot;: &quot;hold&quot;,
-        &quot;source&quot;: {&quot;file&quot;: file, &quot;line&quot;: line, &quot;column&quot;: col},
-    }).encode() + b&quot;\n&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_hold_record</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;hold&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">file</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="n">line</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">},</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Write the failing tests</strong></li>
 </ul>
 <p>Add a new test section to <code>src/plcc/cmd/pipeline_test.py</code>:</p>
-<pre><code class="language-python">from .pipeline import split_committed, slice_from_source
-from ._test_helpers import _hold_record
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_committed</span><span class="p">,</span> <span class="n">slice_from_source</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._test_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_hold_record</span>
 
 
-def _items(*raws):
-    &quot;&quot;&quot;Build (record, raw) pairs from raw JSONL byte chunks (one record each).&quot;&quot;&quot;
-    out = []
-    for raw in raws:
-        line = raw.strip()
-        out.append((json.loads(line), line))
-    return out
+<span class="k">def</span><span class="w"> </span><span class="nf">_items</span><span class="p">(</span><span class="o">*</span><span class="n">raws</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build (record, raw) pairs from raw JSONL byte chunks (one record each).&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">raws</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">line</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span>
 
 
-def test_slice_from_source_single_line():
-    assert slice_from_source(b&quot;3 + 4\n&quot;, {&quot;line&quot;: 1, &quot;column&quot;: 5}) == b&quot;4\n&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slice_from_source_single_line</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;3 + 4</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;4</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 
-def test_slice_from_source_multiline():
-    assert slice_from_source(b&quot;a\nbc\n&quot;, {&quot;line&quot;: 2, &quot;column&quot;: 2}) == b&quot;c\n&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slice_from_source_multiline</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">bc</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;c</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 
-def test_slice_from_source_without_position_returns_all():
-    assert slice_from_source(b&quot;abc&quot;, {}) == b&quot;abc&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slice_from_source_without_position_returns_all</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;abc&quot;</span>
 
 
-def test_split_eof_dispatches_all_and_strips_hold():
-    items = _items(_tree_record(), _hold_record())
-    dispatch, remainder = split_committed(items, b&quot;3\n&quot;, eof=True)
-    assert [r.get(&quot;kind&quot;) for r, _ in dispatch] == [&quot;tree&quot;]
-    assert remainder == b&quot;&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_eof_dispatches_all_and_strips_hold</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">(),</span> <span class="n">_hold_record</span><span class="p">())</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
 
 
-def test_split_trial_holds_trailing_extensible_tree():
-    items = _items(_tree_record(), _hold_record(line=1, col=1))
-    dispatch, remainder = split_committed(items, b&quot;3\n&quot;, eof=False)
-    assert dispatch == []           # the extensible tree is held, not dispatched
-    assert remainder == b&quot;3\n&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_holds_trailing_extensible_tree</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">(),</span> <span class="n">_hold_record</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dispatch</span> <span class="o">==</span> <span class="p">[]</span>           <span class="c1"># the extensible tree is held, not dispatched</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 
-def test_split_trial_commits_leading_tree_holds_incomplete():
-    # A committed final tree followed by a trailing incomplete fragment at col 3.
-    eof_err = json.dumps({
-        &quot;kind&quot;: &quot;error&quot;, &quot;stage&quot;: &quot;plcc-parser-table&quot;, &quot;found&quot;: &quot;eof&quot;,
-        &quot;message&quot;: &quot;unexpected end of input&quot;,
-        &quot;source&quot;: {&quot;file&quot;: &quot;-&quot;, &quot;line&quot;: 1, &quot;column&quot;: 4},
-        &quot;start&quot;: {&quot;file&quot;: &quot;-&quot;, &quot;line&quot;: 1, &quot;column&quot;: 3},
-    }).encode() + b&quot;\n&quot;
-    items = _items(_tree_record(), eof_err)
-    dispatch, remainder = split_committed(items, b&quot;5;1+\n&quot;, eof=False)
-    assert [r.get(&quot;kind&quot;) for r, _ in dispatch] == [&quot;tree&quot;]
-    assert remainder == b&quot;1+\n&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_commits_leading_tree_holds_incomplete</span><span class="p">():</span>
+    <span class="c1"># A committed final tree followed by a trailing incomplete fragment at col 3.</span>
+    <span class="n">eof_err</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;plcc-parser-table&quot;</span><span class="p">,</span> <span class="s2">&quot;found&quot;</span><span class="p">:</span> <span class="s2">&quot;eof&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;unexpected end of input&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">(),</span> <span class="n">eof_err</span><span class="p">)</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;5;1+</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;1+</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 
-def test_split_trial_commits_final_tree_no_remainder():
-    items = _items(_tree_record())   # final tree, no hold marker
-    dispatch, remainder = split_committed(items, b&quot;42\n&quot;, eof=False)
-    assert [r.get(&quot;kind&quot;) for r, _ in dispatch] == [&quot;tree&quot;]
-    assert remainder == b&quot;&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_commits_final_tree_no_remainder</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">())</span>   <span class="c1"># final tree, no hold marker</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;42</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
 
 
-def test_split_trial_commits_genuine_error_no_remainder():
-    items = _items(_error_record(&quot;bad token&quot;))
-    dispatch, remainder = split_committed(items, b&quot;@\n&quot;, eof=False)
-    assert [r.get(&quot;kind&quot;) for r, _ in dispatch] == [&quot;error&quot;]
-    assert remainder == b&quot;&quot;
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_commits_genuine_error_no_remainder</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_error_record</span><span class="p">(</span><span class="s2">&quot;bad token&quot;</span><span class="p">))</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;@</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
 <p>(<code>5;1+</code> assumes a grammar with <code>;</code>-separated statements; the test only exercises the split logic, not real parsing, so the byte content just needs the <code>start</code> column to point at <code>1+</code>. Column 3 of <code>5;1+\n</code> is <code>1</code>, giving remainder <code>b"1+\n"</code>.)</p>
 <ul>
 <li>[ ] <strong>Step 3: Run tests to verify they fail</strong></li>
@@ -2558,44 +2559,44 @@ Expected: FAIL — <code>ImportError: cannot import name 'split_committed'</code
 <li>[ ] <strong>Step 4: Implement the helper functions</strong></li>
 </ul>
 <p>Add to <code>src/plcc/cmd/pipeline.py</code> (module-level, after <code>print_parse_error</code>):</p>
-<pre><code class="language-python">def slice_from_source(content, source):
-    &quot;&quot;&quot;Return content from the 1-based (line, column) in source to the end.
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">slice_from_source</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return content from the 1-based (line, column) in source to the end.</span>
 
-    Returns all of content when source lacks position info, so the caller
-    holds the whole buffer rather than losing input.&quot;&quot;&quot;
-    if not source or &quot;line&quot; not in source or &quot;column&quot; not in source:
-        return content
-    text = content.decode(&quot;utf-8&quot;, errors=&quot;replace&quot;)
-    lines = text.split(&quot;\n&quot;)
-    line = source[&quot;line&quot;]
-    column = source[&quot;column&quot;]
-    offset = sum(len(l) + 1 for l in lines[: line - 1]) + (column - 1)
-    return text[offset:].encode(&quot;utf-8&quot;)
+<span class="sd">    Returns all of content when source lacks position info, so the caller</span>
+<span class="sd">    holds the whole buffer rather than losing input.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span> <span class="ow">or</span> <span class="s2">&quot;line&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span> <span class="ow">or</span> <span class="s2">&quot;column&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">content</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;column&quot;</span><span class="p">]</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[:</span> <span class="n">line</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
 
 
-def split_committed(items, content, eof):
-    &quot;&quot;&quot;Split pipeline.run() output into records to dispatch and bytes to retain.
+<span class="k">def</span><span class="w"> </span><span class="nf">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split pipeline.run() output into records to dispatch and bytes to retain.</span>
 
-    items     — list of (record, raw) pairs from TreePipeline.run().
-    content   — the buffer that produced these records.
-    eof       — True to force-submit (commit everything, retain nothing).
+<span class="sd">    items     — list of (record, raw) pairs from TreePipeline.run().</span>
+<span class="sd">    content   — the buffer that produced these records.</span>
+<span class="sd">    eof       — True to force-submit (commit everything, retain nothing).</span>
 
-    Returns (dispatch_items, remainder_bytes).
-    &quot;&quot;&quot;
-    if eof:
-        dispatch = [(r, raw) for (r, raw) in items if r.get(&quot;kind&quot;) != &quot;hold&quot;]
-        return dispatch, b&quot;&quot;
+<span class="sd">    Returns (dispatch_items, remainder_bytes).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">eof</span><span class="p">:</span>
+        <span class="n">dispatch</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;hold&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dispatch</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
 
-    last = items[-1][0]
-    if last.get(&quot;kind&quot;) == &quot;hold&quot;:
-        # Trailing complete-but-extensible sentence: hold the tree before it.
-        return items[:-2], slice_from_source(content, last.get(&quot;source&quot;, {}))
-    if last.get(&quot;kind&quot;) == &quot;error&quot; and last.get(&quot;found&quot;) == &quot;eof&quot;:
-        # Trailing incomplete fragment: commit leading trees, hold the fragment.
-        return items[:-1], slice_from_source(content, last.get(&quot;start&quot;, {}))
-    # Trailing is a final tree or a genuine error: commit everything.
-    return items, b&quot;&quot;
-</code></pre>
+    <span class="n">last</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;hold&quot;</span><span class="p">:</span>
+        <span class="c1"># Trailing complete-but-extensible sentence: hold the tree before it.</span>
+        <span class="k">return</span> <span class="n">items</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="k">if</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span> <span class="ow">and</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;found&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span><span class="p">:</span>
+        <span class="c1"># Trailing incomplete fragment: commit leading trees, hold the fragment.</span>
+        <span class="k">return</span> <span class="n">items</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="c1"># Trailing is a final tree or a genuine error: commit everything.</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
 </ul>
@@ -2604,9 +2605,9 @@ Expected: PASS (new tests plus all existing <code>TreePipeline.run</code> tests,
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/pipeline.py src/plcc/cmd/pipeline_test.py src/plcc/cmd/_test_helpers.py
-git commit -m &quot;$(printf 'feat(093): add commit/hold split helper\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/pipeline.py<span class="w"> </span>src/plcc/cmd/pipeline_test.py<span class="w"> </span>src/plcc/cmd/_test_helpers.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): add commit/hold split helper\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-4-handlers-return-remainder-bytes">Task 4: Handlers return remainder bytes</h3>
 <p><code>RepHandler.feed</code> and <code>ParseHandler.feed</code> change their return type from <code>bool</code> to remainder <code>bytes</code> (<code>b""</code> = fully consumed → <code>&gt;&gt;&gt;</code>; non-empty = hold → <code>...</code>), using <code>split_committed</code>.</p>
@@ -2631,14 +2632,14 @@ git commit -m &quot;$(printf 'feat(093): add commit/hold split helper\n\nCo-Auth
 <li><code>test_feed_returns_true_for_genuine_error_regardless_of_eof</code>: assert <code>h.feed(b"@\n", "-", eof=False) == b""</code>.</li>
 </ul>
 <p>Add one new test for the hold-trailing-extensible path:</p>
-<pre><code class="language-python">def test_feed_holds_trailing_extensible_without_dispatch(monkeypatch, handler):
-    from ._test_helpers import _hold_record
-    h, interp = handler
-    procs = iter([_proc(), _proc(stdout=_tree_record() + _hold_record(col=1))])
-    monkeypatch.setattr(subprocess, &quot;Popen&quot;, lambda *a, **kw: next(procs))
-    assert h.feed(b&quot;3\n&quot;, &quot;-&quot;, eof=False) == b&quot;3\n&quot;
-    assert interp.stdin.tell() == 0  # extensible tree was NOT sent to interpreter
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_feed_holds_trailing_extensible_without_dispatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._test_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_hold_record</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">interp</span> <span class="o">=</span> <span class="n">handler</span>
+    <span class="n">procs</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="n">_proc</span><span class="p">(),</span> <span class="n">_proc</span><span class="p">(</span><span class="n">stdout</span><span class="o">=</span><span class="n">_tree_record</span><span class="p">()</span> <span class="o">+</span> <span class="n">_hold_record</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">))])</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">&quot;Popen&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">procs</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">h</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">interp</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>  <span class="c1"># extensible tree was NOT sent to interpreter</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run rep feed tests to verify they fail</strong></li>
 </ul>
@@ -2648,28 +2649,28 @@ Expected: FAIL — feed currently returns <code>True</code>/<code>False</code>, 
 <li>[ ] <strong>Step 3: Rewrite <code>RepHandler.feed</code></strong></li>
 </ul>
 <p>In <code>src/plcc/cmd/rep.py</code>, update the import line:</p>
-<pre><code class="language-python">from .pipeline import TreePipeline, print_parse_error, split_committed
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreePipeline</span><span class="p">,</span> <span class="n">print_parse_error</span><span class="p">,</span> <span class="n">split_committed</span>
+</code></pre></div>
 <p>Replace <code>RepHandler.feed</code> with:</p>
-<pre><code class="language-python">    def feed(self, content, source, eof=False):
-        items = self._pipeline.run(content, eof)
-        if items is None:
-            return b&quot;&quot; if eof else content
-        dispatch, remainder = split_committed(items, content, eof)
-        for record, raw in dispatch:
-            if record.get(&quot;kind&quot;) == &quot;error&quot;:
-                print_parse_error(record, default_stage=&quot;plcc-rep&quot;)
-                break
-            elif record.get(&quot;kind&quot;) == &quot;tree&quot;:
-                try:
-                    self._interpreter.stdin.write(raw + b'\n')
-                    self._interpreter.stdin.flush()
-                except BrokenPipeError:
-                    print('plcc-rep: interpreter exited unexpectedly', file=sys.stderr)
-                    sys.exit(1)
-                _read_response(self._interpreter.stdout, self._interpreter, self._verbose_format)
-        return remainder
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">eof</span> <span class="k">else</span> <span class="n">content</span>
+        <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">record</span><span class="p">,</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+                <span class="n">print_parse_error</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">default_stage</span><span class="o">=</span><span class="s2">&quot;plcc-rep&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;tree&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">raw</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">BrokenPipeError</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;plcc-rep: interpreter exited unexpectedly&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">_read_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose_format</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">remainder</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run rep feed tests to verify they pass</strong></li>
 </ul>
@@ -2693,28 +2694,28 @@ Expected: FAIL.</p>
 <li>[ ] <strong>Step 7: Rewrite <code>ParseHandler.feed</code></strong></li>
 </ul>
 <p>In <code>src/plcc/cmd/parse.py</code>, update the import:</p>
-<pre><code class="language-python">from .pipeline import TreePipeline, print_parse_error, location_str, split_committed
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreePipeline</span><span class="p">,</span> <span class="n">print_parse_error</span><span class="p">,</span> <span class="n">location_str</span><span class="p">,</span> <span class="n">split_committed</span>
+</code></pre></div>
 <p>Replace <code>ParseHandler.feed</code> with:</p>
-<pre><code class="language-python">    def feed(self, content, source, eof=False):
-        items = self._pipeline.run(content, eof)
-        if items is None:
-            return b&quot;&quot; if eof else content
-        dispatch, remainder = split_committed(items, content, eof)
-        buffered_steps = []
-        for record, _ in dispatch:
-            if record.get(&quot;kind&quot;) == &quot;parse-step&quot;:
-                buffered_steps.append(record)
-            elif record.get(&quot;kind&quot;) == &quot;error&quot;:
-                _render_trace(buffered_steps)
-                print_parse_error(record, default_stage=&quot;plcc-parse&quot;)
-                self.had_error = True
-                break
-            elif record.get(&quot;kind&quot;) == &quot;tree&quot;:
-                buffered_steps.clear()
-                _print_tree(record, indent=0)
-        return remainder
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">eof</span> <span class="k">else</span> <span class="n">content</span>
+        <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="n">buffered_steps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">record</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;parse-step&quot;</span><span class="p">:</span>
+                <span class="n">buffered_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+                <span class="n">_render_trace</span><span class="p">(</span><span class="n">buffered_steps</span><span class="p">)</span>
+                <span class="n">print_parse_error</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">default_stage</span><span class="o">=</span><span class="s2">&quot;plcc-parse&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">had_error</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;tree&quot;</span><span class="p">:</span>
+                <span class="n">buffered_steps</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">_print_tree</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">remainder</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 8: Run parse feed tests to verify they pass</strong></li>
 </ul>
@@ -2723,9 +2724,9 @@ Expected: PASS.</p>
 <ul>
 <li>[ ] <strong>Step 9: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/rep.py src/plcc/cmd/rep_test.py src/plcc/cmd/parse.py src/plcc/cmd/parse_test.py
-git commit -m &quot;$(printf 'feat(093): handlers return remainder bytes\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/parse.py<span class="w"> </span>src/plcc/cmd/parse_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): handlers return remainder bytes\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-5-incremental-sourcerunner-with-new-d-semantics">Task 5: Incremental <code>SourceRunner</code> with new <code>^D</code> semantics</h3>
 <p>Replace the all-or-nothing accumulate model and <code>SubmitOn.EOF</code>/double-<code>^D</code> machinery with a single incremental mode: each line feeds the buffer (<code>eof=False</code>) and the returned remainder becomes the new buffer; <code>^D</code> is a single-press context exit / force-submit.</p>
@@ -2740,83 +2741,83 @@ git commit -m &quot;$(printf 'feat(093): handlers return remainder bytes\n\nCo-A
 </ul>
 <p>In <code>src/plcc/cmd/source_runner_test.py</code>:</p>
 <p>Change <code>RecordingHandler.feed</code> to return <strong>bytes</strong> (the remainder) instead of booleans, and update its <code>results</code> to be byte strings:</p>
-<pre><code class="language-python">class RecordingHandler:
-    &quot;&quot;&quot;Captures feed() calls for assertions. results: iterator of remainder bytes.&quot;&quot;&quot;
-    def __init__(self, results=None):
-        self._results = iter(results or [])
-        self.calls = []       # list of (content, source)
-        self.eof_flags = []   # parallel list of eof values
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecordingHandler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Captures feed() calls for assertions. results: iterator of remainder bytes.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">results</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>       <span class="c1"># list of (content, source)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eof_flags</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># parallel list of eof values</span>
 
-    def feed(self, content, source, eof=False):
-        self.calls.append((content, source))
-        self.eof_flags.append(eof)
-        try:
-            return next(self._results)
-        except StopIteration:
-            return b&quot;&quot;
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eof_flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eof</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
 <p>Update the <code>runner</code> fixture and helpers to construct <code>SourceRunner()</code> with no <code>submit_on</code>:</p>
-<pre><code class="language-python">@pytest.fixture()
-def runner():
-    return SourceRunner()
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">runner</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">SourceRunner</span><span class="p">()</span>
+</code></pre></div>
 <p>Remove the entire <code># --- SubmitOn enum and EOF mode ---</code> section (every <code>test_eof_mode_*</code>, <code>test_submit_on_required</code>, <code>test_eol_mode_*</code>, the <code>_eof_runner</code>, <code>_read1_tty</code>, and the <code>SubmitOn</code> import). Remove the double-<code>^D</code> tests <code>test_first_ctrl_d_on_empty_prompt_prints_warning</code> and <code>test_second_ctrl_d_on_empty_prompt_exits_without_feed</code> and <code>test_input_after_ctrl_d_warning_clears_pending_exit</code>. Remove the <code>_InteractiveState.pending_exit</code> tests. Update the remaining behavior tests to the bytes/remainder contract and the new <code>^D</code> rules:</p>
-<pre><code class="language-python">def test_interactive_remainder_becomes_next_buffer(monkeypatch, runner):
-    # First line is held (remainder == the line); second line completes it.
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;a\n&quot;, b&quot;b\n&quot;, b&quot;&quot;]))
-    handler = RecordingHandler(results=[b&quot;a\n&quot;, b&quot;&quot;])
-    runner.run([&quot;-&quot;], handler)
-    assert handler.calls[1][0] == b&quot;a\nb\n&quot;   # accumulated, fed again
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_interactive_remainder_becomes_next_buffer</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># First line is held (remainder == the line); second line completes it.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;b</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">b</span><span class="se">\n</span><span class="s2">&quot;</span>   <span class="c1"># accumulated, fed again</span>
 
 
-def test_interactive_empty_remainder_resets_to_prompt(monkeypatch, runner, capsys):
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;line1\n&quot;, b&quot;&quot;]))
-    handler = RecordingHandler(results=[b&quot;&quot;])
-    runner.run([&quot;-&quot;], handler)
-    _, err = capsys.readouterr()
-    assert err.count(&quot;&gt;&gt;&gt; &quot;) &gt;= 2
+<span class="k">def</span><span class="w"> </span><span class="nf">test_interactive_empty_remainder_resets_to_prompt</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">err</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; &quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
 
 
-def test_interactive_nonempty_remainder_shows_continuation(monkeypatch, runner, capsys):
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;line1\n&quot;, b&quot;&quot;]))
-    handler = RecordingHandler(results=[b&quot;line1\n&quot;])
-    runner.run([&quot;-&quot;], handler)
-    _, err = capsys.readouterr()
-    assert &quot;... &quot; in err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_interactive_nonempty_remainder_shows_continuation</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;... &quot;</span> <span class="ow">in</span> <span class="n">err</span>
 
 
-def test_ctrl_d_empty_buffer_exits_immediately(monkeypatch, runner):
-    # Single ^D on the top-level prompt exits; feed is never called.
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;&quot;]))
-    handler = RecordingHandler()
-    runner.run([&quot;-&quot;], handler)
-    assert handler.calls == []
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_empty_buffer_exits_immediately</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># Single ^D on the top-level prompt exits; feed is never called.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">()</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span> <span class="o">==</span> <span class="p">[]</span>
 
 
-def test_ctrl_d_empty_buffer_prints_newline(monkeypatch, runner, capsys):
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;&quot;]))
-    runner.run([&quot;-&quot;], RecordingHandler())
-    _, err = capsys.readouterr()
-    assert err.endswith(&quot;&gt;&gt;&gt; \n&quot;)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_empty_buffer_prints_newline</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">RecordingHandler</span><span class="p">())</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">err</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
-def test_ctrl_d_nonempty_buffer_force_submits_and_returns_to_prompt(monkeypatch, runner, capsys):
-    # line1 is held; ^D on the continuation prompt force-submits with eof=True.
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;line1\n&quot;, b&quot;&quot;]))
-    handler = RecordingHandler(results=[b&quot;line1\n&quot;, b&quot;&quot;])
-    runner.run([&quot;-&quot;], handler)
-    assert handler.eof_flags[-1] is True
-    assert handler.calls[-1][0] == b&quot;line1\n&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_nonempty_buffer_force_submits_and_returns_to_prompt</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="c1"># line1 is held; ^D on the continuation prompt force-submits with eof=True.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">eof_flags</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span>
 
 
-def test_partial_line_then_ctrl_d_force_submits_with_partial(monkeypatch, runner):
-    # &quot;world&quot; arrives with no trailing newline (text then ^D).
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello\n&quot;, b&quot;world&quot;, b&quot;&quot;]))
-    handler = RecordingHandler(results=[b&quot;hello\n&quot;, b&quot;&quot;])
-    runner.run([&quot;-&quot;], handler)
-    assert handler.calls[-1][0] == b&quot;hello\nworld&quot;
-    assert handler.eof_flags[-1] is True
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_partial_line_then_ctrl_d_force_submits_with_partial</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># &quot;world&quot; arrives with no trailing newline (text then ^D).</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">world&quot;</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">eof_flags</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
 <p>Keep the file-source, non-tty, and <code>^C</code> (<code>KeyboardInterrupt</code>) tests, updating any <code>results=[True/False]</code> to bytes (<code>results=[b""]</code> for success, <code>results=[b"&lt;content&gt;"]</code> for hold). The <code>^C</code> semantics (<code>_clear_buffer_or_exit</code>) are unchanged.</p>
 <ul>
 <li>[ ] <strong>Step 2: Run the source_runner tests to verify they fail</strong></li>
@@ -2827,102 +2828,102 @@ Expected: FAIL — <code>SourceRunner()</code> still requires <code>submit_on</c
 <li>[ ] <strong>Step 3: Rewrite <code>source_runner.py</code></strong></li>
 </ul>
 <p>Replace the whole file with:</p>
-<pre><code class="language-python">import sys
-from dataclasses import dataclass
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-HINT = &quot;Enter input. Press ^D (EOF) when done.&quot;
-PROMPT = &quot;&gt;&gt;&gt; &quot;
-CONTINUATION = &quot;... &quot;
-
-
-@dataclass
-class _InteractiveState:
-    buffer: bytes
-    prompt: str
-    done: bool = False
+<span class="n">HINT</span> <span class="o">=</span> <span class="s2">&quot;Enter input. Press ^D (EOF) when done.&quot;</span>
+<span class="n">PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&gt;&gt;&gt; &quot;</span>
+<span class="n">CONTINUATION</span> <span class="o">=</span> <span class="s2">&quot;... &quot;</span>
 
 
-class SourceRunner:
-    def __init__(self, hint=HINT, prompt=PROMPT, continuation=CONTINUATION):
-        self._hint = hint
-        self._prompt = prompt
-        self._continuation = continuation
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_InteractiveState</span><span class="p">:</span>
+    <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">done</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
-    def run(self, sources, handler):
-        &quot;&quot;&quot;Run handler over sources. Interactive stdin parses incrementally;
-        files and piped stdin are fed whole with eof=True.&quot;&quot;&quot;
-        effective = sources if sources else [&quot;-&quot;]
-        for source in effective:
-            if source == &quot;-&quot;:
-                if sys.stdin.isatty():
-                    self._run_interactive(handler)
-                else:
-                    content = sys.stdin.buffer.read()
-                    handler.feed(content, &quot;-&quot;, eof=True)
-            else:
-                with open(source, &quot;rb&quot;) as f:
-                    content = f.read()
-                handler.feed(content, source, eof=True)
 
-    def _run_interactive(self, handler):
-        self._print_hint()
-        state = _InteractiveState(buffer=b&quot;&quot;, prompt=self._prompt)
-        while not state.done:
-            line = self._read_line(state.prompt)
-            state = self._process_line(handler, line, state)
+<span class="k">class</span><span class="w"> </span><span class="nc">SourceRunner</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="o">=</span><span class="n">HINT</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">continuation</span><span class="o">=</span><span class="n">CONTINUATION</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hint</span> <span class="o">=</span> <span class="n">hint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span> <span class="o">=</span> <span class="n">prompt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_continuation</span> <span class="o">=</span> <span class="n">continuation</span>
 
-    def _print_hint(self):
-        print(self._hint, file=sys.stderr)
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run handler over sources. Interactive stdin parses incrementally;</span>
+<span class="sd">        files and piped stdin are fed whole with eof=True.&quot;&quot;&quot;</span>
+        <span class="n">effective</span> <span class="o">=</span> <span class="n">sources</span> <span class="k">if</span> <span class="n">sources</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">effective</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_run_interactive</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">handler</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    def _read_line(self, prompt):
-        try:
-            print(prompt, end=&quot;&quot;, flush=True, file=sys.stderr)
-            return sys.stdin.buffer.readline()
-        except KeyboardInterrupt:
-            return None
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_interactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_hint</span><span class="p">()</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_line</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">prompt</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_line</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
 
-    def _process_line(self, handler, line, state):
-        if line is None:
-            return self._clear_buffer_or_exit(state)
-        if line == b&quot;&quot;:
-            return self._ctrl_d(handler, state)
-        if not line.endswith(b&quot;\n&quot;):
-            return self._force_submit(handler, state.buffer + line)
-        return self._incremental(handler, state.buffer + line)
+    <span class="k">def</span><span class="w"> </span><span class="nf">_print_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hint</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
 
-    def _ctrl_d(self, handler, state):
-        print(file=sys.stderr)
-        if state.buffer:
-            return self._force_submit(handler, state.buffer)
-        return _InteractiveState(buffer=b&quot;&quot;, prompt=self._prompt, done=True)
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
 
-    def _force_submit(self, handler, content):
-        remainder = self._evaluate(handler, content, eof=True)
-        if remainder:
-            print(&quot;PLCC internal error: forced submission left unconsumed input.&quot;,
-                  file=sys.stderr)
-            sys.exit(1)
-        return _InteractiveState(buffer=b&quot;&quot;, prompt=self._prompt)
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clear_buffer_or_exit</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctrl_d</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_submit</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incremental</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
 
-    def _incremental(self, handler, content):
-        remainder = self._evaluate(handler, content, eof=False)
-        prompt = self._prompt if not remainder else self._continuation
-        return _InteractiveState(buffer=remainder, prompt=prompt)
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ctrl_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_submit</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">,</span> <span class="n">done</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    def _clear_buffer_or_exit(self, state):
-        print(file=sys.stderr)
-        if state.buffer:
-            print(&quot;KeyboardInterrupt&quot;, file=sys.stderr)
-            return _InteractiveState(buffer=b&quot;&quot;, prompt=self._prompt)
-        sys.exit(130)
+    <span class="k">def</span><span class="w"> </span><span class="nf">_force_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PLCC internal error: forced submission left unconsumed input.&quot;</span><span class="p">,</span>
+                  <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">)</span>
 
-    def _evaluate(self, handler, content, eof):
-        try:
-            return handler.feed(content, &quot;-&quot;, eof=eof)
-        except KeyboardInterrupt:
-            print(file=sys.stderr)
-            sys.exit(130)
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_incremental</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">remainder</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_continuation</span>
+        <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="n">remainder</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_buffer_or_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KeyboardInterrupt&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">handler</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="n">eof</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run the source_runner tests to verify they pass</strong></li>
 </ul>
@@ -2931,9 +2932,9 @@ Expected: PASS.</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/source_runner.py src/plcc/cmd/source_runner_test.py
-git commit -m &quot;$(printf 'feat(093): incremental SourceRunner with single-press ^D\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/source_runner.py<span class="w"> </span>src/plcc/cmd/source_runner_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): incremental SourceRunner with single-press ^D\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-6-wire-orchestrators-to-the-incremental-runner">Task 6: Wire orchestrators to the incremental runner</h3>
 <p><code>plcc-rep</code> and <code>plcc-parse</code> construct <code>SourceRunner()</code> without <code>SubmitOn</code> and drop the now-dead <code>completed</code> exit branch.</p>
@@ -2947,35 +2948,35 @@ git commit -m &quot;$(printf 'feat(093): incremental SourceRunner with single-pr
 <li>[ ] <strong>Step 1: Update the rep main test</strong></li>
 </ul>
 <p>In <code>src/plcc/cmd/rep_test.py</code>, <code>test_main_uses_eof_submit_mode</code> asserts the old <code>SubmitOn.EOF</code>. Replace it with a test that the runner is constructed without a submit mode:</p>
-<pre><code class="language-python">def test_main_constructs_runner_without_submit_mode(monkeypatch, tmp_path):
-    &quot;&quot;&quot;plcc-rep uses the single incremental SourceRunner (no SubmitOn).&quot;&quot;&quot;
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;grammar.plcc&quot;).write_text(&quot;&quot;)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    (build / &quot;.spec&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
-    (build / &quot;spec.json&quot;).write_text(_json.dumps({&quot;semantics&quot;: {&quot;language&quot;: &quot;Python&quot;}}))
-    (build / &quot;ll1.json&quot;).write_text(&quot;{}&quot;)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_main_constructs_runner_without_submit_mode</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plcc-rep uses the single incremental SourceRunner (no SubmitOn).&quot;&quot;&quot;</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;.spec&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;spec.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">_json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;semantics&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;Python&quot;</span><span class="p">}}))</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;ll1.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    captured = {}
+    <span class="n">captured</span> <span class="o">=</span> <span class="p">{}</span>
 
-    def capturing_runner(*args, **kwargs):
-        captured[&quot;args&quot;] = args
-        captured[&quot;kwargs&quot;] = kwargs
-        m = _MagicMock()
-        m.run.return_value = None
-        return m
+    <span class="k">def</span><span class="w"> </span><span class="nf">capturing_runner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">_MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">m</span>
 
-    monkeypatch.setattr(_rep_module, &quot;SourceRunner&quot;, capturing_runner)
-    monkeypatch.setattr(&quot;subprocess.run&quot;, lambda *a, **kw: _MagicMock(returncode=0, stderr=b&quot;&quot;))
-    monkeypatch.setattr(&quot;subprocess.Popen&quot;,
-                        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()))
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">_rep_module</span><span class="p">,</span> <span class="s2">&quot;SourceRunner&quot;</span><span class="p">,</span> <span class="n">capturing_runner</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">_MagicMock</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.Popen&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">_MagicMock</span><span class="p">(</span><span class="n">stdin</span><span class="o">=</span><span class="n">_MagicMock</span><span class="p">(),</span> <span class="n">wait</span><span class="o">=</span><span class="n">_MagicMock</span><span class="p">()))</span>
 
-    _rep_module.main([&quot;--spec=grammar.plcc&quot;])
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--spec=grammar.plcc&quot;</span><span class="p">])</span>
 
-    assert &quot;submit_on&quot; not in captured[&quot;kwargs&quot;]
-    assert captured[&quot;args&quot;] == ()
-</code></pre>
+    <span class="k">assert</span> <span class="s2">&quot;submit_on&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">()</span>
+</code></pre></div>
 <p>Remove the now-unused <code>from .source_runner import SubmitOn</code> import from the test file.</p>
 <ul>
 <li>[ ] <strong>Step 2: Run to verify it fails</strong></li>
@@ -2987,24 +2988,24 @@ Expected: FAIL — <code>rep.main</code> still imports/uses <code>SubmitOn.EOF</
 </ul>
 <p>In <code>src/plcc/cmd/rep.py</code>:</p>
 <p>Change the import <code>from .source_runner import SourceRunner, SubmitOn</code> to:</p>
-<pre><code class="language-python">from .source_runner import SourceRunner
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.source_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourceRunner</span>
+</code></pre></div>
 <p>Replace the runner construction and the trailing <code>completed</code> branch (currently):</p>
-<pre><code class="language-python">        runner = SourceRunner(submit_on=SubmitOn.EOF)
-        completed = runner.run(sources, handler)
-    finally:
-        ...
-    if not completed:
-        sys.exit(1)
-    verbose.emit(Events.FINISHED, message='done')
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">(</span><span class="n">submit_on</span><span class="o">=</span><span class="n">SubmitOn</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+        <span class="n">completed</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">completed</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+</code></pre></div>
 <p>with:</p>
-<pre><code class="language-python">        runner = SourceRunner()
-        runner.run(sources, handler)
-    finally:
-        ...
-    verbose.emit(Events.FINISHED, message='done')
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">()</span>
+        <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+</code></pre></div>
 <p>(Leave the <code>finally</code> block body unchanged.)</p>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>parse.py</code></strong></li>
@@ -3012,19 +3013,19 @@ Expected: FAIL — <code>rep.main</code> still imports/uses <code>SubmitOn.EOF</
 <p>In <code>src/plcc/cmd/parse.py</code>:</p>
 <p>Change <code>from .source_runner import SourceRunner, SubmitOn</code> to <code>from .source_runner import SourceRunner</code>.</p>
 <p>Replace:</p>
-<pre><code class="language-python">    runner = SourceRunner(submit_on=SubmitOn.EOF)
-    completed = runner.run(sources, handler)
+<div class="highlight"><pre><span></span><code>    <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">(</span><span class="n">submit_on</span><span class="o">=</span><span class="n">SubmitOn</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+    <span class="n">completed</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
 
-    if not completed or handler.had_error:
-        sys.exit(1)
-</code></pre>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">completed</span> <span class="ow">or</span> <span class="n">handler</span><span class="o">.</span><span class="n">had_error</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
 <p>with:</p>
-<pre><code class="language-python">    runner = SourceRunner()
-    runner.run(sources, handler)
+<div class="highlight"><pre><span></span><code>    <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">()</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
 
-    if handler.had_error:
-        sys.exit(1)
-</code></pre>
+    <span class="k">if</span> <span class="n">handler</span><span class="o">.</span><span class="n">had_error</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Update the parse main test if needed</strong></li>
 </ul>
@@ -3037,9 +3038,9 @@ Expected: PASS.</p>
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/rep.py src/plcc/cmd/parse.py src/plcc/cmd/rep_test.py src/plcc/cmd/parse_test.py
-git commit -m &quot;$(printf 'feat(093): wire orchestrators to incremental runner\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/parse.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): wire orchestrators to incremental runner\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-7-end-to-end-verification-and-docs">Task 7: End-to-end verification and docs</h3>
 <p>Verify the full behavior against a real grammar and update the orchestrator docs.</p>
@@ -3075,9 +3076,9 @@ Expected: the new e2e test fails first if the harness wiring is incomplete; fix 
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add docs/cli/orchestrators.md test  # plus the new e2e test path
-git commit -m &quot;$(printf 'docs(093): document incremental interactive mode and ^D [skip ci]\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;')&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/cli/orchestrators.md<span class="w"> </span><span class="nb">test</span><span class="w">  </span><span class="c1"># plus the new e2e test path</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;docs(093): document incremental interactive mode and ^D [skip ci]\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <p>(Split into two commits — a <code>feat(093)</code> for the e2e test and a <code>docs(093): ... [skip ci]</code> for the docs — if you prefer the e2e test to run in CI.)</p>
 <hr />
 <h2 id="self-review">Self-Review</h2>

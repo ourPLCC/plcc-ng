@@ -2364,9 +2364,9 @@ target-language code into classes generated from the syntactic section.</p>
 <p>A bare <code>%</code> line separates the previous section from the semantic section.
 The first non-blank line of the semantic section body names the language
 used by the code blocks.</p>
-<pre><code class="language-text">%
+<div class="highlight"><pre><span></span><code>%
 Java
-</code></pre>
+</code></pre></div>
 <p>The supported languages are:</p>
 <ul>
 <li>Java</li>
@@ -2381,27 +2381,27 @@ and their fields that are generated from production rules.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>```text
-%
-Python</p>
-<p>Exp
+<div class="highlight"><pre><span></span><code>%
+Python
+
+Exp
 %%%
 def _run(self):
-    print("Hello")
+    print(&quot;Hello&quot;)
 %%%
-```</p>
+</code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>```text
-%
-Java</p>
-<p>Exp
+<div class="highlight"><pre><span></span><code>%
+Java
+
+Exp
 %%%
 public void _run() {
-    System.out.println("Hello");
+    System.out.println(&quot;Hello&quot;);
 }
 %%%
-```</p>
+</code></pre></div>
 </div>
 </div>
 </div>
@@ -2412,8 +2412,8 @@ can place inside <code>%%%</code>.</p>
 <h2 id="field-access">Field Access</h2>
 <p>Fields generated from production rules become public instance variables.</p>
 <p>For example, if the syntactic section contains:</p>
-<pre><code class="language-text">&lt;AddExp&gt; ::= &lt;Exp:left&gt; &lt;PLUS&gt; &lt;Exp:right&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code>&lt;AddExp&gt; ::= &lt;Exp:left&gt; &lt;PLUS&gt; &lt;Exp:right&gt;
+</code></pre></div>
 <p>the generated class contain fields such as <code>left</code>, <code>plus</code>, and <code>right</code>,
 which can be accessed from semantic code.</p>
 <h2 id="entry-point-method-_run">Entry point method <code>_run</code></h2>
@@ -2462,35 +2462,35 @@ Append the hook name to the class name with a colon:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Python</label><label for="__tabbed_2_2">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>```text
-WholeExp:import
+<div class="highlight"><pre><span></span><code>WholeExp:import
 %%%
 import sys
-%%%</p>
-<p>WholeExp
+%%%
+
+WholeExp
 %%%
 def eval(self):
     x = int(self.whole.lexeme)
-    sys.stderr.write(f"eval: {x}\n")
+    sys.stderr.write(f&quot;eval: {x}\n&quot;)
     return x
 %%%
-```</p>
+</code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>```text
-WholeExp:import
+<div class="highlight"><pre><span></span><code>WholeExp:import
 %%%
 import java.io.*;
-%%%</p>
-<p>WholeExp
+%%%
+
+WholeExp
 %%%
 public int eval() {
     int x = Integer.parseInt(whole.lexeme);
-    System.err.println("eval: " + x);
+    System.err.println(&quot;eval: &quot; + x);
     return x;
 }
 %%%
-```</p>
+</code></pre></div>
 </div>
 </div>
 </div>
@@ -2506,25 +2506,25 @@ The block contents are written verbatim to that file.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Python</label><label for="__tabbed_3_2">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p><code>text
-Helper      # Creates a file named Helper.py
+<div class="highlight"><pre><span></span><code>Helper      # Creates a file named Helper.py
 %%%
 class Helper:
     @staticmethod
     def double(x):
         return x * 2
-%%%</code></p>
+%%%
+</code></pre></div>
 </div>
 <div class="tabbed-block">
-<p><code>text
-Helper      # Creates a file named Helper.java
+<div class="highlight"><pre><span></span><code>Helper      # Creates a file named Helper.java
 %%%
 public class Helper {
     public static int doubled(int x) {
         return x * 2;
     }
 }
-%%%</code></p>
+%%%
+</code></pre></div>
 </div>
 </div>
 </div>

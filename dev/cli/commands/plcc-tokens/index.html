@@ -2308,8 +2308,8 @@
 <p>Tokenize source files given a spec JSON file; emit token JSONL (one JSON
 record per line, each record representing a token, skip, or error).</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2350,13 +2350,13 @@ record per line, each record representing a token, skip, or error).</p>
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Tokenize stdin using a spec JSON piped from plcc-spec
-plcc-spec spec.plcc | plcc-tokens - samples/
+<div class="highlight"><pre><span></span><code><span class="c1"># Tokenize stdin using a spec JSON piped from plcc-spec</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-tokens<span class="w"> </span>-<span class="w"> </span>samples/
 
-# Save spec JSON first, then tokenize
-plcc-spec spec.plcc &gt; build/spec.json
-plcc-tokens build/spec.json samples/
-</code></pre>
+<span class="c1"># Save spec JSON first, then tokenize</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span>&gt;<span class="w"> </span>build/spec.json
+plcc-tokens<span class="w"> </span>build/spec.json<span class="w"> </span>samples/
+</code></pre></div>
 
 
 

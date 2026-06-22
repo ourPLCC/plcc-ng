@@ -625,6 +625,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -641,6 +659,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-separators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section separators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#includes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Includes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-sections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional sections
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2232,41 +2324,49 @@ a language's tokens, syntax, and semantics.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>```text</p>
-<h1 id="lexical-section">Lexical section</h1>
-<p>skip WHITESPACE /\s+/
-token NUM /\d+/</p>
-<p>%</p>
-<h1 id="syntactic-section">Syntactic section</h1>
-<p><Exp> ::= <NUM></p>
-<p>%</p>
-<h1 id="semantic-section">Semantic section</h1>
-<p>Python</p>
-<p>Exp
+<div class="highlight"><pre><span></span><code># Lexical section
+skip WHITESPACE /\s+/
+token NUM /\d+/
+
+%
+
+# Syntactic section
+&lt;Exp&gt; ::= &lt;NUM&gt;
+
+%
+
+# Semantic section
+Python
+
+Exp
 %%%
-def <strong>run</strong>(self):
-    print("Hello")
+def __run__(self):
+    print(&quot;Hello&quot;)
 %%%
-```</p>
+</code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>```text</p>
-<h1 id="lexical-section_1">Lexical section</h1>
-<p>skip WHITESPACE /\s+/
-token NUM /\d+/</p>
-<p>%</p>
-<h1 id="syntactic-section_1">Syntactic section</h1>
-<p><Exp> ::= <NUM></p>
-<p>%</p>
-<h1 id="semantic-section_1">Semantic section</h1>
-<p>Java</p>
-<p>Exp
+<div class="highlight"><pre><span></span><code># Lexical section
+skip WHITESPACE /\s+/
+token NUM /\d+/
+
+%
+
+# Syntactic section
+&lt;Exp&gt; ::= &lt;NUM&gt;
+
+%
+
+# Semantic section
+Java
+
+Exp
 %%%
-public void <strong>run</strong>() {
-    System.out.println("Hello");
+public void __run__() {
+    System.out.println(&quot;Hello&quot;);
 }
 %%%
-```</p>
+</code></pre></div>
 </div>
 </div>
 </div>
@@ -2279,8 +2379,8 @@ Comments may appear anywhere except in semantic section code blocks.</p>
 <p>Although you can define an entire language in a single file, larger
 languages are often easier to maintain when split across multiple files
 using the <code>%include</code> statement.</p>
-<pre><code class="language-text">%include FILE_PATH
-</code></pre>
+<div class="highlight"><pre><span></span><code>%include FILE_PATH
+</code></pre></div>
 <p><code>%include</code> is valid in any section, but may not appear in a code block
 within the semantic section. <code>FILE_PATH</code> is relative to the directory
 containing the file it appears in.</p>

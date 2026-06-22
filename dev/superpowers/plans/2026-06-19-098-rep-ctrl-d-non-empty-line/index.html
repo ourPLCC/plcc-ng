@@ -2218,7 +2218,8 @@
 <li>TDD: write failing tests first, implement minimally, verify pass, commit.</li>
 <li><code>docs(...)</code> commit subjects must end with <code>[skip ci]</code>.</li>
 <li>Commit footer for every commit:
-  <code>Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;</code></li>
+  <div class="highlight"><pre><span></span><code>Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
+</code></pre></div></li>
 </ul>
 <hr />
 <h3 id="task-1-fix-_read_line-and-update-test-infrastructure">Task 1: Fix <code>_read_line</code> and update test infrastructure</h3>
@@ -2233,28 +2234,28 @@
 </ul>
 <p>In <code>src/plcc/cmd/source_runner_test.py</code>, replace the <code>_tty_stdin</code> helper with a version whose buffer defines <code>read1()</code> instead of relying on <code>BytesIO.readline()</code>. Then add the 098 regression test.</p>
 <p>Replace <code>_tty_stdin</code> (currently around line 85):</p>
-<pre><code class="language-python">def _tty_stdin(lines):
-    &quot;&quot;&quot;Simulate canonical TTY: each read1() call returns the next item from lines.&quot;&quot;&quot;
-    _iter = iter(lines)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_tty_stdin</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simulate canonical TTY: each read1() call returns the next item from lines.&quot;&quot;&quot;</span>
+    <span class="n">_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
-    class _TtyBuffer:
-        def read1(self, n=-1):
-            try:
-                return next(_iter)
-            except StopIteration:
-                return b&quot;&quot;
+    <span class="k">class</span><span class="w"> </span><span class="nc">_TtyBuffer</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">read1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">_iter</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
 
-    return SimpleNamespace(isatty=lambda: True, buffer=_TtyBuffer())
-</code></pre>
+    <span class="k">return</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">isatty</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="n">_TtyBuffer</span><span class="p">())</span>
+</code></pre></div>
 <p>Add this new test after <code>test_ctrl_d_empty_buffer_prints_newline</code> (around line 141):</p>
-<pre><code class="language-python">def test_ctrl_d_partial_line_at_top_level_prompt_force_submits(monkeypatch, runner):
-    # 098 regression: at &gt;&gt;&gt;, type &quot;hello&quot; then ^D (no Enter) — force-submit immediately.
-    monkeypatch.setattr(sys, &quot;stdin&quot;, _tty_stdin([b&quot;hello&quot;, b&quot;&quot;]))
-    handler = RecordingHandler(results=[b&quot;&quot;])
-    runner.run([&quot;-&quot;], handler)
-    assert handler.calls == [(b&quot;hello&quot;, &quot;-&quot;)]
-    assert handler.eof_flags == [True]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_partial_line_at_top_level_prompt_force_submits</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># 098 regression: at &gt;&gt;&gt;, type &quot;hello&quot; then ^D (no Enter) — force-submit immediately.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span> <span class="o">==</span> <span class="p">[(</span><span class="sa">b</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)]</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">eof_flags</span> <span class="o">==</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
 </ul>
@@ -2264,70 +2265,70 @@
 <li>[ ] <strong>Step 3: Fix <code>_read_line</code> in <code>source_runner.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/cmd/source_runner.py</code>, replace the body of <code>_read_line</code>:</p>
-<pre><code class="language-python">def _read_line(self, prompt):
-    try:
-        print(prompt, end=&quot;&quot;, flush=True, file=sys.stderr)
-        return sys.stdin.buffer.read1(65536)
-    except KeyboardInterrupt:
-        return None
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_read_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">read1</span><span class="p">(</span><span class="mi">65536</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update the three custom buffer classes in the test file</strong></li>
 </ul>
 <p>Three tests in <code>source_runner_test.py</code> define inner classes with a <code>readline()</code> method. Replace each <code>readline</code> with <code>read1</code>:</p>
-<p><strong><code>ImmediateInterrupt</code></strong> (around line 181, inside <code>test_ctrl_c_with_empty_buffer_exits_130</code>):</p>
-<pre><code class="language-python">class ImmediateInterrupt:
-    isatty = lambda self: True
+<p><strong><code>ImmediateInterrupt</code></strong> (around line 181, inside <code>test_ctrl_c_with_empty_buffer_exits_130</code>):
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ImmediateInterrupt</span><span class="p">:</span>
+    <span class="n">isatty</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="kc">True</span>
 
-    @property
-    def buffer(self):
-        return self
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
-    def read1(self, n=-1):
-        raise KeyboardInterrupt
-</code></pre>
-<p><strong><code>InterruptAfterLine</code></strong> (around line 197, inside <code>test_ctrl_c_with_buffer_clears_and_continues</code>):</p>
-<pre><code class="language-python">class InterruptAfterLine:
-    def __init__(self):
-        self._calls = 0
+    <span class="k">def</span><span class="w"> </span><span class="nf">read1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyboardInterrupt</span>
+</code></pre></div></p>
+<p><strong><code>InterruptAfterLine</code></strong> (around line 197, inside <code>test_ctrl_c_with_buffer_clears_and_continues</code>):
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">InterruptAfterLine</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">=</span> <span class="mi">0</span>
 
-    isatty = lambda self: True
+    <span class="n">isatty</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="kc">True</span>
 
-    @property
-    def buffer(self):
-        return self
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
-    def read1(self, n=-1):
-        self._calls += 1
-        if self._calls == 1:
-            return b&quot;partial\n&quot;
-        if self._calls == 2:
-            raise KeyboardInterrupt
-        if self._calls == 3:
-            return b&quot;hello\n&quot;
-        return b&quot;&quot;
-</code></pre>
-<p><strong><code>EOFInContinuation</code></strong> (around line 262, inside <code>test_ctrl_d_in_continuation_submits_and_continues</code>):</p>
-<pre><code class="language-python">class EOFInContinuation:
-    def __init__(self):
-        self._calls = 0
+    <span class="k">def</span><span class="w"> </span><span class="nf">read1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;partial</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyboardInterrupt</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div></p>
+<p><strong><code>EOFInContinuation</code></strong> (around line 262, inside <code>test_ctrl_d_in_continuation_submits_and_continues</code>):
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">EOFInContinuation</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">=</span> <span class="mi">0</span>
 
-    isatty = lambda self: True
+    <span class="n">isatty</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="kc">True</span>
 
-    @property
-    def buffer(self):
-        return self
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
-    def read1(self, n=-1):
-        self._calls += 1
-        if self._calls == 1:
-            return b&quot;hello\n&quot;
-        if self._calls == 2:
-            return b&quot;&quot;
-        if self._calls == 3:
-            return b&quot;world\n&quot;
-        return b&quot;&quot;
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;world</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 5: Run all tests to verify they pass</strong></li>
 </ul>
@@ -2341,20 +2342,20 @@
 <ul>
 <li>[ ] <strong>Step 7: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/source_runner.py src/plcc/cmd/source_runner_test.py
-git commit -m &quot;$(cat &lt;&lt;'EOF'
-fix(098): replace readline with read1 so one ^D submits partial line
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/source_runner.py<span class="w"> </span>src/plcc/cmd/source_runner_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<span class="s">fix(098): replace readline with read1 so one ^D submits partial line</span>
 
-On a real TTY in canonical mode, readline() blocks after the first ^D
-flushes buffered content because it loops calling read() until it sees
-a newline or an empty read. A second ^D was required to produce the
-empty read that caused readline() to return. read1(65536) makes exactly
-one OS read() call and returns immediately with whatever was flushed.
+<span class="s">On a real TTY in canonical mode, readline() blocks after the first ^D</span>
+<span class="s">flushes buffered content because it loops calling read() until it sees</span>
+<span class="s">a newline or an empty read. A second ^D was required to produce the</span>
+<span class="s">empty read that caused readline() to return. read1(65536) makes exactly</span>
+<span class="s">one OS read() call and returns immediately with whatever was flushed.</span>
 
-Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;
-EOF
-)&quot;
-</code></pre>
+<span class="s">Co-Authored-By: Claude Sonnet 4.6 &lt;noreply@anthropic.com&gt;</span>
+<span class="s">EOF</span>
+<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="self-review">Self-Review</h2>
 <p><strong>Spec coverage:</strong>

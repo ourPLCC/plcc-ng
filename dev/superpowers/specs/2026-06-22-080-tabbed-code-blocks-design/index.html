@@ -2216,31 +2216,31 @@ Users who only care about one language must visually skip the other throughout t
 Tab selection syncs across all tab groups on the page and persists across pages for the session.</p>
 <h2 id="configuration">Configuration</h2>
 <p>Add two feature flags and the required Markdown extension to <code>mkdocs.yml</code>:</p>
-<pre><code class="language-yaml">theme:
-  features:
-    - content.tabs        # enables === &quot;Label&quot; tab syntax
-    - content.tabs.link   # syncs matching tab labels across pages
+<div class="highlight"><pre><span></span><code><span class="nt">theme</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">features</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">content.tabs</span><span class="w">        </span><span class="c1"># enables === &quot;Label&quot; tab syntax</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">content.tabs.link</span><span class="w">   </span><span class="c1"># syncs matching tab labels across pages</span>
 
-markdown_extensions:
-  - pymdownx.tabbed:
-      alternate_style: true   # required for MkDocs Material v9+
-</code></pre>
+<span class="nt">markdown_extensions</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">pymdownx.tabbed</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">alternate_style</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">   </span><span class="c1"># required for MkDocs Material v9+</span>
+</code></pre></div>
 <p><code>pymdownx.tabbed</code> ships as a transitive dependency of <code>mkdocs-material</code> and is
 already installed — no new packages are needed.</p>
 <h2 id="tab-structure">Tab Structure</h2>
 <p>Tab labels are exactly <code>"Python"</code> and <code>"Java"</code>. Python always appears first because it works
 out of the box — users only need Python to install plcc-ng and run their spec. Java requires
 a separate JDK install.</p>
-<pre><code class="language-markdown">=== &quot;Python&quot;
-    ```text
+<div class="highlight"><pre><span></span><code>=== &quot;Python&quot;
+<span class="sb">    ```text</span>
     &lt;python content&gt;
-    ```
+<span class="sb">    ```</span>
 
 === &quot;Java&quot;
-    ```text
+<span class="sb">    ```text</span>
     &lt;java content&gt;
-    ```
-</code></pre>
+<span class="sb">    ```</span>
+</code></pre></div>
 <p>Because <code>content.tabs.link</code> is enabled, any tab group using these same labels on any page
 will stay in sync. Selecting "Java" on the quick-start page pre-selects "Java" on the
 semantic section and examples pages.</p>

@@ -2318,8 +2318,8 @@
 <h1 id="plcc-parse">plcc-parse</h1>
 <p>Parse source input and print the parse tree in human-readable format.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-parse [-v ...] [options] [SOURCE ...]
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-parse [-v ...] [options] [SOURCE ...]
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2356,12 +2356,12 @@
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Parse stdin
-echo &quot;42 36 2&quot; | plcc-parse
+<div class="highlight"><pre><span></span><code><span class="c1"># Parse stdin</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;42 36 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-parse
 
-# Parse files
-plcc-parse -s subtract.plcc samples/
-</code></pre>
+<span class="c1"># Parse files</span>
+plcc-parse<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples/
+</code></pre></div>
 <h2 id="interactive-mode">Interactive mode</h2>
 <p>When no source files are given and stdin is a terminal, <code>plcc-parse</code> reads
 input at a <code>&gt;&gt;&gt;</code> prompt. After each line, complete sentences are parsed and

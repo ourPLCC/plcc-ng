@@ -2319,8 +2319,8 @@
 <p>Dispatch to a parser plugin. Reads token JSONL from stdin and emits parse
 tree JSON to stdout. The parser plugin is selected with <code>--parser</code>.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-trees [-v ...] [options] --ll1=LL1_JSON
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-trees [-v ...] [options] --ll1=LL1_JSON
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2357,10 +2357,10 @@ tree JSON to stdout. The parser plugin is selected with <code>--parser</code>.</
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash">plcc-spec spec.plcc &gt; build/spec.json
-plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
-plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span>&gt;<span class="w"> </span>build/spec.json
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>build/ll1.json
+plcc-tokens<span class="w"> </span>build/spec.json<span class="w"> </span>samples/<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span>build/ll1.json
+</code></pre></div>
 <h2 id="parser-plugins">Parser plugins</h2>
 <p><code>plcc-trees</code> calls <code>plcc-parser-&lt;kind&gt;</code> for the given <code>--parser</code> value.
 Use <a href="../plcc-parser-list/"><code>plcc-parser-list</code></a> to see available plugins.

@@ -2221,43 +2221,43 @@
 <li>[ ] <strong>Step 1: Apply edits</strong></li>
 </ul>
 <p>Make these exact substitutions:</p>
-<p>Line 13 — change:</p>
-<pre><code>| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a grammar file |
-</code></pre>
-<p>to:</p>
-<pre><code>| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a spec file |
-</code></pre>
-<p>Line 25 — change:</p>
-<pre><code>| [`plcc-spec`](primitives.md#plcc-spec) | Parse and validate a `.plcc` grammar file; emit spec JSON |
-</code></pre>
-<p>to:</p>
-<pre><code>| [`plcc-spec`](primitives.md#plcc-spec) | Parse and validate a `.plcc` spec file; emit spec JSON |
-</code></pre>
-<p>Line 30 — change:</p>
-<pre><code>| [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a grammar file |
-</code></pre>
-<p>to:</p>
-<pre><code>| [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a spec file |
-</code></pre>
-<p>Lines 42–46 — change the entire "Grammar memory" section:</p>
-<pre><code class="language-markdown">## Grammar memory
+<p>Line 13 — change:
+<div class="highlight"><pre><span></span><code>| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a grammar file |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| [`plcc-make`](orchestrators.md#plcc-make) | Build a PLCC project from a spec file |
+</code></pre></div></p>
+<p>Line 25 — change:
+<div class="highlight"><pre><span></span><code>| [`plcc-spec`](primitives.md#plcc-spec) | Parse and validate a `.plcc` grammar file; emit spec JSON |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| [`plcc-spec`](primitives.md#plcc-spec) | Parse and validate a `.plcc` spec file; emit spec JSON |
+</code></pre></div></p>
+<p>Line 30 — change:
+<div class="highlight"><pre><span></span><code>| [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a grammar file |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| [`plcc-diagram`](primitives.md#plcc-diagram) | Generate a class diagram from a spec file |
+</code></pre></div></p>
+<p>Lines 42–46 — change the entire "Grammar memory" section:
+<div class="highlight"><pre><span></span><code><span class="gu">## Grammar memory</span>
 
 The Level 2 orchestrators remember the grammar path between invocations.
-Pass `-g &lt;path&gt;` once; subsequent commands in the same directory use the same
+Pass <span class="sb">`-g &lt;path&gt;`</span> once; subsequent commands in the same directory use the same
 grammar automatically.
-</code></pre>
-<p>to:</p>
-<pre><code class="language-markdown">## Spec memory
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="gu">## Spec memory</span>
 
 The Level 2 orchestrators remember the spec path between invocations.
-Pass `-s &lt;path&gt;` once; subsequent commands in the same directory use the same
+Pass <span class="sb">`-s &lt;path&gt;`</span> once; subsequent commands in the same directory use the same
 spec automatically.
-</code></pre>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Verify no stale <code>grammar</code> references remain (excluding language-concept uses)</strong></li>
 </ul>
-<pre><code class="language-bash">grep -n &quot;grammar&quot; docs/cli/index.md
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;grammar&quot;</span><span class="w"> </span>docs/cli/index.md
+</code></pre></div>
 <p>Expected output: no lines (the file contained no language-concept uses of "grammar").</p>
 <hr />
 <h3 id="task-2-update-docscliorchestratorsmd">Task 2: Update <code>docs/cli/orchestrators.md</code></h3>
@@ -2266,113 +2266,113 @@ spec automatically.
 <ul>
 <li>[ ] <strong>Step 1: Apply edits</strong></li>
 </ul>
-<p>Line 10 — change:</p>
-<pre><code>Build a PLCC project from a grammar file.
-</code></pre>
-<p>to:</p>
-<pre><code>Build a PLCC project from a spec file.
-</code></pre>
-<p>Line 18 — change:</p>
-<pre><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. Defaults to `grammar.plcc` on first use. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. Defaults to `spec.plcc` on first use. |
-</code></pre>
-<p>Line 20 — change:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>Line 25 — change:</p>
-<pre><code>plcc-make -g subtract.plcc
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-make -s subtract.plcc
-</code></pre>
-<p>Line 28 — change:</p>
-<pre><code>Run `plcc-make` again after editing your grammar to rebuild.
-</code></pre>
-<p>to:</p>
-<pre><code>Run `plcc-make` again after editing your spec to rebuild.
-</code></pre>
-<p>Line 43 — change:</p>
-<pre><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
-</code></pre>
-<p>Line 45 — change:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>Lines 50–51 — change:</p>
-<pre><code>plcc-scan -g subtract.plcc samples
+<p>Line 10 — change:
+<div class="highlight"><pre><span></span><code>Build a PLCC project from a grammar file.
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>Build a PLCC project from a spec file.
+</code></pre></div></p>
+<p>Line 18 — change:
+<div class="highlight"><pre><span></span><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. Defaults to `grammar.plcc` on first use. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. Defaults to `spec.plcc` on first use. |
+</code></pre></div></p>
+<p>Line 20 — change:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div></p>
+<p>Line 25 — change:
+<div class="highlight"><pre><span></span><code>plcc-make -g subtract.plcc
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-make -s subtract.plcc
+</code></pre></div></p>
+<p>Line 28 — change:
+<div class="highlight"><pre><span></span><code>Run `plcc-make` again after editing your grammar to rebuild.
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>Run `plcc-make` again after editing your spec to rebuild.
+</code></pre></div></p>
+<p>Line 43 — change:
+<div class="highlight"><pre><span></span><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
+</code></pre></div></p>
+<p>Line 45 — change:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div></p>
+<p>Lines 50–51 — change:
+<div class="highlight"><pre><span></span><code>plcc-scan -g subtract.plcc samples
 echo &quot;42&quot; | plcc-scan
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-scan -s subtract.plcc samples
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-scan -s subtract.plcc samples
 echo &quot;42&quot; | plcc-scan
-</code></pre>
-<p>Line 67 — change:</p>
-<pre><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
-</code></pre>
-<p>Line 68 — change:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>Lines 73–74 — change:</p>
-<pre><code>plcc-parse -g subtract.plcc samples
+</code></pre></div></p>
+<p>Line 67 — change:
+<div class="highlight"><pre><span></span><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
+</code></pre></div></p>
+<p>Line 68 — change:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div></p>
+<p>Lines 73–74 — change:
+<div class="highlight"><pre><span></span><code>plcc-parse -g subtract.plcc samples
 echo &quot;42&quot; | plcc-parse
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-parse -s subtract.plcc samples
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-parse -s subtract.plcc samples
 echo &quot;42&quot; | plcc-parse
-</code></pre>
-<p>Line 81 — change:</p>
-<pre><code>REPL — read, eval, print loop for a PLCC grammar.
-</code></pre>
-<p>to:</p>
-<pre><code>REPL — read, eval, print loop for a PLCC spec.
-</code></pre>
-<p>Line 90 — change:</p>
-<pre><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
-</code></pre>
-<p>Line 92 — change:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>Lines 98–101 — change:</p>
-<pre><code># Run the 'subtract' semantic section against samples, then enter interactive mode
+</code></pre></div></p>
+<p>Line 81 — change:
+<div class="highlight"><pre><span></span><code>REPL — read, eval, print loop for a PLCC grammar.
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>REPL — read, eval, print loop for a PLCC spec.
+</code></pre></div></p>
+<p>Line 90 — change:
+<div class="highlight"><pre><span></span><code>| `-g PATH`, `--grammar=PATH` | Grammar to build from. Remembered across invocations. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-s PATH`, `--spec=PATH` | Spec to build from. Remembered across invocations. |
+</code></pre></div></p>
+<p>Line 92 — change:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div></p>
+<p>Lines 98–101 — change:
+<div class="highlight"><pre><span></span><code># Run the &#39;subtract&#39; semantic section against samples, then enter interactive mode
 plcc-rep -g subtract.plcc --tool=subtract samples
 
 # Evaluate a file only (no interactive mode)
 plcc-rep -g subtract.plcc samples &lt; /dev/null
-</code></pre>
-<p>to:</p>
-<pre><code># Run the 'subtract' semantic section against samples, then enter interactive mode
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code># Run the &#39;subtract&#39; semantic section against samples, then enter interactive mode
 plcc-rep -s subtract.plcc --tool=subtract samples
 
 # Evaluate a file only (no interactive mode)
 plcc-rep -s subtract.plcc samples &lt; /dev/null
-</code></pre>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Verify no stale file/flag references remain</strong></li>
 </ul>
-<pre><code class="language-bash">grep -n &quot;\-\-grammar\|-g PATH\|grammar file\|grammar banner\|grammar to rebuild\|grammar\.plcc&quot; docs/cli/orchestrators.md
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;\-\-grammar\|-g PATH\|grammar file\|grammar banner\|grammar to rebuild\|grammar\.plcc&quot;</span><span class="w"> </span>docs/cli/orchestrators.md
+</code></pre></div>
 <p>Expected output: no lines.</p>
 <hr />
 <h3 id="task-3-update-docscliprimitivesmd">Task 3: Update <code>docs/cli/primitives.md</code></h3>
@@ -2381,71 +2381,71 @@ plcc-rep -s subtract.plcc samples &lt; /dev/null
 <ul>
 <li>[ ] <strong>Step 1: Apply edits</strong></li>
 </ul>
-<p>Line 10 — change:</p>
-<pre><code>Parse, validate, and print a PLCC grammar file as JSON.
-</code></pre>
-<p>to:</p>
-<pre><code>Parse, validate, and print a PLCC spec file as JSON.
-</code></pre>
-<p>Line 18 — change:</p>
-<pre><code>| `FILE` | `.plcc` grammar file. Use `-` to read from stdin. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `FILE` | `.plcc` spec file. Use `-` to read from stdin. |
-</code></pre>
-<p>Line 24 — change:</p>
-<pre><code>plcc-spec grammar.plcc
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-spec spec.plcc
-</code></pre>
-<p>Line 47 — change:</p>
-<pre><code>plcc-spec grammar.plcc | plcc-tokens - samples
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-spec spec.plcc | plcc-tokens - samples
-</code></pre>
-<p>Line 85 — change:</p>
-<pre><code>plcc-spec grammar.plcc | plcc-model
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-spec spec.plcc | plcc-model
-</code></pre>
-<p>Line 106 — change:</p>
-<pre><code>plcc-spec grammar.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
-</code></pre>
-<p>Line 113 — change:</p>
-<pre><code>Generate and display a class diagram from a PLCC grammar file.
-</code></pre>
-<p>to:</p>
-<pre><code>Generate and display a class diagram from a PLCC spec file.
-</code></pre>
-<p>Line 120 — change:</p>
-<pre><code>| `-g PATH`, `--grammar=PATH` | Grammar file. Remembers across invocations. Defaults to `grammar.plcc`. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-s PATH`, `--spec=PATH` | Spec file. Remembers across invocations. Defaults to `spec.plcc`. |
-</code></pre>
-<p>Line 123 — change:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>to:</p>
-<pre><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
-</code></pre>
-<p>Line 128 — change:</p>
-<pre><code>plcc-diagram -g mylang.plcc
-</code></pre>
-<p>to:</p>
-<pre><code>plcc-diagram -s mylang.plcc
-</code></pre>
+<p>Line 10 — change:
+<div class="highlight"><pre><span></span><code>Parse, validate, and print a PLCC grammar file as JSON.
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>Parse, validate, and print a PLCC spec file as JSON.
+</code></pre></div></p>
+<p>Line 18 — change:
+<div class="highlight"><pre><span></span><code>| `FILE` | `.plcc` grammar file. Use `-` to read from stdin. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `FILE` | `.plcc` spec file. Use `-` to read from stdin. |
+</code></pre></div></p>
+<p>Line 24 — change:
+<div class="highlight"><pre><span></span><code>plcc-spec grammar.plcc
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-spec spec.plcc
+</code></pre></div></p>
+<p>Line 47 — change:
+<div class="highlight"><pre><span></span><code>plcc-spec grammar.plcc | plcc-tokens - samples
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-spec spec.plcc | plcc-tokens - samples
+</code></pre></div></p>
+<p>Line 85 — change:
+<div class="highlight"><pre><span></span><code>plcc-spec grammar.plcc | plcc-model
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-spec spec.plcc | plcc-model
+</code></pre></div></p>
+<p>Line 106 — change:
+<div class="highlight"><pre><span></span><code>plcc-spec grammar.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=out/
+</code></pre></div></p>
+<p>Line 113 — change:
+<div class="highlight"><pre><span></span><code>Generate and display a class diagram from a PLCC grammar file.
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>Generate and display a class diagram from a PLCC spec file.
+</code></pre></div></p>
+<p>Line 120 — change:
+<div class="highlight"><pre><span></span><code>| `-g PATH`, `--grammar=PATH` | Grammar file. Remembers across invocations. Defaults to `grammar.plcc`. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-s PATH`, `--spec=PATH` | Spec file. Remembers across invocations. Defaults to `spec.plcc`. |
+</code></pre></div></p>
+<p>Line 123 — change:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| `-b`, `--banner` | Show the version and spec banner on stderr. |
+</code></pre></div></p>
+<p>Line 128 — change:
+<div class="highlight"><pre><span></span><code>plcc-diagram -g mylang.plcc
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>plcc-diagram -s mylang.plcc
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Verify no stale file/flag references remain</strong></li>
 </ul>
-<pre><code class="language-bash">grep -n &quot;grammar file\|grammar\.plcc\|\-\-grammar\|-g PATH\|grammar banner&quot; docs/cli/primitives.md
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;grammar file\|grammar\.plcc\|\-\-grammar\|-g PATH\|grammar banner&quot;</span><span class="w"> </span>docs/cli/primitives.md
+</code></pre></div>
 <p>Expected output: no lines.</p>
 <hr />
 <h3 id="task-4-update-contributingmd-and-commit-pr-a">Task 4: Update <code>CONTRIBUTING.md</code> and commit PR A</h3>
@@ -2454,24 +2454,24 @@ plcc-rep -s subtract.plcc samples &lt; /dev/null
 <ul>
 <li>[ ] <strong>Step 1: Apply edit</strong></li>
 </ul>
-<p>Line 57 — change:</p>
-<pre><code>| **End-to-end** | `tests/bats/e2e/` | The full pipeline from grammar file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
-</code></pre>
-<p>to:</p>
-<pre><code>| **End-to-end** | `tests/bats/e2e/` | The full pipeline from spec file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
-</code></pre>
+<p>Line 57 — change:
+<div class="highlight"><pre><span></span><code>| **End-to-end** | `tests/bats/e2e/` | The full pipeline from grammar file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>| **End-to-end** | `tests/bats/e2e/` | The full pipeline from spec file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Verify</strong></li>
 </ul>
-<pre><code class="language-bash">grep -n &quot;grammar file&quot; CONTRIBUTING.md
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;grammar file&quot;</span><span class="w"> </span>CONTRIBUTING.md
+</code></pre></div>
 <p>Expected output: no lines.</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add docs/cli/index.md docs/cli/orchestrators.md docs/cli/primitives.md CONTRIBUTING.md
-git commit -m &quot;docs(089): update docs grammar-file references to spec-file [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/cli/index.md<span class="w"> </span>docs/cli/orchestrators.md<span class="w"> </span>docs/cli/primitives.md<span class="w"> </span>CONTRIBUTING.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(089): update docs grammar-file references to spec-file [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="phase-4-internal-identifiers-pr-b">Phase 4 — Internal Identifiers (PR B)</h2>
 <h3 id="task-5-tdd-for-buildspecpy">Task 5: TDD for <code>build/spec.py</code></h3>
@@ -2484,99 +2484,99 @@ git commit -m &quot;docs(089): update docs grammar-file references to spec-file 
 <li>[ ] <strong>Step 1: Write failing test file</strong></li>
 </ul>
 <p>Create <code>src/plcc/build/spec_test.py</code>:</p>
-<pre><code class="language-python"># src/plcc/build/spec_test.py
-from plcc.build.spec import read_spec, write_spec, resolve_spec_path, DEFAULT_SPEC_FILE
+<div class="highlight"><pre><span></span><code><span class="c1"># src/plcc/build/spec_test.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span><span class="p">,</span> <span class="n">write_spec</span><span class="p">,</span> <span class="n">resolve_spec_path</span><span class="p">,</span> <span class="n">DEFAULT_SPEC_FILE</span>
 
 
-def test_read_spec_returns_none_when_absent(tmp_path):
-    assert read_spec(tmp_path) is None
+<span class="k">def</span><span class="w"> </span><span class="nf">test_read_spec_returns_none_when_absent</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">read_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 
 
-def test_read_spec_returns_stored_path(tmp_path):
-    (tmp_path / &quot;.spec&quot;).write_text(&quot;a.plcc&quot;)
-    assert read_spec(tmp_path) == &quot;a.plcc&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_read_spec_returns_stored_path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;.spec&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;a.plcc&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">read_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;a.plcc&quot;</span>
 
 
-def test_write_spec_creates_file(tmp_path):
-    write_spec(tmp_path, &quot;a.plcc&quot;)
-    assert (tmp_path / &quot;.spec&quot;).read_text() == &quot;a.plcc&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_write_spec_creates_file</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">write_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s2">&quot;a.plcc&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;.spec&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;a.plcc&quot;</span>
 
 
-def test_write_spec_overwrites_existing(tmp_path):
-    write_spec(tmp_path, &quot;a.plcc&quot;)
-    write_spec(tmp_path, &quot;b.plcc&quot;)
-    assert read_spec(tmp_path) == &quot;b.plcc&quot;
+<span class="k">def</span><span class="w"> </span><span class="nf">test_write_spec_overwrites_existing</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">write_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s2">&quot;a.plcc&quot;</span><span class="p">)</span>
+    <span class="n">write_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="s2">&quot;b.plcc&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">read_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;b.plcc&quot;</span>
 
 
-def test_read_spec_returns_none_when_empty(tmp_path):
-    (tmp_path / &quot;.spec&quot;).write_text(&quot;   &quot;)
-    assert read_spec(tmp_path) is None
+<span class="k">def</span><span class="w"> </span><span class="nf">test_read_spec_returns_none_when_empty</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;.spec&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">read_spec</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
 
 
-def test_resolve_spec_path_explicit_wins():
-    assert resolve_spec_path('explicit.plcc', 'stored.plcc') == 'explicit.plcc'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_resolve_spec_path_explicit_wins</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">resolve_spec_path</span><span class="p">(</span><span class="s1">&#39;explicit.plcc&#39;</span><span class="p">,</span> <span class="s1">&#39;stored.plcc&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;explicit.plcc&#39;</span>
 
 
-def test_resolve_spec_path_uses_stored_when_no_explicit():
-    assert resolve_spec_path(None, 'stored.plcc') == 'stored.plcc'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_resolve_spec_path_uses_stored_when_no_explicit</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">resolve_spec_path</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;stored.plcc&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;stored.plcc&#39;</span>
 
 
-def test_resolve_spec_path_falls_back_to_default():
-    assert resolve_spec_path(None, None) == DEFAULT_SPEC_FILE
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_resolve_spec_path_falls_back_to_default</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">resolve_spec_path</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="n">DEFAULT_SPEC_FILE</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run to confirm import failure</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash -k spec_test
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>-k<span class="w"> </span>spec_test
+</code></pre></div>
 <p>Expected: <code>ModuleNotFoundError: No module named 'plcc.build.spec'</code></p>
 <ul>
 <li>[ ] <strong>Step 3: Create <code>src/plcc/build/spec.py</code></strong></li>
 </ul>
-<pre><code class="language-python"># src/plcc/build/spec.py
-from pathlib import Path
+<div class="highlight"><pre><span></span><code><span class="c1"># src/plcc/build/spec.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-_SPEC_FILE = &quot;.spec&quot;
-DEFAULT_SPEC_FILE = &quot;spec.plcc&quot;
-
-
-def read_spec(build_dir):
-    p = Path(build_dir) / _SPEC_FILE
-    try:
-        return p.read_text().strip() or None
-    except FileNotFoundError:
-        return None
+<span class="n">_SPEC_FILE</span> <span class="o">=</span> <span class="s2">&quot;.spec&quot;</span>
+<span class="n">DEFAULT_SPEC_FILE</span> <span class="o">=</span> <span class="s2">&quot;spec.plcc&quot;</span>
 
 
-def write_spec(build_dir, path):
-    (Path(build_dir) / _SPEC_FILE).write_text(path)
+<span class="k">def</span><span class="w"> </span><span class="nf">read_spec</span><span class="p">(</span><span class="n">build_dir</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">build_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">_SPEC_FILE</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
 
-def resolve_spec_path(explicit, stored):
-    if explicit is not None:
-        return explicit
-    elif stored is not None:
-        return stored
-    else:
-        return DEFAULT_SPEC_FILE
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_spec</span><span class="p">(</span><span class="n">build_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">build_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">_SPEC_FILE</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_spec_path</span><span class="p">(</span><span class="n">explicit</span><span class="p">,</span> <span class="n">stored</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">explicit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">explicit</span>
+    <span class="k">elif</span> <span class="n">stored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stored</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DEFAULT_SPEC_FILE</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run tests to confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash -k spec_test
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>-k<span class="w"> </span>spec_test
+</code></pre></div>
 <p>Expected: 8 passed</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the old grammar module files</strong></li>
 </ul>
-<pre><code class="language-bash">git rm src/plcc/build/grammar.py src/plcc/build/grammar_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>rm<span class="w"> </span>src/plcc/build/grammar.py<span class="w"> </span>src/plcc/build/grammar_test.py
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/build/spec.py src/plcc/build/spec_test.py
-git commit -m &quot;refactor(089): rename build/grammar → build/spec, .grammar → .spec&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/build/spec.py<span class="w"> </span>src/plcc/build/spec_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(089): rename build/grammar → build/spec, .grammar → .spec&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-6-tdd-for-cmdspecpy">Task 6: TDD for <code>cmd/spec.py</code></h3>
 <p><strong>Files:</strong>
@@ -2588,107 +2588,107 @@ git commit -m &quot;refactor(089): rename build/grammar → build/spec, .grammar
 <li>[ ] <strong>Step 1: Write failing test file</strong></li>
 </ul>
 <p>Create <code>src/plcc/cmd/spec_test.py</code>:</p>
-<pre><code class="language-python"># src/plcc/cmd/spec_test.py
-import pytest
-from plcc.cmd.spec import validate_spec_flag, spec_flag_for_child, SPEC_OPTION
-from plcc.build.spec import DEFAULT_SPEC_FILE
+<div class="highlight"><pre><span></span><code><span class="c1"># src/plcc/cmd/spec_test.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_spec_flag</span><span class="p">,</span> <span class="n">spec_flag_for_child</span><span class="p">,</span> <span class="n">SPEC_OPTION</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_SPEC_FILE</span>
 
 
-def test_spec_option_contains_flag():
-    assert '--spec' in SPEC_OPTION
+<span class="k">def</span><span class="w"> </span><span class="nf">test_spec_option_contains_flag</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="s1">&#39;--spec&#39;</span> <span class="ow">in</span> <span class="n">SPEC_OPTION</span>
 
 
-def test_spec_option_contains_default_filename():
-    assert DEFAULT_SPEC_FILE in SPEC_OPTION
+<span class="k">def</span><span class="w"> </span><span class="nf">test_spec_option_contains_default_filename</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">DEFAULT_SPEC_FILE</span> <span class="ow">in</span> <span class="n">SPEC_OPTION</span>
 
 
-def test_validate_spec_flag_none_does_nothing():
-    validate_spec_flag('plcc-test', {'--spec': None})
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_spec_flag_none_does_nothing</span><span class="p">():</span>
+    <span class="n">validate_spec_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
 
 
-def test_validate_spec_flag_existing_file_does_nothing(tmp_path):
-    f = tmp_path / 'foo.plcc'
-    f.write_text('')
-    validate_spec_flag('plcc-test', {'--spec': str(f)})
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_spec_flag_existing_file_does_nothing</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;foo.plcc&#39;</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">validate_spec_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)})</span>
 
 
-def test_validate_spec_flag_missing_file_exits_nonzero():
-    with pytest.raises(SystemExit) as exc:
-        validate_spec_flag('plcc-test', {'--spec': 'nonexistent.plcc'})
-    assert exc.value.code != 0
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_spec_flag_missing_file_exits_nonzero</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">validate_spec_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
 
 
-def test_validate_spec_flag_missing_file_prints_cmd_name(capsys):
-    with pytest.raises(SystemExit):
-        validate_spec_flag('plcc-test', {'--spec': 'nonexistent.plcc'})
-    assert 'plcc-test' in capsys.readouterr().err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_spec_flag_missing_file_prints_cmd_name</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">validate_spec_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="s1">&#39;plcc-test&#39;</span> <span class="ow">in</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span><span class="o">.</span><span class="n">err</span>
 
 
-def test_validate_spec_flag_missing_file_prints_path(capsys):
-    with pytest.raises(SystemExit):
-        validate_spec_flag('plcc-test', {'--spec': 'nonexistent.plcc'})
-    assert 'nonexistent.plcc' in capsys.readouterr().err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_spec_flag_missing_file_prints_path</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">validate_spec_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="s1">&#39;nonexistent.plcc&#39;</span> <span class="ow">in</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span><span class="o">.</span><span class="n">err</span>
 
 
-def test_spec_flag_for_child_none_returns_empty():
-    assert spec_flag_for_child({'--spec': None}) == []
+<span class="k">def</span><span class="w"> </span><span class="nf">test_spec_flag_for_child_none_returns_empty</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">spec_flag_for_child</span><span class="p">({</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span> <span class="o">==</span> <span class="p">[]</span>
 
 
-def test_spec_flag_for_child_path_returns_flag():
-    assert spec_flag_for_child({'--spec': 'foo.plcc'}) == ['--spec=foo.plcc']
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_spec_flag_for_child_path_returns_flag</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">spec_flag_for_child</span><span class="p">({</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;foo.plcc&#39;</span><span class="p">})</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;--spec=foo.plcc&#39;</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run to confirm import failure</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash -k spec_test
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>-k<span class="w"> </span>spec_test
+</code></pre></div>
 <p>Expected: <code>ModuleNotFoundError: No module named 'plcc.cmd.spec'</code></p>
 <ul>
 <li>[ ] <strong>Step 3: Create <code>src/plcc/cmd/spec.py</code></strong></li>
 </ul>
-<pre><code class="language-python"># src/plcc/cmd/spec.py
-import os
-import sys
+<div class="highlight"><pre><span></span><code><span class="c1"># src/plcc/cmd/spec.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-from plcc.build.spec import DEFAULT_SPEC_FILE
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_SPEC_FILE</span>
 
-SPEC_OPTION = f&quot;&quot;&quot;\
-    -s &lt;path&gt; --spec=&lt;path&gt;
-                            Spec to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to {DEFAULT_SPEC_FILE} on first use.
-&quot;&quot;&quot;
-
-
-def validate_spec_flag(cmd_name, args):
-    path = args['--spec']
-    if path is not None and not os.path.exists(path):
-        print(f&quot;{cmd_name}: spec file not found: {path}&quot;, file=sys.stderr)
-        print(file=sys.stderr)
-        print(f&quot;Run '{cmd_name} --help' for more information.&quot;, file=sys.stderr)
-        sys.exit(1)
+<span class="n">SPEC_OPTION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -s &lt;path&gt; --spec=&lt;path&gt;</span>
+<span class="s2">                            Spec to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to </span><span class="si">{</span><span class="n">DEFAULT_SPEC_FILE</span><span class="si">}</span><span class="s2"> on first use.</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
 
-def spec_flag_for_child(args):
-    path = args['--spec']
-    return [f'--spec={path}'] if path is not None else []
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_spec_flag</span><span class="p">(</span><span class="n">cmd_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2">: spec file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run &#39;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2"> --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spec_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;--spec=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run tests to confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash -k spec_test
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>-k<span class="w"> </span>spec_test
+</code></pre></div>
 <p>Expected: 10 passed</p>
 <ul>
 <li>[ ] <strong>Step 5: Delete the old grammar module files</strong></li>
 </ul>
-<pre><code class="language-bash">git rm src/plcc/cmd/grammar.py src/plcc/cmd/grammar_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>rm<span class="w"> </span>src/plcc/cmd/grammar.py<span class="w"> </span>src/plcc/cmd/grammar_test.py
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/spec.py src/plcc/cmd/spec_test.py
-git commit -m &quot;refactor(089): rename cmd/grammar → cmd/spec and its symbols&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/spec.py<span class="w"> </span>src/plcc/cmd/spec_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(089): rename cmd/grammar → cmd/spec and its symbols&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-7-update-imports-and-locals-in-makepy">Task 7: Update imports and locals in <code>make.py</code></h3>
 <p><strong>Files:</strong>
@@ -2697,105 +2697,105 @@ git commit -m &quot;refactor(089): rename cmd/grammar → cmd/spec and its symbo
 <ul>
 <li>[ ] <strong>Step 1: Replace the two import lines (lines 18–19)</strong></li>
 </ul>
-<p>Change:</p>
-<pre><code class="language-python">from plcc.build.grammar import read_grammar, write_grammar, resolve_grammar_path
-from plcc.cmd.grammar import GRAMMAR_OPTION
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from plcc.build.spec import read_spec, write_spec, resolve_spec_path
-from plcc.cmd.spec import SPEC_OPTION
-</code></pre>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span><span class="p">,</span> <span class="n">write_grammar</span><span class="p">,</span> <span class="n">resolve_grammar_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span><span class="p">,</span> <span class="n">write_spec</span><span class="p">,</span> <span class="n">resolve_spec_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPEC_OPTION</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Update the docstring reference (line 31)</strong></li>
 </ul>
-<p>Change:</p>
-<pre><code class="language-python">&quot;&quot;&quot; + GRAMMAR_OPTION + &quot;&quot;&quot;\
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">&quot;&quot;&quot; + SPEC_OPTION + &quot;&quot;&quot;\
-</code></pre>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot; + GRAMMAR_OPTION + &quot;&quot;&quot;</span>\
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot; + SPEC_OPTION + &quot;&quot;&quot;</span>\
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 3: Rename locals in <code>main()</code> (lines 59–103)</strong></li>
 </ul>
-<p>Change:</p>
-<pre><code class="language-python">    explicit_grammar = args['--spec']
-    through = args['--through']
-    build_dir = Path('build')
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="n">explicit_grammar</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+    <span class="n">through</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--through&#39;</span><span class="p">]</span>
+    <span class="n">build_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)</span>
 
-    stored_grammar = read_grammar(build_dir) if build_dir.is_dir() else None
+    <span class="n">stored_grammar</span> <span class="o">=</span> <span class="n">read_grammar</span><span class="p">(</span><span class="n">build_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">build_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
 
-    grammar = resolve_grammar_path(explicit_grammar, stored_grammar)
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">    explicit_spec = args['--spec']
-    through = args['--through']
-    build_dir = Path('build')
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">resolve_grammar_path</span><span class="p">(</span><span class="n">explicit_grammar</span><span class="p">,</span> <span class="n">stored_grammar</span><span class="p">)</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>    <span class="n">explicit_spec</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+    <span class="n">through</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--through&#39;</span><span class="p">]</span>
+    <span class="n">build_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)</span>
 
-    stored_spec = read_spec(build_dir) if build_dir.is_dir() else None
+    <span class="n">stored_spec</span> <span class="o">=</span> <span class="n">read_spec</span><span class="p">(</span><span class="n">build_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">build_dir</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
 
-    spec = resolve_spec_path(explicit_spec, stored_spec)
-</code></pre>
-<p>Change:</p>
-<pre><code class="language-python">    if explicit_grammar is None and stored_grammar is not None and not os.path.exists(grammar):
-        print(f&quot;plcc-make: spec file not found: {grammar}&quot;, file=sys.stderr)
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">    if explicit_spec is None and stored_spec is not None and not os.path.exists(spec):
-        print(f&quot;plcc-make: spec file not found: {spec}&quot;, file=sys.stderr)
-</code></pre>
-<p>Change:</p>
-<pre><code class="language-python">    if not os.path.exists(grammar):
-        print(f&quot;plcc-make: spec file not found: {grammar}&quot;, file=sys.stderr)
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">    if not os.path.exists(spec):
-        print(f&quot;plcc-make: spec file not found: {spec}&quot;, file=sys.stderr)
-</code></pre>
-<p>Change:</p>
-<pre><code class="language-python">    if banner:
-        print_banner(get_version(), os.path.abspath(grammar))
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">resolve_spec_path</span><span class="p">(</span><span class="n">explicit_spec</span><span class="p">,</span> <span class="n">stored_spec</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="n">explicit_grammar</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">stored_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="n">explicit_spec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">stored_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">spec</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">spec</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">grammar</span><span class="p">))</span>
 
-    if (
-        explicit_grammar is not None
-        and stored_grammar is not None
-        and explicit_grammar != stored_grammar
-    ):
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">    if banner:
-        print_banner(get_version(), os.path.abspath(spec))
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">explicit_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">stored_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">explicit_grammar</span> <span class="o">!=</span> <span class="n">stored_grammar</span>
+    <span class="p">):</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">spec</span><span class="p">))</span>
 
-    if (
-        explicit_spec is not None
-        and stored_spec is not None
-        and explicit_spec != stored_spec
-    ):
-</code></pre>
-<p>Change:</p>
-<pre><code class="language-python">    verbose.emit(Events.STARTED, message=f&quot;spec: {grammar}&quot;)
-    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">explicit_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">stored_spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="ow">and</span> <span class="n">explicit_spec</span> <span class="o">!=</span> <span class="n">stored_spec</span>
+    <span class="p">):</span>
+</code></pre></div></p>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    build_dir.mkdir(exist_ok=True)
-    write_grammar(build_dir, grammar)
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">    verbose.emit(Events.STARTED, message=f&quot;spec: {spec}&quot;)
-    child_flags = verbose.child_flags_for_orchestrator(min_level=0)
+    <span class="n">build_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">write_grammar</span><span class="p">(</span><span class="n">build_dir</span><span class="p">,</span> <span class="n">grammar</span><span class="p">)</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code>    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">spec</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-    build_dir.mkdir(exist_ok=True)
-    write_spec(build_dir, spec)
-</code></pre>
+    <span class="n">build_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">write_spec</span><span class="p">(</span><span class="n">build_dir</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Verify no stale grammar identifiers remain in make.py</strong></li>
 </ul>
-<pre><code class="language-bash">grep -n &quot;\bgrammar\b\|GRAMMAR_OPTION\|read_grammar\|write_grammar\|resolve_grammar&quot; src/plcc/cmd/make.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;\bgrammar\b\|GRAMMAR_OPTION\|read_grammar\|write_grammar\|resolve_grammar&quot;</span><span class="w"> </span>src/plcc/cmd/make.py
+</code></pre></div>
 <p>Expected output: no lines. (The only allowed "grammar" in this file is in the string <code>"grammar is not LL(1)"</code> on line 209, which refers to grammatical structure, not the file — verify it is still present and untouched.)</p>
 <ul>
 <li>[ ] <strong>Step 5: Run unit tests for make</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py
+</code></pre></div>
 <p>Expected: all pass (the make tests import from <code>plcc.build.spec</code> via make.py — if imports are wrong, you'll see ImportError).</p>
 <hr />
 <h3 id="task-8-update-imports-in-scanpy-parsepy-reppy-diagrampy">Task 8: Update imports in <code>scan.py</code>, <code>parse.py</code>, <code>rep.py</code>, <code>diagram.py</code></h3>
@@ -2808,47 +2808,47 @@ from plcc.cmd.spec import SPEC_OPTION
 <ul>
 <li>[ ] <strong>Step 1: Update <code>scan.py</code></strong></li>
 </ul>
-<p>Change lines 11–12:</p>
-<pre><code class="language-python">from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from plcc.build.spec import read_spec
-from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-</code></pre>
-<p>Update the docstring reference (search for <code>GRAMMAR_OPTION</code>):</p>
-<pre><code class="language-python">&quot;&quot;&quot; + GRAMMAR_OPTION + &quot;&quot;&quot;\
-</code></pre>
-<p>→</p>
-<pre><code class="language-python">&quot;&quot;&quot; + SPEC_OPTION + &quot;&quot;&quot;\
-</code></pre>
-<p>Update the three call sites in <code>main()</code>:</p>
-<pre><code class="language-python">    validate_grammar_flag('plcc-scan', args)
-</code></pre>
-<p>→</p>
-<pre><code class="language-python">    validate_spec_flag('plcc-scan', args)
-</code></pre>
-<pre><code class="language-python">        + grammar_flag_for_child(args)
-</code></pre>
-<p>→</p>
-<pre><code class="language-python">        + spec_flag_for_child(args)
-</code></pre>
-<pre><code class="language-python">        print_banner(get_version(), os.path.abspath(read_grammar(&quot;build&quot;)))
-</code></pre>
-<p>→</p>
-<pre><code class="language-python">        print_banner(get_version(), os.path.abspath(read_spec(&quot;build&quot;)))
-</code></pre>
+<p>Change lines 11–12:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPEC_OPTION</span><span class="p">,</span> <span class="n">validate_spec_flag</span><span class="p">,</span> <span class="n">spec_flag_for_child</span>
+</code></pre></div></p>
+<p>Update the docstring reference (search for <code>GRAMMAR_OPTION</code>):
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot; + GRAMMAR_OPTION + &quot;&quot;&quot;</span>\
+</code></pre></div>
+→
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot; + SPEC_OPTION + &quot;&quot;&quot;</span>\
+</code></pre></div></p>
+<p>Update the three call sites in <code>main()</code>:
+<div class="highlight"><pre><span></span><code>    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-scan&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</code></pre></div>
+→
+<div class="highlight"><pre><span></span><code>    <span class="n">validate_spec_flag</span><span class="p">(</span><span class="s1">&#39;plcc-scan&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</code></pre></div></p>
+<p><div class="highlight"><pre><span></span><code>        <span class="o">+</span> <span class="n">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</code></pre></div>
+→
+<div class="highlight"><pre><span></span><code>        <span class="o">+</span> <span class="n">spec_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</code></pre></div></p>
+<p><div class="highlight"><pre><span></span><code>        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_grammar</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">)))</span>
+</code></pre></div>
+→
+<div class="highlight"><pre><span></span><code>        <span class="n">print_banner</span><span class="p">(</span><span class="n">get_version</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_spec</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">)))</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Update <code>parse.py</code></strong></li>
 </ul>
-<p>Change lines 9–10:</p>
-<pre><code class="language-python">from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from plcc.build.spec import read_spec
-from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-</code></pre>
+<p>Change lines 9–10:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPEC_OPTION</span><span class="p">,</span> <span class="n">validate_spec_flag</span><span class="p">,</span> <span class="n">spec_flag_for_child</span>
+</code></pre></div></p>
 <p>Update docstring <code>GRAMMAR_OPTION</code> → <code>SPEC_OPTION</code>.</p>
 <p>Update call sites:
 - <code>validate_grammar_flag('plcc-parse', args)</code> → <code>validate_spec_flag('plcc-parse', args)</code>
@@ -2857,14 +2857,14 @@ from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 <ul>
 <li>[ ] <strong>Step 3: Update <code>rep.py</code></strong></li>
 </ul>
-<p>Change lines 11–12:</p>
-<pre><code class="language-python">from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from plcc.build.spec import read_spec
-from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-</code></pre>
+<p>Change lines 11–12:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPEC_OPTION</span><span class="p">,</span> <span class="n">validate_spec_flag</span><span class="p">,</span> <span class="n">spec_flag_for_child</span>
+</code></pre></div></p>
 <p>Update docstring <code>GRAMMAR_OPTION</code> → <code>SPEC_OPTION</code>.</p>
 <p>Update call sites:
 - <code>validate_grammar_flag('plcc-rep', args)</code> → <code>validate_spec_flag('plcc-rep', args)</code>
@@ -2873,14 +2873,14 @@ from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 <ul>
 <li>[ ] <strong>Step 4: Update <code>diagram.py</code></strong></li>
 </ul>
-<p>Change lines 10–11:</p>
-<pre><code class="language-python">from plcc.build.grammar import read_grammar
-from plcc.cmd.grammar import GRAMMAR_OPTION, validate_grammar_flag, grammar_flag_for_child
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from plcc.build.spec import read_spec
-from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-</code></pre>
+<p>Change lines 10–11:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPEC_OPTION</span><span class="p">,</span> <span class="n">validate_spec_flag</span><span class="p">,</span> <span class="n">spec_flag_for_child</span>
+</code></pre></div></p>
 <p>Update docstring <code>GRAMMAR_OPTION</code> → <code>SPEC_OPTION</code>.</p>
 <p>Update call sites:
 - <code>validate_grammar_flag('plcc-diagram', args)</code> → <code>validate_spec_flag('plcc-diagram', args)</code>
@@ -2889,14 +2889,14 @@ from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 <ul>
 <li>[ ] <strong>Step 5: Verify no stale grammar imports remain across all command files</strong></li>
 </ul>
-<pre><code class="language-bash">grep -rn &quot;from plcc.build.grammar\|from plcc.cmd.grammar\|GRAMMAR_OPTION\|read_grammar\|write_grammar\|resolve_grammar\|validate_grammar_flag\|grammar_flag_for_child&quot; src/plcc/cmd/
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;from plcc.build.grammar\|from plcc.cmd.grammar\|GRAMMAR_OPTION\|read_grammar\|write_grammar\|resolve_grammar\|validate_grammar_flag\|grammar_flag_for_child&quot;</span><span class="w"> </span>src/plcc/cmd/
+</code></pre></div>
 <p>Expected output: no lines.</p>
 <ul>
 <li>[ ] <strong>Step 6: Run unit tests</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/scan_test.py src/plcc/cmd/parse_test.py src/plcc/cmd/rep_test.py src/plcc/cmd/diagram_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/diagram_test.py
+</code></pre></div>
 <p>Expected: all pass.</p>
 <hr />
 <h3 id="task-9-update-consumer-test-files">Task 9: Update consumer test files</h3>
@@ -2910,53 +2910,53 @@ from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 <ul>
 <li>[ ] <strong>Step 1: Update <code>make_test.py</code></strong></li>
 </ul>
-<p>Change:</p>
-<pre><code class="language-python">from plcc.build.grammar import read_grammar, write_grammar
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from plcc.build.spec import read_spec, write_spec
-</code></pre>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span><span class="p">,</span> <span class="n">write_grammar</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_spec</span><span class="p">,</span> <span class="n">write_spec</span>
+</code></pre></div></p>
 <p>Then replace all uses of <code>read_grammar(</code> → <code>read_spec(</code> and <code>write_grammar(</code> → <code>write_spec(</code> throughout the file.</p>
 <ul>
 <li>[ ] <strong>Step 2: Update <code>rep_test.py</code></strong></li>
 </ul>
-<p>Find any direct imports from <code>plcc.build.grammar</code>:</p>
-<pre><code class="language-bash">grep -n &quot;from plcc.build.grammar\|from plcc.cmd.grammar&quot; src/plcc/cmd/rep_test.py
-</code></pre>
+<p>Find any direct imports from <code>plcc.build.grammar</code>:
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;from plcc.build.grammar\|from plcc.cmd.grammar&quot;</span><span class="w"> </span>src/plcc/cmd/rep_test.py
+</code></pre></div></p>
 <p>If any exist, update them to <code>plcc.build.spec</code> / <code>plcc.cmd.spec</code> and rename the called functions accordingly (<code>read_grammar</code> → <code>read_spec</code>, <code>write_grammar</code> → <code>write_spec</code>).</p>
 <ul>
 <li>[ ] <strong>Step 3: Check remaining test files for direct grammar imports</strong></li>
 </ul>
-<pre><code class="language-bash">grep -rn &quot;from plcc.build.grammar\|from plcc.cmd.grammar&quot; src/plcc/cmd/scan_test.py src/plcc/cmd/parse_test.py src/plcc/cmd/diagram_test.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;from plcc.build.grammar\|from plcc.cmd.grammar&quot;</span><span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>src/plcc/cmd/diagram_test.py
+</code></pre></div>
 <p>If any lines appear, apply the same pattern: update the import and rename all call sites within that file.</p>
 <ul>
 <li>[ ] <strong>Step 4: Run all unit tests</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: all pass, no import errors.</p>
 <hr />
 <h3 id="task-10-full-test-suite-and-commit-pr-b">Task 10: Full test suite and commit PR B</h3>
 <ul>
 <li>[ ] <strong>Step 1: Run functional tests</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/functional.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/functional.bash
+</code></pre></div>
 <p>Expected: all pass. If any bats test references <code>.grammar</code> (the hidden build-dir file) or old function names, fix those bats files now and re-run.</p>
 <ul>
 <li>[ ] <strong>Step 2: Verify no orphaned grammar identifiers remain in src/</strong></li>
 </ul>
-<pre><code class="language-bash">grep -rn &quot;from plcc.build.grammar\|from plcc.cmd.grammar\|read_grammar\|write_grammar\|resolve_grammar\|GRAMMAR_OPTION\|validate_grammar_flag\|grammar_flag_for_child\|DEFAULT_GRAMMAR_FILE\|_GRAMMAR_FILE&quot; src/plcc/ --include=&quot;*.py&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;from plcc.build.grammar\|from plcc.cmd.grammar\|read_grammar\|write_grammar\|resolve_grammar\|GRAMMAR_OPTION\|validate_grammar_flag\|grammar_flag_for_child\|DEFAULT_GRAMMAR_FILE\|_GRAMMAR_FILE&quot;</span><span class="w"> </span>src/plcc/<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span>
+</code></pre></div>
 <p>Expected output: no lines.</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/make.py src/plcc/cmd/scan.py src/plcc/cmd/parse.py src/plcc/cmd/rep.py src/plcc/cmd/diagram.py
-git add src/plcc/cmd/make_test.py src/plcc/cmd/scan_test.py src/plcc/cmd/parse_test.py src/plcc/cmd/rep_test.py src/plcc/cmd/diagram_test.py
-git commit -m &quot;refactor(089): update all import sites to use build/spec and cmd/spec&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/make.py<span class="w"> </span>src/plcc/cmd/scan.py<span class="w"> </span>src/plcc/cmd/parse.py<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/diagram.py
+git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/diagram_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(089): update all import sites to use build/spec and cmd/spec&quot;</span>
+</code></pre></div>
 
 
 

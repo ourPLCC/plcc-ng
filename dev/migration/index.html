@@ -2414,13 +2414,13 @@ It is not backward compatible — spec files and command invocations both requir
 <h2 id="migration-checklist">Migration checklist</h2>
 <h3 id="1-install-plcc-ng">1. Install PLCC-ng</h3>
 <p>Replace the PLCC shell script, Docker, or DevContainer install with:</p>
-<pre><code class="language-bash">pip install plcc-ng
-</code></pre>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>plcc-ng
+</code></pre></div>
 <p>See <a href="../installation/">Installation</a> for upgrade, pinning, and uninstall instructions.</p>
 <h3 id="2-rename-your-grammar-file">2. Rename your grammar file</h3>
 <p>PLCC's default grammar file is named <code>grammar</code>. PLCC-ng's default is <code>spec.plcc</code>.</p>
-<pre><code>grammar  →  spec.plcc
-</code></pre>
+<div class="highlight"><pre><span></span><code>grammar  →  spec.plcc
+</code></pre></div>
 <h3 id="3-update-regex-patterns-in-the-lexical-section">3. Update regex patterns in the lexical section</h3>
 <p>PLCC uses Java regex (<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html"><code>java.util.regex.Pattern</code></a>).
 PLCC-ng uses Python regex (<a href="https://docs.python.org/3/library/re.html"><code>re</code></a>).</p>
@@ -2544,22 +2544,22 @@ PLCC-ng places it after a colon inside the brackets.</p>
 <h3 id="8-add-semantic-section-language-header">8. Add semantic section language header</h3>
 <p>PLCC only supports Java semantics and has no language header.
 PLCC-ng requires the first non-blank line of the semantic section to declare the language.</p>
-<p>Before (PLCC):</p>
-<pre><code>%
+<p>Before (PLCC):
+<div class="highlight"><pre><span></span><code>%
 Prog
 %%%
   public void $run() { ... }
 %%%
-</code></pre>
-<p>After (PLCC-ng):</p>
-<pre><code>%
+</code></pre></div></p>
+<p>After (PLCC-ng):
+<div class="highlight"><pre><span></span><code>%
 Java
 
 Prog
 %%%
   public void _run() { ... }
 %%%
-</code></pre>
+</code></pre></div></p>
 <p>The supported values are <code>Java</code> and <code>Python</code>.</p>
 <h3 id="9-rename-the-entry-point-method">9. Rename the entry point method</h3>
 <p>The method the start symbol's class uses as its execution entry point was renamed.</p>
@@ -2625,19 +2625,19 @@ unchanged — paths are resolved relative to the file that contains the <code>%i
 </tbody>
 </table>
 <p><strong>Token output format change:</strong></p>
-<p>PLCC format:</p>
-<pre><code>   1: WHOLE '3'
-</code></pre>
-<p>PLCC-ng format (<code>file:line:column</code>):</p>
-<pre><code>-:1:1 NUM '42'
-</code></pre>
+<p>PLCC format:
+<div class="highlight"><pre><span></span><code>   1: WHOLE &#39;3&#39;
+</code></pre></div></p>
+<p>PLCC-ng format (<code>file:line:column</code>):
+<div class="highlight"><pre><span></span><code>-:1:1 NUM &#39;42&#39;
+</code></pre></div></p>
 <p><strong>JSON parse trees:</strong></p>
 <p>PLCC's <code>--json_ast</code> flag (passed to <code>plccmk</code> and <code>parse</code>) is not available in PLCC-ng.
 To obtain a JSON parse tree, use the lower-level pipeline:</p>
-<pre><code class="language-bash">plcc-spec spec.plcc &gt; build/spec.json
-plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
-plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span>&gt;<span class="w"> </span>build/spec.json
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>build/ll1.json
+plcc-tokens<span class="w"> </span>build/spec.json<span class="w"> </span>samples/<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span>build/ll1.json
+</code></pre></div>
 <p>See <a href="../cli/commands/plcc-trees/"><code>plcc-trees</code></a> for details.</p>
 <h2 id="features-not-yet-in-plcc-ng">Features not yet in PLCC-ng</h2>
 <ul>

@@ -2239,9 +2239,9 @@ used elsewhere in <code>bin/</code>.</p>
 </ol>
 <p><strong>Sidecar file (<code>&lt;cache-file&gt;.meta</code>):</strong> stores the cache key and exit code so
 the cache file itself stays pure output — easy to grep without noise. Format:</p>
-<pre><code class="language-text">KEY=&lt;git-status-hash&gt;
+<div class="highlight"><pre><span></span><code>KEY=&lt;git-status-hash&gt;
 EXIT=&lt;exit-code&gt;
-</code></pre>
+</code></pre></div>
 <p><strong>Fallback:</strong> if the git commands fail (run outside a repo), if writing cache
 files fails, or if the sidecar is missing or corrupt, <code>run_cached</code> falls back
 to running the command uncached. Failures are silent — no crash, no noise.</p>
@@ -2308,8 +2308,8 @@ noise.</p>
 <li><strong>Stats log entry:</strong> appends a timestamped line to
    <code>/tmp/plcc-test-cache-stats.log</code>:</li>
 </ol>
-<p><code>text
-   2026-06-18T10:23:45 hit units</code></p>
+<div class="highlight"><pre><span></span><code>2026-06-18T10:23:45 hit units
+</code></pre></div>
 <p><code>bin/test/cache/stats.bash</code> reads the stats log and prints:</p>
 <ul>
 <li>Total runs, hits, misses, skips, and overall hit rate</li>

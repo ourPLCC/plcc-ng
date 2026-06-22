@@ -2228,39 +2228,39 @@
 <li>[ ] <strong>Step 1: Add the palette block</strong></li>
 </ul>
 <p>Open <code>mkdocs.yml</code>. The <code>theme</code> block currently looks like this:</p>
-<pre><code class="language-yaml">theme:
-  name: material
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - toc.integrate
-    - search.suggest
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">theme</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material</span>
+<span class="w">  </span><span class="nt">features</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.tabs</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.sections</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">toc.integrate</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search.suggest</span>
+</code></pre></div>
 <p>Add a <code>palette</code> key inside <code>theme</code>:</p>
-<pre><code class="language-yaml">theme:
-  name: material
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - toc.integrate
-    - search.suggest
-  palette:
-    - media: &quot;(prefers-color-scheme: light)&quot;
-      scheme: default
-      toggle:
-        icon: material/weather-night
-        name: Switch to dark mode
-    - media: &quot;(prefers-color-scheme: dark)&quot;
-      scheme: slate
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to light mode
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">theme</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material</span>
+<span class="w">  </span><span class="nt">features</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.tabs</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">navigation.sections</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">toc.integrate</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">search.suggest</span>
+<span class="w">  </span><span class="nt">palette</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(prefers-color-scheme:</span><span class="nv"> </span><span class="s">light)&quot;</span>
+<span class="w">      </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">      </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/weather-night</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch to dark mode</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(prefers-color-scheme:</span><span class="nv"> </span><span class="s">dark)&quot;</span>
+<span class="w">      </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slate</span>
+<span class="w">      </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/weather-sunny</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch to light mode</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Verify the docs site starts cleanly</strong></li>
 </ul>
-<pre><code class="language-bash">bin/docs/serve.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/docs/serve.bash
+</code></pre></div>
 <p>Expected: MkDocs starts without errors and prints <code>Serving on http://127.0.0.1:8000</code>.
 Stop the server with Ctrl-C once it is up.</p>
 <ul>
@@ -2277,9 +2277,9 @@ Stop the server with Ctrl-C once it is up.</p>
 <p>[ ] <strong>Step 4: Commit</strong></p>
 </li>
 </ol>
-<pre><code class="language-bash">git add mkdocs.yml
-git commit -m &quot;feat(docs): add dark mode with system-preference detection and toggle&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>mkdocs.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(docs): add dark mode with system-preference detection and toggle&quot;</span>
+</code></pre></div>
 
 
 

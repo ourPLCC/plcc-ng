@@ -2232,47 +2232,47 @@
 <ul>
 <li>[ ] <strong>Step 1: Rename the file</strong></li>
 </ul>
-<pre><code class="language-bash">git mv docs/getting-started.md docs/quick-start.md
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>mv<span class="w"> </span>docs/getting-started.md<span class="w"> </span>docs/quick-start.md
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Update <code>mkdocs.yml</code></strong></li>
 </ul>
-<p>Find this line:</p>
-<pre><code class="language-yaml">  - Getting Started: getting-started.md
-</code></pre>
-<p>Replace with:</p>
-<pre><code class="language-yaml">  - Quick Start: quick-start.md
-</code></pre>
+<p>Find this line:
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Getting Started</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">getting-started.md</span>
+</code></pre></div>
+Replace with:
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Quick Start</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quick-start.md</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 3: Update the H1 title in <code>docs/quick-start.md</code></strong></li>
 </ul>
-<p>Find:</p>
-<pre><code class="language-markdown"># Getting Started
-</code></pre>
-<p>Replace with:</p>
-<pre><code class="language-markdown"># Quick Start
-</code></pre>
+<p>Find:
+<div class="highlight"><pre><span></span><code><span class="gh"># Getting Started</span>
+</code></pre></div>
+Replace with:
+<div class="highlight"><pre><span></span><code><span class="gh"># Quick Start</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>docs/index.md</code></strong></li>
 </ul>
-<p>Find this line:</p>
-<pre><code class="language-markdown">- [Getting Started](getting-started.md) — Install plcc-ng and run your first specification in under 10 minutes.
-</code></pre>
-<p>Replace with:</p>
-<pre><code class="language-markdown">- [Quick Start](quick-start.md) — Install plcc-ng and run your first specification in under 10 minutes.
-</code></pre>
+<p>Find this line:
+<div class="highlight"><pre><span></span><code><span class="k">-</span><span class="w"> </span>[<span class="nt">Getting Started</span>](<span class="na">getting-started.md</span>) — Install plcc-ng and run your first specification in under 10 minutes.
+</code></pre></div>
+Replace with:
+<div class="highlight"><pre><span></span><code><span class="k">-</span><span class="w"> </span>[<span class="nt">Quick Start</span>](<span class="na">quick-start.md</span>) — Install plcc-ng and run your first specification in under 10 minutes.
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 5: Verify the build</strong></li>
 </ul>
-<pre><code class="language-bash">.venv/bin/mkdocs build --strict
-</code></pre>
-<p>Expected: build succeeds with no warnings or errors. The <code>site/</code> directory is created or updated.</p>
+<p><div class="highlight"><pre><span></span><code>.venv/bin/mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
+</code></pre></div>
+Expected: build succeeds with no warnings or errors. The <code>site/</code> directory is created or updated.</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add docs/quick-start.md docs/index.md mkdocs.yml
-git commit -m &quot;docs(quick-start): rename getting-started to quick-start [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/quick-start.md<span class="w"> </span>docs/index.md<span class="w"> </span>mkdocs.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(quick-start): rename getting-started to quick-start [skip ci]&quot;</span>
+</code></pre></div>
 <p>Note: <code>git mv</code> already staged the rename; <code>git add</code> picks up the modified files.</p>
 <hr />
 <h3 id="task-2-create-installationmd-and-wire-it-into-the-nav">Task 2: Create <code>installation.md</code> and wire it into the nav</h3>
@@ -2287,88 +2287,86 @@ git commit -m &quot;docs(quick-start): rename getting-started to quick-start [sk
 <li>[ ] <strong>Step 1: Create <code>docs/installation.md</code></strong></li>
 </ul>
 <p>Create the file with this exact content:</p>
-<pre><code class="language-markdown"># Installation
+<div class="highlight"><pre><span></span><code><span class="gh"># Installation</span>
 
 This page covers installing plcc-ng via pip.
 Additional installation methods will be documented here as they become available.
 
-## Requirements
+<span class="gu">## Requirements</span>
 
-- Python 3.12 or later
-- Java JDK 21 or later (only needed if implementing semantics in Java)
+<span class="k">-</span><span class="w"> </span>Python 3.12 or later
+<span class="k">-</span><span class="w"> </span>Java JDK 21 or later (only needed if implementing semantics in Java)
 
-## Install
+<span class="gu">## Install</span>
 
 ```bash
 pip install plcc-ng
-</code></pre>
+</code></pre></div>
 <p>Verify the installation:</p>
-<pre><code class="language-bash">plcc-version
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-version
+</code></pre></div>
 <h2 id="upgrade">Upgrade</h2>
-<pre><code class="language-bash">pip install --upgrade plcc-ng
-</code></pre>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>plcc-ng
+</code></pre></div>
 <p>Verify the new version:</p>
-<pre><code class="language-bash">plcc-version
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-version
+</code></pre></div>
 <p>Check the <a href="changelog.md">Changelog</a> for breaking changes between versions before upgrading.</p>
 <h2 id="pin-a-specific-version">Pin a Specific Version</h2>
 <p>To install a specific version:</p>
-<pre><code class="language-bash">pip install plcc-ng==X.Y.Z
-</code></pre>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>plcc-ng<span class="o">==</span>X.Y.Z
+</code></pre></div>
 <p>To pin in <code>requirements.txt</code>:</p>
-<pre><code>plcc-ng==X.Y.Z
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-ng==X.Y.Z
+</code></pre></div>
 <p>To pin in <code>pyproject.toml</code>:</p>
-<pre><code class="language-toml">[project]
-dependencies = [
-    &quot;plcc-ng==X.Y.Z&quot;,
-]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;plcc-ng==X.Y.Z&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
 <p>Check which version is currently installed:</p>
-<pre><code class="language-bash">plcc-version
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-version
+</code></pre></div>
 <h2 id="uninstall">Uninstall</h2>
-<pre><code class="language-bash">pip uninstall plcc-ng
-</code></pre>
-<pre><code>
-- [ ] **Step 2: Add nav entry to `mkdocs.yml`**
+<p><div class="highlight"><pre><span></span><code>pip<span class="w"> </span>uninstall<span class="w"> </span>plcc-ng
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>- [ ] **Step 2: Add nav entry to `mkdocs.yml`**
 
 Find:
 ```yaml
   - Quick Start: quick-start.md
-</code></pre>
-<p>Replace with:</p>
-<pre><code class="language-yaml">  - Quick Start: quick-start.md
-  - Installation: installation.md
-</code></pre>
+</code></pre></div>
+Replace with:
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Quick Start</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quick-start.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Installation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">installation.md</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 3: Add link in <code>docs/quick-start.md</code></strong></li>
 </ul>
 <p>In <code>docs/quick-start.md</code>, find the install block. It looks like:</p>
-<pre><code class="language-markdown">## Install
+<p><div class="highlight"><pre><span></span><code><span class="gu">## Install</span>
 
 ```bash
 pip install plcc-ng
-</code></pre>
-<pre><code>
-Add a line immediately after the closing code fence:
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Add a line immediately after the closing code fence:
 
 ```markdown
 For upgrade, version pinning, and uninstall instructions, see [Installation](installation.md).
-</code></pre>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Verify the build</strong></li>
 </ul>
-<pre><code class="language-bash">.venv/bin/mkdocs build --strict
-</code></pre>
-<p>Expected: build succeeds with no warnings or errors.</p>
+<p><div class="highlight"><pre><span></span><code>.venv/bin/mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
+</code></pre></div>
+Expected: build succeeds with no warnings or errors.</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add docs/installation.md docs/quick-start.md mkdocs.yml
-git commit -m &quot;docs(installation): add installation page with upgrade, pinning, and uninstall [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/installation.md<span class="w"> </span>docs/quick-start.md<span class="w"> </span>mkdocs.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(installation): add installation page with upgrade, pinning, and uninstall [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-3-create-migrationmd-and-wire-it-into-the-nav">Task 3: Create <code>migration.md</code> and wire it into the nav</h3>
 <p><strong>Files:</strong>
@@ -2386,26 +2384,26 @@ git commit -m &quot;docs(installation): add installation page with upgrade, pinn
 <li>[ ] <strong>Step 1: Create <code>docs/migration.md</code></strong></li>
 </ul>
 <p>Create the file with this exact content:</p>
-<pre><code class="language-markdown"># Migration from PLCC to PLCC-ng
+<div class="highlight"><pre><span></span><code><span class="gh"># Migration from PLCC to PLCC-ng</span>
 
-PLCC-ng is a modern, pip-installable rewrite of [PLCC](https://github.com/ourPLCC/plcc).
+PLCC-ng is a modern, pip-installable rewrite of [<span class="nt">PLCC</span>](<span class="na">https://github.com/ourPLCC/plcc</span>).
 It adds Python semantics support, a cleaner CLI, and a more extensible architecture.
 It is not backward compatible — spec files and command invocations both require updates.
 
-## Migration checklist
+<span class="gu">## Migration checklist</span>
 
-### 1. Install PLCC-ng
+<span class="gu">### 1. Install PLCC-ng</span>
 
 Replace the PLCC shell script, Docker, or DevContainer install with:
 
 ```bash
 pip install plcc-ng
-</code></pre>
+</code></pre></div>
 <p>See <a href="installation.md">Installation</a> for upgrade, pinning, and uninstall instructions.</p>
 <h3 id="2-rename-your-grammar-file">2. Rename your grammar file</h3>
 <p>PLCC's default grammar file is named <code>grammar</code>. PLCC-ng's default is <code>spec.plcc</code>.</p>
-<pre><code>grammar  →  spec.plcc
-</code></pre>
+<div class="highlight"><pre><span></span><code>grammar  →  spec.plcc
+</code></pre></div>
 <h3 id="3-update-regex-patterns-in-the-lexical-section">3. Update regex patterns in the lexical section</h3>
 <p>PLCC uses Java regex (<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html"><code>java.util.regex.Pattern</code></a>).
 PLCC-ng uses Python regex (<a href="https://docs.python.org/3/library/re.html"><code>re</code></a>).</p>
@@ -2529,22 +2527,22 @@ PLCC-ng places it after a colon inside the brackets.</p>
 <h3 id="8-add-semantic-section-language-header">8. Add semantic section language header</h3>
 <p>PLCC only supports Java semantics and has no language header.
 PLCC-ng requires the first non-blank line of the semantic section to declare the language.</p>
-<p>Before (PLCC):</p>
-<pre><code>%
+<p>Before (PLCC):
+<div class="highlight"><pre><span></span><code>%
 Prog
 %%%
   public void $run() { ... }
 %%%
-</code></pre>
-<p>After (PLCC-ng):</p>
-<pre><code>%
+</code></pre></div></p>
+<p>After (PLCC-ng):
+<div class="highlight"><pre><span></span><code>%
 Java
 
 Prog
 %%%
   public void _run() { ... }
 %%%
-</code></pre>
+</code></pre></div></p>
 <p>The supported values are <code>Java</code> and <code>Python</code>.</p>
 <h3 id="9-rename-the-entry-point-method">9. Rename the entry point method</h3>
 <p>The method the start symbol's class uses as its execution entry point was renamed.</p>
@@ -2610,47 +2608,48 @@ unchanged — paths are resolved relative to the file that contains the <code>%i
 </tbody>
 </table>
 <p><strong>Token output format change:</strong></p>
-<p>PLCC format:</p>
-<pre><code>   1: WHOLE '3'
-</code></pre>
-<p>PLCC-ng format (<code>file:line:column</code>):</p>
-<pre><code>-:1:1 NUM '42'
-</code></pre>
+<p>PLCC format:
+<div class="highlight"><pre><span></span><code>   1: WHOLE &#39;3&#39;
+</code></pre></div></p>
+<p>PLCC-ng format (<code>file:line:column</code>):
+<div class="highlight"><pre><span></span><code>-:1:1 NUM &#39;42&#39;
+</code></pre></div></p>
 <p><strong>JSON parse trees:</strong></p>
 <p>PLCC's <code>--json_ast</code> flag (passed to <code>plccmk</code> and <code>parse</code>) is not available in PLCC-ng.
 To obtain a JSON parse tree, use the lower-level pipeline:</p>
-<pre><code class="language-bash">plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
-plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>build/ll1.json
+plcc-tokens<span class="w"> </span>build/spec.json<span class="w"> </span>samples/<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span>build/ll1.json
+</code></pre></div>
 <p>See <a href="cli/commands/plcc-trees.md"><code>plcc-trees</code></a> for details.</p>
 <h2 id="features-not-yet-in-plcc-ng">Features not yet in PLCC-ng</h2>
 <ul>
 <li><strong>Docker installation</strong> — PLCC supported Docker via <code>plcc-con</code>. PLCC-ng is currently pip-only. Docker support is planned.</li>
-<li><strong>DevContainer</strong> — PLCC provided a ready-to-use devcontainer image. PLCC-ng does not yet provide one.</li>
-</ul>
-<pre><code>
-- [ ] **Step 2: Add nav entry to `mkdocs.yml`**
+<li>
+<p><strong>DevContainer</strong> — PLCC provided a ready-to-use devcontainer image. PLCC-ng does not yet provide one.
+<div class="highlight"><pre><span></span><code>- [ ] **Step 2: Add nav entry to `mkdocs.yml`**
 
 Find:
 ```yaml
   - Installation: installation.md
-</code></pre>
-<p>Replace with:</p>
-<pre><code class="language-yaml">  - Installation: installation.md
-  - Migration from PLCC: migration.md
-</code></pre>
-<ul>
-<li>[ ] <strong>Step 3: Verify the build</strong></li>
+</code></pre></div>
+Replace with:
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Installation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">installation.md</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Migration from PLCC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migration.md</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>[ ] <strong>Step 3: Verify the build</strong></p>
+</li>
 </ul>
-<pre><code class="language-bash">.venv/bin/mkdocs build --strict
-</code></pre>
-<p>Expected: build succeeds with no warnings or errors.</p>
+<p><div class="highlight"><pre><span></span><code>.venv/bin/mkdocs<span class="w"> </span>build<span class="w"> </span>--strict
+</code></pre></div>
+Expected: build succeeds with no warnings or errors.</p>
 <ul>
 <li>[ ] <strong>Step 4: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add docs/migration.md mkdocs.yml
-git commit -m &quot;docs(migration): add migration guide from PLCC to PLCC-ng [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/migration.md<span class="w"> </span>mkdocs.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(migration): add migration guide from PLCC to PLCC-ng [skip ci]&quot;</span>
+</code></pre></div>
 
 
 

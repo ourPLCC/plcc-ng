@@ -2227,14 +2227,13 @@
 <li>[ ] <strong>Step 1: Delete the Build section</strong></li>
 </ul>
 <p>In <code>docs/language-guide/examples.md</code>, remove these exact lines (59–65):</p>
-<pre><code>### Build
+<div class="highlight"><pre><span></span><code>### Build
 
 ```bash
 plcc-make -s subtract.plcc
-</code></pre>
+</code></pre></div>
 <p>Exits silently on success.</p>
-<pre><code>
-After the edit, line 58 (```` ``` ````) is followed immediately by a blank line and then `### Scanner`.
+<div class="highlight"><pre><span></span><code>After the edit, line 58 (```` ``` ````) is followed immediately by a blank line and then `### Scanner`.
 
 - [ ] **Step 2: Verify the file looks correct**
 
@@ -2242,19 +2241,19 @@ Run:
 
 ```bash
 grep -n &quot;plcc-make\|### Build\|### Scanner\|### Parser\|### Interpreter&quot; docs/language-guide/examples.md
-</code></pre>
+</code></pre></div>
 <p>Expected output (no <code>plcc-make</code> or <code>### Build</code> lines):</p>
-<pre><code>67:### Scanner
+<div class="highlight"><pre><span></span><code>67:### Scanner
 90:### Parser
 117:### Interpreter
-</code></pre>
+</code></pre></div>
 <p>(Line numbers may shift slightly — the key is no <code>plcc-make</code> or <code>### Build</code> entries.)</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add docs/language-guide/examples.md
-git commit -m &quot;docs(examples): remove explicit plcc-make build step [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/language-guide/examples.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(examples): remove explicit plcc-make build step [skip ci]&quot;</span>
+</code></pre></div>
 
 
 

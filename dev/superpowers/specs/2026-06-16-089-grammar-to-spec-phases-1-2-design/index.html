@@ -2260,39 +2260,39 @@
 </ul>
 <h2 id="specific-changes">Specific changes</h2>
 <h3 id="buildgrammarpy"><code>build/grammar.py</code></h3>
-<pre><code class="language-python">DEFAULT_GRAMMAR_FILE = &quot;spec.plcc&quot;   # was &quot;grammar.plcc&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="o">=</span> <span class="s2">&quot;spec.plcc&quot;</span>   <span class="c1"># was &quot;grammar.plcc&quot;</span>
+</code></pre></div>
 <h3 id="cmdgrammarpy"><code>cmd/grammar.py</code></h3>
-<pre><code class="language-python">GRAMMAR_OPTION = f&quot;&quot;&quot;\
-    -s &lt;path&gt; --spec=&lt;path&gt;
-                            Spec to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to {DEFAULT_GRAMMAR_FILE} on first use.
-&quot;&quot;&quot;
+<div class="highlight"><pre><span></span><code><span class="n">GRAMMAR_OPTION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -s &lt;path&gt; --spec=&lt;path&gt;</span>
+<span class="s2">                            Spec to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to </span><span class="si">{</span><span class="n">DEFAULT_GRAMMAR_FILE</span><span class="si">}</span><span class="s2"> on first use.</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
-def validate_grammar_flag(cmd_name, args):
-    path = args['--spec']                                        # was '--grammar'
-    if path is not None and not os.path.exists(path):
-        print(f&quot;{cmd_name}: spec file not found: {path}&quot;, ...)  # was &quot;grammar file&quot;
-        ...
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_grammar_flag</span><span class="p">(</span><span class="n">cmd_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>                                        <span class="c1"># was &#39;--grammar&#39;</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2">: spec file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>  <span class="c1"># was &quot;grammar file&quot;</span>
+        <span class="o">...</span>
 
-def grammar_flag_for_child(args):
-    path = args['--spec']                                        # was '--grammar'
-    return [f'--spec={path}'] if path is not None else []       # was '--grammar='
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>                                        <span class="c1"># was &#39;--grammar&#39;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;--spec=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>       <span class="c1"># was &#39;--grammar=&#39;</span>
+</code></pre></div>
 <h3 id="cmdmakepy"><code>cmd/make.py</code></h3>
-<pre><code class="language-python">explicit_grammar = args['--spec']                                # was '--grammar'
-# error messages (×2):
-print(f&quot;plcc-make: spec file not found: {grammar}&quot;, ...)        # was &quot;grammar file&quot;
-&quot;use --spec to specify a different one&quot;                          # was '--grammar'
-verbose.emit(Events.STARTED, message=f&quot;spec: {grammar}&quot;)        # was &quot;grammar:&quot;
-# docstring: &quot;Build a PLCC project from a spec file&quot;            # was &quot;grammar file&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">explicit_grammar</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>                                <span class="c1"># was &#39;--grammar&#39;</span>
+<span class="c1"># error messages (×2):</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>        <span class="c1"># was &quot;grammar file&quot;</span>
+<span class="s2">&quot;use --spec to specify a different one&quot;</span>                          <span class="c1"># was &#39;--grammar&#39;</span>
+<span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>        <span class="c1"># was &quot;grammar:&quot;</span>
+<span class="c1"># docstring: &quot;Build a PLCC project from a spec file&quot;            # was &quot;grammar file&quot;</span>
+</code></pre></div>
 <h3 id="cmdoutputpy"><code>cmd/output.py</code></h3>
-<pre><code class="language-python">print(f&quot;spec: {grammar_path}&quot;, ...)   # was &quot;grammar:&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">grammar_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>   <span class="c1"># was &quot;grammar:&quot;</span>
+</code></pre></div>
 <h3 id="cmdreppy"><code>cmd/rep.py</code></h3>
-<pre><code class="language-python">print(&quot;plcc-rep: no semantic sections found in spec.&quot;, ...)   # was &quot;grammar&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;plcc-rep: no semantic sections found in spec.&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>   <span class="c1"># was &quot;grammar&quot;</span>
+</code></pre></div>
 <h2 id="approach">Approach</h2>
 <p>Single TDD pass: update all test files first to assert new behavior, confirm failures, then implement all changes. One commit per logical module.</p>
 <h2 id="testing">Testing</h2>

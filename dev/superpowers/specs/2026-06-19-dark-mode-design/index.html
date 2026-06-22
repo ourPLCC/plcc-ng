@@ -2220,18 +2220,18 @@
 <p>Use MkDocs Material's built-in palette feature. Add a <code>palette</code> block to <code>mkdocs.yml</code> with two entries — one for light, one for dark — each wired to the corresponding <code>prefers-color-scheme</code> media query and a toggle icon. Material handles <code>localStorage</code> persistence automatically.</p>
 <h2 id="change">Change</h2>
 <p><strong>File:</strong> <code>mkdocs.yml</code> — add <code>palette</code> under the <code>theme</code> key:</p>
-<pre><code class="language-yaml">palette:
-  - media: &quot;(prefers-color-scheme: light)&quot;
-    scheme: default
-    toggle:
-      icon: material/weather-night
-      name: Switch to dark mode
-  - media: &quot;(prefers-color-scheme: dark)&quot;
-    scheme: slate
-    toggle:
-      icon: material/weather-sunny
-      name: Switch to light mode
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">palette</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(prefers-color-scheme:</span><span class="nv"> </span><span class="s">light)&quot;</span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">    </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/weather-night</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch to dark mode</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">media</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;(prefers-color-scheme:</span><span class="nv"> </span><span class="s">dark)&quot;</span>
+<span class="w">    </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slate</span>
+<span class="w">    </span><span class="nt">toggle</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">icon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">material/weather-sunny</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Switch to light mode</span>
+</code></pre></div>
 <p>No other files are touched.</p>
 <h2 id="default-behavior">Default Behavior</h2>
 <p>When no system preference is detectable, the light theme (<code>scheme: default</code>) loads because it is listed first.</p>

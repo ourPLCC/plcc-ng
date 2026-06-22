@@ -2292,23 +2292,23 @@
 <li>[ ] <strong>Step 1: Change <code>DEFAULT_GRAMMAR_FILE</code></strong></li>
 </ul>
 <p>In <code>src/plcc/build/grammar.py</code>, change:</p>
-<pre><code class="language-python">DEFAULT_GRAMMAR_FILE = &quot;grammar.plcc&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="o">=</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+</code></pre></div>
 <p>to:</p>
-<pre><code class="language-python">DEFAULT_GRAMMAR_FILE = &quot;spec.plcc&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="o">=</span> <span class="s2">&quot;spec.plcc&quot;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run build unit tests — confirm all pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/build/grammar_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/build/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: 8 passed</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git -C .worktrees/089-grammar-to-spec-rename add src/plcc/build/grammar.py
-git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): rename default spec file grammar.plcc → spec.plcc&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>add<span class="w"> </span>src/plcc/build/grammar.py
+git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(089): rename default spec file grammar.plcc → spec.plcc&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-2-rename-cli-flag-in-cmdgrammarpy">Task 2: Rename CLI flag in <code>cmd/grammar.py</code></h2>
 <p><strong>Files:</strong></p>
@@ -2321,101 +2321,101 @@ git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): rename d
 <li>[ ] <strong>Step 1: Rewrite <code>src/plcc/cmd/grammar_test.py</code> with failing tests</strong></li>
 </ul>
 <p>Replace the entire file with:</p>
-<pre><code class="language-python">import pytest
-from plcc.cmd.grammar import validate_grammar_flag, grammar_flag_for_child, GRAMMAR_OPTION
-from plcc.build.grammar import DEFAULT_GRAMMAR_FILE
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span><span class="p">,</span> <span class="n">GRAMMAR_OPTION</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
 
 
-def test_grammar_option_contains_flag():
-    assert '--spec' in GRAMMAR_OPTION
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_option_contains_flag</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="s1">&#39;--spec&#39;</span> <span class="ow">in</span> <span class="n">GRAMMAR_OPTION</span>
 
 
-def test_grammar_option_contains_default_filename():
-    assert DEFAULT_GRAMMAR_FILE in GRAMMAR_OPTION
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_option_contains_default_filename</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="ow">in</span> <span class="n">GRAMMAR_OPTION</span>
 
 
-def test_validate_grammar_flag_none_does_nothing():
-    validate_grammar_flag('plcc-test', {'--spec': None})
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_none_does_nothing</span><span class="p">():</span>
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
 
 
-def test_validate_grammar_flag_existing_file_does_nothing(tmp_path):
-    f = tmp_path / 'foo.plcc'
-    f.write_text('')
-    validate_grammar_flag('plcc-test', {'--spec': str(f)})
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_existing_file_does_nothing</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;foo.plcc&#39;</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)})</span>
 
 
-def test_validate_grammar_flag_missing_file_exits_nonzero():
-    with pytest.raises(SystemExit) as exc:
-        validate_grammar_flag('plcc-test', {'--spec': 'nonexistent.plcc'})
-    assert exc.value.code != 0
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_missing_file_exits_nonzero</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
 
 
-def test_validate_grammar_flag_missing_file_prints_cmd_name(capsys):
-    with pytest.raises(SystemExit):
-        validate_grammar_flag('plcc-test', {'--spec': 'nonexistent.plcc'})
-    assert 'plcc-test' in capsys.readouterr().err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_missing_file_prints_cmd_name</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="s1">&#39;plcc-test&#39;</span> <span class="ow">in</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span><span class="o">.</span><span class="n">err</span>
 
 
-def test_validate_grammar_flag_missing_file_prints_path(capsys):
-    with pytest.raises(SystemExit):
-        validate_grammar_flag('plcc-test', {'--spec': 'nonexistent.plcc'})
-    assert 'nonexistent.plcc' in capsys.readouterr().err
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_missing_file_prints_path</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="s1">&#39;nonexistent.plcc&#39;</span> <span class="ow">in</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span><span class="o">.</span><span class="n">err</span>
 
 
-def test_grammar_flag_for_child_none_returns_empty():
-    assert grammar_flag_for_child({'--spec': None}) == []
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_flag_for_child_none_returns_empty</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">grammar_flag_for_child</span><span class="p">({</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span> <span class="o">==</span> <span class="p">[]</span>
 
 
-def test_grammar_flag_for_child_path_returns_flag():
-    assert grammar_flag_for_child({'--spec': 'foo.plcc'}) == ['--spec=foo.plcc']
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_flag_for_child_path_returns_flag</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">grammar_flag_for_child</span><span class="p">({</span><span class="s1">&#39;--spec&#39;</span><span class="p">:</span> <span class="s1">&#39;foo.plcc&#39;</span><span class="p">})</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;--spec=foo.plcc&#39;</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests — confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/grammar_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: failures on <code>--spec</code>, <code>--grammar</code>, <code>grammar_flag_for_child</code> assertions</p>
 <ul>
 <li>[ ] <strong>Step 3: Rewrite <code>src/plcc/cmd/grammar.py</code></strong></li>
 </ul>
 <p>Replace the entire file with:</p>
-<pre><code class="language-python">import os
-import sys
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-from plcc.build.grammar import DEFAULT_GRAMMAR_FILE
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
 
-GRAMMAR_OPTION = f&quot;&quot;&quot;\
-    -s &lt;path&gt; --spec=&lt;path&gt;
-                            Spec to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to {DEFAULT_GRAMMAR_FILE} on first use.
-&quot;&quot;&quot;
-
-
-def validate_grammar_flag(cmd_name, args):
-    path = args['--spec']
-    if path is not None and not os.path.exists(path):
-        print(f&quot;{cmd_name}: spec file not found: {path}&quot;, file=sys.stderr)
-        print(file=sys.stderr)
-        print(f&quot;Run '{cmd_name} --help' for more information.&quot;, file=sys.stderr)
-        sys.exit(1)
+<span class="n">GRAMMAR_OPTION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -s &lt;path&gt; --spec=&lt;path&gt;</span>
+<span class="s2">                            Spec to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to </span><span class="si">{</span><span class="n">DEFAULT_GRAMMAR_FILE</span><span class="si">}</span><span class="s2"> on first use.</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
 
-def grammar_flag_for_child(args):
-    path = args['--spec']
-    return [f'--spec={path}'] if path is not None else []
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_grammar_flag</span><span class="p">(</span><span class="n">cmd_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2">: spec file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run &#39;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2"> --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;--spec=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run tests — confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/grammar_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: 9 passed</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git -C .worktrees/089-grammar-to-spec-rename add src/plcc/cmd/grammar.py src/plcc/cmd/grammar_test.py
-git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): rename CLI flag --grammar/-g → --spec/-s&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/grammar.py<span class="w"> </span>src/plcc/cmd/grammar_test.py
+git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(089): rename CLI flag --grammar/-g → --spec/-s&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-3-update-cmdmakepy-cmdmake_testpy-and-cmdoutputpy">Task 3: Update <code>cmd/make.py</code>, <code>cmd/make_test.py</code>, and <code>cmd/output.py</code></h2>
 <p><strong>Files:</strong></p>
@@ -2431,199 +2431,199 @@ git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): rename C
 </ul>
 <p>Apply these changes (each is an independent edit):</p>
 <p><strong>a.</strong> <code>test_grammar_file_not_found_prints_error</code> — change error text:</p>
-<pre><code class="language-python">def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit):
-        run_main([])
-    _, err = capsys.readouterr()
-    assert &quot;spec file not found&quot; in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_file_not_found_prints_error</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec file not found&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>b.</strong> <code>test_grammar_flag_not_found_exits_nonzero</code> — change flag:</p>
-<pre><code class="language-python">def test_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit) as exc:
-        run_main(['--spec=nonexistent.plcc'])
-    assert exc.value.code != 0
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_flag_not_found_exits_nonzero</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;--spec=nonexistent.plcc&#39;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+</code></pre></div>
 <p><strong>c.</strong> <code>test_short_grammar_flag_not_found_exits_nonzero</code> — change flag:</p>
-<pre><code class="language-python">def test_short_grammar_flag_not_found_exits_nonzero(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit) as exc:
-        run_main(['-s', 'nonexistent.plcc'])
-    assert exc.value.code != 0
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_short_grammar_flag_not_found_exits_nonzero</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+</code></pre></div>
 <p><strong>d.</strong> Rename test and update assertion — default filename:</p>
-<pre><code class="language-python">def test_no_spec_flag_no_stored_falls_back_to_spec_plcc(tmp_path, monkeypatch, capsys):
-    # Fresh directory, no spec.plcc → error names spec.plcc
-    monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit) as exc:
-        run_main([])
-    assert exc.value.code != 0
-    _, err = capsys.readouterr()
-    assert &quot;spec.plcc&quot; in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_no_spec_flag_no_stored_falls_back_to_spec_plcc</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="c1"># Fresh directory, no spec.plcc → error names spec.plcc</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec.plcc&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>e.</strong> <code>test_no_grammar_flag_stored_grammar_missing_errors_to_stderr</code> — update error text and flag hint:</p>
-<pre><code class="language-python">def test_no_grammar_flag_stored_grammar_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
-    # build/.grammar points to a file that does not exist
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    write_grammar(build, &quot;missing.plcc&quot;)
-    with pytest.raises(SystemExit) as exc:
-        run_main([])
-    assert exc.value.code != 0
-    _, err = capsys.readouterr()
-    assert &quot;spec file not found&quot; in err
-    assert &quot;missing.plcc&quot; in err
-    assert &quot;--spec&quot; in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_no_grammar_flag_stored_grammar_missing_errors_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="c1"># build/.grammar points to a file that does not exist</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="n">write_grammar</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="s2">&quot;missing.plcc&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec file not found&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="s2">&quot;missing.plcc&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="s2">&quot;--spec&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>f.</strong> <code>test_no_grammar_flag_uses_stored_grammar_path</code> — update comment and fallback assertion:</p>
-<pre><code class="language-python">def test_no_grammar_flag_uses_stored_grammar_path(tmp_path, monkeypatch, capsys):
-    # build/.grammar set to a.plcc (missing) — error names a.plcc, not spec.plcc
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    write_grammar(build, &quot;a.plcc&quot;)
-    with pytest.raises(SystemExit):
-        run_main([])
-    _, err = capsys.readouterr()
-    assert &quot;a.plcc&quot; in err
-    # Must NOT fall back to spec.plcc
-    assert &quot;spec.plcc&quot; not in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_no_grammar_flag_uses_stored_grammar_path</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="c1"># build/.grammar set to a.plcc (missing) — error names a.plcc, not spec.plcc</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="n">write_grammar</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="s2">&quot;a.plcc&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;a.plcc&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="c1"># Must NOT fall back to spec.plcc</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec.plcc&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>g.</strong> <code>test_explicit_grammar_differs_from_stored_wipes_build</code> — change flag:</p>
-<pre><code class="language-python">def test_explicit_grammar_differs_from_stored_wipes_build(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    (build / &quot;marker.txt&quot;).write_text(&quot;from old grammar&quot;)
-    write_grammar(build, &quot;old.plcc&quot;)
-    (tmp_path / &quot;new.plcc&quot;).write_text(&quot;&quot;)  # valid but empty grammar
-    run_main([&quot;--spec=new.plcc&quot;])
-    # build/ was wiped when grammar changed, marker should not exist
-    assert not (build / &quot;marker.txt&quot;).exists()
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_explicit_grammar_differs_from_stored_wipes_build</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;marker.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;from old grammar&quot;</span><span class="p">)</span>
+    <span class="n">write_grammar</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="s2">&quot;old.plcc&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;new.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># valid but empty grammar</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--spec=new.plcc&quot;</span><span class="p">])</span>
+    <span class="c1"># build/ was wiped when grammar changed, marker should not exist</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;marker.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+</code></pre></div>
 <p><strong>h.</strong> <code>test_explicit_grammar_same_as_stored_does_not_wipe</code> — change flag:</p>
-<pre><code class="language-python">def test_explicit_grammar_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    (build / &quot;marker.txt&quot;).write_text(&quot;from current grammar&quot;)
-    write_grammar(build, &quot;same.plcc&quot;)
-    (tmp_path / &quot;same.plcc&quot;).write_text(&quot;&quot;)  # valid but empty grammar
-    run_main([&quot;--spec=same.plcc&quot;])
-    # No wipe — marker is still present because grammar didn't change
-    assert (build / &quot;marker.txt&quot;).exists()
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_explicit_grammar_same_as_stored_does_not_wipe</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;marker.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;from current grammar&quot;</span><span class="p">)</span>
+    <span class="n">write_grammar</span><span class="p">(</span><span class="n">build</span><span class="p">,</span> <span class="s2">&quot;same.plcc&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;same.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># valid but empty grammar</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--spec=same.plcc&quot;</span><span class="p">])</span>
+    <span class="c1"># No wipe — marker is still present because grammar didn&#39;t change</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;marker.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+</code></pre></div>
 <p><strong>i.</strong> <code>test_grammar_written_before_build_stages_run</code> — change flag:</p>
-<pre><code class="language-python">def test_grammar_written_before_build_stages_run(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    (tmp_path / &quot;bad.plcc&quot;).write_text(&quot;token BAD @@@\n&quot;)
-    with pytest.raises(SystemExit):
-        run_main([&quot;--spec=bad.plcc&quot;])
-    assert read_grammar(build) == &quot;bad.plcc&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_written_before_build_stages_run</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;bad.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;token BAD @@@</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--spec=bad.plcc&quot;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">read_grammar</span><span class="p">(</span><span class="n">build</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;bad.plcc&quot;</span>
+</code></pre></div>
 <p><strong>j.</strong> <code>test_make_main_banner_prints_version_to_stderr</code> — use <code>spec.plcc</code>:</p>
-<pre><code class="language-python">def test_make_main_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;spec.plcc&quot;).write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_prints_version_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;spec.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>k.</strong> <code>test_make_main_banner_prints_grammar_to_stderr</code> — rename test and update:</p>
-<pre><code class="language-python">def test_make_main_banner_prints_spec_to_stderr(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    spec = tmp_path / &quot;spec.plcc&quot;
-    spec.write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;spec:&quot; in err
-    assert str(spec) in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_prints_spec_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;spec.plcc&quot;</span>
+    <span class="n">spec</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>l.</strong> <code>test_make_main_banner_short_flag_works</code> — use <code>spec.plcc</code>:</p>
-<pre><code class="language-python">def test_make_main_banner_short_flag_works(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;spec.plcc&quot;).write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;-b&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_short_flag_works</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;spec.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;-b&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <p><strong>m.</strong> <code>test_make_main_banner_is_plain_text_with_json_format</code> — use <code>spec.plcc</code>:</p>
-<pre><code class="language-python">def test_make_main_banner_is_plain_text_with_json_format(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / &quot;spec.plcc&quot;).write_text(&quot;&quot;)
-    monkeypatch.setattr(&quot;plcc.cmd.make.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    monkeypatch.setattr(&quot;subprocess.run&quot;,
-                        lambda *a, **kw: SimpleNamespace(returncode=1, stderr=b&quot;&quot;))
-    with pytest.raises(SystemExit):
-        run_main([&quot;--banner&quot;, &quot;--verbose-format=json&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;plcc-ng 1.2.3&quot; in err  # plain &quot;plcc-ng X.Y.Z&quot;, not a JSON object
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_make_main_banner_is_plain_text_with_json_format</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;spec.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.make.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">,</span> <span class="s2">&quot;--verbose-format=json&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;plcc-ng 1.2.3&quot;</span> <span class="ow">in</span> <span class="n">err</span>  <span class="c1"># plain &quot;plcc-ng X.Y.Z&quot;, not a JSON object</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests — confirm they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: failures on <code>--spec</code>, <code>"spec file not found"</code>, <code>"spec.plcc"</code>, <code>"spec:"</code>, <code>"--spec"</code> assertions</p>
 <ul>
 <li>[ ] <strong>Step 3: Update <code>src/plcc/cmd/make.py</code></strong></li>
 </ul>
 <p>Change line 59:</p>
-<pre><code class="language-python">explicit_grammar = args['--spec']
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">explicit_grammar</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--spec&#39;</span><span class="p">]</span>
+</code></pre></div>
 <p>Change lines 25, 76, 79, 85, 99 (the docstring and error messages):</p>
-<pre><code class="language-python">__doc__ = &quot;&quot;&quot;plcc-make
-    Build a PLCC project from a spec file.
-</code></pre>
-<pre><code class="language-python">    if explicit_grammar is None and stored_grammar is not None and not os.path.exists(grammar):
-        print(f&quot;plcc-make: spec file not found: {grammar}&quot;, file=sys.stderr)
-        print(
-            &quot;(the active spec was set by a previous run; &quot;
-            &quot;use --spec to specify a different one)&quot;,
-            file=sys.stderr,
-        )
-        sys.exit(1)
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-make</span>
+<span class="s2">    Build a PLCC project from a spec file.</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="n">explicit_grammar</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">stored_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;(the active spec was set by a previous run; &quot;</span>
+            <span class="s2">&quot;use --spec to specify a different one)&quot;</span><span class="p">,</span>
+            <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    if not os.path.exists(grammar):
-        print(f&quot;plcc-make: spec file not found: {grammar}&quot;, file=sys.stderr)
-        sys.exit(1)
-</code></pre>
-<pre><code class="language-python">    verbose.emit(Events.STARTED, message=f&quot;spec: {grammar}&quot;)
-</code></pre>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-make: spec file not found: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">grammar</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>src/plcc/cmd/output.py</code></strong></li>
 </ul>
 <p>Change line 10:</p>
-<pre><code class="language-python">    print(f&quot;spec: {grammar_path}&quot;, file=sys.stderr, flush=True)
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">grammar_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Run make tests — confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/make_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: all passing (the ll1/report tests are unaffected — "grammar is not LL(1)" is a parsing concept and does not change)</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git -C .worktrees/089-grammar-to-spec-rename add \
-    src/plcc/cmd/make.py src/plcc/cmd/make_test.py src/plcc/cmd/output.py
-git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): update make error messages, banner, and default spec filename&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src/plcc/cmd/make.py<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>src/plcc/cmd/output.py
+git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(089): update make error messages, banner, and default spec filename&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-4-fix-banner-assertions-in-scan-parse-rep-and-diagram-tests">Task 4: Fix banner assertions in scan, parse, rep, and diagram tests</h2>
 <p><strong>Files:</strong></p>
@@ -2638,78 +2638,78 @@ git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): update m
 <li>[ ] <strong>Step 1: Update <code>src/plcc/cmd/scan_test.py</code></strong></li>
 </ul>
 <p>Change <code>test_main_banner_prints_grammar_to_stderr</code> (the function that asserts <code>"grammar:" in err</code>):</p>
-<pre><code class="language-python">def test_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
-    monkeypatch.chdir(tmp_path)
-    build = tmp_path / &quot;build&quot;
-    build.mkdir()
-    (build / &quot;.grammar&quot;).write_text(str(tmp_path / &quot;grammar.plcc&quot;))
-    monkeypatch.setattr(subprocess, &quot;run&quot;, lambda *a, **kw: SimpleNamespace(returncode=0))
-    monkeypatch.setattr(_scan_module, &quot;SourceRunner&quot;,
-                        lambda **kw: type(&quot;R&quot;, (), {&quot;run&quot;: lambda self, s, h: True})())
-    monkeypatch.setattr(&quot;plcc.cmd.scan.get_version&quot;, lambda: &quot;1.2.3&quot;)
-    run_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;spec:&quot; in err
-    assert str(tmp_path / &quot;grammar.plcc&quot;) in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;.grammar&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">_scan_module</span><span class="p">,</span> <span class="s2">&quot;SourceRunner&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="p">(),</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="kc">True</span><span class="p">})())</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;plcc.cmd.scan.get_version&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">)</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Update <code>src/plcc/cmd/parse_test.py</code></strong></li>
 </ul>
 <p>Change <code>test_parse_main_banner_prints_grammar_to_stderr</code> (asserts <code>"grammar:" in err</code>):</p>
-<pre><code class="language-python">def test_parse_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_parse_main(monkeypatch, tmp_path)
-    from .parse import main as parse_main
-    parse_main([&quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;spec:&quot; in err
-    assert str(tmp_path / &quot;grammar.plcc&quot;) in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_parse_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_parse_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">parse_main</span>
+    <span class="n">parse_main</span><span class="p">([</span><span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Update <code>src/plcc/cmd/rep_test.py</code></strong></li>
 </ul>
 <p>Change <code>test_rep_main_banner_prints_grammar_to_stderr</code> (asserts <code>"grammar:" in err</code>):</p>
-<pre><code class="language-python">def test_rep_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
-    _setup_rep_main(monkeypatch, tmp_path)
-    _rep_module.main([&quot;--tool=calc&quot;, &quot;--banner&quot;])
-    _, err = capsys.readouterr()
-    assert &quot;spec:&quot; in err
-    assert str(tmp_path / &quot;grammar.plcc&quot;) in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_rep_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">_setup_rep_main</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">)</span>
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--tool=calc&quot;</span><span class="p">,</span> <span class="s2">&quot;--banner&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>src/plcc/cmd/diagram_test.py</code></strong></li>
 </ul>
 <p>Change <code>test_diagram_main_banner_prints_grammar_to_stderr</code> (asserts <code>"grammar:" in err</code>):</p>
-<pre><code class="language-python">def test_diagram_main_banner_prints_grammar_to_stderr(tmp_path, monkeypatch, capsys):
-    grammar = tmp_path / &quot;grammar.plcc&quot;
-    grammar.write_text(&quot;# stub&quot;)
-    build_dir = tmp_path / 'build'
-    build_dir.mkdir()
-    (build_dir / 'model.json').write_text('{}')
-    (build_dir / '.grammar').write_text(str(grammar))
-    monkeypatch.chdir(tmp_path)
-    with patch('subprocess.run') as mock_run:
-        mock_run.return_value = MagicMock(returncode=0, stderr=b'')
-        with patch('plcc.cmd.diagram.get_version', return_value='1.2.3'):
-            with pytest.raises(SystemExit):
-                run_main(['--banner'])
-    _, err = capsys.readouterr()
-    assert &quot;spec:&quot; in err
-    assert str(grammar) in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_diagram_main_banner_prints_grammar_to_stderr</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">grammar</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+    <span class="n">grammar</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;# stub&quot;</span><span class="p">)</span>
+    <span class="n">build_dir</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;build&#39;</span>
+    <span class="n">build_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="s1">&#39;model.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="s1">&#39;.grammar&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;subprocess.run&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mock_run</span><span class="p">:</span>
+        <span class="n">mock_run</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;plcc.cmd.diagram.get_version&#39;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="s1">&#39;1.2.3&#39;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+                <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;--banner&#39;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec:&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Run these four test files — confirm they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/scan_test.py src/plcc/cmd/parse_test.py src/plcc/cmd/rep_test.py src/plcc/cmd/diagram_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/diagram_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: all banner tests pass; <code>diagram_test.py::test_grammar_file_not_found_prints_error</code> and <code>rep_test.py</code> line 50 still fail — fixed in Task 5</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git -C .worktrees/089-grammar-to-spec-rename add \
-    src/plcc/cmd/scan_test.py src/plcc/cmd/parse_test.py \
-    src/plcc/cmd/rep_test.py src/plcc/cmd/diagram_test.py
-git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): update banner test assertions grammar: → spec:&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src/plcc/cmd/scan_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/diagram_test.py
+git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(089): update banner test assertions grammar: → spec:&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-5-update-cmdreppy-and-remaining-stale-assertions">Task 5: Update <code>cmd/rep.py</code> and remaining stale assertions</h2>
 <p><strong>Files:</strong></p>
@@ -2729,51 +2729,51 @@ git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): update b
 <p>[ ] <strong>Step 1: Fix <code>src/plcc/cmd/diagram_test.py::test_grammar_file_not_found_prints_error</code></strong></p>
 </li>
 </ol>
-<pre><code class="language-python">def test_grammar_file_not_found_prints_error(tmp_path, monkeypatch, capsys):
-    monkeypatch.chdir(tmp_path)
-    with pytest.raises(SystemExit):
-        run_main([])
-    _, err = capsys.readouterr()
-    assert &quot;spec file not found&quot; in err
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_file_not_found_prints_error</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;spec file not found&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Fix <code>src/plcc/cmd/rep_test.py</code> line 50 — update <code>--grammar</code> flag call</strong></li>
 </ul>
 <p>Find the test that calls <code>_rep_module.main(["--grammar=grammar.plcc", "--tool=calc"])</code> and change to:</p>
-<pre><code class="language-python">    _rep_module.main([&quot;--spec=grammar.plcc&quot;, &quot;--tool=calc&quot;])
-</code></pre>
+<div class="highlight"><pre><span></span><code>    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--spec=grammar.plcc&quot;</span><span class="p">,</span> <span class="s2">&quot;--tool=calc&quot;</span><span class="p">])</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Run diagram and rep tests — confirm those two specific failures are fixed</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/diagram_test.py src/plcc/cmd/rep_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/diagram_test.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: <code>test_grammar_file_not_found_prints_error</code> passes; the <code>--spec</code> call no longer raises a docopt error.</p>
 <ul>
 <li>[ ] <strong>Step 4: Update the error message in <code>src/plcc/cmd/rep.py</code></strong></li>
 </ul>
 <p>Change line 155:</p>
-<pre><code class="language-python">        print(&quot;plcc-rep: no semantic sections found in spec.&quot;, file=sys.stderr)
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;plcc-rep: no semantic sections found in spec.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Run rep tests — confirm all pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/cmd/rep_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: all pass</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git -C .worktrees/089-grammar-to-spec-rename add \
-    src/plcc/cmd/rep.py src/plcc/cmd/rep_test.py src/plcc/cmd/diagram_test.py
-git -C .worktrees/089-grammar-to-spec-rename commit -m &quot;feat(089): update rep error message and remaining stale test assertions&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/diagram_test.py
+git<span class="w"> </span>-C<span class="w"> </span>.worktrees/089-grammar-to-spec-rename<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(089): update rep error message and remaining stale test assertions&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-6-full-functional-test-suite">Task 6: Full functional test suite</h2>
 <ul>
 <li>[ ] <strong>Step 1: Run all tiers</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/functional.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/functional.bash
+</code></pre></div>
 <p>Expected: all tests pass — units, commands, integration, e2e</p>
 <ul>
 <li>[ ] <strong>Step 2: If any bats tests fail, check the <code>--help</code> output for the affected command</strong></li>

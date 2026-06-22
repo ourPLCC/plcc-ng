@@ -2249,64 +2249,64 @@
 <li>[ ] <strong>Step 1: Write the failing test</strong></li>
 </ul>
 <p>Add to <code>src/plcc/spec/lexical/parse_lexical_test.py</code>, at the top of the import block add <code>KeywordExpected</code> (alongside existing imports from <code>.Parser</code>):</p>
-<pre><code class="language-python">from .Parser import NameExpected, PatternExpected, PatternDelimiterExpected, UnexpectedContent, KeywordExpected
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.Parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameExpected</span><span class="p">,</span> <span class="n">PatternExpected</span><span class="p">,</span> <span class="n">PatternDelimiterExpected</span><span class="p">,</span> <span class="n">UnexpectedContent</span><span class="p">,</span> <span class="n">KeywordExpected</span>
+</code></pre></div>
 <p>Then add this test near the other error-class tests:</p>
-<pre><code class="language-python">def test_keyword_is_required():
-    spec, errors = parseLexicalSpec(&quot;NUM '\\d+'&quot;)
-    assert len(errors) == 1
-    assert errors[0].__class__ == KeywordExpected
-    assert len(spec.ruleList) == 0
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_keyword_is_required</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s2">&quot;NUM &#39;</span><span class="se">\\</span><span class="s2">d+&#39;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">KeywordExpected</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run test to confirm it fails</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/lexical/parse_lexical_test.py::test_keyword_is_required -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/spec/lexical/parse_lexical_test.py::test_keyword_is_required<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: <code>ImportError</code> or <code>FAILED</code> — <code>KeywordExpected</code> does not exist yet.</p>
 <ul>
 <li>[ ] <strong>Step 3: Create the error class</strong></li>
 </ul>
 <p>Create <code>src/plcc/spec/lexical/KeywordExpected.py</code>:</p>
-<pre><code class="language-python">from .LexicalSpecError import LexicalSpecError
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.LexicalSpecError</span><span class="w"> </span><span class="kn">import</span> <span class="n">LexicalSpecError</span>
 
 
-class KeywordExpected(LexicalSpecError):
-    def __init__(self, line, index=None, column=None):
-        super().__init__(line=line, index=index, column=column,
-            message=&quot;Expected 'token' or 'skip'.&quot;
-        )
-</code></pre>
+<span class="k">class</span><span class="w"> </span><span class="nc">KeywordExpected</span><span class="p">(</span><span class="n">LexicalSpecError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Expected &#39;token&#39; or &#39;skip&#39;.&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Export from <code>__init__.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/spec/lexical/__init__.py</code>, add <code>KeywordExpected</code> to the imports (insert alphabetically among the existing lines):</p>
-<pre><code class="language-python">from .DuplicateName import DuplicateName
-from .KeywordExpected import KeywordExpected
-from .LexicalRule import LexicalRule
-from .LexicalSpec import LexicalSpec
-from .LexicalSpecError import LexicalSpecError
-from .NameExpected import NameExpected
-from .parseLexicalSpec import parseLexicalSpec
-from .PatternCompilationError import PatternCompilationError
-from .PatternDelimiterExpected import PatternDelimiterExpected
-from .PatternExpected import PatternExpected
-from .SkipRule import SkipRule
-from .TokenRule import TokenRule
-from .UnexpectedContent import UnexpectedContent
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.DuplicateName</span><span class="w"> </span><span class="kn">import</span> <span class="n">DuplicateName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.KeywordExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeywordExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LexicalRule</span><span class="w"> </span><span class="kn">import</span> <span class="n">LexicalRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LexicalSpec</span><span class="w"> </span><span class="kn">import</span> <span class="n">LexicalSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LexicalSpecError</span><span class="w"> </span><span class="kn">import</span> <span class="n">LexicalSpecError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.NameExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parseLexicalSpec</span><span class="w"> </span><span class="kn">import</span> <span class="n">parseLexicalSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.PatternCompilationError</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternCompilationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.PatternDelimiterExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternDelimiterExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.PatternExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.SkipRule</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkipRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.TokenRule</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.UnexpectedContent</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnexpectedContent</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Run test — still fails (parser not changed yet)</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/lexical/parse_lexical_test.py::test_keyword_is_required -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/spec/lexical/parse_lexical_test.py::test_keyword_is_required<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: <code>FAILED</code> — <code>errors</code> is empty because the parser still accepts implicit tokens. This confirms the class exists but the enforcement is missing.</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit the error class (tests still red)</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/spec/lexical/KeywordExpected.py src/plcc/spec/lexical/__init__.py
-git commit -m &quot;feat(lexical): add KeywordExpected error class [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/spec/lexical/KeywordExpected.py<span class="w"> </span>src/plcc/spec/lexical/__init__.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(lexical): add KeywordExpected error class [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-2-enforce-keyword-in-the-parser">Task 2: Enforce keyword in the parser</h3>
 <p><strong>Files:</strong>
@@ -2315,47 +2315,47 @@ git commit -m &quot;feat(lexical): add KeywordExpected error class [skip ci]&quo
 <li>[ ] <strong>Step 1: Import <code>KeywordExpected</code> in <code>Parser.py</code></strong></li>
 </ul>
 <p>At the top of <code>src/plcc/spec/lexical/Parser.py</code>, add the import (the existing imports are already there; add one line):</p>
-<pre><code class="language-python">import re
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-from .check_for_duplicate_names import check_for_duplicate_names
-from .TokenRule import TokenRule
-from .SkipRule import SkipRule
-from .LexicalSpec import LexicalSpec
-from .KeywordExpected import KeywordExpected
-from .NameExpected import NameExpected
-from .PatternCompilationError import PatternCompilationError
-from .PatternDelimiterExpected import PatternDelimiterExpected
-from .PatternExpected import PatternExpected
-from .UnexpectedContent import UnexpectedContent
-</code></pre>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.check_for_duplicate_names</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_for_duplicate_names</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.TokenRule</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.SkipRule</span><span class="w"> </span><span class="kn">import</span> <span class="n">SkipRule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LexicalSpec</span><span class="w"> </span><span class="kn">import</span> <span class="n">LexicalSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.KeywordExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeywordExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.NameExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.PatternCompilationError</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternCompilationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.PatternDelimiterExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternDelimiterExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.PatternExpected</span><span class="w"> </span><span class="kn">import</span> <span class="n">PatternExpected</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.UnexpectedContent</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnexpectedContent</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Replace the optional-keyword match with a required one</strong></li>
 </ul>
 <p>In <code>Parser._processLine</code>, find these three lines (around line 38):</p>
-<pre><code class="language-python">        m = re.compile(r'^\s*(token|skip)?').match(string, index)
-        type_ = m[1] if m[1] is not None else 'token'
-        index += len(m[0])
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*(token|skip)?&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="n">type_</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;token&#39;</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
 <p>Replace them with:</p>
-<pre><code class="language-python">        m = re.compile(r'^\s*(token|skip)').match(string, index)
-        if m is None:
-            wsl = self._getLengthOfLeadingWhitespace(string, index)
-            self.errors.append(KeywordExpected(line=line, index=index + wsl))
-            return
-        type_ = m[1]
-        index += len(m[0])
-</code></pre>
+<div class="highlight"><pre><span></span><code>        <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*(token|skip)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wsl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getLengthOfLeadingWhitespace</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KeywordExpected</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span> <span class="o">+</span> <span class="n">wsl</span><span class="p">))</span>
+            <span class="k">return</span>
+        <span class="n">type_</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">index</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Run the new test — should pass now</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/spec/lexical/parse_lexical_test.py::test_keyword_is_required -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/spec/lexical/parse_lexical_test.py::test_keyword_is_required<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: <code>PASSED</code></p>
 <ul>
 <li>[ ] <strong>Step 4: Run the full unit suite — expect failures in the old implicit-token tests</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash -v 2&gt;&amp;1 | grep FAILED
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FAILED
+</code></pre></div>
 <p>Expected failures (tests that used bare <code>NAME 'pattern'</code> input):
 - <code>test_implicit_token_rule</code>
 - <code>test_implicit_token_produces_TokenRule</code>
@@ -2369,9 +2369,9 @@ from .UnexpectedContent import UnexpectedContent
 <ul>
 <li>[ ] <strong>Step 5: Commit the parser change (some tests still red)</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/spec/lexical/Parser.py
-git commit -m &quot;feat(lexical): require token or skip keyword in lexical rules [skip ci]&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/spec/lexical/Parser.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(lexical): require token or skip keyword in lexical rules [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-3-fix-tests-that-used-implicit-token-syntax">Task 3: Fix tests that used implicit token syntax</h3>
 <p><strong>Files:</strong>
@@ -2381,126 +2381,126 @@ git commit -m &quot;feat(lexical): require token or skip keyword in lexical rule
 <li>[ ] <strong>Step 1: Repurpose <code>test_implicit_token_rule</code></strong></li>
 </ul>
 <p>The test already exists. Replace its body so it tests the new error instead of the old silent behavior:</p>
-<p>Old:</p>
-<pre><code class="language-python">def test_implicit_token_rule():
-    spec, errors = parseLexicalSpec('''
-        SPACE ' '
-    ''')
-    assert errors == []
-    assert len(spec.ruleList) == 1
-    assert not spec.ruleList[0].isSkip
-</code></pre>
-<p>New (same function name is fine, but rename for clarity):</p>
-<pre><code class="language-python">def test_implicit_token_rule():
-    spec, errors = parseLexicalSpec('''
-        SPACE ' '
-    ''')
-    assert len(errors) == 1
-    assert errors[0].__class__ == KeywordExpected
-    assert len(spec.ruleList) == 0
-</code></pre>
+<p>Old:
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_implicit_token_rule</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        SPACE &#39; &#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isSkip</span>
+</code></pre></div></p>
+<p>New (same function name is fine, but rename for clarity):
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_implicit_token_rule</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        SPACE &#39; &#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">KeywordExpected</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Remove <code>test_implicit_token_produces_TokenRule</code></strong></li>
 </ul>
 <p>Delete this entire test — it is redundant with <code>test_keyword_is_required</code> and the updated <code>test_implicit_token_rule</code>:</p>
-<pre><code class="language-python">def test_implicit_token_produces_TokenRule():
-    spec, errors = parseLexicalSpec(&quot;SPACE ' '&quot;)
-    assert errors == []
-    assert isinstance(spec.ruleList[0], TokenRule)
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_implicit_token_produces_TokenRule</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s2">&quot;SPACE &#39; &#39;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">TokenRule</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Fix <code>test_choice_of_pattern_delimiter</code></strong></li>
 </ul>
 <p>Add <code>token</code> keyword:</p>
-<pre><code class="language-python">def test_choice_of_pattern_delimiter():
-    spec, errors = parseLexicalSpec('''
-        token SPACE [ [
-    ''')
-    assert errors == []
-    assert len(spec.ruleList) == 1
-    assert not spec.ruleList[0].isSkip
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_choice_of_pattern_delimiter</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        token SPACE [ [</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isSkip</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Fix <code>test_trailing_comment</code></strong></li>
 </ul>
-<pre><code class="language-python">def test_trailing_comment():
-    spec, errors = parseLexicalSpec('''
-        token SPACE ' ' # comment
-    ''')
-    assert errors == []
-    assert len(spec.ruleList) == 1
-    assert not spec.ruleList[0].isSkip
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_trailing_comment</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        token SPACE &#39; &#39; # comment</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isSkip</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Fix <code>test_no_leading_space_required</code></strong></li>
 </ul>
-<pre><code class="language-python">def test_no_leading_space_required():
-    spec, errors = parseLexicalSpec('''
-token HASH '#'
-    ''')
-    assert len(errors) == 0
-    assert len(spec.ruleList) == 1
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_no_leading_space_required</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">token HASH &#39;#&#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 6: Fix <code>test_names_start_with_uppercase_or_underscore_and_may_contain_numbers</code></strong></li>
 </ul>
-<pre><code class="language-python">def test_names_start_with_uppercase_or_underscore_and_may_contain_numbers():
-    spec, errors = parseLexicalSpec('''
-        token SPACE_3 ' '
-    ''')
-    assert errors == []
-    assert len(spec.ruleList) == 1
-    assert not spec.ruleList[0].isSkip
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_names_start_with_uppercase_or_underscore_and_may_contain_numbers</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        token SPACE_3 &#39; &#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isSkip</span>
 
-    spec, errors = parseLexicalSpec('''
-        token _SPACE3_ ' '
-    ''')
-    assert errors == []
-    assert len(spec.ruleList) == 1
-    assert not spec.ruleList[0].isSkip
-</code></pre>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        token _SPACE3_ &#39; &#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isSkip</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 7: Fix <code>test_two_duplicate_names</code></strong></li>
 </ul>
-<pre><code class="language-python">def test_two_duplicate_names():
-    spec, errors = parseLexicalSpec('''
-        token ONE 'one1'
-        token TWO 'two1'
-        token NOT 'duplicate'
-        token ONE 'one2'
-        token TWO 'two2'
-    ''')
-    assert len(errors) == 2
-    assert errors[0].__class__ == DuplicateName
-    assert errors[1].__class__ == DuplicateName
-    assert len(spec.ruleList) == 5
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_two_duplicate_names</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        token ONE &#39;one1&#39;</span>
+<span class="s1">        token TWO &#39;two1&#39;</span>
+<span class="s1">        token NOT &#39;duplicate&#39;</span>
+<span class="s1">        token ONE &#39;one2&#39;</span>
+<span class="s1">        token TWO &#39;two2&#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">DuplicateName</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">DuplicateName</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 8: Fix <code>test_multiple_of_same_duplication</code></strong></li>
 </ul>
-<pre><code class="language-python">def test_multiple_of_same_duplication():
-    spec, errors = parseLexicalSpec('''
-        token ONE 'one1'
-        token ONE 'one2'
-        token ONE 'one3'
-    ''')
-    assert len(errors) == 2
-    assert errors[0].__class__ == DuplicateName
-    assert errors[1].__class__ == DuplicateName
-    assert len(spec.ruleList) == 3
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_multiple_of_same_duplication</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseLexicalSpec</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">        token ONE &#39;one1&#39;</span>
+<span class="s1">        token ONE &#39;one2&#39;</span>
+<span class="s1">        token ONE &#39;one3&#39;</span>
+<span class="s1">    &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">DuplicateName</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">==</span> <span class="n">DuplicateName</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">ruleList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 9: Run the full unit suite — all should pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: previously-failing tests now pass; pre-existing <code>test_grammar_file_not_found_prints_error</code> failure in <code>diagram_test.py</code> is unrelated to this work and was present before this branch.</p>
 <ul>
 <li>[ ] <strong>Step 10: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/spec/lexical/parse_lexical_test.py
-git commit -m &quot;test(lexical): update tests for required token/skip keyword&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/spec/lexical/parse_lexical_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test(lexical): update tests for required token/skip keyword&quot;</span>
+</code></pre></div>
 
 
 

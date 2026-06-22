@@ -2213,19 +2213,19 @@
 <p>This is a breaking change. No migration path, no deprecation bridge.</p>
 <h2 id="section-1-rough-parser-divider-simplification">Section 1: Rough parser — <code>Divider</code> simplification</h2>
 <p><code>Divider</code> loses its <code>tool</code> and <code>language</code> fields. It becomes a pure positional marker:</p>
-<pre><code class="language-python">@dataclass
-class Divider:
-    line: Line
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Divider</span><span class="p">:</span>
+    <span class="n">line</span><span class="p">:</span> <span class="n">Line</span>
+</code></pre></div>
 <p><code>parse_dividers.py</code> simplifies to a single pattern: a divider is a line that is exactly <code>%</code> (nothing after the percent, not even whitespace). Any <code>%</code> line with tokens after it raises <code>UnexpectedTokensOnDividerError</code> (replacing <code>TooManyDividerTokensError</code>). The old <code>% Language</code>, <code>% toolname Language</code>, and <code>% toolname</code> forms all become errors.</p>
 <h2 id="section-2-semantic-section-parsing">Section 2: Semantic section parsing</h2>
 <h3 id="languagedeclaration-dataclass"><code>LanguageDeclaration</code> dataclass</h3>
 <p>A new dataclass in <code>src/plcc/spec/semantics/</code>:</p>
-<pre><code class="language-python">@dataclass
-class LanguageDeclaration:
-    language: str
-    line: Line
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LanguageDeclaration</span><span class="p">:</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">line</span><span class="p">:</span> <span class="n">Line</span>
+</code></pre></div>
 <h3 id="language-extraction">Language extraction</h3>
 <p><code>parse_semantic_spec.py</code> scans the section body (everything after the divider) for the first non-blank, non-comment line. A blank line is one that is empty or contains only whitespace. A comment line is one whose first non-whitespace character is <code>#</code>. That line is parsed as the <code>LanguageDeclaration</code>. The remaining lines are passed to <code>parse_code_fragments</code> unchanged.</p>
 <p>If no non-blank, non-comment line exists before any code fragments, a <code>MissingLanguageDeclarationError</code> is raised (pointing to the divider's line).</p>
@@ -2233,34 +2233,34 @@ class LanguageDeclaration:
 <p><code>parseSpec.py</code> enforces at most one semantic section after <code>split_rough</code>. If <code>len(rough_sems) &gt; 1</code>, a <code>MultipleSemanticsError</code> is raised pointing to the second divider's line.</p>
 <h3 id="semanticspec"><code>SemanticSpec</code></h3>
 <p><code>tool</code> is removed. <code>language</code> is now populated from <code>LanguageDeclaration</code> rather than <code>Divider</code>:</p>
-<pre><code class="language-python">@dataclass
-class SemanticSpec:
-    language: str
-    codeFragmentList: list[CodeFragment]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SemanticSpec</span><span class="p">:</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">codeFragmentList</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CodeFragment</span><span class="p">]</span>
+</code></pre></div>
 <h2 id="section-3-data-model-schema-and-build_model">Section 3: Data model — schema and <code>build_model</code></h2>
 <h3 id="specschemajson"><code>spec.schema.json</code></h3>
 <p><code>semantics</code> collapses from an array to a single nullable object. An array of max 1 is an awkward type; null/object is cleaner and forces consumers to handle presence explicitly:</p>
-<pre><code class="language-json">&quot;semantics&quot;: {
-  &quot;oneOf&quot;: [
-    {
-      &quot;type&quot;: &quot;object&quot;,
-      &quot;required&quot;: [&quot;language&quot;],
-      &quot;properties&quot;: {
-        &quot;language&quot;: { &quot;type&quot;: &quot;string&quot; }
-      }
-    },
-    { &quot;type&quot;: &quot;null&quot; }
-  ]
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;semantics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;oneOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
 <h3 id="build_modelpy"><code>build_model.py</code></h3>
 <p><code>tool</code> is dropped from the semantic section dict. <code>language</code> is lowercased as before:</p>
-<pre><code class="language-python">{
-    'language': s['language'].lower(),
-    'fragments': fragments,
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+    <span class="s1">&#39;fragments&#39;</span><span class="p">:</span> <span class="n">fragments</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="section-4-build-and-cli-changes">Section 4: Build and CLI changes</h2>
 <h3 id="makepy"><code>make.py</code></h3>
 <ul>

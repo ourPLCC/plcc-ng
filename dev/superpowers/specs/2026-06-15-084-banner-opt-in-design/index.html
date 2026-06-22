@@ -2235,11 +2235,11 @@
 </tr>
 </tbody>
 </table>
-<p>The banner content is unchanged:</p>
-<pre><code>plcc-ng 0.41.0
+<p>The banner content is unchanged:
+<div class="highlight"><pre><span></span><code>plcc-ng 0.41.0
 grammar: /path/to/grammar.plcc
-</code></pre>
-<p>For <code>plcc-rep</code>, the "Running {tool} with {language}." line is also gated on <code>--banner</code>.</p>
+</code></pre></div>
+For <code>plcc-rep</code>, the "Running {tool} with {language}." line is also gated on <code>--banner</code>.</p>
 <p>The banner always uses human-readable text format. <code>--verbose-format=json</code> has no effect on it.</p>
 <h2 id="orchestratorchild-suppression">Orchestrator–Child Suppression</h2>
 <p>Orchestrators (<code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>, <code>plcc-diagram</code>) call <code>plcc-make</code> as a subprocess. Under the new design, orchestrators simply do not pass <code>--banner</code> to their children. Children are silent about the banner by default. No suppression flag is needed.</p>

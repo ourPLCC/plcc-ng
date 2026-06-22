@@ -2373,7 +2373,7 @@
 in a dialect of BNF. Each production rule maps a nonterminal to
 a sequence of symbols on its right-hand side.</p>
 <p>Here is an example that will be referenced in the sections below.</p>
-<pre><code class="language-text"># Standard production rules
+<div class="highlight"><pre><span></span><code># Standard production rules
 &lt;Monologue&gt; ::= &lt;Greeting&gt; &lt;Words&gt;
 &lt;Greeting&gt; ::= &lt;Salutation&gt; COMMA &lt;NAME&gt;
 
@@ -2383,7 +2383,7 @@ a sequence of symbols on its right-hand side.</p>
 
 # Matche zero or more `WORD`s.
 &lt;Words&gt; **= &lt;WORD&gt;
-</code></pre>
+</code></pre></div>
 <h2 id="names">Names</h2>
 <table>
 <thead>
@@ -2423,9 +2423,9 @@ as a token in the lexical section and refer to it here.</p>
 <p><code>Monologue</code> is the start symbol in the Monologue example above.</p>
 <h2 id="matching-nothing">Matching nothing</h2>
 <p>It's also possible for a production to produce nothing (A.K.A. epsilon):</p>
-<pre><code class="language-text">&lt;OptElse:HasElse&gt; ::= ELSE &lt;Stmt&gt;
+<div class="highlight"><pre><span></span><code>&lt;OptElse:HasElse&gt; ::= ELSE &lt;Stmt&gt;
 &lt;OptElse:NoElse&gt;  ::=
-</code></pre>
+</code></pre></div>
 <h2 id="generated-classobject-structure">Generated class/object structure</h2>
 <p>Each production rule defines the structure for the nonterminal named
 on the left-hand side, and generates a class. Returning to our Monologue
@@ -2438,29 +2438,29 @@ If you don't specify a field name, plcc-ng generates one.</p>
 <p>Wrap a terminal in angle brackets to capture it.
 The name of a field is the lower-cased name of the terminal. You may
 provide a different field name using <code>:fieldname</code>.</p>
-<pre><code class="language-text">&lt;Term&gt; ::= NUM         # matches NUM but does not capture it
+<div class="highlight"><pre><span></span><code>&lt;Term&gt; ::= NUM         # matches NUM but does not capture it
 &lt;Term&gt; ::= &lt;NUM&gt;       # captures NUM as field `num`
 &lt;Term&gt; ::= &lt;NUM:age&gt;   # captures NUM as field `age`
-</code></pre>
+</code></pre></div>
 <p>Providing a different field name is especially important when a rule
 has two terms on the right-hand side that would
 generate two fields with the same name.</p>
-<pre><code class="language-text">&lt;Pair&gt; ::= &lt;NUM:x&gt; &lt;NUM:y&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code>&lt;Pair&gt; ::= &lt;NUM:x&gt; &lt;NUM:y&gt;
+</code></pre></div>
 <p>If we did not provide the names <code>x</code> and <code>y</code>, plcc-ng would have generated
 two fields with the same name <code>num</code>, which would not compile and run.</p>
 <p>The type of a capture token field is <code>Token</code>.</p>
 <h3 id="capturing-nonterminals">Capturing nonterminals</h3>
 <p>All nonterminals are captured. Their field names will be the nonterminal
 name lower-cased. You may provide a different field name using <code>:fieldname</code>.</p>
-<pre><code class="language-text">&lt;Program&gt; ::= &lt;Expr&gt;              # captures Expr as field `expr`
+<div class="highlight"><pre><span></span><code>&lt;Program&gt; ::= &lt;Expr&gt;              # captures Expr as field `expr`
 &lt;Program&gt; ::= &lt;Expr:expression&gt;   # captures Expr as field `expression`
-</code></pre>
+</code></pre></div>
 <p>Providing a different field name is especially important when a rule
 has two terms on the right-hand side that would
 generate two fields with the same name.</p>
-<pre><code class="language-text">&lt;Pair&gt; ::= &lt;Expr:left&gt; &lt;Expr:right&gt;
-</code></pre>
+<div class="highlight"><pre><span></span><code>&lt;Pair&gt; ::= &lt;Expr:left&gt; &lt;Expr:right&gt;
+</code></pre></div>
 <p>If we did not provide the names <code>left</code> and <code>right</code>, plcc-ng would have generated
 two fields with the same name <code>expr</code>, which would not compile and run.</p>
 <p>The type of a capture nonterminal field is the class with the same name
@@ -2469,61 +2469,61 @@ as the nonterminal.</p>
 <p>When a nonterminal has multiple rules, each alternative must be given
 a name. This name will be the class generated for that rule and will
 be a subclass of the nonterminal class.</p>
-<pre><code class="language-text">&lt;Expr:LitExpr&gt; ::= &lt;NUM:num&gt;
+<div class="highlight"><pre><span></span><code>&lt;Expr:LitExpr&gt; ::= &lt;NUM:num&gt;
 &lt;Expr:AddExpr&gt; ::= PLUS &lt;Expr:left&gt; &lt;Expr:right&gt;
-</code></pre>
+</code></pre></div>
 <p>This generates:</p>
-<pre><code class="language-java">abstract class Expr { }
-class LitExpr extends Expr  { Token num; }
-class AddExpr extends Expr  { Expr left; Expr right; }
-</code></pre>
-<pre><code class="language-python">class Expr:
-    pass
+<div class="highlight"><pre><span></span><code><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Expr</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">LitExpr</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Expr</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">Token</span><span class="w"> </span><span class="n">num</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">AddExpr</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Expr</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">left</span><span class="p">;</span><span class="w"> </span><span class="n">Expr</span><span class="w"> </span><span class="n">right</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Expr</span><span class="p">:</span>
+    <span class="k">pass</span>
 
-@dataclass
-class LitExpr(Expr):
-    num: Token
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LitExpr</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="n">num</span><span class="p">:</span> <span class="n">Token</span>
 
-@dataclass
-class AddExpr(Expr):
-    left: Expr
-    right: Expr
-</code></pre>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddExpr</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="n">left</span><span class="p">:</span> <span class="n">Expr</span>
+    <span class="n">right</span><span class="p">:</span> <span class="n">Expr</span>
+</code></pre></div>
 <p>Subclass names are required only when a non-terminal
 has more than one production.</p>
 <h3 id="repetition-rules">Repetition rules</h3>
 <p>The <code>**=</code> form matches zero or more occurrences of a pattern,
 with an optional separator:</p>
-<pre><code class="language-text">&lt;Args&gt;  **= &lt;Expr:expr&gt;
+<div class="highlight"><pre><span></span><code>&lt;Args&gt;  **= &lt;Expr:expr&gt;
 &lt;Pairs&gt; **= &lt;WHOLE:x&gt; &lt;WHOLE:y&gt; +COMMA
-</code></pre>
+</code></pre></div>
 <p>Captured symbols become parallel lists:</p>
-<pre><code class="language-java">class Args { List&lt;Expr&gt; exprList; }
-class Pairs { List&lt;Token&gt; xList; List&lt;Token&gt; yList; }
-</code></pre>
-<pre><code class="language-python">@dataclass
-class Args:
-    exprList: List[Expr]
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Args</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Expr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">exprList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">Pairs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xList</span><span class="p">;</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span><span class="w"> </span><span class="n">yList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Args</span><span class="p">:</span>
+    <span class="n">exprList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Expr</span><span class="p">]</span>
 
-@dataclass
-class Pairs:
-    xList: List[Token]
-    yList: List[Token]
-</code></pre>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pairs</span><span class="p">:</span>
+    <span class="n">xList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]</span>
+    <span class="n">yList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]</span>
+</code></pre></div>
 <p>For example, for Pairs, assuming WHOLE matches an integer token, given this input:</p>
-<pre><code class="language-text">2 3, 5 6, 7 8
-</code></pre>
+<div class="highlight"><pre><span></span><code>2 3, 5 6, 7 8
+</code></pre></div>
 <p>xList and yList would contains the following:</p>
-<pre><code class="language-python">xList = [Token(&quot;2&quot;), Token(&quot;5&quot;), Token(&quot;7&quot;)]
-yList = [Token(&quot;3&quot;), Token(&quot;6&quot;), Token(&quot;8&quot;)]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">xList</span> <span class="o">=</span> <span class="p">[</span><span class="n">Token</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">),</span> <span class="n">Token</span><span class="p">(</span><span class="s2">&quot;5&quot;</span><span class="p">),</span> <span class="n">Token</span><span class="p">(</span><span class="s2">&quot;7&quot;</span><span class="p">)]</span>
+<span class="n">yList</span> <span class="o">=</span> <span class="p">[</span><span class="n">Token</span><span class="p">(</span><span class="s2">&quot;3&quot;</span><span class="p">),</span> <span class="n">Token</span><span class="p">(</span><span class="s2">&quot;6&quot;</span><span class="p">),</span> <span class="n">Token</span><span class="p">(</span><span class="s2">&quot;8&quot;</span><span class="p">)]</span>
+</code></pre></div>
 <p>When given, the separator token must appear between each ocurrance of the
 right-hand side. Assuming WHOLE matches an integer token, valid inputs for
 Pairs include:</p>
-<pre><code class="language-text">1 2
+<div class="highlight"><pre><span></span><code>1 2
 3 4, 5 6
 7 8,9 10  , 11 12
-</code></pre>
+</code></pre></div>
 <p>The separator token is not captured in the parse tree.</p>
 <h2 id="parse-algorithm">Parse algorithm</h2>
 <p>plcc-ng generates a top-down LL(1) parser.

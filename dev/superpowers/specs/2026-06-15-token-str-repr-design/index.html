@@ -2217,17 +2217,17 @@
 <p>Python runtime only. Java already has <code>toString()</code> returning <code>lexeme</code>. No template changes needed — <code>Token</code> is defined in the shared runtime, not emitted per-project.</p>
 <h2 id="design">Design</h2>
 <p>Add <code>__str__</code> and <code>__repr__</code> to <code>Token</code> in <code>src/plcc/lang/ext/python/runtime/base.py</code>. Both return <code>self.lexeme</code>.</p>
-<pre><code class="language-python">class Token:
-    def __init__(self, kind, lexeme):
-        self.kind = kind
-        self.lexeme = lexeme
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Token</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">lexeme</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span> <span class="o">=</span> <span class="n">lexeme</span>
 
-    def __str__(self):
-        return self.lexeme
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span>
 
-    def __repr__(self):
-        return self.lexeme
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span>
+</code></pre></div>
 <h3 id="why-both-__str__-and-__repr__">Why both <code>__str__</code> and <code>__repr__</code>?</h3>
 <ul>
 <li><code>__str__</code> covers <code>str(token)</code>, <code>print(token)</code>, and f-string interpolation (<code>f"{token}"</code>).</li>

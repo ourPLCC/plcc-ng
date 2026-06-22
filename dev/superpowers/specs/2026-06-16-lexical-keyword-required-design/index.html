@@ -2213,48 +2213,48 @@
 <h2 id="motivation">Motivation</h2>
 <p>Requiring an explicit keyword makes each rule's intent unambiguous, improves readability, and simplifies the grammar file format for both the parser and students.</p>
 <h2 id="behavior">Behavior</h2>
-<p><strong>Valid:</strong></p>
-<pre><code>token NUM '\d+'
-skip  SPACE '\s+'
-</code></pre>
-<p><strong>Invalid (syntax error):</strong></p>
-<pre><code>NUM '\d+'
-</code></pre>
+<p><strong>Valid:</strong>
+<div class="highlight"><pre><span></span><code>token NUM &#39;\d+&#39;
+skip  SPACE &#39;\s+&#39;
+</code></pre></div></p>
+<p><strong>Invalid (syntax error):</strong>
+<div class="highlight"><pre><span></span><code>NUM &#39;\d+&#39;
+</code></pre></div></p>
 <h2 id="architecture">Architecture</h2>
 <p>The change is confined to the lexical spec parser subsystem:</p>
-<pre><code>src/plcc/spec/lexical/
+<div class="highlight"><pre><span></span><code>src/plcc/spec/lexical/
   Parser.py               ← one regex change + error dispatch
   KeywordExpected.py      ← new error class (new file)
   __init__.py             ← export KeywordExpected
   parse_lexical_test.py   ← tests updated
-</code></pre>
+</code></pre></div>
 <p>No changes to fixture files, rule classes (<code>TokenRule</code>, <code>SkipRule</code>), <code>LexicalSpec</code>, or any layer above.</p>
 <h2 id="parser-change-parserpy">Parser change (<code>Parser.py</code>)</h2>
 <p>In <code>_processLine</code>, replace the optional keyword match with a required one:</p>
-<p><strong>Before:</strong></p>
-<pre><code class="language-python">m = re.compile(r'^\s*(token|skip)?').match(string, index)
-type_ = m[1] if m[1] is not None else 'token'
-index += len(m[0])
-</code></pre>
-<p><strong>After:</strong></p>
-<pre><code class="language-python">m = re.compile(r'^\s*(token|skip)').match(string, index)
-if m is None:
-    wsl = self._getLengthOfLeadingWhitespace(string, index)
-    self.errors.append(KeywordExpected(line=line, index=index + wsl))
-    return
-type_ = m[1]
-index += len(m[0])
-</code></pre>
+<p><strong>Before:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*(token|skip)?&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+<span class="n">type_</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;token&#39;</span>
+<span class="n">index</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></p>
+<p><strong>After:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^\s*(token|skip)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">wsl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getLengthOfLeadingWhitespace</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">KeywordExpected</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span> <span class="o">+</span> <span class="n">wsl</span><span class="p">))</span>
+    <span class="k">return</span>
+<span class="n">type_</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">index</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div></p>
 <p>When the keyword is absent: one <code>KeywordExpected</code> error is collected, the line is skipped, and parsing continues on the next line — identical to how <code>NameExpected</code>, <code>PatternExpected</code>, and other line-level errors work.</p>
 <h2 id="new-error-class-keywordexpectedpy">New error class (<code>KeywordExpected.py</code>)</h2>
-<pre><code class="language-python">from .LexicalSpecError import LexicalSpecError
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.LexicalSpecError</span><span class="w"> </span><span class="kn">import</span> <span class="n">LexicalSpecError</span>
 
-class KeywordExpected(LexicalSpecError):
-    def __init__(self, line, index=None, column=None):
-        super().__init__(line=line, index=index, column=column,
-            message=&quot;Expected 'token' or 'skip'.&quot;
-        )
-</code></pre>
+<span class="k">class</span><span class="w"> </span><span class="nc">KeywordExpected</span><span class="p">(</span><span class="n">LexicalSpecError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Expected &#39;token&#39; or &#39;skip&#39;.&quot;</span>
+        <span class="p">)</span>
+</code></pre></div>
 <p>Exported from <code>__init__.py</code> alongside the other error classes.</p>
 <h2 id="test-updates-parse_lexical_testpy">Test updates (<code>parse_lexical_test.py</code>)</h2>
 <p><strong>Tests whose bare-name input was incidental</strong> — add <code>token</code> keyword so each test keeps testing its original concern:

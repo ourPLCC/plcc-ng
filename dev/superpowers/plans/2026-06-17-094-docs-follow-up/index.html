@@ -2233,22 +2233,19 @@
 <li>[ ] <strong>Step 2: Append the docs responsibility section</strong></li>
 </ul>
 <p>Add the following at the end of the file (after the last existing section):</p>
-<p>```markdown</p>
-<p>## Docs responsibility</p>
-<p>When this issue lands, update <code>docs/cli/orchestrators.md</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Docs responsibility</span>
+
+When this issue lands, update <span class="sb">`docs/cli/orchestrators.md`</span>:
+
+<span class="k">-</span><span class="w"> </span>Resolve the <span class="sb">`&lt;!-- TODO: verify how to suppress interactive mode (&lt; /dev/null or EOF behavior) --&gt;`</span> comment in the <span class="sb">`plcc-rep`</span> section.
+<span class="k">-</span><span class="w"> </span>Update the &quot;Evaluate a file only (no interactive mode)&quot; example to reflect the new behavior.
+</code></pre></div>
 <ul>
-<li>Resolve the <code>&lt;!-- TODO: verify how to suppress interactive mode (&lt; /dev/null or EOF behavior) --&gt;</code> comment in the <code>plcc-rep</code> section.</li>
-<li>
-<p>Update the "Evaluate a file only (no interactive mode)" example to reflect the new behavior.
-  ```</p>
-</li>
-<li>
-<p>[ ] <strong>Step 3: Commit</strong></p>
-</li>
+<li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add dev-docs/issues/093-incremental-parsing-repl.md
-  git commit -m "docs(093): note docs responsibility for orchestrators.md [skip ci]"</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>dev-docs/issues/093-incremental-parsing-repl.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(093): note docs responsibility for orchestrators.md [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-2-document-plcc-ll1-in-primitivesmd-and-fix-plcc-trees">Task 2: Document <code>plcc-ll1</code> in <code>primitives.md</code> and fix <code>plcc-trees</code></h3>
 <p><strong>Files:</strong>
@@ -2261,37 +2258,44 @@
 <li>[ ] <strong>Step 1: Add <code>plcc-ll1</code> section after <code>plcc-tokens</code></strong></li>
 </ul>
 <p>Insert the following block between the <code>plcc-tokens</code> section and the <code>plcc-trees</code> section (after the <code>---</code> that follows <code>plcc-tokens</code>'s example):</p>
-<p>````markdown
-  ## plcc-ll1</p>
-<p>Perform LL(1) analysis on a grammar spec.</p>
-<p><code>text
-  plcc-ll1 [-v ...]</code></p>
-<p>Reads spec JSON from stdin (output of <code>plcc-spec</code>); emits LL(1) analysis JSON to stdout.</p>
-<p><strong>Example:</strong></p>
-<p><code>bash
-  plcc-spec spec.plcc | plcc-ll1 &gt; ll1.json</code></p>
-<hr />
-<p>````</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## plcc-ll1</span>
+
+Perform LL(1) analysis on a grammar spec.
+
+<span class="sb">```text</span>
+plcc-ll1 [-v ...]
+<span class="sb">```</span>
+
+Reads spec JSON from stdin (output of <span class="sb">`plcc-spec`</span>); emits LL(1) analysis JSON to stdout.
+
+<span class="gs">**Example:**</span>
+
+<span class="sb">```bash</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>ll1.json
+<span class="sb">```</span>
+
+---
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Remove the TODO comment from <code>plcc-trees</code> and add a pipeline example</strong></li>
 </ul>
 <p>In the <code>plcc-trees</code> section, replace:</p>
-<p>```markdown
-  <!-- TODO: document how to obtain LL1_JSON (output of plcc-ll1) --></p>
-<p>```</p>
+<div class="highlight"><pre><span></span><code>&lt;!-- TODO: document how to obtain LL1_JSON (output of plcc-ll1) --&gt;
+</code></pre></div>
 <p>with:</p>
-<p>````markdown
-  <strong>Example:</strong></p>
-<p><code>bash
-  plcc-spec spec.plcc | plcc-ll1 &gt; ll1.json
-  plcc-spec spec.plcc | plcc-tokens - samples | plcc-trees --ll1=ll1.json</code>
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="gs">**Example:**</span>
+
+<span class="sb">```bash</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>ll1.json
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-tokens<span class="w"> </span>-<span class="w"> </span>samples<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span>ll1.json
+<span class="sb">```</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add docs/cli/primitives.md
-  git commit -m "docs(094): document plcc-ll1 and fix plcc-trees example [skip ci]"</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/cli/primitives.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(094): document plcc-ll1 and fix plcc-trees example [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-3-remove-tool-from-plcc-rep-in-orchestratorsmd">Task 3: Remove <code>--tool</code> from <code>plcc-rep</code> in <code>orchestrators.md</code></h3>
 <p><strong>Files:</strong>
@@ -2304,38 +2308,42 @@
 <li>[ ] <strong>Step 1: Remove the <code>--tool=NAME</code> row from the plcc-rep options table</strong></li>
 </ul>
 <p>In the <code>plcc-rep</code> section, the options table currently contains:</p>
-<p><code>markdown
-  | `--tool=NAME` | Semantic section to run. Inferred automatically when only one exists. |</code></p>
+<div class="highlight"><pre><span></span><code>| <span class="sb">`--tool=NAME`</span> | Semantic section to run. Inferred automatically when only one exists. |
+</code></pre></div>
 <p>Delete that entire row.</p>
 <ul>
 <li>[ ] <strong>Step 2: Update the plcc-rep examples</strong></li>
 </ul>
 <p>Replace the current example block:</p>
-<p>```markdown
-  <strong>Example:</strong></p>
-<p>```bash
-  # Run the 'subtract' semantic section against samples, then enter interactive mode
-  plcc-rep -s subtract.plcc --tool=subtract samples</p>
-<p># Evaluate a file only (no interactive mode)
-  plcc-rep -s subtract.plcc samples &lt; /dev/null
-  <code></code></p>
-<p>with:</p>
-<p>````markdown
-  <strong>Example:</strong></p>
-<p>```bash
-  # Run against samples, then enter interactive mode
-  plcc-rep -s subtract.plcc samples</p>
-<p># Evaluate a file only (no interactive mode)
-  plcc-rep -s subtract.plcc samples &lt; /dev/null
-  ```
+<p><div class="highlight"><pre><span></span><code><span class="gs">**Example:**</span>
+
+```bash
+<span class="gh"># Run the &#39;subtract&#39; semantic section against samples, then enter interactive mode</span>
+plcc-rep -s subtract.plcc --tool=subtract samples
+
+<span class="gh"># Evaluate a file only (no interactive mode)</span>
+plcc-rep -s subtract.plcc samples &lt; /dev/null
+</code></pre></div>
+  <div class="highlight"><pre><span></span><code>with:
+
+````markdown
+**Example:**
+
+```bash
+# Run against samples, then enter interactive mode
+plcc-rep -s subtract.plcc samples
+
+# Evaluate a file only (no interactive mode)
+plcc-rep -s subtract.plcc samples &lt; /dev/null
+</code></pre></div>
   ````</p>
 <p>Leave the <code>&lt;!-- TODO: verify how to suppress interactive mode (&lt; /dev/null or EOF behavior) --&gt;</code> comment in place — 093 owns that.</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add docs/cli/orchestrators.md
-  git commit -m "docs(094): remove --tool from plcc-rep (095) [skip ci]"</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/cli/orchestrators.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(094): remove --tool from plcc-rep (095) [skip ci]&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-4-full-pass-on-language-guideexamplesmd">Task 4: Full pass on <code>language-guide/examples.md</code></h3>
 <p><strong>Files:</strong>
@@ -2348,36 +2356,38 @@
 <li>[ ] <strong>Step 1: Update the spec file block</strong></li>
 </ul>
 <p>Find the <code>Create \</code>subtract.plcc`:` fenced code block. Replace its entire contents with:</p>
-<p>```text
-  # Subtraction language
-  skip WHITESPACE '\s+'
-  token WHOLE     '\d+'
-  token MINUS     '-'
-  token LP        '('
-  token RP        ')'
-  token COMMA     ','
-  %
-  <Prog>         ::= <Exp:exp>
-  <Exp:WholeExp> ::= <WHOLE:whole>
-  <Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
-  %
-  Python</p>
-<p>Prog
-  %%%
-  def _run(self):
-      print(self.exp.eval())
-  %%%</p>
-<p>WholeExp
-  %%%
-  def eval(self):
-      return int(self.whole.lexeme)
-  %%%</p>
-<p>SubExp
-  %%%
-  def eval(self):
-      return self.exp1.eval() - self.exp2.eval()
-  %%%
-  ```</p>
+<div class="highlight"><pre><span></span><code># Subtraction language
+skip WHITESPACE &#39;\s+&#39;
+token WHOLE     &#39;\d+&#39;
+token MINUS     &#39;\-&#39;
+token LP        &#39;\(&#39;
+token RP        &#39;\)&#39;
+token COMMA     &#39;,&#39;
+%
+&lt;Prog&gt;         ::= &lt;Exp:exp&gt;
+&lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
+&lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
+%
+Python
+
+Prog
+%%%
+def _run(self):
+    print(self.exp.eval())
+%%%
+
+WholeExp
+%%%
+def eval(self):
+    return int(self.whole.lexeme)
+%%%
+
+SubExp
+%%%
+def eval(self):
+    return self.exp1.eval() - self.exp2.eval()
+%%%
+</code></pre></div>
 <p>Key changes from current file:
   - Remove the stray <code>%</code> line that appeared directly before <code>Python</code> (leftover from old <code>% subtract Python</code> divider syntax).
   - Result: exactly one <code>%</code> divider between the syntactic and semantic sections, followed by <code>Python</code> as the first line of the semantic section.</p>
@@ -2385,130 +2395,150 @@
 <li>[ ] <strong>Step 2: Update the Build section</strong></li>
 </ul>
 <p>Replace the entire Build section (heading through closing fence) with:</p>
-<p>````markdown
-  ### Build</p>
-<p><code>bash
-  plcc-make -s subtract.plcc</code></p>
-<p>Exits silently on success.
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="gu">### Build</span>
+
+<span class="sb">```bash</span>
+plcc-make<span class="w"> </span>-s<span class="w"> </span>subtract.plcc
+<span class="sb">```</span>
+
+Exits silently on success.
+</code></pre></div>
 <p>(<code>plcc-make</code> produces no stdout output; the banner moved to stderr via <code>-b</code> in issue 084.)</p>
 <ul>
 <li>[ ] <strong>Step 3: Update the Scanner section command and output</strong></li>
 </ul>
 <p>Replace:</p>
-<p><code>`markdown</code>bash
-  plcc-scan -g subtract.plcc samples
-  ```</p>
-<!-- TODO: verify plcc-scan output format -->
-<p>Expected output:</p>
-<p><code>text
-     1: WHOLE '3'
-     3: MINUS '-'
-  ...</code>
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="sb">```bash</span>
+plcc-scan<span class="w"> </span>-g<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+<span class="sb">```</span>
+
+&lt;!-- TODO: verify plcc-scan output format --&gt;
+Expected output:
+
+<span class="sb">```text</span>
+   1: WHOLE &#39;3&#39;
+   3: MINUS &#39;-&#39;
+...
+<span class="sb">```</span>
+</code></pre></div>
 <p>with:</p>
-<p><code>`markdown</code>bash
-  plcc-scan -s subtract.plcc samples
-  ```</p>
-<p>Expected output:</p>
-<p><code>text
-  samples:1:1 WHOLE '3'
-  samples:3:1 MINUS '-'
-  samples:3:2 LP '('
-  samples:3:3 WHOLE '3'
-  samples:3:4 COMMA ','
-  samples:3:5 WHOLE '2'
-  samples:3:6 RP ')'
-  samples:5:1 MINUS '-'
-  samples:5:2 LP '('
-  samples:5:3 MINUS '-'
-  samples:5:4 LP '('
-  samples:5:5 WHOLE '4'
-  samples:5:6 COMMA ','
-  samples:5:7 WHOLE '1'
-  samples:5:8 RP ')'
-  samples:5:9 COMMA ','
-  samples:5:11 MINUS '-'
-  samples:5:12 LP '('
-  samples:5:13 WHOLE '3'
-  samples:5:14 COMMA ','
-  samples:5:15 WHOLE '2'
-  samples:5:16 RP ')'
-  samples:5:17 RP ')'</code>
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="sb">```bash</span>
+plcc-scan<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+<span class="sb">```</span>
+
+Expected output:
+
+<span class="sb">```text</span>
+samples:1:1 WHOLE &#39;3&#39;
+samples:3:1 MINUS &#39;-&#39;
+samples:3:2 LP &#39;(&#39;
+samples:3:3 WHOLE &#39;3&#39;
+samples:3:4 COMMA &#39;,&#39;
+samples:3:5 WHOLE &#39;2&#39;
+samples:3:6 RP &#39;)&#39;
+samples:5:1 MINUS &#39;-&#39;
+samples:5:2 LP &#39;(&#39;
+samples:5:3 MINUS &#39;-&#39;
+samples:5:4 LP &#39;(&#39;
+samples:5:5 WHOLE &#39;4&#39;
+samples:5:6 COMMA &#39;,&#39;
+samples:5:7 WHOLE &#39;1&#39;
+samples:5:8 RP &#39;)&#39;
+samples:5:9 COMMA &#39;,&#39;
+samples:5:11 MINUS &#39;-&#39;
+samples:5:12 LP &#39;(&#39;
+samples:5:13 WHOLE &#39;3&#39;
+samples:5:14 COMMA &#39;,&#39;
+samples:5:15 WHOLE &#39;2&#39;
+samples:5:16 RP &#39;)&#39;
+samples:5:17 RP &#39;)&#39;
+<span class="sb">```</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update the Parser section command and output</strong></li>
 </ul>
 <p>Replace:</p>
-<p><code>`markdown</code>bash
-  plcc-parse -g subtract.plcc samples
-  ```</p>
-<!-- TODO: verify plcc-parse output format and flags -->
-<p>Expected output:</p>
-<p><code>text
-  &lt;Prog&gt;
-  | &lt;Exp:WholeExp&gt;
-  ...</code>
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="sb">```bash</span>
+plcc-parse<span class="w"> </span>-g<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+<span class="sb">```</span>
+
+&lt;!-- TODO: verify plcc-parse output format and flags --&gt;
+Expected output:
+
+<span class="sb">```text</span>
+&lt;Prog&gt;
+| &lt;Exp:WholeExp&gt;
+...
+<span class="sb">```</span>
+</code></pre></div>
 <p>with:</p>
-<p><code>`markdown</code>bash
-  plcc-parse -s subtract.plcc samples
-  ```</p>
-<p>Expected output:</p>
-<p><code>text
-  Prog
+<div class="highlight"><pre><span></span><code><span class="sb">```bash</span>
+plcc-parse<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+<span class="sb">```</span>
+
+Expected output:
+
+<span class="sb">```text</span>
+Prog
+  WholeExp
+    WHOLE &#39;3&#39; [-:1:1]
+Prog
+  SubExp
     WholeExp
-      WHOLE '3' [-:1:1]
-  Prog
+      WHOLE &#39;3&#39; [-:3:3]
+    WholeExp
+      WHOLE &#39;2&#39; [-:3:5]
+Prog
+  SubExp
     SubExp
       WholeExp
-        WHOLE '3' [-:3:3]
+        WHOLE &#39;4&#39; [-:5:5]
       WholeExp
-        WHOLE '2' [-:3:5]
-  Prog
+        WHOLE &#39;1&#39; [-:5:7]
     SubExp
-      SubExp
-        WholeExp
-          WHOLE '4' [-:5:5]
-        WholeExp
-          WHOLE '1' [-:5:7]
-      SubExp
-        WholeExp
-          WHOLE '3' [-:5:13]
-        WholeExp
-          WHOLE '2' [-:5:15]</code>
-  ````</p>
+      WholeExp
+        WHOLE &#39;3&#39; [-:5:13]
+      WholeExp
+        WHOLE &#39;2&#39; [-:5:15]
+<span class="sb">```</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Update the Interpreter section command and output</strong></li>
 </ul>
 <p>Replace:</p>
-<p><code>`markdown</code>bash
-  plcc-rep -g subtract.plcc --tool=subtract samples
-  ```</p>
-<!-- TODO: verify plcc-rep output format -->
-<p>Expected output:</p>
-<p><code>text
-  3
-  1
-  2</code>
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="sb">```bash</span>
+plcc-rep<span class="w"> </span>-g<span class="w"> </span>subtract.plcc<span class="w"> </span>--tool<span class="o">=</span>subtract<span class="w"> </span>samples
+<span class="sb">```</span>
+
+&lt;!-- TODO: verify plcc-rep output format --&gt;
+Expected output:
+
+<span class="sb">```text</span>
+3
+1
+2
+<span class="sb">```</span>
+</code></pre></div>
 <p>with:</p>
-<p><code>`markdown</code>bash
-  plcc-rep -s subtract.plcc samples &lt; /dev/null
-  ```</p>
-<p>Expected output:</p>
-<p><code>text
-  3
-  1
-  2</code>
-  ````</p>
+<div class="highlight"><pre><span></span><code><span class="sb">```bash</span>
+plcc-rep<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples<span class="w"> </span>&lt;<span class="w"> </span>/dev/null
+<span class="sb">```</span>
+
+Expected output:
+
+<span class="sb">```text</span>
+3
+1
+2
+<span class="sb">```</span>
+</code></pre></div>
 <p>Note: <code>&lt; /dev/null</code> suppresses interactive mode. This will be updated once issue 093 lands and the interactive mode behavior is finalized.</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<p><code>bash
-  git add docs/language-guide/examples.md
-  git commit -m "docs(094): update examples for 089+095, verify all output [skip ci]"</code></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/language-guide/examples.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(094): update examples for 089+095, verify all output [skip ci]&quot;</span>
+</code></pre></div>
 
 
 

@@ -2244,15 +2244,15 @@
 </tbody>
 </table>
 <h2 id="navigation">Navigation</h2>
-<pre><code class="language-yaml">- Home: index.md
-- Quick Start: quick-start.md
-- Installation: installation.md
-- Migration from PLCC: migration.md
-- Language Guide: ...
-- CLI: ...
-- Instructor Guide: ...
-- Changelog: changelog.md
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Home</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index.md</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Quick Start</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quick-start.md</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Installation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">installation.md</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Migration from PLCC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">migration.md</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Language Guide</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CLI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Instructor Guide</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Changelog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">changelog.md</span>
+</code></pre></div>
 <p><code>Installation</code> and <code>Migration from PLCC</code> are top-level peers sitting immediately after Quick Start.</p>
 <hr />
 <h2 id="quick-startmd"><code>quick-start.md</code></h2>
@@ -2270,35 +2270,35 @@
 <p><strong>Requirements</strong>
 - Python 3.12 or later
 - Java JDK 21 or later (only needed if implementing semantics in Java)</p>
-<p><strong>Install</strong></p>
-<pre><code class="language-bash">pip install plcc-ng
-</code></pre>
-<p>Verify with:</p>
-<pre><code class="language-bash">plcc-version
-</code></pre>
-<p><strong>Upgrade</strong></p>
-<pre><code class="language-bash">pip install --upgrade plcc-ng
-</code></pre>
-<p>Verify with <code>plcc-version</code>. Check the <a href="changelog.md">Changelog</a> for breaking changes between versions.</p>
+<p><strong>Install</strong>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>plcc-ng
+</code></pre></div>
+Verify with:
+<div class="highlight"><pre><span></span><code>plcc-version
+</code></pre></div></p>
+<p><strong>Upgrade</strong>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>plcc-ng
+</code></pre></div>
+Verify with <code>plcc-version</code>. Check the <a href="changelog.md">Changelog</a> for breaking changes between versions.</p>
 <p><strong>Pin a specific version</strong></p>
-<p>Install a specific version:</p>
-<pre><code class="language-bash">pip install plcc-ng==X.Y.Z
-</code></pre>
-<p>Pin in <code>requirements.txt</code>:</p>
-<pre><code>plcc-ng==X.Y.Z
-</code></pre>
-<p>Pin in <code>pyproject.toml</code>:</p>
-<pre><code class="language-toml">[project]
-dependencies = [
-    &quot;plcc-ng==X.Y.Z&quot;,
-]
-</code></pre>
-<p>Check the currently installed version:</p>
-<pre><code class="language-bash">plcc-version
-</code></pre>
-<p><strong>Uninstall</strong></p>
-<pre><code class="language-bash">pip uninstall plcc-ng
-</code></pre>
+<p>Install a specific version:
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>plcc-ng<span class="o">==</span>X.Y.Z
+</code></pre></div></p>
+<p>Pin in <code>requirements.txt</code>:
+<div class="highlight"><pre><span></span><code>plcc-ng==X.Y.Z
+</code></pre></div></p>
+<p>Pin in <code>pyproject.toml</code>:
+<div class="highlight"><pre><span></span><code><span class="k">[project]</span>
+<span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;plcc-ng==X.Y.Z&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<p>Check the currently installed version:
+<div class="highlight"><pre><span></span><code>plcc-version
+</code></pre></div></p>
+<p><strong>Uninstall</strong>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>uninstall<span class="w"> </span>plcc-ng
+</code></pre></div></p>
 <h3 id="extensibility">Extensibility</h3>
 <p>The page ends after Uninstall with no "coming soon" placeholders. Docker and DevContainer methods will be added as new top-level sections when they are ready. The intro sentence will note: "This page covers installing plcc-ng via pip. Additional installation methods will be documented here as they become available."</p>
 <hr />
@@ -2329,8 +2329,9 @@ Short paragraph: PLCC-ng is a modern, pip-installable rewrite of PLCC. It adds P
 </li>
 </ol>
 <p>Before (PLCC — skip wins regardless of length):
-   <code>skip WORD '[a-z]+'
-   token IF 'if'</code>
+   <div class="highlight"><pre><span></span><code>skip WORD &#39;[a-z]+&#39;
+token IF &#39;if&#39;
+</code></pre></div>
    Given input <code>if</code>, PLCC emits nothing (skip wins). PLCC-ng emits <code>IF</code> (longest match wins; both match 2 chars, IF appears later but WORD is a skip so… actually need to verify exact PLCC-ng behavior here).</p>
 <blockquote>
 <p><strong>Note to implementer:</strong> Verify the exact PLCC-ng behavior for this case by reading <code>matcher_test.py</code> and <code>scanner_test.py</code> before writing this step. The description above is approximate.</p>
@@ -2362,16 +2363,17 @@ Short paragraph: PLCC-ng is a modern, pip-installable rewrite of PLCC. It adds P
    PLCC has no language header concept — it only supports Java. PLCC-ng requires the first non-blank line of the semantic section to declare the language: <code>Java</code> or <code>Python</code>.</li>
 </ol>
 <p>Before:
-   <code>%
-   Prog
-   %%%</code>
+   <div class="highlight"><pre><span></span><code>%
+Prog
+%%%
+</code></pre></div>
    After:
-   ```
-   %
-   Java</p>
-<p>Prog
-   %%%
-   ```</p>
+   <div class="highlight"><pre><span></span><code>%
+Java
+
+Prog
+%%%
+</code></pre></div></p>
 <ol>
 <li>
 <p><strong>Rename the entry point method</strong>

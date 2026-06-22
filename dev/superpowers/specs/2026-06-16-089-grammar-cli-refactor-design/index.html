@@ -2223,38 +2223,38 @@
 - New <code>cmd/grammar.py</code> — CLI option text and arg validation (cmd-level concerns)</p>
 <h2 id="design">Design</h2>
 <h3 id="buildgrammarpy-additions"><code>build/grammar.py</code> additions</h3>
-<pre><code class="language-python">DEFAULT_GRAMMAR_FILE = &quot;grammar.plcc&quot;
+<div class="highlight"><pre><span></span><code><span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="o">=</span> <span class="s2">&quot;grammar.plcc&quot;</span>
 
-def resolve_grammar_path(explicit, stored):
-    if explicit is not None:
-        return explicit
-    elif stored is not None:
-        return stored
-    else:
-        return DEFAULT_GRAMMAR_FILE
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_grammar_path</span><span class="p">(</span><span class="n">explicit</span><span class="p">,</span> <span class="n">stored</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">explicit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">explicit</span>
+    <span class="k">elif</span> <span class="n">stored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stored</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
+</code></pre></div>
 <p><code>resolve_grammar_path</code> takes the already-read <code>stored</code> value rather than <code>build_dir</code> to avoid double-reading the stored file. <code>make.py</code> already reads it and needs it separately for the "stored file missing" hint error and the "grammar changed, wipe build" logic — the function owns only the 3-way selection.</p>
 <h3 id="new-cmdgrammarpy">New <code>cmd/grammar.py</code></h3>
-<pre><code class="language-python">import os
-import sys
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-from plcc.build.grammar import DEFAULT_GRAMMAR_FILE
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
 
-GRAMMAR_OPTION = f&quot;&quot;&quot;\
-    -g &lt;path&gt; --grammar=&lt;path&gt;
-                            Grammar to build from. Once set, remembered for subsequent
-                            commands until changed. Defaults to {DEFAULT_GRAMMAR_FILE} on first use.&quot;&quot;&quot;
+<span class="n">GRAMMAR_OPTION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;</span>
+<span class="s2">                            Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to </span><span class="si">{</span><span class="n">DEFAULT_GRAMMAR_FILE</span><span class="si">}</span><span class="s2"> on first use.&quot;&quot;&quot;</span>
 
-def validate_grammar_flag(cmd_name, args):
-    path = args['--grammar']
-    if path is not None and not os.path.exists(path):
-        print(f&quot;{cmd_name}: grammar file not found: {path}&quot;, file=sys.stderr)
-        sys.exit(1)
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_grammar_flag</span><span class="p">(</span><span class="n">cmd_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--grammar&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2">: grammar file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-def grammar_flag_for_child(args):
-    path = args['--grammar']
-    return [f'--grammar={path}'] if path is not None else []
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--grammar&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;--grammar=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+</code></pre></div>
 <p><code>GRAMMAR_OPTION</code> references <code>DEFAULT_GRAMMAR_FILE</code> so the help text always matches the actual default. <code>validate_grammar_flag</code> takes <code>cmd_name</code> so each command's error prefix stays accurate.</p>
 <h3 id="scanpy-parsepy-reppy-diagrampy"><code>scan.py</code>, <code>parse.py</code>, <code>rep.py</code>, <code>diagram.py</code></h3>
 <p>Each file:

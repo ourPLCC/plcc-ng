@@ -2307,8 +2307,8 @@
 <h1 id="plcc-spec">plcc-spec</h1>
 <p>Parse, validate, and print a PLCC grammar file as JSON.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-spec [-v ...] [options] FILE
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-spec [-v ...] [options] FILE
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2341,15 +2341,15 @@
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Parse and print spec as JSON
-plcc-spec spec.plcc
+<div class="highlight"><pre><span></span><code><span class="c1"># Parse and print spec as JSON</span>
+plcc-spec<span class="w"> </span>spec.plcc
 
-# Validate only (no output on success)
-plcc-spec --no-json spec.plcc
+<span class="c1"># Validate only (no output on success)</span>
+plcc-spec<span class="w"> </span>--no-json<span class="w"> </span>spec.plcc
 
-# Pipe into another command
-plcc-spec spec.plcc | plcc-ll1
-</code></pre>
+<span class="c1"># Pipe into another command</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1
+</code></pre></div>
 
 
 

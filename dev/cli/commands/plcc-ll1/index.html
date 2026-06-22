@@ -2309,8 +2309,8 @@
 emits LL(1) analysis JSON to stdout, including FIRST sets, FOLLOW sets,
 PREDICT sets, any conflicts, and any left-recursion cycles.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-ll1 [-v ...] [options]
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-ll1 [-v ...] [options]
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2335,12 +2335,12 @@ PREDICT sets, any conflicts, and any left-recursion cycles.</p>
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Analyse a spec and print LL(1) JSON
-plcc-spec spec.plcc | plcc-ll1
+<div class="highlight"><pre><span></span><code><span class="c1"># Analyse a spec and print LL(1) JSON</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1
 
-# Save to file for use with plcc-trees
-plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
-</code></pre>
+<span class="c1"># Save to file for use with plcc-trees</span>
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>build/ll1.json
+</code></pre></div>
 
 
 

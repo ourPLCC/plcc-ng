@@ -2215,21 +2215,21 @@
 <h2 id="change">Change</h2>
 <h3 id="srcplcclangextpythontemplatesmainpyjinja"><code>src/plcc/lang/ext/python/templates/main.py.jinja</code></h3>
 <p>Wrap the outer <code>for</code> loop in <code>try/except KeyboardInterrupt</code>. On interrupt, print a user-facing message to stdout, then exit with code 130.</p>
-<pre><code class="language-python">try:
-    for line in sys.stdin:
-        line = line.strip()
-        if not line:
-            continue
-        try:
-            tree = registry.deserialize(json.loads(line))
-            result = tree.{{ entry_point }}()
-            print(json.dumps({&quot;kind&quot;: &quot;result&quot;, &quot;value&quot;: repr(result) if result is not None else None}), flush=True)
-        except Exception as e:
-            print(json.dumps({&quot;kind&quot;: &quot;error&quot;, &quot;type&quot;: type(e).__name__, &quot;message&quot;: str(e)}), flush=True)
-except KeyboardInterrupt:
-    print(&quot;User interrupted execution by ^C.&quot;)
-    sys.exit(130)
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">tree</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="p">{{</span> <span class="n">entry_point</span> <span class="p">}}()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;User interrupted execution by ^C.&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+</code></pre></div>
 <p>The message is printed to stdout (the pipe to <code>plcc-rep</code>) so that <code>_read_response</code> in <code>rep.py</code> receives and displays it when the interpreter is mid-evaluation. When ^C fires at the idle <code>&gt;&gt;&gt;</code> prompt, <code>plcc-rep</code> exits first via <code>SourceRunner._clear_buffer_or_exit</code> before reading the message — nothing is printed, which is the correct behaviour (no computation was interrupted).</p>
 <h2 id="propagation-chain-no-changes-needed">Propagation chain (no changes needed)</h2>
 <p>The exit-130 chain is already correct end-to-end:</p>

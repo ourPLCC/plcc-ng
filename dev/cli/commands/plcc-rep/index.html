@@ -2319,8 +2319,8 @@
 <p>REPL — read, eval, print loop for a PLCC spec. Scans and parses source input,
 then evaluates it using the generated semantics.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-rep [-v ...] [options] [SOURCE ...]
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-rep [-v ...] [options] [SOURCE ...]
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2357,12 +2357,12 @@ then evaluates it using the generated semantics.</p>
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Evaluate files and exit
-plcc-rep -s subtract.plcc samples/
+<div class="highlight"><pre><span></span><code><span class="c1"># Evaluate files and exit</span>
+plcc-rep<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples/
 
-# Enter interactive mode
-plcc-rep -s subtract.plcc
-</code></pre>
+<span class="c1"># Enter interactive mode</span>
+plcc-rep<span class="w"> </span>-s<span class="w"> </span>subtract.plcc
+</code></pre></div>
 <h2 id="interactive-mode">Interactive mode</h2>
 <p>When no source files are given and stdin is a terminal, <code>plcc-rep</code> reads
 input at a <code>&gt;&gt;&gt;</code> prompt. After each line, complete sentences are evaluated

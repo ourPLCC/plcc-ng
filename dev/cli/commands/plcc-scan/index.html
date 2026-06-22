@@ -2307,8 +2307,8 @@
 <h1 id="plcc-scan">plcc-scan</h1>
 <p>Tokenize source input and print tokens in human-readable format.</p>
 <h2 id="usage">Usage</h2>
-<pre><code class="language-text">plcc-scan [-v ...] [options] [SOURCE ...]
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-scan [-v ...] [options] [SOURCE ...]
+</code></pre></div>
 <h2 id="arguments-and-options">Arguments and Options</h2>
 <table>
 <thead>
@@ -2349,16 +2349,16 @@
 </tbody>
 </table>
 <h2 id="examples">Examples</h2>
-<pre><code class="language-bash"># Tokenize stdin
-echo &quot;42 36 2&quot; | plcc-scan
+<div class="highlight"><pre><span></span><code><span class="c1"># Tokenize stdin</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;42 36 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-scan
 
-# Tokenize files
-plcc-scan -s subtract.plcc samples/
+<span class="c1"># Tokenize files</span>
+plcc-scan<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples/
 
-# After setting spec once, subsequent calls remember it
-plcc-scan -s subtract.plcc
-plcc-scan samples/
-</code></pre>
+<span class="c1"># After setting spec once, subsequent calls remember it</span>
+plcc-scan<span class="w"> </span>-s<span class="w"> </span>subtract.plcc
+plcc-scan<span class="w"> </span>samples/
+</code></pre></div>
 
 
 

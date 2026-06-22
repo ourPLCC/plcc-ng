@@ -2221,40 +2221,40 @@
 <li>[ ] <strong>Step 1: Write the failing test</strong></li>
 </ul>
 <p>Add to <code>src/plcc/lang/ext/python/runtime/base_test.py</code>:</p>
-<pre><code class="language-python">def test_token_str_returns_lexeme():
-    t = Token(kind='NUM', lexeme='42')
-    assert str(t) == '42'
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_token_str_returns_lexeme</span><span class="p">():</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Token</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;NUM&#39;</span><span class="p">,</span> <span class="n">lexeme</span><span class="o">=</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;42&#39;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run the test to confirm it fails</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/lang/ext/python/runtime/base_test.py::test_token_str_returns_lexeme -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/python/runtime/base_test.py::test_token_str_returns_lexeme<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: FAIL — <code>str(t)</code> returns something like <code>&lt;runtime.base.Token object at 0x...&gt;</code>, not <code>'42'</code>.</p>
 <ul>
 <li>[ ] <strong>Step 3: Add <code>__str__</code> to <code>Token</code></strong></li>
 </ul>
 <p>Edit <code>src/plcc/lang/ext/python/runtime/base.py</code> so the class reads:</p>
-<pre><code class="language-python">class Token:
-    def __init__(self, kind, lexeme):
-        self.kind = kind
-        self.lexeme = lexeme
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Token</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">lexeme</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span> <span class="o">=</span> <span class="n">lexeme</span>
 
-    def __str__(self):
-        return self.lexeme
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run the test to confirm it passes</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/lang/ext/python/runtime/base_test.py::test_token_str_returns_lexeme -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/python/runtime/base_test.py::test_token_str_returns_lexeme<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: PASS.</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/lang/ext/python/runtime/base.py src/plcc/lang/ext/python/runtime/base_test.py
-git commit -m &quot;feat(086): Token.__str__ returns lexeme&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/python/runtime/base.py<span class="w"> </span>src/plcc/lang/ext/python/runtime/base_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(086): Token.__str__ returns lexeme&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-2-add-__repr__-to-token">Task 2: Add <code>__repr__</code> to <code>Token</code></h3>
 <p><strong>Files:</strong>
@@ -2264,49 +2264,49 @@ git commit -m &quot;feat(086): Token.__str__ returns lexeme&quot;
 <li>[ ] <strong>Step 1: Write the failing test</strong></li>
 </ul>
 <p>Add to <code>src/plcc/lang/ext/python/runtime/base_test.py</code>:</p>
-<pre><code class="language-python">def test_token_repr_returns_lexeme():
-    t = Token(kind='NUM', lexeme='42')
-    assert repr(t) == '42'
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_token_repr_returns_lexeme</span><span class="p">():</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">Token</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;NUM&#39;</span><span class="p">,</span> <span class="n">lexeme</span><span class="o">=</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">repr</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;42&#39;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run the test to confirm it fails</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/lang/ext/python/runtime/base_test.py::test_token_repr_returns_lexeme -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/python/runtime/base_test.py::test_token_repr_returns_lexeme<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: FAIL — <code>repr(t)</code> returns something like <code>&lt;runtime.base.Token object at 0x...&gt;</code>, not <code>'42'</code>.</p>
 <ul>
 <li>[ ] <strong>Step 3: Add <code>__repr__</code> to <code>Token</code></strong></li>
 </ul>
 <p>Edit <code>src/plcc/lang/ext/python/runtime/base.py</code> so the class reads:</p>
-<pre><code class="language-python">class Token:
-    def __init__(self, kind, lexeme):
-        self.kind = kind
-        self.lexeme = lexeme
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Token</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">lexeme</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span> <span class="o">=</span> <span class="n">lexeme</span>
 
-    def __str__(self):
-        return self.lexeme
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span>
 
-    def __repr__(self):
-        return self.lexeme
-</code></pre>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lexeme</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run the test to confirm it passes</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash src/plcc/lang/ext/python/runtime/base_test.py::test_token_repr_returns_lexeme -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/python/runtime/base_test.py::test_token_repr_returns_lexeme<span class="w"> </span>-v
+</code></pre></div>
 <p>Expected: PASS.</p>
 <ul>
 <li>[ ] <strong>Step 5: Run the full unit suite</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: all tests pass (was 981 at baseline), output clean.</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/lang/ext/python/runtime/base.py src/plcc/lang/ext/python/runtime/base_test.py
-git commit -m &quot;feat(086): Token.__repr__ returns lexeme&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/python/runtime/base.py<span class="w"> </span>src/plcc/lang/ext/python/runtime/base_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(086): Token.__repr__ returns lexeme&quot;</span>
+</code></pre></div>
 
 
 

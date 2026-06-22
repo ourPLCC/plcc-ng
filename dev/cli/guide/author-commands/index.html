@@ -2442,24 +2442,24 @@ once and subsequent commands in the same directory pick it up automatically.</p>
 <h3 id="plcc-scan">plcc-scan</h3>
 <p>Tokenize source input and print each token in human-readable format. Useful
 for checking that your lexical rules match what you expect.</p>
-<pre><code class="language-bash">echo &quot;42 36 2&quot; | plcc-scan
-plcc-scan -s subtract.plcc samples/
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;42 36 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-scan
+plcc-scan<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples/
+</code></pre></div>
 <h3 id="plcc-parse">plcc-parse</h3>
 <p>Parse source input and print the parse tree. Useful for verifying that your
 grammar accepts the input you intend and rejects what it shouldn't.</p>
-<pre><code class="language-bash">echo &quot;42 36 2&quot; | plcc-parse
-plcc-parse -s subtract.plcc samples/
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;42 36 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-parse
+plcc-parse<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples/
+</code></pre></div>
 <p><code>plcc-parse</code> also has an interactive mode: when no source files are given and
 stdin is a terminal, it reads input at a <code>&gt;&gt;&gt;</code> prompt and parses each line as
 you type.</p>
 <h3 id="plcc-rep">plcc-rep</h3>
 <p>Read-eval-print loop. Runs your full language spec — scanning, parsing, and
 executing semantics — and prints the result of each input.</p>
-<pre><code class="language-bash">plcc-rep -s subtract.plcc samples/   # evaluate files and exit
-plcc-rep -s subtract.plcc            # enter interactive mode
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-rep<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples/<span class="w">   </span><span class="c1"># evaluate files and exit</span>
+plcc-rep<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w">            </span><span class="c1"># enter interactive mode</span>
+</code></pre></div>
 <h2 id="common-options">Common options</h2>
 <p>All commands accept these options:</p>
 <table>
@@ -2490,8 +2490,8 @@ plcc-rep -s subtract.plcc            # enter interactive mode
 and inheritance relationships that plcc-ng derives from your syntactic
 grammar — useful for understanding the object model you'll program against
 when writing semantics.</p>
-<pre><code class="language-bash">plcc-diagram -s subtract.plcc
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-diagram<span class="w"> </span>-s<span class="w"> </span>subtract.plcc
+</code></pre></div>
 <blockquote>
 <p><strong>Requires the <code>plcc-diagram</code> package.</strong> If <code>plcc-diagram</code> is not
 installed, this command will not be available.</p>
@@ -2499,23 +2499,23 @@ installed, this command will not be available.</p>
 <h2 id="metadata-and-extension-discovery">Metadata and extension discovery</h2>
 <h3 id="plcc-version">plcc-version</h3>
 <p>Print the installed plcc-ng version.</p>
-<pre><code class="language-bash">plcc-version
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-version
+</code></pre></div>
 <h3 id="plcc-lang-list">plcc-lang-list</h3>
 <p>List the language plugins installed on your system. plcc-ng ships with
 <code>python</code> and <code>java</code> support; this command shows what is available.</p>
-<pre><code class="language-bash">plcc-lang-list
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-lang-list
+</code></pre></div>
 <h3 id="plcc-parser-list">plcc-parser-list</h3>
 <p>List the parser plugins installed on your system. plcc-ng ships with the
 <code>table</code> parser (LL(1) table-driven); this command shows what is available.</p>
-<pre><code class="language-bash">plcc-parser-list
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-parser-list
+</code></pre></div>
 <h3 id="plcc-diagram-list">plcc-diagram-list</h3>
 <p>List the diagram format plugins installed on your system. plcc-ng ships with
 <code>mermaid</code> and <code>plantuml</code> support.</p>
-<pre><code class="language-bash">plcc-diagram-list
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-diagram-list
+</code></pre></div>
 <blockquote>
 <p><strong>Requires the <code>plcc-diagram</code> package.</strong></p>
 </blockquote>

@@ -2255,8 +2255,8 @@ If "grammar" refers to <em>grammar as a language concept</em> (LL(1), context-fr
 <li>Any reference to "LL(1) grammar", "context-free grammar", "grammar rule", "grammar syntax", etc.</li>
 </ul>
 <h3 id="commit">Commit</h3>
-<pre><code>docs(089): update docs grammar-file references to spec-file [skip ci]
-</code></pre>
+<div class="highlight"><pre><span></span><code>docs(089): update docs grammar-file references to spec-file [skip ci]
+</code></pre></div>
 <hr />
 <h2 id="phase-4-internal-identifiers">Phase 4 — Internal Identifiers</h2>
 <h3 id="module-renames">Module renames</h3>
@@ -2345,9 +2345,9 @@ If "grammar" refers to <em>grammar as a language concept</em> (LL(1), context-fr
 2. Implement renames in the module — confirm green
 3. Update all import sites</p>
 <h3 id="commits-one-per-logical-group">Commits (one per logical group)</h3>
-<pre><code>refactor(089): rename build/grammar → build/spec, .grammar → .spec
+<div class="highlight"><pre><span></span><code>refactor(089): rename build/grammar → build/spec, .grammar → .spec
 refactor(089): rename cmd/grammar → cmd/spec and update all import sites
-</code></pre>
+</code></pre></div>
 <h3 id="verification">Verification</h3>
 <p>Run <code>bin/test/functional.bash</code> after all changes to catch any bats tests that reference old symbol names or the <code>.grammar</code> filename.</p>
 

@@ -2284,351 +2284,351 @@
 <li>[ ] <strong>Step 1: Replace parse_dividers_test.py</strong></li>
 </ul>
 <p>Replace the full contents of <code>src/plcc/spec/rough/parse_dividers_test.py</code>:</p>
-<pre><code class="language-python">from pytest import raises
-from ... import lines
-from .Block import Block
-from .Divider import Divider
-from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
-from .parse_blocks import parse_blocks
-from .parse_dividers import parse_dividers
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pytest</span><span class="w"> </span><span class="kn">import</span> <span class="n">raises</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...</span><span class="w"> </span><span class="kn">import</span> <span class="n">lines</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Block</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Divider</span><span class="w"> </span><span class="kn">import</span> <span class="n">Divider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.UnexpectedTokensOnDividerError</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnexpectedTokensOnDividerError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parse_blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_blocks</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parse_dividers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_dividers</span>
 
 
-def test_None_yields_nothing():
-    assert list(parse_dividers(None)) == []
+<span class="k">def</span><span class="w"> </span><span class="nf">test_None_yields_nothing</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span> <span class="o">==</span> <span class="p">[]</span>
 
 
-def test_empty_yields_nothing():
-    assert list(parse_dividers([])) == []
+<span class="k">def</span><span class="w"> </span><span class="nf">test_empty_yields_nothing</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">([]))</span> <span class="o">==</span> <span class="p">[]</span>
 
 
-def test_non_dividers_pass_through():
-    lines_ = list(parse_blocks(lines.parseLines('''\
-one
-%%%
-two
-%%%
-three
-''')))
-    assert list(parse_dividers(lines_)) == lines_
+<span class="k">def</span><span class="w"> </span><span class="nf">test_non_dividers_pass_through</span><span class="p">():</span>
+    <span class="n">lines_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_blocks</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">one</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">two</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">three</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="n">lines_</span><span class="p">))</span> <span class="o">==</span> <span class="n">lines_</span>
 
 
-def test_bare_percent_yields_divider():
-    lines_ = list(lines.parseLines('%'))
-    result = list(parse_dividers(lines_))
-    assert result == [Divider(line=lines_[0])]
+<span class="k">def</span><span class="w"> </span><span class="nf">test_bare_percent_yields_divider</span><span class="p">():</span>
+    <span class="n">lines_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="n">lines_</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="p">[</span><span class="n">Divider</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">lines_</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
 
 
-def test_percent_with_trailing_whitespace_yields_divider():
-    lines_ = list(lines.parseLines('%  '))
-    result = list(parse_dividers(lines_))
-    assert result == [Divider(line=lines_[0])]
+<span class="k">def</span><span class="w"> </span><span class="nf">test_percent_with_trailing_whitespace_yields_divider</span><span class="p">():</span>
+    <span class="n">lines_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;%  &#39;</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="n">lines_</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="p">[</span><span class="n">Divider</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">lines_</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
 
 
-def test_percent_with_token_raises_error():
-    with raises(UnexpectedTokensOnDividerError):
-        list(parse_dividers(list(lines.parseLines('% Java'))))
+<span class="k">def</span><span class="w"> </span><span class="nf">test_percent_with_token_raises_error</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="n">UnexpectedTokensOnDividerError</span><span class="p">):</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;% Java&#39;</span><span class="p">))))</span>
 
 
-def test_percent_with_two_tokens_raises_error():
-    with raises(UnexpectedTokensOnDividerError):
-        list(parse_dividers(list(lines.parseLines('% tool Java'))))
+<span class="k">def</span><span class="w"> </span><span class="nf">test_percent_with_two_tokens_raises_error</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="n">UnexpectedTokensOnDividerError</span><span class="p">):</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;% tool Java&#39;</span><span class="p">))))</span>
 
 
-def test_percent_with_three_tokens_raises_error():
-    with raises(UnexpectedTokensOnDividerError):
-        list(parse_dividers(list(lines.parseLines('% a b c'))))
+<span class="k">def</span><span class="w"> </span><span class="nf">test_percent_with_three_tokens_raises_error</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">raises</span><span class="p">(</span><span class="n">UnexpectedTokensOnDividerError</span><span class="p">):</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">% a</span><span class="s1"> b c&#39;</span><span class="p">))))</span>
 
 
-def test_double_percent_does_not_match():
-    lines_ = list(lines.parseLines('%%'))
-    assert list(parse_dividers(lines_)) == [lines.Line('%%', 1, None)]
+<span class="k">def</span><span class="w"> </span><span class="nf">test_double_percent_does_not_match</span><span class="p">():</span>
+    <span class="n">lines_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="n">lines_</span><span class="p">))</span> <span class="o">==</span> <span class="p">[</span><span class="n">lines</span><span class="o">.</span><span class="n">Line</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span>
 
 
-def test_blocks_mask_dividers():
-    lines_ = list(parse_blocks(lines.parseLines('%%%\n%\n%%%')))
-    assert list(parse_dividers(lines_)) == [
-        Block([
-            lines_[0].lines[0],
-            lines_[0].lines[1],
-            lines_[0].lines[2]
-        ])
-    ]
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_blocks_mask_dividers</span><span class="p">():</span>
+    <span class="n">lines_</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_blocks</span><span class="p">(</span><span class="n">lines</span><span class="o">.</span><span class="n">parseLines</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">%</span><span class="se">\n</span><span class="s1">%</span><span class="se">\n</span><span class="si">%%</span><span class="s1">%&#39;</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">parse_dividers</span><span class="p">(</span><span class="n">lines_</span><span class="p">))</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="n">Block</span><span class="p">([</span>
+            <span class="n">lines_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">lines_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">lines_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="p">])</span>
+    <span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests, confirm failures</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/spec/rough/parse_dividers_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/spec/rough/parse_dividers_test.py -v
+</code></pre></div>
 <p>Expected: multiple failures — <code>UnexpectedTokensOnDividerError</code> not importable, <code>Divider</code> constructor mismatch.</p>
 <ul>
 <li>[ ] <strong>Step 3: Create <code>UnexpectedTokensOnDividerError.py</code></strong></li>
 </ul>
 <p>Create <code>src/plcc/spec/rough/UnexpectedTokensOnDividerError.py</code>:</p>
-<pre><code class="language-python">from ..SpecError import SpecError
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">..SpecError</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpecError</span>
 
 
-class UnexpectedTokensOnDividerError(SpecError):
-    ...
-</code></pre>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnexpectedTokensOnDividerError</span><span class="p">(</span><span class="n">SpecError</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>Divider.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/rough/Divider.py</code>:</p>
-<pre><code class="language-python">from dataclasses import dataclass
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-from ...lines import Line
+<span class="kn">from</span><span class="w"> </span><span class="nn">...lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
 
 
-@dataclass
-class Divider:
-    line: Line
-</code></pre>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Divider</span><span class="p">:</span>
+    <span class="n">line</span><span class="p">:</span> <span class="n">Line</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Update <code>parse_dividers.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/rough/parse_dividers.py</code>:</p>
-<pre><code class="language-python">import re
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-from ...lines import Line
-from .Divider import Divider
-from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
+<span class="kn">from</span><span class="w"> </span><span class="nn">...lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Divider</span><span class="w"> </span><span class="kn">import</span> <span class="n">Divider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.UnexpectedTokensOnDividerError</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnexpectedTokensOnDividerError</span>
 
-_BARE_PERCENT = re.compile(r'^%\s*$')
-_PERCENT_PREFIX = re.compile(r'^%')
-_FIRST_TOKEN = re.compile(r'^%\s*(\S)')
+<span class="n">_BARE_PERCENT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^%\s*$&#39;</span><span class="p">)</span>
+<span class="n">_PERCENT_PREFIX</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^%&#39;</span><span class="p">)</span>
+<span class="n">_FIRST_TOKEN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^%\s*(\S)&#39;</span><span class="p">)</span>
 
 
-def parse_dividers(lines):
-    if not lines:
-        return
-    for line in lines:
-        if isinstance(line, Line) and _PERCENT_PREFIX.match(line.string):
-            if _BARE_PERCENT.match(line.string):
-                yield Divider(line=line)
-            else:
-                match = _FIRST_TOKEN.match(line.string)
-                col = match.start(1) + 1
-                raise UnexpectedTokensOnDividerError(line=line, column=col)
-        else:
-            yield line
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_dividers</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">Line</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_PERCENT_PREFIX</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">string</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">_BARE_PERCENT</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">string</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">Divider</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">_FIRST_TOKEN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+                <span class="n">col</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">raise</span> <span class="n">UnexpectedTokensOnDividerError</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">line</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 6: Update <code>rough/__init__.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/rough/__init__.py</code>:</p>
-<pre><code class="language-python">from .Block import Block
-from .CircularIncludeError import CircularIncludeError
-from .Divider import Divider
-from .parseRough import parseRough
-from .Include import Include
-from .UnexpectedTokensOnDividerError import UnexpectedTokensOnDividerError
-from .UnclosedBlockError import UnclosedBlockError
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.Block</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.CircularIncludeError</span><span class="w"> </span><span class="kn">import</span> <span class="n">CircularIncludeError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Divider</span><span class="w"> </span><span class="kn">import</span> <span class="n">Divider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parseRough</span><span class="w"> </span><span class="kn">import</span> <span class="n">parseRough</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Include</span><span class="w"> </span><span class="kn">import</span> <span class="n">Include</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.UnexpectedTokensOnDividerError</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnexpectedTokensOnDividerError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.UnclosedBlockError</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnclosedBlockError</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 7: Delete <code>TooManyDividerTokensError.py</code></strong></li>
 </ul>
-<pre><code class="language-bash">git rm src/plcc/spec/rough/TooManyDividerTokensError.py
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>rm<span class="w"> </span>src/plcc/spec/rough/TooManyDividerTokensError.py
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 8: Run divider tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/spec/rough/parse_dividers_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/spec/rough/parse_dividers_test.py -v
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 9: Replace <code>parse_semantic_spec_test.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/semantics/parse_semantic_spec_test.py</code>:</p>
-<pre><code class="language-python">import pytest
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 
-from ...lines import Line
-from .. import rough
-from .LanguageDeclaration import LanguageDeclaration
-from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
-from .parse_semantic_spec import parse_semantic_spec
-
-
-def test_language_extracted_from_first_non_blank_line():
-    section = [make_divider('%'), make_line('Python'), make_block()]
-    spec = parse_semantic_spec(section)
-    assert spec.language == 'Python'
+<span class="kn">from</span><span class="w"> </span><span class="nn">...lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..</span><span class="w"> </span><span class="kn">import</span> <span class="n">rough</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LanguageDeclaration</span><span class="w"> </span><span class="kn">import</span> <span class="n">LanguageDeclaration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.MissingLanguageDeclarationError</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingLanguageDeclarationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parse_semantic_spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_semantic_spec</span>
 
 
-def test_language_extracted_skips_blank_lines():
-    section = [make_divider('%'), make_line(''), make_line('  '), make_line('Java')]
-    spec = parse_semantic_spec(section)
-    assert spec.language == 'Java'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_language_extracted_from_first_non_blank_line</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Python&#39;</span><span class="p">),</span> <span class="n">make_block</span><span class="p">()]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;Python&#39;</span>
 
 
-def test_language_extracted_skips_comment_lines():
-    section = [make_divider('%'), make_line('# a comment'), make_line('Python')]
-    spec = parse_semantic_spec(section)
-    assert spec.language == 'Python'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_language_extracted_skips_blank_lines</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Java&#39;</span><span class="p">)]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;Java&#39;</span>
 
 
-def test_language_is_stripped():
-    section = [make_divider('%'), make_line('  Python  ')]
-    spec = parse_semantic_spec(section)
-    assert spec.language == 'Python'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_language_extracted_skips_comment_lines</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;# a comment&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Python&#39;</span><span class="p">)]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;Python&#39;</span>
 
 
-def test_code_fragments_follow_language_line():
-    section = [make_divider('%'), make_line('Python'), make_line('Program'), make_block()]
-    spec = parse_semantic_spec(section)
-    assert len(spec.codeFragmentList) == 1
-    assert spec.codeFragmentList[0].targetLocator.className == 'Program'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_language_is_stripped</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;  Python  &#39;</span><span class="p">)]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;Python&#39;</span>
 
 
-def test_no_code_fragments_is_valid():
-    section = [make_divider('%'), make_line('Python')]
-    spec = parse_semantic_spec(section)
-    assert spec.codeFragmentList == []
+<span class="k">def</span><span class="w"> </span><span class="nf">test_code_fragments_follow_language_line</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Python&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Program&#39;</span><span class="p">),</span> <span class="n">make_block</span><span class="p">()]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">codeFragmentList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">codeFragmentList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">targetLocator</span><span class="o">.</span><span class="n">className</span> <span class="o">==</span> <span class="s1">&#39;Program&#39;</span>
 
 
-def test_no_language_line_raises_error():
-    section = [make_divider('%')]
-    with pytest.raises(MissingLanguageDeclarationError):
-        parse_semantic_spec(section)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_no_code_fragments_is_valid</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Python&#39;</span><span class="p">)]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">codeFragmentList</span> <span class="o">==</span> <span class="p">[]</span>
 
 
-def test_only_blank_lines_raises_error():
-    section = [make_divider('%'), make_line(''), make_line('  ')]
-    with pytest.raises(MissingLanguageDeclarationError):
-        parse_semantic_spec(section)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_no_language_line_raises_error</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">)]</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">MissingLanguageDeclarationError</span><span class="p">):</span>
+        <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
 
 
-def test_only_comment_lines_raises_error():
-    section = [make_divider('%'), make_line('# comment')]
-    with pytest.raises(MissingLanguageDeclarationError):
-        parse_semantic_spec(section)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_only_blank_lines_raises_error</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">)]</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">MissingLanguageDeclarationError</span><span class="p">):</span>
+        <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
 
 
-def test_spec_has_no_tool_attribute():
-    section = [make_divider('%'), make_line('Python')]
-    spec = parse_semantic_spec(section)
-    assert not hasattr(spec, 'tool')
+<span class="k">def</span><span class="w"> </span><span class="nf">test_only_comment_lines_raises_error</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;# comment&#39;</span><span class="p">)]</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">MissingLanguageDeclarationError</span><span class="p">):</span>
+        <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
 
 
-def make_divider(string, number=1):
-    return rough.Divider(line=make_line(string, number))
+<span class="k">def</span><span class="w"> </span><span class="nf">test_spec_has_no_tool_attribute</span><span class="p">():</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">[</span><span class="n">make_divider</span><span class="p">(</span><span class="s1">&#39;%&#39;</span><span class="p">),</span> <span class="n">make_line</span><span class="p">(</span><span class="s1">&#39;Python&#39;</span><span class="p">)]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="s1">&#39;tool&#39;</span><span class="p">)</span>
 
 
-def make_block():
-    rough_, _ = rough.parseRough('%%%\nblock\n%%%\n')
-    return rough_[0]
+<span class="k">def</span><span class="w"> </span><span class="nf">make_divider</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">rough</span><span class="o">.</span><span class="n">Divider</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">make_line</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">number</span><span class="p">))</span>
 
 
-def make_line(string, number=1):
-    return Line(string, number, None)
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_block</span><span class="p">():</span>
+    <span class="n">rough_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rough</span><span class="o">.</span><span class="n">parseRough</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%%</span><span class="s1">%</span><span class="se">\n</span><span class="s1">block</span><span class="se">\n</span><span class="si">%%</span><span class="s1">%</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rough_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_line</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Line</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 10: Run semantic spec tests, confirm failures</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/spec/semantics/parse_semantic_spec_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/spec/semantics/parse_semantic_spec_test.py -v
+</code></pre></div>
 <p>Expected: multiple failures — <code>LanguageDeclaration</code>, <code>MissingLanguageDeclarationError</code> not importable.</p>
 <ul>
 <li>[ ] <strong>Step 11: Create <code>LanguageDeclaration.py</code></strong></li>
 </ul>
 <p>Create <code>src/plcc/spec/semantics/LanguageDeclaration.py</code>:</p>
-<pre><code class="language-python">from dataclasses import dataclass
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-from ...lines import Line
+<span class="kn">from</span><span class="w"> </span><span class="nn">...lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
 
 
-@dataclass
-class LanguageDeclaration:
-    language: str
-    line: Line
-</code></pre>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LanguageDeclaration</span><span class="p">:</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">line</span><span class="p">:</span> <span class="n">Line</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 12: Create <code>MissingLanguageDeclarationError.py</code></strong></li>
 </ul>
 <p>Create <code>src/plcc/spec/semantics/MissingLanguageDeclarationError.py</code>:</p>
-<pre><code class="language-python">from ..SpecError import SpecError
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">..SpecError</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpecError</span>
 
 
-class MissingLanguageDeclarationError(SpecError):
-    ...
-</code></pre>
+<span class="k">class</span><span class="w"> </span><span class="nc">MissingLanguageDeclarationError</span><span class="p">(</span><span class="n">SpecError</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 13: Update <code>SemanticSpec.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/semantics/SemanticSpec.py</code>:</p>
-<pre><code class="language-python">from dataclasses import dataclass
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-from .CodeFragment import CodeFragment
+<span class="kn">from</span><span class="w"> </span><span class="nn">.CodeFragment</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodeFragment</span>
 
 
-@dataclass
-class SemanticSpec:
-    language: str
-    codeFragmentList: list[CodeFragment]
-</code></pre>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SemanticSpec</span><span class="p">:</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">codeFragmentList</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CodeFragment</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 14: Update <code>parse_semantic_spec.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/semantics/parse_semantic_spec.py</code>:</p>
-<pre><code class="language-python">from ...lines import Line
-from ..rough import Block, Divider
-from .LanguageDeclaration import LanguageDeclaration
-from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
-from .parse_code_fragments import parse_code_fragments
-from .SemanticSpec import SemanticSpec
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">...lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..rough</span><span class="w"> </span><span class="kn">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">Divider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.LanguageDeclaration</span><span class="w"> </span><span class="kn">import</span> <span class="n">LanguageDeclaration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.MissingLanguageDeclarationError</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingLanguageDeclarationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parse_code_fragments</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_code_fragments</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.SemanticSpec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SemanticSpec</span>
 
 
-def parse_semantic_spec(semantic_spec: list) -&gt; SemanticSpec:
-    divider = semantic_spec[0]
-    rest = list(semantic_spec[1:])
-    language_decl, body_start = _extract_language(rest, divider)
-    code_fragments = parse_code_fragments(rest[body_start:])
-    return SemanticSpec(language=language_decl.language, codeFragmentList=code_fragments)
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_semantic_spec</span><span class="p">(</span><span class="n">semantic_spec</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SemanticSpec</span><span class="p">:</span>
+    <span class="n">divider</span> <span class="o">=</span> <span class="n">semantic_spec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">semantic_spec</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">language_decl</span><span class="p">,</span> <span class="n">body_start</span> <span class="o">=</span> <span class="n">_extract_language</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">divider</span><span class="p">)</span>
+    <span class="n">code_fragments</span> <span class="o">=</span> <span class="n">parse_code_fragments</span><span class="p">(</span><span class="n">rest</span><span class="p">[</span><span class="n">body_start</span><span class="p">:])</span>
+    <span class="k">return</span> <span class="n">SemanticSpec</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="n">language_decl</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">codeFragmentList</span><span class="o">=</span><span class="n">code_fragments</span><span class="p">)</span>
 
 
-def _extract_language(items, divider):
-    for i, item in enumerate(items):
-        if isinstance(item, Line) and not _is_blank_or_comment(item.string):
-            return LanguageDeclaration(language=item.string.strip(), line=item), i + 1
-    raise MissingLanguageDeclarationError(line=divider.line, column=1)
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_language</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">divider</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">Line</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_is_blank_or_comment</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">string</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">LanguageDeclaration</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">line</span><span class="o">=</span><span class="n">item</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">raise</span> <span class="n">MissingLanguageDeclarationError</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">divider</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 
-def _is_blank_or_comment(s):
-    if s is None:
-        return True
-    stripped = s.strip()
-    return stripped == '' or stripped.startswith('#')
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_blank_or_comment</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="n">stripped</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">stripped</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">stripped</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 15: Update <code>semantics/__init__.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/semantics/__init__.py</code>:</p>
-<pre><code class="language-python">from .LanguageDeclaration import LanguageDeclaration
-from .MissingLanguageDeclarationError import MissingLanguageDeclarationError
-from .SemanticSpec import SemanticSpec
-from .parse_semantic_spec import parse_semantic_spec
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.LanguageDeclaration</span><span class="w"> </span><span class="kn">import</span> <span class="n">LanguageDeclaration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.MissingLanguageDeclarationError</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingLanguageDeclarationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.SemanticSpec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SemanticSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parse_semantic_spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_semantic_spec</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 16: Run all unit tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash -v
+</code></pre></div>
 <p>Expected: 977+ pass, 0 failures.</p>
 <ul>
 <li>[ ] <strong>Step 17: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/spec/rough/UnexpectedTokensOnDividerError.py \
-        src/plcc/spec/rough/Divider.py \
-        src/plcc/spec/rough/parse_dividers.py \
-        src/plcc/spec/rough/__init__.py \
-        src/plcc/spec/rough/parse_dividers_test.py \
-        src/plcc/spec/semantics/LanguageDeclaration.py \
-        src/plcc/spec/semantics/MissingLanguageDeclarationError.py \
-        src/plcc/spec/semantics/SemanticSpec.py \
-        src/plcc/spec/semantics/parse_semantic_spec.py \
-        src/plcc/spec/semantics/__init__.py \
-        src/plcc/spec/semantics/parse_semantic_spec_test.py
-git commit -m &quot;feat(095): simplify Divider and extract language from semantic section body&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/spec/rough/UnexpectedTokensOnDividerError.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/rough/Divider.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/rough/parse_dividers.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/rough/__init__.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/rough/parse_dividers_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/semantics/LanguageDeclaration.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/semantics/MissingLanguageDeclarationError.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/semantics/SemanticSpec.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/semantics/parse_semantic_spec.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/semantics/__init__.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/semantics/parse_semantic_spec_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(095): simplify Divider and extract language from semantic section body&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-2-single-section-enforcement-and-spec-type-change">Task 2: Single-section enforcement and <code>Spec</code> type change</h2>
 <p>Adds <code>MultipleSemanticsError</code>, enforces one semantic section in <code>parseSpec</code>, changes <code>Spec.semantics</code> from <code>list</code> to <code>SemanticSpec | None</code>.</p>
@@ -2647,199 +2647,199 @@ git commit -m &quot;feat(095): simplify Divider and extract language from semant
 <li>[ ] <strong>Step 1: Replace <code>parseSpec_test.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/parseSpec_test.py</code>:</p>
-<pre><code class="language-python">import pytest
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 
-from .parseSpec import parseSpec
-from .MultipleSemanticsError import MultipleSemanticsError
-from .rough.UnclosedBlockError import UnclosedBlockError
-
-
-def test_rough_errors_are_returned():
-    _, errors = parseSpec(&quot;token NUM '\\d+'\n%\n&lt;a&gt; ::= NUM\n%\nPython\n%%%\nhi&quot;)
-    assert any(isinstance(e, UnclosedBlockError) for e in errors)
+<span class="kn">from</span><span class="w"> </span><span class="nn">.parseSpec</span><span class="w"> </span><span class="kn">import</span> <span class="n">parseSpec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.MultipleSemanticsError</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultipleSemanticsError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.rough.UnclosedBlockError</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnclosedBlockError</span>
 
 
-def test_lex_only():
-    spec, errors = parseSpec(&quot;token A 'a'\nskip B 'b'\n&quot;)
-    assert len(spec.lexical) == 2
-    assert len(spec.syntax) == 0
-    assert spec.semantics is None
+<span class="k">def</span><span class="w"> </span><span class="nf">test_rough_errors_are_returned</span><span class="p">():</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span><span class="s2">&quot;token NUM &#39;</span><span class="se">\\</span><span class="s2">d+&#39;</span><span class="se">\n</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&lt;a&gt; ::= NUM</span><span class="se">\n</span><span class="s2">%</span><span class="se">\n</span><span class="s2">Python</span><span class="se">\n</span><span class="si">%%</span><span class="s2">%</span><span class="se">\n</span><span class="s2">hi&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">UnclosedBlockError</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">)</span>
 
 
-def test_lexical_and_syntax_only():
-    spec, errors = parseSpec(
-        &quot;token A 'a'\nskip B 'b'\n%\n&lt;a&gt; ::= A &lt;b&gt;\n&lt;b&gt; ::= B\n&quot;
-    )
-    assert len(spec.lexical) == 2
-    assert len(spec.syntax) == 2
-    assert spec.semantics is None
+<span class="k">def</span><span class="w"> </span><span class="nf">test_lex_only</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span><span class="s2">&quot;token A &#39;a&#39;</span><span class="se">\n</span><span class="s2">skip B &#39;b&#39;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">lexical</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">syntax</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span> <span class="ow">is</span> <span class="kc">None</span>
 
 
-def test_full_with_single_semantic_section():
-    s = '''\
-token A 'a'
-skip B 'b'
-%
-&lt;a&gt; ::= A &lt;b&gt;
-&lt;b&gt; ::= B
-%
-Python
-A
-%%%
-Hi
-%%%
-'''
-    spec, errors = parseSpec(s)
-    assert errors == []
-    assert len(spec.lexical) == 2
-    assert len(spec.syntax) == 2
-    assert spec.semantics is not None
-    assert spec.semantics.language == 'Python'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_lexical_and_syntax_only</span><span class="p">():</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span>
+        <span class="s2">&quot;token A &#39;a&#39;</span><span class="se">\n</span><span class="s2">skip B &#39;b&#39;</span><span class="se">\n</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&lt;a&gt; ::= A &lt;b&gt;</span><span class="se">\n</span><span class="s2">&lt;b&gt; ::= B</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">lexical</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">syntax</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span> <span class="ow">is</span> <span class="kc">None</span>
 
 
-def test_multiple_semantic_sections_produces_error():
-    s = '''\
-token A 'a'
-%
-&lt;a&gt; ::= A
-%
-Python
-%%%
-one
-%%%
-%
-Java
-%%%
-two
-%%%
-'''
-    spec, errors = parseSpec(s)
-    assert any(isinstance(e, MultipleSemanticsError) for e in errors)
+<span class="k">def</span><span class="w"> </span><span class="nf">test_full_with_single_semantic_section</span><span class="p">():</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">token A &#39;a&#39;</span>
+<span class="s1">skip B &#39;b&#39;</span>
+<span class="s1">%</span>
+<span class="s1">&lt;a&gt; ::= A &lt;b&gt;</span>
+<span class="s1">&lt;b&gt; ::= B</span>
+<span class="s1">%</span>
+<span class="s1">Python</span>
+<span class="s1">A</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">Hi</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">&#39;&#39;&#39;</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">lexical</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">syntax</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;Python&#39;</span>
 
 
-def test_multiple_semantic_sections_returns_first_section():
-    s = '''\
-token A 'a'
-%
-&lt;a&gt; ::= A
-%
-Python
-%
-Java
-'''
-    spec, errors = parseSpec(s)
-    assert spec.semantics is not None
-    assert spec.semantics.language == 'Python'
+<span class="k">def</span><span class="w"> </span><span class="nf">test_multiple_semantic_sections_produces_error</span><span class="p">():</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">token A &#39;a&#39;</span>
+<span class="s1">%</span>
+<span class="s1">&lt;a&gt; ::= A</span>
+<span class="s1">%</span>
+<span class="s1">Python</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">one</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">%</span>
+<span class="s1">Java</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">two</span>
+<span class="si">%%</span><span class="s1">%</span>
+<span class="s1">&#39;&#39;&#39;</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">MultipleSemanticsError</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">)</span>
 
 
-def test_missing_language_declaration_produces_error():
-    s = &quot;token A 'a'\n%\n&lt;a&gt; ::= A\n%\n&quot;
-    spec, errors = parseSpec(s)
-    assert len(errors) &gt; 0
-    assert spec.semantics is None
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_multiple_semantic_sections_returns_first_section</span><span class="p">():</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span><span class="se">\</span>
+<span class="s1">token A &#39;a&#39;</span>
+<span class="s1">%</span>
+<span class="s1">&lt;a&gt; ::= A</span>
+<span class="s1">%</span>
+<span class="s1">Python</span>
+<span class="s1">%</span>
+<span class="s1">Java</span>
+<span class="s1">&#39;&#39;&#39;</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;Python&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_missing_language_declaration_produces_error</span><span class="p">():</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;token A &#39;a&#39;</span><span class="se">\n</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&lt;a&gt; ::= A</span><span class="se">\n</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">spec</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">parseSpec</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">spec</span><span class="o">.</span><span class="n">semantics</span> <span class="ow">is</span> <span class="kc">None</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests, confirm failures</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/spec/parseSpec_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/spec/parseSpec_test.py -v
+</code></pre></div>
 <p>Expected: failures — <code>MultipleSemanticsError</code> not importable, <code>spec.semantics is None</code> assertions fail (it's still a list).</p>
 <ul>
 <li>[ ] <strong>Step 3: Create <code>MultipleSemanticsError.py</code></strong></li>
 </ul>
 <p>Create <code>src/plcc/spec/MultipleSemanticsError.py</code>:</p>
-<pre><code class="language-python">from .SpecError import SpecError
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.SpecError</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpecError</span>
 
 
-class MultipleSemanticsError(SpecError):
-    ...
-</code></pre>
+<span class="k">class</span><span class="w"> </span><span class="nc">MultipleSemanticsError</span><span class="p">(</span><span class="n">SpecError</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>Spec.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/Spec.py</code>:</p>
-<pre><code class="language-python">from dataclasses import dataclass
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-from ..spec import lexical, semantics, syntax
+<span class="kn">from</span><span class="w"> </span><span class="nn">..spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexical</span><span class="p">,</span> <span class="n">semantics</span><span class="p">,</span> <span class="n">syntax</span>
 
 
-@dataclass
-class Spec:
-    lexical: lexical.LexicalSpec
-    syntax: syntax.SyntacticSpec
-    semantics: semantics.SemanticSpec | None
-</code></pre>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Spec</span><span class="p">:</span>
+    <span class="n">lexical</span><span class="p">:</span> <span class="n">lexical</span><span class="o">.</span><span class="n">LexicalSpec</span>
+    <span class="n">syntax</span><span class="p">:</span> <span class="n">syntax</span><span class="o">.</span><span class="n">SyntacticSpec</span>
+    <span class="n">semantics</span><span class="p">:</span> <span class="n">semantics</span><span class="o">.</span><span class="n">SemanticSpec</span> <span class="o">|</span> <span class="kc">None</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Update <code>parseSpec.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/spec/parseSpec.py</code>:</p>
-<pre><code class="language-python">from .MultipleSemanticsError import MultipleSemanticsError
-from .Spec import Spec
-from .semantics.MissingLanguageDeclarationError import MissingLanguageDeclarationError
-from .split_rough import split_rough
-from . import lexical, rough, semantics, syntax
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.MultipleSemanticsError</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultipleSemanticsError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Spec</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.semantics.MissingLanguageDeclarationError</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingLanguageDeclarationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.split_rough</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_rough</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexical</span><span class="p">,</span> <span class="n">rough</span><span class="p">,</span> <span class="n">semantics</span><span class="p">,</span> <span class="n">syntax</span>
 
 
-def parseSpec(string, file=None, startLineNumber=1):
-    rough_, rough_errors = rough.parseRough(string, file, startLineNumber)
-    rough_ = iter(rough_)
-    rough_lex, rough_syn, rough_sems = split_rough(rough_)
-    lex_, lex_errors = lexical.parseLexicalSpec(rough_lex)
-    syn_, syn_errors = syntax.parse_syntactic_spec(rough_syn)
+<span class="k">def</span><span class="w"> </span><span class="nf">parseSpec</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startLineNumber</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">rough_</span><span class="p">,</span> <span class="n">rough_errors</span> <span class="o">=</span> <span class="n">rough</span><span class="o">.</span><span class="n">parseRough</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">startLineNumber</span><span class="p">)</span>
+    <span class="n">rough_</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">rough_</span><span class="p">)</span>
+    <span class="n">rough_lex</span><span class="p">,</span> <span class="n">rough_syn</span><span class="p">,</span> <span class="n">rough_sems</span> <span class="o">=</span> <span class="n">split_rough</span><span class="p">(</span><span class="n">rough_</span><span class="p">)</span>
+    <span class="n">lex_</span><span class="p">,</span> <span class="n">lex_errors</span> <span class="o">=</span> <span class="n">lexical</span><span class="o">.</span><span class="n">parseLexicalSpec</span><span class="p">(</span><span class="n">rough_lex</span><span class="p">)</span>
+    <span class="n">syn_</span><span class="p">,</span> <span class="n">syn_errors</span> <span class="o">=</span> <span class="n">syntax</span><span class="o">.</span><span class="n">parse_syntactic_spec</span><span class="p">(</span><span class="n">rough_syn</span><span class="p">)</span>
 
-    sem_errors = []
-    sem_ = None
-    if len(rough_sems) &gt; 1:
-        second_divider = rough_sems[1][0]
-        sem_errors.append(MultipleSemanticsError(line=second_divider.line, column=1))
-    if rough_sems:
-        try:
-            sem_ = semantics.parse_semantic_spec(rough_sems[0])
-        except MissingLanguageDeclarationError as e:
-            sem_errors.append(e)
+    <span class="n">sem_errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sem_</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rough_sems</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">second_divider</span> <span class="o">=</span> <span class="n">rough_sems</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">sem_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">MultipleSemanticsError</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="n">second_divider</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">rough_sems</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sem_</span> <span class="o">=</span> <span class="n">semantics</span><span class="o">.</span><span class="n">parse_semantic_spec</span><span class="p">(</span><span class="n">rough_sems</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">MissingLanguageDeclarationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">sem_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-    return (
-        Spec(lexical=lex_, syntax=syn_, semantics=sem_),
-        rough_errors + lex_errors + syn_errors + sem_errors,
-    )
-</code></pre>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">Spec</span><span class="p">(</span><span class="n">lexical</span><span class="o">=</span><span class="n">lex_</span><span class="p">,</span> <span class="n">syntax</span><span class="o">=</span><span class="n">syn_</span><span class="p">,</span> <span class="n">semantics</span><span class="o">=</span><span class="n">sem_</span><span class="p">),</span>
+        <span class="n">rough_errors</span> <span class="o">+</span> <span class="n">lex_errors</span> <span class="o">+</span> <span class="n">syn_errors</span> <span class="o">+</span> <span class="n">sem_errors</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 6: Update <code>plcc_spec_cli_test.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/spec/plcc_spec_cli_test.py</code>, replace <code>test_outputs_spec_json</code>:</p>
-<pre><code class="language-python">def test_outputs_spec_json(capsys, fs):
-    fs.create_file('/trivial.plcc', contents=&quot;&quot;&quot;\
-token NUM '\\d+'
-%
-&lt;program&gt; ::= NUM
-%
-PlantUML
-&quot;&quot;&quot;)
-    run_main(['/trivial.plcc'])
-    out, err = capsys.readouterr()
-    data = json.loads(out)
-    assert 'lexical' in data
-    assert 'syntax' in data
-    assert 'semantics' in data
-    assert data['semantics'] is not None
-    assert data['semantics']['language'] == 'PlantUML'
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_outputs_spec_json</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">fs</span><span class="p">):</span>
+    <span class="n">fs</span><span class="o">.</span><span class="n">create_file</span><span class="p">(</span><span class="s1">&#39;/trivial.plcc&#39;</span><span class="p">,</span> <span class="n">contents</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">token NUM &#39;</span><span class="se">\\</span><span class="s2">d+&#39;</span>
+<span class="s2">%</span>
+<span class="s2">&lt;program&gt; ::= NUM</span>
+<span class="s2">%</span>
+<span class="s2">PlantUML</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="s1">&#39;/trivial.plcc&#39;</span><span class="p">])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="s1">&#39;lexical&#39;</span> <span class="ow">in</span> <span class="n">data</span>
+    <span class="k">assert</span> <span class="s1">&#39;syntax&#39;</span> <span class="ow">in</span> <span class="n">data</span>
+    <span class="k">assert</span> <span class="s1">&#39;semantics&#39;</span> <span class="ow">in</span> <span class="n">data</span>
+    <span class="k">assert</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;semantics&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;semantics&#39;</span><span class="p">][</span><span class="s1">&#39;language&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;PlantUML&#39;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 7: Run all unit tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash -v
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 8: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/spec/MultipleSemanticsError.py \
-        src/plcc/spec/Spec.py \
-        src/plcc/spec/parseSpec.py \
-        src/plcc/spec/parseSpec_test.py \
-        src/plcc/spec/plcc_spec_cli_test.py
-git commit -m &quot;feat(095): enforce single semantic section; Spec.semantics is now SemanticSpec | None&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/spec/MultipleSemanticsError.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/Spec.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/parseSpec.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/parseSpec_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/spec/plcc_spec_cli_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(095): enforce single semantic section; Spec.semantics is now SemanticSpec | None&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-3-json-schema-and-model-builder">Task 3: JSON schema and model builder</h2>
 <p>Updates <code>spec.schema.json</code> (semantics → nullable object, no tool), <code>model.schema.json</code> (remove tool from semantic_sections items), <code>build_model.py</code> (handle nullable semantics), and all affected test fixtures.</p>
@@ -2857,190 +2857,190 @@ git commit -m &quot;feat(095): enforce single semantic section; Spec.semantics i
 <li>[ ] <strong>Step 1: Update <code>build_model_test.py</code> fixture and assertion</strong></li>
 </ul>
 <p>In <code>src/plcc/model/build_model_test.py</code>, replace <code>_TRIVIAL_SPEC</code> and <code>test_semantic_sections_present</code>:</p>
-<pre><code class="language-python">_TRIVIAL_SPEC = {
-    &quot;lexical&quot;: {
-        &quot;ruleList&quot;: [
-            {
-                &quot;name&quot;: &quot;NUM&quot;,
-                &quot;pattern&quot;: &quot;\\d+&quot;,
-                &quot;isSkip&quot;: False,
-                &quot;line&quot;: {&quot;string&quot;: &quot;token NUM '\\d+'&quot;, &quot;number&quot;: 1, &quot;file&quot;: None}
-            }
-        ]
-    },
-    &quot;syntax&quot;: {
-        &quot;rules&quot;: [
-            {
-                &quot;line&quot;: {&quot;string&quot;: &quot;&lt;Program&gt; ::= NUM&quot;, &quot;number&quot;: 3, &quot;file&quot;: None},
-                &quot;lhs&quot;: {&quot;name&quot;: &quot;Program&quot;, &quot;isTerminal&quot;: False, &quot;altName&quot;: None, &quot;isCapturing&quot;: False},
-                &quot;rhsSymbolList&quot;: [
-                    {&quot;name&quot;: &quot;NUM&quot;, &quot;isTerminal&quot;: True, &quot;isCapturing&quot;: True}
-                ]
-            }
-        ]
-    },
-    &quot;semantics&quot;: {&quot;language&quot;: &quot;PlantUML&quot;, &quot;codeFragmentList&quot;: []}
-}
-</code></pre>
-<pre><code class="language-python">def test_semantic_sections_present():
-    model = build_model(_TRIVIAL_SPEC)
-    sections = model['semantic_sections']
-    assert len(sections) == 1
-    assert sections[0]['language'] == 'plantuml'
-    assert 'tool' not in sections[0]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="n">_TRIVIAL_SPEC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;lexical&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ruleList&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NUM&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">d+&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;isSkip&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="s2">&quot;token NUM &#39;</span><span class="se">\\</span><span class="s2">d+&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;syntax&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;Program&gt; ::= NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                <span class="s2">&quot;lhs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;isTerminal&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;altName&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;isCapturing&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                <span class="s2">&quot;rhsSymbolList&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;isTerminal&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;isCapturing&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;semantics&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;PlantUML&quot;</span><span class="p">,</span> <span class="s2">&quot;codeFragmentList&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_semantic_sections_present</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">build_model</span><span class="p">(</span><span class="n">_TRIVIAL_SPEC</span><span class="p">)</span>
+    <span class="n">sections</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">sections</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;language&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;plantuml&#39;</span>
+    <span class="k">assert</span> <span class="s1">&#39;tool&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run failing test</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/model/build_model_test.py::test_semantic_sections_present -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/model/build_model_test.py::test_semantic_sections_present -v
+</code></pre></div>
 <p>Expected: FAIL — <code>build_model</code> still reads <code>spec.get('semantics', [])</code> as list.</p>
 <ul>
 <li>[ ] <strong>Step 3: Update <code>build_model.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/model/build_model.py</code>, replace <code>_build_semantic_sections</code>:</p>
-<pre><code class="language-python">def _build_semantic_sections(spec, known_class_names):
-    sem = spec.get('semantics')
-    if not sem:
-        return []
-    fragments = [
-        _build_fragment(frag, known_class_names)
-        for frag in sem.get('codeFragmentList', [])
-    ]
-    return [{'language': sem['language'].lower(), 'fragments': fragments}]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_build_semantic_sections</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">known_class_names</span><span class="p">):</span>
+    <span class="n">sem</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;semantics&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sem</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+    <span class="n">fragments</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">_build_fragment</span><span class="p">(</span><span class="n">frag</span><span class="p">,</span> <span class="n">known_class_names</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">sem</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;codeFragmentList&#39;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">[{</span><span class="s1">&#39;language&#39;</span><span class="p">:</span> <span class="n">sem</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s1">&#39;fragments&#39;</span><span class="p">:</span> <span class="n">fragments</span><span class="p">}]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run model tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/model/build_model_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/model/build_model_test.py -v
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 5: Remove <code>tool</code> from emitter test fixtures</strong></li>
 </ul>
 <p>In <code>src/plcc/lang/ext/python/emit_test.py</code>, in <code>_arith_model()</code>, remove <code>"tool": "calculate"</code> from the semantic section:</p>
-<pre><code class="language-python">&quot;semantic_sections&quot;: [
-    {
-        &quot;language&quot;: &quot;Python&quot;,
-        &quot;fragments&quot;: [
-            {&quot;class_name&quot;: &quot;Program&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def _run(self):\n    return self.expr.eval()&quot;},
-            {&quot;class_name&quot;: &quot;AddRest&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())&quot;},
-            {&quot;class_name&quot;: &quot;NilRest&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self, acc):\n    return acc&quot;},
-            {&quot;class_name&quot;: &quot;Term&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self):\n    return int(self.num.lexeme)&quot;},
-            {&quot;class_name&quot;: &quot;Expr&quot;, &quot;kind&quot;: &quot;body&quot;, &quot;body&quot;: &quot;def eval(self):\n    return self.rest.eval(self.term.eval())&quot;},
-        ]
-    }
-]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;semantic_sections&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;Python&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fragments&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;def _run(self):</span><span class="se">\n</span><span class="s2">    return self.expr.eval()&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;AddRest&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;def eval(self, acc):</span><span class="se">\n</span><span class="s2">    return self.rest.eval(acc + self.term.eval())&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;NilRest&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;def eval(self, acc):</span><span class="se">\n</span><span class="s2">    return acc&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Term&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;def eval(self):</span><span class="se">\n</span><span class="s2">    return int(self.num.lexeme)&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Expr&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;def eval(self):</span><span class="se">\n</span><span class="s2">    return self.rest.eval(self.term.eval())&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
 <p>In <code>src/plcc/lang/ext/java/emit_test.py</code>, in <code>_trivial_model()</code>, remove <code>"tool": "Java"</code>:</p>
-<pre><code class="language-python">&quot;semantic_sections&quot;: [
-    {
-        &quot;language&quot;: &quot;Java&quot;,
-        &quot;fragments&quot;: [
-            {&quot;class_name&quot;: &quot;Program&quot;, &quot;kind&quot;: &quot;body&quot;,
-             &quot;body&quot;: &quot;    public void _run() {\n        System.out.println(expr.toString());\n    }&quot;},
-        ]
-    }
-]
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;semantic_sections&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;Java&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fragments&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;    public void _run() {</span><span class="se">\n</span><span class="s2">        System.out.println(expr.toString());</span><span class="se">\n</span><span class="s2">    }&quot;</span><span class="p">},</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 6: Update <code>spec.schema.json</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/schemas/spec.schema.json</code>:</p>
-<pre><code class="language-json">{
-  &quot;$schema&quot;: &quot;http://json-schema.org/draft-07/schema#&quot;,
-  &quot;title&quot;: &quot;Spec&quot;,
-  &quot;description&quot;: &quot;Output of plcc-spec: a parsed PLCC grammar.&quot;,
-  &quot;type&quot;: &quot;object&quot;,
-  &quot;required&quot;: [&quot;lexical&quot;, &quot;syntax&quot;, &quot;semantics&quot;],
-  &quot;properties&quot;: {
-    &quot;lexical&quot;: {
-      &quot;type&quot;: &quot;object&quot;,
-      &quot;required&quot;: [&quot;ruleList&quot;],
-      &quot;properties&quot;: {
-        &quot;ruleList&quot;: {
-          &quot;type&quot;: &quot;array&quot;,
-          &quot;items&quot;: {
-            &quot;type&quot;: &quot;object&quot;,
-            &quot;required&quot;: [&quot;name&quot;, &quot;pattern&quot;, &quot;isSkip&quot;],
-            &quot;properties&quot;: {
-              &quot;name&quot;:    { &quot;type&quot;: &quot;string&quot; },
-              &quot;pattern&quot;: { &quot;type&quot;: &quot;string&quot; },
-              &quot;isSkip&quot;:  { &quot;type&quot;: &quot;boolean&quot; }
-            }
-          }
-        }
-      }
-    },
-    &quot;syntax&quot;: {
-      &quot;type&quot;: &quot;object&quot;,
-      &quot;required&quot;: [&quot;rules&quot;],
-      &quot;properties&quot;: {
-        &quot;rules&quot;: { &quot;type&quot;: &quot;array&quot; }
-      }
-    },
-    &quot;semantics&quot;: {
-      &quot;oneOf&quot;: [
-        {
-          &quot;type&quot;: &quot;object&quot;,
-          &quot;required&quot;: [&quot;language&quot;],
-          &quot;properties&quot;: {
-            &quot;language&quot;: { &quot;type&quot;: &quot;string&quot; }
-          }
-        },
-        { &quot;type&quot;: &quot;null&quot; }
-      ]
-    }
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://json-schema.org/draft-07/schema#&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Spec&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Output of plcc-spec: a parsed PLCC grammar.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;lexical&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;syntax&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;semantics&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;lexical&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;ruleList&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;ruleList&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pattern&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;isSkip&quot;</span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;pattern&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">              </span><span class="nt">&quot;isSkip&quot;</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;syntax&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;rules&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;rules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;semantics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;oneOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">],</span>
+<span class="w">          </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 7: Update <code>model.schema.json</code></strong></li>
 </ul>
 <p>In <code>src/plcc/schemas/model.schema.json</code>, replace the <code>semantic_sections</code> items definition (remove <code>tool</code> from <code>required</code> and <code>properties</code>):</p>
-<pre><code class="language-json">&quot;semantic_sections&quot;: {
-  &quot;type&quot;: &quot;array&quot;,
-  &quot;items&quot;: {
-    &quot;type&quot;: &quot;object&quot;,
-    &quot;required&quot;: [&quot;language&quot;, &quot;fragments&quot;],
-    &quot;properties&quot;: {
-      &quot;language&quot;:    { &quot;type&quot;: &quot;string&quot; },
-      &quot;fragments&quot;: {
-        &quot;type&quot;: &quot;array&quot;,
-        &quot;items&quot;: {
-          &quot;type&quot;: &quot;object&quot;,
-          &quot;required&quot;: [&quot;class_name&quot;, &quot;kind&quot;, &quot;body&quot;],
-          &quot;properties&quot;: {
-            &quot;class_name&quot;: { &quot;type&quot;: &quot;string&quot; },
-            &quot;kind&quot;: {
-              &quot;type&quot;: &quot;string&quot;,
-              &quot;enum&quot;: [&quot;top&quot;, &quot;import&quot;, &quot;class&quot;, &quot;init&quot;, &quot;body&quot;, &quot;file&quot;]
-            },
-            &quot;body&quot;: { &quot;type&quot;: &quot;string&quot; }
-          }
-        }
-      }
-    }
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;semantic_sections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;fragments&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;fragments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;array&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;kind&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;body&quot;</span><span class="p">],</span>
+<span class="w">          </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;class_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;import&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;class&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;init&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;body&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;file&quot;</span><span class="p">]</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 8: Run all unit tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash -v
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 9: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/schemas/spec.schema.json \
-        src/plcc/schemas/model.schema.json \
-        src/plcc/model/build_model.py \
-        src/plcc/model/build_model_test.py \
-        src/plcc/lang/ext/python/emit_test.py \
-        src/plcc/lang/ext/java/emit_test.py
-git commit -m &quot;feat(095): update spec/model schemas and build_model — semantics is nullable object, no tool&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/schemas/spec.schema.json<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/schemas/model.schema.json<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/model/build_model.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/model/build_model_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/lang/ext/python/emit_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/lang/ext/java/emit_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(095): update spec/model schemas and build_model — semantics is nullable object, no tool&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-4-update-plcc-make">Task 4: Update <code>plcc-make</code></h2>
 <p>Removes <code>validate_tool_name</code>, uses <code>section['language']</code> as build output directory, handles nullable semantics.</p>
@@ -3054,12 +3054,12 @@ git commit -m &quot;feat(095): update spec/model schemas and build_model — sem
 <li>[ ] <strong>Step 1: Update <code>make_test.py</code></strong></li>
 </ul>
 <p>In <code>src/plcc/cmd/make_test.py</code>:</p>
-<p>Change the import from:</p>
-<pre><code class="language-python">from .make import main as run_main, validate_tool_name, _report_ll1_failure
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">from .make import main as run_main, _report_ll1_failure
-</code></pre>
+<p>Change the import from:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.make</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">run_main</span><span class="p">,</span> <span class="n">validate_tool_name</span><span class="p">,</span> <span class="n">_report_ll1_failure</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.make</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">run_main</span><span class="p">,</span> <span class="n">_report_ll1_failure</span>
+</code></pre></div></p>
 <p>Delete the three <code>validate_tool_name</code> tests:
 - <code>test_validate_tool_name_accepts_valid</code>
 - <code>test_validate_tool_name_rejects_path_traversal</code>
@@ -3067,8 +3067,8 @@ git commit -m &quot;feat(095): update spec/model schemas and build_model — sem
 <ul>
 <li>[ ] <strong>Step 2: Run make tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash src/plcc/cmd/make_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/cmd/make_test.py -v
+</code></pre></div>
 <p>Expected: all pass (the deleted tests were the only ones importing the deleted function).</p>
 <ul>
 <li>[ ] <strong>Step 3: Update <code>make.py</code> — remove <code>validate_tool_name</code>, use language as dir</strong></li>
@@ -3082,49 +3082,49 @@ git commit -m &quot;feat(095): update spec/model schemas and build_model — sem
 <p>Replace the <code>tool_stages</code> line and <code>_REQUIRED</code> dict (around line 136):</p>
 </li>
 </ol>
-<pre><code class="language-python">sem = spec_data.get('semantics')
-lang_stage = {sem['language']} if sem else set()
+<div class="highlight"><pre><span></span><code><span class="n">sem</span> <span class="o">=</span> <span class="n">spec_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;semantics&#39;</span><span class="p">)</span>
+<span class="n">lang_stage</span> <span class="o">=</span> <span class="p">{</span><span class="n">sem</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]}</span> <span class="k">if</span> <span class="n">sem</span> <span class="k">else</span> <span class="nb">set</span><span class="p">()</span>
 
-_REQUIRED = {
-    'scan':  {'scan'},
-    'parse': {'scan', 'parse'},
-    'model': {'scan', 'model'},
-    'all':   {'scan', 'parse', 'model'} | lang_stage,
-}
-</code></pre>
+<span class="n">_REQUIRED</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;scan&#39;</span><span class="p">:</span>  <span class="p">{</span><span class="s1">&#39;scan&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;parse&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;scan&#39;</span><span class="p">,</span> <span class="s1">&#39;parse&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;scan&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;all&#39;</span><span class="p">:</span>   <span class="p">{</span><span class="s1">&#39;scan&#39;</span><span class="p">,</span> <span class="s1">&#39;parse&#39;</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">}</span> <span class="o">|</span> <span class="n">lang_stage</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
 <ol>
 <li>Replace the emit loop (the <code>if through == 'all':</code> block that iterates <code>spec_data.get('semantics', [])</code>):</li>
 </ol>
-<pre><code class="language-python">if through == 'all':
-    section = spec_data.get('semantics')
-    if section:
-        lang = section['language']
-        output_dir = str(build_dir / lang)
-        os.makedirs(output_dir, exist_ok=True)
-        verbose.emit(Events.PHASE, message=f&quot;emit {lang}&quot;)
-        _run_or_die(
-            ['plcc-lang-emit', f'--target={lang}', f'--output={output_dir}'] + child_flags,
-            stdin_file=model_json,
-            verbose=verbose,
-        )
-        verbose.emit(Events.PHASE, message=f&quot;build {lang}&quot;)
-        _run_or_die(
-            ['plcc-lang-build', f'--target={lang}', f'--output={output_dir}'] + child_flags,
-            verbose=verbose,
-        )
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">through</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">spec_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;semantics&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">section</span><span class="p">:</span>
+        <span class="n">lang</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">build_dir</span> <span class="o">/</span> <span class="n">lang</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">PHASE</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;emit </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">_run_or_die</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;plcc-lang-emit&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--target=</span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+            <span class="n">stdin_file</span><span class="o">=</span><span class="n">model_json</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">PHASE</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;build </span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">_run_or_die</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;plcc-lang-build&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--target=</span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run all unit tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash -v
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/make.py src/plcc/cmd/make_test.py
-git commit -m &quot;feat(095): plcc-make uses language name as output dir, removes validate_tool_name&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/make.py<span class="w"> </span>src/plcc/cmd/make_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(095): plcc-make uses language name as output dir, removes validate_tool_name&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="task-5-update-plcc-rep-and-print_banner">Task 5: Update <code>plcc-rep</code> and <code>print_banner</code></h2>
 <p>Removes <code>--tool</code> flag from <code>plcc-rep</code>, simplifies language resolution to read from nullable <code>spec['semantics']</code>, updates <code>print_banner</code> to accept only <code>language</code>.</p>
@@ -3149,37 +3149,37 @@ git commit -m &quot;feat(095): plcc-make uses language name as output dir, remov
 <p>Replace <code>_rep_module.main(["--tool=calc", "--banner"])</code> with <code>_rep_module.main(["--banner"])</code> (two occurrences in <code>test_rep_main_banner_prints_version_to_stderr</code> and <code>test_rep_main_banner_prints_grammar_to_stderr</code>).</p>
 </li>
 <li>
-<p>In <code>test_rep_main_banner_prints_running_line_to_stderr</code>, replace <code>_rep_module.main(["--tool=calc", "--banner"])</code> with <code>_rep_module.main(["--banner"])</code> and change the assertion from:</p>
+<p>In <code>test_rep_main_banner_prints_running_line_to_stderr</code>, replace <code>_rep_module.main(["--tool=calc", "--banner"])</code> with <code>_rep_module.main(["--banner"])</code> and change the assertion from:
+<div class="highlight"><pre><span></span><code><span class="k">assert</span> <span class="s2">&quot;Running calc with python.&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
+to:
+<div class="highlight"><pre><span></span><code><span class="k">assert</span> <span class="s2">&quot;Running Python.&quot;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>[ ] <strong>Step 2: Run rep tests, confirm failures</strong></p>
 </li>
 </ol>
-<pre><code class="language-python">assert &quot;Running calc with python.&quot; in err
-</code></pre>
-<p>to:</p>
-<pre><code class="language-python">assert &quot;Running Python.&quot; in err
-</code></pre>
-<ul>
-<li>[ ] <strong>Step 2: Run rep tests, confirm failures</strong></li>
-</ul>
-<pre><code>bin/test/units.bash src/plcc/cmd/rep_test.py -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash src/plcc/cmd/rep_test.py -v
+</code></pre></div>
 <p>Expected: failures around <code>--tool</code> arg and banner text.</p>
 <ul>
 <li>[ ] <strong>Step 3: Update <code>output.py</code></strong></li>
 </ul>
 <p>Replace <code>src/plcc/cmd/output.py</code>:</p>
-<pre><code class="language-python">import sys
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 
-def print_user_error(message):
-    print(message, flush=True)
+<span class="k">def</span><span class="w"> </span><span class="nf">print_user_error</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
-def print_banner(version, grammar_path, language=None):
-    print(f&quot;plcc-ng {version}&quot;, file=sys.stderr, flush=True)
-    print(f&quot;spec: {grammar_path}&quot;, file=sys.stderr, flush=True)
-    if language is not None:
-        print(f&quot;Running {language}.&quot;, file=sys.stderr, flush=True)
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_banner</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">grammar_path</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-ng </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spec: </span><span class="si">{</span><span class="n">grammar_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">language</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running </span><span class="si">{</span><span class="n">language</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>rep.py</code></strong></li>
 </ul>
@@ -3195,44 +3195,44 @@ def print_banner(version, grammar_path, language=None):
 <p>Replace the <code>_resolve_tool</code> call and the <code>tool_dir</code> / <code>tool_name</code> / <code>language</code> variables with:</p>
 </li>
 </ol>
-<pre><code class="language-python">language = _resolve_language(spec)
-if banner:
-    print_banner(
-        get_version(),
-        os.path.abspath(read_spec('build')),
-        language=language,
-    )
-output_dir = os.path.join('build', language)
+<div class="highlight"><pre><span></span><code><span class="n">language</span> <span class="o">=</span> <span class="n">_resolve_language</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">banner</span><span class="p">:</span>
+    <span class="n">print_banner</span><span class="p">(</span>
+        <span class="n">get_version</span><span class="p">(),</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">read_spec</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">)),</span>
+        <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
 
-interpreter = subprocess.Popen(
-    ['plcc-lang-run', f'--target={language}', f'--output={output_dir}'],
-    stdin=subprocess.PIPE,
-    stdout=subprocess.PIPE,
-    stderr=None,
-)
-</code></pre>
+<span class="n">interpreter</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;plcc-lang-run&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--target=</span><span class="si">{</span><span class="n">language</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span>
+    <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+    <span class="n">stderr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <ol>
 <li>Replace <code>_resolve_tool</code> with <code>_resolve_language</code>:</li>
 </ol>
-<pre><code class="language-python">def _resolve_language(spec):
-    section = spec.get('semantics')
-    if not section:
-        print(&quot;plcc-rep: no semantic section found in spec.&quot;, file=sys.stderr)
-        sys.exit(1)
-    return section['language']
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_resolve_language</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;semantics&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">section</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;plcc-rep: no semantic section found in spec.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">section</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 5: Run all unit tests, confirm they pass</strong></li>
 </ul>
-<pre><code>bin/test/units.bash -v
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash -v
+</code></pre></div>
 <p>Expected: all pass.</p>
 <ul>
 <li>[ ] <strong>Step 6: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add src/plcc/cmd/rep.py src/plcc/cmd/output.py src/plcc/cmd/rep_test.py
-git commit -m &quot;feat(095): plcc-rep removes --tool flag, reads language from spec semantics&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/output.py<span class="w"> </span>src/plcc/cmd/rep_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(095): plcc-rep removes --tool flag, reads language from spec semantics&quot;</span>
+</code></pre></div>
 
 
 

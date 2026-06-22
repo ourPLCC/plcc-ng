@@ -821,6 +821,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#scanner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scanner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreter
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2309,147 +2342,151 @@ subtraction expressions. It walks through all three grammar sections and shows
 the output of each pipeline stage.</p>
 <h3 id="sample-programs">Sample programs</h3>
 <p>Create a file named <code>samples</code>:</p>
-<pre><code class="language-text">3
+<div class="highlight"><pre><span></span><code>3
 
 -(3,2)
 
 -(-(4,1), -(3,2))
-</code></pre>
+</code></pre></div>
 <h3 id="grammar-file">Grammar file</h3>
 <p>Create <code>subtract.plcc</code>:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>```text</p>
-<h1 id="subtraction-language">Subtraction language</h1>
-<p>skip WHITESPACE '\s+'
-token WHOLE     '\d+'
-token MINUS     '-'
-token LP        '('
-token RP        ')'
-token COMMA     ','
+<div class="highlight"><pre><span></span><code># Subtraction language
+skip WHITESPACE &#39;\s+&#39;
+token WHOLE     &#39;\d+&#39;
+token MINUS     &#39;\-&#39;
+token LP        &#39;\(&#39;
+token RP        &#39;\)&#39;
+token COMMA     &#39;,&#39;
 %
-<Prog>         ::= <Exp:exp>
-<Exp:WholeExp> ::= <WHOLE:whole>
-<Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
+&lt;Prog&gt;         ::= &lt;Exp:exp&gt;
+&lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
+&lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
 %
-Python</p>
-<p>Prog
+Python
+
+Prog
 %%%
 def _run(self):
     print(self.exp.eval())
-%%%</p>
-<p>WholeExp
+%%%
+
+WholeExp
 %%%
 def eval(self):
     return int(self.whole.lexeme)
-%%%</p>
-<p>SubExp
+%%%
+
+SubExp
 %%%
 def eval(self):
     return self.exp1.eval() - self.exp2.eval()
 %%%
-```</p>
+</code></pre></div>
 </div>
 <div class="tabbed-block">
-<p>```text</p>
-<h1 id="subtraction-language_1">Subtraction language</h1>
-<p>skip WHITESPACE '\s+'
-token WHOLE     '\d+'
-token MINUS     '-'
-token LP        '('
-token RP        ')'
-token COMMA     ','
+<div class="highlight"><pre><span></span><code># Subtraction language
+skip WHITESPACE &#39;\s+&#39;
+token WHOLE     &#39;\d+&#39;
+token MINUS     &#39;\-&#39;
+token LP        &#39;\(&#39;
+token RP        &#39;\)&#39;
+token COMMA     &#39;,&#39;
 %
-<Prog>         ::= <Exp:exp>
-<Exp:WholeExp> ::= <WHOLE:whole>
-<Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
+&lt;Prog&gt;         ::= &lt;Exp:exp&gt;
+&lt;Exp:WholeExp&gt; ::= &lt;WHOLE:whole&gt;
+&lt;Exp:SubExp&gt;   ::= MINUS LP &lt;Exp:exp1&gt; COMMA &lt;Exp:exp2&gt; RP
 %
-Java</p>
-<p>Prog
+Java
+
+Prog
 %%%
 public void _run() {
     System.out.println(exp.eval());
 }
-%%%</p>
-<p>WholeExp
+%%%
+
+WholeExp
 %%%
 public int eval() {
     return Integer.parseInt(whole.lexeme);
 }
-%%%</p>
-<p>SubExp
+%%%
+
+SubExp
 %%%
 public int eval() {
     return exp1.eval() - exp2.eval();
 }
 %%%
-```</p>
+</code></pre></div>
 </div>
 </div>
 </div>
 <h3 id="scanner">Scanner</h3>
-<pre><code class="language-bash">plcc-scan -s subtract.plcc samples
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-scan<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+</code></pre></div>
 <p>Expected output:</p>
-<pre><code class="language-text">samples:1:1 WHOLE '3'
-samples:3:1 MINUS '-'
-samples:3:2 LP '('
-samples:3:3 WHOLE '3'
-samples:3:4 COMMA ','
-samples:3:5 WHOLE '2'
-samples:3:6 RP ')'
-samples:5:1 MINUS '-'
-samples:5:2 LP '('
-samples:5:3 MINUS '-'
-samples:5:4 LP '('
-samples:5:5 WHOLE '4'
-samples:5:6 COMMA ','
-samples:5:7 WHOLE '1'
-samples:5:8 RP ')'
-samples:5:9 COMMA ','
-samples:5:11 MINUS '-'
-samples:5:12 LP '('
-samples:5:13 WHOLE '3'
-samples:5:14 COMMA ','
-samples:5:15 WHOLE '2'
-samples:5:16 RP ')'
-samples:5:17 RP ')'
-</code></pre>
+<div class="highlight"><pre><span></span><code>samples:1:1 WHOLE &#39;3&#39;
+samples:3:1 MINUS &#39;-&#39;
+samples:3:2 LP &#39;(&#39;
+samples:3:3 WHOLE &#39;3&#39;
+samples:3:4 COMMA &#39;,&#39;
+samples:3:5 WHOLE &#39;2&#39;
+samples:3:6 RP &#39;)&#39;
+samples:5:1 MINUS &#39;-&#39;
+samples:5:2 LP &#39;(&#39;
+samples:5:3 MINUS &#39;-&#39;
+samples:5:4 LP &#39;(&#39;
+samples:5:5 WHOLE &#39;4&#39;
+samples:5:6 COMMA &#39;,&#39;
+samples:5:7 WHOLE &#39;1&#39;
+samples:5:8 RP &#39;)&#39;
+samples:5:9 COMMA &#39;,&#39;
+samples:5:11 MINUS &#39;-&#39;
+samples:5:12 LP &#39;(&#39;
+samples:5:13 WHOLE &#39;3&#39;
+samples:5:14 COMMA &#39;,&#39;
+samples:5:15 WHOLE &#39;2&#39;
+samples:5:16 RP &#39;)&#39;
+samples:5:17 RP &#39;)&#39;
+</code></pre></div>
 <h3 id="parser">Parser</h3>
-<pre><code class="language-bash">plcc-parse -s subtract.plcc samples
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-parse<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+</code></pre></div>
 <p>Expected output:</p>
-<pre><code class="language-text">Prog
+<div class="highlight"><pre><span></span><code>Prog
   WholeExp
-    WHOLE '3' [-:1:1]
+    WHOLE &#39;3&#39; [-:1:1]
 Prog
   SubExp
     WholeExp
-      WHOLE '3' [-:3:3]
+      WHOLE &#39;3&#39; [-:3:3]
     WholeExp
-      WHOLE '2' [-:3:5]
+      WHOLE &#39;2&#39; [-:3:5]
 Prog
   SubExp
     SubExp
       WholeExp
-        WHOLE '4' [-:5:5]
+        WHOLE &#39;4&#39; [-:5:5]
       WholeExp
-        WHOLE '1' [-:5:7]
+        WHOLE &#39;1&#39; [-:5:7]
     SubExp
       WholeExp
-        WHOLE '3' [-:5:13]
+        WHOLE &#39;3&#39; [-:5:13]
       WholeExp
-        WHOLE '2' [-:5:15]
-</code></pre>
+        WHOLE &#39;2&#39; [-:5:15]
+</code></pre></div>
 <h3 id="interpreter">Interpreter</h3>
-<pre><code class="language-bash">plcc-rep -s subtract.plcc samples
-</code></pre>
+<div class="highlight"><pre><span></span><code>plcc-rep<span class="w"> </span>-s<span class="w"> </span>subtract.plcc<span class="w"> </span>samples
+</code></pre></div>
 <p>Expected output:</p>
-<pre><code class="language-text">3
+<div class="highlight"><pre><span></span><code>3
 1
 2
-</code></pre>
+</code></pre></div>
 
 
 

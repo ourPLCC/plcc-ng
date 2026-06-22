@@ -2243,22 +2243,22 @@ runs environment setup:</p>
 <p>Run all three setup steps once, before invoking the leaf scripts. Pass
 <code>SKIP_SETUP=1</code> inline on each leaf invocation so the flag is scoped to the
 subprocess and does not leak into the surrounding environment.</p>
-<pre><code class="language-bash">_run() {
-    &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-    pdm install
-    &quot;${SCRIPT_DIR}/../install/bats.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/units.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/commands.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/integration.bash&quot;
-    SKIP_SETUP=1 &quot;${SCRIPT_DIR}/e2e.bash&quot;
-}
-</code></pre>
+<div class="highlight"><pre><span></span><code>_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/bats.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/units.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/commands.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/integration.bash&quot;</span>
+<span class="w">    </span><span class="nv">SKIP_SETUP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/e2e.bash&quot;</span>
+<span class="o">}</span>
+</code></pre></div>
 <h3 id="leaf-scripts">Leaf scripts</h3>
 <p>Wrap each script's setup block in a <code>SKIP_SETUP</code> guard:</p>
-<pre><code class="language-bash">if [[ -z &quot;${SKIP_SETUP:-}&quot; ]]; then
-    # existing setup calls
-fi
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="c1"># existing setup calls</span>
+<span class="k">fi</span>
+</code></pre></div>
 <ul>
 <li><code>units.bash</code> guards: <code>bin/install/pdm.bash</code> + <code>pdm install</code></li>
 <li><code>commands.bash</code>, <code>integration.bash</code>, <code>e2e.bash</code> each guard: <code>bin/install/bats.bash</code> + <code>pdm install</code></li>

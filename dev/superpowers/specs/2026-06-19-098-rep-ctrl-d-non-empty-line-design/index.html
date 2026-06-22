@@ -2216,12 +2216,12 @@
 <p>The 093 spec incorrectly stated that <code>readline()</code> "already returns a partial line (no trailing newline) when the user presses ^D after typing without Enter." Issue 098 is the empirical correction.</p>
 <h2 id="change">Change</h2>
 <p>One line in <code>src/plcc/cmd/source_runner.py</code>, inside <code>SourceRunner._read_line</code>:</p>
-<pre><code class="language-python"># before (093 regression)
-return sys.stdin.buffer.readline()
+<div class="highlight"><pre><span></span><code><span class="c1"># before (093 regression)</span>
+<span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
 
-# after
-return sys.stdin.buffer.read1(65536)
-</code></pre>
+<span class="c1"># after</span>
+<span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">read1</span><span class="p">(</span><span class="mi">65536</span><span class="p">)</span>
+</code></pre></div>
 <p>No other code changes. The rest of <code>_process_line</code> already handles all cases correctly:</p>
 <table>
 <thead>

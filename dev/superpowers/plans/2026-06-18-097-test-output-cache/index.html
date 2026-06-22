@@ -2235,193 +2235,193 @@
 <li>[ ] <strong>Step 1: Create the bats test file</strong></li>
 </ul>
 <p>Create <code>tests/bats/commands/cache.bats</code>:</p>
-<pre><code class="language-bash">#!/usr/bin/env bats
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
 
-bats_require_minimum_version 1.5.0
+bats_require_minimum_version<span class="w"> </span><span class="m">1</span>.5.0
 
-PROJECT_ROOT=&quot;$(git rev-parse --show-toplevel)&quot;
-CACHE_HELPER=&quot;${PROJECT_ROOT}/bin/test/_cache.bash&quot;
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>--show-toplevel<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">CACHE_HELPER</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/test/_cache.bash&quot;</span>
 
-setup() {
-    CACHE_DIR=&quot;$(mktemp -d)&quot;
-    CACHE_FILE=&quot;${CACHE_DIR}/plcc-test-units.log&quot;
-    export PLCC_TEST_STATS_LOG=&quot;${CACHE_DIR}/stats.log&quot;
-    unset PLCC_NO_TEST_CACHE
-}
+setup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">CACHE_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nv">CACHE_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_DIR</span><span class="si">}</span><span class="s2">/plcc-test-units.log&quot;</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_DIR</span><span class="si">}</span><span class="s2">/stats.log&quot;</span>
+<span class="w">    </span><span class="nb">unset</span><span class="w"> </span>PLCC_NO_TEST_CACHE
+<span class="o">}</span>
 
-teardown() {
-    rm -rf &quot;${CACHE_DIR}&quot;
-}
+teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-@test &quot;cache miss: runs command and creates cache and meta files&quot; {
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot;
-    [ &quot;$status&quot; -eq 0 ]
-    [[ &quot;$output&quot; == &quot;hello&quot; ]]
-    [ -f &quot;${CACHE_FILE}&quot; ]
-    [ -f &quot;${CACHE_FILE}.meta&quot; ]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache miss: runs command and creates cache and meta files&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">.meta&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="o">}</span>
 
-@test &quot;cache miss: output is stored in cache file&quot; {
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo cached-output 2&gt;/dev/null&quot; || true
-    grep -q &quot;cached-output&quot; &quot;${CACHE_FILE}&quot;
-}
+@test<span class="w"> </span><span class="s2">&quot;cache miss: output is stored in cache file&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo cached-output 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;cached-output&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-@test &quot;cache hit: replays cached output without re-running command&quot; {
-    # Prime the cache
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo first-run 2&gt;/dev/null&quot; || true
-    # Second run — command would print &quot;second-run&quot; but cache should return &quot;first-run&quot;
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo second-run 2&gt;/dev/null&quot;
-    [ &quot;$status&quot; -eq 0 ]
-    [[ &quot;$output&quot; == &quot;first-run&quot; ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache hit: replays cached output without re-running command&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Prime the cache</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo first-run 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span><span class="c1"># Second run — command would print &quot;second-run&quot; but cache should return &quot;first-run&quot;</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo second-run 2&gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;first-run&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;cache hit: replays non-zero exit code&quot; {
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' bash -c 'echo fail-output; exit 42' 2&gt;/dev/null&quot; || true
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo should-not-run 2&gt;/dev/null&quot;
-    [ &quot;$status&quot; -eq 42 ]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache hit: replays non-zero exit code&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; bash -c &#39;echo fail-output; exit 42&#39; 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo should-not-run 2&gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="o">]</span>
+<span class="o">}</span>
 
-@test &quot;cache miss: non-zero exit code is preserved&quot; {
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' bash -c 'exit 7' 2&gt;/dev/null&quot;
-    [ &quot;$status&quot; -eq 7 ]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache miss: non-zero exit code is preserved&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; bash -c &#39;exit 7&#39; 2&gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="o">]</span>
+<span class="o">}</span>
 
-@test &quot;stale cache: reruns command when git state changes&quot; {
-    # Prime the cache with a known (wrong) key
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo first-run 2&gt;/dev/null&quot; || true
-    printf 'KEY=stalekey\nEXIT=0\n' &gt; &quot;${CACHE_FILE}.meta&quot;
-    # Next run should be a miss (stale key) and run the new command
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo fresh-run 2&gt;/dev/null&quot;
-    [[ &quot;$output&quot; == &quot;fresh-run&quot; ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;stale cache: reruns command when git state changes&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Prime the cache with a known (wrong) key</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo first-run 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;KEY=stalekey\nEXIT=0\n&#39;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">.meta&quot;</span>
+<span class="w">    </span><span class="c1"># Next run should be a miss (stale key) and run the new command</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo fresh-run 2&gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;fresh-run&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;PLCC_NO_TEST_CACHE=1: runs command live without caching&quot; {
-    export PLCC_NO_TEST_CACHE=1
-    run bash -c &quot;export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo live-run 2&gt;/dev/null&quot;
-    [ &quot;$status&quot; -eq 0 ]
-    [[ &quot;$output&quot; == &quot;live-run&quot; ]]
-    [ ! -f &quot;${CACHE_FILE}&quot; ]
-}
+@test<span class="w"> </span><span class="s2">&quot;PLCC_NO_TEST_CACHE=1: runs command live without caching&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PLCC_NO_TEST_CACHE</span><span class="o">=</span><span class="m">1</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;export PLCC_NO_TEST_CACHE=1; source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39;; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo live-run 2&gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;live-run&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="o">}</span>
 
-@test &quot;stats log: miss event is written&quot; {
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
-    grep -q &quot; miss units&quot; &quot;${PLCC_TEST_STATS_LOG}&quot;
-}
+@test<span class="w"> </span><span class="s2">&quot;stats log: miss event is written&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot; miss units&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-@test &quot;stats log: hit event is written&quot; {
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
-    grep -q &quot; hit units&quot; &quot;${PLCC_TEST_STATS_LOG}&quot;
-}
+@test<span class="w"> </span><span class="s2">&quot;stats log: hit event is written&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot; hit units&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-@test &quot;stats log: skip event is written with PLCC_NO_TEST_CACHE=1&quot; {
-    bash -c &quot;export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
-    grep -q &quot; skip units&quot; &quot;${PLCC_TEST_STATS_LOG}&quot;
-}
+@test<span class="w"> </span><span class="s2">&quot;stats log: skip event is written with PLCC_NO_TEST_CACHE=1&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;export PLCC_NO_TEST_CACHE=1; source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39;; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot; skip units&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-@test &quot;stderr: prints [cache miss] on miss&quot; {
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;&amp;1 &gt;/dev/null&quot;
-    [[ &quot;$output&quot; == *&quot;[cache miss] units&quot;* ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;stderr: prints [cache miss] on miss&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;&amp;1 &gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;[cache miss] units&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;stderr: prints [cache hit] on hit&quot; {
-    bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;/dev/null&quot; || true
-    run bash -c &quot;source '${CACHE_HELPER}' &amp;&amp; run_cached '${CACHE_FILE}' echo hello 2&gt;&amp;1 &gt;/dev/null&quot;
-    [[ &quot;$output&quot; == *&quot;[cache hit] units&quot;* ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;stderr: prints [cache hit] on hit&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;/dev/null&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39; &amp;&amp; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;&amp;1 &gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;[cache hit] units&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;stderr: prints [cache skip] with PLCC_NO_TEST_CACHE=1&quot; {
-    run bash -c &quot;export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo hello 2&gt;&amp;1 &gt;/dev/null&quot;
-    [[ &quot;$output&quot; == *&quot;[cache skip] units&quot;* ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;stderr: prints [cache skip] with PLCC_NO_TEST_CACHE=1&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;export PLCC_NO_TEST_CACHE=1; source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39;; run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo hello 2&gt;&amp;1 &gt;/dev/null&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;[cache skip] units&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;fallback: runs uncached when git is unavailable&quot; {
-    run bash -c &quot;
-        export PATH=/usr/bin:/bin  # strip git from PATH
-        source '${CACHE_HELPER}'
-        run_cached '${CACHE_FILE}' echo fallback-output 2&gt;/dev/null
-    &quot;
-    [ &quot;$status&quot; -eq 0 ]
-    [[ &quot;$output&quot; == &quot;fallback-output&quot; ]]
-}
-</code></pre>
+@test<span class="w"> </span><span class="s2">&quot;fallback: runs uncached when git is unavailable&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<span class="s2">        export PATH=/usr/bin:/bin  # strip git from PATH</span>
+<span class="s2">        source &#39;</span><span class="si">${</span><span class="nv">CACHE_HELPER</span><span class="si">}</span><span class="s2">&#39;</span>
+<span class="s2">        run_cached &#39;</span><span class="si">${</span><span class="nv">CACHE_FILE</span><span class="si">}</span><span class="s2">&#39; echo fallback-output 2&gt;/dev/null</span>
+<span class="s2">    &quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;fallback-output&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to verify they all fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache.bats&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/commands.bash<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;cache.bats&quot;</span>
+</code></pre></div>
 <p>Expected: failures like <code>_cache.bash: No such file or directory</code></p>
 <ul>
 <li>[ ] <strong>Step 3: Create <code>bin/test/_cache.bash</code></strong></li>
 </ul>
-<pre><code class="language-bash"># Sourced by bin/test/*.bash scripts. Not executable.
-# Provides run_cached &lt;cache-file&gt; &lt;command&gt; [args...].
+<div class="highlight"><pre><span></span><code><span class="c1"># Sourced by bin/test/*.bash scripts. Not executable.</span>
+<span class="c1"># Provides run_cached &lt;cache-file&gt; &lt;command&gt; [args...].</span>
 
-_cache_log_event() {
-    local event=&quot;$1&quot; name=&quot;$2&quot;
-    local stats_log=&quot;${PLCC_TEST_STATS_LOG:-/tmp/plcc-test-cache-stats.log}&quot;
-    echo &quot;[cache ${event}] ${name}&quot; &gt;&amp;2
-    printf '%s %s %s\n' &quot;$(date -u +%Y-%m-%dT%H:%M:%S)&quot; &quot;${event}&quot; &quot;${name}&quot; \
-        &gt;&gt; &quot;${stats_log}&quot;
-}
+_cache_log_event<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">stats_log</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="k">:-</span><span class="p">/tmp/plcc-test-cache-stats.log</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[cache </span><span class="si">${</span><span class="nv">event</span><span class="si">}</span><span class="s2">] </span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s %s %s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y-%m-%dT%H:%M:%S<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">event</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">stats_log</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-_cache_key() {
-    local head status
-    head=$(git rev-parse HEAD 2&gt;/dev/null) || return 1
-    status=$(git status --porcelain 2&gt;/dev/null) || return 1
-    printf '%s\n%s' &quot;${head}&quot; &quot;${status}&quot; | sha256sum | cut -d' ' -f1
-}
+_cache_key<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span>head<span class="w"> </span>status
+<span class="w">    </span><span class="nv">head</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>HEAD<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="nv">status</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>status<span class="w"> </span>--porcelain<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="m">1</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s\n%s&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">head</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">&#39; &#39;</span><span class="w"> </span>-f1
+<span class="o">}</span>
 
-run_cached() {
-    local cache_file=&quot;$1&quot;
-    shift
-    local name
-    name=$(basename &quot;${cache_file}&quot; .log)
-    name=&quot;${name#plcc-test-}&quot;
+run_cached<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">cache_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">shift</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span>name
+<span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="k">$(</span>basename<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cache_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>.log<span class="k">)</span>
+<span class="w">    </span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="p">#plcc-test-</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    if [[ &quot;${PLCC_NO_TEST_CACHE:-}&quot; == &quot;1&quot; ]]; then
-        _cache_log_event &quot;skip&quot; &quot;${name}&quot;
-        &quot;$@&quot;
-        return
-    fi
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_NO_TEST_CACHE</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>_cache_log_event<span class="w"> </span><span class="s2">&quot;skip&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
 
-    local key
-    if ! key=$(_cache_key); then
-        &quot;$@&quot;
-        return
-    fi
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span>key
+<span class="w">    </span><span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="nv">key</span><span class="o">=</span><span class="k">$(</span>_cache_key<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="k">return</span>
+<span class="w">    </span><span class="k">fi</span>
 
-    local meta=&quot;${cache_file}.meta&quot;
-    if [[ -f &quot;${cache_file}&quot; &amp;&amp; -f &quot;${meta}&quot; ]]; then
-        local stored_key stored_exit
-        stored_key=$(grep '^KEY=' &quot;${meta}&quot; 2&gt;/dev/null | cut -d= -f2-) || true
-        stored_exit=$(grep '^EXIT=' &quot;${meta}&quot; 2&gt;/dev/null | cut -d= -f2-) || true
-        if [[ &quot;${stored_key}&quot; == &quot;${key}&quot; &amp;&amp; &quot;${stored_exit}&quot; =~ ^[0-9]+$ ]]; then
-            _cache_log_event &quot;hit&quot; &quot;${name}&quot;
-            cat &quot;${cache_file}&quot;
-            exit &quot;${stored_exit}&quot;
-        fi
-    fi
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">meta</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cache_file</span><span class="si">}</span><span class="s2">.meta&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cache_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="nb">local</span><span class="w"> </span>stored_key<span class="w"> </span>stored_exit
+<span class="w">        </span><span class="nv">stored_key</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s1">&#39;^KEY=&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2-<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">        </span><span class="nv">stored_exit</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span><span class="s1">&#39;^EXIT=&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">meta</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2-<span class="k">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">stored_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">stored_exit</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span>^<span class="o">[</span><span class="m">0</span>-9<span class="o">]</span>+$<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span>_cache_log_event<span class="w"> </span><span class="s2">&quot;hit&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">            </span>cat<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cache_file</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">            </span><span class="nb">exit</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">stored_exit</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span><span class="k">fi</span>
+<span class="w">    </span><span class="k">fi</span>
 
-    _cache_log_event &quot;miss&quot; &quot;${name}&quot;
-    local exit_code=0
-    &quot;$@&quot; 2&gt;&amp;1 | tee &quot;${cache_file}&quot; || exit_code=$?
-    printf 'KEY=%s\nEXIT=%s\n' &quot;${key}&quot; &quot;${exit_code}&quot; &gt; &quot;${meta}&quot;
-    exit &quot;${exit_code}&quot;
-}
-</code></pre>
+<span class="w">    </span>_cache_log_event<span class="w"> </span><span class="s2">&quot;miss&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">exit_code</span><span class="o">=</span><span class="m">0</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">cache_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">exit_code</span><span class="o">=</span><span class="nv">$?</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;KEY=%s\nEXIT=%s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">exit_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">meta</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">exit_code</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache.bats&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/commands.bash<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;cache.bats&quot;</span>
+</code></pre></div>
 <p>Expected: all cache.bats tests pass</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/_cache.bash tests/bats/commands/cache.bats
-git commit -m &quot;feat(097): add _cache.bash with run_cached helper&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/_cache.bash<span class="w"> </span>tests/bats/commands/cache.bats
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(097): add _cache.bash with run_cached helper&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-2-bintestcachestatsbash-stats-summary-script">Task 2: <code>bin/test/cache/stats.bash</code> — stats summary script</h3>
 <p><strong>Files:</strong>
@@ -2435,116 +2435,116 @@ git commit -m &quot;feat(097): add _cache.bash with run_cached helper&quot;
 <li>[ ] <strong>Step 1: Create the bats test file</strong></li>
 </ul>
 <p>Create <code>tests/bats/commands/cache-stats.bats</code>:</p>
-<pre><code class="language-bash">#!/usr/bin/env bats
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
 
-bats_require_minimum_version 1.5.0
+bats_require_minimum_version<span class="w"> </span><span class="m">1</span>.5.0
 
-PROJECT_ROOT=&quot;$(git rev-parse --show-toplevel)&quot;
-CACHE_STATS=&quot;${PROJECT_ROOT}/bin/test/cache/stats.bash&quot;
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>git<span class="w"> </span>rev-parse<span class="w"> </span>--show-toplevel<span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">CACHE_STATS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/test/cache/stats.bash&quot;</span>
 
-setup() {
-    STATS_DIR=&quot;$(mktemp -d)&quot;
-    export PLCC_TEST_STATS_LOG=&quot;${STATS_DIR}/stats.log&quot;
-}
+setup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">STATS_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATS_DIR</span><span class="si">}</span><span class="s2">/stats.log&quot;</span>
+<span class="o">}</span>
 
-teardown() {
-    rm -rf &quot;${STATS_DIR}&quot;
-}
+teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATS_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-@test &quot;cache-stats: prints 'no stats yet' when log is missing&quot; {
-    run bash &quot;${CACHE_STATS}&quot;
-    [ &quot;$status&quot; -eq 0 ]
-    [[ &quot;$output&quot; == *&quot;no stats yet&quot;* ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache-stats: prints &#39;no stats yet&#39; when log is missing&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_STATS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;no stats yet&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;cache-stats: counts hits, misses, skips correctly&quot; {
-    printf '2026-06-18T10:00:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    printf '2026-06-18T10:01:00 miss units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    printf '2026-06-18T10:02:00 skip e2e\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    run bash &quot;${CACHE_STATS}&quot;
-    [ &quot;$status&quot; -eq 0 ]
-    [[ &quot;$output&quot; == *&quot;Hits: 1&quot;* ]]
-    [[ &quot;$output&quot; == *&quot;Misses: 1&quot;* ]]
-    [[ &quot;$output&quot; == *&quot;Skips: 1&quot;* ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache-stats: counts hits, misses, skips correctly&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:00:00 hit units\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:01:00 miss units\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:02:00 skip e2e\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_STATS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;Hits: 1&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;Misses: 1&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;Skips: 1&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;cache-stats: computes hit rate&quot; {
-    printf '2026-06-18T10:00:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    printf '2026-06-18T10:01:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    printf '2026-06-18T10:02:00 miss units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    run bash &quot;${CACHE_STATS}&quot;
-    [[ &quot;$output&quot; == *&quot;67%&quot;* ]]
-}
+@test<span class="w"> </span><span class="s2">&quot;cache-stats: computes hit rate&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:00:00 hit units\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:01:00 hit units\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:02:00 miss units\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_STATS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;67%&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
 
-@test &quot;cache-stats: shows per-script breakdown&quot; {
-    printf '2026-06-18T10:00:00 hit units\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    printf '2026-06-18T10:01:00 miss e2e\n' &gt;&gt; &quot;${PLCC_TEST_STATS_LOG}&quot;
-    run bash &quot;${CACHE_STATS}&quot;
-    [[ &quot;$output&quot; == *&quot;units&quot;* ]]
-    [[ &quot;$output&quot; == *&quot;e2e&quot;* ]]
-}
-</code></pre>
+@test<span class="w"> </span><span class="s2">&quot;cache-stats: shows per-script breakdown&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:00:00 hit units\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;2026-06-18T10:01:00 miss e2e\n&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>run<span class="w"> </span>bash<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CACHE_STATS</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;units&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;e2e&quot;</span>*<span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache-stats.bats&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/commands.bash<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;cache-stats.bats&quot;</span>
+</code></pre></div>
 <p>Expected: failures — <code>cache-stats.bash</code> not found</p>
 <ul>
 <li>[ ] <strong>Step 3: Create <code>bin/test/cache/stats.bash</code></strong></li>
 </ul>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-STATS_LOG=&quot;${PLCC_TEST_STATS_LOG:-/tmp/plcc-test-cache-stats.log}&quot;
+<span class="nv">STATS_LOG</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLCC_TEST_STATS_LOG</span><span class="k">:-</span><span class="p">/tmp/plcc-test-cache-stats.log</span><span class="si">}</span><span class="s2">&quot;</span>
 
-if [[ ! -f &quot;${STATS_LOG}&quot; ]]; then
-    echo &quot;no stats yet&quot;
-    exit 0
-fi
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;no stats yet&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">0</span>
+<span class="k">fi</span>
 
-awk '
-{
-    event = $2
-    script = $3
-    total++
-    events[event]++
-    per_script_total[script]++
-    per_script_event[script &quot;_&quot; event]++
-}
-END {
-    hits   = events[&quot;hit&quot;]   + 0
-    misses = events[&quot;miss&quot;]  + 0
-    skips  = events[&quot;skip&quot;]  + 0
-    rate   = (total &gt; 0) ? int(hits / total * 100 + 0.5) : 0
-    printf &quot;Total: %d  Hits: %d  Misses: %d  Skips: %d  Hit rate: %d%%\n&quot;,
-        total, hits, misses, skips, rate
-    print &quot;&quot;
-    print &quot;Per-script breakdown:&quot;
-    for (s in per_script_total) {
-        h = per_script_event[s &quot;_hit&quot;]   + 0
-        m = per_script_event[s &quot;_miss&quot;]  + 0
-        k = per_script_event[s &quot;_skip&quot;]  + 0
-        t = per_script_total[s]
-        printf &quot;  %-20s  total=%-4d  hits=%-4d  misses=%-4d  skips=%-4d\n&quot;,
-            s, t, h, m, k
-    }
-}
-' &quot;${STATS_LOG}&quot;
-</code></pre>
+awk<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">{</span>
+<span class="s1">    event = $2</span>
+<span class="s1">    script = $3</span>
+<span class="s1">    total++</span>
+<span class="s1">    events[event]++</span>
+<span class="s1">    per_script_total[script]++</span>
+<span class="s1">    per_script_event[script &quot;_&quot; event]++</span>
+<span class="s1">}</span>
+<span class="s1">END {</span>
+<span class="s1">    hits   = events[&quot;hit&quot;]   + 0</span>
+<span class="s1">    misses = events[&quot;miss&quot;]  + 0</span>
+<span class="s1">    skips  = events[&quot;skip&quot;]  + 0</span>
+<span class="s1">    rate   = (total &gt; 0) ? int(hits / total * 100 + 0.5) : 0</span>
+<span class="s1">    printf &quot;Total: %d  Hits: %d  Misses: %d  Skips: %d  Hit rate: %d%%\n&quot;,</span>
+<span class="s1">        total, hits, misses, skips, rate</span>
+<span class="s1">    print &quot;&quot;</span>
+<span class="s1">    print &quot;Per-script breakdown:&quot;</span>
+<span class="s1">    for (s in per_script_total) {</span>
+<span class="s1">        h = per_script_event[s &quot;_hit&quot;]   + 0</span>
+<span class="s1">        m = per_script_event[s &quot;_miss&quot;]  + 0</span>
+<span class="s1">        k = per_script_event[s &quot;_skip&quot;]  + 0</span>
+<span class="s1">        t = per_script_total[s]</span>
+<span class="s1">        printf &quot;  %-20s  total=%-4d  hits=%-4d  misses=%-4d  skips=%-4d\n&quot;,</span>
+<span class="s1">            s, t, h, m, k</span>
+<span class="s1">    }</span>
+<span class="s1">}</span>
+<span class="s1">&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATS_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
 <ul>
 <li>[ ] <strong>Step 4: Make executable and run tests</strong></li>
 </ul>
-<pre><code class="language-bash">chmod +x bin/test/cache/stats.bash
-bin/test/commands.bash 2&gt;&amp;1 | grep -A3 &quot;cache-stats.bats&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>bin/test/cache/stats.bash
+bin/test/commands.bash<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;cache-stats.bats&quot;</span>
+</code></pre></div>
 <p>Expected: all cache-stats.bats tests pass</p>
 <ul>
 <li>[ ] <strong>Step 5: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/cache/stats.bash tests/bats/commands/cache-stats.bats
-git commit -m &quot;feat(097): add cache-stats.bash summary script&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/cache/stats.bash<span class="w"> </span>tests/bats/commands/cache-stats.bats
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(097): add cache-stats.bash summary script&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-3-update-simple-test-scripts">Task 3: Update simple test scripts</h3>
 <p>Add caching to <code>units.bash</code>, <code>commands.bash</code>, <code>integration.bash</code>, <code>e2e.bash</code>, and <code>packaging.bash</code>. Each follows the same pattern: source the helper, wrap the main command(s) in <code>run_cached</code>.</p>
@@ -2560,236 +2560,236 @@ git commit -m &quot;feat(097): add cache-stats.bash summary script&quot;
 <ul>
 <li>[ ] <strong>Step 1: Update <code>bin/test/units.bash</code></strong></li>
 </ul>
-<p>Replace:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
+<p>Replace:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 
-set -euo pipefail
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/units.bash&quot;
-echo &quot;-------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/units.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-&quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-pdm install
-pdm test -v &quot;$@&quot;
-</code></pre>
-<p>With:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
+<span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+pdm<span class="w"> </span>install
+pdm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+</code></pre></div></p>
+<p>With:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 
-set -euo pipefail
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/units.bash&quot;
-echo &quot;-------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/units.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-run_cached /tmp/plcc-test-units.log \
-    bash -c '&quot;${SCRIPT_DIR}/../install/pdm.bash&quot; &amp;&amp; pdm install &amp;&amp; pdm test -v &quot;$@&quot;' \
-    -- &quot;$@&quot;
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-units.log<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;&quot;${SCRIPT_DIR}/../install/pdm.bash&quot; &amp;&amp; pdm install &amp;&amp; pdm test -v &quot;$@&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+</code></pre></div></p>
 <p>Wait — the above passes <code>$@</code> through to <code>pdm test</code>, but wrapping multiple commands in a <code>bash -c</code> string with <code>"$@"</code> is tricky. A cleaner approach: wrap in a local function.</p>
-<p>Replace <code>bin/test/units.bash</code> with:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
+<p>Replace <code>bin/test/units.bash</code> with:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 
-set -euo pipefail
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/units.bash&quot;
-echo &quot;-------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/units.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    &quot;${SCRIPT_DIR}/../install/pdm.bash&quot;
-    pdm install
-    pdm test -v &quot;$@&quot;
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../install/pdm.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span>pdm<span class="w"> </span><span class="nb">test</span><span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-units.log _run &quot;$@&quot;
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-units.log<span class="w"> </span>_run<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Update <code>bin/test/commands.bash</code></strong></li>
 </ul>
-<p>Replace the file with:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<p>Replace the file with:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/commands.bash&quot;
-echo &quot;----------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/commands.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;----------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-    pdm install
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats tests/bats/commands/
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/commands/
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-commands.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-commands.log<span class="w"> </span>_run
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 3: Update <code>bin/test/integration.bash</code></strong></li>
 </ul>
-<p>Replace the file with:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<p>Replace the file with:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/integration.bash&quot;
-echo &quot;-------------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/integration.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-------------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-    pdm install
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats tests/bats/integration/
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/integration/
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-integration.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-integration.log<span class="w"> </span>_run
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 4: Update <code>bin/test/e2e.bash</code></strong></li>
 </ul>
-<p>Replace the file with:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<p>Replace the file with:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/e2e.bash&quot;
-echo &quot;-----------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/e2e.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    cd &quot;${PROJECT_ROOT}&quot;
-    &quot;${PROJECT_ROOT}/bin/install/bats.bash&quot;
-    pdm install
-    export PATH=&quot;${PROJECT_ROOT}/.venv/bin:${PATH}&quot;
-    bats $(find tests/bats/e2e/ -name &quot;*.bats&quot; ! -name &quot;languages-java.bats&quot; | sort)
-    if [ -n &quot;${LANGUAGES_REPO_PATH:-}&quot; ]; then
-        &quot;${PROJECT_ROOT}/bin/install/java.bash&quot;
-        echo &quot;&quot;
-        echo &quot;Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})&quot;
-        bats tests/bats/e2e/languages-java.bats
-    fi
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">    </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>tests/bats/e2e/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.bats&quot;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;languages-java.bats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="k">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LANGUAGES_REPO_PATH</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/java.bash&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Running Java corpus tests (LANGUAGES_REPO_PATH=</span><span class="si">${</span><span class="nv">LANGUAGES_REPO_PATH</span><span class="si">}</span><span class="s2">)&quot;</span>
+<span class="w">        </span>bats<span class="w"> </span>tests/bats/e2e/languages-java.bats
+<span class="w">    </span><span class="k">fi</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-e2e.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-e2e.log<span class="w"> </span>_run
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 5: Update <code>bin/test/packaging.bash</code></strong></li>
 </ul>
 <p>Add the source and wrapper at the top, wrap the body in <code>_run</code>, and call <code>run_cached</code>. The file is long — make these structural changes:</p>
-<p>At the top, after the <code>cd "${PROJECT_ROOT}"</code> line, add:</p>
-<pre><code class="language-bash"># shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<p>At the top, after the <code>cd "${PROJECT_ROOT}"</code> line, add:
+<div class="highlight"><pre><span></span><code><span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-</code></pre>
-<p>And just before the final <code>echo "packaging: all checks passed"</code> line, close the function and add:</p>
-<pre><code class="language-bash">}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+</code></pre></div></p>
+<p>And just before the final <code>echo "packaging: all checks passed"</code> line, close the function and add:
+<div class="highlight"><pre><span></span><code><span class="o">}</span>
 
-run_cached /tmp/plcc-test-packaging.log _run
-</code></pre>
-<p>The complete updated <code>bin/test/packaging.bash</code>:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+run_cached<span class="w"> </span>/tmp/plcc-test-packaging.log<span class="w"> </span>_run
+</code></pre></div></p>
+<p>The complete updated <code>bin/test/packaging.bash</code>:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/packaging.bash&quot;
-echo &quot;-----------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/packaging.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
-cd &quot;${PROJECT_ROOT}&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    VENV=$(mktemp -d)
-    trap 'rm -rf &quot;${VENV}&quot;' EXIT
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">VENV</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
+<span class="w">    </span><span class="nb">trap</span><span class="w"> </span><span class="s1">&#39;rm -rf &quot;${VENV}&quot;&#39;</span><span class="w"> </span>EXIT
 
-    &quot;${PROJECT_ROOT}/.venv/bin/python&quot; -m venv &quot;${VENV}&quot;
-    &quot;${VENV}/bin/pip&quot; install --quiet dist/*.whl
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin/python&quot;</span><span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VENV</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VENV</span><span class="si">}</span><span class="s2">/bin/pip&quot;</span><span class="w"> </span>install<span class="w"> </span>--quiet<span class="w"> </span>dist/*.whl
 
-    for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
-               plcc-lang-emit plcc-lang-build plcc-lang-list \
-               plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
-               plcc-plantuml-diagram-emit plcc-plantuml-diagram-build plcc-plantuml-diagram-run \
-               plcc-make plcc-scan plcc-parse plcc-rep; do
-        test -x &quot;${VENV}/bin/${cmd}&quot; || { echo &quot;FAIL: ${cmd} not installed&quot;; exit 1; }
-        echo &quot;OK: ${cmd}&quot;
-    done
+<span class="w">    </span><span class="k">for</span><span class="w"> </span>cmd<span class="w"> </span><span class="k">in</span><span class="w"> </span>plcc-spec<span class="w"> </span>plcc-tokens<span class="w"> </span>plcc-trees<span class="w"> </span>plcc-model<span class="w"> </span><span class="se">\</span>
+<span class="w">               </span>plcc-lang-emit<span class="w"> </span>plcc-lang-build<span class="w"> </span>plcc-lang-list<span class="w"> </span><span class="se">\</span>
+<span class="w">               </span>plcc-diagram<span class="w"> </span>plcc-diagram-emit<span class="w"> </span>plcc-diagram-build<span class="w"> </span>plcc-diagram-run<span class="w"> </span>plcc-diagram-list<span class="w"> </span><span class="se">\</span>
+<span class="w">               </span>plcc-plantuml-diagram-emit<span class="w"> </span>plcc-plantuml-diagram-build<span class="w"> </span>plcc-plantuml-diagram-run<span class="w"> </span><span class="se">\</span>
+<span class="w">               </span>plcc-make<span class="w"> </span>plcc-scan<span class="w"> </span>plcc-parse<span class="w"> </span>plcc-rep<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">        </span><span class="nb">test</span><span class="w"> </span>-x<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VENV</span><span class="si">}</span><span class="s2">/bin/</span><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: </span><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span><span class="s2"> not installed&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: </span><span class="si">${</span><span class="nv">cmd</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">done</span>
 
-    export PATH=&quot;${VENV}/bin:${PATH}&quot;
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VENV</span><span class="si">}</span><span class="s2">/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    LANG_LIST=$(&quot;${VENV}/bin/plcc-lang-list&quot;)
-    echo &quot;${LANG_LIST}&quot; | grep -q &quot;python&quot; || { echo &quot;FAIL: plcc-lang-list missing 'python'&quot;; exit 1; }
-    echo &quot;${LANG_LIST}&quot; | grep -q &quot;java&quot;   || { echo &quot;FAIL: plcc-lang-list missing 'java'&quot;;   exit 1; }
-    echo &quot;OK: plcc-lang-list reports python and java&quot;
+<span class="w">    </span><span class="nv">LANG_LIST</span><span class="o">=</span><span class="k">$(</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VENV</span><span class="si">}</span><span class="s2">/bin/plcc-lang-list&quot;</span><span class="k">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LANG_LIST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: plcc-lang-list missing &#39;python&#39;&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LANG_LIST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;java&quot;</span><span class="w">   </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: plcc-lang-list missing &#39;java&#39;&quot;</span><span class="p">;</span><span class="w">   </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: plcc-lang-list reports python and java&quot;</span>
 
-    DIAGRAM_LIST=$(&quot;${VENV}/bin/plcc-diagram-list&quot;)
-    echo &quot;${DIAGRAM_LIST}&quot; | grep -q &quot;plantuml&quot; || { echo &quot;FAIL: plcc-diagram-list missing 'plantuml'&quot;; exit 1; }
-    echo &quot;OK: plcc-diagram-list reports plantuml&quot;
+<span class="w">    </span><span class="nv">DIAGRAM_LIST</span><span class="o">=</span><span class="k">$(</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">VENV</span><span class="si">}</span><span class="s2">/bin/plcc-diagram-list&quot;</span><span class="k">)</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DIAGRAM_LIST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;plantuml&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: plcc-diagram-list missing &#39;plantuml&#39;&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: plcc-diagram-list reports plantuml&quot;</span>
 
-    WORK_DIR=&quot;$(mktemp -d)&quot;
-    trap 'rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot;' EXIT
-    (
-        cd &quot;${WORK_DIR}&quot;
-        cp &quot;${PROJECT_ROOT}/tests/fixtures/trivial.plcc&quot; spec.plcc
-        plcc-make
-        test -f build/spec.json   || { echo &quot;FAIL: build/spec.json missing&quot;; exit 1; }
-        test -f build/model.json  || { echo &quot;FAIL: build/model.json missing&quot;; exit 1; }
-    )
-    DIAGRAM_DIR=&quot;$(mktemp -d)&quot;
-    trap 'rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot; &quot;${DIAGRAM_DIR}&quot;' EXIT
-    plcc-spec &quot;${PROJECT_ROOT}/tests/fixtures/arith.plcc&quot; | plcc-model | plcc-plantuml-diagram-emit --output=&quot;${DIAGRAM_DIR}&quot;
-    test -f &quot;${DIAGRAM_DIR}/diagram.puml&quot; || { echo &quot;FAIL: diagram.puml missing&quot;; exit 1; }
-    echo &quot;packaging: all checks passed&quot;
-}
+<span class="w">    </span><span class="nv">WORK_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">trap</span><span class="w"> </span><span class="s1">&#39;rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot;&#39;</span><span class="w"> </span>EXIT
+<span class="w">    </span><span class="o">(</span>
+<span class="w">        </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">WORK_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">        </span>cp<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/tests/fixtures/trivial.plcc&quot;</span><span class="w"> </span>spec.plcc
+<span class="w">        </span>plcc-make
+<span class="w">        </span><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>build/spec.json<span class="w">   </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: build/spec.json missing&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">        </span><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>build/model.json<span class="w">  </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: build/model.json missing&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="o">)</span>
+<span class="w">    </span><span class="nv">DIAGRAM_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">trap</span><span class="w"> </span><span class="s1">&#39;rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot; &quot;${DIAGRAM_DIR}&quot;&#39;</span><span class="w"> </span>EXIT
+<span class="w">    </span>plcc-spec<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/tests/fixtures/arith.plcc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-model<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-plantuml-diagram-emit<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DIAGRAM_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DIAGRAM_DIR</span><span class="si">}</span><span class="s2">/diagram.puml&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: diagram.puml missing&quot;</span><span class="p">;</span><span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;packaging: all checks passed&quot;</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-packaging.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-packaging.log<span class="w"> </span>_run
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 6: Run units to verify nothing is broken</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: 972 passed (or similar), <code>[cache miss] units</code> on stderr, <code>/tmp/plcc-test-units.log</code> created</p>
 <ul>
 <li>[ ] <strong>Step 7: Run units a second time to verify cache hit</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: output replayed instantly, <code>[cache hit] units</code> on stderr</p>
 <ul>
 <li>[ ] <strong>Step 8: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/units.bash bin/test/commands.bash bin/test/integration.bash \
-        bin/test/e2e.bash bin/test/packaging.bash
-git commit -m &quot;feat(097): add run_cached to simple test scripts&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/units.bash<span class="w"> </span>bin/test/commands.bash<span class="w"> </span>bin/test/integration.bash<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>bin/test/e2e.bash<span class="w"> </span>bin/test/packaging.bash
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(097): add run_cached to simple test scripts&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-4-update-composite-test-scripts">Task 4: Update composite test scripts</h3>
 <p><code>functional.bash</code> and <code>all.bash</code> call other test scripts. Each sub-script now uses <code>run_cached</code> internally. The composites need the same treatment: source the helper, wrap their call sequence in a local function, and pass it to <code>run_cached</code>.</p>
@@ -2802,61 +2802,61 @@ git commit -m &quot;feat(097): add run_cached to simple test scripts&quot;
 <ul>
 <li>[ ] <strong>Step 1: Update <code>bin/test/functional.bash</code></strong></li>
 </ul>
-<p>Replace the file with:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<p>Replace the file with:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/funcional.bash&quot;
-echo &quot;-----------------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/funcional.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    &quot;${SCRIPT_DIR}/units.bash&quot;
-    &quot;${SCRIPT_DIR}/commands.bash&quot;
-    &quot;${SCRIPT_DIR}/integration.bash&quot;
-    &quot;${SCRIPT_DIR}/e2e.bash&quot;
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/units.bash&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/commands.bash&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/integration.bash&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/e2e.bash&quot;</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-functional.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-functional.log<span class="w"> </span>_run
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Update <code>bin/test/all.bash</code></strong></li>
 </ul>
-<p>Replace the file with:</p>
-<pre><code class="language-bash">#!/usr/bin/env bash
-set -euo pipefail
+<p>Replace the file with:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
-echo &quot;bin/test/all.bash&quot;
-echo &quot;-----------------&quot;
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/all.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------&quot;</span>
 
-SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
 
-# shellcheck source=bin/test/_cache.bash
-source &quot;${SCRIPT_DIR}/_cache.bash&quot;
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
 
-_run() {
-    &quot;${SCRIPT_DIR}/functional.bash&quot;
-    &quot;${SCRIPT_DIR}/packaging.bash&quot;
-}
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/functional.bash&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/packaging.bash&quot;</span>
+<span class="o">}</span>
 
-run_cached /tmp/plcc-test-all.log _run
-</code></pre>
+run_cached<span class="w"> </span>/tmp/plcc-test-all.log<span class="w"> </span>_run
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 3: Run units to verify they still pass</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: pass (cache hit if nothing changed)</p>
 <ul>
 <li>[ ] <strong>Step 4: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add bin/test/functional.bash bin/test/all.bash
-git commit -m &quot;feat(097): add run_cached to composite test scripts&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/functional.bash<span class="w"> </span>bin/test/all.bash
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(097): add run_cached to composite test scripts&quot;</span>
+</code></pre></div>
 <hr />
 <h3 id="task-5-update-ci-to-disable-caching">Task 5: Update CI to disable caching</h3>
 <p>All test steps in <code>.github/workflows/ci.yml</code> must set <code>PLCC_NO_TEST_CACHE=1</code>. This prevents CI from ever reading or writing a cache (the <code>/tmp</code> dir is ephemeral per job anyway) and keeps logs free of cache noise.</p>
@@ -2867,44 +2867,44 @@ git commit -m &quot;feat(097): add run_cached to composite test scripts&quot;
 <li>[ ] <strong>Step 1: Update <code>.github/workflows/ci.yml</code></strong></li>
 </ul>
 <p>Add <code>env: PLCC_NO_TEST_CACHE: "1"</code> to each test step. Replace the test steps section with:</p>
-<pre><code class="language-yaml">      - name: Run unit tests
-        env:
-          PLCC_NO_TEST_CACHE: &quot;1&quot;
-        run: bin/test/units.bash
-      - name: Run command tests
-        env:
-          PLCC_NO_TEST_CACHE: &quot;1&quot;
-        run: bin/test/commands.bash
-      - name: Run integration tests
-        env:
-          PLCC_NO_TEST_CACHE: &quot;1&quot;
-        run: bin/test/integration.bash
-</code></pre>
-<p>For the <code>languages-corpus</code> job:</p>
-<pre><code class="language-yaml">      - name: Run e2e corpus tests
-        env:
-          LANGUAGES_REPO_PATH: /tmp/languages
-          PLCC_NO_TEST_CACHE: &quot;1&quot;
-        run: bin/test/e2e.bash
-</code></pre>
-<p>For the <code>packaging</code> job:</p>
-<pre><code class="language-yaml">      - name: Run packaging smoke test
-        env:
-          PLCC_NO_TEST_CACHE: &quot;1&quot;
-        run: bin/test/packaging.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run unit tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/units.bash</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run command tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/commands.bash</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run integration tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/integration.bash</span>
+</code></pre></div>
+<p>For the <code>languages-corpus</code> job:
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run e2e corpus tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">LANGUAGES_REPO_PATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/languages</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/e2e.bash</span>
+</code></pre></div></p>
+<p>For the <code>packaging</code> job:
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run packaging smoke test</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/packaging.bash</span>
+</code></pre></div></p>
 <ul>
 <li>[ ] <strong>Step 2: Run units to verify nothing broke</strong></li>
 </ul>
-<pre><code class="language-bash">bin/test/units.bash
-</code></pre>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
 <p>Expected: pass</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<pre><code class="language-bash">git add .github/workflows/ci.yml
-git commit -m &quot;ci(097): disable test output cache in CI with PLCC_NO_TEST_CACHE&quot;
-</code></pre>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.github/workflows/ci.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;ci(097): disable test output cache in CI with PLCC_NO_TEST_CACHE&quot;</span>
+</code></pre></div>
 
 
 
