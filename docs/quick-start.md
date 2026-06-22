@@ -22,28 +22,58 @@ Running a program will print their sum.
 
 Create a file named `spec.plcc`:
 
-```text
-# Define the tokens of the language.
-skip  WHITESPACE '\s+'
-token NUM '\d+'
+=== "Python"
+    ```text
+    # Define the tokens of the language.
+    skip  WHITESPACE '\s+'
+    token NUM '\d+'
 
-%
+    %
 
-# Define the structure of the language.
-# A program consists of a sequence of numbers.
-<Program> **= <NUM:num>
+    # Define the structure of the language.
+    # A program consists of a sequence of numbers.
+    <Program> **= <NUM:num>
 
-%
+    %
 
-# Define what happens when a program is run.
-Python
+    # Define what happens when a program is run.
+    Python
 
-Program
-%%%
-def _run(self):
-  print(sum(int(str(num)) for num in self.numList))
-%%%
-```
+    Program
+    %%%
+    def _run(self):
+      print(sum(int(str(num)) for num in self.numList))
+    %%%
+    ```
+
+=== "Java"
+    ```text
+    # Define the tokens of the language.
+    skip  WHITESPACE '\s+'
+    token NUM '\d+'
+
+    %
+
+    # Define the structure of the language.
+    # A program consists of a sequence of numbers.
+    <Program> **= <NUM:num>
+
+    %
+
+    # Define what happens when a program is run.
+    Java
+
+    Program
+    %%%
+    public void _run() {
+        int sum = 0;
+        for (NUM num : numList) {
+            sum += Integer.parseInt(num.lexeme);
+        }
+        System.out.println(sum);
+    }
+    %%%
+    ```
 
 PLCC-ng automatically generates fields such as `numList` from the grammar.
 The [Language Guide](language-guide/index.md) explains how this mapping works.

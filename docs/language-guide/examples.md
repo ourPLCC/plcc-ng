@@ -22,39 +22,78 @@ Create a file named `samples`:
 
 Create `subtract.plcc`:
 
-```text
-# Subtraction language
-skip WHITESPACE '\s+'
-token WHOLE     '\d+'
-token MINUS     '\-'
-token LP        '\('
-token RP        '\)'
-token COMMA     ','
-%
-<Prog>         ::= <Exp:exp>
-<Exp:WholeExp> ::= <WHOLE:whole>
-<Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
-%
-Python
+=== "Python"
+    ```text
+    # Subtraction language
+    skip WHITESPACE '\s+'
+    token WHOLE     '\d+'
+    token MINUS     '\-'
+    token LP        '\('
+    token RP        '\)'
+    token COMMA     ','
+    %
+    <Prog>         ::= <Exp:exp>
+    <Exp:WholeExp> ::= <WHOLE:whole>
+    <Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
+    %
+    Python
 
-Prog
-%%%
-def _run(self):
-    print(self.exp.eval())
-%%%
+    Prog
+    %%%
+    def _run(self):
+        print(self.exp.eval())
+    %%%
 
-WholeExp
-%%%
-def eval(self):
-    return int(self.whole.lexeme)
-%%%
+    WholeExp
+    %%%
+    def eval(self):
+        return int(self.whole.lexeme)
+    %%%
 
-SubExp
-%%%
-def eval(self):
-    return self.exp1.eval() - self.exp2.eval()
-%%%
-```
+    SubExp
+    %%%
+    def eval(self):
+        return self.exp1.eval() - self.exp2.eval()
+    %%%
+    ```
+
+=== "Java"
+    ```text
+    # Subtraction language
+    skip WHITESPACE '\s+'
+    token WHOLE     '\d+'
+    token MINUS     '\-'
+    token LP        '\('
+    token RP        '\)'
+    token COMMA     ','
+    %
+    <Prog>         ::= <Exp:exp>
+    <Exp:WholeExp> ::= <WHOLE:whole>
+    <Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
+    %
+    Java
+
+    Prog
+    %%%
+    public void _run() {
+        System.out.println(exp.eval());
+    }
+    %%%
+
+    WholeExp
+    %%%
+    public int eval() {
+        return Integer.parseInt(whole.lexeme);
+    }
+    %%%
+
+    SubExp
+    %%%
+    public int eval() {
+        return exp1.eval() - exp2.eval();
+    }
+    %%%
+    ```
 
 ### Scanner
 

@@ -28,28 +28,30 @@ and their fields that are generated from production rules.
 
 To inject code into a class, use the following construct.
 
-```text
-%
-Python
+=== "Python"
+    ```text
+    %
+    Python
 
-Exp
-%%%
-def _run(self):
-    print("Hello")
-%%%
-```
+    Exp
+    %%%
+    def _run(self):
+        print("Hello")
+    %%%
+    ```
 
-```text
-%
-Java
+=== "Java"
+    ```text
+    %
+    Java
 
-Exp
-%%%
-public void _run() {
-    System.out.println("Hello");
-}
-%%%
-```
+    Exp
+    %%%
+    public void _run() {
+        System.out.println("Hello");
+    }
+    %%%
+    ```
 
 Since whatever you put within the `%%%` lines is injected into the body
 of the class, you can add static or instance methods, class or instance variables,
@@ -93,20 +95,38 @@ Append the hook name to the class name with a colon:
 
 ### Example
 
-```text
-WholeExp:import
-%%%
-import sys
-%%%
+=== "Python"
+    ```text
+    WholeExp:import
+    %%%
+    import sys
+    %%%
 
-WholeExp
-%%%
-def eval(self):
-    x = int(self.whole.lexeme)
-    sys.stderr.write(f"eval: {x}\n")
-    return x
-%%%
-```
+    WholeExp
+    %%%
+    def eval(self):
+        x = int(self.whole.lexeme)
+        sys.stderr.write(f"eval: {x}\n")
+        return x
+    %%%
+    ```
+
+=== "Java"
+    ```text
+    WholeExp:import
+    %%%
+    import java.io.*;
+    %%%
+
+    WholeExp
+    %%%
+    public int eval() {
+        int x = Integer.parseInt(whole.lexeme);
+        System.err.println("eval: " + x);
+        return x;
+    }
+    %%%
+    ```
 
 You can have multiple code blocks that refer to the same class.
 The blocks are injected in the order they appear in the semantic section.
@@ -121,15 +141,28 @@ a nonterminal in the syntactic section.
 When you do, plcc-ng creates a file based on the class name.
 The block contents are written verbatim to that file.
 
-```text
-Helper      # Creates a file named Helper.py
-%%%
-class Helper:
-    @staticmethod
-    def double(x):
-        return x * 2
-%%%
-```
+=== "Python"
+    ```text
+    Helper      # Creates a file named Helper.py
+    %%%
+    class Helper:
+        @staticmethod
+        def double(x):
+            return x * 2
+    %%%
+    ```
+
+=== "Java"
+    ```text
+    Helper      # Creates a file named Helper.java
+    %%%
+    public class Helper {
+        public static int doubled(int x) {
+            return x * 2;
+        }
+    }
+    %%%
+    ```
 
 ## Packages and imports/includes
 
