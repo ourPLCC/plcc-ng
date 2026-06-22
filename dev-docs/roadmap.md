@@ -1,6 +1,6 @@
 # Roadmap
 
-2 open issues as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
+1 open issue as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
 
 ## Phase 2 — Docs: site features
 
