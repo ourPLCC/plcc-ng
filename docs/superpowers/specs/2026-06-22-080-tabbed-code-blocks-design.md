@@ -15,15 +15,21 @@ Tab selection syncs across all tab groups on the page and persists across pages 
 
 ## Configuration
 
-Add two feature flags to `mkdocs.yml`:
+Add two feature flags and the required Markdown extension to `mkdocs.yml`:
 
 ```yaml
-features:
-  - content.tabs        # enables === "Label" tab syntax
-  - content.tabs.link   # syncs matching tab labels across pages
+theme:
+  features:
+    - content.tabs        # enables === "Label" tab syntax
+    - content.tabs.link   # syncs matching tab labels across pages
+
+markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true   # required for MkDocs Material v9+
 ```
 
-No other configuration changes are needed.
+`pymdownx.tabbed` ships as a transitive dependency of `mkdocs-material` and is
+already installed — no new packages are needed.
 
 ## Tab Structure
 
