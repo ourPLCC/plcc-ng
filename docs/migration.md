@@ -1,0 +1,170 @@
+# Migration from PLCC to PLCC-ng
+
+PLCC-ng is a modern, pip-installable rewrite of [PLCC](https://github.com/ourPLCC/plcc).
+It adds Python semantics support, a cleaner CLI, and a more extensible architecture.
+It is not backward compatible — spec files and command invocations both require updates.
+
+## Migration checklist
+
+### 1. Install PLCC-ng
+
+Replace the PLCC shell script, Docker, or DevContainer install with:
+
+```bash
+pip install plcc-ng
+```
+
+See [Installation](installation.md) for upgrade, pinning, and uninstall instructions.
+
+### 2. Rename your grammar file
+
+PLCC's default grammar file is named `grammar`. PLCC-ng's default is `spec.plcc`.
+
+```
+grammar  →  spec.plcc
+```
+
+### 3. Update regex patterns in the lexical section
+
+PLCC uses Java regex ([`java.util.regex.Pattern`](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html)).
+PLCC-ng uses Python regex ([`re`](https://docs.python.org/3/library/re.html)).
+
+Most common patterns are identical. The following Java-specific syntax must be rewritten:
+
+| Java pattern | Python equivalent |
+|---|---|
+| `\p{Alpha}` | `[a-zA-Z]` |
+| `(?<name>...)` named group | `(?P<name>...)` |
+| `\p{Digit}` | `\d` |
+
+Test your patterns with a Python regex tool (e.g. [regex101.com](https://regex101.com/) set to Python flavor).
+
+### 4. Check scan algorithm behavior
+
+PLCC gives skip rules priority over all token rules whenever they match *any* input,
+regardless of match length. PLCC-ng uses pure first-longest-match — skip and token rules
+compete equally, with ties broken by declaration order.
+
+If any of your skip rules are shorter than competing token rules, the behavior changes:
+
+| Input | PLCC | PLCC-ng |
+|---|---|---|
+| `123` with `skip ONE '1'` before `token NUMBER '\d+'` | skip wins (nothing emitted) | `NUMBER '123'` (longer match wins) |
+
+**Fix:** If you relied on skip-first behavior, rewrite the skip pattern to match as many characters as the token it was shadowing. For most grammars (whitespace skips vs. identifier/number tokens), the longest match already produces the same result and no change is needed.
+
+### 5. Update nonterminal names to PascalCase
+
+PLCC nonterminals are lowercase; PLCC-ng uses PascalCase.
+
+| PLCC | PLCC-ng |
+|---|---|
+| `<prog>` | `<Program>` |
+| `<exp>` | `<Expr>` |
+
+Update every nonterminal on both the left-hand side and right-hand side of every rule.
+
+### 6. Update alternative/subclass syntax
+
+PLCC places the distinguishing name as a suffix after the closing bracket.
+PLCC-ng places it after a colon inside the brackets.
+
+| PLCC | PLCC-ng |
+|---|---|
+| `<exp>WholeExp ::= ...` | `<Expr:WholeExp> ::= ...` |
+| `<exp>SubExp ::= ...` | `<Expr:SubExp> ::= ...` |
+
+### 7. Update captured field syntax
+
+PLCC places a field name as a suffix after the closing bracket.
+PLCC-ng places it after a colon inside the brackets.
+
+| PLCC | PLCC-ng |
+|---|---|
+| `<exp>exp1` (field named `exp1`) | `<Expr:exp1>` |
+| `<exp>exp2` (field named `exp2`) | `<Expr:exp2>` |
+| `<WHOLE>` (auto-named field `whole`) | `<WHOLE>` (same — auto-naming unchanged) |
+| `<WHOLE>` with explicit name | `<WHOLE:whole>` |
+
+### 8. Add semantic section language header
+
+PLCC only supports Java semantics and has no language header.
+PLCC-ng requires the first non-blank line of the semantic section to declare the language.
+
+Before (PLCC):
+```
+%
+Prog
+%%%
+  public void $run() { ... }
+%%%
+```
+
+After (PLCC-ng):
+```
+%
+Java
+
+Prog
+%%%
+  public void _run() { ... }
+%%%
+```
+
+The supported values are `Java` and `Python`.
+
+### 9. Rename the entry point method
+
+The method the start symbol's class uses as its execution entry point was renamed.
+
+| PLCC | PLCC-ng |
+|---|---|
+| `$run()` | `_run()` |
+
+Update this in the semantic section of your spec file.
+
+### 10. Check `%include` paths
+
+Both PLCC and PLCC-ng support `%include FILENAME`. The syntax is unchanged.
+If your include paths were relative to a file named `grammar`, they will work
+unchanged — paths are resolved relative to the file that contains the `%include` directive.
+
+### 11. Replace commands
+
+| PLCC | PLCC-ng | Notes |
+|---|---|---|
+| `plcc.py --version` | `plcc-version` | |
+| `plccmk [-c] [file]` | *(not needed)* | Top-level commands generate and compile automatically |
+| `scan [file...]` | `plcc-scan [file...]` | Token output format changed (see below) |
+| `parse [-t] [-n] [file...]` | `plcc-parse [file...]` | Always shows parse tree; no `-t` flag needed |
+| `rep [-t] [-n] [file...]` | `plcc-rep [file...]` | |
+| `parse --json_ast` | `plcc-tokens \| plcc-trees` | See below |
+
+**Token output format change:**
+
+PLCC format:
+```
+   1: WHOLE '3'
+```
+
+PLCC-ng format (`file:line:column`):
+```
+-:1:1 NUM '42'
+```
+
+**JSON parse trees:**
+
+PLCC's `--json_ast` flag (passed to `plccmk` and `parse`) is not available in PLCC-ng.
+To obtain a JSON parse tree, use the lower-level pipeline:
+
+```bash
+plcc-spec spec.plcc | plcc-ll1 > build/ll1.json
+plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
+```
+
+See [`plcc-trees`](cli/commands/plcc-trees.md) for details.
+
+## Features not yet in PLCC-ng
+
+- **Docker installation** — PLCC supported Docker via `plcc-con`. PLCC-ng is currently pip-only. Docker support is planned.
+- **DevContainer** — PLCC provided a ready-to-use devcontainer image. PLCC-ng does not yet provide one.

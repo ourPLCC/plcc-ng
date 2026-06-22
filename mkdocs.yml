@@ -34,6 +34,7 @@ nav:
   - Home: index.md
   - Quick Start: quick-start.md
   - Installation: installation.md
+  - Migration from PLCC: migration.md
   - Language Guide:
     - Overview: language-guide/index.md
     - Lexical Section: language-guide/lexical.md
