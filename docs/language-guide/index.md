@@ -3,27 +3,52 @@
 A plcc-ng specification describes
 a language's tokens, syntax, and semantics.
 
-```text
-# Lexical section
-skip WHITESPACE /\s+/
-token NUM /\d+/
+=== "Python"
+    ```text
+    # Lexical section
+    skip WHITESPACE /\s+/
+    token NUM /\d+/
 
-%
+    %
 
-# Syntactic section
-<Exp> ::= <NUM>
+    # Syntactic section
+    <Exp> ::= <NUM>
 
-%
+    %
 
-# Semantic section
-Python
+    # Semantic section
+    Python
 
-Exp
-%%%
-def __run__(self):
-    print("Hello")
-%%%
-```
+    Exp
+    %%%
+    def __run__(self):
+        print("Hello")
+    %%%
+    ```
+
+=== "Java"
+    ```text
+    # Lexical section
+    skip WHITESPACE /\s+/
+    token NUM /\d+/
+
+    %
+
+    # Syntactic section
+    <Exp> ::= <NUM>
+
+    %
+
+    # Semantic section
+    Java
+
+    Exp
+    %%%
+    public void __run__() {
+        System.out.println("Hello");
+    }
+    %%%
+    ```
 
 ## Comments
 
