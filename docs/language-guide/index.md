@@ -21,7 +21,7 @@ a language's tokens, syntax, and semantics.
 
     Exp
     %%%
-    def __run__(self):
+    def _run(self):
         print("Hello")
     %%%
     ```
@@ -44,7 +44,7 @@ a language's tokens, syntax, and semantics.
 
     Exp
     %%%
-    public void __run__() {
+    public void _run() {
         System.out.println("Hello");
     }
     %%%
