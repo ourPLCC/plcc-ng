@@ -1,0 +1,27 @@
+{% set concrete = classes | selectattr('abstract', 'equalto', false) | list %}
+const { Registry } = require('./runtime/registry');
+const { deserialize } = require('./runtime/deserialize');
+{% for cls in concrete %}const { {{ cls.name }} } = require('./{{ cls.name }}');
+{% endfor %}
+const registry = new Registry();
+registry.register({% for cls in concrete %}{{ cls.name }}{% if not loop.last %}, {% endif %}{% endfor %});
+
+process.on('SIGINT', () => {
+    process.stdout.write('User interrupted execution by ^C.\n');
+    process.exit(130);
+});
+
+const readline = require('readline');
+const rl = readline.createInterface({ input: process.stdin });
+
+rl.on('line', (line) => {
+    line = line.trim();
+    if (!line) return;
+    try {
+        const tree = deserialize(JSON.parse(line), registry);
+        const result = tree.{{ entry_point }}();
+        console.log(JSON.stringify({ kind: 'result', value: result != null ? String(result) : null }));
+    } catch (e) {
+        console.log(JSON.stringify({ kind: 'error', type: e.constructor.name, message: e.message ?? '' }));
+    }
+});
