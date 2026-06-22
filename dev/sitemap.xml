@@ -269,6 +269,10 @@
          <lastmod>2026-06-22</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-081-remove-plcc-make-from-examples/</loc>
+         <lastmod>2026-06-22</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
          <lastmod>2026-06-22</lastmod>
     </url>
@@ -330,6 +334,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-071-072-102-installation-migration-design/</loc>
+         <lastmod>2026-06-22</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-081-remove-plcc-make-from-examples-design/</loc>
          <lastmod>2026-06-22</lastmod>
     </url>
 </urlset>
