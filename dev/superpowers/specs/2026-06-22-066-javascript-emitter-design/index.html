@@ -8,31 +8,27 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/language-guide/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-066-javascript-emitter-design/">
       
       
-        <link rel="prev" href="../migration/">
-      
-      
-        <link rel="next" href="lexical/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
     
     
       
-        <title>Overview - plcc-ng</title>
+        <title>JavaScript Emitter Design - plcc-ng</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -51,7 +47,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#language-guide" class="md-skip">
+        <a href="#javascript-emitter-design" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              JavaScript Emitter Design
             
           </span>
         </div>
@@ -227,7 +223,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -246,7 +242,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../quick-start/" class="md-tabs__link">
+      <a href="../../../quick-start/" class="md-tabs__link">
         
   
   
@@ -265,7 +261,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../installation/" class="md-tabs__link">
+      <a href="../../../installation/" class="md-tabs__link">
         
   
   
@@ -284,7 +280,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../migration/" class="md-tabs__link">
+      <a href="../../../migration/" class="md-tabs__link">
         
   
   
@@ -301,13 +297,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
           
   
   
@@ -327,7 +321,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../cli/" class="md-tabs__link">
+        <a href="../../../cli/" class="md-tabs__link">
           
   
   
@@ -347,7 +341,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../instructor-guide/" class="md-tabs__link">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
           
   
   
@@ -365,7 +359,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../changelog/" class="md-tabs__link">
+      <a href="../../../changelog/" class="md-tabs__link">
         
   
   
@@ -384,7 +378,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../acknowledgments/" class="md-tabs__link">
+      <a href="../../../acknowledgments/" class="md-tabs__link">
         
   
   
@@ -421,7 +415,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -451,7 +445,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -478,7 +472,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quick-start/" class="md-nav__link">
+      <a href="../../../quick-start/" class="md-nav__link">
         
   
   
@@ -505,7 +499,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../../installation/" class="md-nav__link">
         
   
   
@@ -532,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migration/" class="md-nav__link">
+      <a href="../../../migration/" class="md-nav__link">
         
   
   
@@ -556,31 +550,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -598,7 +587,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -613,37 +602,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Overview
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
         
   
   
@@ -659,81 +621,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#comments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#section-separators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Section separators
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#includes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Includes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional sections
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What next
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -746,7 +633,7 @@
   
   
     <li class="md-nav__item">
-      <a href="lexical/" class="md-nav__link">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
         
   
   
@@ -774,7 +661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="syntactic/" class="md-nav__link">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
         
   
   
@@ -802,7 +689,7 @@
   
   
     <li class="md-nav__item">
-      <a href="semantic/" class="md-nav__link">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
         
   
   
@@ -830,7 +717,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/" class="md-nav__link">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
         
   
   
@@ -917,7 +804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+      <a href="../../../cli/" class="md-nav__link">
         
   
   
@@ -997,7 +884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/guide/author-commands/" class="md-nav__link">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
         
   
   
@@ -1025,7 +912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/guide/under-the-hood/" class="md-nav__link">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
         
   
   
@@ -1053,7 +940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/guide/language-extensions/" class="md-nav__link">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
         
   
   
@@ -1081,7 +968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/guide/parser-extensions/" class="md-nav__link">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
         
   
   
@@ -1109,7 +996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/guide/diagram-extensions/" class="md-nav__link">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
         
   
   
@@ -1197,7 +1084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-diagram/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
         
   
   
@@ -1225,7 +1112,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-diagram-build/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
         
   
   
@@ -1253,7 +1140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
         
   
   
@@ -1281,7 +1168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-diagram-list/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
         
   
   
@@ -1309,7 +1196,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-diagram-run/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
         
   
   
@@ -1337,7 +1224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-java-build/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
         
   
   
@@ -1365,7 +1252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-java-emit/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
         
   
   
@@ -1393,7 +1280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-java-run/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
         
   
   
@@ -1421,7 +1308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-lang-build/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
         
   
   
@@ -1449,7 +1336,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-lang-emit/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
         
   
   
@@ -1477,7 +1364,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-lang-list/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
         
   
   
@@ -1505,7 +1392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-lang-run/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
         
   
   
@@ -1533,7 +1420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-ll1/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
         
   
   
@@ -1561,7 +1448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-make/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
         
   
   
@@ -1589,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-mermaid-diagram-build/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-mermaid-diagram-build/" class="md-nav__link">
         
   
   
@@ -1617,7 +1504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-mermaid-diagram-emit/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-mermaid-diagram-emit/" class="md-nav__link">
         
   
   
@@ -1645,7 +1532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-mermaid-diagram-run/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-mermaid-diagram-run/" class="md-nav__link">
         
   
   
@@ -1673,7 +1560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-model/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
         
   
   
@@ -1701,7 +1588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-parse/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
         
   
   
@@ -1729,7 +1616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-parser-list/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
         
   
   
@@ -1757,7 +1644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-parser-table/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
         
   
   
@@ -1785,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-plantuml-diagram-build/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build/" class="md-nav__link">
         
   
   
@@ -1813,7 +1700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-plantuml-diagram-emit/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit/" class="md-nav__link">
         
   
   
@@ -1841,7 +1728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-plantuml-diagram-run/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run/" class="md-nav__link">
         
   
   
@@ -1869,7 +1756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-python-emit/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
         
   
   
@@ -1897,7 +1784,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-python-run/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
         
   
   
@@ -1925,7 +1812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-rep/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
         
   
   
@@ -1953,7 +1840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-scan/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
         
   
   
@@ -1981,7 +1868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-spec/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
         
   
   
@@ -2009,7 +1896,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-tokens/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
         
   
   
@@ -2037,7 +1924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-trees/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
         
   
   
@@ -2065,7 +1952,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/commands/plcc-version/" class="md-nav__link">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
         
   
   
@@ -2160,7 +2047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../instructor-guide/" class="md-nav__link">
+      <a href="../../../instructor-guide/" class="md-nav__link">
         
   
   
@@ -2188,7 +2075,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../instructor-guide/evaluating/" class="md-nav__link">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
         
   
   
@@ -2216,7 +2103,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../instructor-guide/adopting/" class="md-nav__link">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
         
   
   
@@ -2251,7 +2138,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../../../changelog/" class="md-nav__link">
         
   
   
@@ -2278,7 +2165,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../acknowledgments/" class="md-nav__link">
+      <a href="../../../acknowledgments/" class="md-nav__link">
         
   
   
@@ -2318,86 +2205,219 @@
   
 
 
-<h1 id="language-guide">Language Guide</h1>
-<p>A plcc-ng specification describes
-a language's tokens, syntax, and semantics.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code># Lexical section
-skip WHITESPACE /\s+/
-token NUM /\d+/
-
-%
-
-# Syntactic section
-&lt;Exp&gt; ::= &lt;NUM&gt;
-
-%
-
-# Semantic section
-Python
-
-Exp
-%%%
-def _run(self):
-    print(&quot;Hello&quot;)
-%%%
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code># Lexical section
-skip WHITESPACE /\s+/
-token NUM /\d+/
-
-%
-
-# Syntactic section
-&lt;Exp&gt; ::= &lt;NUM&gt;
-
-%
-
-# Semantic section
-Java
-
-Exp
-%%%
-public void _run() {
-    System.out.println(&quot;Hello&quot;);
-}
-%%%
-</code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="comments">Comments</h2>
-<p>Comments start with <code>#</code> and end at the end of the current line.
-Comments may appear anywhere except in semantic section code blocks.</p>
-<h2 id="section-separators">Section separators</h2>
-<p>Each section is separated by a line with a single <code>%</code>.</p>
-<h2 id="includes">Includes</h2>
-<p>Although you can define an entire language in a single file, larger
-languages are often easier to maintain when split across multiple files
-using the <code>%include</code> statement.</p>
-<div class="highlight"><pre><span></span><code>%include FILE_PATH
-</code></pre></div>
-<p><code>%include</code> is valid in any section, but may not appear in a code block
-within the semantic section. <code>FILE_PATH</code> is relative to the directory
-containing the file it appears in.</p>
-<h2 id="optional-sections">Optional sections</h2>
-<p>Sections build on one another:</p>
-<div><svg xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css" data-diagram-type="DESCRIPTION" height="57px" preserveAspectRatio="xMaxYMax meet" style="width:585px;height:57px;background:#FFFFFF;" version="1.1" viewBox="0 0 585 57" width="585px" zoomAndPan="magnify" id="Kroki"><defs /><g><g class="entity" data-qualified-name="lex" data-source-line="2" id="ent0001"><rect fill="#F1F1F1" height="36.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="68.7539" x="7" y="7" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="48.7539" x="17" y="29.9951">Lexical</text></g><g class="entity" data-qualified-name="syn" data-source-line="3" id="ent0002"><rect fill="#F1F1F1" height="36.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="84.8867" x="246.75" y="7" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64.8867" x="256.75" y="29.9951">Syntactic</text></g><g class="entity" data-qualified-name="sem" data-source-line="4" id="ent0003"><rect fill="#F1F1F1" height="36.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="85.666" x="485.64" y="7" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="65.666" x="495.64" y="29.9951">Semantic</text></g><g class="link" data-entity-1="ent0001" data-entity-2="ent0002" data-link-type="dependency" data-source-line="5" id="lnk4"><path d="M76.04,25.15 C120.35,25.15 193.25,25.15 241.32,25.15" fill="none" id="lex-to-syn" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="246.32,25.15,237.32,21.15,241.32,25.15,237.32,29.15,246.32,25.15" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="109.2749" x="106.75" y="21.2169">tokens/terminals</text></g><g class="link" data-entity-1="ent0002" data-entity-2="ent0003" data-link-type="dependency" data-source-line="6" id="lnk5"><path d="M332.07,25.15 C375.18,25.15 436.98,25.15 480.22,25.15" fill="none" id="syn-to-sem" style="stroke:#181818;stroke-width:1;" /><polygon fill="#181818" points="485.22,25.15,476.22,21.15,480.22,25.15,476.22,29.15,485.22,25.15" style="stroke:#181818;stroke-width:1;stroke-linejoin:miter;stroke-miterlimit:10;" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="92.644" x="362.64" y="21.2169">class hiearchy</text></g></g></svg></div>
-
-<p>You can start with only a lexical section (no <code>%</code> separator is needed),
-or add a syntactic section without defining semantics. This makes it easy
-to develop and test a language incrementally.</p>
-<h2 id="what-next">What next</h2>
+<h1 id="javascript-emitter-design">JavaScript Emitter Design</h1>
+<p><strong>Issue:</strong> 066
+<strong>Date:</strong> 2026-06-22</p>
+<h2 id="overview">Overview</h2>
+<p>Add a JavaScript (Node.js) language backend to plcc-ng, following the same extension pattern as the existing <code>java</code> and <code>python</code> backends. The generated code uses CommonJS modules and requires no compilation step.</p>
+<p>JavaScript was chosen over TypeScript, C++, and Rust because:</p>
 <ul>
-<li><a href="lexical/">Lexical Section</a> — <code>token</code> and <code>skip</code> syntax, scanning algorithm</li>
-<li><a href="syntactic/">Syntactic Section</a> — BNF rules, parse tree class hierarchy</li>
-<li><a href="semantic/">Semantic Section</a> — embedding code, hooks, target language selection</li>
-<li><a href="examples/">Examples</a> — worked examples of increasing complexity</li>
+<li>No build step (interpreted, like Python)</li>
+<li>Native <code>JSON.parse</code> — no runtime library needed for deserialization</li>
+<li>Node.js is ubiquitous in classrooms</li>
+<li>ES6 classes map directly onto the class-per-rule design</li>
+<li>Highest market share of the candidates in 2026</li>
 </ul>
+<h2 id="extension-location">Extension Location</h2>
+<div class="highlight"><pre><span></span><code>src/plcc/lang/ext/javascript/
+  __init__.py
+  emit.py
+  emit_test.py
+  run.py
+  run_test.py
+  templates/
+    class_file.js.jinja
+    main.js.jinja
+  runtime/
+    base.js
+    base_test.py
+    registry.js
+    registry_test.py
+    deserialize.js
+    deserialize_test.py
+</code></pre></div>
+<h2 id="entry-points">Entry Points</h2>
+<p>Two entries added to <code>pyproject.toml</code> <code>[project.scripts]</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">plcc-javascript-emit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.javascript.emit:main&quot;</span>
+<span class="n">plcc-javascript-run</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.javascript.run:main&quot;</span>
+</code></pre></div>
+<p>No <code>plcc-javascript-build</code> entry point. <code>plcc-lang-build</code> exits 0 when the build command is absent, so the pipeline skips the build step automatically — identical to Python's behavior.</p>
+<h2 id="spec-section-tag">Spec Section Tag</h2>
+<p>Users tag semantic sections with <code>javascript</code> (lowercase), consistent with the existing <code>java</code> and <code>python</code> tags:</p>
+<div class="highlight"><pre><span></span><code>%javascript
+ClassName
+%%%
+body
+    someMethod() { ... }
+%%%
+</code></pre></div>
+<h2 id="fragment-kinds">Fragment Kinds</h2>
+<p>Matches Python's set minus <code>class</code>. The original PLCC's <code>class</code> hook served two purposes: in Java it injected content into the class declaration line to add <code>implements</code> clauses; in Python it added comma-separated base classes for multiple inheritance. JavaScript has neither interfaces nor multiple inheritance, so there is no equivalent and <code>class</code> is intentionally omitted.</p>
+<p>Note: plcc-ng's Java emitter is currently missing <code>class</code> fragment support from the original PLCC. That gap is tracked separately (see issue 067).</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Placement in generated file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>top</code></td>
+<td>Before the class definition (e.g., <code>const x = require(...)</code>)</td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td>After the generated <code>require</code> lines, before the class</td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>Inside the constructor body, after field assignments</td>
+</tr>
+<tr>
+<td><code>body</code></td>
+<td>Methods on the class</td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>Replaces the entire class file</td>
+</tr>
+</tbody>
+</table>
+<h2 id="generated-output-structure">Generated Output Structure</h2>
+<div class="highlight"><pre><span></span><code>&lt;output&gt;/
+  main.js             # entry point
+  _Start.js           # default base for the start class
+  &lt;ClassName&gt;.js      # one file per class from the model
+  runtime/
+    base.js
+    registry.js
+    deserialize.js
+</code></pre></div>
+<h2 id="generated-class-file-class_filejsjinja">Generated Class File (<code>class_file.js.jinja</code>)</h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// top fragments</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Node</span><span class="p">,</span><span class="w"> </span><span class="nx">Token</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./runtime/base&#39;</span><span class="p">);</span>
+<span class="c1">// if cls.extends: const { ParentClass } = require(&#39;./ParentClass&#39;);</span>
+<span class="c1">// import fragments</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">ClassName</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">ParentOrNode</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// abstract classes: body fragments only, no static fields or constructor</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">_RULE_NAME</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;rule_name&#39;</span><span class="p">;</span><span class="w">      </span><span class="c1">// concrete classes only</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="nx">_FIELDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;field1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;field2&#39;</span><span class="p">];</span><span class="w"> </span><span class="c1">// concrete classes only</span>
+
+<span class="w">    </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">field1</span><span class="p">,</span><span class="w"> </span><span class="nx">field2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">          </span><span class="c1">// concrete classes only</span>
+<span class="w">        </span><span class="k">super</span><span class="p">();</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">field1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">field1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">field2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">field2</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// init fragments</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// body fragments</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ClassName</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<p>Abstract classes omit <code>_RULE_NAME</code>, <code>_FIELDS</code>, and the constructor — they are not registered and cannot be instantiated by the registry. This mirrors Python's behavior.</p>
+<h2 id="_startjs"><code>_Start.js</code></h2>
+<p>Injected into the output directory when the grammar's start class has no explicit <code>extends</code>. Provides a default <code>_run()</code> that prints the node's string representation:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Node</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./runtime/base&#39;</span><span class="p">);</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">_Start</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">Node</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">_run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">String</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">_Start</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<p>The start class <code>extends _Start</code> instead of <code>extends Node</code> when it has no explicit parent.</p>
+<h2 id="mainjs-mainjsjinja"><code>main.js</code> (<code>main.js.jinja</code>)</h2>
+<p>Reads JSON lines from stdin, deserializes each into an object tree, calls <code>_run()</code> on the root, and prints a JSON result or error record — identical protocol to Java and Python:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Registry</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./runtime/registry&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deserialize</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./runtime/deserialize&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">ConcreteClass1</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./ConcreteClass1&#39;</span><span class="p">);</span>
+<span class="c1">// ... one require per concrete class</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">registry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Registry</span><span class="p">();</span>
+<span class="nx">registry</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">ConcreteClass1</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+
+<span class="kd">const</span><span class="w"> </span><span class="nx">readline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;readline&#39;</span><span class="p">);</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">rl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">readline</span><span class="p">.</span><span class="nx">createInterface</span><span class="p">({</span><span class="w"> </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">stdin</span><span class="w"> </span><span class="p">});</span>
+
+<span class="nx">rl</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">line</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">line</span><span class="p">.</span><span class="nx">trim</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">line</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">tree</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">deserialize</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">line</span><span class="p">),</span><span class="w"> </span><span class="nx">registry</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tree</span><span class="p">.</span><span class="nx">_run</span><span class="p">();</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">            </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;result&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">        </span><span class="p">}));</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<span class="w">            </span><span class="nx">kind</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="kr">constructor</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+<span class="w">            </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="p">}));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="runtime-library">Runtime Library</h2>
+<h3 id="runtimebasejs"><code>runtime/base.js</code></h3>
+<p><code>Node</code> — empty base class all generated classes ultimately extend.</p>
+<p><code>Token</code> — holds <code>kind</code> and <code>lexeme</code>; <code>toString()</code> returns <code>lexeme</code>. Not a subclass of <code>Node</code>.</p>
+<h3 id="runtimeregistryjs"><code>runtime/registry.js</code></h3>
+<p><code>Registry</code> — registers concrete classes by <code>_RULE_NAME</code> + <code>_FIELDS</code> set; <code>lookup(ruleName, fieldNames)</code> returns the matching class. Same algorithm as Python's registry.</p>
+<h3 id="runtimedeserializejs"><code>runtime/deserialize.js</code></h3>
+<p><code>deserialize(tree, registry)</code> — recursive. Token nodes (<code>kind === 'token'</code>) produce <code>Token</code> instances. All other nodes look up their class in the registry and construct it with positional field arguments extracted from the <code>children</code> array.</p>
+<h2 id="emitpy"><code>emit.py</code></h2>
+<p>Mirrors <code>python/emit.py</code> closely:</p>
+<ul>
+<li>Reads model JSON from stdin</li>
+<li>Creates output directory</li>
+<li>Copies <code>runtime/</code> (excluding <code>*_test.py</code>)</li>
+<li>Renders <code>class_file.js.jinja</code> for each class</li>
+<li>Writes <code>_Start.js</code> inline (string constant, like Python/Java)</li>
+<li>Renders <code>main.js.jinja</code></li>
+<li>Applies <code>file</code> fragments (overwrite entire class file)</li>
+<li>Filters fragments by kind per class</li>
+</ul>
+<h2 id="runpy"><code>run.py</code></h2>
+<p>Invokes <code>node main.js</code> in the output directory, passing stdin/stdout/stderr through. Handles <code>KeyboardInterrupt</code> with exit code 130. No compilation step.</p>
+<h2 id="testing">Testing</h2>
+<h3 id="emit_testpy"><code>emit_test.py</code></h3>
+<p>Pytest unit tests for the emitter:</p>
+<ul>
+<li>Correct file names generated for concrete and abstract classes</li>
+<li><code>_RULE_NAME</code>, <code>_FIELDS</code>, constructor present on concrete classes</li>
+<li><code>_RULE_NAME</code>, <code>_FIELDS</code>, constructor absent on abstract classes</li>
+<li><code>_Start.js</code> written when start class has no explicit <code>extends</code></li>
+<li>Start class <code>extends _Start</code> when it has no explicit parent</li>
+<li>Fragment kinds placed in correct positions (<code>top</code>, <code>import</code>, <code>init</code>, <code>body</code>)</li>
+<li><code>file</code> fragment replaces entire class file</li>
+<li>Runtime directory copied to output</li>
+</ul>
+<h3 id="run_testpy"><code>run_test.py</code></h3>
+<p>Pytest unit tests for the runner:</p>
+<ul>
+<li>Invokes <code>node main.js</code> with the output directory</li>
+<li>Passes stdin/stdout/stderr through</li>
+<li>Exits with the node process's return code</li>
+</ul>
+<h3 id="runtimebase_testpy-registry_testpy-deserialize_testpy"><code>runtime/base_test.py</code>, <code>registry_test.py</code>, <code>deserialize_test.py</code></h3>
+<p>Pytest tests using <code>subprocess.run(['node', '-e', '...'])</code> to exercise the JS runtime modules. Node.js must be available in the test environment (a reasonable requirement given it is the target runtime).</p>
+<p>Tests cover:</p>
+<ul>
+<li><code>Node</code> is a valid base class</li>
+<li><code>Token</code> stores kind and lexeme; <code>toString()</code> returns lexeme</li>
+<li><code>Registry.register</code> and <code>lookup</code> by rule name and field set</li>
+<li><code>deserialize</code> handles tokens, single nodes, nested nodes, list fields</li>
+</ul>
+<h2 id="module-system">Module System</h2>
+<p>CommonJS throughout. All generated files use <code>require()</code> and <code>module.exports</code>. No <code>package.json</code> is written to the output directory — Node.js resolves <code>require('./runtime/base')</code> without one.</p>
+<p>If ESM support is ever needed, it would be a separate <code>javascript-esm</code> extension, not a flag on this one.</p>
 
 
 
@@ -2449,10 +2469,10 @@ to develop and test a language incrementally.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
