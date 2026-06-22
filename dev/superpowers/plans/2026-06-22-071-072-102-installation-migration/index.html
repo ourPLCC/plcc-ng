@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-to-spec-phases-3-4-design/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-071-072-102-installation-migration/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Design: Grammar-to-Spec Rename — Phases 3 & 4 (089) - plcc-ng</title>
+        <title>Installation Page and Migration Guide Implementation Plan - plcc-ng</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#design-grammar-to-spec-rename-phases-3-4-089" class="md-skip">
+        <a href="#installation-page-and-migration-guide-implementation-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Design: Grammar-to-Spec Rename — Phases 3 &amp; 4 (089)
+              Installation Page and Migration Guide Implementation Plan
             
           </span>
         </div>
@@ -2159,151 +2159,452 @@
   
 
 
-<h1 id="design-grammar-to-spec-rename-phases-3-4-089">Design: Grammar-to-Spec Rename — Phases 3 &amp; 4 (089)</h1>
-<p><strong>Date:</strong> 2026-06-16
-<strong>Issue:</strong> <a href="../../../dev-docs/issues/089-grammar-to-spec-rename.md">089 - Rename "grammar file" to "specification file"</a>
-<strong>Prior work:</strong> Phases 1 &amp; 2 shipped in PRs #205 and #206 (CLI flags, default filename, error messages, help text).</p>
-<h2 id="goal">Goal</h2>
-<p>Complete the rename by updating documentation (Phase 3) and internal Python identifiers (Phase 4).</p>
-<h2 id="delivery">Delivery</h2>
-<p>Two PRs shipped in order:</p>
-<ol>
-<li><strong>PR A — Phase 3 (docs):</strong> text-only, trivially reviewable</li>
-<li><strong>PR B — Phase 4 (internals):</strong> module renames + symbol renames across the Python source</li>
-</ol>
-<hr />
-<h2 id="phase-3-documentation">Phase 3 — Documentation</h2>
-<h3 id="rule">Rule</h3>
-<p>If "grammar" refers to <em>the <code>.plcc</code> spec file or a CLI flag</em>, update it.
-If "grammar" refers to <em>grammar as a language concept</em> (LL(1), context-free, syntactic structure), leave it alone.</p>
-<h3 id="files-changed">Files changed</h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>What changes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>docs/cli/index.md</code></td>
-<td>"grammar file" → "spec file"; "grammar path" → "spec path"</td>
-</tr>
-<tr>
-<td><code>docs/cli/orchestrators.md</code></td>
-<td>"grammar file" → "spec file"; "grammar banner" → "spec banner"; <code>grammar.plcc</code> → <code>spec.plcc</code> in examples; <code>--grammar</code> → <code>--spec</code> in examples</td>
-</tr>
-<tr>
-<td><code>docs/cli/primitives.md</code></td>
-<td>"grammar file" → "spec file"; <code>grammar.plcc</code> → <code>spec.plcc</code> in example commands</td>
-</tr>
-<tr>
-<td><code>CONTRIBUTING.md</code></td>
-<td>One instance: "grammar file" → "spec file" in the test tier table</td>
-</tr>
-</tbody>
-</table>
-<h3 id="files-left-alone">Files left alone</h3>
+<h1 id="installation-page-and-migration-guide-implementation-plan">Installation Page and Migration Guide Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Add <code>installation.md</code> (pip install, upgrade, pin, uninstall) and <code>migration.md</code> (checklist for PLCC → PLCC-ng), rename <code>getting-started.md</code> → <code>quick-start.md</code>, and update the nav.</p>
+<p><strong>Architecture:</strong> Pure docs changes — markdown files and <code>mkdocs.yml</code>. No code changes. Each task ends with a <code>mkdocs build --strict</code> verification and a commit. Tasks are ordered so the build stays green at every step.</p>
+<p><strong>Tech Stack:</strong> MkDocs Material, Markdown, <code>mkdocs build --strict</code> for verification. Run mkdocs via <code>.venv/bin/mkdocs</code> from the repo root.</p>
+<h2 id="global-constraints">Global Constraints</h2>
 <ul>
-<li><code>docs/getting-started.md</code> — "PLCC-ng automatically generates fields from the grammar" refers to grammar-as-language-concept.</li>
-<li>Any reference to "LL(1) grammar", "context-free grammar", "grammar rule", "grammar syntax", etc.</li>
+<li>All commits are docs commits; subject line must end with <code>[skip ci]</code></li>
+<li>Commit message format: <code>docs(&lt;scope&gt;): &lt;description&gt; [skip ci]</code></li>
+<li>Work in the worktree at <code>.worktrees/issue-071-072-102-docs-upgrade-migration/</code></li>
+<li>Run <code>mkdocs build --strict</code> from inside the worktree (where <code>mkdocs.yml</code> lives)</li>
+<li><code>%include</code> directive syntax in PLCC-ng: <code>%include FILENAME</code> (with <code>%</code> prefix)</li>
+<li>Do not create or modify any files outside <code>docs/</code> and <code>mkdocs.yml</code></li>
 </ul>
-<h3 id="commit">Commit</h3>
-<pre><code>docs(089): update docs grammar-file references to spec-file [skip ci]
+<hr />
+<h3 id="task-1-rename-quick-start-and-update-all-references">Task 1: Rename Quick Start and update all references</h3>
+<p><strong>Files:</strong>
+- Rename: <code>docs/getting-started.md</code> → <code>docs/quick-start.md</code>
+- Modify: <code>mkdocs.yml</code> (update filename and nav label)
+- Modify: <code>docs/index.md</code> (update link text and target)</p>
+<p><strong>Interfaces:</strong>
+- Produces: <code>docs/quick-start.md</code> — same content as <code>getting-started.md</code>, ready for a link addition in Task 2</p>
+<ul>
+<li>[ ] <strong>Step 1: Rename the file</strong></li>
+</ul>
+<pre><code class="language-bash">git mv docs/getting-started.md docs/quick-start.md
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>mkdocs.yml</code></strong></li>
+</ul>
+<p>Find this line:</p>
+<pre><code class="language-yaml">  - Getting Started: getting-started.md
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-yaml">  - Quick Start: quick-start.md
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Update the H1 title in <code>docs/quick-start.md</code></strong></li>
+</ul>
+<p>Find:</p>
+<pre><code class="language-markdown"># Getting Started
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-markdown"># Quick Start
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>docs/index.md</code></strong></li>
+</ul>
+<p>Find this line:</p>
+<pre><code class="language-markdown">- [Getting Started](getting-started.md) — Install plcc-ng and run your first specification in under 10 minutes.
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-markdown">- [Quick Start](quick-start.md) — Install plcc-ng and run your first specification in under 10 minutes.
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 5: Verify the build</strong></li>
+</ul>
+<pre><code class="language-bash">.venv/bin/mkdocs build --strict
+</code></pre>
+<p>Expected: build succeeds with no warnings or errors. The <code>site/</code> directory is created or updated.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/quick-start.md docs/index.md mkdocs.yml
+git commit -m &quot;docs(quick-start): rename getting-started to quick-start [skip ci]&quot;
+</code></pre>
+<p>Note: <code>git mv</code> already staged the rename; <code>git add</code> picks up the modified files.</p>
+<hr />
+<h3 id="task-2-create-installationmd-and-wire-it-into-the-nav">Task 2: Create <code>installation.md</code> and wire it into the nav</h3>
+<p><strong>Files:</strong>
+- Create: <code>docs/installation.md</code>
+- Modify: <code>mkdocs.yml</code> (add nav entry)
+- Modify: <code>docs/quick-start.md</code> (add link to installation.md)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>docs/quick-start.md</code> from Task 1
+- Produces: <code>docs/installation.md</code> — covers pip install, upgrade, pinning, uninstall</p>
+<ul>
+<li>[ ] <strong>Step 1: Create <code>docs/installation.md</code></strong></li>
+</ul>
+<p>Create the file with this exact content:</p>
+<pre><code class="language-markdown"># Installation
+
+This page covers installing plcc-ng via pip.
+Additional installation methods will be documented here as they become available.
+
+## Requirements
+
+- Python 3.12 or later
+- Java JDK 21 or later (only needed if implementing semantics in Java)
+
+## Install
+
+```bash
+pip install plcc-ng
+</code></pre>
+<p>Verify the installation:</p>
+<pre><code class="language-bash">plcc-version
+</code></pre>
+<h2 id="upgrade">Upgrade</h2>
+<pre><code class="language-bash">pip install --upgrade plcc-ng
+</code></pre>
+<p>Verify the new version:</p>
+<pre><code class="language-bash">plcc-version
+</code></pre>
+<p>Check the <a href="changelog.md">Changelog</a> for breaking changes between versions before upgrading.</p>
+<h2 id="pin-a-specific-version">Pin a Specific Version</h2>
+<p>To install a specific version:</p>
+<pre><code class="language-bash">pip install plcc-ng==X.Y.Z
+</code></pre>
+<p>To pin in <code>requirements.txt</code>:</p>
+<pre><code>plcc-ng==X.Y.Z
+</code></pre>
+<p>To pin in <code>pyproject.toml</code>:</p>
+<pre><code class="language-toml">[project]
+dependencies = [
+    &quot;plcc-ng==X.Y.Z&quot;,
+]
+</code></pre>
+<p>Check which version is currently installed:</p>
+<pre><code class="language-bash">plcc-version
+</code></pre>
+<h2 id="uninstall">Uninstall</h2>
+<pre><code class="language-bash">pip uninstall plcc-ng
+</code></pre>
+<pre><code>
+- [ ] **Step 2: Add nav entry to `mkdocs.yml`**
+
+Find:
+```yaml
+  - Quick Start: quick-start.md
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-yaml">  - Quick Start: quick-start.md
+  - Installation: installation.md
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Add link in <code>docs/quick-start.md</code></strong></li>
+</ul>
+<p>In <code>docs/quick-start.md</code>, find the install block. It looks like:</p>
+<pre><code class="language-markdown">## Install
+
+```bash
+pip install plcc-ng
+</code></pre>
+<pre><code>
+Add a line immediately after the closing code fence:
+
+```markdown
+For upgrade, version pinning, and uninstall instructions, see [Installation](installation.md).
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Verify the build</strong></li>
+</ul>
+<pre><code class="language-bash">.venv/bin/mkdocs build --strict
+</code></pre>
+<p>Expected: build succeeds with no warnings or errors.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/installation.md docs/quick-start.md mkdocs.yml
+git commit -m &quot;docs(installation): add installation page with upgrade, pinning, and uninstall [skip ci]&quot;
 </code></pre>
 <hr />
-<h2 id="phase-4-internal-identifiers">Phase 4 — Internal Identifiers</h2>
-<h3 id="module-renames">Module renames</h3>
-<table>
-<thead>
-<tr>
-<th>Old path</th>
-<th>New path</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>src/plcc/build/grammar.py</code></td>
-<td><code>src/plcc/build/spec.py</code></td>
-</tr>
-<tr>
-<td><code>src/plcc/build/grammar_test.py</code></td>
-<td><code>src/plcc/build/spec_test.py</code></td>
-</tr>
-<tr>
-<td><code>src/plcc/cmd/grammar.py</code></td>
-<td><code>src/plcc/cmd/spec.py</code></td>
-</tr>
-<tr>
-<td><code>src/plcc/cmd/grammar_test.py</code></td>
-<td><code>src/plcc/cmd/spec_test.py</code></td>
-</tr>
-</tbody>
-</table>
-<p><code>src/plcc/spec/syntax/validations/ll1/build_spec_grammar.py</code> is about the LL(1) grammar data structure — unchanged.</p>
-<h3 id="symbol-renames">Symbol renames</h3>
-<p>Applied in the renamed modules and all import sites (<code>make.py</code>, <code>scan.py</code>, <code>parse.py</code>, <code>rep.py</code>, <code>diagram.py</code>, and their test files):</p>
-<table>
-<thead>
-<tr>
-<th>Old</th>
-<th>New</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>_GRAMMAR_FILE = ".grammar"</code></td>
-<td><code>_SPEC_FILE = ".spec"</code></td>
-</tr>
-<tr>
-<td><code>DEFAULT_GRAMMAR_FILE</code></td>
-<td><code>DEFAULT_SPEC_FILE</code></td>
-</tr>
-<tr>
-<td><code>read_grammar</code></td>
-<td><code>read_spec</code></td>
-</tr>
-<tr>
-<td><code>write_grammar</code></td>
-<td><code>write_spec</code></td>
-</tr>
-<tr>
-<td><code>resolve_grammar_path</code></td>
-<td><code>resolve_spec_path</code></td>
-</tr>
-<tr>
-<td><code>GRAMMAR_OPTION</code></td>
-<td><code>SPEC_OPTION</code></td>
-</tr>
-<tr>
-<td><code>validate_grammar_flag</code></td>
-<td><code>validate_spec_flag</code></td>
-</tr>
-<tr>
-<td><code>grammar_flag_for_child</code></td>
-<td><code>spec_flag_for_child</code></td>
-</tr>
-<tr>
-<td><code>explicit_grammar</code>, <code>stored_grammar</code>, <code>grammar</code> (locals in <code>make.py</code>)</td>
-<td><code>explicit_spec</code>, <code>stored_spec</code>, <code>spec</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="test-function-renames">Test function renames</h3>
-<p>Test function names in the renamed test files are updated to match new symbol names (e.g. <code>test_grammar_option_contains_flag</code> → <code>test_spec_option_contains_flag</code>). Test behavior is unchanged.</p>
-<h3 id="backward-compatibility">Backward compatibility</h3>
-<p>None required. The project is experimental. Existing build directories with a <code>.grammar</code> file will lose their remembered spec path — acceptable.</p>
-<h3 id="approach">Approach</h3>
-<p>TDD pass per module:
-1. Rename file, update test names and assertions to use new symbols — confirm red
-2. Implement renames in the module — confirm green
-3. Update all import sites</p>
-<h3 id="commits-one-per-logical-group">Commits (one per logical group)</h3>
-<pre><code>refactor(089): rename build/grammar → build/spec, .grammar → .spec
-refactor(089): rename cmd/grammar → cmd/spec and update all import sites
+<h3 id="task-3-create-migrationmd-and-wire-it-into-the-nav">Task 3: Create <code>migration.md</code> and wire it into the nav</h3>
+<p><strong>Files:</strong>
+- Create: <code>docs/migration.md</code>
+- Modify: <code>mkdocs.yml</code> (add nav entry)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: nothing from earlier tasks
+- Produces: <code>docs/migration.md</code> — full migration checklist</p>
+<p><strong>Scan algorithm behavior (verified from <code>src/plcc/scan/matcher_test.py</code>):</strong>
+- PLCC: skip rules take priority over <em>all</em> token rules when they match <em>any</em> input, regardless of match length
+- PLCC-ng: pure first-longest-match — skip and token rules compete equally; ties broken by declaration order
+- Example: with <code>skip ONE '1'</code> and <code>token NUMBER '\d+'</code>, input <code>123</code> → PLCC emits nothing (skip wins on any match), PLCC-ng emits <code>NUMBER '123'</code> (longer match wins)
+- Example: with <code>skip ONETWOTHREE '123'</code> declared before <code>token NUMBER '\d+'</code>, input <code>123</code> → both match 3 chars, PLCC-ng emits skip (declaration order breaks tie)</p>
+<ul>
+<li>[ ] <strong>Step 1: Create <code>docs/migration.md</code></strong></li>
+</ul>
+<p>Create the file with this exact content:</p>
+<pre><code class="language-markdown"># Migration from PLCC to PLCC-ng
+
+PLCC-ng is a modern, pip-installable rewrite of [PLCC](https://github.com/ourPLCC/plcc).
+It adds Python semantics support, a cleaner CLI, and a more extensible architecture.
+It is not backward compatible — spec files and command invocations both require updates.
+
+## Migration checklist
+
+### 1. Install PLCC-ng
+
+Replace the PLCC shell script, Docker, or DevContainer install with:
+
+```bash
+pip install plcc-ng
 </code></pre>
-<h3 id="verification">Verification</h3>
-<p>Run <code>bin/test/functional.bash</code> after all changes to catch any bats tests that reference old symbol names or the <code>.grammar</code> filename.</p>
+<p>See <a href="installation.md">Installation</a> for upgrade, pinning, and uninstall instructions.</p>
+<h3 id="2-rename-your-grammar-file">2. Rename your grammar file</h3>
+<p>PLCC's default grammar file is named <code>grammar</code>. PLCC-ng's default is <code>spec.plcc</code>.</p>
+<pre><code>grammar  →  spec.plcc
+</code></pre>
+<h3 id="3-update-regex-patterns-in-the-lexical-section">3. Update regex patterns in the lexical section</h3>
+<p>PLCC uses Java regex (<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/regex/Pattern.html"><code>java.util.regex.Pattern</code></a>).
+PLCC-ng uses Python regex (<a href="https://docs.python.org/3/library/re.html"><code>re</code></a>).</p>
+<p>Most common patterns are identical. The following Java-specific syntax must be rewritten:</p>
+<table>
+<thead>
+<tr>
+<th>Java pattern</th>
+<th>Python equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\p{Alpha}</code></td>
+<td><code>[a-zA-Z]</code></td>
+</tr>
+<tr>
+<td><code>(?&lt;name&gt;...)</code> named group</td>
+<td><code>(?P&lt;name&gt;...)</code></td>
+</tr>
+<tr>
+<td><code>\p{Digit}</code></td>
+<td><code>\d</code></td>
+</tr>
+</tbody>
+</table>
+<p>Test your patterns with a Python regex tool (e.g. <a href="https://regex101.com/">regex101.com</a> set to Python flavor).</p>
+<h3 id="4-check-scan-algorithm-behavior">4. Check scan algorithm behavior</h3>
+<p>PLCC gives skip rules priority over all token rules whenever they match <em>any</em> input,
+regardless of match length. PLCC-ng uses pure first-longest-match — skip and token rules
+compete equally, with ties broken by declaration order.</p>
+<p>If any of your skip rules are shorter than competing token rules, the behavior changes:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>PLCC</th>
+<th>PLCC-ng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>123</code> with <code>skip ONE '1'</code> before <code>token NUMBER '\d+'</code></td>
+<td>skip wins (nothing emitted)</td>
+<td><code>NUMBER '123'</code> (longer match wins)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fix:</strong> If you relied on skip-first behavior, rewrite the skip pattern to match as many characters as the token it was shadowing. For most grammars (whitespace skips vs. identifier/number tokens), the longest match already produces the same result and no change is needed.</p>
+<h3 id="5-update-nonterminal-names-to-pascalcase">5. Update nonterminal names to PascalCase</h3>
+<p>PLCC nonterminals are lowercase; PLCC-ng uses PascalCase.</p>
+<table>
+<thead>
+<tr>
+<th>PLCC</th>
+<th>PLCC-ng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;prog&gt;</code></td>
+<td><code>&lt;Program&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;exp&gt;</code></td>
+<td><code>&lt;Expr&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>Update every nonterminal on both the left-hand side and right-hand side of every rule.</p>
+<h3 id="6-update-alternativesubclass-syntax">6. Update alternative/subclass syntax</h3>
+<p>PLCC places the distinguishing name as a suffix after the closing bracket.
+PLCC-ng places it after a colon inside the brackets.</p>
+<table>
+<thead>
+<tr>
+<th>PLCC</th>
+<th>PLCC-ng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;exp&gt;WholeExp ::= ...</code></td>
+<td><code>&lt;Expr:WholeExp&gt; ::= ...</code></td>
+</tr>
+<tr>
+<td><code>&lt;exp&gt;SubExp ::= ...</code></td>
+<td><code>&lt;Expr:SubExp&gt; ::= ...</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="7-update-captured-field-syntax">7. Update captured field syntax</h3>
+<p>PLCC places a field name as a suffix after the closing bracket.
+PLCC-ng places it after a colon inside the brackets.</p>
+<table>
+<thead>
+<tr>
+<th>PLCC</th>
+<th>PLCC-ng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;exp&gt;exp1</code> (field named <code>exp1</code>)</td>
+<td><code>&lt;Expr:exp1&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;exp&gt;exp2</code> (field named <code>exp2</code>)</td>
+<td><code>&lt;Expr:exp2&gt;</code></td>
+</tr>
+<tr>
+<td><code>&lt;WHOLE&gt;</code> (auto-named field <code>whole</code>)</td>
+<td><code>&lt;WHOLE&gt;</code> (same — auto-naming unchanged)</td>
+</tr>
+<tr>
+<td><code>&lt;WHOLE&gt;</code> with explicit name</td>
+<td><code>&lt;WHOLE:whole&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="8-add-semantic-section-language-header">8. Add semantic section language header</h3>
+<p>PLCC only supports Java semantics and has no language header.
+PLCC-ng requires the first non-blank line of the semantic section to declare the language.</p>
+<p>Before (PLCC):</p>
+<pre><code>%
+Prog
+%%%
+  public void $run() { ... }
+%%%
+</code></pre>
+<p>After (PLCC-ng):</p>
+<pre><code>%
+Java
+
+Prog
+%%%
+  public void _run() { ... }
+%%%
+</code></pre>
+<p>The supported values are <code>Java</code> and <code>Python</code>.</p>
+<h3 id="9-rename-the-entry-point-method">9. Rename the entry point method</h3>
+<p>The method the start symbol's class uses as its execution entry point was renamed.</p>
+<table>
+<thead>
+<tr>
+<th>PLCC</th>
+<th>PLCC-ng</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$run()</code></td>
+<td><code>_run()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Update this in the semantic section of your spec file.</p>
+<h3 id="10-check-include-paths">10. Check <code>%include</code> paths</h3>
+<p>Both PLCC and PLCC-ng support <code>%include FILENAME</code>. The syntax is unchanged.
+If your include paths were relative to a file named <code>grammar</code>, they will work
+unchanged — paths are resolved relative to the file that contains the <code>%include</code> directive.</p>
+<h3 id="11-replace-commands">11. Replace commands</h3>
+<table>
+<thead>
+<tr>
+<th>PLCC</th>
+<th>PLCC-ng</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>plcc.py --version</code></td>
+<td><code>plcc-version</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>plccmk [-c] [file]</code></td>
+<td><em>(not needed)</em></td>
+<td>Top-level commands generate and compile automatically</td>
+</tr>
+<tr>
+<td><code>scan [file...]</code></td>
+<td><code>plcc-scan [file...]</code></td>
+<td>Token output format changed (see below)</td>
+</tr>
+<tr>
+<td><code>parse [-t] [-n] [file...]</code></td>
+<td><code>plcc-parse [file...]</code></td>
+<td>Always shows parse tree; no <code>-t</code> flag needed</td>
+</tr>
+<tr>
+<td><code>rep [-t] [-n] [file...]</code></td>
+<td><code>plcc-rep [file...]</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>parse --json_ast</code></td>
+<td><code>plcc-tokens \| plcc-trees</code></td>
+<td>See below</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Token output format change:</strong></p>
+<p>PLCC format:</p>
+<pre><code>   1: WHOLE '3'
+</code></pre>
+<p>PLCC-ng format (<code>file:line:column</code>):</p>
+<pre><code>-:1:1 NUM '42'
+</code></pre>
+<p><strong>JSON parse trees:</strong></p>
+<p>PLCC's <code>--json_ast</code> flag (passed to <code>plccmk</code> and <code>parse</code>) is not available in PLCC-ng.
+To obtain a JSON parse tree, use the lower-level pipeline:</p>
+<pre><code class="language-bash">plcc-spec spec.plcc | plcc-ll1 &gt; build/ll1.json
+plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
+</code></pre>
+<p>See <a href="cli/commands/plcc-trees.md"><code>plcc-trees</code></a> for details.</p>
+<h2 id="features-not-yet-in-plcc-ng">Features not yet in PLCC-ng</h2>
+<ul>
+<li><strong>Docker installation</strong> — PLCC supported Docker via <code>plcc-con</code>. PLCC-ng is currently pip-only. Docker support is planned.</li>
+<li><strong>DevContainer</strong> — PLCC provided a ready-to-use devcontainer image. PLCC-ng does not yet provide one.</li>
+</ul>
+<pre><code>
+- [ ] **Step 2: Add nav entry to `mkdocs.yml`**
+
+Find:
+```yaml
+  - Installation: installation.md
+</code></pre>
+<p>Replace with:</p>
+<pre><code class="language-yaml">  - Installation: installation.md
+  - Migration from PLCC: migration.md
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Verify the build</strong></li>
+</ul>
+<pre><code class="language-bash">.venv/bin/mkdocs build --strict
+</code></pre>
+<p>Expected: build succeeds with no warnings or errors.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add docs/migration.md mkdocs.yml
+git commit -m &quot;docs(migration): add migration guide from PLCC to PLCC-ng [skip ci]&quot;
+</code></pre>
 
 
 
