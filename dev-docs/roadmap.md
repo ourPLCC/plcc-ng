@@ -1,16 +1,14 @@
 # Roadmap
 
-1 open issue as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
+2 open issues as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
 
-## Phase 2 — Docs: site features
-
-Framework and tooling decisions are resolved (MkDocs Material + PlantUML via Kroki).
+## Phase 1 — Docs: quick wins (independent, any order)
 
 | # | Issue | Notes |
 | --- | --- | --- |
-| [080](issues/080-docs-tabbed-code-blocks.md) | Tabbed code blocks for language variants | MkDocs Material content tabs; enable `content.tabs` feature |
+| [103](issues/103-docs-language-guide-overview-double-underscore-run.md) | Fix `__run__` → `_run` in Language Guide Overview | Both Java and Python examples affected |
 
-## Phase 3 — Feature: new language emitter
+## Phase 2 — Feature: new language emitter
 
 | # | Issue | Notes |
 | --- | --- | --- |
