@@ -81,6 +81,8 @@ plcc-python-run = "plcc.lang.ext.python.run:main"
 plcc-java-emit  = "plcc.lang.ext.java.emit:main"
 plcc-java-build = "plcc.lang.ext.java.build:main"
 plcc-java-run   = "plcc.lang.ext.java.run:main"
+plcc-javascript-emit = "plcc.lang.ext.javascript.emit:main"
+plcc-javascript-run  = "plcc.lang.ext.javascript.run:main"
 plcc-version = "plcc.version:main"
 
 [project.optional-dependencies]
