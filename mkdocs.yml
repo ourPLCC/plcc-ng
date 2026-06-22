@@ -33,6 +33,7 @@ plugins:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
+  - Installation: installation.md
   - Language Guide:
     - Overview: language-guide/index.md
     - Lexical Section: language-guide/lexical.md

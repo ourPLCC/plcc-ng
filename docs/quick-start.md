@@ -11,6 +11,8 @@
 pip install plcc-ng
 ```
 
+For upgrade, version pinning, and uninstall instructions, see [Installation](installation.md).
+
 ## Test Drive
 
 Let's build a tiny language whose programs consist of a sequence of integers.
