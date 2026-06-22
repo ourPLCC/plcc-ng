@@ -10,6 +10,8 @@ theme:
     - navigation.sections
     - toc.integrate
     - search.suggest
+    - content.tabs
+    - content.tabs.link
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -91,3 +93,7 @@ nav:
 extra:
   version:
     provider: mike
+
+markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true
