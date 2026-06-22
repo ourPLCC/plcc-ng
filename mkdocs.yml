@@ -87,6 +87,7 @@ nav:
     - Evaluating plcc-ng: instructor-guide/evaluating.md
     - Adopting plcc-ng: instructor-guide/adopting.md
   - Changelog: changelog.md
+  - Acknowledgments: acknowledgments.md
 
 extra:
   version:
