@@ -62,7 +62,9 @@ body
 
 ## Fragment Kinds
 
-Matches Python's set minus `class`. Python's `class` fragments add comma-separated base classes (Python supports multiple inheritance); JavaScript `extends` takes exactly one class, so there is no equivalent.
+Matches Python's set minus `class`. The original PLCC's `class` hook served two purposes: in Java it injected content into the class declaration line to add `implements` clauses; in Python it added comma-separated base classes for multiple inheritance. JavaScript has neither interfaces nor multiple inheritance, so there is no equivalent and `class` is intentionally omitted.
+
+Note: plcc-ng's Java emitter is currently missing `class` fragment support from the original PLCC. That gap is tracked separately (see issue 067).
 
 | Kind     | Placement in generated file                                   |
 |----------|---------------------------------------------------------------|
