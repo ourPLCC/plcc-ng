@@ -56,14 +56,6 @@ def eval(self):
 %%%
 ```
 
-### Build
-
-```bash
-plcc-make -s subtract.plcc
-```
-
-Exits silently on success.
-
 ### Scanner
 
 ```bash
