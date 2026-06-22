@@ -1,13 +1,6 @@
 # Roadmap
 
-4 open issues as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
-
-## Phase 1 — Docs: quick wins (independent, any order)
-
-| # | Issue | Notes |
-| --- | --- | --- |
-| [081](issues/081-docs-remove-plcc-make-from-examples.md) | Remove `plcc-make` from examples | `examples.md` still tells users to run it directly |
-| [101](issues/101-docs-acknowledgments-page.md) | Acknowledgments page | Credit contributors, institutions, and key dependencies |
+2 open issues as of 2026-06-22. Grouped by theme; within a theme the order reflects dependencies.
 
 ## Phase 2 — Docs: site features
 
