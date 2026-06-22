@@ -158,6 +158,7 @@ PLCC's `--json_ast` flag (passed to `plccmk` and `parse`) is not available in PL
 To obtain a JSON parse tree, use the lower-level pipeline:
 
 ```bash
+plcc-spec spec.plcc > build/spec.json
 plcc-spec spec.plcc | plcc-ll1 > build/ll1.json
 plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
 ```
