@@ -1,4 +1,4 @@
-# Getting Started
+# Quick Start
 
 ## Prerequisites
 
@@ -10,6 +10,8 @@
 ```bash
 pip install plcc-ng
 ```
+
+For upgrade, version pinning, and uninstall instructions, see [Installation](installation.md).
 
 ## Test Drive
 
