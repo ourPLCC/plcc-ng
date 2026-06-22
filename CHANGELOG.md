@@ -1,6 +1,237 @@
 # CHANGELOG
 
 
+## v0.47.2 (2026-06-22)
+
+### Bug Fixes
+
+- **mkdocs**: Add pymdownx.superfences to fix code blocks inside tabs
+  ([`196d0ed`](https://github.com/ourPLCC/plcc-ng/commit/196d0ed508c291662f9a49b02c35b82d07e3dc5b))
+
+Without superfences, fenced code blocks inside content tabs render as literal text with the ```
+  markers visible instead of as code blocks.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Chores
+
+- **issues**: Move 070 and 098 to done
+  ([`3b360c6`](https://github.com/ourPLCC/plcc-ng/commit/3b360c664a77518ca590de6da4b7b6724a05dc0d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Move 100 to done [skip ci]
+  ([`9471bd7`](https://github.com/ourPLCC/plcc-ng/commit/9471bd7317a3821da8d3f1c6aacc043f0454d4b0))
+
+PR #221 implemented the CLI command classification and reference pages that issue 100 designed.
+
+### Documentation
+
+- **acknowledgments**: Add acknowledgments page placeholder [skip ci]
+  ([`6934a6f`](https://github.com/ourPLCC/plcc-ng/commit/6934a6f5551f8730dcb7c5b79c9ff48deb3a9ace))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **acknowledgments**: Fill in contributors, institutions, and dependencies [skip ci]
+  ([`e2a3d40`](https://github.com/ourPLCC/plcc-ng/commit/e2a3d40575e8a61201f059162ebcfb9e11cd0bb5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Restructure directories and nav for issue 100 [skip ci]
+  ([`ab49034`](https://github.com/ourPLCC/plcc-ng/commit/ab490346ffa50fb474bde0a1379e27c09829541e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write author-facing commands guide page [skip ci]
+  ([`be44b6a`](https://github.com/ourPLCC/plcc-ng/commit/be44b6a274be3df63bc9ad742bb756f10e7ae390))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write CLI landing page [skip ci]
+  ([`29aa662`](https://github.com/ourPLCC/plcc-ng/commit/29aa66243014273295898ace8593198c0548eb84))
+
+- **cli**: Write core pipeline reference pages [skip ci]
+  ([`70599df`](https://github.com/ourPLCC/plcc-ng/commit/70599df1d93ed6ec2c50cd58c3a8249623497de4))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write diagram extension reference pages [skip ci]
+  ([`bd4ea8b`](https://github.com/ourPLCC/plcc-ng/commit/bd4ea8b7a298276a02a3669588d10dd6480af014))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write discovery and utility reference pages [skip ci]
+  ([`d8ec4c6`](https://github.com/ourPLCC/plcc-ng/commit/d8ec4c6570960ac0551633cda8908343e7e91b0b))
+
+- **cli**: Write extension guide pages [skip ci]
+  ([`58a3345`](https://github.com/ourPLCC/plcc-ng/commit/58a33459b25e3258068c9622a4b61d9fabbd4cd3))
+
+- **cli**: Write lang dispatch reference pages [skip ci]
+  ([`284d199`](https://github.com/ourPLCC/plcc-ng/commit/284d1992657559faf6eb957838df3cdc01fb464a))
+
+- **cli**: Write language extension reference pages [skip ci]
+  ([`f30d839`](https://github.com/ourPLCC/plcc-ng/commit/f30d839a0b7e2f9ca7e2bbe61ec9bc9589f7c7ef))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write plcc-diagram package reference pages [skip ci]
+  ([`bcf78f0`](https://github.com/ourPLCC/plcc-ng/commit/bcf78f02fde2bc1149cb9397ce355f40d3ba9638))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write plcc-make reference page [skip ci]
+  ([`1e071de`](https://github.com/ourPLCC/plcc-ng/commit/1e071dee572d4a238cfda32af808d641058a7760))
+
+- **cli**: Write plcc-parser-table reference page [skip ci]
+  ([`4893159`](https://github.com/ourPLCC/plcc-ng/commit/489315995892c10128985812fa048b2de1b92bbc))
+
+- **cli**: Write plcc-scan, plcc-parse, plcc-rep reference pages [skip ci]
+  ([`928ff4a`](https://github.com/ourPLCC/plcc-ng/commit/928ff4a5502a04feaa166cee811496d25a7b5c3b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **cli**: Write under-the-hood guide page [skip ci]
+  ([`d7a1780`](https://github.com/ourPLCC/plcc-ng/commit/d7a1780c45e1888214479a3986dd93cf5d5b3a51))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **examples**: Remove explicit plcc-make build step [skip ci]
+  ([`3c2f6d0`](https://github.com/ourPLCC/plcc-ng/commit/3c2f6d0203dc430ea2d5abf21cd642860fab955a))
+
+- **installation**: Add installation page with upgrade, pinning, and uninstall [skip ci]
+  ([`443182c`](https://github.com/ourPLCC/plcc-ng/commit/443182c260c77c9818c0351bfe124cad6c95e72e))
+
+- **issues**: Add 101 acknowledgments page [skip ci]
+  ([`1a43ac5`](https://github.com/ourPLCC/plcc-ng/commit/1a43ac5b497b3bf28314da6febb231800567a52c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add 102 migration guide from PLCC to PLCC-ng [skip ci]
+  ([`e83118b`](https://github.com/ourPLCC/plcc-ng/commit/e83118bf90ff8aa7241161ef2c8c4f21b40f8324))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add roadmap for 14 open issues [skip ci]
+  ([`5a73a19`](https://github.com/ourPLCC/plcc-ng/commit/5a73a19cc9fbf780bd0d69026d1e8dfda50f053a))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Integrate 101 and 102 into roadmap [skip ci]
+  ([`07341b0`](https://github.com/ourPLCC/plcc-ng/commit/07341b0f8af285b0bbd1ef48ed42fb4b1e4ea5f6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Resolve phase 1 decisions and close already-done issues
+  ([`156e8ab`](https://github.com/ourPLCC/plcc-ng/commit/156e8abaa57144110bff648cd4a7c146255fb32b))
+
+- #100: record CLI command classification decision and doc structure - #083: close (absorbed by
+  #100) - #079: close (keep PlantUML via Kroki; Mermaid easy to add later if needed) - #074: close
+  (plcc-make already removed from quickstart; output already verified) - #076: close (home page has
+  no install redundancy) - #077: close (licensing already on home page) - #073: close (Java JDK
+  already in prerequisites) - #078: close (CC BY-SA 4.0 already stated on home page) - #099: close
+  (repo_url already configured in mkdocs.yml)
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **language-guide**: Add Java tab to overview grammar example
+  ([`a785e9a`](https://github.com/ourPLCC/plcc-ng/commit/a785e9adb168ca816631aea687bf5d5bfa99e61e))
+
+- **language-guide**: Add Java tab to subtract.plcc example
+  ([`7645e07`](https://github.com/ourPLCC/plcc-ng/commit/7645e07f6bf6e923caf1722d16b6f60af5a4dd3a))
+
+- **language-guide**: Add Java tabs to semantic section examples
+  ([`f748d59`](https://github.com/ourPLCC/plcc-ng/commit/f748d59243f79143e3859df8a3443c325c71dba5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **migration**: Add migration guide from PLCC to PLCC-ng [skip ci]
+  ([`63fe25e`](https://github.com/ourPLCC/plcc-ng/commit/63fe25ec9ab623553aba396e4d692d72a280ea4f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **migration**: Fix missing first step in JSON parse tree pipeline [skip ci]
+  ([`52a2d52`](https://github.com/ourPLCC/plcc-ng/commit/52a2d5201e77f37c80a91e0d76692b0ebd1f7cc0))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **mkdocs**: Enable content tabs feature and pymdownx.tabbed extension
+  ([`a1d6812`](https://github.com/ourPLCC/plcc-ng/commit/a1d6812017d0624fc7709c48449daefe1579bc85))
+
+- **plan**: Add implementation plan for issue 081 [skip ci]
+  ([`8fca8c6`](https://github.com/ourPLCC/plcc-ng/commit/8fca8c61fdf38664ff1bd863dfa693ae55698960))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plan**: Add implementation plan for issue 101 acknowledgments page [skip ci]
+  ([`c1a8538`](https://github.com/ourPLCC/plcc-ng/commit/c1a85380026087cc5ac19bba264c848da80ae57b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Add implementation plan for installation page and migration guide [skip ci]
+  ([`2e59e9e`](https://github.com/ourPLCC/plcc-ng/commit/2e59e9e8f2d6362994da0b778725320b360906c9))
+
+Covers issues 071, 072, and 102.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **quick-start**: Add Java tab to semantic section example
+  ([`7d374d1`](https://github.com/ourPLCC/plcc-ng/commit/7d374d144a93d53e6c253b76d5c45bb7f4bc19a4))
+
+- **quick-start**: Rename getting-started to quick-start [skip ci]
+  ([`5592e69`](https://github.com/ourPLCC/plcc-ng/commit/5592e696a33bab4d628155eeef0b82dfe17da4eb))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **roadmap**: Update to reflect 7 open issues after #100 done [skip ci]
+  ([`ee6a751`](https://github.com/ourPLCC/plcc-ng/commit/ee6a751fc80f3dad807f7750cbced4ec14c5adbc))
+
+Phase 1 (CLI reference) is complete. Renumber remaining phases and update the issue count and date.
+
+- **roadmap**: Update to reflect current open issues [skip ci]
+  ([`9c82dfc`](https://github.com/ourPLCC/plcc-ng/commit/9c82dfcafc003f1e8606b8200266a3274ebc1757))
+
+Remove resolved issues, renumber phases, and update issue count to 8. Phase 1 structural decisions
+  are all resolved; roadmap now starts with implementing the #100 CLI classification decision.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **spec**: Add design doc for issue 081 plcc-make removal from examples [skip ci]
+  ([`a5aaf58`](https://github.com/ourPLCC/plcc-ng/commit/a5aaf582df1784d8dd5efb685aeed66e39496330))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **spec**: Add design doc for issue 101 acknowledgments page [skip ci]
+  ([`9cbb69a`](https://github.com/ourPLCC/plcc-ng/commit/9cbb69afbcf73ecd4661398052d9c9839fd664ed))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add CLI restructure design for issue 100 [skip ci]
+  ([`fc250dc`](https://github.com/ourPLCC/plcc-ng/commit/fc250dcbdb8a16eb2d2fec123aef136c0955c158))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add design for installation page and PLCC migration guide [skip ci]
+  ([`cc5bbee`](https://github.com/ourPLCC/plcc-ng/commit/cc5bbeeacabadcba1a0fa7a43f045a18112ed73d))
+
+Covers issues 071 (upgrade instructions), 072 (version pinning), and 102 (migration guide from PLCC
+  to PLCC-ng).
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add design spec for issue 080 tabbed code blocks [skip ci]
+  ([`7c16962`](https://github.com/ourPLCC/plcc-ng/commit/7c169623f1bdc31f9079bb4569cb5a228b8226ce))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add implementation plan and update spec for issue 080 tabbed code blocks [skip ci]
+  ([`ee671e7`](https://github.com/ourPLCC/plcc-ng/commit/ee671e770cc6ca153060b358a4e7a2b9903f9262))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **superpowers**: Add implementation plan for CLI doc restructure [skip ci]
+  ([`dafed24`](https://github.com/ourPLCC/plcc-ng/commit/dafed2417b49093b33aada92fc45834168d89676))
+
+
 ## v0.47.1 (2026-06-19)
 
 ### Bug Fixes
