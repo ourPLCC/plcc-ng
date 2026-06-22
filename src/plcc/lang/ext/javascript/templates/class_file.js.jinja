@@ -1,0 +1,22 @@
+{% for frag in top_fragments %}{{ frag.body }}
+{% endfor %}const { Node, Token } = require('./runtime/base');
+{% if cls.extends %}const { {{ cls.extends }} } = require('./{{ cls.extends }}');
+{% endif %}{% for frag in import_fragments %}{{ frag.body }}
+{% endfor %}
+class {{ cls.name }} extends {% if cls.extends %}{{ cls.extends }}{% else %}Node{% endif %} {
+{% if not cls.abstract %}
+
+    static _RULE_NAME = {{ cls.rule_name | tojson }};
+    static _FIELDS = [{% for field in cls.fields %}{{ field.name | tojson }}{% if not loop.last %}, {% endif %}{% endfor %}];
+
+    constructor({% for field in cls.fields %}{{ field.name }}{% if not loop.last %}, {% endif %}{% endfor %}) {
+        super();
+{% for field in cls.fields %}        this.{{ field.name }} = {{ field.name }};
+{% endfor %}{% for frag in init_fragments %}        {{ frag.body | indent(8) }}
+{% endfor %}    }
+
+{% endif %}{% for frag in body_fragments %}    {{ frag.body | indent(4) }}
+
+{% endfor %}}
+
+module.exports = { {{ cls.name }} };
