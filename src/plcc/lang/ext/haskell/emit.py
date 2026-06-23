@@ -125,7 +125,7 @@ def _write_cabal(modules, output_dir):
         'executable interpreter\n'
         '  main-is:          Main.hs\n'
         f'  other-modules:    {module_list}\n'
-        '  build-depends:    base, aeson, bytestring, containers, text\n'
+        '  build-depends:    base, aeson, bytestring, text\n'
         '  default-language: Haskell2010\n'
         '  hs-source-dirs:   .\n'
     )
