@@ -155,6 +155,7 @@ def _render_module(module_name, module_info, fragments_by_class):
     body_frags = [f for f in frags if f['kind'] == 'body']
 
     lines = []
+    lines.append('{-# LANGUAGE DuplicateRecordFields #-}')
     for f in top_frags:
         lines.append(f['body'])
     lines.append(f'module {module_name} where')

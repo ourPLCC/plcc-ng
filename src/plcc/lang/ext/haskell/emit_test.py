@@ -284,3 +284,10 @@ def test_main_hs_outputs_json_error_line(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     text = (tmp_path / 'Main.hs').read_text()
     assert '"error"' in text or 'error' in text
+
+
+def test_duplicate_record_fields_pragma_emitted(monkeypatch, tmp_path):
+    model = _minimal_model()
+    _run_emit(monkeypatch, tmp_path, model)
+    content = (tmp_path / 'Expr.hs').read_text()
+    assert '{-# LANGUAGE DuplicateRecordFields #-}' in content
