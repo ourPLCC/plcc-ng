@@ -127,6 +127,8 @@ def _render_module(module_name, module_info, fragments_by_class):
     lines.append('')
     lines.extend(_render_data(module_name, module_info))
     lines.append('')
+    lines.extend(_render_from_json(module_name, module_info))
+    lines.append('')
     for f in body_frags:
         lines.append(f['body'])
     return '\n'.join(lines) + '\n'
@@ -165,6 +167,42 @@ def _render_data(module_name, module_info):
         else:
             lines.append(f'data {module_name} = {cls["name"]}')
     lines.append('    deriving (Show, Eq)')
+    return lines
+
+
+def _render_from_json(module_name, module_info):
+    if module_info['kind'] == 'abstract':
+        rule_name = module_info['abstract']['rule_name']
+        concretes = module_info['concretes']
+    else:
+        rule_name = module_info['cls']['rule_name']
+        concretes = [module_info['cls']]
+
+    lines = [
+        f'instance FromJSON {module_name} where',
+        f'    parseJSON = withObject "{module_name}" $ \\o -> do',
+        f'        rule     <- o .: "rule"',
+        f'        rawChildren <- o .: "children"',
+        f'        let children = parseChildren rawChildren',
+        f'            fns      = sort (map fst children)',
+        f'        case (rule :: String) of',
+        f'            "{rule_name}" -> case fns of',
+    ]
+    for cls in concretes:
+        field_names = sorted(f['name'] for f in cls['fields'])
+        fns_literal = '[' + ', '.join(f'"{n}"' for n in field_names) + ']'
+        if cls['fields']:
+            first = cls['fields'][0]['name']
+            rest = cls['fields'][1:]
+            expr = f'{cls["name"]} <$> parseField children "{first}"'
+            for f in rest:
+                expr += f'\n                              <*> parseField children "{f["name"]}"'
+        else:
+            expr = f'return {cls["name"]}'
+        lines.append(f'                {fns_literal} ->')
+        lines.append(f'                    {expr}')
+    lines.append(f'                fns -> fail ("unknown variant of {rule_name}: " ++ show fns)')
+    lines.append(f'            r -> fail ("unexpected rule: " ++ r)')
     return lines
 
 

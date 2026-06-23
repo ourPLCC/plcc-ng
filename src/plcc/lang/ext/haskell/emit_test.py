@@ -122,6 +122,43 @@ def test_all_types_derive_show_and_eq(monkeypatch, tmp_path):
         assert 'deriving (Show, Eq)' in text
 
 
+def test_abstract_module_has_from_json_instance(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'instance FromJSON Expr' in text
+
+
+def test_from_json_matches_on_rule_name(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert '"expr"' in text
+
+
+def test_from_json_matches_constructor_by_sorted_field_names(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert '["num"]' in text
+    assert 'NumExpr' in text
+
+
+def test_lone_concrete_has_from_json_instance(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Prog.hs').read_text()
+    assert 'instance FromJSON Prog' in text
+
+
+def test_from_json_uses_parse_field(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'parseField' in text
+
+
+def test_from_json_parses_children_as_pairs(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'parseChildren' in text
+
+
 def test_list_field_uses_bracket_type(monkeypatch, tmp_path):
     model = {
         "start": "stmts",
