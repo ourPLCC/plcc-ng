@@ -45,9 +45,13 @@ def emit(model, output_dir):
     _write_cabal(modules, output_dir)
     _copy_token(output_dir)
     section = _find_haskell_section(model)
-    fragments_by_class = _group_fragments(section.get('fragments', []) if section else [])
+    all_frags = section.get('fragments', []) if section else []
+    fragments_by_class = _group_fragments(all_frags)
     for module_name, module_info in modules.items():
         _write_module(module_name, module_info, fragments_by_class, output_dir)
+    for frag in all_frags:
+        if frag['kind'] == 'file':
+            (output_dir / f'{frag["class_name"]}.hs').write_text(frag['body'])
 
 
 def _group_modules(classes):

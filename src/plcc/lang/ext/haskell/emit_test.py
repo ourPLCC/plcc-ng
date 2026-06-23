@@ -176,3 +176,55 @@ def test_list_field_uses_bracket_type(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, model)
     text = (tmp_path / 'Stmts.hs').read_text()
     assert 'items :: [Token]' in text
+
+
+def _model_with_fragments(fragment_list):
+    model = _minimal_model()
+    model['semantic_sections'] = [{'language': 'haskell', 'fragments': fragment_list}]
+    return model
+
+
+def test_top_fragment_appears_before_module_declaration(monkeypatch, tmp_path):
+    model = _model_with_fragments([
+        {'class_name': 'Expr', 'kind': 'top', 'body': '{-# LANGUAGE OverloadedStrings #-}'}
+    ])
+    _run_emit(monkeypatch, tmp_path, model)
+    text = (tmp_path / 'Expr.hs').read_text()
+    top_pos = text.index('{-# LANGUAGE')
+    module_pos = text.index('module Expr')
+    assert top_pos < module_pos
+
+
+def test_import_fragment_appears_after_generated_imports(monkeypatch, tmp_path):
+    model = _model_with_fragments([
+        {'class_name': 'Expr', 'kind': 'import', 'body': 'import Data.Map (Map)'}
+    ])
+    _run_emit(monkeypatch, tmp_path, model)
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'import Data.Map (Map)' in text
+    token_pos = text.index('import Token')
+    map_pos = text.index('import Data.Map (Map)')
+    assert token_pos < map_pos
+
+
+def test_body_fragment_appears_after_from_json(monkeypatch, tmp_path):
+    model = _model_with_fragments([
+        {'class_name': 'Expr', 'kind': 'body',
+         'body': '_run :: Expr -> String\n_run (NumExpr t) = lexeme t'}
+    ])
+    _run_emit(monkeypatch, tmp_path, model)
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert '_run :: Expr -> String' in text
+    from_json_pos = text.index('instance FromJSON Expr')
+    body_pos = text.index('_run :: Expr -> String')
+    assert from_json_pos < body_pos
+
+
+def test_file_fragment_replaces_entire_module(monkeypatch, tmp_path):
+    model = _model_with_fragments([
+        {'class_name': 'Expr', 'kind': 'file', 'body': '-- custom Expr module\nmodule Expr where\n'}
+    ])
+    _run_emit(monkeypatch, tmp_path, model)
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert '-- custom Expr module' in text
+    assert 'instance FromJSON Expr' not in text
