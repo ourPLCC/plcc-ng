@@ -29,7 +29,7 @@ Expr
 evalExpr :: Expr -> String
 evalExpr (Expr t r) = evalRest r (read (evalTerm t) :: Int)
 %%%
-AddRest
+ExprRest
 %%%
 evalRest :: ExprRest -> Int -> String
 evalRest (AddRest t r) acc = evalRest r (acc + read (evalTerm t) :: Int)
