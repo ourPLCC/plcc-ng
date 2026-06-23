@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v0.50.0 (2026-06-23)
+
+### Build System
+
+- Add ghci and cabal to devcontainer
+  ([`c7da922`](https://github.com/ourPLCC/plcc-ng/commit/c7da922349e43187eb5f4d4428bea2e3ba779052))
+
+### Chores
+
+- **issues**: Close 066 and 103; add 106 and 107; update roadmap [skip ci]
+  ([`d7b2adf`](https://github.com/ourPLCC/plcc-ng/commit/d7b2adf023ae677a964d393988401ffefb22873d))
+
+Move completed issues 066 (JavaScript emitter) and 103 (__run__ docs fix) to done/. Add issues 106
+  and 107 for JavaScript and Haskell language extension documentation. Update roadmap to 4 open
+  issues.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **java**: Add class fragment support to Java emitter
+  ([`34be97b`](https://github.com/ourPLCC/plcc-ng/commit/34be97bbf23ca0abd65c35d8cdaeb6b82c19bb67))
+
+Pass class_fragments to the template and render them on the class declaration line after the extends
+  clause, matching the original PLCC's /*Cls:class*/ hook behavior.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.49.0 (2026-06-23)
 
 ### Bug Fixes
