@@ -54,6 +54,38 @@ def emit(model, output_dir):
     for frag in all_frags:
         if frag['kind'] == 'file':
             (output_dir / f'{frag["class_name"]}.hs').write_text(frag['body'])
+    _write_main(start_module, modules, output_dir)
+
+
+def _write_main(start_module, modules, output_dir):
+    import_lines = '\n'.join(f'import {name}' for name in sorted(modules))
+    content = (
+        'module Main where\n'
+        '\n'
+        'import Data.Aeson (eitherDecode, encode, object, (.=))\n'
+        'import qualified Data.ByteString.Lazy.Char8 as BL\n'
+        'import System.IO (hSetBuffering, stdout, BufferMode (..))\n'
+        f'{import_lines}\n'
+        '\n'
+        'main :: IO ()\n'
+        'main = do\n'
+        '    hSetBuffering stdout LineBuffering\n'
+        '    contents <- getContents\n'
+        '    mapM_ handle (filter (not . null) (lines contents))\n'
+        '  where\n'
+        '    handle line = case eitherDecode (BL.pack line) of\n'
+        '        Left err ->\n'
+        '            BL.putStrLn $ encode $ object\n'
+        '                [ "kind" .= ("error" :: String)\n'
+        '                , "message" .= err\n'
+        '                ]\n'
+        '        Right tree ->\n'
+        '            BL.putStrLn $ encode $ object\n'
+        '                [ "kind" .= ("result" :: String)\n'
+        f'                , "value" .= _run (tree :: {start_module})\n'
+        '                ]\n'
+    )
+    (output_dir / 'Main.hs').write_text(content)
 
 
 def _group_modules(classes):

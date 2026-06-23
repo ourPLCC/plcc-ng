@@ -254,3 +254,33 @@ def test_default_run_not_added_to_non_start_modules(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     text = (tmp_path / 'Expr.hs').read_text()
     assert '_run = show' not in text
+
+
+def test_emit_writes_main_hs(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    assert (tmp_path / 'Main.hs').exists()
+
+
+def test_main_hs_imports_start_module(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Main.hs').read_text()
+    assert 'import Prog' in text
+
+
+def test_main_hs_calls_run_on_start_type(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Main.hs').read_text()
+    assert '_run' in text
+    assert 'Prog' in text
+
+
+def test_main_hs_outputs_json_result_line(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Main.hs').read_text()
+    assert '"result"' in text or 'result' in text
+
+
+def test_main_hs_outputs_json_error_line(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Main.hs').read_text()
+    assert '"error"' in text or 'error' in text
