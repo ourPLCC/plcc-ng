@@ -33,7 +33,7 @@ def _minimal_model():
                 "name": "NumExpr",
                 "extends": "Expr",
                 "abstract": False,
-                "rule_name": "expr",
+                "rule_name": "NumExpr",
                 "fields": [{"name": "num", "type": "Token", "is_list": False}],
             },
         ],
@@ -131,7 +131,7 @@ def test_abstract_module_has_from_json_instance(monkeypatch, tmp_path):
 def test_from_json_matches_on_rule_name(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     text = (tmp_path / 'Expr.hs').read_text()
-    assert '"expr"' in text
+    assert '"NumExpr"' in text
 
 
 def test_from_json_matches_constructor_by_sorted_field_names(monkeypatch, tmp_path):

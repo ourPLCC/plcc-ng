@@ -160,9 +160,7 @@ def _render_module(module_name, module_info, fragments_by_class):
     lines.append(f'module {module_name} where')
     lines.append('')
     lines.append('import Data.Aeson (FromJSON (..), Value (..), withObject, (.:))')
-    lines.append('import Data.Aeson.Types (Parser)')
     lines.append('import Data.List (sort)')
-    lines.append('import Data.Text (unpack)')
     lines.append('import Token')
     for imp in _collect_imports(module_name, module_info):
         lines.append(f'import {imp}')
@@ -216,36 +214,39 @@ def _render_data(module_name, module_info):
 
 def _render_from_json(module_name, module_info):
     if module_info['kind'] == 'abstract':
-        rule_name = module_info['abstract']['rule_name']
         concretes = module_info['concretes']
     else:
-        rule_name = module_info['cls']['rule_name']
         concretes = [module_info['cls']]
 
     lines = [
         f'instance FromJSON {module_name} where',
         f'    parseJSON = withObject "{module_name}" $ \\o -> do',
-        f'        rule     <- o .: "rule"',
+        f'        rule        <- o .: "rule"',
         f'        rawChildren <- o .: "children"',
         f'        let children = parseChildren rawChildren',
         f'            fns      = sort (map fst children)',
         f'        case (rule :: String) of',
-        f'            "{rule_name}" -> case fns of',
     ]
+    # Group by rule_name so same-named alts share an outer case arm
+    seen = {}
     for cls in concretes:
-        field_names = sorted(f['name'] for f in cls['fields'])
-        fns_literal = '[' + ', '.join(f'"{n}"' for n in field_names) + ']'
-        if cls['fields']:
-            first = cls['fields'][0]['name']
-            rest = cls['fields'][1:]
-            expr = f'{cls["name"]} <$> parseField children "{first}"'
-            for f in rest:
-                expr += f'\n                              <*> parseField children "{f["name"]}"'
-        else:
-            expr = f'return {cls["name"]}'
-        lines.append(f'                {fns_literal} ->')
-        lines.append(f'                    {expr}')
-    lines.append(f'                fns -> fail ("unknown variant of {rule_name}: " ++ show fns)')
+        seen.setdefault(cls['rule_name'], []).append(cls)
+    for rule_name, group in seen.items():
+        lines.append(f'            "{rule_name}" -> case fns of')
+        for cls in group:
+            field_names = sorted(f['name'] for f in cls['fields'])
+            fns_literal = '[' + ', '.join(f'"{n}"' for n in field_names) + ']'
+            if cls['fields']:
+                first = cls['fields'][0]['name']
+                rest = cls['fields'][1:]
+                expr = f'{cls["name"]} <$> parseField children "{first}"'
+                for f in rest:
+                    expr += f'\n                              <*> parseField children "{f["name"]}"'
+            else:
+                expr = f'return {cls["name"]}'
+            lines.append(f'                {fns_literal} ->')
+            lines.append(f'                    {expr}')
+        lines.append(f'                fns -> fail ("unknown variant of {rule_name}: " ++ show fns)')
     lines.append(f'            r -> fail ("unexpected rule: " ++ r)')
     return lines
 
