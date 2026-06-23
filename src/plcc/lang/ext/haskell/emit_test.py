@@ -228,3 +228,29 @@ def test_file_fragment_replaces_entire_module(monkeypatch, tmp_path):
     text = (tmp_path / 'Expr.hs').read_text()
     assert '-- custom Expr module' in text
     assert 'instance FromJSON Expr' not in text
+
+
+def test_default_run_generated_when_start_has_no_body_fragment(monkeypatch, tmp_path):
+    # _minimal_model() start is 'prog' → start module is 'Prog'
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Prog.hs').read_text()
+    assert '_run :: Prog -> String' in text
+    assert '_run = show' in text
+
+
+def test_default_run_not_generated_when_user_provides_it(monkeypatch, tmp_path):
+    model = _model_with_fragments([
+        {'class_name': 'Prog', 'kind': 'body',
+         'body': '_run :: Prog -> String\n_run (Prog e) = show e'}
+    ])
+    _run_emit(monkeypatch, tmp_path, model)
+    text = (tmp_path / 'Prog.hs').read_text()
+    # User's _run is present; default '_run = show' must not be added
+    assert text.count('_run') >= 1
+    assert '_run = show' not in text
+
+
+def test_default_run_not_added_to_non_start_modules(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert '_run = show' not in text

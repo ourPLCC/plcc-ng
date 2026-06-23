@@ -47,8 +47,10 @@ def emit(model, output_dir):
     section = _find_haskell_section(model)
     all_frags = section.get('fragments', []) if section else []
     fragments_by_class = _group_fragments(all_frags)
+    start_module = model['start'][0].upper() + model['start'][1:]
     for module_name, module_info in modules.items():
-        _write_module(module_name, module_info, fragments_by_class, output_dir)
+        is_start = (module_name == start_module)
+        _write_module(module_name, module_info, fragments_by_class, output_dir, is_start)
     for frag in all_frags:
         if frag['kind'] == 'file':
             (output_dir / f'{frag["class_name"]}.hs').write_text(frag['body'])
@@ -103,8 +105,14 @@ def _copy_token(output_dir):
     shutil.copy(src, output_dir / 'Token.hs')
 
 
-def _write_module(module_name, module_info, fragments_by_class, output_dir):
+def _write_module(module_name, module_info, fragments_by_class, output_dir, is_start=False):
+    frags = fragments_by_class.get(module_name, [])
     content = _render_module(module_name, module_info, fragments_by_class)
+    if is_start:
+        body_frags = [f for f in frags if f['kind'] == 'body']
+        user_has_run = any('_run' in f['body'] for f in body_frags)
+        if not user_has_run:
+            content = content.rstrip('\n') + f'\n\n_run :: {module_name} -> String\n_run = show\n'
     (output_dir / f'{module_name}.hs').write_text(content)
 
 
