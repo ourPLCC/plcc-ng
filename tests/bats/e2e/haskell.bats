@@ -4,6 +4,7 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     if ! command -v cabal &>/dev/null; then skip "cabal not available"; fi
+    cabal update
     SPEC_DIR=$(mktemp -d)
     OUT_DIR=$(mktemp -d)
     cat > "$SPEC_DIR/arith.plcc" << 'EOF'
