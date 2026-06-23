@@ -231,6 +231,30 @@ def test_verbose_flag_accepted(tmp_path, monkeypatch):
     run_main([f'--output={tmp_path}', '-v'])
 
 
+def test_class_fragment_appears_on_class_declaration_line(tmp_path, monkeypatch):
+    model = _trivial_model()
+    model['semantic_sections'][0]['fragments'].append(
+        {"class_name": "Program", "kind": "class", "body": "implements Runnable"}
+    )
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    program_java = (tmp_path / 'Program.java').read_text()
+    class_decl_line = next(l for l in program_java.splitlines() if 'class Program' in l)
+    assert 'implements Runnable' in class_decl_line
+
+
+def test_class_fragment_appears_on_abstract_class_declaration_line(tmp_path, monkeypatch):
+    model = _trivial_model()
+    model['semantic_sections'][0]['fragments'].append(
+        {"class_name": "Expr", "kind": "class", "body": "implements Cloneable"}
+    )
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    expr_java = (tmp_path / 'Expr.java').read_text()
+    class_decl_line = next(l for l in expr_java.splitlines() if 'class Expr' in l)
+    assert 'implements Cloneable' in class_decl_line
+
+
 def test_body_fragment_pasted_into_class_when_language_is_lowercase(tmp_path, monkeypatch):
     model = _trivial_model()
     model['semantic_sections'][0]['language'] = 'java'

@@ -72,6 +72,7 @@ def main(argv=None):
         content = class_template.render(
             cls=cls,
             import_fragments=[f for f in frags if f['kind'] == 'import'],
+            class_fragments=[f for f in frags if f['kind'] == 'class'],
             init_fragments=[f for f in frags if f['kind'] == 'init'],
             body_fragments=[f for f in frags if f['kind'] == 'body'],
         )
