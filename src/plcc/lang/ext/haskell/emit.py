@@ -60,6 +60,7 @@ def emit(model, output_dir):
 def _write_main(start_module, modules, output_dir):
     import_lines = '\n'.join(f'import {name}' for name in sorted(modules))
     content = (
+        '{-# LANGUAGE OverloadedStrings #-}\n'
         'module Main where\n'
         '\n'
         'import Data.Aeson (eitherDecode, encode, object, (.=))\n'
@@ -155,7 +156,7 @@ def _render_module(module_name, module_info, fragments_by_class):
     body_frags = [f for f in frags if f['kind'] == 'body']
 
     lines = []
-    lines.append('{-# LANGUAGE DuplicateRecordFields #-}')
+    lines.append('{-# LANGUAGE DuplicateRecordFields, OverloadedStrings #-}')
     for f in top_frags:
         lines.append(f['body'])
     lines.append(f'module {module_name} where')

@@ -290,4 +290,4 @@ def test_duplicate_record_fields_pragma_emitted(monkeypatch, tmp_path):
     model = _minimal_model()
     _run_emit(monkeypatch, tmp_path, model)
     content = (tmp_path / 'Expr.hs').read_text()
-    assert '{-# LANGUAGE DuplicateRecordFields #-}' in content
+    assert '{-# LANGUAGE DuplicateRecordFields, OverloadedStrings #-}' in content

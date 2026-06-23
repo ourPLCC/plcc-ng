@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Token where
 
 import Data.Aeson (FromJSON (..), Value (..), withObject, (.:))
