@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import runtime.Token;
 
-public {% if cls.abstract %}abstract {% endif %}class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %} {
+public {% if cls.abstract %}abstract {% endif %}class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %}{% for frag in class_fragments %} {{ frag.body }}{% endfor %} {
 {% if not cls.abstract %}
 
     public static final String _RULE_NAME = {{ cls.rule_name | tojson }};
