@@ -1,6 +1,119 @@
 # CHANGELOG
 
 
+## v0.49.0 (2026-06-23)
+
+### Bug Fixes
+
+- **haskell**: Add OverloadedStrings pragma for aeson 2.x compatibility
+  ([`ab1f4a5`](https://github.com/ourPLCC/plcc-ng/commit/ab1f4a59963ced16b4ffda5bbba2685142f1d7a3))
+
+aeson 2.x requires Key not String for (.:) and (.=). OverloadedStrings makes string literals
+  polymorphic so they satisfy Key where needed.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Dispatch FromJSON on concrete rule_name; remove unused imports
+  ([`7476563`](https://github.com/ourPLCC/plcc-ng/commit/74765634949943553a4da476fae65b026d05fa34))
+
+- **haskell**: Emit DuplicateRecordFields pragma to allow shared field labels
+  ([`7d7985a`](https://github.com/ourPLCC/plcc-ng/commit/7d7985a41cb57ebad6cfcabd6d7bd5ac3c354bdf))
+
+- **haskell**: Remove unused containers dep from generated cabal file
+  ([`3b9a793`](https://github.com/ourPLCC/plcc-ng/commit/3b9a793105b3e1891da1c14e395841f568eeeb7b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Run cabal update in e2e setup for fresh environments
+  ([`7a9cd34`](https://github.com/ourPLCC/plcc-ng/commit/7a9cd340310d0229036c6aa550991fa4c0ba7cd7))
+
+cabal build fails if the Hackage package index has never been fetched. Running cabal update in
+  setup() makes the test self-contained in CI.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Use abstract class name ExprRest for evalRest fragment
+  ([`3c50e47`](https://github.com/ourPLCC/plcc-ng/commit/3c50e47dc6b20170c52ef5822344aac23bc34da3))
+
+In one-module-per-rule, body fragments must be tagged with the abstract class name (ExprRest), not a
+  concrete alternative (AddRest). There is no ExprRest.hs — everything for the rule lives in
+  ExprRest.hs.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Chores
+
+- **ci**: Trigger
+  ([`b4ea10a`](https://github.com/ourPLCC/plcc-ng/commit/b4ea10afdbe5ee6b9091c541fef2826a5982101b))
+
+### Continuous Integration
+
+- Cache cabal store in e2e job to speed up Haskell builds
+  ([`e2b591e`](https://github.com/ourPLCC/plcc-ng/commit/e2b591e1388b65cd1b3dcd24bddd137c4311c698))
+
+The first run downloads and compiles aeson's full dependency tree (~38 packages). Caching
+  ~/.cabal/packages and ~/.cabal/store keyed on emit.py (which contains the fixed dep list) makes
+  subsequent runs fast.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: #105 haskell fragment concrete class name silently ignored [skip ci]
+  ([`1152ba2`](https://github.com/ourPLCC/plcc-ng/commit/1152ba2d329f07eea7634727b4ce5ae93540808c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Add Haskell emitter implementation plan [skip ci]
+  ([`66d3f5d`](https://github.com/ourPLCC/plcc-ng/commit/66d3f5d2a3cb8642ba5d5875f9d8d8aedff3e8be))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Add Haskell emitter design spec [skip ci]
+  ([`744e090`](https://github.com/ourPLCC/plcc-ng/commit/744e0904c7d3cea89f351f8dea51c22b26571f9f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **haskell**: Add extension skeleton and entry points
+  ([`c7238c9`](https://github.com/ourPLCC/plcc-ng/commit/c7238c913c0d15973921d7cc7bd7f8ccffc9ee07))
+
+- **haskell**: Add GHC and cabal to devcontainer
+  ([`72a656c`](https://github.com/ourPLCC/plcc-ng/commit/72a656c65c89026efe78f38fe1a474af7642ae4e))
+
+- **haskell**: Add Token.hs runtime with parseField helper
+  ([`bcff83e`](https://github.com/ourPLCC/plcc-ng/commit/bcff83e64a75ca1849050e904ec63cbbaadfcfec))
+
+- **haskell**: Emit cabal file and copy Token.hs
+  ([`79bc432`](https://github.com/ourPLCC/plcc-ng/commit/79bc432ac80af0ede75c78340cc833f318274d13))
+
+- **haskell**: Emit data type declarations per rule module
+  ([`171bff4`](https://github.com/ourPLCC/plcc-ng/commit/171bff4d40b724820fbcf17bef680b0e80a137f8))
+
+- **haskell**: Emit FromJSON instances for rule modules
+  ([`5751a34`](https://github.com/ourPLCC/plcc-ng/commit/5751a3493dab6d4909dee83ed8b23adc7588929a))
+
+- **haskell**: Emit Main.hs entry point
+  ([`9daeec2`](https://github.com/ourPLCC/plcc-ng/commit/9daeec2fc6988a7c86fece300f38bec86ba4ecba))
+
+- **haskell**: Generate default _run for start rule when not provided
+  ([`5b7cfcd`](https://github.com/ourPLCC/plcc-ng/commit/5b7cfcd9f6736959705ba18bd376753d82c17922))
+
+- **haskell**: Handle top/import/body/file fragments in emitter
+  ([`99ffa0c`](https://github.com/ourPLCC/plcc-ng/commit/99ffa0c6ab7697ed93718f62f9b826c56c8b436a))
+
+### Testing
+
+- **haskell**: Add BATS command and e2e tests
+  ([`b339511`](https://github.com/ourPLCC/plcc-ng/commit/b339511448d391193a61e7031507017dcc709439))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Add unit tests for build.py and run.py
+  ([`1d493df`](https://github.com/ourPLCC/plcc-ng/commit/1d493df5b56a4f71ae34e801711f00c8ce786445))
+
+
 ## v0.48.0 (2026-06-22)
 
 ### Chores
