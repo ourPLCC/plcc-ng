@@ -73,3 +73,69 @@ def test_token_hs_contains_token_module(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     text = (tmp_path / 'Token.hs').read_text()
     assert 'module Token' in text
+
+
+def test_emit_writes_module_for_abstract_rule(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    assert (tmp_path / 'Expr.hs').exists()
+
+
+def test_abstract_module_contains_data_declaration(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'data Expr' in text
+
+
+def test_abstract_module_contains_concrete_constructor(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'NumExpr' in text
+
+
+def test_concrete_constructor_has_token_field(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'num :: Token' in text
+
+
+def test_emit_writes_module_for_lone_concrete(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    assert (tmp_path / 'Prog.hs').exists()
+
+
+def test_lone_concrete_module_contains_data_declaration(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Prog.hs').read_text()
+    assert 'data Prog' in text
+
+
+def test_lone_concrete_field_uses_class_type(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Prog.hs').read_text()
+    assert 'expr :: Expr' in text
+
+
+def test_all_types_derive_show_and_eq(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    for path in [tmp_path / 'Expr.hs', tmp_path / 'Prog.hs']:
+        text = path.read_text()
+        assert 'deriving (Show, Eq)' in text
+
+
+def test_list_field_uses_bracket_type(monkeypatch, tmp_path):
+    model = {
+        "start": "stmts",
+        "classes": [
+            {
+                "name": "Stmts",
+                "extends": None,
+                "abstract": False,
+                "rule_name": "stmts",
+                "fields": [{"name": "items", "type": "Token", "is_list": True}],
+            }
+        ],
+        "semantic_sections": [],
+    }
+    _run_emit(monkeypatch, tmp_path, model)
+    text = (tmp_path / 'Stmts.hs').read_text()
+    assert 'items :: [Token]' in text

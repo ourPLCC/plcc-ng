@@ -44,6 +44,10 @@ def emit(model, output_dir):
     modules = _group_modules(model['classes'])
     _write_cabal(modules, output_dir)
     _copy_token(output_dir)
+    section = _find_haskell_section(model)
+    fragments_by_class = _group_fragments(section.get('fragments', []) if section else [])
+    for module_name, module_info in modules.items():
+        _write_module(module_name, module_info, fragments_by_class, output_dir)
 
 
 def _group_modules(classes):
@@ -93,3 +97,96 @@ def _write_cabal(modules, output_dir):
 def _copy_token(output_dir):
     src = Path(__file__).parent / 'runtime' / 'Token.hs'
     shutil.copy(src, output_dir / 'Token.hs')
+
+
+def _write_module(module_name, module_info, fragments_by_class, output_dir):
+    content = _render_module(module_name, module_info, fragments_by_class)
+    (output_dir / f'{module_name}.hs').write_text(content)
+
+
+def _render_module(module_name, module_info, fragments_by_class):
+    frags = fragments_by_class.get(module_name, [])
+    top_frags = [f for f in frags if f['kind'] == 'top']
+    import_frags = [f for f in frags if f['kind'] == 'import']
+    body_frags = [f for f in frags if f['kind'] == 'body']
+
+    lines = []
+    for f in top_frags:
+        lines.append(f['body'])
+    lines.append(f'module {module_name} where')
+    lines.append('')
+    lines.append('import Data.Aeson (FromJSON (..), Value (..), withObject, (.:))')
+    lines.append('import Data.Aeson.Types (Parser)')
+    lines.append('import Data.List (sort)')
+    lines.append('import Data.Text (unpack)')
+    lines.append('import Token')
+    for imp in _collect_imports(module_name, module_info):
+        lines.append(f'import {imp}')
+    for f in import_frags:
+        lines.append(f['body'])
+    lines.append('')
+    lines.extend(_render_data(module_name, module_info))
+    lines.append('')
+    for f in body_frags:
+        lines.append(f['body'])
+    return '\n'.join(lines) + '\n'
+
+
+def _collect_imports(module_name, module_info):
+    """Return sorted list of module names to import (excluding Token and self)."""
+    concretes = (module_info['concretes'] if module_info['kind'] == 'abstract'
+                 else [module_info['cls']])
+    imports = set()
+    for cls in concretes:
+        for field in cls['fields']:
+            ft = field['type']
+            if ft != 'Token' and ft != module_name:
+                imports.add(ft)
+    return sorted(imports)
+
+
+def _render_data(module_name, module_info):
+    lines = []
+    if module_info['kind'] == 'abstract':
+        concretes = module_info['concretes']
+        lines.append(f'data {module_name}')
+        for i, cls in enumerate(concretes):
+            prefix = '    = ' if i == 0 else '    | '
+            fields_str = _render_record_fields(cls['fields'])
+            if fields_str:
+                lines.append(f'{prefix}{cls["name"]} {{ {fields_str} }}')
+            else:
+                lines.append(f'{prefix}{cls["name"]}')
+    else:
+        cls = module_info['cls']
+        fields_str = _render_record_fields(cls['fields'])
+        if fields_str:
+            lines.append(f'data {module_name} = {cls["name"]} {{ {fields_str} }}')
+        else:
+            lines.append(f'data {module_name} = {cls["name"]}')
+    lines.append('    deriving (Show, Eq)')
+    return lines
+
+
+def _render_record_fields(fields):
+    parts = [f'{f["name"]} :: {_hs_type(f)}' for f in fields]
+    return ', '.join(parts)
+
+
+def _hs_type(field):
+    base = field['type']
+    return f'[{base}]' if field['is_list'] else base
+
+
+def _find_haskell_section(model):
+    for s in model.get('semantic_sections', []):
+        if s.get('language', '').lower() == 'haskell':
+            return s
+    return None
+
+
+def _group_fragments(fragments):
+    groups = {}
+    for frag in fragments:
+        groups.setdefault(frag['class_name'], []).append(frag)
+    return groups
