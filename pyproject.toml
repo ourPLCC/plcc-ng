@@ -83,6 +83,9 @@ plcc-java-build = "plcc.lang.ext.java.build:main"
 plcc-java-run   = "plcc.lang.ext.java.run:main"
 plcc-javascript-emit = "plcc.lang.ext.javascript.emit:main"
 plcc-javascript-run  = "plcc.lang.ext.javascript.run:main"
+plcc-haskell-emit  = "plcc.lang.ext.haskell.emit:main"
+plcc-haskell-build = "plcc.lang.ext.haskell.build:main"
+plcc-haskell-run   = "plcc.lang.ext.haskell.run:main"
 plcc-version = "plcc.version:main"
 
 [project.optional-dependencies]
