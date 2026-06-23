@@ -6,10 +6,6 @@
 		"ghcr.io/devcontainers/features/java:1": { "version": "17" },
 		"ghcr.io/devcontainers-extra/features/pdm:2": {},
 		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
-		"ghcr.io/devcontainers/features/haskell:1": {
-			"installStack": false,
-			"installHLS": false
-		}
 	},
 
 	"customizations": {
@@ -41,7 +37,7 @@
 		}
 	},
 
-	"postStartCommand": "pdm install"
+	"postStartCommand": "curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_INSTALL_STACK=0 BOOTSTRAP_HASKELL_INSTALL_HLS=0 sh && (grep -q ghcup ~/.bashrc || echo '. ~/.ghcup/env' >> ~/.bashrc) && pdm install"
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }
