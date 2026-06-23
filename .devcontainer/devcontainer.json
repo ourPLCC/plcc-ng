@@ -5,7 +5,11 @@
 		"ghcr.io/devcontainers/features/python:1": {},
 		"ghcr.io/devcontainers/features/java:1": { "version": "17" },
 		"ghcr.io/devcontainers-extra/features/pdm:2": {},
-		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+		"ghcr.io/devcontainers/features/haskell:1": {
+			"installStack": false,
+			"installHLS": false
+		}
 	},
 
 	"customizations": {

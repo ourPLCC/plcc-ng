@@ -41,6 +41,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cabal/packages
+            ~/.cabal/store
+          key: ${{ runner.os }}-cabal-${{ hashFiles('src/plcc/lang/ext/haskell/emit.py') }}
+          restore-keys: ${{ runner.os }}-cabal-
       - name: Install PDM
         run: pip install pdm
       - name: Clone languages repo at pinned commit
