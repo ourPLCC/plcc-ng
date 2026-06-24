@@ -637,15 +637,28 @@ warning or error.</p>
 <li>Any module that calls <code>evalRest</code> fails to compile.</li>
 </ol>
 <h2 id="notes">Notes</h2>
-<p>The fix should either:
-- Emit a warning when a fragment's <code>class_name</code> matches a concrete class
-  whose parent abstract rule owns the module, and suggest using the abstract
-  class name instead.
-- Or automatically redirect such fragments to the parent module (friendlier,
-  but could be surprising for <code>file</code> fragments).</p>
+<p>The fix should raise a fatal error when a fragment's <code>class_name</code> matches a
+concrete alternative whose parent abstract rule owns the module, with a message
+that names the concrete class, explains it maps to a constructor (not a module),
+and directs the user to use the abstract class name instead.</p>
 <p>The correct workaround for users today is to use the abstract class name
 (<code>ExprRest</code>) as the fragment's class name, since that is the module that
 gets generated.</p>
+<h2 id="related-haskell-documentation-needed">Related: Haskell documentation needed</h2>
+<p>The Haskell emitter's one-nonterminal-per-module model is not documented and
+causes this class of confusion:</p>
+<ul>
+<li>In Haskell, each <strong>abstract rule</strong> (non-terminal) maps to a <strong>module</strong>
+  (<code>ExprRest</code> → <code>ExprRest.hs</code>) and its concrete alternatives map to
+  <strong>constructors</strong> within that module (<code>AddRest</code>, <code>NilRest</code> are constructors
+  of the <code>ExprRest</code> data type).</li>
+<li>Fragment class names in <code>%haskell</code> sections must therefore be the <strong>abstract
+  rule name</strong> (the module), never the concrete alternative name (a constructor).</li>
+<li>This is different from Java, where every class — concrete or abstract — has
+  its own file, so concrete names are valid fragment targets.</li>
+</ul>
+<p>Documentation should make this model explicit so users understand why concrete
+alternative names are invalid as fragment targets in Haskell.</p>
 
 
 
