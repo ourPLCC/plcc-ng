@@ -1,6 +1,31 @@
 # CHANGELOG
 
 
+## v0.51.0 (2026-06-24)
+
+### Documentation
+
+- Add design spec and update issue 105 for haskell fragment validation
+  ([`b0e2e3d`](https://github.com/ourPLCC/plcc-ng/commit/b0e2e3d7cd85b4b4e73b2fec0924fbc2024cf8c5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for haskell fragment validation
+  ([`e562c8d`](https://github.com/ourPLCC/plcc-ng/commit/e562c8d59d16fa6330259d386e5d97f2e4604c58))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **haskell**: Add validate_fragments to detect invalid fragment class names
+  ([`7e3d09f`](https://github.com/ourPLCC/plcc-ng/commit/7e3d09f476d40cef9f66baa7086f835031642752))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Wire validate_fragments into emit to enforce fragment class name rules
+  ([`9e186bf`](https://github.com/ourPLCC/plcc-ng/commit/9e186bf32432111c89323d734d440fa65fb6b699))
+
+
 ## v0.50.0 (2026-06-23)
 
 ### Build System
