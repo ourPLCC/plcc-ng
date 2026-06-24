@@ -33,14 +33,6 @@
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/104-java-class-fragment-missing/</loc>
-         <lastmod>2026-06-24</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/105-haskell-fragment-concrete-class-name-silently-ignored/</loc>
-         <lastmod>2026-06-24</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/106-docs-javascript-language-extension/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
@@ -454,6 +446,14 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/103-docs-language-guide-overview-double-underscore-run/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/104-java-class-fragment-missing/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/105-haskell-fragment-concrete-class-name-silently-ignored/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
