@@ -341,6 +341,10 @@
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-plantuml-inheritance-direction/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
@@ -434,6 +438,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-107-haskell-docs-design/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-plantuml-inheritance-direction-design/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
 </urlset>
