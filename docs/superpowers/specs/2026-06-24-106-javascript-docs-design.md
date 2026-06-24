@@ -98,27 +98,24 @@ The same grammar and semantic implementation is used on every language page, ena
 **Grammar (language-agnostic):**
 
 ```text
-%% lexical
-NUM \d+
-PLUS \+
-SKIP \s+
-
-%% syntactic
-<Prog>   ::= <Exp>*
-<Exp>    ::= <AddExp>
-           | <NumExp>
-<AddExp> ::= <Exp:left> PLUS <Exp:right>
-<NumExp> ::= NUM
+token NUM   '\d+'
+token PLUS  '\+'
+skip  SPACE '\s+'
+%
+<Prog>       **= <Exp>
+<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
+<Exp:NumExp> ::= <NUM>
 ```
 
 **Constructs exercised:**
 
 | Construct | Where |
-|-----------|-------|
-| Arbno (zero or more) | `<Prog> ::= <Exp>*` |
-| Abstract non-terminal (alternatives, no constructor) | `<Exp>` |
-| Concrete non-terminal with named non-terminal fields | `<AddExp>` (`left`, `right`) |
-| Terminal/token field | `<NumExp>` (`num`) |
+| --------- | ----- |
+| Arbno (zero or more) | `<Prog> **= <Exp>` → field `expList` |
+| Abstract non-terminal (alternatives, no constructor) | `<Exp>` (implied by `:AddExp`/`:NumExp` variants) |
+| Concrete non-terminal with named non-terminal fields | `<Exp:AddExp>` — `left`, `right` named explicitly to avoid collision |
+| Terminal/token field (captured) | `<Exp:NumExp> ::= <NUM>` → field `num` |
+| Terminal (not captured) | `PLUS` in `<Exp:AddExp>` — matched but not stored as a field |
 
 The semantic section implements `eval()` on each class and overrides `_run()` on `Prog` to print results — just enough to show how every construct is accessed.
 
@@ -128,7 +125,7 @@ No standalone helper classes or every hook kind are demonstrated; those are cove
 
 ### Prerequisites
 
-Node.js. Minimum version: the generated code uses ES6 classes, static class fields, and CommonJS modules — Node.js 12 or later.
+Node.js. Minimum version: the generated code uses ES6 classes, static class fields, and CommonJS modules — Node.js 18 or later.
 
 ### Language tag
 
