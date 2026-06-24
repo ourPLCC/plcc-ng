@@ -11,6 +11,7 @@ source "${SCRIPT_DIR}/_cache.bash"
 
 _run() {
     "${SCRIPT_DIR}/functional.bash"
+    "${SCRIPT_DIR}/e2e_haskell_roundtrip.bash"
     "${SCRIPT_DIR}/packaging.bash"
 }
 

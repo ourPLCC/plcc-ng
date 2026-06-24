@@ -29,9 +29,10 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 | [bin/test/commands.bash](bin/test/commands.bash) | Run black-box CLI tests (`tests/bats/commands/`) for individual commands exercised through their installed entry points. Covers both Level 0 primitives and Level 2 orchestrators (see architectural spec §5–6). | After finishing a command's unit tests, verify its CLI contract. |
 | [bin/test/integration.bash](bin/test/integration.bash) | Run adjacent-pair pipeline tests (`tests/bats/integration/`). | After touching a stage that sits next to another in the pipeline. |
 | [bin/test/e2e.bash](bin/test/e2e.bash) | Run end-to-end pipeline tests (`tests/bats/e2e/`). | After changes that could affect the whole pipeline. |
-| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e). | Before pushing. |
+| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e). Does NOT include the Haskell roundtrip (see below). | Before pushing. |
+| [bin/test/e2e_haskell_roundtrip.bash](bin/test/e2e_haskell_roundtrip.bash) | Run the slow Haskell full-build roundtrip test (`tests/bats/e2e/haskell_roundtrip.bats`). Invokes `cabal build` and can take several minutes on a cold cache. | After changes to the Haskell emitter, runtime, or Haskell-specific fixtures. |
 | [bin/test/packaging.bash](bin/test/packaging.bash) | Build a wheel, install it into a throwaway venv, verify all entry points resolve, and run a smoke test against the installed package. | After changes to `pyproject.toml`, entry points, or packaging layout. |
-| [bin/test/all.bash](bin/test/all.bash) | Run `functional.bash` then `packaging.bash`. | Full local pre-push check. |
+| [bin/test/all.bash](bin/test/all.bash) | Run `functional.bash` then `e2e_haskell_roundtrip.bash` then `packaging.bash`. | Full local pre-push check including the Haskell roundtrip. |
 
 ### Test output cache
 
