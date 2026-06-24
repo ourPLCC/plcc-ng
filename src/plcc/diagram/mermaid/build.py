@@ -1,7 +1,6 @@
 import base64
 import enum
 import sys
-import urllib.error
 import urllib.request
 import zlib
 
