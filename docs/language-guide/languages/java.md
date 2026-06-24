@@ -68,17 +68,16 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 ## BNF to Java constructs
 
-| Grammar construct | Java | Example from spec |
-| --- | --- | --- |
-| Concrete non-terminal rule | Java class with public fields and constructor | `<Exp:NumExp> ::= <NUM>` |
-| Abstract non-terminal (has alternatives) | `abstract` Java class | `<Exp>` |
-| Named non-terminal field (`:name` on RHS) | `name` — instance of that class | `<Exp:left>` → `left` |
-| Captured terminal (`<TOKEN>`) | `name` — a `Token` | `<NUM>` → `num` |
-| Token string value | `.lexeme` on the token | `num.lexeme` → `"42"` |
-| Uncaptured terminal (no angle brackets) | Not stored, no field | `PLUS` in `<Exp:AddExp>` |
-| Arbno (`**=`) | `ArrayList<ClassName> nameList` | `<Prog> **= <Exp>` → `expList` |
+| Grammar Construct | Example from spec | Java Construct | Example based on spec |
+| --- | --- | --- | --- |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | Java class with public fields and constructor | `class Prog extends _Start { public ArrayList<Exp> expList; ... }` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Java class extending the base nonterminal | `class AddExp extends Exp { public Exp left, right; ... }` |
+| Named non-terminal (RHS) | `<Exp:left>` | `left` — an `Exp` instance | `left.eval()` |
+| Captured terminal (RHS) | `<NUM>` | `num` — a `Token`; `.lexeme` for the string value | `Integer.parseInt(num.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `expList` — `ArrayList<Exp>` | `for (Exp exp : expList)` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased. Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `exp`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
 
 All generated classes are in the same package, so sibling classes are accessible without explicit imports.
 
