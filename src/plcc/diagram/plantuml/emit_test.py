@@ -51,13 +51,13 @@ def test_build_diagram_concrete_class_with_no_fields():
 
 def test_build_diagram_inheritance_arrow():
     result = build_diagram(_ARITH_MODEL)
-    assert 'AddRest --|> ExprRest' in result
-    assert 'NilRest --|> ExprRest' in result
+    assert 'ExprRest <|-- AddRest' in result
+    assert 'ExprRest <|-- NilRest' in result
 
 
 def test_build_diagram_no_arrow_for_no_extends():
     result = build_diagram(_ARITH_MODEL)
-    assert 'Program --|>' not in result
+    assert '<|-- Program' not in result
 
 
 def test_main_writes_diagram_puml(tmp_path, monkeypatch):
