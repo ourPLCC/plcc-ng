@@ -2674,50 +2674,52 @@ public int eval() {
 <table>
 <thead>
 <tr>
-<th>Grammar construct</th>
-<th>Java</th>
+<th>Grammar Construct</th>
 <th>Example from spec</th>
+<th>Java Construct</th>
+<th>Example based on spec</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Concrete non-terminal rule</td>
+<td>Concrete rule (LHS, no alt name) — generates one class</td>
+<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
 <td>Java class with public fields and constructor</td>
-<td><code>&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;</code></td>
+<td><code>class Prog extends _Start { public ArrayList&lt;Exp&gt; expList; ... }</code></td>
 </tr>
 <tr>
-<td>Abstract non-terminal (has alternatives)</td>
-<td><code>abstract</code> Java class</td>
-<td><code>&lt;Exp&gt;</code></td>
+<td>Alternative rule (LHS, with alt name) — base nonterminal becomes abstract</td>
+<td><code>&lt;Exp:AddExp&gt;</code> in <code>&lt;Exp:AddExp&gt; ::= ...</code></td>
+<td>Java class extending the base nonterminal</td>
+<td><code>class AddExp extends Exp { public Exp left, right; ... }</code></td>
 </tr>
 <tr>
-<td>Named non-terminal field (<code>:name</code> on RHS)</td>
-<td><code>name</code> — instance of that class</td>
-<td><code>&lt;Exp:left&gt;</code> → <code>left</code></td>
+<td>Named non-terminal (RHS)</td>
+<td><code>&lt;Exp:left&gt;</code></td>
+<td><code>left</code> — an <code>Exp</code> instance</td>
+<td><code>left.eval()</code></td>
 </tr>
 <tr>
-<td>Captured terminal (<code>&lt;TOKEN&gt;</code>)</td>
-<td><code>name</code> — a <code>Token</code></td>
-<td><code>&lt;NUM&gt;</code> → <code>num</code></td>
+<td>Captured terminal (RHS)</td>
+<td><code>&lt;NUM&gt;</code></td>
+<td><code>num</code> — a <code>Token</code>; <code>.lexeme</code> for the string value</td>
+<td><code>Integer.parseInt(num.lexeme)</code></td>
 </tr>
 <tr>
-<td>Token string value</td>
-<td><code>.lexeme</code> on the token</td>
-<td><code>num.lexeme</code> → <code>"42"</code></td>
+<td>Uncaptured terminal (RHS)</td>
+<td><code>PLUS</code></td>
+<td>No field generated</td>
+<td>—</td>
 </tr>
 <tr>
-<td>Uncaptured terminal (no angle brackets)</td>
-<td>Not stored, no field</td>
-<td><code>PLUS</code> in <code>&lt;Exp:AddExp&gt;</code></td>
-</tr>
-<tr>
-<td>Arbno (<code>**=</code>)</td>
-<td><code>ArrayList&lt;ClassName&gt; nameList</code></td>
-<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code> → <code>expList</code></td>
+<td>Arbno rule (<code>**=</code>)</td>
+<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
+<td><code>expList</code> — <code>ArrayList&lt;Exp&gt;</code></td>
+<td><code>for (Exp exp : expList)</code></td>
 </tr>
 </tbody>
 </table>
-<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased. Use explicit names when two RHS symbols would produce the same field name.</p>
+<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased (e.g., <code>&lt;Exp&gt;</code> → <code>exp</code>, <code>&lt;NUM&gt;</code> → <code>num</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
 <p>All generated classes are in the same package, so sibling classes are accessible without explicit imports.</p>
 <h2 id="fragment-kinds">Fragment kinds</h2>
 <table>

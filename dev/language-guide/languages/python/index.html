@@ -2663,50 +2663,52 @@ def eval(self):
 <table>
 <thead>
 <tr>
-<th>Grammar construct</th>
-<th>Python</th>
+<th>Grammar Construct</th>
 <th>Example from spec</th>
+<th>Python Construct</th>
+<th>Example based on spec</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Concrete non-terminal rule</td>
+<td>Concrete rule (LHS, no alt name) — generates one class</td>
+<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
 <td>Python dataclass with fields</td>
-<td><code>&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;</code></td>
+<td><code>@dataclass class Prog(_Start): expList: List[Exp]</code></td>
 </tr>
 <tr>
-<td>Abstract non-terminal (has alternatives)</td>
-<td>Python class, no fields or constructor</td>
-<td><code>&lt;Exp&gt;</code></td>
+<td>Alternative rule (LHS, with alt name) — base nonterminal becomes abstract</td>
+<td><code>&lt;Exp:AddExp&gt;</code> in <code>&lt;Exp:AddExp&gt; ::= ...</code></td>
+<td>Python dataclass extending the base nonterminal</td>
+<td><code>@dataclass class AddExp(Exp): left: Exp; right: Exp</code></td>
 </tr>
 <tr>
-<td>Named non-terminal field (<code>:name</code> on RHS)</td>
-<td><code>self.name</code> — instance of that class</td>
-<td><code>&lt;Exp:left&gt;</code> → <code>self.left</code></td>
+<td>Named non-terminal (RHS)</td>
+<td><code>&lt;Exp:left&gt;</code></td>
+<td><code>self.left</code> — an <code>Exp</code> instance</td>
+<td><code>self.left.eval()</code></td>
 </tr>
 <tr>
-<td>Captured terminal (<code>&lt;TOKEN&gt;</code>)</td>
-<td><code>self.name</code> — a <code>Token</code></td>
-<td><code>&lt;NUM&gt;</code> → <code>self.num</code></td>
+<td>Captured terminal (RHS)</td>
+<td><code>&lt;NUM&gt;</code></td>
+<td><code>self.num</code> — a <code>Token</code>; <code>.lexeme</code> for the string value</td>
+<td><code>int(self.num.lexeme)</code></td>
 </tr>
 <tr>
-<td>Token string value</td>
-<td><code>.lexeme</code> on the token</td>
-<td><code>self.num.lexeme</code> → <code>"42"</code></td>
+<td>Uncaptured terminal (RHS)</td>
+<td><code>PLUS</code></td>
+<td>No field generated</td>
+<td>—</td>
 </tr>
 <tr>
-<td>Uncaptured terminal (no angle brackets)</td>
-<td>Not stored, no field</td>
-<td><code>PLUS</code> in <code>&lt;Exp:AddExp&gt;</code></td>
-</tr>
-<tr>
-<td>Arbno (<code>**=</code>)</td>
-<td><code>List[ClassName] nameList</code></td>
-<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code> → <code>self.expList</code></td>
+<td>Arbno rule (<code>**=</code>)</td>
+<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
+<td><code>self.expList</code> — <code>List[Exp]</code></td>
+<td><code>[e.eval() for e in self.expList]</code></td>
 </tr>
 </tbody>
 </table>
-<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased. Use explicit names when two RHS symbols would produce the same field name.</p>
+<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased (e.g., <code>&lt;Exp&gt;</code> → <code>self.exp</code>, <code>&lt;NUM&gt;</code> → <code>self.num</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
 <h2 id="fragment-kinds">Fragment kinds</h2>
 <table>
 <thead>

@@ -2666,50 +2666,52 @@ eval() {
 <table>
 <thead>
 <tr>
-<th>Grammar construct</th>
-<th>JavaScript</th>
+<th>Grammar Construct</th>
 <th>Example from spec</th>
+<th>JavaScript Construct</th>
+<th>Example based on spec</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Concrete non-terminal rule</td>
+<td>Concrete rule (LHS, no alt name) — generates one class</td>
+<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
 <td>ES6 class with constructor and fields</td>
-<td><code>&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;</code></td>
+<td><code>class Prog extends _Start { constructor(expList) { ... } }</code></td>
 </tr>
 <tr>
-<td>Abstract non-terminal (has alternatives)</td>
-<td>ES6 class, no constructor</td>
-<td><code>&lt;Exp&gt;</code></td>
+<td>Alternative rule (LHS, with alt name) — base nonterminal becomes abstract</td>
+<td><code>&lt;Exp:AddExp&gt;</code> in <code>&lt;Exp:AddExp&gt; ::= ...</code></td>
+<td>ES6 class extending the base nonterminal</td>
+<td><code>class AddExp extends Exp { constructor(left, right) { ... } }</code></td>
 </tr>
 <tr>
-<td>Named non-terminal field (<code>:name</code> on RHS)</td>
-<td><code>this.name</code> — instance of that class</td>
-<td><code>&lt;Exp:left&gt;</code> → <code>this.left</code></td>
+<td>Named non-terminal (RHS)</td>
+<td><code>&lt;Exp:left&gt;</code></td>
+<td><code>this.left</code> — an <code>Exp</code> instance</td>
+<td><code>this.left.eval()</code></td>
 </tr>
 <tr>
-<td>Captured terminal (<code>&lt;TOKEN&gt;</code>)</td>
-<td><code>this.name</code> — a <code>Token</code></td>
-<td><code>&lt;NUM&gt;</code> → <code>this.num</code></td>
+<td>Captured terminal (RHS)</td>
+<td><code>&lt;NUM&gt;</code></td>
+<td><code>this.num</code> — a <code>Token</code>; <code>.lexeme</code> for the string value</td>
+<td><code>parseInt(this.num.lexeme)</code></td>
 </tr>
 <tr>
-<td>Token string value</td>
-<td><code>.lexeme</code> on the token</td>
-<td><code>this.num.lexeme</code> → <code>"42"</code></td>
+<td>Uncaptured terminal (RHS)</td>
+<td><code>PLUS</code></td>
+<td>No field generated</td>
+<td>—</td>
 </tr>
 <tr>
-<td>Uncaptured terminal (no angle brackets)</td>
-<td>Not stored, no field</td>
-<td><code>PLUS</code> in <code>&lt;Exp:AddExp&gt;</code></td>
-</tr>
-<tr>
-<td>Arbno (<code>**=</code>)</td>
-<td>Array field named <code>&lt;symbol&gt;List</code></td>
-<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code> → <code>this.expList</code></td>
+<td>Arbno rule (<code>**=</code>)</td>
+<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
+<td><code>this.expList</code> — <code>Array</code> of <code>Exp</code></td>
+<td><code>this.expList.map(e =&gt; e.eval())</code></td>
 </tr>
 </tbody>
 </table>
-<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased (e.g., <code>&lt;Exp&gt;</code> → <code>exp</code>, <code>&lt;NUM&gt;</code> → <code>num</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
+<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased (e.g., <code>&lt;Exp&gt;</code> → <code>this.exp</code>, <code>&lt;NUM&gt;</code> → <code>this.num</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
 <h2 id="fragment-kinds">Fragment kinds</h2>
 <p>Fragments inject code at specific locations in the generated file. Use <code>ClassName:kind</code> to name the target class and location.</p>
 <table>
