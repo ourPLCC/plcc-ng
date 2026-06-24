@@ -3,8 +3,10 @@
 bats_require_minimum_version 1.5.0
 
 setup() {
+    if ! command -v cabal &>/dev/null; then skip "cabal not available"; fi
+    cabal update
     SPEC_DIR=$(mktemp -d)
-    OUT_DIR=$(mktemp -d)
+    OUT_DIR="${HASKELL_ROUNDTRIP_OUT_DIR:-$(mktemp -d)}"
     cat > "$SPEC_DIR/arith.plcc" << 'EOF'
 token NUM '\d+'
 token PLUS '\+'
@@ -42,20 +44,28 @@ EOF
 }
 
 teardown() {
-    rm -rf "$SPEC_DIR" "$OUT_DIR"
+    rm -rf "$SPEC_DIR"
+    if [[ -z "${HASKELL_ROUNDTRIP_OUT_DIR:-}" ]]; then
+        rm -rf "$OUT_DIR"
+    fi
 }
 
-@test "haskell pipeline: spec to model to emit produces expected files" {
+@test "haskell pipeline: emit-build-run roundtrip" {
     SPEC_JSON=$(mktemp)
     MODEL_JSON=$(mktemp)
-    trap "rm -f '$SPEC_JSON' '$MODEL_JSON'" RETURN
+    LL1_JSON=$(mktemp)
+    trap "rm -f '$SPEC_JSON' '$MODEL_JSON' '$LL1_JSON'" RETURN
 
     plcc-spec "$SPEC_DIR/arith.plcc" > "$SPEC_JSON"
     plcc-model "$SPEC_JSON" > "$MODEL_JSON"
+    plcc-spec "$SPEC_DIR/arith.plcc" | plcc-ll1 > "$LL1_JSON"
     plcc-haskell-emit --output="$OUT_DIR" < "$MODEL_JSON"
+    plcc-haskell-build --output="$OUT_DIR"
 
-    [ -f "$OUT_DIR/interpreter.cabal" ]
-    [ -f "$OUT_DIR/Token.hs" ]
-    [ -f "$OUT_DIR/Main.hs" ]
-    [ -f "$OUT_DIR/Program.hs" ]
+    result=$(echo '1 + 2' \
+        | plcc-tokens "$SPEC_JSON" \
+        | plcc-trees --ll1="$LL1_JSON" \
+        | plcc-haskell-run --output="$OUT_DIR")
+
+    echo "$result" | grep -q '"value":"3"'
 }
