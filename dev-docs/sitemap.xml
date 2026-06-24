@@ -33,15 +33,19 @@
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/106-docs-javascript-language-extension/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/109-plantuml-ebnf-diagram/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/107-docs-haskell-language-extension/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/110-e2e-haskell-build-test-performance/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/108-plantuml-inheritance-direction/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/111-mermaid-extension-redesign/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/112-first-major-release/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
@@ -458,6 +462,18 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/105-haskell-fragment-concrete-class-name-silently-ignored/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/106-docs-javascript-language-extension/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/107-docs-haskell-language-extension/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/108-plantuml-inheritance-direction/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
