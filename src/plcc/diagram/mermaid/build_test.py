@@ -1,6 +1,6 @@
-import subprocess
+import urllib.error
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from .build import main as run_main
 
@@ -11,49 +11,57 @@ def test_missing_required_args_exits_nonzero():
         run_main([])
 
 
-def test_missing_mmdc_cli_prints_helpful_error(tmp_path, capsys):
+def test_renders_png_via_kroki(tmp_path):
+    src = tmp_path / "diagram.mmd"
+    src.write_text("classDiagram\n    class Foo {}\n")
+    out = tmp_path / "diagram.png"
+
+    fake_png = b'\x89PNG fake'
+    mock_response = MagicMock()
+    mock_response.read.return_value = fake_png
+    mock_response.__enter__ = lambda s: s
+    mock_response.__exit__ = MagicMock(return_value=False)
+
+    with patch('urllib.request.urlopen', return_value=mock_response):
+        run_main([f'--input={src}', f'--output={out}'])
+
+    assert out.read_bytes() == fake_png
+
+
+def test_http_error_prints_message_and_exits(tmp_path, capsys):
     src = tmp_path / "diagram.mmd"
     src.write_text("classDiagram\n")
     out = tmp_path / "diagram.png"
 
-    with patch('shutil.which', return_value=None):
+    with patch('urllib.request.urlopen', side_effect=urllib.error.URLError('connection refused')):
         with pytest.raises(SystemExit) as exc:
             run_main([f'--input={src}', f'--output={out}'])
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
-    assert 'npm install -g @mermaid-js/mermaid-cli' in err
+    assert 'plcc-mermaid-diagram-build' in err
 
 
-def test_calls_mmdc_with_correct_args(tmp_path):
+def test_encodes_source_in_url(tmp_path):
     src = tmp_path / "diagram.mmd"
-    src.write_text("classDiagram\n    class Foo {}\n")
+    src.write_text("classDiagram\n    class Bar {}\n")
     out = tmp_path / "diagram.png"
 
-    with patch('shutil.which', return_value='/usr/bin/mmdc'):
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = subprocess.CompletedProcess([], 0)
-            run_main([f'--input={src}', f'--output={out}'])
+    captured_urls = []
 
-    mock_run.assert_called_once_with(
-        ['mmdc', '-i', str(src), '-o', str(out)],
-        stderr=subprocess.PIPE,
-    )
+    def fake_urlopen(req, timeout=None):
+        captured_urls.append(req.full_url)
+        mock_response = MagicMock()
+        mock_response.read.return_value = b'\x89PNG'
+        mock_response.__enter__ = lambda s: s
+        mock_response.__exit__ = MagicMock(return_value=False)
+        return mock_response
 
+    with patch('urllib.request.urlopen', side_effect=fake_urlopen):
+        run_main([f'--input={src}', f'--output={out}'])
 
-def test_mmdc_nonzero_exit_prints_error_and_exits(tmp_path, capsys):
-    src = tmp_path / "diagram.mmd"
-    src.write_text("classDiagram\n")
-    out = tmp_path / "diagram.png"
-
-    with patch('shutil.which', return_value='/usr/bin/mmdc'):
-        with patch('subprocess.run') as mock_run:
-            mock_run.return_value = subprocess.CompletedProcess(
-                [], 1, stderr=b'mmdc: error rendering diagram\n'
-            )
-            with pytest.raises(SystemExit) as exc:
-                run_main([f'--input={src}', f'--output={out}'])
-
-    assert exc.value.code != 0
-    _, err = capsys.readouterr()
-    assert 'mmdc' in err
+    assert len(captured_urls) == 1
+    url = captured_urls[0]
+    assert url.startswith('https://kroki.io/mermaid/png/')
+    payload = url[len('https://kroki.io/mermaid/png/'):]
+    assert len(payload) > 0

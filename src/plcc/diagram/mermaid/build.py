@@ -1,14 +1,16 @@
+import base64
 import enum
-import shutil
-import subprocess
 import sys
+import urllib.error
+import urllib.request
+import zlib
 
 from docopt import docopt
 
 from ...verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-mermaid-diagram-build
-    Render a Mermaid diagram source file to a PNG image.
+    Render a Mermaid diagram source file to a PNG image via kroki.io.
 
 Usage:
     plcc-mermaid-diagram-build --input=FILE --output=FILE [-v ...] [options]
@@ -25,6 +27,11 @@ class Events(enum.Enum):
     FINISHED = "finished"
 
 
+def _encode(source):
+    compressed = zlib.compress(source.encode('utf-8'), 9)
+    return base64.urlsafe_b64encode(compressed).decode('utf-8').rstrip('=')
+
+
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
@@ -33,19 +40,16 @@ def main(argv=None):
     input_file = args['--input']
     output_file = args['--output']
     verbose.emit(Events.STARTED, message=f"rendering {input_file}")
-    if not shutil.which('mmdc'):
-        print(
-            "plcc-mermaid-diagram-build: mmdc not found — "
-            "run: npm install -g @mermaid-js/mermaid-cli",
-            file=sys.stderr,
-        )
+    try:
+        with open(input_file) as f:
+            source = f.read()
+        url = f'https://kroki.io/mermaid/png/{_encode(source)}'
+        req = urllib.request.Request(url, headers={'User-Agent': 'plcc-ng/1.0'})
+        with urllib.request.urlopen(req, timeout=30) as response:
+            png_bytes = response.read()
+    except Exception as e:
+        print(f"plcc-mermaid-diagram-build: {e}", file=sys.stderr)
         sys.exit(1)
-    result = subprocess.run(
-        ['mmdc', '-i', input_file, '-o', output_file],
-        stderr=subprocess.PIPE,
-    )
-    if result.returncode != 0:
-        stderr = result.stderr.decode('utf-8', errors='replace').strip()
-        print(f"plcc-mermaid-diagram-build: mmdc failed: {stderr}", file=sys.stderr)
-        sys.exit(result.returncode)
+    with open(output_file, 'wb') as f:
+        f.write(png_bytes)
     verbose.emit(Events.FINISHED, message=f"wrote {output_file}")
