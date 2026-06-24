@@ -54,7 +54,7 @@ teardown() {
     trap "rm -rf '${DIAGRAM_DIR}'" EXIT
     plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-plantuml-diagram-emit --output="${DIAGRAM_DIR}"
     grep 'ExprRest' "${DIAGRAM_DIR}/diagram.puml"
-    grep 'AddRest --|> ExprRest' "${DIAGRAM_DIR}/diagram.puml"
+    grep 'ExprRest <|-- AddRest' "${DIAGRAM_DIR}/diagram.puml"
 }
 
 @test "plcc-diagram-list finds plantuml" {
