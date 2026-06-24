@@ -18,7 +18,7 @@ def _build_and_run(tmp_path, main_hs):
         executable     test-token
           main-is:          Main.hs
           other-modules:    Token
-          build-depends:    base, aeson, text
+          build-depends:    base, aeson, bytestring, text
           default-language: Haskell2010
           hs-source-dirs:   .
     """))
@@ -30,7 +30,6 @@ def _build_and_run(tmp_path, main_hs):
     return result.stdout.strip()
 
 
-@pytest.mark.skip(reason="requires cabal, run after devcontainer rebuild")
 def test_token_parses_kind_and_lexeme(tmp_path):
     output = _build_and_run(tmp_path, textwrap.dedent("""\
         module Main where
@@ -47,7 +46,6 @@ def test_token_parses_kind_and_lexeme(tmp_path):
     assert output == "INT\n42"
 
 
-@pytest.mark.skip(reason="requires cabal, run after devcontainer rebuild")
 def test_token_show(tmp_path):
     output = _build_and_run(tmp_path, textwrap.dedent("""\
         module Main where
