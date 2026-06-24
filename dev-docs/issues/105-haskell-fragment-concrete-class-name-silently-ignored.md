@@ -30,13 +30,28 @@ warning or error.
 
 ## Notes
 
-The fix should either:
-- Emit a warning when a fragment's `class_name` matches a concrete class
-  whose parent abstract rule owns the module, and suggest using the abstract
-  class name instead.
-- Or automatically redirect such fragments to the parent module (friendlier,
-  but could be surprising for `file` fragments).
+The fix should raise a fatal error when a fragment's `class_name` matches a
+concrete alternative whose parent abstract rule owns the module, with a message
+that names the concrete class, explains it maps to a constructor (not a module),
+and directs the user to use the abstract class name instead.
 
 The correct workaround for users today is to use the abstract class name
 (`ExprRest`) as the fragment's class name, since that is the module that
 gets generated.
+
+## Related: Haskell documentation needed
+
+The Haskell emitter's one-nonterminal-per-module model is not documented and
+causes this class of confusion:
+
+- In Haskell, each **abstract rule** (non-terminal) maps to a **module**
+  (`ExprRest` → `ExprRest.hs`) and its concrete alternatives map to
+  **constructors** within that module (`AddRest`, `NilRest` are constructors
+  of the `ExprRest` data type).
+- Fragment class names in `%haskell` sections must therefore be the **abstract
+  rule name** (the module), never the concrete alternative name (a constructor).
+- This is different from Java, where every class — concrete or abstract — has
+  its own file, so concrete names are valid fragment targets.
+
+Documentation should make this model explicit so users understand why concrete
+alternative names are invalid as fragment targets in Haskell.

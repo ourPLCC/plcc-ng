@@ -18,6 +18,7 @@ from pathlib import Path
 from docopt import docopt
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from .validate import validate_fragments
 
 __doc__ = __doc__ + VERBOSE_OPTIONS
 
@@ -47,6 +48,7 @@ def emit(model, output_dir):
     section = _find_haskell_section(model)
     all_frags = section.get('fragments', []) if section else []
     fragments_by_class = _group_fragments(all_frags)
+    validate_fragments(all_frags, model['classes'])
     start_module = model['start'][0].upper() + model['start'][1:]
     for module_name, module_info in modules.items():
         is_start = (module_name == start_module)

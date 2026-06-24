@@ -291,3 +291,12 @@ def test_duplicate_record_fields_pragma_emitted(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, model)
     content = (tmp_path / 'Expr.hs').read_text()
     assert '{-# LANGUAGE DuplicateRecordFields, OverloadedStrings #-}' in content
+
+
+def test_emit_raises_on_fragment_with_concrete_alternative_name(monkeypatch, tmp_path):
+    # NumExpr extends Expr (abstract) in _minimal_model(), so it's a concrete alternative
+    model = _model_with_fragments([
+        {'class_name': 'NumExpr', 'kind': 'body', 'body': '-- code'}
+    ])
+    with pytest.raises(SystemExit):
+        _run_emit(monkeypatch, tmp_path, model)
