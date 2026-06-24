@@ -722,6 +722,150 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../language-guide/examples/" class="md-nav__link">
         
@@ -1042,6 +1186,17 @@
     <span class="md-ellipsis">
       
         plcc-java
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plcc-javascript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-javascript
       
     </span>
   </a>
@@ -1387,6 +1542,62 @@
     
   
     plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
   
 
     
@@ -2306,7 +2517,7 @@
 
 <h1 id="language-extensions">Language Extensions</h1>
 <p>Language extensions provide the emit, build, and run steps for a specific
-target language. plcc-ng ships with Python and Java support.</p>
+target language. plcc-ng ships with Python, Java, and JavaScript support.</p>
 <h2 id="how-language-extensions-plug-in">How language extensions plug in</h2>
 <p>When <code>plcc-make</code> (or any command that calls it) builds a spec with a semantic
 section, it runs three dispatch commands in sequence:</p>
@@ -2366,6 +2577,29 @@ runs it with <code>java</code>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="plcc-javascript">plcc-javascript</h2>
+<p>Emits a JavaScript interpreter from model JSON, then runs it with Node.js.
+No build step is required.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../commands/plcc-javascript-emit/"><code>plcc-javascript-emit</code></a></td>
+<td>Writes <code>.js</code> class files and a <code>main.js</code> entry point to the output directory</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-javascript-run/"><code>plcc-javascript-run</code></a></td>
+<td>Runs <code>main.js</code> with <code>node</code>; requires Node.js 18+ on <code>PATH</code></td>
+</tr>
+</tbody>
+</table>
+<p>No build step is required for JavaScript — <code>plcc-lang-build</code> exits silently if
+<code>plcc-javascript-build</code> is not found.</p>
 
 
 

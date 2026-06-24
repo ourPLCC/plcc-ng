@@ -14,7 +14,7 @@
         <link rel="prev" href="../syntactic/">
       
       
-        <link rel="next" href="../examples/">
+        <link rel="next" href="../languages/javascript/">
       
       
         
@@ -785,7 +785,7 @@
   <a href="#field-access" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Field Access
+        Field access
       
     </span>
   </a>
@@ -793,10 +793,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#entry-point-method-_run" class="md-nav__link">
+  <a href="#entry-point-_run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry point method _run
+        Entry point: _run
       
     </span>
   </a>
@@ -812,23 +812,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Hooks">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -843,10 +826,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#packages-and-importsincludes" class="md-nav__link">
+  <a href="#choose-your-language" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Packages and imports/includes
+        Choose your language
       
     </span>
   </a>
@@ -856,6 +839,153 @@
     </ul>
   
 </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -1440,6 +1570,62 @@
     
   
     plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
   
 
     
@@ -2362,179 +2548,81 @@
 target-language code into classes generated from the syntactic section.</p>
 <h2 id="section-header">Section header</h2>
 <p>A bare <code>%</code> line separates the previous section from the semantic section.
-The first non-blank line of the semantic section body names the language
-used by the code blocks.</p>
+The first non-blank line of the semantic section body names the target language.</p>
 <div class="highlight"><pre><span></span><code>%
-Java
+javascript
 </code></pre></div>
-<p>The supported languages are:</p>
-<ul>
-<li>Java</li>
-<li>Python</li>
-</ul>
 <h2 id="code-blocks">Code blocks</h2>
-<p>The semantic section allows you to inject code blocks into the classes generated
-from the production rules given in the syntactic section.
-The <a href="../syntactic/">syntactic section</a> describes the classes
-and their fields that are generated from production rules.</p>
-<p>To inject code into a class, use the following construct.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Python</label><label for="__tabbed_1_2">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>%
-Python
-
-Exp
+<p>To inject code into a class, name the class and follow it with a <code>%%%</code> block:</p>
+<div class="highlight"><pre><span></span><code>ClassName
 %%%
-def _run(self):
-    print(&quot;Hello&quot;)
+# your code here
 %%%
 </code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>%
-Java
-
-Exp
-%%%
-public void _run() {
-    System.out.println(&quot;Hello&quot;);
-}
-%%%
+<p>The block's content is injected into the class body. Multiple blocks for the
+same class are injected in the order they appear.</p>
+<h2 id="field-access">Field access</h2>
+<p>Fields generated from production rules become instance variables in the
+generated class. For example:</p>
+<div class="highlight"><pre><span></span><code>&lt;AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
 </code></pre></div>
-</div>
-</div>
-</div>
-<p>Since whatever you put within the <code>%%%</code> lines is injected into the body
-of the class, you can add static or instance methods, class or instance variables,
-or even inner classes. Anything you can place in the body of a class, you
-can place inside <code>%%%</code>.</p>
-<h2 id="field-access">Field Access</h2>
-<p>Fields generated from production rules become public instance variables.</p>
-<p>For example, if the syntactic section contains:</p>
-<div class="highlight"><pre><span></span><code>&lt;AddExp&gt; ::= &lt;Exp:left&gt; &lt;PLUS&gt; &lt;Exp:right&gt;
-</code></pre></div>
-<p>the generated class contain fields such as <code>left</code>, <code>plus</code>, and <code>right</code>,
-which can be accessed from semantic code.</p>
-<h2 id="entry-point-method-_run">Entry point method <code>_run</code></h2>
-<p>The code between the <code>%%%</code> lines is injected into the body of the named class.
-The start symbol's class inherits from <code>_Start</code>, which defines
-a <code>_run</code> method that serves as the entry point called by <code>plcc-rep</code>.
-The default implementation of
-<code>_run</code> prints a string representation of the root of the parse tree.
-You'll want to override the <code>_run</code> method to implement the semantics of
-your language.</p>
+<p>generates a class with fields <code>left</code> and <code>right</code>. How you access them depends
+on your target language — see your language's page below.</p>
+<h2 id="entry-point-_run">Entry point: <code>_run</code></h2>
+<p>The start symbol's class inherits from <code>_Start</code>, which defines a <code>_run</code>
+method that is called when you run a program with <code>plcc-rep</code>. The default
+implementation prints a string representation of the parse tree root.
+Override <code>_run</code> in your start class to implement your language's semantics.</p>
 <h2 id="hooks">Hooks</h2>
 <p>Hooks inject code at specific locations within a generated class file.
 Append the hook name to the class name with a colon:</p>
+<div class="highlight"><pre><span></span><code>ClassName:hook
+%%%
+# code injected at the hook location
+%%%
+</code></pre></div>
 <table>
 <thead>
 <tr>
 <th>Hook</th>
 <th>Where code is injected</th>
-<th>Uses</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>ClassName:top</code></td>
+<td><code>top</code></td>
 <td>Top of the generated file</td>
-<td>Package declarations, module directives, file-level code or comments</td>
 </tr>
 <tr>
-<td><code>ClassName:import</code></td>
+<td><code>import</code></td>
 <td>File-level import section</td>
-<td>Add imports</td>
 </tr>
 <tr>
-<td><code>ClassName:class</code></td>
-<td>Class declaration (extend/implement)</td>
-<td>Declare class or interface inheritance</td>
+<td><code>class</code></td>
+<td>Class declaration line (extend/implement)</td>
 </tr>
 <tr>
-<td><code>ClassName:init</code></td>
+<td><code>init</code></td>
 <td>Constructor / initializer</td>
-<td>Add statements to the generated constructor/initializer</td>
 </tr>
 </tbody>
 </table>
-<h3 id="example">Example</h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Python</label><label for="__tabbed_2_2">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>WholeExp:import
-%%%
-import sys
-%%%
-
-WholeExp
-%%%
-def eval(self):
-    x = int(self.whole.lexeme)
-    sys.stderr.write(f&quot;eval: {x}\n&quot;)
-    return x
-%%%
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>WholeExp:import
-%%%
-import java.io.*;
-%%%
-
-WholeExp
-%%%
-public int eval() {
-    int x = Integer.parseInt(whole.lexeme);
-    System.err.println(&quot;eval: &quot; + x);
-    return x;
-}
-%%%
-</code></pre></div>
-</div>
-</div>
-</div>
-<p>You can have multiple code blocks that refer to the same class.
-The blocks are injected in the order they appear in the semantic section.</p>
+<p>Supported hooks and their exact placement vary by language. See your language's
+page for the full list and any language-specific restrictions.</p>
 <h2 id="adding-standalone-classes">Adding standalone classes</h2>
-<p>Standalone classes are useful for helper code that does not naturally
-belong to a generated grammar class.</p>
-<p>You may declare a new class or module that is not derived from
-a nonterminal in the syntactic section.
-When you do, plcc-ng creates a file based on the class name.
-The block contents are written verbatim to that file.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Python</label><label for="__tabbed_3_2">Java</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>Helper      # Creates a file named Helper.py
-%%%
-class Helper:
-    @staticmethod
-    def double(x):
-        return x * 2
-%%%
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code>Helper      # Creates a file named Helper.java
-%%%
-public class Helper {
-    public static int doubled(int x) {
-        return x * 2;
-    }
-}
-%%%
-</code></pre></div>
-</div>
-</div>
-</div>
-<h2 id="packages-and-importsincludes">Packages and imports/includes</h2>
-<p>Each generated class is placed in a separate file with the same name
-as the class. All files are placed in the same package.</p>
-<p>For Java, this means that all classes can access all other classes without
-explicitly importing them.</p>
-<p>In Python, code that refers to another generated class by name must
-add an appropriate relative import.</p>
+<p>You can create a file that is not derived from a grammar nonterminal.
+Name a class that does not appear in the grammar and follow it with a <code>%%%</code>
+block; plcc-ng writes the block's content verbatim to a file named after
+the class.</p>
+<h2 id="choose-your-language">Choose your language</h2>
+<p>Each language page covers: prerequisites, enabling in a spec, a quick
+reference example, how BNF constructs map to language constructs, supported
+hooks, the <code>_run</code> contract, generated output, commands, restrictions, and tips.</p>
+<ul>
+<li><a href="../languages/javascript/">JavaScript</a></li>
+<li><a href="../languages/java/">Java</a></li>
+<li><a href="../languages/python/">Python</a></li>
+</ul>
 
 
 
