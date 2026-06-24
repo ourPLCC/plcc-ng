@@ -775,14 +775,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+      <a href="../../../language-guide/languages/haskell/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    JavaScript
+    Haskell
   
 
     
@@ -811,6 +811,34 @@
     
   
     Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
   
 
     
@@ -1203,6 +1231,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#plcc-haskell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        plcc-haskell
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1458,6 +1497,90 @@
     
   
     plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-haskell-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-haskell-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/plcc-haskell-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-run
   
 
     
@@ -2517,7 +2640,7 @@
 
 <h1 id="language-extensions">Language Extensions</h1>
 <p>Language extensions provide the emit, build, and run steps for a specific
-target language. plcc-ng ships with Python, Java, and JavaScript support.</p>
+target language. plcc-ng ships with Python, Java, JavaScript, and Haskell support.</p>
 <h2 id="how-language-extensions-plug-in">How language extensions plug in</h2>
 <p>When <code>plcc-make</code> (or any command that calls it) builds a spec with a semantic
 section, it runs three dispatch commands in sequence:</p>
@@ -2600,6 +2723,31 @@ No build step is required.</p>
 </table>
 <p>No build step is required for JavaScript — <code>plcc-lang-build</code> exits silently if
 <code>plcc-javascript-build</code> is not found.</p>
+<h2 id="plcc-haskell">plcc-haskell</h2>
+<p>Emits a Haskell interpreter from model JSON, compiles it with cabal, then
+runs it with <code>cabal run</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../commands/plcc-haskell-emit/"><code>plcc-haskell-emit</code></a></td>
+<td>Writes <code>.hs</code> source files and an <code>interpreter.cabal</code> project file to the output directory</td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-haskell-build/"><code>plcc-haskell-build</code></a></td>
+<td>Compiles with <code>cabal build</code>; requires GHC 9.4+ and cabal 3.0+ on <code>PATH</code></td>
+</tr>
+<tr>
+<td><a href="../../commands/plcc-haskell-run/"><code>plcc-haskell-run</code></a></td>
+<td>Runs <code>cabal run interpreter</code>; requires cabal 3.0+ on <code>PATH</code></td>
+</tr>
+</tbody>
+</table>
 
 
 

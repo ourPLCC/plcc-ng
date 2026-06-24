@@ -49,6 +49,18 @@
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-build/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-emit/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-run/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-build/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
@@ -217,6 +229,10 @@
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/haskell/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/java/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
@@ -321,6 +337,10 @@
          <lastmod>2026-06-24</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-107-haskell-docs/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
@@ -410,6 +430,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-106-javascript-docs-design/</loc>
+         <lastmod>2026-06-24</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-107-haskell-docs-design/</loc>
          <lastmod>2026-06-24</lastmod>
     </url>
 </urlset>
