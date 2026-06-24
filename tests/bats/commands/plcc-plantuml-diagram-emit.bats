@@ -29,5 +29,5 @@ teardown() {
 
 @test "diagram.puml contains inheritance arrow" {
     bash -c "cat '${MODEL_JSON}' | plcc-plantuml-diagram-emit --output='${OUTPUT_DIR}'"
-    grep 'AddRest --|> ExprRest' "${OUTPUT_DIR}/diagram.puml"
+    grep 'ExprRest <|-- AddRest' "${OUTPUT_DIR}/diagram.puml"
 }

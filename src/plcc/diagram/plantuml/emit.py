@@ -49,7 +49,7 @@ def build_diagram(model):
             lines.append('')
         lines.extend(_render_class(cls))
         if cls.get('extends'):
-            lines.append(f'{cls["name"]} --|> {cls["extends"]}')
+            lines.append(f'{cls["extends"]} <|-- {cls["name"]}')
     lines.append('@enduml')
     return '\n'.join(lines) + '\n'
 
