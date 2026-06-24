@@ -175,7 +175,7 @@ Expected output:
 ## Commands
 
 | Command | What it does |
-| --- | --- | --- | --- |
+| --- | --- |
 | [`plcc-haskell-emit`](../../cli/commands/plcc-haskell-emit.md) | Writes `.hs` source files and `interpreter.cabal` to the output directory |
 | [`plcc-haskell-build`](../../cli/commands/plcc-haskell-build.md) | Compiles with `cabal build`; requires GHC 9.4+ and cabal 3.0+ on `PATH` |
 | [`plcc-haskell-run`](../../cli/commands/plcc-haskell-run.md) | Runs `cabal run interpreter`; requires cabal 3.0+ on `PATH` |
