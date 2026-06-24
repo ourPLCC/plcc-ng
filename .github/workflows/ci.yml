@@ -120,11 +120,12 @@ jobs:
         with:
           path: ~/.cache/plcc-haskell-roundtrip
           key: ${{ runner.os }}-dist-newstyle-${{ hashFiles('src/plcc/lang/ext/haskell/emit.py', 'src/plcc/lang/ext/haskell/runtime/**', 'tests/bats/e2e/haskell_roundtrip.bats') }}
+          restore-keys: ${{ runner.os }}-dist-newstyle-
       - name: Install PDM
         run: pip install pdm
       - name: Run Haskell roundtrip test
         env:
-          HASKELL_ROUNDTRIP_OUT_DIR: ~/.cache/plcc-haskell-roundtrip
+          HASKELL_ROUNDTRIP_OUT_DIR: $HOME/.cache/plcc-haskell-roundtrip
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/e2e_haskell_roundtrip.bash
 
