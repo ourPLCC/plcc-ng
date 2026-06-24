@@ -2204,6 +2204,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#v0500-2026-06-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.50.0 (2026-06-23)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.50.0 (2026-06-23)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0490-2026-06-23" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2227,7 +2277,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#chores" class="md-nav__link">
+  <a href="#chores_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Chores
@@ -2260,7 +2310,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#features" class="md-nav__link">
+  <a href="#features_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Features
@@ -2299,7 +2349,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#chores_1" class="md-nav__link">
+  <a href="#chores_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Chores
@@ -2321,7 +2371,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#features_1" class="md-nav__link">
+  <a href="#features_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Features
@@ -2360,7 +2410,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#chores_2" class="md-nav__link">
+  <a href="#chores_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Chores
@@ -2443,6 +2493,29 @@
 
 <!-- markdownlint-disable-file MD041 -->
 <h1 id="changelog">CHANGELOG</h1>
+<h2 id="v0500-2026-06-23">v0.50.0 (2026-06-23)</h2>
+<h3 id="build-system">Build System</h3>
+<ul>
+<li>Add ghci and cabal to devcontainer
+  (<a href="https://github.com/ourPLCC/plcc-ng/commit/c7da922349e43187eb5f4d4428bea2e3ba779052"><code>c7da922</code></a>)</li>
+</ul>
+<h3 id="chores">Chores</h3>
+<ul>
+<li><strong>issues</strong>: Close 066 and 103; add 106 and 107; update roadmap [skip ci]
+  (<a href="https://github.com/ourPLCC/plcc-ng/commit/d7b2adf023ae677a964d393988401ffefb22873d"><code>d7b2adf</code></a>)</li>
+</ul>
+<p>Move completed issues 066 (JavaScript emitter) and 103 (<strong>run</strong> docs fix) to done/. Add issues 106
+  and 107 for JavaScript and Haskell language extension documentation. Update roadmap to 4 open
+  issues.</p>
+<p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
+<h3 id="features">Features</h3>
+<ul>
+<li><strong>java</strong>: Add class fragment support to Java emitter
+  (<a href="https://github.com/ourPLCC/plcc-ng/commit/34be97bbf23ca0abd65c35d8cdaeb6b82c19bb67"><code>34be97b</code></a>)</li>
+</ul>
+<p>Pass class_fragments to the template and render them on the class declaration line after the extends
+  clause, matching the original PLCC's /<em>Cls:class</em>/ hook behavior.</p>
+<p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
 <h2 id="v0490-2026-06-23">v0.49.0 (2026-06-23)</h2>
 <h3 id="bug-fixes">Bug Fixes</h3>
 <ul>
@@ -2482,7 +2555,7 @@
   concrete alternative (AddRest). There is no ExprRest.hs — everything for the rule lives in
   ExprRest.hs.</p>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="chores">Chores</h3>
+<h3 id="chores_1">Chores</h3>
 <ul>
 <li><strong>ci</strong>: Trigger
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/b4ea10afdbe5ee6b9091c541fef2826a5982101b"><code>b4ea10a</code></a>)</li>
@@ -2512,7 +2585,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/744e0904c7d3cea89f351f8dea51c22b26571f9f"><code>744e090</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features">Features</h3>
+<h3 id="features_1">Features</h3>
 <ul>
 <li>
 <p><strong>haskell</strong>: Add extension skeleton and entry points
@@ -2562,7 +2635,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/1d493df5b56a4f71ae34e801711f00c8ce786445"><code>1d493df</code></a>)</li>
 </ul>
 <h2 id="v0480-2026-06-22">v0.48.0 (2026-06-22)</h2>
-<h3 id="chores_1">Chores</h3>
+<h3 id="chores_2">Chores</h3>
 <ul>
 <li>
 <p><strong>issues</strong>: Add 103 - fix <strong>run</strong> double underscore in language guide overview [skip ci]
@@ -2608,7 +2681,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/d0b0585a3518104e08c134f452135ced60f3742c"><code>d0b0585</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_1">Features</h3>
+<h3 id="features_2">Features</h3>
 <ul>
 <li><strong>javascript</strong>: Add emit.py and Jinja2 templates
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/044c57ecd32d436fdf0e5b83a5414fe79027291f"><code>044c57e</code></a>)</li>
@@ -2647,7 +2720,7 @@
 <p>Without superfences, fenced code blocks inside content tabs render as literal text with the ```
   markers visible instead of as code blocks.</p>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="chores_2">Chores</h3>
+<h3 id="chores_3">Chores</h3>
 <ul>
 <li><strong>issues</strong>: Move 070 and 098 to done
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/3b360c664a77518ca590de6da4b7b6724a05dc0d"><code>3b360c6</code></a>)</li>
@@ -2913,7 +2986,7 @@
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
 <h2 id="v0470-2026-06-19">v0.47.0 (2026-06-19)</h2>
-<h3 id="chores_3">Chores</h3>
+<h3 id="chores_4">Chores</h3>
 <ul>
 <li>
 <p><strong>096</strong>: Guard setup in commands, integration, e2e with SKIP_SETUP
@@ -2968,7 +3041,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/1b27077197848441cf1c9ae57203cbf0fe4989ad"><code>1b27077</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_2">Features</h3>
+<h3 id="features_3">Features</h3>
 <ul>
 <li><strong>docs</strong>: Add dark mode with system-preference detection and toggle
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/669d763d566cc8ef34710d2738115f9332efe42e"><code>669d763</code></a>)</li>
@@ -3174,7 +3247,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/94254ccf9d550d25c8032e2a9604fc4e429a01f9"><code>94254cc</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_3">Features</h3>
+<h3 id="features_4">Features</h3>
 <ul>
 <li><strong>093</strong>: Add commit/hold split helper
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/41019ba4c09870b7195ac5c2e960550b38f85b78"><code>41019ba</code></a>)</li>
@@ -3290,7 +3363,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/95ff879bdc9f3ecee31d18f0c015959c4e56af7a"><code>95ff879</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_4">Features</h3>
+<h3 id="features_5">Features</h3>
 <ul>
 <li><strong>095</strong>: Enforce single semantic section; Spec.semantics is now SemanticSpec | None
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/5d8725e115f4c17009025989c76bf8635e99026f"><code>5d8725e</code></a>)</li>
@@ -3400,7 +3473,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_5">Features</h3>
+<h3 id="features_6">Features</h3>
 <ul>
 <li>
 <p><strong>089</strong>: Fix stale 'grammar banner' in make --help text
@@ -3496,7 +3569,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/927e8f5470bda5bcf79faefc2c6c41fd889972c7"><code>927e8f5</code></a>)</p>
 </li>
 </ul>
-<h3 id="chores_4">Chores</h3>
+<h3 id="chores_5">Chores</h3>
 <ul>
 <li><strong>bin</strong>: Add close-worktree.bash utility script
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/eb05296a54b01c5c6a1ecbdb8fde524f93a7d69b"><code>eb05296</code></a>)</li>
@@ -3512,7 +3585,7 @@
 <li><strong>088</strong>: Add implementation plan for required lexical keyword [skip ci]
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/eb415472ee8e5ec017c465962e912051a6490f58"><code>eb41547</code></a>)</li>
 </ul>
-<h3 id="features_6">Features</h3>
+<h3 id="features_7">Features</h3>
 <ul>
 <li>
 <p><strong>lexical</strong>: Add KeywordExpected error class [skip ci]
@@ -3574,7 +3647,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/aa3d84f7070ab58ea0c9135af2489359ce4f5bc8"><code>aa3d84f</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_7">Features</h3>
+<h3 id="features_8">Features</h3>
 <ul>
 <li><strong>084</strong>: Add print_banner() writing version+grammar to stderr
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/2a294358f4c6ba2e9c33267d35cb2a10acc1d03f"><code>2a29435</code></a>)</li>
@@ -3630,7 +3703,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/964b8d15a26ad13e7489978d43b8dc43bd61d1e6"><code>964b8d1</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_8">Features</h3>
+<h3 id="features_9">Features</h3>
 <ul>
 <li><strong>086</strong>: Token.<strong>repr</strong> returns lexeme
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/2b4d2e8fcc4fccf7ff1292a7fe38123acfc20410"><code>2b4d2e8</code></a>)</li>
@@ -3714,7 +3787,7 @@
 <p>fence_prefix: '' — use plain ```plantuml blocks (default is kroki-plantuml)</p>
 <p>tag_format: svg — embed SVG inline at build time, not img tags pointing to kroki.io</p>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="chores_5">Chores</h3>
+<h3 id="chores_6">Chores</h3>
 <ul>
 <li><strong>docs</strong>: Add bin/docs/serve.bash to start the MkDocs dev server [skip ci]
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/a6b497f2d1e1f84dd824f163e3a70740e83b7f62"><code>a6b497f</code></a>)</li>
@@ -3995,7 +4068,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/d7fda699d1cfa8e0845686ed685aa1f0d3772394"><code>d7fda69</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_9">Features</h3>
+<h3 id="features_10">Features</h3>
 <ul>
 <li><strong>docs</strong>: Add mkdocs-kroki-plugin for PlantUML diagram support [skip ci]
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/336fc97fa6b2d0f03f1b299c914a2a614b1b7cf9"><code>336fc97</code></a>)</li>
@@ -4011,7 +4084,7 @@
   used as a start anchor. Without the marker include-markdown included nothing. Remove the start
   filter to include the full file, and suppress MD041 since the linter cannot see past the include
   directive to the # CHANGELOG heading PSR generates.</p>
-<h3 id="build-system">Build System</h3>
+<h3 id="build-system_1">Build System</h3>
 <ul>
 <li><strong>release</strong>: Add [skip ci] to PSR release commit message
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/951fc0456008350823e1fefe6971a18084d0b2c3"><code>951fc04</code></a>)</li>
@@ -4045,7 +4118,7 @@
   project.version field exists). Reverted to [].</p>
 <p>deploy-dev-docs now waits on deploy-user-docs so both jobs don't push to gh-pages concurrently,
   which could cause non-fast-forward push failures.</p>
-<h3 id="build-system_1">Build System</h3>
+<h3 id="build-system_2">Build System</h3>
 <ul>
 <li>
 <p><strong>docs</strong>: Add mkdocs, material, mike, include-markdown-plugin [skip ci]
@@ -4215,7 +4288,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/6e75c3139e4f12d8e080ef8d9e05709dadc7a630"><code>6e75c31</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_10">Features</h3>
+<h3 id="features_11">Features</h3>
 <ul>
 <li>
 <p><strong>069</strong>: Add _render_trace for Style B parse trace output
@@ -4379,7 +4452,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_11">Features</h3>
+<h3 id="features_12">Features</h3>
 <ul>
 <li><strong>java-emitter</strong>: Rename \$run to _run to match Python convention
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/c5c02ddc6a436eeb74593076b1ef0bf900d01b94"><code>c5c02dd</code></a>)</li>
@@ -4407,7 +4480,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/17c0477bd503fe560fc47cf56dd6584ea26c688e"><code>17c0477</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_12">Features</h3>
+<h3 id="features_13">Features</h3>
 <ul>
 <li><strong>lexical</strong>: Remove close_pattern and make_block_result from LexicalRule protocol
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/589e07beaba49bc42070530955ddc6ab822525c6"><code>589e07b</code></a>)</li>
@@ -4510,7 +4583,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/28373258a33c9cd66a39d395bd6dc67e04499bb5"><code>2837325</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_13">Features</h3>
+<h3 id="features_14">Features</h3>
 <ul>
 <li><strong>diagram</strong>: Add version banner and --no-banner flag
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/08903da92e609b5fbdb64d201a20e6cb50f13853"><code>08903da</code></a>)</li>
@@ -4590,7 +4663,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/a9215aa27ce5c538a7ced5e81c2b98f09a17cdb6"><code>a9215aa</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_14">Features</h3>
+<h3 id="features_15">Features</h3>
 <ul>
 <li><strong>scan</strong>: Switch to EOF submit mode for multi-line block token support
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/ef945c2322063cf7f81936fd683d050e52816475"><code>ef945c2</code></a>)</li>
@@ -4675,7 +4748,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/61a04c96cb4887e2a12e7f3324f4bed438109329"><code>61a04c9</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_15">Features</h3>
+<h3 id="features_16">Features</h3>
 <ul>
 <li><strong>062</strong>: Add format_unclosed_block_error_record to jsonl_formatter
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/573ffe3a1ddebc52785ff627a684110279b2c582"><code>573ffe3</code></a>)</li>
@@ -4806,7 +4879,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/458d3ee7c1990645948b1d5b62099c8f2683858d"><code>458d3ee</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_16">Features</h3>
+<h3 id="features_17">Features</h3>
 <ul>
 <li><strong>scan</strong>: Replace skip-priority algorithm with first-longest-match
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/a4d85b313af2370e4469bac3ea343cb744320668"><code>a4d85b3</code></a>)</li>
@@ -4900,7 +4973,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_17">Features</h3>
+<h3 id="features_18">Features</h3>
 <ul>
 <li>
 <p><strong>cmd</strong>: Add print_startup_banner to output.py
@@ -4977,7 +5050,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/f17d8af2f5474fa2c0399a1bdf154cddaa2c28aa"><code>f17d8af</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_18">Features</h3>
+<h3 id="features_19">Features</h3>
 <ul>
 <li><strong>rough</strong>: Raise error for extra token on divider line; remove entry_point parsing
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/3282b8ef44e12c14ab26216101acb8138ef4f8dc"><code>3282b8e</code></a>)</li>
@@ -5149,7 +5222,7 @@
 <li><strong>make</strong>: Write build/.grammar before build stages so sticky grammar survives syntax errors
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/82318b5bd72d4d338e0a05a49435e9c63a585778"><code>82318b5</code></a>)</li>
 </ul>
-<h3 id="chores_6">Chores</h3>
+<h3 id="chores_7">Chores</h3>
 <ul>
 <li>Add bin/issues/new.bash and .next-id.txt to prevent duplicate issue numbers
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/ef60483474e0618430fccb8852c43e2e0351f88c"><code>ef60483</code></a>)</li>
@@ -5253,7 +5326,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_19">Features</h3>
+<h3 id="features_20">Features</h3>
 <ul>
 <li>
 <p>Add plcc.build.grammar module for sticky grammar tracking
@@ -5328,7 +5401,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/8b33c7e8e7749e29316b1aab60e5b7d84ea26bd2"><code>8b33c7e</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_20">Features</h3>
+<h3 id="features_21">Features</h3>
 <ul>
 <li><strong>parse</strong>: Add --trace flag and parse-step rendering
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/798a00fbb943e63f92bf690db8ba6b9a56d7fa23"><code>798a00f</code></a>)</li>
@@ -5404,7 +5477,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_21">Features</h3>
+<h3 id="features_22">Features</h3>
 <ul>
 <li><strong>cmd</strong>: Add print_user_error helper to encode stdout intent
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/56c2f76de80fd284d28daa12ba2cfe93886ab183"><code>56c2f76</code></a>)</li>
@@ -5514,7 +5587,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_22">Features</h3>
+<h3 id="features_23">Features</h3>
 <ul>
 <li>Field-aware symbol rendering in conflict messages
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/b81ef72b78402e7f912bd5a3032dfded35a71300"><code>b81ef72</code></a>)</li>
@@ -5615,7 +5688,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/9c4e43af837eba5407cc39e8c53180df3fcd108f"><code>9c4e43a</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_23">Features</h3>
+<h3 id="features_24">Features</h3>
 <ul>
 <li>
 <p>Add Rule dataclass to spec_json_decoder
@@ -5675,7 +5748,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/024b62d2c463e8b068a0446a4faed517e2b07931"><code>024b62d</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_24">Features</h3>
+<h3 id="features_25">Features</h3>
 <ul>
 <li>
 <p><strong>version</strong>: Add get_version and main to plcc.version
@@ -5733,7 +5806,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/20e121f9b07ab437467f0e6e9618593db8d9b3d8"><code>20e121f</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_25">Features</h3>
+<h3 id="features_26">Features</h3>
 <ul>
 <li>
 <p>Add kind and hint properties to MalformedBNFError
@@ -5788,7 +5861,7 @@
 <li>Move issue 041 to done
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/8c1ebc2fa203c5f4e8e27b475af0d1179bce8b11"><code>8c1ebc2</code></a>)</li>
 </ul>
-<h3 id="features_26">Features</h3>
+<h3 id="features_27">Features</h3>
 <ul>
 <li>
 <p>Give MalformedBNFError a readable <strong>str</strong> with column and examples
@@ -5965,7 +6038,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="build-system_2">Build System</h3>
+<h3 id="build-system_3">Build System</h3>
 <ul>
 <li><strong>diagram</strong>: Register plantuml build/run entry points and plantuml optional dep
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/cac7b40fdd59cc25e6ef4162b4c231f059991b12"><code>cac7b40</code></a>)</li>
@@ -6002,7 +6075,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/f189a1c034776c93d6dbdd32151636de1be9de4a"><code>f189a1c</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_27">Features</h3>
+<h3 id="features_28">Features</h3>
 <ul>
 <li><strong>diagram</strong>: Add plcc-plantuml-diagram-build plugin using plantuml PyPI
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/1aeb6a333ff19d35053144831d6fc791b47635ce"><code>1aeb6a3</code></a>)</li>
@@ -6093,7 +6166,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/d03040136e5d5bfc8293f23a4d78c7b5fe7e86e7"><code>d030401</code></a>)</p>
 </li>
 </ul>
-<h3 id="build-system_3">Build System</h3>
+<h3 id="build-system_4">Build System</h3>
 <ul>
 <li>Update entry points for diagram redesign
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/215321b62aaf13d6e952f2e0521bb52584bf8d3e"><code>215321b</code></a>)</li>
@@ -6114,7 +6187,7 @@
 <li><strong>plans</strong>: Add implementation plan for issue 035 diagram redesign [skip ci]
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/26ee4f6abec9801d29992a0aa98aeb0b3c889558"><code>26ee4f6</code></a>)</li>
 </ul>
-<h3 id="features_28">Features</h3>
+<h3 id="features_29">Features</h3>
 <ul>
 <li><strong>diagram</strong>: Add plcc-diagram Level 2 command
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/043e42f3e56aae31b8b2375d06d8c1b9cf6fa0a2"><code>043e42f</code></a>)</li>
@@ -6304,7 +6377,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/d11176a175e19595cb36e07039d432e9c387f8a1"><code>d11176a</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_29">Features</h3>
+<h3 id="features_30">Features</h3>
 <ul>
 <li><strong>rep</strong>: Switch to SubmitOn.EOF — ^D submits, Enter accumulates
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/5509d436d1289a526d0b712c7209e59aae5b6b31"><code>5509d43</code></a>)</li>
@@ -6339,7 +6412,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/35471be59323edfc5e6e4c9b0edd0753e2935a39"><code>35471be</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_30">Features</h3>
+<h3 id="features_31">Features</h3>
 <ul>
 <li>
 <p><strong>source-runner</strong>: Add pending_exit field to _InteractiveState
@@ -6429,7 +6502,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/cc0f9866b949e8707281abe0522e1e755c671972"><code>cc0f986</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_31">Features</h3>
+<h3 id="features_32">Features</h3>
 <ul>
 <li><strong>scan</strong>: Preserve newlines in scanner input, matching original PLCC behavior
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/1e0e094f5ac1bc1e70c9c6cc5c0e58e2fb0c2c83"><code>1e0e094</code></a>)</li>
@@ -6464,7 +6537,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/fdfa4f5e563ed11dc689f108aad67618b44d718b"><code>fdfa4f5</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_32">Features</h3>
+<h3 id="features_33">Features</h3>
 <ul>
 <li><strong>java-emit</strong>: Generate _Start.java and wire start class to extend it
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/42a09e18de0b44a2a9b2a82847f0663d7fdff2a1"><code>42a09e1</code></a>)</li>
@@ -6610,7 +6683,7 @@
 <li><strong>lang</strong>: Exit 130 cleanly on ^C in plcc-lang-run, plcc-java-run, plcc-python-run
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/3b57b168e7cb366a2e1e05aedc45247ce3f83e2d"><code>3b57b16</code></a>)</li>
 </ul>
-<h3 id="chores_7">Chores</h3>
+<h3 id="chores_8">Chores</h3>
 <ul>
 <li><strong>test</strong>: Remove unused Path import in java run_test.py
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/cbdd1d77b73290e40af3614826e12decbf64f76a"><code>cbdd1d7</code></a>)</li>
@@ -6669,7 +6742,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_33">Features</h3>
+<h3 id="features_34">Features</h3>
 <ul>
 <li><strong>parse</strong>: Annotate empty productions with '(empty)' in tree output
   (<a href="https://github.com/ourPLCC/plcc-ng/pull/23">#023</a>,
@@ -6929,7 +7002,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/f9307d1f5a012fdc517eb9bca8984d268bd1e759"><code>f9307d1</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_34">Features</h3>
+<h3 id="features_35">Features</h3>
 <ul>
 <li><strong>source-runner</strong>: Trial first line before entering continuation mode (025) [skip ci]
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/899ce2d177968251779c9affe5582cad3f92d295"><code>899ce2d</code></a>)</li>
@@ -7013,7 +7086,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_35">Features</h3>
+<h3 id="features_36">Features</h3>
 <ul>
 <li><strong>parse</strong>: Uniform record iteration, file:line:col error format
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/8f5b6e52eab1c66304ec44b79642f0596190546f"><code>8f5b6e5</code></a>)</li>
@@ -7290,7 +7363,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/abd18de9fad48f0145dfb9f83771d3bbcf3c08ff"><code>abd18de</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_36">Features</h3>
+<h3 id="features_37">Features</h3>
 <ul>
 <li><strong>cmd</strong>: Add SourceRunner with source routing and interactive loop
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/8e319e453e4c876fc8cc268d231f212ed503fad1"><code>8e319e4</code></a>)</li>
@@ -7370,7 +7443,7 @@
 <li><strong>issues</strong>: Mark 005-007 as done
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/0de5fb54f89dad51501adb9d6d2d12ff20253d63"><code>0de5fb5</code></a>)</li>
 </ul>
-<h3 id="features_37">Features</h3>
+<h3 id="features_38">Features</h3>
 <ul>
 <li><strong>scan</strong>: Print TTY hint each time interactive stdin read begins
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/56ef53ace15d3fc31c4722a69cbd5511dd6ec2a8"><code>56ef53a</code></a>)</li>
@@ -7484,7 +7557,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/de53f05dad7738572cd21d23f31a494b1b204c9d"><code>de53f05</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_38">Features</h3>
+<h3 id="features_39">Features</h3>
 <ul>
 <li>Add staleness algorithm, --grammar-file, --through to plcc-make
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/e12c97f59d18688d681abf95071912be6c0d666b"><code>e12c97f</code></a>)</li>
@@ -7664,7 +7737,7 @@
   plcc-tokens, adds --show-line/--show-regex/--show-all on plcc-scan, and updates -v references to
   match merged main branch.</p>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_39">Features</h3>
+<h3 id="features_40">Features</h3>
 <ul>
 <li><strong>scan</strong>: Add pattern and attempts fields to Token and Skip
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/7a802b6e13bfb9f07eeb2e673e09dc4a9f537907"><code>7a802b6</code></a>)</li>
@@ -7736,7 +7809,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/e1296cdf926071563c6e67fb68e67d3d5a8d1418"><code>e1296cd</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_40">Features</h3>
+<h3 id="features_41">Features</h3>
 <ul>
 <li>Add [-v ...] to all CLI usage lines for docopt-ng counting
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/19b04db883543a8fa8fb57e8c8f2a8babe6c2563"><code>19b04db</code></a>)</li>
@@ -7792,7 +7865,7 @@
 <li><strong>issues</strong>: Completed 001
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/3f3b90c59a97ca545e0b0ac8fedfc27032ee915f"><code>3f3b90c</code></a>)</li>
 </ul>
-<h3 id="features_41">Features</h3>
+<h3 id="features_42">Features</h3>
 <ul>
 <li>
 <p><strong>scan</strong>: Pass SOURCE args to plcc-tokens; always include file in location
@@ -7859,7 +7932,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/9a3fd0d1b77ca1a46bdcc7c2263deff4c0d93f55"><code>9a3fd0d</code></a>)</li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="features_42">Features</h3>
+<h3 id="features_43">Features</h3>
 <ul>
 <li>
 <p><strong>tokens</strong>: Add format_error_record to jsonl_formatter
@@ -7896,7 +7969,7 @@
 <li><strong>scan</strong>: Handle BrokenPipeError in feeder, flush token output, drop feed join
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/546914412946bbada258beecd8479e15c1ecf73f"><code>5469144</code></a>)</li>
 </ul>
-<h3 id="features_43">Features</h3>
+<h3 id="features_44">Features</h3>
 <ul>
 <li><strong>scan</strong>: Stream tokens line by line using Popen
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/39ed0bff9b77e010321798cf93e3bd76c109c5a3"><code>39ed0bf</code></a>)</li>
@@ -7912,7 +7985,7 @@
 </ul>
 <p>Pass --continue-on-error to plcc-tokens and always process stdout regardless of exit code, so tokens
   emitted before a lex error are not silently discarded.</p>
-<h3 id="features_44">Features</h3>
+<h3 id="features_45">Features</h3>
 <ul>
 <li><strong>tokens</strong>: Add --continue-on-error flag
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/d4d402d37d392a9351c581ebb353a28279ae7b7b"><code>d4d402d</code></a>)</li>
@@ -7923,7 +7996,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/3fe33d6cac71648dd0228cbd62e6247b69a07cf3"><code>3fe33d6</code></a>)</li>
 </ul>
 <h2 id="v020-2026-05-06">v0.2.0 (2026-05-06)</h2>
-<h3 id="features_45">Features</h3>
+<h3 id="features_46">Features</h3>
 <ul>
 <li>
 <p><strong>parse</strong>: Accept '-' as stdin
@@ -7959,7 +8032,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/e93ea70f09ebd107defa706dcc0f524b740a0cb1"><code>e93ea70</code></a>)</p>
 </li>
 </ul>
-<h3 id="chores_8">Chores</h3>
+<h3 id="chores_9">Chores</h3>
 <ul>
 <li>Pin devcontainer feature versions in lock file
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/e3611074694f67179deaa84e778995233ed6e055"><code>e361107</code></a>)</li>
@@ -8380,7 +8453,7 @@
 </li>
 </ul>
 <p>Co-Authored-By: Claude Sonnet 4.6 <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;">&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#64;&#97;&#110;&#116;&#104;&#114;&#111;&#112;&#105;&#99;&#46;&#99;&#111;&#109;</a></p>
-<h3 id="build-system_4">Build System</h3>
+<h3 id="build-system_5">Build System</h3>
 <ul>
 <li>
 <p>Add release-image.yml file
@@ -8476,7 +8549,7 @@
 <p>shell/run no longer changes to the root of the project before running the shell environment. This
   means the current working directory from which you run shell/run will be mounted into the
   environment rather than the root of the project. This makes it more flexible in manual tests.</p>
-<h3 id="chores_9">Chores</h3>
+<h3 id="chores_10">Chores</h3>
 <ul>
 <li>
 <p>Add .worktrees/ to .gitignore
@@ -9190,7 +9263,7 @@
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/ca08e75c2b5635d4ce5593aa56ab913e3b27998b"><code>ca08e75</code></a>)</p>
 </li>
 </ul>
-<h3 id="features_46">Features</h3>
+<h3 id="features_47">Features</h3>
 <ul>
 <li>
 <p>Add %include
@@ -9519,7 +9592,7 @@
 <li>Upgrade docker dependencies (<a href="https://github.com/ourPLCC/plcc-ng/pull/48">#48</a>,
   <a href="https://github.com/ourPLCC/plcc-ng/commit/3d6bb79203643d35b1959740eb737d4589fb9880"><code>3d6bb79</code></a>)</li>
 </ul>
-<h2 id="features_47">Features</h2>
+<h2 id="features_48">Features</h2>
 <ul>
 <li>Upgrade Java to 17 in Docker, allowing language authors to use its features when implementing
   languages.</li>
