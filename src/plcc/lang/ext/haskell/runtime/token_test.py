@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 import textwrap
 from pathlib import Path
@@ -5,6 +6,19 @@ from pathlib import Path
 import pytest
 
 TOKEN_HS = Path(__file__).parent / 'Token.hs'
+
+def _hackage_available():
+    if not shutil.which('cabal'):
+        return False
+    for base in [Path.home() / '.cabal', Path.home() / '.local' / 'state' / 'cabal']:
+        if (base / 'packages' / 'hackage.haskell.org').exists():
+            return True
+    return False
+
+_skip_no_hackage = pytest.mark.skipif(
+    not _hackage_available(),
+    reason="requires cabal with hackage package list (run 'cabal update')",
+)
 
 
 def _build_and_run(tmp_path, main_hs):
@@ -30,6 +44,7 @@ def _build_and_run(tmp_path, main_hs):
     return result.stdout.strip()
 
 
+@_skip_no_hackage
 def test_token_parses_kind_and_lexeme(tmp_path):
     output = _build_and_run(tmp_path, textwrap.dedent("""\
         module Main where
@@ -46,6 +61,7 @@ def test_token_parses_kind_and_lexeme(tmp_path):
     assert output == "INT\n42"
 
 
+@_skip_no_hackage
 def test_token_show(tmp_path):
     output = _build_and_run(tmp_path, textwrap.dedent("""\
         module Main where
