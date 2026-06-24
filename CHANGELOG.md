@@ -1,6 +1,75 @@
 # CHANGELOG
 
 
+## v0.53.0 (2026-06-24)
+
+### Continuous Integration
+
+- Fix tilde expansion, add dist-newstyle restore-keys, and update CONTRIBUTING.md
+  ([`d20828a`](https://github.com/ourPLCC/plcc-ng/commit/d20828a15122f5e376439c92211df3492e181b2b))
+
+- Use $HOME instead of ~ in HASKELL_ROUNDTRIP_OUT_DIR env var; GitHub Actions does not expand ~ in
+  env: blocks, causing cache path mismatch - Add restore-keys: ${{ runner.os }}-dist-newstyle- to
+  the dist-newstyle cache step so any change to haskell_roundtrip.bats does not force a full cold
+  Haskell build - Update CONTRIBUTING.md test table: document e2e_haskell_roundtrip.bash, clarify
+  functional.bash excludes the Haskell roundtrip, and update all.bash description to reflect it now
+  includes the Haskell roundtrip
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Parallelize all test jobs and add venv/cabal/dist-newstyle caches
+  ([`c848f7d`](https://github.com/ourPLCC/plcc-ng/commit/c848f7d08aa6581836e9e98c004f8cca50566825))
+
+- Skip CI for doc-only changes via paths-ignore
+  ([`0eaab7f`](https://github.com/ourPLCC/plcc-ng/commit/0eaab7fcb834b4ee43e576536f5654cc92fed711))
+
+Adds paths-ignore to the pull_request trigger so pushes that touch only dev-docs/, docs/, top-level
+  markdown, or mkdocs config files do not run the test suite. Replaces the manual [skip ci]
+  convention.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec for issue 110 Haskell roundtrip CI performance [skip ci]
+  ([`fb6ff8f`](https://github.com/ourPLCC/plcc-ng/commit/fb6ff8fc2a19431316318d292608646b57b721da))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue 110 Haskell roundtrip CI performance [skip ci]
+  ([`d934504`](https://github.com/ourPLCC/plcc-ng/commit/d934504bb84d96c8ed01d0de4cc82aa256e96144))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Remove [skip ci] convention from CONTRIBUTING.md
+  ([`040b32b`](https://github.com/ourPLCC/plcc-ng/commit/040b32b4b2f52dd1552a63101dda01e40d0ec5d3))
+
+CI now skips doc-only PRs automatically via paths-ignore in ci.yml. No manual annotation needed.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update issues and roadmap for 2026-06-24 [skip ci]
+  ([`92995d9`](https://github.com/ourPLCC/plcc-ng/commit/92995d9874d5d44799499cf025c9fe47ba2453b3))
+
+Move completed issues 106, 107, 108 to done. Add issues 109 (PlantUML EBNF diagram), 110 (e2e
+  Haskell build performance), 111 (Mermaid extension redesign), 112 (v1.0 release prep). Update
+  roadmap to 0 open issues.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Add e2e_haskell_roundtrip.bash and exclude roundtrip from e2e suite
+  ([`321dc68`](https://github.com/ourPLCC/plcc-ng/commit/321dc688e135e55b58ccf7697ff39fe4eb956335))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Testing
+
+- Split haskell.bats into fast emit and slow roundtrip
+  ([`e7d99ad`](https://github.com/ourPLCC/plcc-ng/commit/e7d99ade52dbe5a515a6f847a36551d0612f6cb8))
+
+
 ## v0.52.0 (2026-06-24)
 
 ### Bug Fixes
