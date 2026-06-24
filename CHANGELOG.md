@@ -1,6 +1,41 @@
 # CHANGELOG
 
 
+## v0.51.1 (2026-06-24)
+
+### Bug Fixes
+
+- **haskell**: Skip Token runtime tests when hackage package list is absent
+  ([`37c6815`](https://github.com/ourPLCC/plcc-ng/commit/37c6815af43a4c4f32226748a5597a616019b7c4))
+
+Replace unconditional @pytest.mark.skip with a skipif that checks whether the hackage package list
+  exists. Tests run where cabal has been properly initialized (devcontainer), skip cleanly in CI
+  where cabal update has not run.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Unskip Token runtime tests and add missing bytestring dep
+  ([`1c1f5ea`](https://github.com/ourPLCC/plcc-ng/commit/1c1f5eabfb264f011bd88a1cdfd3ed2567f31559))
+
+The two cabal-based tests were unconditionally skipped despite cabal being available. The build also
+  failed because the cabal template was missing bytestring in build-depends (needed for
+  Data.ByteString.Lazy.Char8).
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Chores
+
+- Update close-worktree.bash to find worktrees under .claude/worktrees/
+  ([`90023de`](https://github.com/ourPLCC/plcc-ng/commit/90023defafa3b3047394fde5af5b1db5b18f66ed))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Close 104 and 105; update roadmap [skip ci]
+  ([`c18aa23`](https://github.com/ourPLCC/plcc-ng/commit/c18aa2313b118ceb7abbadec6cbd0c6c61f5f490))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.51.0 (2026-06-24)
 
 ### Documentation
