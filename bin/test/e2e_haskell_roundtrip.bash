@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "bin/test/e2e.bash"
-echo "-----------------"
+echo "bin/test/e2e_haskell_roundtrip.bash"
+echo "------------------------------------"
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 PROJECT_ROOT="$( cd "${SCRIPT_DIR}/../.." &> /dev/null && pwd )"
@@ -17,13 +17,7 @@ _run() {
         pdm install
     fi
     export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
-    bats $(find tests/bats/e2e/ -name "*.bats" ! -name "languages-java.bats" ! -name "haskell_roundtrip.bats" | sort)
-    if [ -n "${LANGUAGES_REPO_PATH:-}" ]; then
-        "${PROJECT_ROOT}/bin/install/java.bash"
-        echo ""
-        echo "Running Java corpus tests (LANGUAGES_REPO_PATH=${LANGUAGES_REPO_PATH})"
-        bats tests/bats/e2e/languages-java.bats
-    fi
+    bats tests/bats/e2e/haskell_roundtrip.bats
 }
 
-run_cached /tmp/plcc-test-e2e.log _run
+run_cached /tmp/plcc-test-e2e-haskell-roundtrip.log _run
