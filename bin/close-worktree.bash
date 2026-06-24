@@ -7,14 +7,22 @@ cd "${PROJECT_ROOT}"
 
 usage() {
     echo "Usage: $(basename "$0") <worktree-name>"
-    echo "  worktree-name  name of the worktree under .worktrees/, e.g. 084-no-banner-default"
+    echo "  worktree-name  name of the worktree under .worktrees/ or .claude/worktrees/, e.g. 084-no-banner-default"
     exit 1
 }
 
 [[ $# -lt 1 ]] && usage
 
 WORKTREE_NAME="$1"
-WORKTREE_PATH="${PROJECT_ROOT}/.worktrees/${WORKTREE_NAME}"
+
+if [[ -d "${PROJECT_ROOT}/.worktrees/${WORKTREE_NAME}" ]]; then
+    WORKTREE_PATH="${PROJECT_ROOT}/.worktrees/${WORKTREE_NAME}"
+elif [[ -d "${PROJECT_ROOT}/.claude/worktrees/${WORKTREE_NAME}" ]]; then
+    WORKTREE_PATH="${PROJECT_ROOT}/.claude/worktrees/${WORKTREE_NAME}"
+else
+    echo "Error: worktree '${WORKTREE_NAME}' not found under .worktrees/ or .claude/worktrees/" >&2
+    exit 1
+fi
 
 BRANCH="$(git -C "${WORKTREE_PATH}" branch --show-current)"
 
