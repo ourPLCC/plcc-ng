@@ -72,8 +72,8 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 | --- | --- | --- |
 | Concrete non-terminal rule | Java class with public fields and constructor | `<Exp:NumExp> ::= <NUM>` |
 | Abstract non-terminal (has alternatives) | `abstract` Java class | `<Exp>` |
-| Named non-terminal field (`:name` on RHS) | `this.name` — instance of that class | `<Exp:left>` → `left` |
-| Captured terminal (`<TOKEN>`) | `this.name` — a `Token` | `<NUM>` → `num` |
+| Named non-terminal field (`:name` on RHS) | `name` — instance of that class | `<Exp:left>` → `left` |
+| Captured terminal (`<TOKEN>`) | `name` — a `Token` | `<NUM>` → `num` |
 | Token string value | `.lexeme` on the token | `num.lexeme` → `"42"` |
 | Uncaptured terminal (no angle brackets) | Not stored, no field | `PLUS` in `<Exp:AddExp>` |
 | Arbno (`**=`) | `ArrayList<ClassName> nameList` | `<Prog> **= <Exp>` → `expList` |

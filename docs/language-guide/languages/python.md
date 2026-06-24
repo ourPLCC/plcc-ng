@@ -169,6 +169,7 @@ No build step is required — Python does not need a compilation step, so `plcc-
 
 ## Restrictions
 
+- Requires Python 3.12 or later.
 - Generated files are overwritten on every emit run — do not edit them directly.
 - Sibling generated classes are not automatically in scope; import them explicitly with an `import` fragment.
 

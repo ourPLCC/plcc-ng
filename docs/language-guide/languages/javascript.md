@@ -183,13 +183,13 @@ Expected output:
 | Command | What it does |
 | --- | --- |
 | [`plcc-javascript-emit`](../../cli/commands/plcc-javascript-emit.md) | Writes `.js` class files and a `main.js` entry point to the output directory |
-| [`plcc-javascript-run`](../../cli/commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js on `PATH` |
+| [`plcc-javascript-run`](../../cli/commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js 18+ on `PATH` |
 
 No build step is required — Node.js does not need a compilation step, so `plcc-lang-build` skips silently.
 
 ## Restrictions
 
-- No `class` hook (unlike Python). There is no equivalent in JavaScript.
+- No `class` hook (unlike Java and Python). There is no equivalent in JavaScript.
 - Generated code uses CommonJS (`require` / `module.exports`). ESM (`import` / `export`) is not supported.
 - All output files are overwritten on every emit run — do not edit them directly.
 - Sibling generated classes are not automatically in scope; require them explicitly with an `import` fragment.
