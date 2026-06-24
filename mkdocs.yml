@@ -42,6 +42,10 @@ nav:
     - Lexical Section: language-guide/lexical.md
     - Syntactic Section: language-guide/syntactic.md
     - Semantic Section: language-guide/semantic.md
+    - Languages:
+      - JavaScript: language-guide/languages/javascript.md
+      - Java: language-guide/languages/java.md
+      - Python: language-guide/languages/python.md
     - Examples: language-guide/examples.md
   - CLI:
     - Overview: cli/index.md
@@ -60,6 +64,8 @@ nav:
       - plcc-java-build: cli/commands/plcc-java-build.md
       - plcc-java-emit: cli/commands/plcc-java-emit.md
       - plcc-java-run: cli/commands/plcc-java-run.md
+      - plcc-javascript-emit: cli/commands/plcc-javascript-emit.md
+      - plcc-javascript-run: cli/commands/plcc-javascript-run.md
       - plcc-lang-build: cli/commands/plcc-lang-build.md
       - plcc-lang-emit: cli/commands/plcc-lang-emit.md
       - plcc-lang-list: cli/commands/plcc-lang-list.md
