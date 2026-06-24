@@ -11,32 +11,65 @@ on:
       - 'mkdocs-dev.yml'
 
 jobs:
-  unit-and-integration:
-    name: Unit and integration tests
+  units:
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+      - uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
       - name: Install PDM
         run: pip install pdm
       - name: Run unit tests
         env:
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/units.bash
+
+  commands:
+    name: Command tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
+      - name: Install PDM
+        run: pip install pdm
       - name: Run command tests
         env:
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/commands.bash
+
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
+      - name: Install PDM
+        run: pip install pdm
       - name: Run integration tests
         env:
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/integration.bash
 
-  languages-corpus:
-    name: Languages corpus (Java e2e)
-    needs: unit-and-integration
+  e2e:
+    name: E2E tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,11 +82,8 @@ jobs:
           java-version: '17'
       - uses: actions/cache@v4
         with:
-          path: |
-            ~/.cabal/packages
-            ~/.cabal/store
-          key: ${{ runner.os }}-cabal-${{ hashFiles('src/plcc/lang/ext/haskell/emit.py') }}
-          restore-keys: ${{ runner.os }}-cabal-
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
       - name: Install PDM
         run: pip install pdm
       - name: Clone languages repo at pinned commit
@@ -61,15 +91,45 @@ jobs:
           PIN=$(cat tests/fixtures/languages-pin.txt)
           git clone https://github.com/ourPLCC/languages.git /tmp/languages
           git -C /tmp/languages checkout "${PIN}"
-      - name: Run e2e corpus tests
+      - name: Run e2e tests
         env:
           LANGUAGES_REPO_PATH: /tmp/languages
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/e2e.bash
 
-  packaging:
+  e2e-haskell-roundtrip:
+    name: E2E Haskell roundtrip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cabal/packages
+            ~/.cabal/store
+          key: ${{ runner.os }}-cabal-${{ hashFiles('src/plcc/lang/ext/haskell/emit.py') }}
+          restore-keys: ${{ runner.os }}-cabal-
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/plcc-haskell-roundtrip
+          key: ${{ runner.os }}-dist-newstyle-${{ hashFiles('src/plcc/lang/ext/haskell/emit.py', 'src/plcc/lang/ext/haskell/runtime/**', 'tests/bats/e2e/haskell_roundtrip.bats') }}
+      - name: Install PDM
+        run: pip install pdm
+      - name: Run Haskell roundtrip test
+        env:
+          HASKELL_ROUNDTRIP_OUT_DIR: ~/.cache/plcc-haskell-roundtrip
+          PLCC_NO_TEST_CACHE: "1"
+        run: bin/test/e2e_haskell_roundtrip.bash
+
+  package:
     name: Packaging
-    needs: unit-and-integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,6 +138,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+      - uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
       - name: Install PDM
         run: pip install pdm
       - name: Build wheel
