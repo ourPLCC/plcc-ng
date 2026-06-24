@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v0.54.0 (2026-06-24)
+
+### Bug Fixes
+
+- Remove unused urllib.error import from mermaid build
+  ([`13461e7`](https://github.com/ourPLCC/plcc-ng/commit/13461e785aeaa6b4f1f42e4c2d5d0147bd48db9f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec for issue 111 mermaid build via kroki.io [skip ci]
+  ([`3ac6533`](https://github.com/ourPLCC/plcc-ng/commit/3ac6533ba646f608bf8a0e8ab2bedff5b9bbcfd0))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue 111 mermaid build via kroki.io [skip ci]
+  ([`efc4832`](https://github.com/ourPLCC/plcc-ng/commit/efc4832c86125ff77ad369197eabaa00fec7b43d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Render mermaid diagrams via kroki.io instead of mmdc
+  ([`a05005e`](https://github.com/ourPLCC/plcc-ng/commit/a05005e38696f7d4f2c4d4723b246d0543baafdb))
+
+
 ## v0.53.0 (2026-06-24)
 
 ### Continuous Integration
