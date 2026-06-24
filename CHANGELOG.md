@@ -1,6 +1,113 @@
 # CHANGELOG
 
 
+## v0.52.0 (2026-06-24)
+
+### Bug Fixes
+
+- **diagram**: Update bats command test for new plantuml inheritance arrow direction
+  ([`39138ae`](https://github.com/ourPLCC/plcc-ng/commit/39138aef2acc344df73c8769a4851bf13405136a))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Update e2e test for new plantuml inheritance arrow direction
+  ([`5871141`](https://github.com/ourPLCC/plcc-ng/commit/587114183aeaab08e4fff053cd87514b8825b34f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec for Haskell language extension documentation (issue 107)
+  ([`21c6102`](https://github.com/ourPLCC/plcc-ng/commit/21c610229a4f45f899b8a94660b3730893fc3a04))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add Haskell language extension guide (issue 107)
+  ([`b96aeba`](https://github.com/ourPLCC/plcc-ng/commit/b96aeba6c768ed8449aa4af1706d9b862a6f7143))
+
+- Add Haskell to Languages nav and CLI commands in mkdocs.yml
+  ([`30c31ea`](https://github.com/ourPLCC/plcc-ng/commit/30c31eaee2b4394719d7d8cf932ef91d865ab83b))
+
+- Add implementation plan for Haskell language extension documentation
+  ([`94ccc41`](https://github.com/ourPLCC/plcc-ng/commit/94ccc41ca6c4067e4b4fd6c44e0ce87375db0f7c))
+
+- Add implementation plan for plantuml inheritance arrow direction
+  ([`15dc6aa`](https://github.com/ourPLCC/plcc-ng/commit/15dc6aa9f23418bed887b6222a8cee0da2293d9f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add issue 108 and design spec for plantuml inheritance arrow direction
+  ([`0cae21a`](https://github.com/ourPLCC/plcc-ng/commit/0cae21a85c1da5904d17f51a7bafc801b662399c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add Java language extension page
+  ([`a0aaf00`](https://github.com/ourPLCC/plcc-ng/commit/a0aaf00e795aee849c85c367efc87ce4be4efa7a))
+
+- Add JavaScript language extension page
+  ([`151d885`](https://github.com/ourPLCC/plcc-ng/commit/151d885d338eb83595026ea2ef30d998befcd5ba))
+
+- Add Languages nav and JavaScript command docs to mkdocs.yml
+  ([`093577f`](https://github.com/ourPLCC/plcc-ng/commit/093577f8f7bff3abbae66547caa2bc7a815d98f8))
+
+- Add plcc-haskell section to language-extensions guide
+  ([`2e07122`](https://github.com/ourPLCC/plcc-ng/commit/2e071229f2bc6ea65becf830edadcacb7f0d1ebf))
+
+- Add plcc-haskell-emit/build/run CLI command reference pages
+  ([`261ebcb`](https://github.com/ourPLCC/plcc-ng/commit/261ebcbf4a4601e0621cdbf61793caa0ccc6c1f0))
+
+- Add plcc-javascript section to language-extensions guide
+  ([`7856f69`](https://github.com/ourPLCC/plcc-ng/commit/7856f692f7d3a7270d625e4639c97f79c87d159b))
+
+- Add plcc-javascript-emit and plcc-javascript-run command reference pages
+  ([`337599e`](https://github.com/ourPLCC/plcc-ng/commit/337599e0e1f6feb7a4efb200064062d9c13d1a39))
+
+- Add Python language extension page
+  ([`41129b7`](https://github.com/ourPLCC/plcc-ng/commit/41129b708ca8b1104babf90b4cb7932cd7d53fb3))
+
+- Fix Commands table separator in haskell.md
+  ([`fdf9231`](https://github.com/ourPLCC/plcc-ng/commit/fdf9231bec46f2028461661b3a1f482f8430c7bc))
+
+- Fix review findings in language pages
+  ([`1584621`](https://github.com/ourPLCC/plcc-ng/commit/1584621520bec38dcb62b35b356da0771cd90d3a))
+
+- Reorganize BNF tables to 4-column format with LHS/RHS clarity
+  ([`aa3e6dd`](https://github.com/ourPLCC/plcc-ng/commit/aa3e6dd9951edf92cbf3e7cfaf8496568a6e379a))
+
+Fixes the concrete/abstract distinction: a rule with no alt name on the LHS is a concrete rule; a
+  rule with an alt name (e.g. <Exp:AddExp>) is an alternative rule that makes the base nonterminal
+  abstract. Removes the separate "Token string value" row by folding .lexeme into the captured
+  terminal row. Adds an "Example based on spec" column (generated or semantic code snippet)
+  alongside the renamed "Example from spec" column.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Slim semantic.md to concepts, link to per-language pages
+  ([`89df13e`](https://github.com/ourPLCC/plcc-ng/commit/89df13e347bb4671b664fab99077d8c66eab8064))
+
+- **plan**: Add implementation plan for issue 106 JavaScript language extension docs
+  ([`fea564d`](https://github.com/ourPLCC/plcc-ng/commit/fea564de01bddfb857105b5f11c233a3545b09d8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **spec**: Add design doc for issue 106 JavaScript language extension docs
+  ([`70de103`](https://github.com/ourPLCC/plcc-ng/commit/70de10303ab88752928ec6ebec7cd18cc0a9ad01))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **spec**: Fix canonical example syntax and Node.js version in issue 106 design
+  ([`13ccdba`](https://github.com/ourPLCC/plcc-ng/commit/13ccdbafb501d5707d02f53dbf7267820b54c003))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **diagram**: Point plantuml inheritance arrows up (Parent <|-- Child)
+  ([`5c2000b`](https://github.com/ourPLCC/plcc-ng/commit/5c2000b19354d1aa078fefba15068771252dba46))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.51.1 (2026-06-24)
 
 ### Bug Fixes
