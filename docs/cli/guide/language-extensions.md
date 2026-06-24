@@ -1,7 +1,7 @@
 # Language Extensions
 
 Language extensions provide the emit, build, and run steps for a specific
-target language. plcc-ng ships with Python and Java support.
+target language. plcc-ng ships with Python, Java, and JavaScript support.
 
 ## How language extensions plug in
 
@@ -39,3 +39,16 @@ runs it with `java`.
 | [`plcc-java-emit`](../commands/plcc-java-emit.md) | Writes `.java` class files and a `Main.java` entry point to the output directory |
 | [`plcc-java-build`](../commands/plcc-java-build.md) | Compiles all `.java` files with `javac`; requires Java JDK 21+ on `PATH` |
 | [`plcc-java-run`](../commands/plcc-java-run.md) | Runs `Main` with `java`; requires Java JDK 21+ on `PATH` |
+
+## plcc-javascript
+
+Emits a JavaScript interpreter from model JSON, then runs it with Node.js.
+No build step is required.
+
+| Command | What it does |
+| --- | --- |
+| [`plcc-javascript-emit`](../commands/plcc-javascript-emit.md) | Writes `.js` class files and a `main.js` entry point to the output directory |
+| [`plcc-javascript-run`](../commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js 18+ on `PATH` |
+
+No build step is required for JavaScript — `plcc-lang-build` exits silently if
+`plcc-javascript-build` is not found.

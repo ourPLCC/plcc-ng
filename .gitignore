@@ -8,6 +8,8 @@
 
 # This is created by bin/test/languages.bash. But should not be committed.
 languages/
+# Re-include the docs subdirectory for per-language documentation pages.
+!docs/language-guide/languages/
 
 # PLCC places generated Java files in directories named Java. Ignore them.
 Java/
