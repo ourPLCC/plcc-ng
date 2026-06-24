@@ -60,17 +60,16 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 ## BNF to JavaScript constructs
 
-| Grammar construct | JavaScript | Example from spec |
-| --- | --- | --- |
-| Concrete non-terminal rule | ES6 class with constructor and fields | `<Exp:NumExp> ::= <NUM>` |
-| Abstract non-terminal (has alternatives) | ES6 class, no constructor | `<Exp>` |
-| Named non-terminal field (`:name` on RHS) | `this.name` — instance of that class | `<Exp:left>` → `this.left` |
-| Captured terminal (`<TOKEN>`) | `this.name` — a `Token` | `<NUM>` → `this.num` |
-| Token string value | `.lexeme` on the token | `this.num.lexeme` → `"42"` |
-| Uncaptured terminal (no angle brackets) | Not stored, no field | `PLUS` in `<Exp:AddExp>` |
-| Arbno (`**=`) | Array field named `<symbol>List` | `<Prog> **= <Exp>` → `this.expList` |
+| Grammar Construct | Example from spec | JavaScript Construct | Example based on spec |
+| --- | --- | --- | --- |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | ES6 class with constructor and fields | `class Prog extends _Start { constructor(expList) { ... } }` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | ES6 class extending the base nonterminal | `class AddExp extends Exp { constructor(left, right) { ... } }` |
+| Named non-terminal (RHS) | `<Exp:left>` | `this.left` — an `Exp` instance | `this.left.eval()` |
+| Captured terminal (RHS) | `<NUM>` | `this.num` — a `Token`; `.lexeme` for the string value | `parseInt(this.num.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `this.expList` — `Array` of `Exp` | `this.expList.map(e => e.eval())` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `exp`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `this.exp`, `<NUM>` → `this.num`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
