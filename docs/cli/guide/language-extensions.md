@@ -1,7 +1,7 @@
 # Language Extensions
 
 Language extensions provide the emit, build, and run steps for a specific
-target language. plcc-ng ships with Python, Java, and JavaScript support.
+target language. plcc-ng ships with Python, Java, JavaScript, and Haskell support.
 
 ## How language extensions plug in
 
@@ -52,3 +52,14 @@ No build step is required.
 
 No build step is required for JavaScript — `plcc-lang-build` exits silently if
 `plcc-javascript-build` is not found.
+
+## plcc-haskell
+
+Emits a Haskell interpreter from model JSON, compiles it with cabal, then
+runs it with `cabal run`.
+
+| Command | What it does |
+| --- | --- |
+| [`plcc-haskell-emit`](../commands/plcc-haskell-emit.md) | Writes `.hs` source files and an `interpreter.cabal` project file to the output directory |
+| [`plcc-haskell-build`](../commands/plcc-haskell-build.md) | Compiles with `cabal build`; requires GHC 9.4+ and cabal 3.0+ on `PATH` |
+| [`plcc-haskell-run`](../commands/plcc-haskell-run.md) | Runs `cabal run interpreter`; requires cabal 3.0+ on `PATH` |
