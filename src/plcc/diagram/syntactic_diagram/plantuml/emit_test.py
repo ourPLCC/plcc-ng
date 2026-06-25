@@ -26,7 +26,7 @@ def test_startebnf_and_endebnf():
 
 def test_standard_rule_single_nonterminal():
     result = build_ebnf(_spec([_RULE('Program', None, [_NT('Stmt')])]))
-    assert 'Program ::= Stmt ;' in result
+    assert 'Program = Stmt ;' in result
 
 
 def test_nonterminal_rendered_unquoted():
@@ -42,7 +42,7 @@ def test_terminal_rendered_quoted():
 
 def test_standard_rule_multiple_symbols():
     result = build_ebnf(_spec([_RULE('Expr', None, [_NT('Term'), _T('PLUS'), _NT('Expr')])]))
-    assert "Expr ::= Term 'PLUS' Expr ;" in result
+    assert "Expr = Term, 'PLUS', Expr ;" in result
 
 
 def test_multiple_alternatives_same_lhs():
@@ -51,7 +51,7 @@ def test_multiple_alternatives_same_lhs():
         _RULE('Expr', 'Add', [_NT('Expr'), _T('PLUS'), _NT('Term')]),
     ]
     result = build_ebnf(_spec(rules))
-    assert "Expr ::= Term | Expr 'PLUS' Term ;" in result
+    assert "Expr = Term | Expr, 'PLUS', Term ;" in result
 
 
 def test_alternatives_appear_once_not_twice():
@@ -60,22 +60,22 @@ def test_alternatives_appear_once_not_twice():
         _RULE('Expr', 'Add', [_NT('Expr'), _T('PLUS'), _NT('Term')]),
     ]
     result = build_ebnf(_spec(rules))
-    assert result.count('Expr ::=') == 1
+    assert result.count('Expr =') == 1
 
 
 def test_repeating_rule_no_separator():
     result = build_ebnf(_spec([_REPEAT('Items', [_NT('Item')])]))
-    assert 'Items ::= { Item } ;' in result
+    assert 'Items = { Item } ;' in result
 
 
 def test_repeating_rule_with_separator():
     result = build_ebnf(_spec([_REPEAT('Args', [_NT('Arg')], sep='COMMA')]))
-    assert "Args ::= { Arg 'COMMA' } ;" in result
+    assert "Args = { Arg, 'COMMA' } ;" in result
 
 
 def test_empty_production():
     result = build_ebnf(_spec([_RULE('Opt', None, [])]))
-    assert 'Opt ::=  ;' in result
+    assert 'Opt =  ;' in result
 
 
 def test_lhs_order_preserved():
@@ -84,7 +84,7 @@ def test_lhs_order_preserved():
         _RULE('A', None, [_NT('B')]),
     ]
     result = build_ebnf(_spec(rules))
-    assert result.index('B ::=') < result.index('A ::=')
+    assert result.index('B =') < result.index('A =')
 
 
 def test_arith_grammar_smoke():
@@ -97,6 +97,6 @@ def test_arith_grammar_smoke():
     ]
     result = build_ebnf(_spec(rules))
     assert '@startebnf' in result
-    assert 'Program ::= Expr ;' in result
-    assert "ExprRest ::= 'PLUS' Term ExprRest |  ;" in result
-    assert "Term ::= 'NUM' ;" in result
+    assert 'Program = Expr ;' in result
+    assert "ExprRest = 'PLUS', Term, ExprRest |  ;" in result
+    assert "Term = 'NUM' ;" in result
