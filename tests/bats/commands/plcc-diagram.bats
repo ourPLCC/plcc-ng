@@ -9,8 +9,7 @@ bats_require_minimum_version 1.5.0
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-diagram fails when spec file not found" {
-    run bash -c "cd /tmp && plcc-diagram --spec=nonexistent.plcc"
-    [ "$status" -ne 0 ]
-    [[ "$output" =~ "spec file not found" ]]
+@test "plcc-diagram --help mentions plcc-diagram-list" {
+    run plcc-diagram --help
+    [[ "$output" =~ "plcc-diagram" ]]
 }

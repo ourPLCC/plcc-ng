@@ -1,31 +1,28 @@
 import enum
 import os
+import re
 import subprocess
 import sys
 
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from plcc.version import get_version
-from plcc.build.spec import read_spec
-from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-from .output import print_banner
+from plcc.cmd.spec import SPEC_OPTION, spec_flag_for_child
 
 __doc__ = """plcc-diagram
-    Generate and display a class diagram from a PLCC spec file.
+    Generate all installed diagram types from a PLCC spec file.
 
 Usage:
     plcc-diagram [-v ...] [options]
 
 Options:
 """ + SPEC_OPTION + """\
-    --format=FMT            Diagram format [default: plantuml].
     -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
 """ + VERBOSE_OPTIONS
 
-
-_SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+_TYPE_PATTERN = re.compile(r'^plcc-diagram-([a-z][a-z0-9]*)$')
+_RESERVED = frozenset({'emit', 'build', 'run', 'list'})
 
 
 class Events(enum.Enum):
@@ -44,68 +41,56 @@ def main(argv=None):
         print("Run 'plcc-diagram --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
-    banner = args["--banner"]
     verbose = VerboseContext.from_args("plcc-diagram", Events, args)
-    fmt = args['--format']
-
-    validate_spec_flag('plcc-diagram', args)
-
-    verbose.emit(Events.STARTED, message="generating diagram")
+    verbose.emit(Events.STARTED, message="generating diagrams")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
-    make_result = subprocess.run(
-        ['plcc-make', '--through=model']
-        + spec_flag_for_child(args)
-        + child_flags,
-        stderr=subprocess.PIPE,
-    )
-    if make_result.stderr:
-        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
-        verbose.reformat_child_events(events)
-    if make_result.returncode != 0:
-        sys.exit(make_result.returncode)
-
-    if banner:
-        print_banner(get_version(), os.path.abspath(read_spec('build')))
-
-    source_ext = _SOURCE_EXT.get(fmt, fmt)
-    build_diagram_dir = os.path.join('build', 'diagram')
-    os.makedirs(build_diagram_dir, exist_ok=True)
-    diagram_source = os.path.join(build_diagram_dir, f'diagram.{source_ext}')
-    diagram_image = os.path.join(build_diagram_dir, 'diagram.png')
-    model_json = os.path.join('build', 'model.json')
-
-    with open(model_json) as stdin_f, open(diagram_source, 'w') as stdout_f:
-        emit_result = subprocess.run(
-            ['plcc-diagram-emit', f'--format={fmt}'] + child_flags,
-            stdin=stdin_f, stdout=stdout_f, stderr=subprocess.PIPE,
+    for diagram_type in sorted(find_types()):
+        cmd = f'plcc-diagram-{diagram_type}'
+        result = subprocess.run(
+            [cmd]
+            + spec_flag_for_child(args)
+            + (['--banner'] if args['--banner'] else [])
+            + child_flags,
+            stderr=subprocess.PIPE,
         )
-    if emit_result.stderr:
-        events = verbose.parse_child_events(emit_result.stderr.decode('utf-8', errors='replace'))
-        verbose.reformat_child_events(events)
-    if emit_result.returncode != 0:
-        sys.exit(emit_result.returncode)
-
-    build_result = subprocess.run(
-        ['plcc-diagram-build', f'--format={fmt}',
-         f'--input={diagram_source}',
-         f'--output={diagram_image}'] + child_flags,
-        stderr=subprocess.PIPE,
-    )
-    if build_result.stderr:
-        events = verbose.parse_child_events(build_result.stderr.decode('utf-8', errors='replace'))
-        verbose.reformat_child_events(events)
-    if build_result.returncode != 0:
-        sys.exit(build_result.returncode)
-
-    run_result = subprocess.run(
-        ['plcc-diagram-run', f'--format={fmt}', f'--input={diagram_image}'] + child_flags,
-        stderr=subprocess.PIPE,
-    )
-    if run_result.stderr:
-        events = verbose.parse_child_events(run_result.stderr.decode('utf-8', errors='replace'))
-        verbose.reformat_child_events(events)
-    if run_result.returncode != 0:
-        sys.exit(run_result.returncode)
+        if result.stderr:
+            events = verbose.parse_child_events(result.stderr.decode('utf-8', errors='replace'))
+            verbose.reformat_child_events(events)
+        if result.returncode != 0:
+            sys.exit(result.returncode)
 
     verbose.emit(Events.FINISHED, message="done")
+
+
+def find_types():
+    types = []
+    seen = set()
+    for directory in _path_dirs():
+        try:
+            for entry in os.scandir(directory):
+                name = _extract_type_name(entry.name)
+                if name and name not in seen and _is_executable(entry):
+                    types.append(name)
+                    seen.add(name)
+        except (PermissionError, FileNotFoundError):
+            continue
+    return types
+
+
+def _extract_type_name(command_name):
+    m = _TYPE_PATTERN.match(command_name)
+    if not m:
+        return None
+    name = m.group(1)
+    if name in _RESERVED:
+        return None
+    return name
+
+
+def _path_dirs():
+    return os.environ.get('PATH', '').split(os.pathsep)
+
+
+def _is_executable(entry):
+    return entry.is_file() and os.access(entry.path, os.X_OK)
