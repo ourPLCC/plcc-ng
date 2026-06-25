@@ -1,6 +1,58 @@
 # CHANGELOG
 
 
+## v0.55.0 (2026-06-25)
+
+### Bug Fixes
+
+- Emit doc example, validate_spec_flag ordering, and list output description (issue 113)
+  ([`8c135a1`](https://github.com/ourPLCC/plcc-ng/commit/8c135a186d38209ce4ad2e6a5957219251ccde9e))
+
+Fix plcc-diagram-emit.md Usage block and example to include required --type flag. Move
+  validate_spec_flag before VerboseContext construction in plcc-diagram-class to match the
+  type-discoverer's ordering. Update author-commands.md plcc-diagram-list description for new
+  type/format output.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Restore spec validation and strengthen bats test (issue 113 phase 1) [skip ci]
+  ([`3383a1e`](https://github.com/ourPLCC/plcc-ng/commit/3383a1ee5f6a5c283806abef82f42f41958e705a))
+
+Restore validate_spec_flag so plcc-diagram fails fast on a bad --spec path even when no diagram
+  types are installed. Fix bats test assertion to check for a distinctive phrase in the help output
+  rather than the trivially-true command name.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update packaging test for renamed diagram commands (issue 113)
+  ([`c3ab286`](https://github.com/ourPLCC/plcc-ng/commit/c3ab2869689e0ce013faff9e41ef0f88e0e13894))
+
+Replace plcc-plantuml-diagram-* references with the new plcc-diagram-* command names throughout
+  packaging.bash.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec for issue 113 rename diagram commands [skip ci]
+  ([`6f11767`](https://github.com/ourPLCC/plcc-ng/commit/6f117679b45d2efb7158ca8c80a1d01291520c59))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plans for issue 113 phases 1 and 2 [skip ci]
+  ([`7a3d0fe`](https://github.com/ourPLCC/plcc-ng/commit/7a3d0fe989a71e90c4ad12445ddf8c984d420bb3))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Rename diagram commands to plcc-diagram-* namespace (issue 113 phase 2)
+  ([`e946331`](https://github.com/ourPLCC/plcc-ng/commit/e9463315ca0566bf4295dceda3e668c33fceb7e4))
+
+- Replace plcc-diagram with type-discoverer (issue 113 phase 1) [skip ci]
+  ([`52be0e6`](https://github.com/ourPLCC/plcc-ng/commit/52be0e62c57a65a6725f8fef638d39d11c008cf5))
+
+
 ## v0.54.0 (2026-06-24)
 
 ### Bug Fixes
