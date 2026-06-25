@@ -22,7 +22,9 @@ _run() {
     for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
                plcc-lang-emit plcc-lang-build plcc-lang-list \
                plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
-               plcc-plantuml-diagram-emit plcc-plantuml-diagram-build plcc-plantuml-diagram-run \
+               plcc-diagram-class plcc-diagram-class-plantuml-emit plcc-diagram-class-mermaid-emit \
+               plcc-diagram-plantuml-build plcc-diagram-plantuml-run \
+               plcc-diagram-mermaid-build plcc-diagram-mermaid-run \
                plcc-make plcc-scan plcc-parse plcc-rep; do
         test -x "${VENV}/bin/${cmd}" || { echo "FAIL: ${cmd} not installed"; exit 1; }
         echo "OK: ${cmd}"
@@ -37,8 +39,8 @@ _run() {
     echo "OK: plcc-lang-list reports python and java"
 
     DIAGRAM_LIST=$("${VENV}/bin/plcc-diagram-list")
-    echo "${DIAGRAM_LIST}" | grep -q "plantuml" || { echo "FAIL: plcc-diagram-list missing 'plantuml'"; exit 1; }
-    echo "OK: plcc-diagram-list reports plantuml"
+    echo "${DIAGRAM_LIST}" | grep -q "class/plantuml" || { echo "FAIL: plcc-diagram-list missing 'class/plantuml'"; exit 1; }
+    echo "OK: plcc-diagram-list reports class/plantuml"
 
     # Run end-to-end in the installed venv
     WORK_DIR="$(mktemp -d)"
@@ -52,7 +54,7 @@ _run() {
     )
     DIAGRAM_DIR="$(mktemp -d)"
     trap 'rm -rf "${VENV}" "${WORK_DIR}" "${DIAGRAM_DIR}"' EXIT
-    plcc-spec "${PROJECT_ROOT}/tests/fixtures/arith.plcc" | plcc-model | plcc-plantuml-diagram-emit --output="${DIAGRAM_DIR}"
+    plcc-spec "${PROJECT_ROOT}/tests/fixtures/arith.plcc" | plcc-model | plcc-diagram-class-plantuml-emit --output="${DIAGRAM_DIR}"
     test -f "${DIAGRAM_DIR}/diagram.puml" || { echo "FAIL: diagram.puml missing"; exit 1; }
     echo "packaging: all checks passed"
 }
