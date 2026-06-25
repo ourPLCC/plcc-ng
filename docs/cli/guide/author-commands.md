@@ -99,8 +99,8 @@ plcc-parser-list
 
 ### plcc-diagram-list
 
-List the diagram format plugins installed on your system. plcc-ng ships with
-`mermaid` and `plantuml` support.
+List the diagram plugins installed on your system. Each line shows a
+`type/format` pair (e.g., `class/plantuml`, `class/mermaid`).
 
 ```bash
 plcc-diagram-list

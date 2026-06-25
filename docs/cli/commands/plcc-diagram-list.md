@@ -1,7 +1,7 @@
 # plcc-diagram-list
 
 List installed diagram format plugins. Scans `PATH` for
-`plcc-*-diagram-emit` commands and prints each format name, one per line.
+`plcc-diagram-*-*-emit` commands and prints each `type/format` pair, one per line.
 
 Requires the `plcc-diagram` package.
 
@@ -23,6 +23,6 @@ plcc-diagram-list [-v ...] [options]
 
 ```bash
 plcc-diagram-list
-# mermaid
-# plantuml
+# class/mermaid
+# class/plantuml
 ```

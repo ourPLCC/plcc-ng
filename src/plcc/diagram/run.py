@@ -8,7 +8,7 @@ from docopt import docopt
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-diagram-run
-    Dispatch to the appropriate plcc-<fmt>-diagram-run command.
+    Dispatch to the appropriate plcc-diagram-<fmt>-run command.
 
 Usage:
     plcc-diagram-run --input=FILE [-v ...] [options]
@@ -32,7 +32,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-diagram-run", Events, args)
     fmt = args['--format']
     input_file = args['--input']
-    cmd = f'plcc-{fmt}-diagram-run'
+    cmd = f'plcc-diagram-{fmt}-run'
     if not shutil.which(cmd):
         print(
             f"No diagram run plugin found for '{fmt}'. Is {cmd} installed?\n"

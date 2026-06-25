@@ -39,7 +39,7 @@ def test_http_error_prints_message_and_exits(tmp_path, capsys):
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
-    assert 'plcc-mermaid-diagram-build' in err
+    assert 'plcc-diagram-mermaid-build' in err
 
 
 def test_encodes_source_in_url(tmp_path):

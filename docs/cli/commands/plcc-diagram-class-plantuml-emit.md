@@ -1,14 +1,14 @@
-# plcc-plantuml-diagram-emit
+# plcc-diagram-class-plantuml-emit
 
 Emit a PlantUML class diagram from model JSON. Reads model JSON from stdin
 and writes PlantUML source to stdout (or to a file if `--output` is given).
 
-Called by [`plcc-diagram-emit --format=plantuml`](plcc-diagram-emit.md).
+Called by [`plcc-diagram-emit --type=class --format=plantuml`](plcc-diagram-emit.md).
 
 ## Usage
 
 ```text
-plcc-plantuml-diagram-emit [--output=DIR] [-v ...] [options]
+plcc-diagram-class-plantuml-emit [--output=DIR] [-v ...] [options]
 ```
 
 ## Arguments and Options
@@ -23,5 +23,5 @@ plcc-plantuml-diagram-emit [--output=DIR] [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-plantuml-diagram-emit > diagram.puml
+plcc-spec spec.plcc | plcc-model | plcc-diagram-class-plantuml-emit > diagram.puml
 ```

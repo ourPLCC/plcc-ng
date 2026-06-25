@@ -14,20 +14,22 @@ teardown() {
     rm -rf "${OUTPUT_DIR}"
 }
 
-@test "plcc-plantuml-diagram-emit is on PATH" { command -v plcc-plantuml-diagram-emit; }
+@test "plcc-diagram-class-plantuml-emit is on PATH" {
+    command -v plcc-diagram-class-plantuml-emit
+}
 
-@test "plcc-plantuml-diagram-emit creates diagram.puml" {
-    run bash -c "cat '${MODEL_JSON}' | plcc-plantuml-diagram-emit --output='${OUTPUT_DIR}'"
+@test "plcc-diagram-class-plantuml-emit creates diagram.puml" {
+    run bash -c "cat '${MODEL_JSON}' | plcc-diagram-class-plantuml-emit --output='${OUTPUT_DIR}'"
     [ "$status" -eq 0 ]
     [ -f "${OUTPUT_DIR}/diagram.puml" ]
 }
 
 @test "diagram.puml contains ExprRest" {
-    bash -c "cat '${MODEL_JSON}' | plcc-plantuml-diagram-emit --output='${OUTPUT_DIR}'"
+    bash -c "cat '${MODEL_JSON}' | plcc-diagram-class-plantuml-emit --output='${OUTPUT_DIR}'"
     grep 'ExprRest' "${OUTPUT_DIR}/diagram.puml"
 }
 
 @test "diagram.puml contains inheritance arrow" {
-    bash -c "cat '${MODEL_JSON}' | plcc-plantuml-diagram-emit --output='${OUTPUT_DIR}'"
+    bash -c "cat '${MODEL_JSON}' | plcc-diagram-class-plantuml-emit --output='${OUTPUT_DIR}'"
     grep 'ExprRest <|-- AddRest' "${OUTPUT_DIR}/diagram.puml"
 }

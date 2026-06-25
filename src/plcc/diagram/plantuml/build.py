@@ -8,11 +8,11 @@ from docopt import docopt
 
 from ...verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-plantuml-diagram-build
+__doc__ = """plcc-diagram-plantuml-build
     Render a PlantUML diagram source file to a PNG image via plantuml.com.
 
 Usage:
-    plcc-plantuml-diagram-build --input=FILE --output=FILE [-v ...] [options]
+    plcc-diagram-plantuml-build --input=FILE --output=FILE [-v ...] [options]
 
 Options:
     --input=FILE    Path to .puml source file.
@@ -43,7 +43,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args("plcc-plantuml-diagram-build", Events, args)
+    verbose = VerboseContext.from_args("plcc-diagram-plantuml-build", Events, args)
     input_file = args['--input']
     output_file = args['--output']
     verbose.emit(Events.STARTED, message=f"rendering {input_file}")
@@ -55,7 +55,7 @@ def main(argv=None):
         with urllib.request.urlopen(req, timeout=30) as response:
             png_bytes = response.read()
     except Exception as e:
-        print(f"plcc-plantuml-diagram-build: {e}", file=sys.stderr)
+        print(f"plcc-diagram-plantuml-build: {e}", file=sys.stderr)
         sys.exit(1)
     with open(output_file, 'wb') as f:
         f.write(png_bytes)

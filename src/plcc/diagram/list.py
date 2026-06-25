@@ -17,7 +17,7 @@ Options:
     -h --help   Show this message.
 """ + VERBOSE_OPTIONS
 
-_DIAGRAM_PATTERN = re.compile(r'^plcc-(.+)-diagram-emit$')
+_PLUGIN_PATTERN = re.compile(r'^plcc-diagram-([a-z][a-z0-9]*)-([a-z][a-z0-9]*)-emit$')
 
 
 class Events(enum.Enum):
@@ -30,34 +30,30 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-diagram-list", Events, args)
-    for fmt in sorted(find_formats()):
-        print(fmt)
+    for diagram_type, fmt in sorted(find_plugins()):
+        print(f'{diagram_type}/{fmt}')
 
 
-def find_formats():
-    """Scan PATH for plcc-*-diagram-emit commands; return list of format names."""
-    formats = []
+def find_plugins():
+    plugins = []
     seen = set()
     for directory in _path_dirs():
         try:
             for entry in os.scandir(directory):
-                name = extract_format_name(entry.name)
-                if name and name not in seen and _is_executable(entry):
-                    formats.append(name)
-                    seen.add(name)
+                result = extract_type_format(entry.name)
+                if result and result not in seen and _is_executable(entry):
+                    plugins.append(result)
+                    seen.add(result)
         except (PermissionError, FileNotFoundError):
             continue
-    return formats
+    return plugins
 
 
-def extract_format_name(command_name):
-    """Return format name from plcc-<fmt>-diagram-emit command name, or None."""
-    m = _DIAGRAM_PATTERN.match(command_name)
-    if m:
-        fmt = m.group(1)
-        if fmt != 'diagram':
-            return fmt
-    return None
+def extract_type_format(command_name):
+    m = _PLUGIN_PATTERN.match(command_name)
+    if not m:
+        return None
+    return (m.group(1), m.group(2))
 
 
 def _path_dirs():

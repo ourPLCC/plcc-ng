@@ -8,11 +8,11 @@ from docopt import docopt
 
 from ...verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-mermaid-diagram-build
+__doc__ = """plcc-diagram-mermaid-build
     Render a Mermaid diagram source file to a PNG image via kroki.io.
 
 Usage:
-    plcc-mermaid-diagram-build --input=FILE --output=FILE [-v ...] [options]
+    plcc-diagram-mermaid-build --input=FILE --output=FILE [-v ...] [options]
 
 Options:
     --input=FILE    Path to .mmd source file.
@@ -35,7 +35,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args("plcc-mermaid-diagram-build", Events, args)
+    verbose = VerboseContext.from_args("plcc-diagram-mermaid-build", Events, args)
     input_file = args['--input']
     output_file = args['--output']
     verbose.emit(Events.STARTED, message=f"rendering {input_file}")
@@ -47,7 +47,7 @@ def main(argv=None):
         with urllib.request.urlopen(req, timeout=30) as response:
             png_bytes = response.read()
     except Exception as e:
-        print(f"plcc-mermaid-diagram-build: {e}", file=sys.stderr)
+        print(f"plcc-diagram-mermaid-build: {e}", file=sys.stderr)
         sys.exit(1)
     with open(output_file, 'wb') as f:
         f.write(png_bytes)
