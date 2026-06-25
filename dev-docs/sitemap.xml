@@ -33,10 +33,6 @@
          <lastmod>2026-06-25</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/109-plantuml-ebnf-diagram/</loc>
-         <lastmod>2026-06-25</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/110-e2e-haskell-build-test-performance/</loc>
          <lastmod>2026-06-25</lastmod>
     </url>
@@ -49,11 +45,39 @@
          <lastmod>2026-06-25</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/113-rename-diagram-commands/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/114-lexical-ebnf-diagram/</loc>
          <lastmod>2026-06-25</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/114-lexical-ebnf-diagram/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/115-scan-trace-vs-verbose-inconsistency/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/116-docopts-cryptic-error-message/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/117-scan-trace-output-readability/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/118-spec-parser-misses-percent-brace-syntax/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/119-rep-ctrl-c-continuation-mode/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/120-parser-table-eof-message/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/121-rep-python-syntax-error-continues/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/122-rep-python-wrong-output/</loc>
          <lastmod>2026-06-25</lastmod>
     </url>
     <url>
@@ -482,6 +506,14 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/108-plantuml-inheritance-direction/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/109-plantuml-ebnf-diagram/</loc>
+         <lastmod>2026-06-25</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/113-rename-diagram-commands/</loc>
          <lastmod>2026-06-25</lastmod>
     </url>
     <url>
