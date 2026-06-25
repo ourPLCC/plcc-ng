@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.56.1 (2026-06-25)
+
+### Bug Fixes
+
+- Correct PlantUML EBNF syntax in syntactic diagram emitter (issue 109)
+  ([`cc3f708`](https://github.com/ourPLCC/plcc-ng/commit/cc3f7087fb9d6b7f9fb6634e66fd8c09d518b55b))
+
+Use '=' instead of '::=' and ', ' to concatenate symbols in sequences, matching PlantUML's EBNF
+  grammar requirements.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.56.0 (2026-06-25)
 
 ### Bug Fixes
