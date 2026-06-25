@@ -23,6 +23,7 @@ _run() {
                plcc-lang-emit plcc-lang-build plcc-lang-list \
                plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
                plcc-diagram-class plcc-diagram-class-plantuml-emit plcc-diagram-class-mermaid-emit \
+               plcc-diagram-syntactic plcc-diagram-syntactic-plantuml-emit \
                plcc-diagram-plantuml-build plcc-diagram-plantuml-run \
                plcc-diagram-mermaid-build plcc-diagram-mermaid-run \
                plcc-make plcc-scan plcc-parse plcc-rep; do
@@ -41,6 +42,8 @@ _run() {
     DIAGRAM_LIST=$("${VENV}/bin/plcc-diagram-list")
     echo "${DIAGRAM_LIST}" | grep -q "class/plantuml" || { echo "FAIL: plcc-diagram-list missing 'class/plantuml'"; exit 1; }
     echo "OK: plcc-diagram-list reports class/plantuml"
+    echo "${DIAGRAM_LIST}" | grep -q "syntactic/plantuml" || { echo "FAIL: plcc-diagram-list missing 'syntactic/plantuml'"; exit 1; }
+    echo "OK: plcc-diagram-list reports syntactic/plantuml"
 
     # Run end-to-end in the installed venv
     WORK_DIR="$(mktemp -d)"
