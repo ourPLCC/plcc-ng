@@ -7,15 +7,15 @@ from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
-from plcc.build.spec import read_spec
-from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
+from plcc.build.spec import read_spec, resolve_spec_path
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag
 from plcc.cmd.output import print_banner
 
-__doc__ = """plcc-diagram-class
-    Generate and display a class diagram from a PLCC spec file.
+__doc__ = """plcc-diagram-syntactic
+    Generate and display a syntactic grammar diagram from a PLCC spec file.
 
 Usage:
-    plcc-diagram-class [-v ...] [options]
+    plcc-diagram-syntactic [-v ...] [options]
 
 Options:
 """ + SPEC_OPTION + """\
@@ -25,7 +25,7 @@ Options:
 """ + VERBOSE_OPTIONS
 
 
-_SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+_SOURCE_EXT = {'plantuml': 'puml', 'mermaid': 'mmd'}
 
 
 class Events(enum.Enum):
@@ -41,45 +41,50 @@ def main(argv=None):
     except DocoptExit as e:
         print(str(e), file=sys.stderr)
         print(file=sys.stderr)
-        print("Run 'plcc-diagram-class --help' for more information.", file=sys.stderr)
+        print("Run 'plcc-diagram-syntactic --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
     banner = args["--banner"]
     fmt = args['--format']
 
-    validate_spec_flag('plcc-diagram-class', args)
+    validate_spec_flag('plcc-diagram-syntactic', args)
 
-    verbose = VerboseContext.from_args("plcc-diagram-class", Events, args)
+    spec_path = resolve_spec_path(args['--spec'], read_spec('build'))
+    if not os.path.exists(spec_path):
+        print(f"plcc-diagram-syntactic: spec file not found: {spec_path}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run 'plcc-diagram-syntactic --help' for more information.", file=sys.stderr)
+        sys.exit(1)
 
-    verbose.emit(Events.STARTED, message="generating diagram")
+    spec_path = os.path.abspath(spec_path)
+
+    verbose = VerboseContext.from_args("plcc-diagram-syntactic", Events, args)
+    verbose.emit(Events.STARTED, message="generating syntactic diagram")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
-    make_result = subprocess.run(
-        ['plcc-make', '--through=model']
-        + spec_flag_for_child(args)
-        + child_flags,
-        stderr=subprocess.PIPE,
+    spec_result = subprocess.run(
+        ['plcc-spec', spec_path] + child_flags,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     )
-    if make_result.stderr:
-        events = verbose.parse_child_events(make_result.stderr.decode('utf-8', errors='replace'))
+    if spec_result.stderr:
+        events = verbose.parse_child_events(spec_result.stderr.decode('utf-8', errors='replace'))
         verbose.reformat_child_events(events)
-    if make_result.returncode != 0:
-        sys.exit(make_result.returncode)
+    if spec_result.returncode != 0:
+        sys.exit(spec_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_spec('build')))
+        print_banner(get_version(), os.path.abspath(spec_path))
 
     source_ext = _SOURCE_EXT.get(fmt, fmt)
     build_diagram_dir = os.path.join('build', 'diagram')
     os.makedirs(build_diagram_dir, exist_ok=True)
-    diagram_source = os.path.join(build_diagram_dir, f'class.{source_ext}')
-    diagram_image = os.path.join(build_diagram_dir, 'class.png')
-    model_json = os.path.join('build', 'model.json')
+    diagram_source = os.path.join(build_diagram_dir, f'syntactic.{source_ext}')
+    diagram_image = os.path.join(build_diagram_dir, 'syntactic.png')
 
-    with open(model_json) as stdin_f, open(diagram_source, 'w') as stdout_f:
+    with open(diagram_source, 'w') as stdout_f:
         emit_result = subprocess.run(
-            ['plcc-diagram-emit', '--type=class', f'--format={fmt}'] + child_flags,
-            stdin=stdin_f, stdout=stdout_f, stderr=subprocess.PIPE,
+            ['plcc-diagram-emit', '--type=syntactic', f'--format={fmt}'] + child_flags,
+            input=spec_result.stdout, stdout=stdout_f, stderr=subprocess.PIPE,
         )
     if emit_result.stderr:
         events = verbose.parse_child_events(emit_result.stderr.decode('utf-8', errors='replace'))

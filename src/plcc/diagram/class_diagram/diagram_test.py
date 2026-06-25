@@ -68,6 +68,31 @@ def test_calls_emit_with_type_class(tmp_path, monkeypatch):
     assert '--format=plantuml' in emit_call
 
 
+def test_build_uses_class_puml_path(tmp_path, monkeypatch):
+    grammar = tmp_path / "grammar.plcc"
+    grammar.write_text("# stub")
+    build_dir = tmp_path / 'build'
+    build_dir.mkdir()
+    (build_dir / 'model.json').write_text('{}')
+    (build_dir / '.spec').write_text(str(grammar))
+    monkeypatch.chdir(tmp_path)
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        m = MagicMock()
+        m.returncode = 0
+        m.stderr = b''
+        return m
+
+    with patch('subprocess.run', side_effect=fake_run):
+        run_main([])
+
+    build_call = calls[2]  # plcc-diagram-build is the 3rd call
+    assert '--input=build/diagram/class.puml' in build_call
+    assert '--output=build/diagram/class.png' in build_call
+
+
 def test_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
