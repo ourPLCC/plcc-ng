@@ -3,7 +3,8 @@ import os
 import subprocess
 import sys
 
-from docopt import docopt, DocoptExit
+from docopt import DocoptExit
+from plcc.cli import parse_args
 
 from plcc.version import get_version
 from plcc.build.spec import read_spec
@@ -63,7 +64,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     try:
-        args = docopt(__doc__, argv)
+        args = parse_args(__doc__, argv)
     except DocoptExit as e:
         print(str(e), file=sys.stderr)
         print(file=sys.stderr)

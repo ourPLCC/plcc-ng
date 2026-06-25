@@ -3,7 +3,7 @@ import json
 import sys
 from dataclasses import asdict
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from . import parseSpec
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
@@ -32,7 +32,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-spec", Events, args)
     spec, errors = _load(args['FILE'])
     if errors:

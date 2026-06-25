@@ -4,7 +4,7 @@ import sys
 import urllib.request
 import zlib
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from ...verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -42,7 +42,7 @@ def _encode(source):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-diagram-plantuml-build", Events, args)
     input_file = args['--input']
     output_file = args['--output']

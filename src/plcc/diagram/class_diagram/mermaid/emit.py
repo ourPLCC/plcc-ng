@@ -2,7 +2,7 @@ import enum
 import json
 import sys
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -25,7 +25,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-diagram-class-mermaid-emit", Events, args)
     verbose.emit(Events.STARTED)
     model = json.load(sys.stdin)

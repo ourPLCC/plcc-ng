@@ -15,7 +15,7 @@ import shutil
 import subprocess
 import sys
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -30,7 +30,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-lang-run", Events, args)
     lang = args["--target"]
     output = args["--output"]
