@@ -8,7 +8,7 @@ Requires the `plcc-diagram` package.
 ## Usage
 
 ```text
-plcc-diagram-emit [-v ...] [options]
+plcc-diagram-emit --type=TYPE [-v ...] [options]
 ```
 
 ## Arguments and Options
@@ -24,5 +24,5 @@ plcc-diagram-emit [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-diagram-emit --format=mermaid
+plcc-spec spec.plcc | plcc-model | plcc-diagram-emit --type=class --format=mermaid
 ```

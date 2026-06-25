@@ -45,10 +45,11 @@ def main(argv=None):
         sys.exit(1)
 
     banner = args["--banner"]
-    verbose = VerboseContext.from_args("plcc-diagram-class", Events, args)
     fmt = args['--format']
 
     validate_spec_flag('plcc-diagram-class', args)
+
+    verbose = VerboseContext.from_args("plcc-diagram-class", Events, args)
 
     verbose.emit(Events.STARTED, message="generating diagram")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
