@@ -195,6 +195,7 @@ def test_attempts_entry_fields():
     assert a['char_count'] == 2
     assert a['is_skip'] is False
     assert a['winner'] is True
+    assert a['rule_index'] == 1
 
 
 def test_skip_zero_length_match_is_lex_error():
