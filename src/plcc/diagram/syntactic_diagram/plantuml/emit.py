@@ -44,7 +44,7 @@ def build_ebnf(spec):
     lines = ['@startebnf']
     for name in order:
         rhs = _render_alternatives(groups[name])
-        lines.append(f'{name} ::= {rhs} ;')
+        lines.append(f'{name} = {rhs} ;')
     lines.append('@endebnf')
     return '\n'.join(lines) + '\n'
 
@@ -60,14 +60,14 @@ def _render_rule(rule):
 
 
 def _render_standard(rule):
-    return ' '.join(_render_symbol(s) for s in rule['rhsSymbolList'])
+    return ', '.join(_render_symbol(s) for s in rule['rhsSymbolList'])
 
 
 def _render_repeating(rule):
-    body = ' '.join(_render_symbol(s) for s in rule['rhsSymbolList'])
+    body = ', '.join(_render_symbol(s) for s in rule['rhsSymbolList'])
     sep = rule['separator']
     if sep:
-        return f'{{ {body} \'{sep["name"]}\' }}'
+        return f'{{ {body}, \'{sep["name"]}\' }}'
     return f'{{ {body} }}'
 
 
