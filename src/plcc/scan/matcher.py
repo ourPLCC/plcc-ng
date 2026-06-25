@@ -25,6 +25,7 @@ class Matcher:
                     'char_count': len(m.lexeme),
                     'is_skip': isinstance(m, Skip),
                     'winner': m is result,
+                    'rule_index': getattr(m, '_rule_index', None),
                 }
                 for m in matches
             ]
@@ -34,13 +35,15 @@ class Matcher:
     def _getMatches(self, line, index):
         patterns = self._getPatterns()
         matches = []
-        for rule, pattern in zip(self._rules, patterns):
+        for i, (rule, pattern) in enumerate(zip(self._rules, patterns), start=1):
             m = pattern.match(line.string, index)
             if not m:
                 continue
             if m.end() == index:
                 continue
-            matches.append(rule.make_match(m, line, index))
+            obj = rule.make_match(m, line, index)
+            obj._rule_index = i
+            matches.append(obj)
         return matches
 
     def _getPatterns(self):

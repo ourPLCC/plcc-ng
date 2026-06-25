@@ -211,6 +211,18 @@ def test_token_zero_length_match_is_lex_error():
     assert isinstance(result, LexError)
 
 
+def test_attempts_include_rule_index():
+    m = makeMatcher(r"""
+        token ONE '\d'
+        token NUM '\d+'
+    """, record_attempts=True)
+    line = parseLine("42")
+    result = m.match(line, index=0)
+    by_name = {a['name']: a for a in result.attempts}
+    assert by_name['ONE']['rule_index'] == 1
+    assert by_name['NUM']['rule_index'] == 2
+
+
 #helper methods
 
 def makeMatcher(spec, record_attempts=False):
