@@ -2,7 +2,7 @@ import enum
 import json
 import sys
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from .build_model import build_model
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
@@ -29,7 +29,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-model", Events, args)
     path = args['SPEC_JSON'] or '-'
     spec = _load(path)

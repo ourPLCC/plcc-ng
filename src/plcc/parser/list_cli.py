@@ -3,7 +3,7 @@ import os
 import re
 import sys
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -28,7 +28,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     VerboseContext.from_args("plcc-parser-list", Events, args)
     for kind in sorted(find_parsers()):
         print(kind)

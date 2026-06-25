@@ -2,7 +2,7 @@ import enum
 import json
 import sys
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from ....verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -25,7 +25,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     VerboseContext.from_args("plcc-diagram-syntactic-plantuml-emit", Events, args)
     spec = json.load(sys.stdin)
     sys.stdout.write(build_ebnf(spec))

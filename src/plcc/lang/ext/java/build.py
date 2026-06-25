@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from docopt import docopt
+from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
@@ -29,7 +29,7 @@ class Events(enum.Enum):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    args = docopt(__doc__, argv)
+    args = parse_args(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-java-build", Events, args)
     output_dir = Path(args['--output']).resolve()
     verbose.emit(Events.STARTED, message=f'compiling in {output_dir}')
