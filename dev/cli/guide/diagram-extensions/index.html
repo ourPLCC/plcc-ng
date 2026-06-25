@@ -1887,7 +1887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-mermaid-diagram-build/" class="md-nav__link">
+      <a href="../../commands/plcc-mermaid-diagram-build.md" class="md-nav__link">
         
   
   
@@ -1915,7 +1915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-mermaid-diagram-emit/" class="md-nav__link">
+      <a href="../../commands/plcc-mermaid-diagram-emit.md" class="md-nav__link">
         
   
   
@@ -1943,7 +1943,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-mermaid-diagram-run/" class="md-nav__link">
+      <a href="../../commands/plcc-mermaid-diagram-run.md" class="md-nav__link">
         
   
   
@@ -2083,7 +2083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-plantuml-diagram-build/" class="md-nav__link">
+      <a href="../../commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
         
   
   
@@ -2111,7 +2111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-plantuml-diagram-emit/" class="md-nav__link">
+      <a href="../../commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
         
   
   
@@ -2139,7 +2139,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-plantuml-diagram-run/" class="md-nav__link">
+      <a href="../../commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
         
   
   
@@ -2622,9 +2622,9 @@ diagram format. plcc-ng ships with Mermaid and PlantUML support.</p>
 <h2 id="how-diagram-extensions-plug-in">How diagram extensions plug in</h2>
 <p><a href="../../commands/plcc-diagram/"><code>plcc-diagram</code></a> runs three dispatch commands:</p>
 <ol>
-<li><a href="../../commands/plcc-diagram-emit/"><code>plcc-diagram-emit --format=FMT</code></a> — calls <code>plcc-&lt;fmt&gt;-diagram-emit</code></li>
-<li><a href="../../commands/plcc-diagram-build/"><code>plcc-diagram-build --format=FMT</code></a> — calls <code>plcc-&lt;fmt&gt;-diagram-build</code></li>
-<li><a href="../../commands/plcc-diagram-run/"><code>plcc-diagram-run --format=FMT</code></a> — calls <code>plcc-&lt;fmt&gt;-diagram-run</code></li>
+<li><a href="../../commands/plcc-diagram-emit/"><code>plcc-diagram-emit --format=FMT</code></a> — calls <code>plcc-diagram-&lt;type&gt;-&lt;fmt&gt;-emit</code></li>
+<li><a href="../../commands/plcc-diagram-build/"><code>plcc-diagram-build --format=FMT</code></a> — calls <code>plcc-diagram-&lt;fmt&gt;-build</code></li>
+<li><a href="../../commands/plcc-diagram-run/"><code>plcc-diagram-run --format=FMT</code></a> — calls <code>plcc-diagram-&lt;fmt&gt;-run</code></li>
 </ol>
 <p>The default format is <code>plantuml</code>. Use <a href="../../commands/plcc-diagram-list/"><code>plcc-diagram-list</code></a>
 to see what is installed.</p>
@@ -2640,15 +2640,15 @@ to see what is installed.</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../../commands/plcc-mermaid-diagram-emit/"><code>plcc-mermaid-diagram-emit</code></a></td>
+<td><a href="../../commands/plcc-diagram-class-mermaid-emit/"><code>plcc-diagram-class-mermaid-emit</code></a></td>
 <td>Reads model JSON from stdin; writes a <code>.mmd</code> Mermaid source file</td>
 </tr>
 <tr>
-<td><a href="../../commands/plcc-mermaid-diagram-build/"><code>plcc-mermaid-diagram-build</code></a></td>
+<td><code>plcc-diagram-mermaid-build</code></td>
 <td>Renders <code>.mmd</code> to PNG using <code>mmdc</code></td>
 </tr>
 <tr>
-<td><a href="../../commands/plcc-mermaid-diagram-run/"><code>plcc-mermaid-diagram-run</code></a></td>
+<td><code>plcc-diagram-mermaid-run</code></td>
 <td>Prints the path to the rendered PNG</td>
 </tr>
 </tbody>
@@ -2665,15 +2665,15 @@ to see what is installed.</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../../commands/plcc-plantuml-diagram-emit/"><code>plcc-plantuml-diagram-emit</code></a></td>
+<td><a href="../../commands/plcc-diagram-class-plantuml-emit/"><code>plcc-diagram-class-plantuml-emit</code></a></td>
 <td>Reads model JSON from stdin; writes a <code>.puml</code> PlantUML source file</td>
 </tr>
 <tr>
-<td><a href="../../commands/plcc-plantuml-diagram-build/"><code>plcc-plantuml-diagram-build</code></a></td>
+<td><code>plcc-diagram-plantuml-build</code></td>
 <td>Sends <code>.puml</code> to plantuml.com and writes the returned PNG</td>
 </tr>
 <tr>
-<td><a href="../../commands/plcc-plantuml-diagram-run/"><code>plcc-plantuml-diagram-run</code></a></td>
+<td><code>plcc-diagram-plantuml-run</code></td>
 <td>Prints the path to the rendered PNG</td>
 </tr>
 </tbody>

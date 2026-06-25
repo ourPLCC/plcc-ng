@@ -1368,10 +1368,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#diagram-formats" class="md-nav__link">
+  <a href="#diagram-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Diagram formats
+        Diagram types
       
     </span>
   </a>
@@ -1898,7 +1898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plcc-mermaid-diagram-build/" class="md-nav__link">
+      <a href="../plcc-mermaid-diagram-build.md" class="md-nav__link">
         
   
   
@@ -1926,7 +1926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plcc-mermaid-diagram-emit/" class="md-nav__link">
+      <a href="../plcc-mermaid-diagram-emit.md" class="md-nav__link">
         
   
   
@@ -1954,7 +1954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plcc-mermaid-diagram-run/" class="md-nav__link">
+      <a href="../plcc-mermaid-diagram-run.md" class="md-nav__link">
         
   
   
@@ -2094,7 +2094,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plcc-plantuml-diagram-build/" class="md-nav__link">
+      <a href="../plcc-plantuml-diagram-build.md" class="md-nav__link">
         
   
   
@@ -2122,7 +2122,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plcc-plantuml-diagram-emit/" class="md-nav__link">
+      <a href="../plcc-plantuml-diagram-emit.md" class="md-nav__link">
         
   
   
@@ -2150,7 +2150,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../plcc-plantuml-diagram-run/" class="md-nav__link">
+      <a href="../plcc-plantuml-diagram-run.md" class="md-nav__link">
         
   
   
@@ -2628,9 +2628,8 @@
 
 
 <h1 id="plcc-diagram">plcc-diagram</h1>
-<p>Generate and display a class diagram from a PLCC spec file. Shows the classes
-and inheritance relationships derived from the syntactic grammar.</p>
-<p>Requires the <code>plcc-diagram</code> package.</p>
+<p>Generate all installed diagram types from a PLCC spec file. Discovers and
+runs each installed <code>plcc-diagram-{type}</code> command in alphabetical order.</p>
 <h2 id="usage">Usage</h2>
 <div class="highlight"><pre><span></span><code>plcc-diagram [-v ...] [options]
 </code></pre></div>
@@ -2646,10 +2645,6 @@ and inheritance relationships derived from the syntactic grammar.</p>
 <tr>
 <td><code>-s PATH</code>, <code>--spec=PATH</code></td>
 <td>Spec file. Remembered across invocations. Defaults to <code>spec.plcc</code>.</td>
-</tr>
-<tr>
-<td><code>--format=FMT</code></td>
-<td>Diagram format plugin to use. Default: <code>plantuml</code>.</td>
 </tr>
 <tr>
 <td><code>-b</code>, <code>--banner</code></td>
@@ -2671,11 +2666,11 @@ and inheritance relationships derived from the syntactic grammar.</p>
 </table>
 <h2 id="examples">Examples</h2>
 <div class="highlight"><pre><span></span><code>plcc-diagram<span class="w"> </span>-s<span class="w"> </span>subtract.plcc
-plcc-diagram<span class="w"> </span>--format<span class="o">=</span>mermaid
 </code></pre></div>
-<h2 id="diagram-formats">Diagram formats</h2>
-<p><code>plcc-diagram</code> dispatches to diagram extension plugins via <code>--format</code>.
-Use <a href="../plcc-diagram-list/"><code>plcc-diagram-list</code></a> to see installed formats.
+<h2 id="diagram-types">Diagram types</h2>
+<p><code>plcc-diagram</code> discovers installed diagram types by scanning PATH for
+<code>plcc-diagram-{type}</code> executables. Use <a href="../plcc-diagram-list/"><code>plcc-diagram-list</code></a>
+to see installed formats per type.
 See <a href="../../guide/diagram-extensions/">Diagram extensions</a> for details.</p>
 
 
