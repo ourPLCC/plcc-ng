@@ -7,7 +7,7 @@ import sys
 from docopt import docopt, DocoptExit
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
-from plcc.cmd.spec import SPEC_OPTION, spec_flag_for_child
+from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 
 __doc__ = """plcc-diagram
     Generate all installed diagram types from a PLCC spec file.
@@ -40,6 +40,8 @@ def main(argv=None):
         print(file=sys.stderr)
         print("Run 'plcc-diagram --help' for more information.", file=sys.stderr)
         sys.exit(1)
+
+    validate_spec_flag('plcc-diagram', args)
 
     verbose = VerboseContext.from_args("plcc-diagram", Events, args)
     verbose.emit(Events.STARTED, message="generating diagrams")

@@ -9,7 +9,7 @@ bats_require_minimum_version 1.5.0
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-diagram --help mentions plcc-diagram-list" {
+@test "plcc-diagram --help describes type discovery" {
     run plcc-diagram --help
-    [[ "$output" =~ "plcc-diagram" ]]
+    [[ "$output" =~ "installed diagram types" ]]
 }
