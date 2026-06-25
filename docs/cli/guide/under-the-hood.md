@@ -37,15 +37,15 @@ package parser-extensions {
 
 package diagram-extensions {
   package plcc-mermaid-diagram {
-    class plcc-mermaid-diagram-emit
-    class plcc-mermaid-diagram-build
-    class plcc-mermaid-diagram-run
+    class plcc-diagram-class-mermaid-emit
+    class plcc-diagram-mermaid-build
+    class plcc-diagram-mermaid-run
   }
 
   package plcc-plantuml-diagram {
-    class plcc-plantuml-diagram-emit
-    class plcc-plantuml-diagram-build
-    class plcc-plantuml-diagram-run
+    class plcc-diagram-class-plantuml-emit
+    class plcc-diagram-plantuml-build
+    class plcc-diagram-plantuml-run
   }
 }
 
@@ -93,12 +93,12 @@ package plcc-diagram {
   plcc-diagram --> plcc-diagram-build
   plcc-diagram --> plcc-diagram-run
 
-  plcc-diagram-emit --> plcc-mermaid-diagram-emit
-  plcc-diagram-emit --> plcc-plantuml-diagram-emit
-  plcc-diagram-build --> plcc-mermaid-diagram-build
-  plcc-diagram-build --> plcc-plantuml-diagram-build
-  plcc-diagram-run --> plcc-mermaid-diagram-run
-  plcc-diagram-run --> plcc-plantuml-diagram-run
+  plcc-diagram-emit --> plcc-diagram-class-mermaid-emit
+  plcc-diagram-emit --> plcc-diagram-class-plantuml-emit
+  plcc-diagram-build --> plcc-diagram-mermaid-build
+  plcc-diagram-build --> plcc-diagram-plantuml-build
+  plcc-diagram-run --> plcc-diagram-mermaid-run
+  plcc-diagram-run --> plcc-diagram-plantuml-run
 
 }
 

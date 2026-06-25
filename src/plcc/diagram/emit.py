@@ -8,12 +8,13 @@ from docopt import docopt
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-diagram-emit
-    Dispatch model JSON to the appropriate plcc-<fmt>-diagram-emit command.
+    Dispatch model JSON to the appropriate plcc-diagram-{type}-{fmt}-emit command.
 
 Usage:
-    plcc-diagram-emit [-v ...] [options]
+    plcc-diagram-emit --type=TYPE [-v ...] [options]
 
 Options:
+    --type=TYPE     Diagram type (e.g., class).
     --format=FMT    Diagram format [default: plantuml].
     -h --help       Show this message.
 """ + VERBOSE_OPTIONS
@@ -29,11 +30,13 @@ def main(argv=None):
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
     verbose = VerboseContext.from_args("plcc-diagram-emit", Events, args)
+    diagram_type = args['--type']
     fmt = args['--format']
-    cmd = f'plcc-{fmt}-diagram-emit'
+    cmd = f'plcc-diagram-{diagram_type}-{fmt}-emit'
     if not shutil.which(cmd):
         print(
-            f"No diagram plugin found for '{fmt}'. Is {cmd} installed?\n"
+            f"No diagram plugin found for type='{diagram_type}' format='{fmt}'."
+            f" Is {cmd} installed?\n"
             f"Run plcc-diagram-list to see what is available.",
             file=sys.stderr,
         )

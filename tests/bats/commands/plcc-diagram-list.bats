@@ -9,8 +9,8 @@ bats_require_minimum_version 1.5.0
     [ "$status" -eq 0 ]
 }
 
-@test "plcc-diagram-list finds mermaid" {
+@test "plcc-diagram-list finds class/mermaid" {
     run plcc-diagram-list
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "mermaid" ]]
+    [[ "$output" =~ "class/mermaid" ]]
 }

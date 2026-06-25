@@ -1,7 +1,7 @@
 # plcc-diagram-run
 
 Dispatch to the appropriate diagram runner. Calls
-`plcc-<fmt>-diagram-run` for the specified format. Currently, all built-in
+`plcc-diagram-<fmt>-run` for the specified format. Currently, all built-in
 runners print the path to the rendered image file to stdout.
 
 Requires the `plcc-diagram` package.

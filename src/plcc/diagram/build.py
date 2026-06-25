@@ -8,7 +8,7 @@ from docopt import docopt
 from ..verbose import VerboseContext, VERBOSE_OPTIONS
 
 __doc__ = """plcc-diagram-build
-    Dispatch to the appropriate plcc-<fmt>-diagram-build command.
+    Dispatch to the appropriate plcc-diagram-<fmt>-build command.
 
 Usage:
     plcc-diagram-build --input=FILE --output=FILE [-v ...] [options]
@@ -34,7 +34,7 @@ def main(argv=None):
     fmt = args['--format']
     input_file = args['--input']
     output_file = args['--output']
-    cmd = f'plcc-{fmt}-diagram-build'
+    cmd = f'plcc-diagram-{fmt}-build'
     if not shutil.which(cmd):
         print(
             f"No diagram build plugin found for '{fmt}'. Is {cmd} installed?\n"

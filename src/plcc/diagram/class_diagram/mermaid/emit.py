@@ -4,13 +4,13 @@ import sys
 
 from docopt import docopt
 
-from ...verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-mermaid-diagram-emit
+__doc__ = """plcc-diagram-class-mermaid-emit
     Emit a Mermaid class diagram from model JSON.
 
 Usage:
-    plcc-mermaid-diagram-emit [-v ...] [options]
+    plcc-diagram-class-mermaid-emit [-v ...] [options]
 
 Options:
     -h --help   Show this message.
@@ -26,7 +26,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args("plcc-mermaid-diagram-emit", Events, args)
+    verbose = VerboseContext.from_args("plcc-diagram-class-mermaid-emit", Events, args)
     verbose.emit(Events.STARTED)
     model = json.load(sys.stdin)
     sys.stdout.write(build_diagram(model))

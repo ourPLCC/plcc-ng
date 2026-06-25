@@ -1,7 +1,7 @@
 # plcc-diagram-build
 
 Dispatch to the appropriate diagram build step. Calls
-`plcc-<fmt>-diagram-build` for the specified format, converting a diagram
+`plcc-diagram-<fmt>-build` for the specified format, converting a diagram
 source file into a PNG image.
 
 Requires the `plcc-diagram` package.

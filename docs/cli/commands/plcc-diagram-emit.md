@@ -1,7 +1,7 @@
 # plcc-diagram-emit
 
 Dispatch model JSON to the appropriate diagram emitter. Reads model JSON from
-stdin and calls `plcc-<fmt>-diagram-emit` for the specified format.
+stdin and calls `plcc-diagram-<type>-<fmt>-emit` for the specified type and format.
 
 Requires the `plcc-diagram` package.
 
@@ -15,6 +15,7 @@ plcc-diagram-emit [-v ...] [options]
 
 | Option | Description |
 |---|---|
+| `--type=TYPE` | Diagram type (e.g., `class`). Required. |
 | `--format=FMT` | Diagram format plugin to use. Default: `plantuml`. |
 | `-h`, `--help` | Show usage and exit. |
 | `-v` | Increase verbosity (repeat for more: `-v`, `-vv`, `-vvv`). |

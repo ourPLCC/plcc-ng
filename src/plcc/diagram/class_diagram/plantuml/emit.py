@@ -5,13 +5,13 @@ import sys
 
 from docopt import docopt
 
-from ...verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-plantuml-diagram-emit
+__doc__ = """plcc-diagram-class-plantuml-emit
     Emit a PlantUML class diagram from model JSON.
 
 Usage:
-    plcc-plantuml-diagram-emit [--output=DIR] [-v ...] [options]
+    plcc-diagram-class-plantuml-emit [--output=DIR] [-v ...] [options]
 
 Options:
     --output=DIR    Directory to write diagram.puml into (writes to stdout if omitted).
@@ -28,7 +28,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = docopt(__doc__, argv)
-    verbose = VerboseContext.from_args("plcc-plantuml-diagram-emit", Events, args)
+    verbose = VerboseContext.from_args("plcc-diagram-class-plantuml-emit", Events, args)
     output_dir = args['--output']
     model = json.load(sys.stdin)
     content = build_diagram(model)

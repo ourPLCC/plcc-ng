@@ -13,7 +13,7 @@ _TRIVIAL_MODEL = json.dumps({
 })
 
 
-def test_dispatches_to_plantuml_diagram_emit_by_default(monkeypatch):
+def test_dispatches_to_class_plantuml_emit_by_default(monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
     calls = []
 
@@ -23,14 +23,14 @@ def test_dispatches_to_plantuml_diagram_emit_by_default(monkeypatch):
         m.returncode = 0
         return m
 
-    with patch('shutil.which', return_value='/usr/bin/plcc-plantuml-diagram-emit'):
+    with patch('shutil.which', return_value='/usr/bin/plcc-diagram-class-plantuml-emit'):
         with patch('subprocess.run', side_effect=fake_run):
-            run_main([])
+            run_main(['--type=class'])
 
-    assert calls[0][0] == 'plcc-plantuml-diagram-emit'
+    assert calls[0][0] == 'plcc-diagram-class-plantuml-emit'
 
 
-def test_custom_format_dispatches_to_correct_command(monkeypatch):
+def test_explicit_type_and_format(monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
     calls = []
 
@@ -40,11 +40,18 @@ def test_custom_format_dispatches_to_correct_command(monkeypatch):
         m.returncode = 0
         return m
 
-    with patch('shutil.which', return_value='/usr/bin/plcc-plantuml-diagram-emit'):
+    with patch('shutil.which', return_value='/usr/bin/plcc-diagram-class-plantuml-emit'):
         with patch('subprocess.run', side_effect=fake_run):
-            run_main(['--format=plantuml'])
+            run_main(['--type=class', '--format=plantuml'])
 
-    assert calls[0][0] == 'plcc-plantuml-diagram-emit'
+    assert calls[0][0] == 'plcc-diagram-class-plantuml-emit'
+
+
+def test_missing_type_exits_nonzero(monkeypatch, capsys):
+    monkeypatch.setattr('sys.stdin', io.StringIO(_TRIVIAL_MODEL))
+    import docopt as _docopt
+    with pytest.raises((SystemExit, _docopt.DocoptExit)):
+        run_main([])
 
 
 def test_missing_plugin_exits_nonzero(monkeypatch, capsys):
@@ -52,7 +59,7 @@ def test_missing_plugin_exits_nonzero(monkeypatch, capsys):
 
     with patch('shutil.which', return_value=None):
         with pytest.raises(SystemExit) as exc:
-            run_main(['--format=nonexistent'])
+            run_main(['--type=class', '--format=nonexistent'])
 
     assert exc.value.code != 0
     _, err = capsys.readouterr()
