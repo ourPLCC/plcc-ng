@@ -1,6 +1,42 @@
 # CHANGELOG
 
 
+## v0.57.0 (2026-06-25)
+
+### Documentation
+
+- Add design spec for issue 116 docopts error message improvement [skip ci]
+  ([`7d9c0d1`](https://github.com/ourPLCC/plcc-ng/commit/7d9c0d1dd76925bba5119fc20a20a6bec1a5eebe))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue 116 docopts error message improvement [skip ci]
+  ([`3394942`](https://github.com/ourPLCC/plcc-ng/commit/339494282af12041f35f953219bcaf7e3607f9af))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Move completed issues to done and add 8 new issues from board feedback [skip ci]
+  ([`d1baaa1`](https://github.com/ourPLCC/plcc-ng/commit/d1baaa1d17359cdf5b02b775e95613e10d3ecc0a))
+
+- Move 109 and 113 to done/ - Add issues 115-122 based on board member feedback (docopts UX, scan
+  trace readability, %%{ syntax error, ^C continuation mode, eof error message, Python rep
+  build-failure handling, Python rep wrong output)
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Add parse_args wrapper to give clear error messages for bad options (issue 116)
+  ([`9987353`](https://github.com/ourPLCC/plcc-ng/commit/99873533b8d4fdbbd841936c007ed6e4ee78b78b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Refactoring
+
+- Migrate all CLI entry points from docopt() to parse_args() (issue 116)
+  ([`a57fa79`](https://github.com/ourPLCC/plcc-ng/commit/a57fa790b7fde7c1e377bf66e995ac9679929823))
+
+
 ## v0.56.1 (2026-06-25)
 
 ### Bug Fixes
