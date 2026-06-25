@@ -4,16 +4,6 @@ from unittest.mock import patch, MagicMock
 from .diagram import main as run_main
 
 
-def _fake_run(returncode=0, stdout=b'{}'):
-    def fake(cmd, **kwargs):
-        m = MagicMock()
-        m.returncode = returncode
-        m.stderr = b''
-        m.stdout = stdout
-        return m
-    return fake
-
-
 def test_spec_file_not_found_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     with pytest.raises(SystemExit) as exc:
