@@ -1,6 +1,59 @@
 # CHANGELOG
 
 
+## v0.56.0 (2026-06-25)
+
+### Bug Fixes
+
+- Remove unused _fake_run helper in diagram_test.py (issue 109)
+  ([`1756baf`](https://github.com/ourPLCC/plcc-ng/commit/1756bafb666d0710652bac617143edac51f913b1))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Remove unused imports in emit_test.py (issue 109)
+  ([`40c50ea`](https://github.com/ourPLCC/plcc-ng/commit/40c50ead03dcec5daa21531aa4418087fa804605))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update plcc-diagram-class output paths to build/diagram/class.* (issue 109)
+  ([`e5928b4`](https://github.com/ourPLCC/plcc-ng/commit/e5928b49b78eb2dec60f8e40055e2145095cba69))
+
+Changes the orchestrator to write class diagrams to build/diagram/class.puml and
+  build/diagram/class.png instead of build/diagram/diagram.* to follow the
+  build/diagram/{type}.{ext} convention for all diagram artifacts.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec and issue 114 for syntactic/lexical EBNF diagrams [skip ci]
+  ([`14f8202`](https://github.com/ourPLCC/plcc-ng/commit/14f82020a02958db34215c2fcb78f72f91158fe4))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for syntactic EBNF diagram (issue 109) [skip ci]
+  ([`a630dff`](https://github.com/ourPLCC/plcc-ng/commit/a630dffe362ce0741cad07860444660227467e0f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Add plcc-diagram-syntactic orchestrator and entry points (issue 109)
+  ([`6067d84`](https://github.com/ourPLCC/plcc-ng/commit/6067d84f838199bdcb271cb37d7936a099247b2b))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add plcc-diagram-syntactic-plantuml-emit (issue 109)
+  ([`e8b5d4c`](https://github.com/ourPLCC/plcc-ng/commit/e8b5d4c05359e1818ba9f7edc65863b65e3cd459))
+
+### Testing
+
+- Add bats tests for plcc-diagram-syntactic and update packaging (issue 109)
+  ([`b072b55`](https://github.com/ourPLCC/plcc-ng/commit/b072b55b9f1ad3baa42265798fba380abc9493b6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.55.0 (2026-06-25)
 
 ### Bug Fixes
