@@ -1,10 +1,13 @@
-from dataclasses import dataclass
-
-from ..ValidationError import ValidationError
+from ..SpecError import SpecError
 
 
-@dataclass
-class UndefinedBlockError(ValidationError):
+class UndefinedBlockError(SpecError):
     def __init__(self, line):
-        self.line = line
-        self.message = f"Undefined Block for {self.line.string} on line: {self.line.number}"
+        super().__init__(
+            line=line,
+            column=1,
+            message=(
+                f"class name '{line.string.strip()}' must be "
+                "immediately followed by '%%%' on the next line"
+            ),
+        )
