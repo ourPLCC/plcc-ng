@@ -152,6 +152,9 @@ def main(argv=None):
     model_json = None
     delete_sentinel(build_dir)  # absent until final success write below
 
+    verbose.emit(Events.PHASE, message="validate-lexical")
+    _run_or_die(['plcc-validate-lexical'] + child_flags, stdin_file=spec_json, verbose=verbose)
+
     if through in ('parse', 'all'):
         verbose.emit(Events.PHASE, message="ll1")
         ll1_json = str(build_dir / 'll1.json')
