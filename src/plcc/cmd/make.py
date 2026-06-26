@@ -163,6 +163,8 @@ def main(argv=None):
             sys.exit(1)
 
     if through in ('model', 'all'):
+        verbose.emit(Events.PHASE, message="validate-semantic")
+        _run_or_die(['plcc-validate-semantic'] + child_flags, stdin_file=spec_json, verbose=verbose)
         verbose.emit(Events.PHASE, message="model")
         model_json = str(build_dir / 'model.json')
         _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)
