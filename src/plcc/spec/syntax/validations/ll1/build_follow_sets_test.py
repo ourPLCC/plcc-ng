@@ -97,6 +97,22 @@ def test__follow_set_with_terminal_after_captured_rule():
     assert follows["d"] == {"A", "C"}
 
 
+def test_left_recursive_nonterminal_inside_nullable_does_not_crash():
+    """
+    build_follow_sets should not raise RecursionError when a nullable
+    nonterminal's first production expands into a left-recursive one.
+    Reproduces the crash from: prog **= exp  with  exp ::= exp PLUS exp | NUM.
+    """
+    grammar, firsts, follows = setup([
+        'prog explist',
+        'explist exp explist',
+        'explist',
+        'exp exp PLUS exp',
+        'exp NUM',
+    ])
+    assert follows is not None
+
+
 def setup(lines):
     g = Grammar()
     for line in [line.split() for line in lines]:
