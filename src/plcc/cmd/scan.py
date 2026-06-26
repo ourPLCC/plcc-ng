@@ -42,6 +42,8 @@ def _print_candidates_table(attempts):
 
     rows = []
     for a in attempts:
+        if a['char_count'] == 0:
+            continue
         is_winner = a.get('winner', False)
         index_marker = '*' if (is_tie and is_winner) else ''
         len_marker = '*' if (not is_tie and is_winner) else ''

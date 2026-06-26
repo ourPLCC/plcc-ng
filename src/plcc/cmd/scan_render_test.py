@@ -159,3 +159,15 @@ def test_non_trace_skip_format_unchanged():
     r['lexeme'] = ' '
     out = _capture(r, show_skips=True, show_line=False, show_attempts=False)
     assert out.strip() == "-:1:1 WS ' ' SKIPPED"
+
+
+def test_trace_zero_char_candidates_excluded():
+    r = _base_record()
+    r['attempts'] = [
+        {'name': 'NUM', 'regex': r'\d+', 'lexeme': '42',
+         'char_count': 2, 'is_skip': False, 'winner': True, 'rule_index': 1},
+        {'name': 'WS', 'regex': r'\s+', 'lexeme': '',
+         'char_count': 0, 'is_skip': True, 'winner': False, 'rule_index': 2},
+    ]
+    out = _capture(r)
+    assert 'WS' not in out
