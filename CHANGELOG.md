@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v0.58.1 (2026-06-26)
+
+### Bug Fixes
+
+- Prevent RecursionError in build_follow_sets on left-recursive grammars
+  ([`5cc5a05`](https://github.com/ourPLCC/plcc-ng/commit/5cc5a05a65290a66b6b8a2e70174b70aa54dd701))
+
+_canDeriveEmptyString had no cycle detection, so checking if a nullable nonterminal could derive ε
+  would recurse infinitely when its first production expanded into a left-recursive nonterminal
+  (e.g., prog **= exp with exp ::= exp PLUS exp). Thread a `computing` set through to break cycles.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.58.0 (2026-06-26)
 
 ### Bug Fixes
