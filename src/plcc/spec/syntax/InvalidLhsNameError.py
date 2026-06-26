@@ -3,7 +3,7 @@ from ..SpecError import SpecError
 class InvalidLhsNameError(SpecError):
     def __init__(self, rule):
         super().__init__(line=rule.line, column=1,
-            message=f"invalid LHS name '{rule.lhs.name}' — must start with a lowercase letter followed by letters, digits, or underscores")
+            message=f"invalid LHS name '{rule.lhs.name}' — must start with an uppercase letter followed by letters, digits, or underscores")
 
     def __eq__(self, other):
         if not isinstance(other, InvalidLhsNameError):
