@@ -78,6 +78,8 @@ class SyntacticRhsValidator:
                     seen.add(symbolName)
 
     def _validateSeparatorIsTerminal(self, rule):
+        if rule.separator is None:
+            return
         if not re.match(r"^[A-Z][A-Z0-9_]+$", rule.separator.name):
             self._appendInvalidRhsSeparatorTypeError(rule)
 
