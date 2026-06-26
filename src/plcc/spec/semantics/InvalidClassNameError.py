@@ -1,10 +1,19 @@
-from dataclasses import dataclass
-
-from ..ValidationError import ValidationError
+from ..SpecError import SpecError
 
 
-@dataclass
-class InvalidClassNameError(ValidationError):
+class InvalidClassNameError(SpecError):
     def __init__(self, line):
-        self.line = line
-        self.message = f"Invalid name format for ClassName {self.line.string} on line: {self.line.number} (Must start with an upper case letter, and may contain upper or lower case letters, numbers, and underscores)."
+        super().__init__(
+            line=line,
+            column=1,
+            message=(
+                f"invalid class name '{line.string.strip()}' — "
+                "must start with an uppercase letter followed by letters, digits, or underscores"
+            ),
+        )
+
+    @property
+    def hint(self):
+        if self.line.string.strip().startswith('%%'):
+            return "did you mean '%%%' instead of '%%{' or '%%}'?"
+        return None

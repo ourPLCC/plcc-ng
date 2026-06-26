@@ -1,0 +1,9 @@
+token NUM '\d+'
+skip WS '\s+'
+%
+<Program> ::= NUM
+%
+Java
+%%{
+public void _run() {}
+%%}

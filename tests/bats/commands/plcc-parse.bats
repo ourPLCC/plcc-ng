@@ -95,12 +95,12 @@ token NUM '\d+'
 token PLUS '\+'
 skip WS '\s+'
 %
-<program> ::= <expr>
-<expr> ::= NUM PLUS NUM
+<Program> ::= <Expr>
+<Expr> ::= NUM PLUS NUM
 SPEC
     run bash -c "cd '${WORK_DIR}' && echo '1 +' | plcc-parse"
     [ "$status" -ne 0 ]
-    [[ "$output" == *"program"* ]]
+    [[ "$output" == *"Program"* ]]
     [[ "$output" == *"NUM"* ]]
     [[ "$output" != *"predict"* ]]
 }
@@ -111,12 +111,12 @@ token NUM '\d+'
 token PLUS '\+'
 skip WS '\s+'
 %
-<program> ::= <expr>
-<expr> ::= NUM PLUS NUM
+<Program> ::= <Expr>
+<Expr> ::= NUM PLUS NUM
 SPEC
     run bash -c "cd '${WORK_DIR}' && echo '1 +' | plcc-parse"
     [ "$status" -ne 0 ]
-    rule_line=$(echo "$output" | grep -n "^program$" | head -1 | cut -d: -f1)
+    rule_line=$(echo "$output" | grep -n "^Program$" | head -1 | cut -d: -f1)
     error_line=$(echo "$output" | grep -n "error:" | head -1 | cut -d: -f1)
     [ "$rule_line" -lt "$error_line" ]
 }

@@ -136,7 +136,7 @@ def main(argv=None):
     _REQUIRED = {
         'scan':  {'scan'},
         'parse': {'scan', 'parse'},
-        'model': {'scan', 'model'},
+        'model': {'scan', 'parse', 'model'},
         'all':   {'scan', 'parse', 'model'} | lang_stage,
     }
     required_stages = _REQUIRED[through]
@@ -152,7 +152,12 @@ def main(argv=None):
     model_json = None
     delete_sentinel(build_dir)  # absent until final success write below
 
-    if through in ('parse', 'all'):
+    verbose.emit(Events.PHASE, message="validate-lexical")
+    _run_or_die(['plcc-validate-lexical'] + child_flags, stdin_file=spec_json, verbose=verbose)
+
+    if through in ('parse', 'model', 'all'):
+        verbose.emit(Events.PHASE, message="validate-syntactic")
+        _run_or_die(['plcc-validate-syntactic'] + child_flags, stdin_file=spec_json, verbose=verbose)
         verbose.emit(Events.PHASE, message="ll1")
         ll1_json = str(build_dir / 'll1.json')
         _run_or_die(['plcc-ll1'] + child_flags, stdin_file=spec_json, stdout_file=ll1_json, verbose=verbose)
@@ -163,6 +168,8 @@ def main(argv=None):
             sys.exit(1)
 
     if through in ('model', 'all'):
+        verbose.emit(Events.PHASE, message="validate-semantic")
+        _run_or_die(['plcc-validate-semantic'] + child_flags, stdin_file=spec_json, verbose=verbose)
         verbose.emit(Events.PHASE, message="model")
         model_json = str(build_dir / 'model.json')
         _run_or_die(['plcc-model', spec_json] + child_flags, stdout_file=model_json, verbose=verbose)

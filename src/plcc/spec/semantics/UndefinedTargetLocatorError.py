@@ -1,10 +1,10 @@
-from dataclasses import dataclass
-
-from ..ValidationError import ValidationError
+from ..SpecError import SpecError
 
 
-@dataclass
-class UndefinedTargetLocatorError(ValidationError):
+class UndefinedTargetLocatorError(SpecError):
     def __init__(self, line):
-        self.line = line
-        self.message = f"Undefined class name on line: {self.line.number}"
+        super().__init__(
+            line=line,
+            column=1,
+            message="'%%%' block has no preceding class name",
+        )
