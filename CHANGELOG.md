@@ -1,6 +1,72 @@
 # CHANGELOG
 
 
+## v0.59.0 (2026-06-26)
+
+### Bug Fixes
+
+- Correct InvalidLhsNameError message and update plcc-parse.bats to use valid LHS names
+  ([`16a5591`](https://github.com/ourPLCC/plcc-ng/commit/16a559144b31f4ce4584190578750adc2adfd3f2))
+
+LHS names in PLCC must start with an uppercase letter (they become class names). The message said
+  "lowercase" — opposite of the actual check in is_valid_class_name. Two bats tests also used
+  invalid lowercase <program>/<expr> specs that only worked before because plcc-validate-syntactic
+  was dead code.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **118**: Wire plcc-validate-semantic into plcc-make; add e2e test for bad block delimiters
+  ([`2af21c1`](https://github.com/ourPLCC/plcc-ng/commit/2af21c1dff815be651d8491932684f826c9334b8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add spec validation pipeline design for issue 118 [skip ci]
+  ([`e75c70f`](https://github.com/ourPLCC/plcc-ng/commit/e75c70f94ac267721f4de2063e6aa9fa8b9906b2))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Write implementation plan for spec validation pipeline [skip ci]
+  ([`b32529d`](https://github.com/ourPLCC/plcc-ng/commit/b32529d46783d67783c74a5084204ac64768a2b8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Add plcc-validate-lexical command and wire into plcc-make [skip ci]
+  ([`cb68a42`](https://github.com/ourPLCC/plcc-ng/commit/cb68a429c7a0a3d8829941eff2a5498f50d4c0f1))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add plcc-validate-semantic command [skip ci]
+  ([`425d82a`](https://github.com/ourPLCC/plcc-ng/commit/425d82a86a16788a4ca7df82e04cd6b9ff13e0e4))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add plcc-validate-syntactic command; wire all validators into plcc-make; fix _REQUIRED hierarchy
+  ([`40313c4`](https://github.com/ourPLCC/plcc-ng/commit/40313c41c6437d6850bccbf8c19ac19835f77ccc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add SemanticSpec deserializer from spec JSON [skip ci]
+  ([`7652c75`](https://github.com/ourPLCC/plcc-ng/commit/7652c75e6ffd4469ad904a89633ba915afd58311))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Refactoring
+
+- Upgrade semantic error classes to SpecError with improved messages [skip ci]
+  ([`ae57063`](https://github.com/ourPLCC/plcc-ng/commit/ae57063664bd534a1714394937268dbb6b1110e6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Upgrade syntactic validation error classes to SpecError [skip ci]
+  ([`3d23cc8`](https://github.com/ourPLCC/plcc-ng/commit/3d23cc8b3a1188a6c25c356dc97285f340d5ce41))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.58.1 (2026-06-26)
 
 ### Bug Fixes
