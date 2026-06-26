@@ -210,7 +210,7 @@ def test_ctrl_c_with_empty_buffer_exits_130(monkeypatch, runner):
     assert exc_info.value.code == 130
 
 
-def test_ctrl_c_with_buffer_clears_and_continues(monkeypatch, runner, capsys):
+def test_ctrl_c_with_buffer_exits_130(monkeypatch, runner):
     class InterruptAfterLine:
         def __init__(self):
             self._calls = 0
@@ -224,20 +224,17 @@ def test_ctrl_c_with_buffer_clears_and_continues(monkeypatch, runner, capsys):
         def read1(self, n=-1):
             self._calls += 1
             if self._calls == 1:
-                return b"partial\n"   # builds the buffer
+                return b"code\n"
             if self._calls == 2:
-                raise KeyboardInterrupt  # ^C with non-empty buffer
-            if self._calls == 3:
-                return b"hello\n"
-            return b""
+                raise KeyboardInterrupt   # ^C with non-empty buffer (remainder in state)
+            return b""  # Should never reach here if fix works
 
     monkeypatch.setattr(sys, "stdin", InterruptAfterLine())
-    handler = RecordingHandler(results=[b"partial\n", b""])
-    runner.run(["-"], handler)
-    _, err = capsys.readouterr()
-    assert "KeyboardInterrupt" in err
-    # buffer was cleared by ^C; next feed sees only "hello\n"
-    assert handler.calls[-1][0] == b"hello\n"
+    # Handler returns a remainder, so buffer will be non-empty
+    handler = RecordingHandler(results=[b"incomplete"])
+    with pytest.raises(SystemExit) as exc_info:
+        runner.run(["-"], handler)
+    assert exc_info.value.code == 130
 
 
 def test_ctrl_c_during_evaluation_exits_130(monkeypatch, runner):
