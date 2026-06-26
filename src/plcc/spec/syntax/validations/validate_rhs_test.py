@@ -108,6 +108,10 @@ def test_valid_rhs_alt_name():
 <Sentence> ::= <Word:name>''')
 
 
+def test_repeating_rule_without_separator_is_valid():
+    assertValid('''<Sentence> **= WORD''')
+
+
 def test_valid_separator_terminal():
     assertValid('''<Sentence> **= WORD +PERIOD''')
 
