@@ -66,14 +66,18 @@ class FollowSetBuilder:
             self._changed = True
 
     def _canDeriveEmpty(self, symbols):
-        return all(self._canDeriveEmptyString(symbol) for symbol in symbols)
+        return all(self._canDeriveEmptyString(symbol, set()) for symbol in symbols)
 
-    def _canDeriveEmptyString(self, symbol):
+    def _canDeriveEmptyString(self, symbol, computing):
+        if symbol in computing:
+            return False
         if self.grammar.isNonterminal(symbol):
-            if self._allRulesCanDeriveEmpty(symbol):
-                return True
+            computing.add(symbol)
+            result = self._allRulesCanDeriveEmpty(symbol, computing)
+            computing.discard(symbol)
+            return result
         return False
 
-    def _allRulesCanDeriveEmpty(self, symbol):
-        if all(self._canDeriveEmptyString(rule) for rule in self.grammar.getForms(symbol)[0]):
+    def _allRulesCanDeriveEmpty(self, symbol, computing):
+        if all(self._canDeriveEmptyString(rule, computing) for rule in self.grammar.getForms(symbol)[0]):
             return True
