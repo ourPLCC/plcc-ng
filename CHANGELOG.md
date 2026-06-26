@@ -1,6 +1,64 @@
 # CHANGELOG
 
 
+## v0.58.0 (2026-06-26)
+
+### Bug Fixes
+
+- **117**: Exclude zero-char candidates from trace table; add test
+  ([`656edff`](https://github.com/ourPLCC/plcc-ng/commit/656edff87706c689f815f9a98757b94eb0bb4404))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec for issue 117 scan trace output readability [skip ci]
+  ([`681e2e2`](https://github.com/ourPLCC/plcc-ng/commit/681e2e2e4e62dcd62d31faf279b43d5870fbc846))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue 117 scan trace output readability [skip ci]
+  ([`30e74be`](https://github.com/ourPLCC/plcc-ng/commit/30e74be52edcb0259b0578dcda02092d79e0e093))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **117**: Add rule_index to matcher attempt records
+  ([`6e913fe`](https://github.com/ourPLCC/plcc-ng/commit/6e913fe553e352eb0f2f0359a6be3238ced0379d))
+
+Each match object now tracks its 1-based position in the spec's lexical rule list. This is added to
+  attempt dicts as 'rule_index' for downstream display layers.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **117**: Replace scan trace renderer with new block format
+  ([`961546b`](https://github.com/ourPLCC/plcc-ng/commit/961546b7d96f74812c4dff1a9041eed27eb0c854))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Refactoring
+
+- **117**: Remove unused import and dead conditional in trace renderer
+  ([`0c1360b`](https://github.com/ourPLCC/plcc-ng/commit/0c1360bbf9076ca5f7fad3b3ce2089d3cd65a2d6))
+
+Remove unused pytest import from scan_render_test.py. Remove dead conditional in
+  _print_candidates_table where char_count > 0 check is unreachable due to earlier continue guard on
+  line 45-46.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Testing
+
+- **117**: Add rule_index assertion to test_attempts_entry_fields
+  ([`2f2f5ea`](https://github.com/ourPLCC/plcc-ng/commit/2f2f5ea28acd6de5502745879d901f19fc82ffb3))
+
+- **117**: Update scan --trace bats tests for new output format
+  ([`a16d7a5`](https://github.com/ourPLCC/plcc-ng/commit/a16d7a5a26f5f25300e6b72acb536d7c041ff5dc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.57.0 (2026-06-25)
 
 ### Documentation
