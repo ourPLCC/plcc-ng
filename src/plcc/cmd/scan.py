@@ -22,26 +22,49 @@ def _location_str(source):
     return f"{file}:{line}:{col}"
 
 
-__doc__ = """plcc-scan
-    Tokenize source input and print tokens in human-readable format.
-
-Usage:
-    plcc-scan [-v ...] [options] [SOURCE ...]
-
-Arguments:
-    SOURCE      Source files to tokenize. Reads stdin if none given.
-
-Options:
-    -h --help                   Show this message.
-""" + SPEC_OPTION + """\
-    -t --trace                  Show detailed scanning output.
-    -b --banner                 Show the version and spec banner on stderr.
-""" + VERBOSE_OPTIONS
+def _escape(s):
+    return (s
+            .replace('\\', '\\\\')
+            .replace('\n', '\\n')
+            .replace('\t', '\\t')
+            .replace('\r', '\\r'))
 
 
-class Events(enum.Enum):
-    STARTED = "started"
-    FINISHED = "finished"
+def _print_candidates_table(attempts):
+    if not attempts:
+        return
+    winner = next((a for a in attempts if a.get('winner')), None)
+    if winner is None:
+        return
+
+    winner_len = winner['char_count']
+    is_tie = sum(1 for a in attempts if a['char_count'] == winner_len) > 1
+
+    rows = []
+    for a in attempts:
+        if a['char_count'] == 0:
+            continue
+        is_winner = a.get('winner', False)
+        index_marker = '*' if (is_tie and is_winner) else ''
+        len_marker = '*' if (not is_tie and is_winner) else ''
+        rows.append({
+            '#': str(a.get('rule_index', '?')) + index_marker,
+            'Type': 'skip' if a.get('is_skip') else 'token',
+            'Name': a['name'],
+            'Pattern': f"'{a['regex']}'",
+            'Len': str(a['char_count']) + len_marker,
+            'Match': f"'{_escape(a['lexeme'])}'",
+        })
+
+    cols = ['#', 'Type', 'Name', 'Pattern', 'Len', 'Match']
+    header = {c: c for c in cols}
+    all_rows = [header] + rows
+    widths = {c: max(len(r[c]) for r in all_rows) for c in cols}
+
+    for r in all_rows:
+        print('  '.join(r[c].ljust(widths[c]) for c in cols).rstrip(), flush=True)
+
+    print('* longest match wins; ties broken by earliest rule (#)', flush=True)
 
 
 def _render_record(record, show_skips, show_line, show_attempts):
@@ -63,36 +86,56 @@ def _render_record(record, show_skips, show_line, show_attempts):
     loc = _location_str(source)
     name = record.get("name", "?")
     lexeme = record.get("lexeme", "?")
+    pattern = record.get("regex", "?")
     source_line = record.get("source_line", "")
     attempts = record.get("attempts", [])
     col = source.get("column", 1)
 
-    if show_line and source_line:
-        print(source_line, flush=True)
-        print(" " * (col - 1) + "^", flush=True)
-
-    if show_attempts:
-        print("Candidates:", flush=True)
-        for attempt in attempts:
-            if attempt.get("char_count", 0) == 0:
-                continue
-            prefix = "-> " if attempt.get("winner") else "   "
-            a_name = attempt.get("name", "?")
-            a_regex = attempt.get("regex", "?")
-            a_count = attempt.get("char_count", 0)
-            a_lexeme = attempt.get("lexeme", "?")
-            print(f"{prefix}{a_name} '{a_regex}' {a_count} chars '{a_lexeme}'", flush=True)
-
-    if show_attempts:
+    if not show_attempts:
         if kind == "skip":
-            print(f"{loc}: skip: {name} '{lexeme}'", flush=True)
+            print(f"{loc} {name} '{lexeme}' SKIPPED", flush=True)
         else:
-            print(f"{loc}: token: {name} '{lexeme}'", flush=True)
-        print(flush=True)
-    elif kind == "skip":
-        print(f"{loc} {name} '{lexeme}' SKIPPED", flush=True)
-    else:
-        print(f"{loc} {name} '{lexeme}'", flush=True)
+            print(f"{loc} {name} '{lexeme}'", flush=True)
+        return
+
+    print(f"Scanning {loc}:", flush=True)
+
+    display_line = source_line.replace('\t', '→')
+    if col - 1 >= len(display_line):
+        display_line += '↵'
+    print(display_line, flush=True)
+    print(' ' * (col - 1) + '^', flush=True)
+
+    print(flush=True)
+    print("Candidates:", flush=True)
+    _print_candidates_table(attempts)
+
+    print(flush=True)
+    print("Result:", flush=True)
+    print(f"{kind} {name} '{pattern}' '{_escape(lexeme)}'", flush=True)
+    print(flush=True)
+
+
+__doc__ = """plcc-scan
+    Tokenize source input and print tokens in human-readable format.
+
+Usage:
+    plcc-scan [-v ...] [options] [SOURCE ...]
+
+Arguments:
+    SOURCE      Source files to tokenize. Reads stdin if none given.
+
+Options:
+    -h --help                   Show this message.
+""" + SPEC_OPTION + """\
+    -t --trace                  Show detailed scanning output.
+    -b --banner                 Show the version and spec banner on stderr.
+""" + VERBOSE_OPTIONS
+
+
+class Events(enum.Enum):
+    STARTED = "started"
+    FINISHED = "finished"
 
 
 class ScanHandler:
