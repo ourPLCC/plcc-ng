@@ -1,6 +1,5 @@
 import io
 import sys
-import pytest
 from .scan import _render_record
 
 

@@ -53,7 +53,7 @@ def _print_candidates_table(attempts):
             'Name': a['name'],
             'Pattern': f"'{a['regex']}'",
             'Len': str(a['char_count']) + len_marker,
-            'Match': f"'{_escape(a['lexeme'])}'" if a['char_count'] > 0 else '',
+            'Match': f"'{_escape(a['lexeme'])}'",
         })
 
     cols = ['#', 'Type', 'Name', 'Pattern', 'Len', 'Match']
