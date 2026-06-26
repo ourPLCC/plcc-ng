@@ -1,0 +1,5 @@
+token PLUS '\+'
+token OP   '\+'
+skip  WS   '\s+'
+%
+<Program> ::= PLUS

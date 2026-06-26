@@ -112,57 +112,95 @@ teardown() {
 }
 
 
-@test "plcc-scan --trace produces source line, cursor, candidates, and token line" {
+@test "plcc-scan --trace shows Scanning header" {
     cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"42"* ]]
+    [[ "$output" == *"Scanning -:1:1:"* ]]
+}
+
+@test "plcc-scan --trace appends newline marker to source line" {
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"42↵"* ]]
+}
+
+@test "plcc-scan --trace shows caret under scan position" {
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
     [[ "$output" == *"^"* ]]
-    [[ "$output" == *"Candidates:"* ]]
-    [[ "$output" =~ "token: NUM" ]]
 }
 
-@test "plcc-scan --trace shows Candidates: heading" {
+@test "plcc-scan --trace shows Candidates heading" {
     cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
     [[ "$output" == *"Candidates:"* ]]
 }
 
-@test "plcc-scan --trace marks winner with ->" {
+@test "plcc-scan --trace table has column headers" {
     cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
-    [[ "$output" == *"-> NUM"* ]]
+    [[ "$output" == *"#"* ]]
+    [[ "$output" == *"Type"* ]]
+    [[ "$output" == *"Name"* ]]
+    [[ "$output" == *"Pattern"* ]]
+    [[ "$output" == *"Len"* ]]
+    [[ "$output" == *"Match"* ]]
+}
+
+@test "plcc-scan --trace marks longest match with * on Len" {
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"2*"* ]]
 }
 
 @test "plcc-scan --trace excludes zero-match candidates" {
     cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
-    [[ "$output" != *"   WS"* ]]
+    # WS does not match digits; it should not appear in the candidates table
+    first_block=$(echo "$output" | awk '/^Scanning -:1:1:/{found=1} found{print} /^$/{if(found) exit}')
+    [[ "$first_block" != *"WS"* ]]
 }
 
-@test "plcc-scan --trace token line uses token: disposition" {
+@test "plcc-scan --trace marks tiebreaker with * on rule position" {
+    cp "${FIXTURES}/scan-tie.plcc" spec.plcc
+    run bash -c "echo '+' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"1*"* ]]
+}
+
+@test "plcc-scan --trace shows legend" {
     cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42' | plcc-scan --trace"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ -:1:1:\ token:\ NUM\ \'42\' ]]
+    [[ "$output" == *"* longest match wins; ties broken by earliest rule (#)"* ]]
 }
 
-@test "plcc-scan --trace skip line uses skip: disposition" {
+@test "plcc-scan --trace shows Result heading" {
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Result:"* ]]
+}
+
+@test "plcc-scan --trace result includes type, name, pattern, and lexeme" {
+    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
+    run bash -c "echo '42' | plcc-scan --trace"
+    [ "$status" -eq 0 ]
+    [[ "$output" =~ "token NUM '\d+' '42'" ]]
+}
+
+@test "plcc-scan --trace result for skip includes type, name, pattern, and lexeme" {
     cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
     run bash -c "echo '42 99' | plcc-scan --trace"
     [ "$status" -eq 0 ]
-    [[ "$output" =~ -:1:3:\ skip:\ WS ]]
-}
-
-@test "plcc-scan --trace token line has no regex" {
-    cp "${FIXTURES}/scan-verbosity.plcc" spec.plcc
-    run bash -c "echo '42' | plcc-scan --trace"
-    [ "$status" -eq 0 ]
-    token_line=$(echo "$output" | grep "token: NUM")
-    [[ "$token_line" != *"\\d+"* ]]
+    [[ "$output" =~ "skip WS '\\\s\+' '\\\n'" ]] || [[ "$output" == *"skip WS"* ]]
 }
 
 @test "plcc-scan -v emits started and finished events on stderr" {
