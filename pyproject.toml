@@ -51,6 +51,7 @@ fallback_version = "0.0.0"
 
 [project.scripts]
 plcc-spec = "plcc.spec.plcc_spec_cli:main"
+plcc-validate-semantic  = "plcc.spec.semantics.plcc_validate_semantic_cli:main"
 plcc-tokens = "plcc.tokens.tokens_cli:main"
 plcc-trees = "plcc.tree.tree_cli:main"
 plcc-model = "plcc.model.model_cli:main"
