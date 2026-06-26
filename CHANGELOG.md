@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.59.1 (2026-06-26)
+
+### Bug Fixes
+
+- Guard against None separator in _validateSeparatorIsTerminal
+  ([`3989921`](https://github.com/ourPLCC/plcc-ng/commit/3989921dcb1de8ba976dfc101b6c9f750d2c8d47))
+
+A repeating rule using **= without a separator has rule.separator=None, causing an AttributeError
+  when the validator tried to access .name.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.59.0 (2026-06-26)
 
 ### Bug Fixes
