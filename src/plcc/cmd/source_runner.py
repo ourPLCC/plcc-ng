@@ -54,7 +54,7 @@ class SourceRunner:
 
     def _process_line(self, handler, line, state):
         if line is None:
-            return self._clear_buffer_or_exit(state)
+            self._handle_interrupt()
         if line == b"":
             return self._ctrl_d(handler, state)
         if not line.endswith(b"\n"):
@@ -80,11 +80,8 @@ class SourceRunner:
         prompt = self._prompt if not remainder else self._continuation
         return _InteractiveState(buffer=remainder, prompt=prompt)
 
-    def _clear_buffer_or_exit(self, state):
+    def _handle_interrupt(self):
         print(file=sys.stderr)
-        if state.buffer:
-            print("KeyboardInterrupt", file=sys.stderr)
-            return _InteractiveState(buffer=b"", prompt=self._prompt)
         sys.exit(130)
 
     def _evaluate(self, handler, content, eof):
