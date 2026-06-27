@@ -41,7 +41,7 @@ In all four cases `plcc-rep` continues. No label is added by `plcc-rep` — the 
 
 ---
 
-### System Error
+### plcc-ng Error
 
 **What it is:** An internal error in `plcc-rep` or any `plcc-*` tool — a bug in plcc-ng itself, an unexpected crash, or malformed output from a subprocess that violates the protocol.
 
@@ -49,7 +49,7 @@ In all four cases `plcc-rep` continues. No label is added by `plcc-rep` — the 
 
 **REPL action:** Print the error, exit.
 
-**Message:** `System error: <description>` followed by `Please report this at https://github.com/ourPLCC/plcc-ng/issues.`
+**Message:** `plcc-ng error: <description>` followed by `Please report this at https://github.com/ourPLCC/plcc-ng/issues.`
 
 ---
 
@@ -138,7 +138,7 @@ Note: Haskell's built-in `error "string"` throws `ErrorCall`, which is **not** a
 | Semantics bug during evaluation | `{"kind": "specification_error"}` from runner | Print Specification Error, exit |
 | Interpreter dies at startup | EOF before any record | Print Specification Error, exit |
 | `plcc-make` fails | Non-zero exit code | Print Specification Error, exit |
-| Protocol violation / unexpected state | Malformed or missing output | Print System Error, exit |
+| Protocol violation / unexpected state | Malformed or missing output | Print plcc-ng Error, exit |
 
 ---
 

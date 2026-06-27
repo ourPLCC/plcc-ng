@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement the error taxonomy defined in the spec so that `plcc-rep` distinguishes Language Behavior (continue), Specification Errors (exit with message), and System Errors (exit with report prompt).
+**Goal:** Implement the error taxonomy defined in the spec so that `plcc-rep` distinguishes Language Behavior (continue), Specification Errors (exit with message), and plcc-ng Errors (exit with report prompt).
 
 **Architecture:** Each language runtime gains a `LanguageError` base exception and emits a startup `{"kind": "ready"}` handshake on stdout. The runtime template catches `LanguageError` → `{"kind": "error"}` (REPL continues) and all other exceptions → `{"kind": "specification_error"}` (REPL exits). `plcc-rep` reads the ready handshake before the REPL loop (treating EOF as a Specification Error) and handles the new `specification_error` record kind.
 
@@ -719,14 +719,14 @@ def test_render_record_specification_error_prints_spec_error_message(capsys):
     assert "Fix the errors" in combined
 
 
-def test_render_record_unknown_kind_prints_system_error(capsys):
+def test_render_record_unknown_kind_prints_plccng_error(capsys):
     record = {"kind": "unexpected_kind", "type": "X", "message": "oops"}
     with pytest.raises(SystemExit) as exc_info:
         _rep_module._render_record(record, "text")
     assert exc_info.value.code != 0
     out, err = capsys.readouterr()
     combined = out + err
-    assert "System error" in combined
+    assert "plcc-ng error" in combined
     assert "report" in combined.lower()
 
 
@@ -760,7 +760,7 @@ def test_wait_for_ready_exits_with_spec_error_when_interpreter_sends_eof(capsys)
 - [ ] **Step 3: Run to verify failure**
 
 ```bash
-bin/test/units.bash src/plcc/cmd/rep_test.py::test_render_record_error_prints_only_message src/plcc/cmd/rep_test.py::test_render_record_specification_error_prints_spec_error_message src/plcc/cmd/rep_test.py::test_render_record_unknown_kind_prints_system_error src/plcc/cmd/rep_test.py::test_wait_for_ready_succeeds_when_interpreter_sends_ready src/plcc/cmd/rep_test.py::test_wait_for_ready_exits_with_spec_error_when_interpreter_sends_eof -v
+bin/test/units.bash src/plcc/cmd/rep_test.py::test_render_record_error_prints_only_message src/plcc/cmd/rep_test.py::test_render_record_specification_error_prints_spec_error_message src/plcc/cmd/rep_test.py::test_render_record_unknown_kind_prints_plccng_error src/plcc/cmd/rep_test.py::test_wait_for_ready_succeeds_when_interpreter_sends_ready src/plcc/cmd/rep_test.py::test_wait_for_ready_exits_with_spec_error_when_interpreter_sends_eof -v
 ```
 
 Expected: FAIL
@@ -789,7 +789,7 @@ def _render_record(record, verbose_format):
         print_user_error("Fix the errors in your specification and re-run.")
         sys.exit(1)
     else:
-        print_user_error(f"System error: unexpected record kind '{kind}': {record}")
+        print_user_error(f"plcc-ng error: unexpected record kind '{kind}': {record}")
         print_user_error("Please report this at https://github.com/ourPLCC/plcc-ng/issues.")
         sys.exit(1)
 ```
@@ -809,7 +809,7 @@ def _wait_for_ready(interpreter):
             return
     except (json.JSONDecodeError, AttributeError):
         pass
-    print_user_error(f"System error: unexpected startup output from interpreter: {raw!r}")
+    print_user_error(f"plcc-ng error: unexpected startup output from interpreter: {raw!r}")
     print_user_error("Please report this at https://github.com/ourPLCC/plcc-ng/issues.")
     sys.exit(1)
 ```
@@ -958,7 +958,7 @@ git commit -m "feat(rep): startup handshake, specification_error handling, clean
 - Language Behavior / Semantic rejection (`LanguageError`): Tasks 1–5 add `LanguageError` + template catch; Task 6 renders `{"kind": "error"}` as just `message` ✓
 - Specification Error at startup (Python syntax): Task 6 `_wait_for_ready` catches EOF before REPL loop ✓
 - Specification Error at runtime: Tasks 1–5 emit `specification_error` record; Task 6 handles it in `_render_record` ✓
-- System Error: Task 6 handles unknown record kinds ✓
+- plcc-ng Error: Task 6 handles unknown record kinds ✓
 - `plcc-make` failure: already handled by existing non-zero exit check ✓
 
 **Placeholder scan:** No TBDs or TODOs. All steps include concrete code.
