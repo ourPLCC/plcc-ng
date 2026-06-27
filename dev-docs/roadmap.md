@@ -12,9 +12,6 @@
 - **[#121](issues/121-rep-python-syntax-error-continues.md) — `plcc-rep` continues after Python syntax errors in semantics**
   Build failures from syntax errors should abort the REPL rather than drop into the input loop.
 
-- **[#122](issues/122-rep-python-wrong-output.md) — `plcc-rep` with Python emitter returns object repr instead of value**
-  Evaluated expressions show raw object repr; Python semantics are not wired up correctly.
-
 ### Features
 
 - **[#111](issues/111-mermaid-extension-redesign.md) — Redesign the Mermaid diagram extension**
@@ -25,6 +22,11 @@
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
   Define v1.0 criteria, decide emitter support tiers, and write the release SOP.
+
+### Refactors
+
+- **[#123](issues/123-rename-syntactic-to-syntax-in-plcc-diagram.md) — Rename `syntactic` to `syntax` in `plcc-diagram-*` and output filenames**
+  The word "syntactic" in command names and generated filenames should be "syntax" for consistency.
 
 ### Performance
 
