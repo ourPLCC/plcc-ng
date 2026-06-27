@@ -174,6 +174,20 @@ def test_nested_nonterminal_child_is_tree():
 
 # --- error cases ---
 
+def test_no_production_for_eof_message_says_end_of_file():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_TRIVIAL_LL1, [])
+    assert "end of file" in exc_info.value.args[0]
+    assert "'eof'" not in exc_info.value.args[0]
+
+
+def test_expected_terminal_got_eof_message_says_end_of_file():
+    with pytest.raises(ParseError) as exc_info:
+        parse(_ADDITION_LL1, [_tok("NUM", "1")])
+    assert "end of file" in exc_info.value.args[0]
+    assert "'eof'" not in exc_info.value.args[0]
+
+
 def test_wrong_terminal_raises_parse_error():
     with pytest.raises(ParseError):
         parse(_TRIVIAL_LL1, [_tok("IDENTIFIER", "x")])
