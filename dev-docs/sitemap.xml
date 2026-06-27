@@ -53,26 +53,6 @@
          <lastmod>2026-06-27</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/116-docopts-cryptic-error-message/</loc>
-         <lastmod>2026-06-27</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/117-scan-trace-output-readability/</loc>
-         <lastmod>2026-06-27</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/118-spec-parser-misses-percent-brace-syntax/</loc>
-         <lastmod>2026-06-27</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/119-rep-ctrl-c-continuation-mode/</loc>
-         <lastmod>2026-06-27</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/120-parser-table-eof-message/</loc>
-         <lastmod>2026-06-27</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/121-rep-python-syntax-error-continues/</loc>
          <lastmod>2026-06-27</lastmod>
     </url>
@@ -514,6 +494,26 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/113-rename-diagram-commands/</loc>
+         <lastmod>2026-06-27</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/116-docopts-cryptic-error-message/</loc>
+         <lastmod>2026-06-27</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/117-scan-trace-output-readability/</loc>
+         <lastmod>2026-06-27</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/118-spec-parser-misses-percent-brace-syntax/</loc>
+         <lastmod>2026-06-27</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/119-rep-ctrl-c-continuation-mode/</loc>
+         <lastmod>2026-06-27</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/120-parser-table-eof-message/</loc>
          <lastmod>2026-06-27</lastmod>
     </url>
     <url>
