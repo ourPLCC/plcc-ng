@@ -1,6 +1,32 @@
 # CHANGELOG
 
 
+## v0.59.2 (2026-06-27)
+
+### Bug Fixes
+
+- ^c always exits 130 in interactive mode, even in continuation
+  ([#119](https://github.com/ourPLCC/plcc-ng/pull/119),
+  [`5799012`](https://github.com/ourPLCC/plcc-ng/commit/5799012ce1d9e8c806dbed25a801d13a3d7a47a0))
+
+Replace the buffer-clearing path with immediate exit 130 when Ctrl+C is pressed, regardless of
+  whether there's unparsed content in the buffer.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add design spec for issue #119 ctrl-c continuation mode fix [skip ci]
+  ([`26e035d`](https://github.com/ourPLCC/plcc-ng/commit/26e035d56407bd3766a42dd16e6d6bc16f215ca2))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue #119 ctrl-c continuation mode [skip ci]
+  ([`2d8a725`](https://github.com/ourPLCC/plcc-ng/commit/2d8a7259ea2b3ec31d0891ff309b3a20944b579a))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.59.1 (2026-06-26)
 
 ### Bug Fixes
