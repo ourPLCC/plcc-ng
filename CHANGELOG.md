@@ -1,6 +1,18 @@
 # CHANGELOG
 
 
+## v0.59.3 (2026-06-27)
+
+### Bug Fixes
+
+- Replace 'eof' with 'end of file' in parser error messages
+  ([`816f04b`](https://github.com/ourPLCC/plcc-ng/commit/816f04b3f297cbec573e43f2f3fab69f801b7257))
+
+Closes #120.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.59.2 (2026-06-27)
 
 ### Bug Fixes
