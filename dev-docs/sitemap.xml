@@ -57,7 +57,7 @@
          <lastmod>2026-06-27</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/122-rep-python-wrong-output/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/123-rename-syntactic-to-syntax-in-plcc-diagram/</loc>
          <lastmod>2026-06-27</lastmod>
     </url>
     <url>
@@ -514,6 +514,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/120-parser-table-eof-message/</loc>
+         <lastmod>2026-06-27</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/122-rep-python-wrong-output/</loc>
          <lastmod>2026-06-27</lastmod>
     </url>
     <url>
