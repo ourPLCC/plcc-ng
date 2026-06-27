@@ -197,3 +197,84 @@ def test_emit_class_file_contains_body_fragment_when_language_is_lowercase(tmp_p
     run_main([f'--output={tmp_path}'])
     term_py = (tmp_path / 'Term.py').read_text()
     assert 'def eval(self):' in term_py
+
+
+def test_emit_generated_main_emits_ready_on_startup(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / 'main.py')],
+        input='',
+        capture_output=True,
+        text=True,
+    )
+    first_line = result.stdout.splitlines()[0] if result.stdout else ''
+    assert json.loads(first_line) == {"kind": "ready"}
+
+
+def test_emit_generated_main_language_error_returns_error_record(tmp_path, monkeypatch):
+    model = _arith_model()
+    model['semantic_sections'][0]['fragments'].append({
+        "class_name": "Program", "kind": "body",
+        "body": "def _run(self):\n    from runtime.base import LanguageError\n    raise LanguageError('type mismatch')"
+    })
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    tree_json = json.dumps({
+        "kind": "tree",
+        "rule": "program",
+        "children": [
+            ["expr", {
+                "kind": "tree", "rule": "Expr", "children": [
+                    ["term", {"kind": "tree", "rule": "Term", "children": [
+                        ["num", {"kind": "token", "name": "NUM", "lexeme": "1"}]
+                    ]}],
+                    ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}]
+                ]
+            }]
+        ]
+    })
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / 'main.py')],
+        input=tree_json + '\n',
+        capture_output=True,
+        text=True,
+    )
+    records = [json.loads(l) for l in result.stdout.splitlines() if l]
+    error_records = [r for r in records if r.get('kind') == 'error']
+    assert error_records, f"No error record found in: {result.stdout}"
+    assert error_records[0]['message'] == 'type mismatch'
+
+
+def test_emit_generated_main_other_exception_returns_specification_error(tmp_path, monkeypatch):
+    model = _arith_model()
+    model['semantic_sections'][0]['fragments'].append({
+        "class_name": "Program", "kind": "body",
+        "body": "def _run(self):\n    raise ValueError('stack underflow')"
+    })
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    tree_json = json.dumps({
+        "kind": "tree",
+        "rule": "program",
+        "children": [
+            ["expr", {
+                "kind": "tree", "rule": "Expr", "children": [
+                    ["term", {"kind": "tree", "rule": "Term", "children": [
+                        ["num", {"kind": "token", "name": "NUM", "lexeme": "1"}]
+                    ]}],
+                    ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}]
+                ]
+            }]
+        ]
+    })
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / 'main.py')],
+        input=tree_json + '\n',
+        capture_output=True,
+        text=True,
+    )
+    records = [json.loads(l) for l in result.stdout.splitlines() if l]
+    spec_error_records = [r for r in records if r.get('kind') == 'specification_error']
+    assert spec_error_records, f"No specification_error record found in: {result.stdout}"
+    assert 'stack underflow' in spec_error_records[0]['message']
