@@ -111,11 +111,14 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
         cursor[0] += 1
         return tok
 
+    def _display_name(token_name):
+        return "end of file" if token_name == "eof" else repr(token_name)
+
     def expect(sym):
         tok = current()
         if tok["name"] != sym:
             raise ParseError(
-                f"expected {sym!r}, got {tok['name']!r}",
+                f"expected {sym!r}, got {_display_name(tok['name'])}",
                 source=tok["source"],
                 found=tok["name"],
             )
@@ -143,7 +146,7 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
         production = nt_table.get(lookahead)
         if production is None:
             raise ParseError(
-                f"unexpected {lookahead!r}, no production for {sym!r}",
+                f"unexpected {_display_name(lookahead)}, no production for {sym!r}",
                 source=current()["source"],
                 found=lookahead,
             )
