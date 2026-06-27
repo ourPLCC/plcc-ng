@@ -1,6 +1,6 @@
 # Roadmap
 
-8 open issues as of 2026-06-27.
+7 open issues as of 2026-06-27.
 
 ## Open Issues
 
@@ -11,9 +11,6 @@
 
 - **[#121](issues/121-rep-python-syntax-error-continues.md) — `plcc-rep` continues after Python syntax errors in semantics**
   Build failures from syntax errors should abort the REPL rather than drop into the input loop.
-
-- **[#122](issues/122-rep-python-wrong-output.md) — `plcc-rep` with Python emitter returns object repr instead of value**
-  Evaluated expressions show raw object repr; Python semantics are not wired up correctly.
 
 ### Features
 
