@@ -1,6 +1,6 @@
 # Roadmap
 
-7 open issues as of 2026-06-27.
+8 open issues as of 2026-06-27.
 
 ## Open Issues
 
@@ -25,6 +25,11 @@
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
   Define v1.0 criteria, decide emitter support tiers, and write the release SOP.
+
+### Refactors
+
+- **[#123](issues/123-rename-syntactic-to-syntax-in-plcc-diagram.md) — Rename `syntactic` to `syntax` in `plcc-diagram-*` and output filenames**
+  The word "syntactic" in command names and generated filenames should be "syntax" for consistency.
 
 ### Performance
 
