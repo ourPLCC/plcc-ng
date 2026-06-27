@@ -278,3 +278,4 @@ def test_emit_generated_main_other_exception_returns_specification_error(tmp_pat
     spec_error_records = [r for r in records if r.get('kind') == 'specification_error']
     assert spec_error_records, f"No specification_error record found in: {result.stdout}"
     assert 'stack underflow' in spec_error_records[0]['message']
+    assert result.returncode != 0
