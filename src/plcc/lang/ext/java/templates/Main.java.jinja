@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import org.json.JSONObject;
 import runtime.Deserializer;
+import runtime.LanguageError;
 import runtime.Registry;
 
 public class Main {
@@ -9,6 +10,11 @@ public class Main {
         Registry registry = new Registry();
         registry.register({% for cls in concrete_classes %}{{ cls.name }}.class{% if not loop.last %}, {% endif %}{% endfor %});
         Deserializer deserializer = new Deserializer(registry);
+
+        JSONObject readyRecord = new JSONObject();
+        readyRecord.put("kind", "ready");
+        System.out.println(readyRecord.toString());
+        System.out.flush();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line;
@@ -24,9 +30,21 @@ public class Main {
                 record.put("value", result != null ? result.toString() : JSONObject.NULL);
                 System.out.println(record.toString());
                 System.out.flush();
+            } catch (java.lang.reflect.InvocationTargetException ite) {
+                Throwable cause = ite.getCause() != null ? ite.getCause() : ite;
+                JSONObject record = new JSONObject();
+                if (cause instanceof LanguageError) {
+                    record.put("kind", "error");
+                } else {
+                    record.put("kind", "specification_error");
+                }
+                record.put("type", cause.getClass().getSimpleName());
+                record.put("message", cause.getMessage() != null ? cause.getMessage() : "");
+                System.out.println(record.toString());
+                System.out.flush();
             } catch (Exception e) {
                 JSONObject record = new JSONObject();
-                record.put("kind", "error");
+                record.put("kind", "specification_error");
                 record.put("type", e.getClass().getSimpleName());
                 record.put("message", e.getMessage() != null ? e.getMessage() : "");
                 System.out.println(record.toString());

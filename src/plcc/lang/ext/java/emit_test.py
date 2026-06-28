@@ -262,3 +262,24 @@ def test_body_fragment_pasted_into_class_when_language_is_lowercase(tmp_path, mo
     run_main([f'--output={tmp_path}'])
     program_java = (tmp_path / 'Program.java').read_text()
     assert 'System.out.println(expr.toString())' in program_java
+
+
+def test_emit_main_java_catches_language_error_separately(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    main_java = (tmp_path / 'Main.java').read_text()
+    assert 'LanguageError' in main_java
+    assert 'specification_error' in main_java
+
+
+def test_emit_main_java_contains_ready_signal(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    main_java = (tmp_path / 'Main.java').read_text()
+    assert '"ready"' in main_java
+
+
+def test_emit_copies_language_error_java(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    assert (tmp_path / 'runtime' / 'LanguageError.java').exists()
