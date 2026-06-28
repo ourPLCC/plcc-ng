@@ -12,11 +12,11 @@ from plcc.build.spec import read_spec, resolve_spec_path
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag
 from plcc.cmd.output import print_banner
 
-__doc__ = """plcc-diagram-syntactic
-    Generate and display a syntactic grammar diagram from a PLCC spec file.
+__doc__ = """plcc-diagram-syntax
+    Generate and display a syntax grammar diagram from a PLCC spec file.
 
 Usage:
-    plcc-diagram-syntactic [-v ...] [options]
+    plcc-diagram-syntax [-v ...] [options]
 
 Options:
 """ + SPEC_OPTION + """\
@@ -42,25 +42,25 @@ def main(argv=None):
     except DocoptExit as e:
         print(str(e), file=sys.stderr)
         print(file=sys.stderr)
-        print("Run 'plcc-diagram-syntactic --help' for more information.", file=sys.stderr)
+        print("Run 'plcc-diagram-syntax --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
     banner = args["--banner"]
     fmt = args['--format']
 
-    validate_spec_flag('plcc-diagram-syntactic', args)
+    validate_spec_flag('plcc-diagram-syntax', args)
 
     spec_path = resolve_spec_path(args['--spec'], read_spec('build'))
     if not os.path.exists(spec_path):
-        print(f"plcc-diagram-syntactic: spec file not found: {spec_path}", file=sys.stderr)
+        print(f"plcc-diagram-syntax: spec file not found: {spec_path}", file=sys.stderr)
         print(file=sys.stderr)
-        print("Run 'plcc-diagram-syntactic --help' for more information.", file=sys.stderr)
+        print("Run 'plcc-diagram-syntax --help' for more information.", file=sys.stderr)
         sys.exit(1)
 
     spec_path = os.path.abspath(spec_path)
 
-    verbose = VerboseContext.from_args("plcc-diagram-syntactic", Events, args)
-    verbose.emit(Events.STARTED, message="generating syntactic diagram")
+    verbose = VerboseContext.from_args("plcc-diagram-syntax", Events, args)
+    verbose.emit(Events.STARTED, message="generating syntax diagram")
     child_flags = verbose.child_flags_for_orchestrator(min_level=0)
 
     spec_result = subprocess.run(
@@ -79,12 +79,12 @@ def main(argv=None):
     source_ext = _SOURCE_EXT.get(fmt, fmt)
     build_diagram_dir = os.path.join('build', 'diagram')
     os.makedirs(build_diagram_dir, exist_ok=True)
-    diagram_source = os.path.join(build_diagram_dir, f'syntactic.{source_ext}')
-    diagram_image = os.path.join(build_diagram_dir, 'syntactic.png')
+    diagram_source = os.path.join(build_diagram_dir, f'syntax.{source_ext}')
+    diagram_image = os.path.join(build_diagram_dir, 'syntax.png')
 
     with open(diagram_source, 'w') as stdout_f:
         emit_result = subprocess.run(
-            ['plcc-diagram-emit', '--type=syntactic', f'--format={fmt}'] + child_flags,
+            ['plcc-diagram-emit', '--type=syntax', f'--format={fmt}'] + child_flags,
             input=spec_result.stdout, stdout=stdout_f, stderr=subprocess.PIPE,
         )
     if emit_result.stderr:

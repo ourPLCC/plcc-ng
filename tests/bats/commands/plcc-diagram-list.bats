@@ -15,8 +15,8 @@ bats_require_minimum_version 1.5.0
     [[ "$output" =~ "class/mermaid" ]]
 }
 
-@test "plcc-diagram-list finds syntactic/plantuml" {
+@test "plcc-diagram-list finds syntax/plantuml" {
     run plcc-diagram-list
     [ "$status" -eq 0 ]
-    [[ "$output" =~ "syntactic/plantuml" ]]
+    [[ "$output" =~ "syntax/plantuml" ]]
 }
