@@ -12,7 +12,7 @@ from plcc.verbose import VerboseContext
 from .rep import RepHandler
 from ._test_helpers import (
     _proc, _tree_record, _error_record, _error_record_with_source,
-    _eof_error_record,
+    _eof_error_record, _ready_record, _specification_error_record,
 )
 
 
@@ -38,7 +38,10 @@ def test_main_constructs_runner_without_submit_mode(monkeypatch, tmp_path):
     monkeypatch.setattr(_rep_module, "SourceRunner", capturing_runner)
     monkeypatch.setattr("subprocess.run", lambda *a, **kw: _MagicMock(returncode=0, stderr=b""))
     monkeypatch.setattr("subprocess.Popen",
-                        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()))
+                        lambda *a, **kw: _MagicMock(
+                            stdin=_MagicMock(), wait=_MagicMock(),
+                            stdout=io.BytesIO(b'{"kind":"ready"}\n'),
+                        ))
 
     _rep_module.main(["--spec=grammar.plcc"])
 
@@ -324,13 +327,76 @@ def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
     assert "second error" not in out
 
 
-def test_render_record_interpreter_error_writes_to_stdout(capsys):
+def test_render_record_error_prints_only_message(capsys):
     record = {"kind": "error", "type": "TypeError", "message": "bad value"}
     _rep_module._render_record(record, "text")
-    out, err = capsys.readouterr()
-    assert "TypeError" in out
+    out, _ = capsys.readouterr()
     assert "bad value" in out
-    assert err == ""
+    assert "TypeError" not in out
+
+
+def test_render_record_specification_error_prints_spec_error_message(capsys):
+    record = {"kind": "specification_error", "type": "ValueError", "message": "stack underflow"}
+    with pytest.raises(SystemExit) as exc_info:
+        _rep_module._render_record(record, "text")
+    assert exc_info.value.code != 0
+    out, err = capsys.readouterr()
+    combined = out + err
+    assert "Specification error" in combined
+    assert "stack underflow" in combined
+    assert "Fix the errors" in combined
+
+
+def test_render_record_unknown_kind_prints_plccng_error(capsys):
+    record = {"kind": "unexpected_kind", "type": "X", "message": "oops"}
+    with pytest.raises(SystemExit) as exc_info:
+        _rep_module._render_record(record, "text")
+    assert exc_info.value.code != 0
+    out, err = capsys.readouterr()
+    combined = out + err
+    assert "plcc-ng error" in combined
+    assert "report" in combined.lower()
+
+
+def test_wait_for_ready_succeeds_when_interpreter_sends_ready():
+    interp = SimpleNamespace()
+    interp.stdout = io.BytesIO(b'{"kind":"ready"}\n{"kind":"result","value":"42"}\n')
+    _rep_module._wait_for_ready(interp)  # must not raise or exit
+
+
+def test_wait_for_ready_exits_with_spec_error_when_interpreter_sends_eof(capsys):
+    interp = SimpleNamespace()
+    interp.stdin = io.BytesIO()
+    interp.stdout = io.BytesIO(b"")  # EOF immediately
+    with pytest.raises(SystemExit) as exc_info:
+        _rep_module._wait_for_ready(interp)
+    assert exc_info.value.code != 0
+    out, err = capsys.readouterr()
+    combined = out + err
+    assert "Specification error" in combined
+    assert "Fix the errors" in combined
+
+
+def test_wait_for_ready_exits_with_plccng_error_when_interpreter_sends_non_ready_record(capsys):
+    interp = SimpleNamespace()
+    interp.stdout = io.BytesIO(b'{"kind":"result","value":"x"}\n')
+    with pytest.raises(SystemExit) as exc_info:
+        _rep_module._wait_for_ready(interp)
+    assert exc_info.value.code != 0
+    out, err = capsys.readouterr()
+    combined = out + err
+    assert "plcc-ng error" in combined
+    assert "report" in combined.lower()
+
+
+def test_feed_exits_on_specification_error_from_interpreter(monkeypatch, handler, capsys):
+    h, interp = handler
+    interp.stdout = io.BytesIO(_specification_error_record())
+    procs = iter([_proc(), _proc(stdout=_tree_record())])
+    monkeypatch.setattr(subprocess, "Popen", lambda *a, **kw: next(procs))
+    with pytest.raises(SystemExit) as exc_info:
+        h.feed(b"42\n", "-")
+    assert exc_info.value.code != 0
 
 
 def _setup_rep_main(monkeypatch, tmp_path):
@@ -350,7 +416,10 @@ def _setup_rep_main(monkeypatch, tmp_path):
     )
     monkeypatch.setattr(
         "subprocess.Popen",
-        lambda *a, **kw: _MagicMock(stdin=_MagicMock(), wait=_MagicMock()),
+        lambda *a, **kw: _MagicMock(
+            stdin=_MagicMock(), wait=_MagicMock(),
+            stdout=io.BytesIO(b'{"kind":"ready"}\n'),
+        ),
     )
     monkeypatch.setattr(_rep_module, "SourceRunner",
                         lambda **kw: type("R", (), {"run": lambda self, s, h: True})())

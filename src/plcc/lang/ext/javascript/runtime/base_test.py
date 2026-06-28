@@ -34,3 +34,26 @@ def test_token_is_not_a_node():
     r = _node("const { Node, Token } = require('./base'); console.log(new Token('X', 'x') instanceof Node);")
     assert r.returncode == 0
     assert r.stdout.strip() == 'false'
+
+
+def test_language_error_is_a_class():
+    r = _node("const { LanguageError } = require('./base'); console.log(typeof LanguageError);")
+    assert r.returncode == 0
+    assert r.stdout.strip() == 'function'
+
+
+def test_language_error_instance_is_error():
+    r = _node("const { LanguageError } = require('./base'); const e = new LanguageError('oops'); console.log(e instanceof Error);")
+    assert r.returncode == 0
+    assert r.stdout.strip() == 'true'
+
+
+def test_language_error_subclass_is_language_error():
+    r = _node("""
+const { LanguageError } = require('./base');
+class MyError extends LanguageError {}
+const e = new MyError('bad');
+console.log(e instanceof LanguageError);
+""")
+    assert r.returncode == 0
+    assert r.stdout.strip() == 'true'

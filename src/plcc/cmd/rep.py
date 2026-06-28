@@ -121,6 +121,7 @@ def main(argv=None):
         stdout=subprocess.PIPE,
         stderr=None,
     )
+    _wait_for_ready(interpreter)
 
     try:
         handler = RepHandler(
@@ -181,13 +182,42 @@ def _read_response(stdout, interpreter, verbose_format):
         return
 
 
+def _wait_for_ready(interpreter):
+    raw = interpreter.stdout.readline()
+    if not raw:
+        print_user_error("Specification error: interpreter failed to start.")
+        print_user_error("Fix the errors in your specification and re-run.")
+        sys.exit(1)
+    try:
+        record = json.loads(raw.decode('utf-8', errors='replace'))
+        if record.get('kind') == 'ready':
+            return
+    except (json.JSONDecodeError, AttributeError):
+        pass
+    print_user_error(f"plcc-ng error: unexpected startup output from interpreter: {raw!r}")
+    print_user_error("Please report this at https://github.com/ourPLCC/plcc-ng/issues.")
+    sys.exit(1)
+
+
 def _render_record(record, verbose_format):
     if verbose_format == 'json':
         print(json.dumps(record))
         return
-    if record['kind'] == 'result':
+    kind = record.get('kind')
+    if kind == 'result':
         value = record.get('value')
         if value is not None:
             print(value)
-    elif record['kind'] == 'error':
-        print_user_error(f"error: {record.get('type')}: {record.get('message')}")
+    elif kind == 'error':
+        print(record.get('message', ''))
+    elif kind == 'specification_error':
+        msg = record.get('message', '')
+        type_ = record.get('type', '')
+        label = f"Specification error: {type_}: {msg}" if type_ else f"Specification error: {msg}"
+        print_user_error(label)
+        print_user_error("Fix the errors in your specification and re-run.")
+        sys.exit(1)
+    else:
+        print_user_error(f"plcc-ng error: unexpected record kind '{kind}': {record}")
+        print_user_error("Please report this at https://github.com/ourPLCC/plcc-ng/issues.")
+        sys.exit(1)

@@ -300,3 +300,24 @@ def test_emit_raises_on_fragment_with_concrete_alternative_name(monkeypatch, tmp
     ])
     with pytest.raises(SystemExit):
         _run_emit(monkeypatch, tmp_path, model)
+
+
+def test_write_main_contains_language_error(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert 'LanguageError' in main_hs
+
+
+def test_write_main_contains_ready_signal(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert '"ready"' in main_hs
+
+
+def test_write_main_contains_specification_error(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert 'specification_error' in main_hs

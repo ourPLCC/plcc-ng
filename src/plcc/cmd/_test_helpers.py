@@ -78,3 +78,11 @@ def _hold_record(line=1, col=1, file="-"):
         "kind": "hold",
         "source": {"file": file, "line": line, "column": col},
     }).encode() + b"\n"
+
+
+def _ready_record():
+    return json.dumps({"kind": "ready"}).encode() + b"\n"
+
+
+def _specification_error_record(msg="stack underflow", type_="ValueError"):
+    return json.dumps({"kind": "specification_error", "type": type_, "message": msg}).encode() + b"\n"

@@ -11,4 +11,11 @@ class Token {
     }
 }
 
-module.exports = { Node, Token };
+class LanguageError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'LanguageError';
+    }
+}
+
+module.exports = { Node, Token, LanguageError };
