@@ -1,6 +1,7 @@
 {% set concrete = classes | selectattr('abstract', 'equalto', false) | list %}
 const { Registry } = require('./runtime/registry');
 const { deserialize } = require('./runtime/deserialize');
+const { LanguageError } = require('./runtime/base');
 {% for cls in concrete %}const { {{ cls.name }} } = require('./{{ cls.name }}');
 {% endfor %}
 const registry = new Registry();
@@ -10,6 +11,8 @@ process.on('SIGINT', () => {
     process.stdout.write('User interrupted execution by ^C.\n');
     process.exit(130);
 });
+
+console.log(JSON.stringify({ kind: 'ready' }));
 
 const readline = require('readline');
 const rl = readline.createInterface({ input: process.stdin });
@@ -22,6 +25,11 @@ rl.on('line', (line) => {
         const result = tree.{{ entry_point }}();
         console.log(JSON.stringify({ kind: 'result', value: result != null ? String(result) : null }));
     } catch (e) {
-        console.log(JSON.stringify({ kind: 'error', type: e.constructor.name, message: e.message ?? '' }));
+        if (e instanceof LanguageError) {
+            console.log(JSON.stringify({ kind: 'error', type: e.constructor.name, message: e.message ?? '' }));
+        } else {
+            console.log(JSON.stringify({ kind: 'specification_error', type: e.constructor.name, message: e.message ?? '' }));
+            process.exit(1);
+        }
     }
 });
