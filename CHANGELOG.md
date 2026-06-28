@@ -1,6 +1,134 @@
 # CHANGELOG
 
 
+## v0.60.0 (2026-06-28)
+
+### Bug Fixes
+
+- Remove dead Haskell imports, Java spec_error exits, add _wait_for_ready test
+  ([`124a6a0`](https://github.com/ourPLCC/plcc-ng/commit/124a6a050077eb163f93e6f0ebe7a6c0adf946f8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **e2e**: Update standalone main.py test to handle ready record in output
+  ([`fd0f2ad`](https://github.com/ourPLCC/plcc-ng/commit/fd0f2ad90269501461c151efb9ca5e8e39fa5bdb))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Add ScopedTypeVariables pragma to generated Main.hs
+  ([`802cda0`](https://github.com/ourPLCC/plcc-ng/commit/802cda0d39e2c129b82f0ac0e4bfa257fe025c81))
+
+The lambda pattern `\(e :: SomeException) ->` requires ScopedTypeVariables. Without it, GHC 9.14.1
+  rejects the build.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **haskell**: Remove show from value field and drop Typeable deriving
+  ([`32a5595`](https://github.com/ourPLCC/plcc-ng/commit/32a55951f45c2c22497ad9a203a403cbd48b1219))
+
+- `show v` where `v :: String` double-encodes the value ("3" becomes "\"3\""), causing the result
+  JSON to not match expected format. Use `v` directly since _run already returns a String. -
+  `deriving Typeable` is a hard error in GHC 9.12+ (all types are Typeable automatically); remove it
+  and the Data.Typeable import.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **python**: Specification_error exits the interpreter
+  ([`e0d3f8e`](https://github.com/ourPLCC/plcc-ng/commit/e0d3f8e51bbc15202444ce6351532d39a03e16d0))
+
+When a specification_error occurs (unexpected exception in user code), the REPL was incorrectly
+  continuing to read from stdin. A specification_error means the interpreter state is broken and
+  cannot continue. Now sys.exit(1) is called after emitting the error record to properly terminate
+  the process.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **rep**: Commit _ready_record and _specification_error_record helpers
+  ([`b461540`](https://github.com/ourPLCC/plcc-ng/commit/b461540d0c3b2cc755817eeb72c72e280e7d231d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **rep**: Match brief wording for specification_error, add unknown-kind handler
+  ([`e4a0f0e`](https://github.com/ourPLCC/plcc-ng/commit/e4a0f0ebe658a9b63c46cbd239232d9a7e7f8091))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- Add implementation plan for rep error taxonomy [skip ci]
+  ([`bd0cdbb`](https://github.com/ourPLCC/plcc-ng/commit/bd0cdbb69908f67976a31b20514df890871eff24))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add rep error taxonomy design spec [skip ci]
+  ([`c62d9cc`](https://github.com/ourPLCC/plcc-ng/commit/c62d9ccdbd8eb5f717f4dd190a43673dbe016de2))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Close issue 122 (plcc-rep Python output fixed) [skip ci]
+  ([`0bbd211`](https://github.com/ourPLCC/plcc-ng/commit/0bbd211538ec189beba7ad9dafe2d70bc721ffc4))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Move completed issues 116-120 to done [skip ci]
+  ([`2a4a245`](https://github.com/ourPLCC/plcc-ng/commit/2a4a245d0c85eebde6194a7a2fedee1e6becc8d8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Rename System Error to plcc-ng Error in spec and plan [skip ci]
+  ([`40887c2`](https://github.com/ourPLCC/plcc-ng/commit/40887c222e6bf20eab9895e80f6726cd9ceef341))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Revise rep error taxonomy — combine syntax/behavior into Language Behavior [skip ci]
+  ([`80f5463`](https://github.com/ourPLCC/plcc-ng/commit/80f5463cf85572a2ca3f7ce6311891214285bc22))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update roadmap with 7 open issues as of 2026-06-27 [skip ci]
+  ([`6a77213`](https://github.com/ourPLCC/plcc-ng/commit/6a772133f483c858b83517628bc04ef397ff1ed1))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Update roadmap with issue 123 (rename syntactic to syntax) [skip ci]
+  ([`d7eef3b`](https://github.com/ourPLCC/plcc-ng/commit/d7eef3b873c42d32b04a5892fd4acb55ab2d27dc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 123 rename syntactic to syntax in plcc-diagram-* [skip ci]
+  ([`cc47a37`](https://github.com/ourPLCC/plcc-ng/commit/cc47a37b2105fee21ac3af0254eecc1db397cfd8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **haskell**: Add LanguageError, ready signal, and specification_error
+  ([`77a72e6`](https://github.com/ourPLCC/plcc-ng/commit/77a72e638dd8edb992785eba2c3f1b0d80278672))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **java**: Add LanguageError, ready signal, and specification_error
+  ([`97f6a24`](https://github.com/ourPLCC/plcc-ng/commit/97f6a24685842cc65dfd454584cee983ff15e2d8))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **javascript**: Add LanguageError, ready signal, and specification_error
+  ([`30dda5e`](https://github.com/ourPLCC/plcc-ng/commit/30dda5e4947c85ede15165813a87ce0934ac26c6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **python**: Add LanguageError to Python runtime base
+  ([`eedf936`](https://github.com/ourPLCC/plcc-ng/commit/eedf9360b80961e46eb3fc726ce8424b08c9241a))
+
+- **python**: Emit ready signal and specification_error in main template
+  ([`c77b039`](https://github.com/ourPLCC/plcc-ng/commit/c77b03978121fc2a5cfdf3d969e63823a411a84b))
+
+- **rep**: Startup handshake, specification_error handling, message-only error output
+  ([`d320a1b`](https://github.com/ourPLCC/plcc-ng/commit/d320a1bd91e2862e06c7c93a95bceb43c1798f71))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.59.3 (2026-06-27)
 
 ### Bug Fixes
