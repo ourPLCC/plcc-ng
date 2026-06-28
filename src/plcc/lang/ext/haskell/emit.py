@@ -63,10 +63,9 @@ def _write_main(start_module, modules, output_dir):
     import_lines = '\n'.join(f'import {name}' for name in sorted(modules))
     content = (
         '{-# LANGUAGE OverloadedStrings #-}\n'
-        '{-# LANGUAGE DeriveAnyClass #-}\n'
         'module Main where\n'
         '\n'
-        'import Control.Exception (Exception, SomeException, catch, evaluate, throwIO)\n'
+        'import Control.Exception (Exception, SomeException, catch, evaluate)\n'
         'import Data.Aeson (eitherDecode, encode, object, (.=))\n'
         'import qualified Data.ByteString.Lazy.Char8 as BL\n'
         'import Data.Typeable (Typeable)\n'

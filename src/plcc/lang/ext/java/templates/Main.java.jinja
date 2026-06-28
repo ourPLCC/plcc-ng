@@ -35,13 +35,18 @@ public class Main {
                 JSONObject record = new JSONObject();
                 if (cause instanceof LanguageError) {
                     record.put("kind", "error");
+                    record.put("type", cause.getClass().getSimpleName());
+                    record.put("message", cause.getMessage() != null ? cause.getMessage() : "");
+                    System.out.println(record.toString());
+                    System.out.flush();
                 } else {
                     record.put("kind", "specification_error");
+                    record.put("type", cause.getClass().getSimpleName());
+                    record.put("message", cause.getMessage() != null ? cause.getMessage() : "");
+                    System.out.println(record.toString());
+                    System.out.flush();
+                    System.exit(1);
                 }
-                record.put("type", cause.getClass().getSimpleName());
-                record.put("message", cause.getMessage() != null ? cause.getMessage() : "");
-                System.out.println(record.toString());
-                System.out.flush();
             } catch (Exception e) {
                 JSONObject record = new JSONObject();
                 record.put("kind", "specification_error");
@@ -49,6 +54,7 @@ public class Main {
                 record.put("message", e.getMessage() != null ? e.getMessage() : "");
                 System.out.println(record.toString());
                 System.out.flush();
+                System.exit(1);
             }
         }
     }

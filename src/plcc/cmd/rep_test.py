@@ -327,14 +327,6 @@ def test_feed_stops_at_first_error(monkeypatch, handler, capsys):
     assert "second error" not in out
 
 
-def test_render_record_interpreter_error_writes_to_stdout(capsys):
-    record = {"kind": "error", "type": "TypeError", "message": "bad value"}
-    _rep_module._render_record(record, "text")
-    out, err = capsys.readouterr()
-    assert "bad value" in out
-    assert err == ""
-
-
 def test_render_record_error_prints_only_message(capsys):
     record = {"kind": "error", "type": "TypeError", "message": "bad value"}
     _rep_module._render_record(record, "text")
@@ -383,6 +375,18 @@ def test_wait_for_ready_exits_with_spec_error_when_interpreter_sends_eof(capsys)
     combined = out + err
     assert "Specification error" in combined
     assert "Fix the errors" in combined
+
+
+def test_wait_for_ready_exits_with_plccng_error_when_interpreter_sends_non_ready_record(capsys):
+    interp = SimpleNamespace()
+    interp.stdout = io.BytesIO(b'{"kind":"result","value":"x"}\n')
+    with pytest.raises(SystemExit) as exc_info:
+        _rep_module._wait_for_ready(interp)
+    assert exc_info.value.code != 0
+    out, err = capsys.readouterr()
+    combined = out + err
+    assert "plcc-ng error" in combined
+    assert "report" in combined.lower()
 
 
 def test_feed_exits_on_specification_error_from_interpreter(monkeypatch, handler, capsys):
