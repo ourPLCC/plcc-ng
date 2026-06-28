@@ -62,7 +62,7 @@ def emit(model, output_dir):
 def _write_main(start_module, modules, output_dir):
     import_lines = '\n'.join(f'import {name}' for name in sorted(modules))
     content = (
-        '{-# LANGUAGE OverloadedStrings #-}\n'
+        '{-# LANGUAGE OverloadedStrings, ScopedTypeVariables #-}\n'
         'module Main where\n'
         '\n'
         'import Control.Exception (Exception, SomeException, catch, evaluate)\n'
