@@ -62,7 +62,7 @@ def test_calls_emit_build_run_in_order(tmp_path, monkeypatch):
     assert cmds == ['plcc-spec', 'plcc-diagram-emit', 'plcc-diagram-build', 'plcc-diagram-run']
 
 
-def test_emit_called_with_type_syntactic(tmp_path, monkeypatch):
+def test_emit_called_with_type_syntax(tmp_path, monkeypatch):
     spec = tmp_path / "spec.plcc"
     spec.write_text("# stub")
     monkeypatch.chdir(tmp_path)
@@ -80,11 +80,11 @@ def test_emit_called_with_type_syntactic(tmp_path, monkeypatch):
         run_main([])
 
     emit_call = calls[1]
-    assert '--type=syntactic' in emit_call
+    assert '--type=syntax' in emit_call
     assert '--format=plantuml' in emit_call
 
 
-def test_build_uses_syntactic_paths(tmp_path, monkeypatch):
+def test_build_uses_syntax_paths(tmp_path, monkeypatch):
     spec = tmp_path / "spec.plcc"
     spec.write_text("# stub")
     monkeypatch.chdir(tmp_path)
@@ -102,5 +102,5 @@ def test_build_uses_syntactic_paths(tmp_path, monkeypatch):
         run_main([])
 
     build_call = calls[2]
-    assert '--input=build/diagram/syntactic.puml' in build_call
-    assert '--output=build/diagram/syntactic.png' in build_call
+    assert '--input=build/diagram/syntax.puml' in build_call
+    assert '--output=build/diagram/syntax.png' in build_call

@@ -6,11 +6,11 @@ from plcc.cli import parse_args
 
 from ....verbose import VerboseContext, VERBOSE_OPTIONS
 
-__doc__ = """plcc-diagram-syntactic-plantuml-emit
+__doc__ = """plcc-diagram-syntax-plantuml-emit
     Emit a PlantUML EBNF diagram from spec JSON.
 
 Usage:
-    plcc-diagram-syntactic-plantuml-emit [-v ...] [options]
+    plcc-diagram-syntax-plantuml-emit [-v ...] [options]
 
 Options:
     -h --help   Show this message.
@@ -26,7 +26,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = parse_args(__doc__, argv)
-    VerboseContext.from_args("plcc-diagram-syntactic-plantuml-emit", Events, args)
+    VerboseContext.from_args("plcc-diagram-syntax-plantuml-emit", Events, args)
     spec = json.load(sys.stdin)
     sys.stdout.write(build_ebnf(spec))
 
