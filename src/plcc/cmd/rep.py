@@ -121,6 +121,7 @@ def main(argv=None):
         stdout=subprocess.PIPE,
         stderr=None,
     )
+    _wait_for_ready(interpreter)
 
     try:
         handler = RepHandler(
@@ -181,6 +182,22 @@ def _read_response(stdout, interpreter, verbose_format):
         return
 
 
+def _wait_for_ready(interpreter):
+    raw = interpreter.stdout.readline()
+    if not raw:
+        print_user_error('plcc-rep: specification error: interpreter failed to start')
+        sys.exit(1)
+    line = raw.decode('utf-8', errors='replace').rstrip('\n')
+    try:
+        record = json.loads(line)
+    except json.JSONDecodeError:
+        print_user_error(f'plcc-rep: specification error: unexpected output on startup: {line}')
+        sys.exit(1)
+    if not isinstance(record, dict) or record.get('kind') != 'ready':
+        print_user_error(f'plcc-rep: specification error: unexpected record on startup: {line}')
+        sys.exit(1)
+
+
 def _render_record(record, verbose_format):
     if verbose_format == 'json':
         print(json.dumps(record))
@@ -190,4 +207,7 @@ def _render_record(record, verbose_format):
         if value is not None:
             print(value)
     elif record['kind'] == 'error':
-        print_user_error(f"error: {record.get('type')}: {record.get('message')}")
+        print_user_error(record.get('message', ''))
+    elif record['kind'] == 'specification_error':
+        print_user_error(f"specification error: {record.get('message', '')}")
+        sys.exit(1)
