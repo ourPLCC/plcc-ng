@@ -72,7 +72,7 @@ teardown() {
     | plcc-tokens build/spec.json \
     | plcc-trees --ll1=build/ll1.json \
     | python3 -u build/Python/main.py \
-    | python3 -c "import json,sys; r=json.loads(sys.stdin.read()); assert r['value']=='3', r"
+    | python3 -c "import json,sys; recs=[json.loads(l) for l in sys.stdin if l.strip()]; r=next(x for x in recs if x.get('kind')=='result'); assert r['value']=='3', r"
 }
 
 setup_arbno_build() {
