@@ -2,6 +2,7 @@
 
 **Type:** feat
 **Date:** 2026-06-24
+**Status:** abandoned — superseded by #124 (drop Mermaid support entirely)
 
 ## Description
 
