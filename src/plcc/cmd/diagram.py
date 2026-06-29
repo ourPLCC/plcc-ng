@@ -7,7 +7,7 @@ import sys
 from docopt import DocoptExit
 from plcc.cli import parse_args
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 
 __doc__ = """plcc-diagram
@@ -17,10 +17,12 @@ Usage:
     plcc-diagram [-v ...] [options]
 
 Options:
-""" + SPEC_OPTION + """\
-    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
-""" + VERBOSE_OPTIONS
+""" + SPEC_OPTION + """\
+
+Output:
+    -b --banner             Show the version and spec banner on stderr.
+""" + DIAGNOSTICS_OPTIONS
 
 _TYPE_PATTERN = re.compile(r'^plcc-diagram-([a-z][a-z0-9]*)$')
 _RESERVED = frozenset({'emit', 'build', 'run', 'list'})
