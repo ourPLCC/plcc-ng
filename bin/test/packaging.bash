@@ -15,17 +15,24 @@ _run() {
     VENV=$(mktemp -d)
     trap 'rm -rf "${VENV}"' EXIT
 
-    "${PROJECT_ROOT}/.venv/bin/python" -m venv "${VENV}"
+    # Find Python interpreter - handle worktree case where .venv is in parent
+    local python_exe
+    if [[ -x "${PROJECT_ROOT}/.venv/bin/python" ]]; then
+        python_exe="${PROJECT_ROOT}/.venv/bin/python"
+    else
+        python_exe="$(which python)" || { echo "FAIL: python not found"; exit 1; }
+    fi
+
+    "${python_exe}" -m venv "${VENV}"
     "${VENV}/bin/pip" install --quiet dist/*.whl
 
     # Verify all entry points are installed on the venv PATH
     for cmd in plcc-spec plcc-tokens plcc-trees plcc-model \
                plcc-lang-emit plcc-lang-build plcc-lang-list \
                plcc-diagram plcc-diagram-emit plcc-diagram-build plcc-diagram-run plcc-diagram-list \
-               plcc-diagram-class plcc-diagram-class-plantuml-emit plcc-diagram-class-mermaid-emit \
+               plcc-diagram-class plcc-diagram-class-plantuml-emit \
                plcc-diagram-syntax plcc-diagram-syntax-plantuml-emit \
                plcc-diagram-plantuml-build plcc-diagram-plantuml-run \
-               plcc-diagram-mermaid-build plcc-diagram-mermaid-run \
                plcc-make plcc-scan plcc-parse plcc-rep; do
         test -x "${VENV}/bin/${cmd}" || { echo "FAIL: ${cmd} not installed"; exit 1; }
         echo "OK: ${cmd}"

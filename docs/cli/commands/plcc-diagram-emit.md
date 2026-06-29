@@ -24,5 +24,5 @@ plcc-diagram-emit --type=TYPE [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-diagram-emit --type=class --format=mermaid
+plcc-spec spec.plcc | plcc-model | plcc-diagram-emit --type=class --format=plantuml
 ```

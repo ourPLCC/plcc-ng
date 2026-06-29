@@ -1,7 +1,7 @@
 # Diagram Extensions
 
 Diagram extensions implement the emit, build, and run steps for a specific
-diagram format. plcc-ng ships with Mermaid and PlantUML support.
+diagram format. plcc-ng ships with PlantUML support.
 
 ## How diagram extensions plug in
 
@@ -13,17 +13,6 @@ diagram format. plcc-ng ships with Mermaid and PlantUML support.
 
 The default format is `plantuml`. Use [`plcc-diagram-list`](../commands/plcc-diagram-list.md)
 to see what is installed.
-
-## plcc-mermaid-diagram
-
-Generates a Mermaid class diagram. Requires the `mmdc` CLI
-(`npm install -g @mermaid-js/mermaid-cli`).
-
-| Command | What it does |
-| --- | --- |
-| [`plcc-diagram-class-mermaid-emit`](../commands/plcc-diagram-class-mermaid-emit.md) | Reads model JSON from stdin; writes a `.mmd` Mermaid source file |
-| `plcc-diagram-mermaid-build` | Renders `.mmd` to PNG using `mmdc` |
-| `plcc-diagram-mermaid-run` | Prints the path to the rendered PNG |
 
 ## plcc-plantuml-diagram
 

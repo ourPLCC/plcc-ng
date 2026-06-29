@@ -26,7 +26,7 @@ Options:
 """ + VERBOSE_OPTIONS
 
 
-_SOURCE_EXT = {'mermaid': 'mmd', 'plantuml': 'puml'}
+_SOURCE_EXT = {'plantuml': 'puml'}
 
 
 class Events(enum.Enum):

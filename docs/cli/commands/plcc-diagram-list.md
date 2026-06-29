@@ -23,6 +23,5 @@ plcc-diagram-list [-v ...] [options]
 
 ```bash
 plcc-diagram-list
-# class/mermaid
 # class/plantuml
 ```

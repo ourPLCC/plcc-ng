@@ -31,28 +31,9 @@ def test_dispatches_to_diagram_plantuml_build(tmp_path):
     assert f'--output={out}' in calls[0]
 
 
-def test_custom_format_dispatches_correctly(tmp_path):
-    src = tmp_path / "diagram.mmd"
-    src.write_text("classDiagram\n")
-    out = tmp_path / "diagram.png"
-    calls = []
-
-    def fake_run(cmd, **kwargs):
-        calls.append(cmd)
-        m = MagicMock()
-        m.returncode = 0
-        return m
-
-    with patch('shutil.which', return_value='/usr/bin/plcc-diagram-mermaid-build'):
-        with patch('subprocess.run', side_effect=fake_run):
-            run_main([f'--input={src}', f'--output={out}', '--format=mermaid'])
-
-    assert calls[0][0] == 'plcc-diagram-mermaid-build'
-
-
 def test_missing_plugin_exits_nonzero(tmp_path, capsys):
-    src = tmp_path / "diagram.mmd"
-    src.write_text("classDiagram\n")
+    src = tmp_path / "diagram.puml"
+    src.write_text("@startuml\n@enduml\n")
     out = tmp_path / "diagram.png"
 
     with patch('shutil.which', return_value=None):

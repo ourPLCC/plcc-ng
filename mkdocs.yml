@@ -76,9 +76,6 @@ nav:
       - plcc-lang-run: cli/commands/plcc-lang-run.md
       - plcc-ll1: cli/commands/plcc-ll1.md
       - plcc-make: cli/commands/plcc-make.md
-      - plcc-mermaid-diagram-build: cli/commands/plcc-mermaid-diagram-build.md
-      - plcc-mermaid-diagram-emit: cli/commands/plcc-mermaid-diagram-emit.md
-      - plcc-mermaid-diagram-run: cli/commands/plcc-mermaid-diagram-run.md
       - plcc-model: cli/commands/plcc-model.md
       - plcc-parse: cli/commands/plcc-parse.md
       - plcc-parser-list: cli/commands/plcc-parser-list.md

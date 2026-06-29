@@ -2,6 +2,7 @@
 
 **Type:** feat
 **Date:** 2026-06-25
+**Status:** abandoned — not a priority for v1.0; revisit if needed
 
 ## Description
 
