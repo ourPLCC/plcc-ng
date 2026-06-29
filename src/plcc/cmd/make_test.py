@@ -330,3 +330,14 @@ def test_validate_language_name_rejects_path_traversal():
 def test_validate_language_name_rejects_empty():
     with pytest.raises(ValueError):
         validate_language_name('')
+
+
+def test_make_help_has_output_section():
+    import plcc.cmd.make as m
+    assert "Output:" in m.__doc__
+    assert "--banner" in m.__doc__
+
+
+def test_make_help_has_diagnostics_section():
+    import plcc.cmd.make as m
+    assert "Diagnostics:" in m.__doc__

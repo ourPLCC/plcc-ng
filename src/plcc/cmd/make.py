@@ -11,7 +11,7 @@ from pathlib import Path
 from docopt import DocoptExit
 from plcc.cli import parse_args
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
@@ -28,11 +28,13 @@ Usage:
     plcc-make [-v ...] [options]
 
 Options:
+    -h --help               Show this message.
 """ + SPEC_OPTION + """\
     --through=<level>       Build up to this level: scan, parse, model, or all [default: all].
+
+Output:
     -b --banner             Show the version and spec banner on stderr.
-    -h --help               Show this message.
-""" + VERBOSE_OPTIONS
+""" + DIAGNOSTICS_OPTIONS
 
 class Events(enum.Enum):
     STARTED = "started"
