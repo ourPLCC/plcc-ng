@@ -7,6 +7,7 @@ from docopt import DocoptExit
 from plcc.cli import parse_args
 
 from plcc.version import get_version
+from plcc.build import OUTPUT_DIR
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
@@ -94,10 +95,10 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_spec("build")))
+        print_banner(get_version(), os.path.abspath(read_spec(OUTPUT_DIR)))
 
-    spec_path = os.path.join("build", "spec.json")
-    ll1_path = os.path.join("build", "ll1.json")
+    spec_path = os.path.join(OUTPUT_DIR, "spec.json")
+    ll1_path = os.path.join(OUTPUT_DIR, "ll1.json")
 
     handler = ParseHandler(spec_path=spec_path, ll1_path=ll1_path,
                            child_flags=child_flags, verbose=verbose)
