@@ -32,8 +32,8 @@ def test_dispatches_to_diagram_plantuml_build(tmp_path):
 
 
 def test_missing_plugin_exits_nonzero(tmp_path, capsys):
-    src = tmp_path / "diagram.mmd"
-    src.write_text("classDiagram\n")
+    src = tmp_path / "diagram.puml"
+    src.write_text("@startuml\n@enduml\n")
     out = tmp_path / "diagram.png"
 
     with patch('shutil.which', return_value=None):
