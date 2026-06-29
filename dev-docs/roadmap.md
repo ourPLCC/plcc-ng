@@ -1,13 +1,8 @@
 # Roadmap
 
-3 open issues as of 2026-06-29.
+2 open issues as of 2026-06-29.
 
 ## Open Issues
-
-### Fixes
-
-- **[#115](issues/115-scan-trace-vs-verbose-inconsistency.md) — Group help options into Output vs Diagnostics sections**
-  Users confuse `--trace` (feature flag) with `--verbose` (diagnostic volume knob); split the help text into named sections to make the distinction clear.
 
 ### Refactors
 
