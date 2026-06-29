@@ -6,8 +6,8 @@
 
 ### Fixes
 
-- **[#115](issues/115-scan-trace-vs-verbose-inconsistency.md) — `plcc-scan --trace` vs `plcc-parse --verbose` inconsistency**
-  Diagnostic flag names differ across commands; pick one term and apply it consistently.
+- **[#115](issues/115-scan-trace-vs-verbose-inconsistency.md) — Group help options into Output vs Diagnostics sections**
+  Users confuse `--trace` (feature flag) with `--verbose` (diagnostic volume knob); split the help text into named sections to make the distinction clear.
 
 ### Refactors
 
