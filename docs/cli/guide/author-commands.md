@@ -100,7 +100,7 @@ plcc-parser-list
 ### plcc-diagram-list
 
 List the diagram plugins installed on your system. Each line shows a
-`type/format` pair (e.g., `class/plantuml`, `class/mermaid`).
+`type/format` pair (e.g., `class/plantuml`).
 
 ```bash
 plcc-diagram-list

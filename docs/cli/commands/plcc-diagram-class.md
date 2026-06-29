@@ -26,7 +26,6 @@ plcc-diagram-class [-v ...] [options]
 
 ```bash
 plcc-diagram-class -s subtract.plcc
-plcc-diagram-class --format=mermaid
 ```
 
 ## Diagram formats
