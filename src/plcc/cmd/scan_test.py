@@ -10,6 +10,18 @@ from .scan import ScanHandler, main as run_main
 import plcc.cmd.scan as _scan_module
 
 
+def test_scan_help_has_output_section():
+    import plcc.cmd.scan as m
+    assert "Output:" in m.__doc__
+    assert "--trace" in m.__doc__
+    assert "--banner" in m.__doc__
+
+
+def test_scan_help_has_diagnostics_section():
+    import plcc.cmd.scan as m
+    assert "Diagnostics:" in m.__doc__
+
+
 def _make_proc(stdout_lines=None):
     data = b"".join(stdout_lines or [])
     return SimpleNamespace(

@@ -7,7 +7,7 @@ import sys
 from docopt import DocoptExit
 from plcc.cli import parse_args
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.version import get_version
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
@@ -128,9 +128,11 @@ Arguments:
 Options:
     -h --help                   Show this message.
 """ + SPEC_OPTION + """\
+
+Output:
     -t --trace                  Show detailed scanning output.
     -b --banner                 Show the version and spec banner on stderr.
-""" + VERBOSE_OPTIONS
+""" + DIAGNOSTICS_OPTIONS
 
 
 class Events(enum.Enum):
