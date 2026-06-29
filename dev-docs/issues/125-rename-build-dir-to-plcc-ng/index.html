@@ -624,6 +624,27 @@
 <li>This is a breaking change for users who depend on the <code>build/</code> path — note it in CHANGELOG</li>
 <li>Consider whether <code>.gitignore</code> templates or quickstart examples need updating</li>
 </ul>
+<h2 id="scope-as-of-2026-06-29">Scope (as of 2026-06-29)</h2>
+<p>The string <code>'build'</code> is hardcoded independently in each command — there is no shared constant.</p>
+<p><strong>Source (~8 files):</strong></p>
+<ul>
+<li><code>src/plcc/cmd/make.py:60</code> — <code>build_dir = Path('build')</code> (the orchestrator; central point of change)</li>
+<li><code>src/plcc/cmd/scan.py</code>, <code>parse.py</code>, <code>rep.py</code> — each hardcode <code>os.path.join('build', ...)</code> (2–4 hits each)</li>
+<li><code>src/plcc/diagram/class_diagram/diagram.py</code>, <code>syntax_diagram/diagram.py</code> — 2–3 hits each</li>
+<li><code>src/plcc/cmd/diagram.py:28</code> — <code>_RESERVED = frozenset({'emit', 'build', 'run', 'list'})</code> — verify whether this <code>'build'</code> is a reserved subcommand name (unrelated to the directory) or not</li>
+</ul>
+<p><strong>Tests (~14 files):</strong></p>
+<ul>
+<li>~11 pytest files with <code>tmp_path / "build"</code> path construction</li>
+<li>3 bats files (<code>tests/bats/commands/plcc-make.bats</code>, <code>tests/bats/e2e/plcc-rep.bats</code>, <code>tests/bats/e2e/happy-path.bats</code>) with direct <code>build/</code> shell paths — need manual attention</li>
+</ul>
+<p><strong>Docs (~10 files):</strong></p>
+<ul>
+<li>User-facing docs under <code>docs/cli/commands/</code> and <code>docs/migration.md</code></li>
+<li>Historical superpowers plans/specs also contain <code>build/</code> but do not need updating</li>
+</ul>
+<h2 id="recommended-approach">Recommended approach</h2>
+<p>Introduce a single <code>OUTPUT_DIR = 'plcc-ng'</code> constant in a shared module and import it from every command. That reduces the rename to a 1-liner plus import updates and prevents future drift. Without it, the change is ~40 individual string replacements across source, tests, and docs.</p>
 
 
 

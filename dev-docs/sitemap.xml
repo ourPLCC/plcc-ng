@@ -37,10 +37,6 @@
          <lastmod>2026-06-29</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/115-scan-trace-vs-verbose-inconsistency/</loc>
-         <lastmod>2026-06-29</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/125-rename-build-dir-to-plcc-ng/</loc>
          <lastmod>2026-06-29</lastmod>
     </url>
@@ -490,6 +486,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/114-lexical-ebnf-diagram/</loc>
+         <lastmod>2026-06-29</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/115-scan-trace-vs-verbose-inconsistency/</loc>
          <lastmod>2026-06-29</lastmod>
     </url>
     <url>
