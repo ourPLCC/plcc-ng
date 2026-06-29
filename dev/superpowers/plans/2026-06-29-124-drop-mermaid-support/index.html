@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-081-remove-plcc-make-from-examples/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-29-124-drop-mermaid-support/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Remove plcc-make from Examples Implementation Plan - plcc-ng</title>
+        <title>Drop Mermaid Diagram Support — Implementation Plan - plcc-ng</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#remove-plcc-make-from-examples-implementation-plan" class="md-skip">
+        <a href="#drop-mermaid-diagram-support-implementation-plan" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Remove plcc-make from Examples Implementation Plan
+              Drop Mermaid Diagram Support — Implementation Plan
             
           </span>
         </div>
@@ -2433,55 +2433,405 @@
   
 
 
-<h1 id="remove-plcc-make-from-examples-implementation-plan">Remove plcc-make from Examples Implementation Plan</h1>
+<h1 id="drop-mermaid-diagram-support-implementation-plan">Drop Mermaid Diagram Support — Implementation Plan</h1>
 <blockquote>
 <p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
 </blockquote>
-<p><strong>Goal:</strong> Remove the explicit <code>plcc-make</code> Build step from <code>docs/language-guide/examples.md</code> so the example reflects the correct user workflow.</p>
-<p><strong>Architecture:</strong> Delete lines 59–65 of <code>docs/language-guide/examples.md</code> (the <code>### Build</code> heading, the <code>plcc-make -s subtract.plcc</code> code block, and the "Exits silently on success." line). No other files change.</p>
-<p><strong>Tech Stack:</strong> Markdown only.</p>
+<p><strong>Goal:</strong> Remove all Mermaid diagram code, entry points, tests, and documentation from plcc-ng in a single clean pass.</p>
+<p><strong>Architecture:</strong> Delete two source packages and one doc page; edit pyproject.toml, mkdocs.yml, two <code>diagram.py</code> orchestrators, three unit test files, one bats test file, and four user-facing doc pages to remove every Mermaid reference.</p>
+<p><strong>Tech Stack:</strong> Python, pytest, bats, pyproject.toml entry points, MkDocs nav</p>
 <h2 id="global-constraints">Global Constraints</h2>
 <ul>
-<li>Docs commits must include <code>[skip ci]</code> in the commit subject.</li>
-<li>Do not touch <code>docs/cli/guide/under-the-hood.md</code>, <code>docs/cli/guide/language-extensions.md</code>, or <code>docs/cli/commands/plcc-make.md</code>.</li>
+<li>Run <code>bin/test/units.bash</code> after every source change; run <code>bin/test/commands.bash</code> after removing entry points.</li>
+<li>Conventional commits: <code>refactor(diagram): …</code> for source/test changes, <code>docs: …</code> for doc-only changes.</li>
+<li>All commits include <code>[skip ci]</code> only for doc-only commits; source changes do not.</li>
 </ul>
 <hr />
-<h3 id="task-1-remove-the-build-section-from-examplesmd">Task 1: Remove the Build section from examples.md</h3>
+<h3 id="task-1-delete-mermaid-source-packages-and-their-unit-tests">Task 1: Delete Mermaid source packages and their unit tests</h3>
 <p><strong>Files:</strong>
-- Modify: <code>docs/language-guide/examples.md:59-65</code></p>
+- Delete: <code>src/plcc/diagram/mermaid/</code> (entire directory)
+- Delete: <code>src/plcc/diagram/class_diagram/mermaid/</code> (entire directory)</p>
 <p><strong>Interfaces:</strong>
-- Produces: <code>examples.md</code> with no <code>### Build</code> section; the <code>### Scanner</code> heading follows directly after the grammar file code block.</p>
+- Produces: nothing — these packages are self-contained and not imported anywhere else</p>
 <ul>
-<li>[ ] <strong>Step 1: Delete the Build section</strong></li>
+<li>[ ] <strong>Step 1: Delete the packages</strong></li>
 </ul>
-<p>In <code>docs/language-guide/examples.md</code>, remove these exact lines (59–65):</p>
-<div class="highlight"><pre><span></span><code>### Build
-
-```bash
-plcc-make -s subtract.plcc
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>-rf<span class="w"> </span>src/plcc/diagram/mermaid/
+rm<span class="w"> </span>-rf<span class="w"> </span>src/plcc/diagram/class_diagram/mermaid/
 </code></pre></div>
-<p>Exits silently on success.</p>
-<div class="highlight"><pre><span></span><code>After the edit, line 58 (```` ``` ````) is followed immediately by a blank line and then `### Scanner`.
-
-- [ ] **Step 2: Verify the file looks correct**
-
-Run:
-
-```bash
-grep -n &quot;plcc-make\|### Build\|### Scanner\|### Parser\|### Interpreter&quot; docs/language-guide/examples.md
-</code></pre></div>
-<p>Expected output (no <code>plcc-make</code> or <code>### Build</code> lines):</p>
-<div class="highlight"><pre><span></span><code>67:### Scanner
-90:### Parser
-117:### Interpreter
-</code></pre></div>
-<p>(Line numbers may shift slightly — the key is no <code>plcc-make</code> or <code>### Build</code> entries.)</p>
+<ul>
+<li>[ ] <strong>Step 2: Verify unit tests still pass</strong></li>
+</ul>
+<p>Run: <code>bin/test/units.bash</code>
+Expected: all tests pass (the deleted tests are simply gone; no failures)</p>
 <ul>
 <li>[ ] <strong>Step 3: Commit</strong></li>
 </ul>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/language-guide/examples.md
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs(examples): remove explicit plcc-make build step [skip ci]&quot;</span>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>-A<span class="w"> </span>src/plcc/diagram/mermaid/<span class="w"> </span>src/plcc/diagram/class_diagram/mermaid/
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(diagram): delete Mermaid source packages (#124)&quot;</span>
 </code></pre></div>
+<hr />
+<h3 id="task-2-remove-mermaid-entry-points-from-pyprojecttoml">Task 2: Remove Mermaid entry points from pyproject.toml</h3>
+<p><strong>Files:</strong>
+- Modify: <code>pyproject.toml</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: deleted packages from Task 1</p>
+<ul>
+<li>[ ] <strong>Step 1: Remove the three entry points</strong></li>
+</ul>
+<p>Open <code>pyproject.toml</code> and delete these three lines from <code>[project.scripts]</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">plcc-diagram-class-mermaid-emit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.diagram.class_diagram.mermaid.emit:main&quot;</span>
+<span class="n">plcc-diagram-mermaid-build</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.diagram.mermaid.build:main&quot;</span>
+<span class="n">plcc-diagram-mermaid-run</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.diagram.mermaid.run:main&quot;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Reinstall the package so the entry points are gone</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>pdm<span class="w"> </span>install
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Verify the commands are no longer on PATH</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>plcc-diagram-mermaid-build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: still exists&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: gone&quot;</span>
+<span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>plcc-diagram-mermaid-run<span class="w">   </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: still exists&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: gone&quot;</span>
+<span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>plcc-diagram-class-mermaid-emit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: still exists&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: gone&quot;</span>
+</code></pre></div>
+<p>Expected: all three print <code>OK: gone</code></p>
+<ul>
+<li>[ ] <strong>Step 4: Run packaging test to confirm entry points are clean</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/packaging.bash
+</code></pre></div>
+<p>Expected: passes (no missing entry point errors for the removed commands)</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>pyproject.toml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(diagram): remove Mermaid entry points from pyproject.toml (#124)&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-3-remove-mermaid-from-_source_ext-maps">Task 3: Remove Mermaid from <code>_SOURCE_EXT</code> maps</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/diagram/class_diagram/diagram.py</code>
+- Modify: <code>src/plcc/diagram/syntax_diagram/diagram.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: nothing new
+- Produces: <code>_SOURCE_EXT</code> dicts that contain only <code>plantuml</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Edit <code>class_diagram/diagram.py</code></strong></li>
+</ul>
+<p>Find this line (around line 32):</p>
+<div class="highlight"><pre><span></span><code><span class="n">_SOURCE_EXT</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mermaid&#39;</span><span class="p">:</span> <span class="s1">&#39;mmd&#39;</span><span class="p">,</span> <span class="s1">&#39;plantuml&#39;</span><span class="p">:</span> <span class="s1">&#39;puml&#39;</span><span class="p">}</span>
+</code></pre></div>
+<p>Replace with:</p>
+<div class="highlight"><pre><span></span><code><span class="n">_SOURCE_EXT</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;plantuml&#39;</span><span class="p">:</span> <span class="s1">&#39;puml&#39;</span><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Edit <code>syntax_diagram/diagram.py</code></strong></li>
+</ul>
+<p>Find this line (around line 29):</p>
+<div class="highlight"><pre><span></span><code><span class="n">_SOURCE_EXT</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;plantuml&#39;</span><span class="p">:</span> <span class="s1">&#39;puml&#39;</span><span class="p">,</span> <span class="s1">&#39;mermaid&#39;</span><span class="p">:</span> <span class="s1">&#39;mmd&#39;</span><span class="p">}</span>
+</code></pre></div>
+<p>Replace with:</p>
+<div class="highlight"><pre><span></span><code><span class="n">_SOURCE_EXT</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;plantuml&#39;</span><span class="p">:</span> <span class="s1">&#39;puml&#39;</span><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Run unit tests</strong></li>
+</ul>
+<p>Run: <code>bin/test/units.bash</code>
+Expected: all tests pass</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/diagram/class_diagram/diagram.py<span class="w"> </span>src/plcc/diagram/syntax_diagram/diagram.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(diagram): remove mermaid from _SOURCE_EXT maps (#124)&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-4-remove-mermaid-test-cases-from-unit-test-files">Task 4: Remove Mermaid test cases from unit test files</h3>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/diagram/build_test.py</code>
+- Modify: <code>src/plcc/diagram/run_test.py</code>
+- Modify: <code>src/plcc/diagram/list_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: nothing new</p>
+<ul>
+<li>[ ] <strong>Step 1: Edit <code>build_test.py</code> — remove <code>test_custom_format_dispatches_correctly</code></strong></li>
+</ul>
+<p>Delete the entire <code>test_custom_format_dispatches_correctly</code> test function (the one that uses <code>--format=mermaid</code> and asserts <code>calls[0][0] == 'plcc-diagram-mermaid-build'</code>). The result should look like:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">patch</span><span class="p">,</span> <span class="n">MagicMock</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.build</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">run_main</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_missing_required_args_exits_nonzero</span><span class="p">():</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">docopt</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">((</span><span class="n">docopt</span><span class="o">.</span><span class="n">DocoptExit</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">)):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_dispatches_to_diagram_plantuml_build</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;diagram.puml&quot;</span>
+    <span class="n">src</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;@startuml</span><span class="se">\n</span><span class="s2">@enduml</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;diagram.png&quot;</span>
+    <span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fake_run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">m</span>
+
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;shutil.which&#39;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="s1">&#39;/usr/bin/plcc-diagram-plantuml-build&#39;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;subprocess.run&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">fake_run</span><span class="p">):</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--input=</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;plcc-diagram-plantuml-build&#39;</span>
+    <span class="k">assert</span> <span class="sa">f</span><span class="s1">&#39;--input=</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_missing_plugin_exits_nonzero</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;diagram.mmd&quot;</span>
+    <span class="n">src</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;classDiagram</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;diagram.png&quot;</span>
+
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;shutil.which&#39;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--input=</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;--format=nonexistent&#39;</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;nonexistent&#39;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Edit <code>run_test.py</code> — remove <code>test_custom_format_dispatches_correctly</code></strong></li>
+</ul>
+<p>Delete the entire <code>test_custom_format_dispatches_correctly</code> test function (the one that uses <code>--format=mermaid</code> and asserts <code>calls[0][0] == 'plcc-diagram-mermaid-run'</code>). The result should look like:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">patch</span><span class="p">,</span> <span class="n">MagicMock</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.run</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">run_main</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_missing_required_args_exits_nonzero</span><span class="p">():</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">docopt</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">((</span><span class="n">docopt</span><span class="o">.</span><span class="n">DocoptExit</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">)):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_dispatches_to_diagram_plantuml_run</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;diagram.png&quot;</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG&#39;</span><span class="p">)</span>
+    <span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fake_run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">m</span>
+
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;shutil.which&#39;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="s1">&#39;/usr/bin/plcc-diagram-plantuml-run&#39;</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;subprocess.run&#39;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">fake_run</span><span class="p">):</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--input=</span><span class="si">{</span><span class="n">img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;plcc-diagram-plantuml-run&#39;</span>
+    <span class="k">assert</span> <span class="sa">f</span><span class="s1">&#39;--input=</span><span class="si">{</span><span class="n">img</span><span class="si">}</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_missing_plugin_exits_nonzero</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;diagram.png&quot;</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s1">&#39;shutil.which&#39;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--input=</span><span class="si">{</span><span class="n">img</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;--format=nonexistent&#39;</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;nonexistent&#39;</span> <span class="ow">in</span> <span class="n">err</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Edit <code>list_test.py</code> — remove the two Mermaid test cases and update the <code>test_main_prints_type_slash_format</code> fixture</strong></li>
+</ul>
+<p>Delete <code>test_extract_type_format_mermaid</code> entirely, and update <code>test_main_prints_type_slash_format</code> to only include <code>class/plantuml</code>. The result should look like:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.list</span><span class="w"> </span><span class="kn">import</span> <span class="n">extract_type_format</span><span class="p">,</span> <span class="n">find_plugins</span><span class="p">,</span> <span class="n">main</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_extract_type_format_plantuml</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">extract_type_format</span><span class="p">(</span><span class="s1">&#39;plcc-diagram-class-plantuml-emit&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;plantuml&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_extract_ignores_dispatcher</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">extract_type_format</span><span class="p">(</span><span class="s1">&#39;plcc-diagram-emit&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_extract_ignores_old_pattern</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">extract_type_format</span><span class="p">(</span><span class="s1">&#39;plcc-plantuml-diagram-emit&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_extract_ignores_non_matching</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">extract_type_format</span><span class="p">(</span><span class="s1">&#39;plcc-diagram-list&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">extract_type_format</span><span class="p">(</span><span class="s1">&#39;python&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_main_prints_type_slash_format</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span>
+        <span class="s1">&#39;plcc.diagram.list.find_plugins&#39;</span><span class="p">,</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="p">[(</span><span class="s1">&#39;class&#39;</span><span class="p">,</span> <span class="s1">&#39;plantuml&#39;</span><span class="p">)]</span>
+    <span class="p">)</span>
+    <span class="n">main</span><span class="p">([])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;class/plantuml&#39;</span><span class="p">]</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests</strong></li>
+</ul>
+<p>Run: <code>bin/test/units.bash</code>
+Expected: all tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/diagram/build_test.py<span class="w"> </span>src/plcc/diagram/run_test.py<span class="w"> </span>src/plcc/diagram/list_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test(diagram): remove Mermaid test cases from unit tests (#124)&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-5-delete-and-update-mermaid-bats-tests">Task 5: Delete and update Mermaid bats tests</h3>
+<p><strong>Files:</strong>
+- Delete: <code>tests/bats/commands/plcc-diagram-class-mermaid-emit.bats</code>
+- Delete: <code>tests/bats/commands/plcc-diagram-mermaid-build.bats</code>
+- Delete: <code>tests/bats/commands/plcc-diagram-mermaid-run.bats</code>
+- Modify: <code>tests/bats/commands/plcc-diagram-list.bats</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Delete the three Mermaid bats test files</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>tests/bats/commands/plcc-diagram-class-mermaid-emit.bats
+rm<span class="w"> </span>tests/bats/commands/plcc-diagram-mermaid-build.bats
+rm<span class="w"> </span>tests/bats/commands/plcc-diagram-mermaid-run.bats
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Remove the <code>class/mermaid</code> assertion from <code>plcc-diagram-list.bats</code></strong></li>
+</ul>
+<p>Delete the entire <code>@test "plcc-diagram-list finds class/mermaid"</code> block. The result should look like:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
+
+bats_require_minimum_version<span class="w"> </span><span class="m">1</span>.5.0
+
+@test<span class="w"> </span><span class="s2">&quot;plcc-diagram-list is on PATH&quot;</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>plcc-diagram-list<span class="p">;</span><span class="w"> </span><span class="o">}</span>
+
+@test<span class="w"> </span><span class="s2">&quot;plcc-diagram-list exits 0&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>plcc-diagram-list
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="o">}</span>
+
+@test<span class="w"> </span><span class="s2">&quot;plcc-diagram-list finds syntax/plantuml&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>run<span class="w"> </span>plcc-diagram-list
+<span class="w">    </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$output</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span>~<span class="w"> </span><span class="s2">&quot;syntax/plantuml&quot;</span><span class="w"> </span><span class="o">]]</span>
+<span class="o">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Run commands tests</strong></li>
+</ul>
+<p>Run: <code>bin/test/commands.bash</code>
+Expected: all tests pass (no failures referencing removed commands)</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>-A<span class="w"> </span>tests/bats/commands/plcc-diagram-class-mermaid-emit.bats<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>tests/bats/commands/plcc-diagram-mermaid-build.bats<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>tests/bats/commands/plcc-diagram-mermaid-run.bats<span class="w"> </span><span class="se">\</span>
+<span class="w">           </span>tests/bats/commands/plcc-diagram-list.bats
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test(diagram): remove Mermaid bats tests (#124)&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-6-remove-mermaid-from-user-facing-docs-and-mkdocsyml">Task 6: Remove Mermaid from user-facing docs and mkdocs.yml</h3>
+<p><strong>Files:</strong>
+- Modify: <code>mkdocs.yml</code>
+- Delete: <code>docs/cli/commands/plcc-diagram-class-mermaid-emit.md</code>
+- Modify: <code>docs/cli/guide/diagram-extensions.md</code>
+- Modify: <code>docs/cli/guide/under-the-hood.md</code>
+- Modify: <code>docs/cli/guide/author-commands.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-class.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-emit.md</code>
+- Modify: <code>docs/cli/commands/plcc-diagram-list.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Remove stale Mermaid nav entries from <code>mkdocs.yml</code></strong></li>
+</ul>
+<p>Delete these three lines (they reference old pre-#113 paths that never existed on disk):</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-mermaid-diagram-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-mermaid-diagram-build.md</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-mermaid-diagram-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-mermaid-diagram-emit.md</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-mermaid-diagram-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-mermaid-diagram-run.md</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Delete the Mermaid command doc page</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>rm<span class="w"> </span>docs/cli/commands/plcc-diagram-class-mermaid-emit.md
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Edit <code>docs/cli/guide/diagram-extensions.md</code></strong></li>
+</ul>
+<p>Remove the entire <code>## plcc-mermaid-diagram</code> section (the heading, the intro paragraph mentioning <code>npm install -g @mermaid-js/mermaid-cli</code>, the command table, and the usage example <code>plcc-diagram-class --format=mermaid</code>).</p>
+<ul>
+<li>[ ] <strong>Step 4: Edit <code>docs/cli/guide/under-the-hood.md</code></strong></li>
+</ul>
+<p>Remove the <code>plcc-mermaid-diagram</code> package block from the PlantUML diagram (the <code>package plcc-mermaid-diagram { … }</code> block and its three arrow lines). Also remove the mention of <code>class/mermaid</code> in the <code>type/format</code> pair example sentence — change it to reference only <code>class/plantuml</code>.</p>
+<ul>
+<li>[ ] <strong>Step 5: Edit <code>docs/cli/guide/author-commands.md</code></strong></li>
+</ul>
+<p>Remove the one reference to <code>class/mermaid</code> in the <code>type/format</code> pair example. Change the example to reference only <code>class/plantuml</code>.</p>
+<ul>
+<li>[ ] <strong>Step 6: Edit <code>docs/cli/commands/plcc-diagram-class.md</code></strong></li>
+</ul>
+<p>Remove the line referencing <code>--format=mermaid</code> or <code>plcc-diagram-class --format=mermaid</code>.</p>
+<ul>
+<li>[ ] <strong>Step 7: Edit <code>docs/cli/commands/plcc-diagram-emit.md</code></strong></li>
+</ul>
+<p>Remove the line: <code>plcc-spec spec.plcc | plcc-model | plcc-diagram-emit --type=class --format=mermaid</code></p>
+<ul>
+<li>[ ] <strong>Step 8: Edit <code>docs/cli/commands/plcc-diagram-list.md</code></strong></li>
+</ul>
+<p>Remove the <code># class/mermaid</code> line from the example output.</p>
+<ul>
+<li>[ ] <strong>Step 9: Verify no remaining Mermaid references in docs</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;mermaid&quot;</span><span class="w"> </span>docs/cli/<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.md&quot;</span>
+</code></pre></div>
+<p>Expected: no output</p>
+<ul>
+<li>[ ] <strong>Step 10: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>mkdocs.yml<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/commands/plcc-diagram-class-mermaid-emit.md<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/guide/diagram-extensions.md<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/guide/under-the-hood.md<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/guide/author-commands.md<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/commands/plcc-diagram-class.md<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/commands/plcc-diagram-emit.md<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>docs/cli/commands/plcc-diagram-list.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: remove Mermaid from user-facing docs and mkdocs nav (#124) [skip ci]&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-7-final-verification-and-changelog">Task 7: Final verification and CHANGELOG</h3>
+<p><strong>Files:</strong>
+- Modify: <code>CHANGELOG.md</code> (semantic-release manages this; add a note in the PR description instead — see step below)</p>
+<ul>
+<li>[ ] <strong>Step 1: Run full functional test suite</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/functional.bash
+</code></pre></div>
+<p>Expected: all tests pass</p>
+<ul>
+<li>[ ] <strong>Step 2: Verify no Mermaid references remain in source or tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;mermaid&quot;</span><span class="w"> </span>src/<span class="w"> </span>tests/<span class="w"> </span>pyproject.toml<span class="w"> </span>mkdocs.yml<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.bats&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.toml&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.yml&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+</code></pre></div>
+<p>Expected: no output</p>
+<ul>
+<li>[ ] <strong>Step 3: Note breaking change for PR description</strong></li>
+</ul>
+<p>The PR description must note: "<code>--format=mermaid</code> is no longer accepted. The commands <code>plcc-diagram-class-mermaid-emit</code>, <code>plcc-diagram-mermaid-build</code>, and <code>plcc-diagram-mermaid-run</code> have been removed. Use PlantUML (the default) instead."</p>
+<p>The CHANGELOG entry will be auto-generated by semantic-release from the conventional commits above.</p>
 
 
 

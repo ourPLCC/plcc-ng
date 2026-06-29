@@ -1255,17 +1255,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#plcc-mermaid-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        plcc-mermaid-diagram
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#plcc-plantuml-diagram" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1867,90 +1856,6 @@
     
   
     plcc-make
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/plcc-mermaid-diagram-build.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-mermaid-diagram-build
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/plcc-mermaid-diagram-emit.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-mermaid-diagram-emit
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/plcc-mermaid-diagram-run.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-mermaid-diagram-run
   
 
     
@@ -2618,7 +2523,7 @@
 
 <h1 id="diagram-extensions">Diagram Extensions</h1>
 <p>Diagram extensions implement the emit, build, and run steps for a specific
-diagram format. plcc-ng ships with Mermaid and PlantUML support.</p>
+diagram format. plcc-ng ships with PlantUML support.</p>
 <h2 id="how-diagram-extensions-plug-in">How diagram extensions plug in</h2>
 <p><a href="../../commands/plcc-diagram/"><code>plcc-diagram</code></a> runs three dispatch commands:</p>
 <ol>
@@ -2628,31 +2533,6 @@ diagram format. plcc-ng ships with Mermaid and PlantUML support.</p>
 </ol>
 <p>The default format is <code>plantuml</code>. Use <a href="../../commands/plcc-diagram-list/"><code>plcc-diagram-list</code></a>
 to see what is installed.</p>
-<h2 id="plcc-mermaid-diagram">plcc-mermaid-diagram</h2>
-<p>Generates a Mermaid class diagram. Requires the <code>mmdc</code> CLI
-(<code>npm install -g @mermaid-js/mermaid-cli</code>).</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../../commands/plcc-diagram-class-mermaid-emit/"><code>plcc-diagram-class-mermaid-emit</code></a></td>
-<td>Reads model JSON from stdin; writes a <code>.mmd</code> Mermaid source file</td>
-</tr>
-<tr>
-<td><code>plcc-diagram-mermaid-build</code></td>
-<td>Renders <code>.mmd</code> to PNG using <code>mmdc</code></td>
-</tr>
-<tr>
-<td><code>plcc-diagram-mermaid-run</code></td>
-<td>Prints the path to the rendered PNG</td>
-</tr>
-</tbody>
-</table>
 <h2 id="plcc-plantuml-diagram">plcc-plantuml-diagram</h2>
 <p>Generates a PlantUML class diagram. Rendering is done via the public
 <code>plantuml.com</code> API — no local PlantUML installation required.</p>
