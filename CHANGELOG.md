@@ -1,6 +1,177 @@
 # CHANGELOG
 
 
+## v0.61.0 (2026-06-29)
+
+### Documentation
+
+- Add design spec for issue #123 rename syntactic to syntax [skip ci]
+  ([`60c16d8`](https://github.com/ourPLCC/plcc-ng/commit/60c16d86eb8763c4cdacc13cb7649bbfd7287cff))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add design spec for issue #124 drop Mermaid support [skip ci]
+  ([`c34934d`](https://github.com/ourPLCC/plcc-ng/commit/c34934d2693efa7c864e6554da83dfc8c0c27f3f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue #123 syntactic→syntax rename [skip ci]
+  ([`c27332b`](https://github.com/ourPLCC/plcc-ng/commit/c27332b6b2a1d4afd07212aad8e1c387cd42a52a))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Add implementation plan for issue #124 drop Mermaid support [skip ci]
+  ([`aafed22`](https://github.com/ourPLCC/plcc-ng/commit/aafed2287b1bcb794e1673fd46fcf2fca800c16d))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Close 121/123, abandon 111/114, add 124, update roadmap [skip ci]
+  ([`2e9433d`](https://github.com/ourPLCC/plcc-ng/commit/2e9433db501230fd434df24fe6218788b2898a1e))
+
+- Move completed issues 121 (rep syntax error) and 123 (syntactic→syntax rename) to done/ - Abandon
+  issue 111 (Mermaid redesign) — superseded by #124 (drop Mermaid) - Abandon issue 114 (lexical EBNF
+  diagram) — not a v1.0 priority - Add issue 124: drop Mermaid diagram support entirely - Update
+  roadmap to 4 open issues as of 2026-06-28
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Close issue 110 (Haskell roundtrip performance), update roadmap [skip ci]
+  ([`2bc2cbc`](https://github.com/ourPLCC/plcc-ng/commit/2bc2cbcfbbd9c3f63dee9a82850ed37b43a7fdfc))
+
+PR #244 resolved this via CI parallelization, cabal store caching, and splitting haskell.bats into
+  fast emit + slow roundtrip tiers.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Close issue 124 (drop Mermaid support), update roadmap [skip ci]
+  ([`b2fb6b3`](https://github.com/ourPLCC/plcc-ng/commit/b2fb6b3d8d5cbce72040642b01f39eb7914eac3f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- Remove Mermaid from user-facing docs and mkdocs nav (#124) [skip ci]
+  ([`5b5784f`](https://github.com/ourPLCC/plcc-ng/commit/5b5784fffacf1ef51a05a6f56cdf1d371f1c7e06))
+
+- **design**: Spec for issue 115 help Output vs Diagnostics grouping [skip ci]
+  ([`3339fa8`](https://github.com/ourPLCC/plcc-ng/commit/3339fa8427b88eab9b6f717c189d8813bfa8d612))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issue 125 rename build/ to plcc-ng/, update roadmap [skip ci]
+  ([`bbbad6a`](https://github.com/ourPLCC/plcc-ng/commit/bbbad6a9ced8a57cf76355714f3a1bde49ab7d53))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Reframe 115 as Output vs Diagnostics help grouping [skip ci]
+  ([`c0d8c9a`](https://github.com/ourPLCC/plcc-ng/commit/c0d8c9aa286475431ca62265afdea8187d50abbc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plan**: Implementation plan for issue 115 help Output vs Diagnostics [skip ci]
+  ([`c6ad785`](https://github.com/ourPLCC/plcc-ng/commit/c6ad7858d8240ec134ba1c9d0e0f755a45c1baf0))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **verbose**: Mention DIAGNOSTICS_OPTIONS in module docstring
+  ([`c7e7b03`](https://github.com/ourPLCC/plcc-ng/commit/c7e7b03032e90e6de4e238aa4f1f7fbedf8a0336))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- Add DIAGNOSTICS_OPTIONS constant with Diagnostics: section header
+  ([`3cc74a0`](https://github.com/ourPLCC/plcc-ng/commit/3cc74a0efebd188e404da0b2de6bc445dca2708e))
+
+This constant is used for grouping verbose-related help text separately from other help output,
+  enabling better organization of help documentation.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Split help into Options/Output/Diagnostics sections
+  ([`1232711`](https://github.com/ourPLCC/plcc-ng/commit/123271158f70d455aff35c84af45b02618449c71))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **make**: Split help into Options/Output/Diagnostics sections
+  ([`f2130f1`](https://github.com/ourPLCC/plcc-ng/commit/f2130f161e7a9bba74feb6c97282783f299ec88e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **parse**: Split help into Options/Output/Diagnostics sections
+  ([`ee6852f`](https://github.com/ourPLCC/plcc-ng/commit/ee6852f99b329efdc10e742285d3b29254f1fbe7))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **rep**: Split help into Options/Output/Diagnostics sections
+  ([`70fd5b7`](https://github.com/ourPLCC/plcc-ng/commit/70fd5b7aefc8041d44da1522dec5b0ab197ffa18))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **scan**: Split help into Options/Output/Diagnostics sections
+  ([`84d759b`](https://github.com/ourPLCC/plcc-ng/commit/84d759bf6a3aec46e1100abf68b4c7cf0c015b02))
+
+### Refactoring
+
+- Rename plcc-diagram-syntactic to plcc-diagram-syntax
+  ([#123](https://github.com/ourPLCC/plcc-ng/pull/123),
+  [`50b9f9f`](https://github.com/ourPLCC/plcc-ng/commit/50b9f9f76f7904649ad15162b361ef43729c7b10))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Delete Mermaid source packages ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`b6393c5`](https://github.com/ourPLCC/plcc-ng/commit/b6393c5b8bd69e5b3d5d8f4db40b8bd4638d6da5))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Remove Mermaid entry points from pyproject.toml
+  ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`9e6cfa0`](https://github.com/ourPLCC/plcc-ng/commit/9e6cfa0298f75eb2bf786c274174ce59dc3697f3))
+
+Remove the three Mermaid-related entry points that pointed to deleted packages. Also update the
+  packaging test to remove the now-deleted entry points from verification.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Remove mermaid from _SOURCE_EXT maps
+  ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`9e8821d`](https://github.com/ourPLCC/plcc-ng/commit/9e8821db5db519f134610bb1e52297d0ffd844ef))
+
+Remove the dead 'mermaid': 'mmd' entry from the _SOURCE_EXT dictionaries in both class_diagram and
+  syntax_diagram orchestrators, leaving only plantuml as the supported source format.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Testing
+
+- Update bats and packaging tests for syntactic→syntax rename
+  ([#123](https://github.com/ourPLCC/plcc-ng/pull/123),
+  [`9f3ba0b`](https://github.com/ourPLCC/plcc-ng/commit/9f3ba0b92328125e0d918a84dced7a01f67eb557))
+
+- **diagram**: Delete remaining Mermaid bats test files
+  ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`e9de53f`](https://github.com/ourPLCC/plcc-ng/commit/e9de53f4fe6829508a561530a7e0cb8355b585fb))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Fix stale .mmd fixture in test_missing_plugin_exits_nonzero
+  ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`01e76a7`](https://github.com/ourPLCC/plcc-ng/commit/01e76a73f88fa7dde85b457b2b650f802e778caf))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Remove Mermaid bats tests ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`91851fd`](https://github.com/ourPLCC/plcc-ng/commit/91851fda1995e7ca2f4e75bfcf6da9a9016ad0c9))
+
+Removes three Mermaid bats test files (plcc-diagram-class-mermaid-emit, plcc-diagram-mermaid-build,
+  plcc-diagram-mermaid-run) and deletes the class/mermaid assertion from plcc-diagram-list.bats as
+  part of task 5 of issue #112 cleanup.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **diagram**: Remove Mermaid test cases from unit tests
+  ([#124](https://github.com/ourPLCC/plcc-ng/pull/124),
+  [`fda7b28`](https://github.com/ourPLCC/plcc-ng/commit/fda7b28d1b04a790eac326140ea2c5737bb55334))
+
+
 ## v0.60.0 (2026-06-28)
 
 ### Bug Fixes
