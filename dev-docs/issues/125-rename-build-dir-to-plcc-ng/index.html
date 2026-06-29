@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/115-scan-trace-vs-verbose-inconsistency/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/125-rename-build-dir-to-plcc-ng/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>115 - Group help options into Output vs Diagnostics sections - plcc-ng Developer Docs</title>
+        <title>125 - Rename build/ output directory to plcc-ng/ - plcc-ng Developer Docs</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#115-group-help-options-into-output-vs-diagnostics-sections" class="md-skip">
+        <a href="#125-rename-build-output-directory-to-plcc-ng" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              115 - Group help options into Output vs Diagnostics sections
+              125 - Rename build/ output directory to plcc-ng/
             
           </span>
         </div>
@@ -612,21 +612,17 @@
   
 
 
-<h1 id="115-group-help-options-into-output-vs-diagnostics-sections">115 - Group help options into Output vs Diagnostics sections</h1>
-<p><strong>Type:</strong> fix
-<strong>Date:</strong> 2026-06-25</p>
+<h1 id="125-rename-build-output-directory-to-plcc-ng">125 - Rename <code>build/</code> output directory to <code>plcc-ng/</code></h1>
+<p><strong>Type:</strong> refactor
+<strong>Date:</strong> 2026-06-29</p>
 <h2 id="description">Description</h2>
-<p>Users confuse <code>--trace</code> and <code>--verbose</code> because they appear as a flat list of options with no indication that they serve different purposes.</p>
-<p><code>--verbose</code> (<code>-v</code>) is a diagnostic volume knob. It writes structured information about a command's internal operations to stderr. Orchestrating tools use it to get machine-readable detail from low-level commands; it is not something end users normally reach for.</p>
-<p><code>--trace</code> and <code>--banner</code> are feature flags. They augment the user-facing output of a command with specific additional information the user has opted into.</p>
-<p><code>--verbose</code> is already consistent across all commands (via <code>VERBOSE_OPTIONS</code>). The issue is that nothing in the help text signals that these two groups of flags are different in kind.</p>
+<p>plcc-ng currently writes its generated output into a directory named <code>build/</code>. This is a very common name used by many build tools (Maven, Gradle, CMake, npm, etc.), which creates a risk of name collisions when plcc-ng is used alongside other tools in the same project. Renaming the output directory to <code>plcc-ng/</code> makes the ownership of that directory unambiguous.</p>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Split the Options section in each command's docopt string into two named groups:</li>
-<li><code>Output:</code> — feature flags that change what the command shows (<code>--trace</code>, <code>--banner</code>)</li>
-<li><code>Diagnostics:</code> — verbose flags aimed at orchestrators and debuggers (<code>-v</code>, <code>--verbose-format</code>)</li>
-<li>Apply consistently to <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>, and any other user-facing commands</li>
-<li>No flag renames needed; this is a help-text-only change</li>
+<li>Find all places in the codebase that reference <code>build/</code> as the output directory and update them to <code>plcc-ng/</code></li>
+<li>Update any user-facing documentation that mentions <code>build/</code></li>
+<li>This is a breaking change for users who depend on the <code>build/</code> path — note it in CHANGELOG</li>
+<li>Consider whether <code>.gitignore</code> templates or quickstart examples need updating</li>
 </ul>
 
 

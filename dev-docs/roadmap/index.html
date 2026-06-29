@@ -613,23 +613,22 @@
 
 
 <h1 id="roadmap">Roadmap</h1>
-<p>3 open issues as of 2026-06-28.</p>
+<p>3 open issues as of 2026-06-29.</p>
 <h2 id="open-issues">Open Issues</h2>
 <h3 id="fixes">Fixes</h3>
 <ul>
-<li><strong><a href="../issues/115-scan-trace-vs-verbose-inconsistency/">#115</a> — <code>plcc-scan --trace</code> vs <code>plcc-parse --verbose</code> inconsistency</strong>
-  Diagnostic flag names differ across commands; pick one term and apply it consistently.</li>
+<li><strong><a href="../issues/115-scan-trace-vs-verbose-inconsistency/">#115</a> — Group help options into Output vs Diagnostics sections</strong>
+  Users confuse <code>--trace</code> (feature flag) with <code>--verbose</code> (diagnostic volume knob); split the help text into named sections to make the distinction clear.</li>
+</ul>
+<h3 id="refactors">Refactors</h3>
+<ul>
+<li><strong><a href="../issues/125-rename-build-dir-to-plcc-ng/">#125</a> — Rename <code>build/</code> output directory to <code>plcc-ng/</code></strong>
+  Avoid name collisions with other build tools by giving the output directory an unambiguous name.</li>
 </ul>
 <h3 id="features">Features</h3>
 <ul>
-<li>
-<p><strong><a href="../issues/112-first-major-release/">#112</a> — Prepare for first major release (v1.0.0)</strong>
-  Define v1.0 criteria, decide emitter support tiers, and write the release SOP.</p>
-</li>
-<li>
-<p><strong><a href="../issues/124-drop-mermaid-support/">#124</a> — Drop Mermaid diagram support</strong>
-  Remove the broken Mermaid extension; PlantUML covers all current diagram needs.</p>
-</li>
+<li><strong><a href="../issues/112-first-major-release/">#112</a> — Prepare for first major release (v1.0.0)</strong>
+  Define v1.0 criteria, decide emitter support tiers, and write the release SOP.</li>
 </ul>
 
 
