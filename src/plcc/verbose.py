@@ -16,6 +16,12 @@ VERBOSE_OPTIONS = """
     --verbose-format=FMT    Output format: text or json [default: text].
 """
 
+DIAGNOSTICS_OPTIONS = """
+Diagnostics:
+    -v                      Increase verbosity (may repeat: -v, -vv, -vvv for levels 1-3).
+    --verbose-format=FMT    Output format: text or json [default: text].
+"""
+
 
 class VerboseContext:
     """Holds verbosity settings for one command invocation."""

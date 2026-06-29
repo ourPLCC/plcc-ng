@@ -15,6 +15,14 @@ def test_verbose_options_is_a_string():
     assert "--verbose-format" in VERBOSE_OPTIONS
 
 
+def test_diagnostics_options_is_a_string():
+    from plcc.verbose import DIAGNOSTICS_OPTIONS
+    assert isinstance(DIAGNOSTICS_OPTIONS, str)
+    assert "Diagnostics:" in DIAGNOSTICS_OPTIONS
+    assert "-v" in DIAGNOSTICS_OPTIONS
+    assert "--verbose-format" in DIAGNOSTICS_OPTIONS
+
+
 def test_from_args_defaults():
     args = {"-v": 0, "--verbose-format": "text"}
     ctx = VerboseContext.from_args("plcc-test", SampleEvents, args)
