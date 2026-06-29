@@ -7,7 +7,7 @@ import sys
 from docopt import DocoptExit
 from plcc.cli import parse_args
 
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.version import get_version
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
@@ -25,10 +25,12 @@ Arguments:
     SOURCE      Source files to evaluate before entering interactive mode.
 
 Options:
-""" + SPEC_OPTION + """\
-    -b --banner             Show the version and spec banner on stderr.
     -h --help               Show this message.
-""" + VERBOSE_OPTIONS
+""" + SPEC_OPTION + """\
+
+Output:
+    -b --banner             Show the version and spec banner on stderr.
+""" + DIAGNOSTICS_OPTIONS
 
 
 class Events(enum.Enum):

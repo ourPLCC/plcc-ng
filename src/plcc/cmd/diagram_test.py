@@ -1,6 +1,17 @@
 from .diagram import _extract_type_name, find_types
 
 
+def test_diagram_help_has_output_section():
+    import plcc.cmd.diagram as m
+    assert "Output:" in m.__doc__
+    assert "--banner" in m.__doc__
+
+
+def test_diagram_help_has_diagnostics_section():
+    import plcc.cmd.diagram as m
+    assert "Diagnostics:" in m.__doc__
+
+
 class TestExtractTypeName:
     def test_class_type(self):
         assert _extract_type_name('plcc-diagram-class') == 'class'

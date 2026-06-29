@@ -1,7 +1,7 @@
 """Shared verbose infrastructure for the PLCC pipeline.
 
 Every command accepts -v and --verbose-format. This module provides
-the VerboseContext object and the VERBOSE_OPTIONS docopt fragment.
+the VerboseContext object and the VERBOSE_OPTIONS and DIAGNOSTICS_OPTIONS docopt fragments.
 """
 
 import json
@@ -12,6 +12,12 @@ from typing import List, Optional
 
 
 VERBOSE_OPTIONS = """
+    -v                      Increase verbosity (may repeat: -v, -vv, -vvv for levels 1-3).
+    --verbose-format=FMT    Output format: text or json [default: text].
+"""
+
+DIAGNOSTICS_OPTIONS = """
+Diagnostics:
     -v                      Increase verbosity (may repeat: -v, -vv, -vvv for levels 1-3).
     --verbose-format=FMT    Output format: text or json [default: text].
 """

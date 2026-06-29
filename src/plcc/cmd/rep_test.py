@@ -461,3 +461,14 @@ def test_rep_main_banner_prints_running_line_to_stderr(monkeypatch, tmp_path, ca
     _rep_module.main(["--banner"])
     _, err = capsys.readouterr()
     assert "Running Python." in err
+
+
+def test_rep_help_has_output_section():
+    import plcc.cmd.rep as m
+    assert "Output:" in m.__doc__
+    assert "--banner" in m.__doc__
+
+
+def test_rep_help_has_diagnostics_section():
+    import plcc.cmd.rep as m
+    assert "Diagnostics:" in m.__doc__
