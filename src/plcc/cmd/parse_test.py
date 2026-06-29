@@ -433,3 +433,14 @@ def test_feed_on_error_with_shift_shows_token_in_trace(monkeypatch, handler, cap
     out, _ = capsys.readouterr()
     assert "NUM '42'" in out
     assert "program" in out
+
+
+def test_parse_help_has_output_section():
+    import plcc.cmd.parse as m
+    assert "Output:" in m.__doc__
+    assert "--banner" in m.__doc__
+
+
+def test_parse_help_has_diagnostics_section():
+    import plcc.cmd.parse as m
+    assert "Diagnostics:" in m.__doc__

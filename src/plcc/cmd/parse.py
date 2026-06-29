@@ -9,7 +9,7 @@ from plcc.cli import parse_args
 from plcc.version import get_version
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
-from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from .pipeline import TreePipeline, print_parse_error, location_str, split_committed
 from .output import print_banner
 from .source_runner import SourceRunner
@@ -26,8 +26,10 @@ Arguments:
 Options:
     -h --help                   Show this message.
 """ + SPEC_OPTION + """\
+
+Output:
     -b --banner                 Show the version and spec banner on stderr.
-""" + VERBOSE_OPTIONS
+""" + DIAGNOSTICS_OPTIONS
 
 
 class Events(enum.Enum):
