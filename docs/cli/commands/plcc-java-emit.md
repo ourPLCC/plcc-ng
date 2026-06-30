@@ -24,5 +24,5 @@ plcc-java-emit --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-java-emit --output=build/Java
+plcc-spec spec.plcc | plcc-model | plcc-java-emit --output=plcc-ng/Java
 ```

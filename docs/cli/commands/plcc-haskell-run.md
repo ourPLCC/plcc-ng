@@ -27,5 +27,5 @@ plcc-haskell-run --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-haskell-run --output=build/Haskell
+plcc-haskell-run --output=plcc-ng/Haskell
 ```

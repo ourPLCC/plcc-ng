@@ -22,7 +22,7 @@ plcc-lang-emit [-v ...] --target=LANG --output=DIR
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=build/Python
+plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=plcc-ng/Python
 ```
 
 ## Language plugins

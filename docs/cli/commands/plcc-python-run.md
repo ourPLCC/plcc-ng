@@ -23,5 +23,5 @@ plcc-python-run --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-python-run --output=build/Python
+plcc-python-run --output=plcc-ng/Python
 ```

@@ -23,9 +23,9 @@ plcc-trees [-v ...] [options] --ll1=LL1_JSON
 ## Examples
 
 ```bash
-plcc-spec spec.plcc > build/spec.json
-plcc-spec spec.plcc | plcc-ll1 > build/ll1.json
-plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
+plcc-spec spec.plcc > plcc-ng/spec.json
+plcc-spec spec.plcc | plcc-ll1 > plcc-ng/ll1.json
+plcc-tokens plcc-ng/spec.json samples/ | plcc-trees --ll1=plcc-ng/ll1.json
 ```
 
 ## Parser plugins

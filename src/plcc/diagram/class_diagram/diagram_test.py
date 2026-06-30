@@ -44,7 +44,7 @@ def test_calls_plcc_make_with_through_model(tmp_path, monkeypatch):
 def test_calls_emit_with_type_class(tmp_path, monkeypatch):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
-    build_dir = tmp_path / 'build'
+    build_dir = tmp_path / 'plcc-ng'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
     (build_dir / '.spec').write_text(str(grammar))
@@ -71,7 +71,7 @@ def test_calls_emit_with_type_class(tmp_path, monkeypatch):
 def test_build_uses_class_puml_path(tmp_path, monkeypatch):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
-    build_dir = tmp_path / 'build'
+    build_dir = tmp_path / 'plcc-ng'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
     (build_dir / '.spec').write_text(str(grammar))
@@ -89,14 +89,14 @@ def test_build_uses_class_puml_path(tmp_path, monkeypatch):
         run_main([])
 
     build_call = calls[2]  # plcc-diagram-build is the 3rd call
-    assert '--input=build/diagram/class.puml' in build_call
-    assert '--output=build/diagram/class.png' in build_call
+    assert '--input=plcc-ng/diagram/class.puml' in build_call
+    assert '--output=plcc-ng/diagram/class.png' in build_call
 
 
 def test_banner_prints_version_to_stderr(tmp_path, monkeypatch, capsys):
     grammar = tmp_path / "grammar.plcc"
     grammar.write_text("# stub")
-    build_dir = tmp_path / 'build'
+    build_dir = tmp_path / 'plcc-ng'
     build_dir.mkdir()
     (build_dir / 'model.json').write_text('{}')
     (build_dir / '.spec').write_text(str(grammar))

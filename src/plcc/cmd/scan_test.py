@@ -94,7 +94,7 @@ def test_scan_handler_renders_token_records(monkeypatch, capsys):
 
 
 def test_main_creates_source_runner(monkeypatch, tmp_path):
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     created = []
@@ -119,7 +119,7 @@ def test_main_default_prints_no_banner_to_stdout(monkeypatch, capsys):
 
 def test_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0))
@@ -133,7 +133,7 @@ def test_main_banner_prints_version_to_stderr(monkeypatch, tmp_path, capsys):
 
 def test_main_banner_prints_grammar_to_stderr(monkeypatch, tmp_path, capsys):
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     monkeypatch.setattr(subprocess, "run", lambda *a, **kw: SimpleNamespace(returncode=0))

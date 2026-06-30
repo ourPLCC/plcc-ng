@@ -59,8 +59,8 @@ _run() {
         cd "${WORK_DIR}"
         cp "${PROJECT_ROOT}/tests/fixtures/trivial.plcc" spec.plcc
         plcc-make
-        test -f build/spec.json   || { echo "FAIL: build/spec.json missing"; exit 1; }
-        test -f build/model.json  || { echo "FAIL: build/model.json missing"; exit 1; }
+        test -f plcc-ng/spec.json   || { echo "FAIL: plcc-ng/spec.json missing"; exit 1; }
+        test -f plcc-ng/model.json  || { echo "FAIL: plcc-ng/model.json missing"; exit 1; }
     )
     DIAGRAM_DIR="$(mktemp -d)"
     trap 'rm -rf "${VENV}" "${WORK_DIR}" "${DIAGRAM_DIR}"' EXIT

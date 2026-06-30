@@ -195,7 +195,7 @@ def test_no_spec_flag_no_stored_falls_back_to_spec_plcc(tmp_path, monkeypatch, c
 def test_no_spec_flag_stored_spec_missing_errors_to_stderr(tmp_path, monkeypatch, capsys):
     # build/.spec points to a file that does not exist
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     write_spec(build, "missing.plcc")
     with pytest.raises(SystemExit) as exc:
@@ -210,7 +210,7 @@ def test_no_spec_flag_stored_spec_missing_errors_to_stderr(tmp_path, monkeypatch
 def test_no_spec_flag_uses_stored_spec_path(tmp_path, monkeypatch, capsys):
     # build/.spec set to a.plcc (missing) — error names a.plcc, not spec.plcc
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     write_spec(build, "a.plcc")
     with pytest.raises(SystemExit):
@@ -223,7 +223,7 @@ def test_no_spec_flag_uses_stored_spec_path(tmp_path, monkeypatch, capsys):
 
 def test_explicit_spec_differs_from_stored_wipes_build(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / "marker.txt").write_text("from old grammar")
     write_spec(build, "old.plcc")
@@ -235,7 +235,7 @@ def test_explicit_spec_differs_from_stored_wipes_build(tmp_path, monkeypatch):
 
 def test_explicit_spec_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / "marker.txt").write_text("from current grammar")
     write_spec(build, "same.plcc")
@@ -247,7 +247,7 @@ def test_explicit_spec_same_as_stored_does_not_wipe(tmp_path, monkeypatch):
 
 def test_spec_written_before_build_stages_run(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     (tmp_path / "bad.plcc").write_text("token BAD @@@\n")
     with pytest.raises(SystemExit):
         run_main(["--spec=bad.plcc"])

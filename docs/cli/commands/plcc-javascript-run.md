@@ -25,5 +25,5 @@ plcc-javascript-run --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-javascript-run --output=build/javascript
+plcc-javascript-run --output=plcc-ng/javascript
 ```

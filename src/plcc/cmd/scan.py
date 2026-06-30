@@ -9,6 +9,7 @@ from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.version import get_version
+from plcc.build import OUTPUT_DIR
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .output import print_banner, print_user_error
@@ -201,9 +202,9 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_spec("build")))
+        print_banner(get_version(), os.path.abspath(read_spec(OUTPUT_DIR)))
 
-    spec_path = os.path.join("build", "spec.json")
+    spec_path = os.path.join(OUTPUT_DIR, "spec.json")
     tokens_flags = child_flags + (["--trace"] if trace else [])
 
     handler = ScanHandler(spec_path=spec_path, tokens_flags=tokens_flags)

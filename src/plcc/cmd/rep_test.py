@@ -20,7 +20,7 @@ def test_main_constructs_runner_without_submit_mode(monkeypatch, tmp_path):
     """plcc-rep uses the single incremental SourceRunner (no SubmitOn)."""
     monkeypatch.chdir(tmp_path)
     (tmp_path / "grammar.plcc").write_text("")
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     (build / "spec.json").write_text(_json.dumps({"semantics": {"language": "Python"}}))
@@ -404,7 +404,7 @@ def _setup_rep_main(monkeypatch, tmp_path):
     import json as _j
     monkeypatch.chdir(tmp_path)
     (tmp_path / "grammar.plcc").write_text("")
-    build = tmp_path / "build"
+    build = tmp_path / "plcc-ng"
     build.mkdir()
     (build / ".spec").write_text(str(tmp_path / "grammar.plcc"))
     spec = {"semantics": {"language": "Python"}}

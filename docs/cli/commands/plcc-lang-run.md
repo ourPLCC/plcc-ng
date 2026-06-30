@@ -22,5 +22,5 @@ plcc-lang-run --target=LANG --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-lang-run --target=Python --output=build/Python
+plcc-lang-run --target=Python --output=plcc-ng/Python
 ```

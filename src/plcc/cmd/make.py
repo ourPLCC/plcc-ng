@@ -15,6 +15,7 @@ from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
+from plcc.build import OUTPUT_DIR
 from plcc.build.spec import read_spec, write_spec, resolve_spec_path
 from plcc.cmd.spec import SPEC_OPTION
 from plcc.ll1.format_conflict_message import format_conflict_message
@@ -57,7 +58,7 @@ def main(argv=None):
     verbose = VerboseContext.from_args("plcc-make", Events, args)
     explicit_spec = args['--spec']
     through = args['--through']
-    build_dir = Path('build')
+    build_dir = Path(OUTPUT_DIR)
 
     stored_spec = read_spec(build_dir) if build_dir.is_dir() else None
 

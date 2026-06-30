@@ -9,6 +9,7 @@ from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, DIAGNOSTICS_OPTIONS
 from plcc.version import get_version
+from plcc.build import OUTPUT_DIR
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from .pipeline import TreePipeline, print_parse_error, split_committed
@@ -97,8 +98,8 @@ def main(argv=None):
     if make_result.returncode != 0:
         sys.exit(make_result.returncode)
 
-    spec_path = os.path.join('build', 'spec.json')
-    ll1_path = os.path.join('build', 'll1.json')
+    spec_path = os.path.join(OUTPUT_DIR, 'spec.json')
+    ll1_path = os.path.join(OUTPUT_DIR, 'll1.json')
 
     with open(spec_path) as f:
         spec = json.load(f)
@@ -112,10 +113,10 @@ def main(argv=None):
     if banner:
         print_banner(
             get_version(),
-            os.path.abspath(read_spec('build')),
+            os.path.abspath(read_spec(OUTPUT_DIR)),
             language=language,
         )
-    output_dir = os.path.join('build', language)
+    output_dir = os.path.join(OUTPUT_DIR, language)
 
     interpreter = subprocess.Popen(
         ['plcc-lang-run', f'--target={language}', f'--output={output_dir}'],

@@ -46,5 +46,5 @@ plcc-make --through=scan
 | `model` | `plcc-spec`, `plcc-model` |
 | `all` (default) | `plcc-spec`, `plcc-ll1`, `plcc-model`, `plcc-lang-emit`, `plcc-lang-build` |
 
-`plcc-make` caches its output in `build/` and skips stages whose inputs
+`plcc-make` caches its output in `plcc-ng/` and skips stages whose inputs
 haven't changed since the last successful run.

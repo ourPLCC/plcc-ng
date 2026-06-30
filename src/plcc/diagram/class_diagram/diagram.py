@@ -8,6 +8,7 @@ from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
+from plcc.build import OUTPUT_DIR
 from plcc.build.spec import read_spec
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag, spec_flag_for_child
 from plcc.cmd.output import print_banner
@@ -68,14 +69,14 @@ def main(argv=None):
         sys.exit(make_result.returncode)
 
     if banner:
-        print_banner(get_version(), os.path.abspath(read_spec('build')))
+        print_banner(get_version(), os.path.abspath(read_spec(OUTPUT_DIR)))
 
     source_ext = _SOURCE_EXT.get(fmt, fmt)
-    build_diagram_dir = os.path.join('build', 'diagram')
+    build_diagram_dir = os.path.join(OUTPUT_DIR, 'diagram')
     os.makedirs(build_diagram_dir, exist_ok=True)
     diagram_source = os.path.join(build_diagram_dir, f'class.{source_ext}')
     diagram_image = os.path.join(build_diagram_dir, 'class.png')
-    model_json = os.path.join('build', 'model.json')
+    model_json = os.path.join(OUTPUT_DIR, 'model.json')
 
     with open(model_json) as stdin_f, open(diagram_source, 'w') as stdout_f:
         emit_result = subprocess.run(

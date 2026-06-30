@@ -25,5 +25,5 @@ plcc-java-run --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-java-run --output=build/Java
+plcc-java-run --output=plcc-ng/Java
 ```

@@ -25,5 +25,5 @@ plcc-diagram-run --input=FILE [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-diagram-run --format=plantuml --input=build/diagram/diagram.png
+plcc-diagram-run --format=plantuml --input=plcc-ng/diagram/diagram.png
 ```
