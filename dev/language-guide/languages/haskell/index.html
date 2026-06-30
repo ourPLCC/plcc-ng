@@ -928,6 +928,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#languageerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LanguageError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencing-other-generated-modules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2916,6 +2927,10 @@ _run (Prog es) = unlines (map (show . eval) es)
 </code></pre></div>
 <p>The function signature must be <code>_run :: StartModule -&gt; String</code>. The return value is sent to <code>plcc-rep</code> as the result string.</p>
 <p>If you do not define <code>_run</code>, the default <code>_run = show</code> is injected, which prints the <code>Show</code> instance of the root node.</p>
+<h2 id="languageerror"><code>LanguageError</code></h2>
+<p><code>LanguageError</code> is the intended mechanism for signaling a deliberate error in the defined language from Haskell semantics code. When thrown, <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
+<p><code>LanguageError</code> is currently not accessible from user-authored module files — it is defined in the generated <code>Main.hs</code>, which user modules cannot import. Support for throwing <code>LanguageError</code> from semantics code is tracked in issues 131 and 132.</p>
+<p>In the meantime, note that Haskell's built-in <code>error "message"</code> throws <code>ErrorCall</code>, which is treated as a <strong>specification error</strong> (not a language error) — <code>plcc-rep</code> will exit.</p>
 <h2 id="referencing-other-generated-modules">Referencing other generated modules</h2>
 <p>Each generated <code>.hs</code> file auto-imports only the modules its record fields reference. To use a sibling module that is not auto-imported, add an <code>import</code> fragment:</p>
 <div class="highlight"><pre><span></span><code>MyModule:import

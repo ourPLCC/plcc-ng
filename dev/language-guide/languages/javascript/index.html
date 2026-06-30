@@ -984,6 +984,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#languageerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LanguageError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencing-other-generated-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2925,6 +2936,18 @@ module.exports = { MathHelper };
 </code></pre></div>
 <p>The return value is converted to a string and printed by <code>plcc-rep</code>. Return <code>undefined</code> (or nothing) to suppress output for that input.</p>
 <p>The default <code>_Start._run()</code> prints <code>String(this)</code> to stdout. Override it to replace the default behavior entirely.</p>
+<h2 id="languageerror"><code>LanguageError</code></h2>
+<p>Throw <code>LanguageError</code> to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
+<p><code>LanguageError</code> is available in all generated classes without any import:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">eval</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">LanguageError</span><span class="p">(</span><span class="s2">&quot;type mismatch: expected int&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Subclass it to create named error types:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">DivisionByZeroError</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="nx">LanguageError</span><span class="w"> </span><span class="p">{}</span>
+<span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">DivisionByZeroError</span><span class="p">(</span><span class="s2">&quot;division by zero&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>Any other exception (not <code>LanguageError</code> or a subclass) is treated as a specification error — <code>plcc-rep</code> prints the error and exits.</p>
 <h2 id="referencing-other-generated-classes">Referencing other generated classes</h2>
 <p>Generated files use CommonJS modules. To use a sibling generated class from semantic code, require it with an <code>import</code> fragment:</p>
 <div class="highlight"><pre><span></span><code>MyClass:import

@@ -804,6 +804,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#signaling-errors-from-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signaling errors from semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hooks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2713,6 +2724,10 @@ on your target language — see your language's page below.</p>
 method that is called when you run a program with <code>plcc-rep</code>. The default
 implementation prints a string representation of the parse tree root.
 Override <code>_run</code> in your start class to implement your language's semantics.</p>
+<h2 id="signaling-errors-from-semantics">Signaling errors from semantics</h2>
+<p>When your semantics code needs to report a deliberate error — a type mismatch, a precondition violation, or any condition your language treats as an error — raise a <code>LanguageError</code>. <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
+<p>Raising any other exception is treated as a bug in your specification. <code>plcc-rep</code> prints a specification error and exits.</p>
+<p>Each language provides <code>LanguageError</code> as part of its generated runtime. See your language's page for the exact syntax.</p>
 <h2 id="hooks">Hooks</h2>
 <p>Hooks inject code at specific locations within a generated class file.
 Append the hook name to the class name with a colon:</p>

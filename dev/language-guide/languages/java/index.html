@@ -956,6 +956,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#languageerror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LanguageError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#referencing-other-generated-classes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2930,6 +2941,23 @@ public int eval() {
 </code></pre></div>
 <p>The default <code>_Start._run()</code> prints <code>String(this)</code> using <code>System.out.println</code>. Override it to replace the default behavior. Return type is <code>void</code>.</p>
 <p>Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see <code>Exp</code> in the quick reference example).</p>
+<h2 id="languageerror"><code>LanguageError</code></h2>
+<p>Throw <code>LanguageError</code> to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
+<p><code>LanguageError</code> is available in all generated classes without any import:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">eval</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LanguageError</span><span class="p">(</span><span class="s">&quot;type mismatch: expected int&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Subclass it to create named error types:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DivisionByZeroError</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">LanguageError</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">DivisionByZeroError</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kd">super</span><span class="p">(</span><span class="s">&quot;division by zero&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">eval</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DivisionByZeroError</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Any other exception (not <code>LanguageError</code> or a subclass) is treated as a specification error — <code>plcc-rep</code> prints the error and exits.</p>
 <h2 id="referencing-other-generated-classes">Referencing other generated classes</h2>
 <p>All generated <code>.java</code> files are compiled together in the same package. You can reference any sibling class by name directly — no import needed.</p>
 <h2 id="generated-output">Generated output</h2>
