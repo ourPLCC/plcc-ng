@@ -144,8 +144,8 @@ eval() {
 Subclass it to create named error types:
 
 ```javascript
-class TypeError extends LanguageError {}
-throw new TypeError("expected int");
+class DivisionByZeroError extends LanguageError {}
+throw new DivisionByZeroError("division by zero");
 ```
 
 Any other exception (not `LanguageError` or a subclass) is treated as a specification error — `plcc-rep` prints the error and exits.

@@ -50,7 +50,7 @@ Override `_run` in your start class to implement your language's semantics.
 
 When your semantics code needs to report a deliberate error — a type mismatch, a precondition violation, or any condition your language treats as an error — raise a `LanguageError`. `plcc-rep` prints the message and gives a fresh prompt; the session continues.
 
-Raising any other exception is treated as a bug in your specification. `plcc-rep` prints a Specification Error and exits.
+Raising any other exception is treated as a bug in your specification. `plcc-rep` prints a specification error and exits.
 
 Each language provides `LanguageError` as part of its generated runtime. See your language's page for the exact syntax.
 

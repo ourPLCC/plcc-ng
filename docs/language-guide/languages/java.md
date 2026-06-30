@@ -144,10 +144,15 @@ public int eval() {
 Subclass it to create named error types:
 
 ```java
-public class TypeError extends LanguageError {
-    public TypeError(String msg) { super(msg); }
+public class DivisionByZeroError extends LanguageError {
+    public DivisionByZeroError() { super("division by zero"); }
 }
-throw new TypeError("expected int");
+```
+
+```java
+public int eval() {
+    throw new DivisionByZeroError();
+}
 ```
 
 Any other exception (not `LanguageError` or a subclass) is treated as a specification error — `plcc-rep` prints the error and exits.

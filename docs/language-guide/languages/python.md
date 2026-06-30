@@ -129,8 +129,8 @@ def eval(self):
 Subclass it to create named error types:
 
 ```python
-class TypeError(LanguageError): pass
-raise TypeError("expected int")
+class DivisionByZeroError(LanguageError): pass
+raise DivisionByZeroError("division by zero")
 ```
 
 Any other exception (not `LanguageError` or a subclass) is treated as a specification error — `plcc-rep` prints the error and exits.
