@@ -13,32 +13,32 @@ teardown() {
     rm -rf "${WORK_DIR}"
 }
 
-@test "plcc-make produces build/spec.json" {
-    [ -f build/spec.json ]
+@test "plcc-make produces plcc-ng/spec.json" {
+    [ -f plcc-ng/spec.json ]
 }
 
-@test "build/spec.json validates against spec schema" {
-    check-jsonschema --schemafile "${SPEC_SCHEMA}" build/spec.json
+@test "plcc-ng/spec.json validates against spec schema" {
+    check-jsonschema --schemafile "${SPEC_SCHEMA}" plcc-ng/spec.json
 }
 
-@test "plcc-make produces build/model.json" {
-    [ -f build/model.json ]
+@test "plcc-make produces plcc-ng/model.json" {
+    [ -f plcc-ng/model.json ]
 }
 
-@test "build/model.json validates against model schema" {
-    check-jsonschema --schemafile "${MODEL_SCHEMA}" build/model.json
+@test "plcc-ng/model.json validates against model schema" {
+    check-jsonschema --schemafile "${MODEL_SCHEMA}" plcc-ng/model.json
 }
 
-@test "plcc-make produces build/ll1.json" {
-    [ -f build/ll1.json ]
+@test "plcc-make produces plcc-ng/ll1.json" {
+    [ -f plcc-ng/ll1.json ]
 }
 
 @test "plcc-make updates spec.json and .spec-hash when spec changes" {
-    first_hash=$(cat build/.spec-hash)
+    first_hash=$(cat plcc-ng/.spec-hash)
     cp "${FIXTURES}/trivial-python.plcc" "${WORK_DIR}/spec2.plcc"
     run plcc-make --spec="${WORK_DIR}/spec2.plcc"
     [ "$status" -eq 0 ]
-    second_hash=$(cat build/.spec-hash)
+    second_hash=$(cat plcc-ng/.spec-hash)
     [ "$first_hash" != "$second_hash" ]
 }
 
@@ -67,8 +67,8 @@ teardown() {
     (
         cd "${FULL_DIR}"
         plcc-make --spec="${FIXTURES}/trivial-full.plcc"
-        [ -f build/ll1.json ]
-        [ -d build/Python ]
+        [ -f plcc-ng/ll1.json ]
+        [ -d plcc-ng/Python ]
     )
     rm -rf "${FULL_DIR}"
 }

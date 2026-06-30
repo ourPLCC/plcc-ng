@@ -6,10 +6,10 @@ setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     WORK_DIR="$(mktemp -d)"
     cd "${WORK_DIR}"
-    mkdir -p build
-    plcc-spec "${FIXTURES}/arith.plcc" > build/spec.json
-    plcc-ll1 < build/spec.json > build/ll1.json
-    plcc-model build/spec.json | plcc-python-emit --output=build/Python
+    mkdir -p plcc-ng
+    plcc-spec "${FIXTURES}/arith.plcc" > plcc-ng/spec.json
+    plcc-ll1 < plcc-ng/spec.json > plcc-ng/ll1.json
+    plcc-model plcc-ng/spec.json | plcc-python-emit --output=plcc-ng/Python
 }
 
 teardown() {
@@ -20,10 +20,10 @@ teardown() {
     command -v plcc-rep
 }
 
-@test "build/Python/ is set up correctly" {
-    [ -d build/Python ]
-    [ -f build/Python/main.py ]
-    [ -f build/Python/Program.py ]
+@test "plcc-ng/Python/ is set up correctly" {
+    [ -d plcc-ng/Python ]
+    [ -f plcc-ng/Python/main.py ]
+    [ -f plcc-ng/Python/Program.py ]
 }
 
 @test "plcc-rep evaluates 1+2 to 3 in batch mode" {
@@ -69,18 +69,18 @@ teardown() {
 
 @test "standalone invocation: plcc-tokens | plcc-trees | python main.py" {
     echo '1 + 2' \
-    | plcc-tokens build/spec.json \
-    | plcc-trees --ll1=build/ll1.json \
-    | python3 -u build/Python/main.py \
+    | plcc-tokens plcc-ng/spec.json \
+    | plcc-trees --ll1=plcc-ng/ll1.json \
+    | python3 -u plcc-ng/Python/main.py \
     | python3 -c "import json,sys; recs=[json.loads(l) for l in sys.stdin if l.strip()]; r=next(x for x in recs if x.get('kind')=='result'); assert r['value']=='3', r"
 }
 
 setup_arbno_build() {
     ARBNO_DIR="$(mktemp -d)"
-    mkdir -p "${ARBNO_DIR}/build"
-    plcc-spec "${FIXTURES}/trivial-arbno.plcc" > "${ARBNO_DIR}/build/spec.json"
-    plcc-ll1 < "${ARBNO_DIR}/build/spec.json" > "${ARBNO_DIR}/build/ll1.json"
-    plcc-model "${ARBNO_DIR}/build/spec.json" | plcc-python-emit --output="${ARBNO_DIR}/build/Python"
+    mkdir -p "${ARBNO_DIR}/plcc-ng"
+    plcc-spec "${FIXTURES}/trivial-arbno.plcc" > "${ARBNO_DIR}/plcc-ng/spec.json"
+    plcc-ll1 < "${ARBNO_DIR}/plcc-ng/spec.json" > "${ARBNO_DIR}/plcc-ng/ll1.json"
+    plcc-model "${ARBNO_DIR}/plcc-ng/spec.json" | plcc-python-emit --output="${ARBNO_DIR}/plcc-ng/Python"
     cd "${ARBNO_DIR}"
 }
 
