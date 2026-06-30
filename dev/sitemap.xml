@@ -53,6 +53,14 @@
          <lastmod>2026-06-30</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-syntax-plantuml-emit/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-syntax/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram/</loc>
          <lastmod>2026-06-30</lastmod>
     </url>
@@ -385,6 +393,10 @@
          <lastmod>2026-06-30</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-30-126-diagram-syntax-command-page/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
          <lastmod>2026-06-30</lastmod>
     </url>
@@ -530,6 +542,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-29-help-output-vs-diagnostics-design/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-30-126-diagram-syntax-command-page-design/</loc>
          <lastmod>2026-06-30</lastmod>
     </url>
 </urlset>
