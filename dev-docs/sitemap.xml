@@ -37,7 +37,23 @@
          <lastmod>2026-06-30</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/125-rename-build-dir-to-plcc-ng/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/126-docs-diagram-syntax-command-page/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/127-docs-rep-protocol-language-error/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/128-docs-help-options-output-diagnostics/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/129-docs-parser-eof-message-example/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/130-release-sop/</loc>
          <lastmod>2026-06-30</lastmod>
     </url>
     <url>
@@ -526,6 +542,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/124-drop-mermaid-support/</loc>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/125-rename-build-dir-to-plcc-ng/</loc>
          <lastmod>2026-06-30</lastmod>
     </url>
     <url>
