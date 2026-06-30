@@ -115,6 +115,26 @@ The return value is converted to a string and printed by `plcc-rep`. Return `Non
 
 The default `_Start._run()` prints `str(self)`. Override it to replace the default behavior.
 
+## `LanguageError`
+
+Raise `LanguageError` to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. `plcc-rep` prints the message and gives a fresh prompt; the session continues.
+
+`LanguageError` is available in all generated classes without any import:
+
+```python
+def eval(self):
+    raise LanguageError("type mismatch: expected int")
+```
+
+Subclass it to create named error types:
+
+```python
+class TypeError(LanguageError): pass
+raise TypeError("expected int")
+```
+
+Any other exception (not `LanguageError` or a subclass) is treated as a specification error — `plcc-rep` prints the error and exits.
+
 ## Referencing other generated classes
 
 Generated `.py` files are separate modules. To use a sibling class, import it with an `import` fragment:
