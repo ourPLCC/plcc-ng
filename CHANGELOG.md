@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.62.1 (2026-06-30)
+
+### Bug Fixes
+
+- Update release smoke test to check plcc-ng/ instead of build/
+  ([`5727f22`](https://github.com/ourPLCC/plcc-ng/commit/5727f22ce7629afb05a6a5e55c37f69f767fa44a))
+
+
 ## v0.62.0 (2026-06-30)
 
 ### Bug Fixes
