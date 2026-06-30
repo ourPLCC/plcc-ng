@@ -129,6 +129,27 @@ The return value is converted to a string and printed by `plcc-rep`. Return `und
 
 The default `_Start._run()` prints `String(this)` to stdout. Override it to replace the default behavior entirely.
 
+## `LanguageError`
+
+Throw `LanguageError` to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. `plcc-rep` prints the message and gives a fresh prompt; the session continues.
+
+`LanguageError` is available in all generated classes without any import:
+
+```javascript
+eval() {
+    throw new LanguageError("type mismatch: expected int");
+}
+```
+
+Subclass it to create named error types:
+
+```javascript
+class TypeError extends LanguageError {}
+throw new TypeError("expected int");
+```
+
+Any other exception (not `LanguageError` or a subclass) is treated as a specification error — `plcc-rep` prints the error and exits.
+
 ## Referencing other generated classes
 
 Generated files use CommonJS modules. To use a sibling generated class from semantic code, require it with an `import` fragment:
