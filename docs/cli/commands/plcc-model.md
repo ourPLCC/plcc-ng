@@ -26,5 +26,5 @@ plcc-model [-v ...] [options] [SPEC_JSON]
 plcc-spec spec.plcc | plcc-model
 
 # From a saved spec JSON
-plcc-model build/spec.json
+plcc-model plcc-ng/spec.json
 ```

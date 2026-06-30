@@ -28,6 +28,6 @@ plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
 plcc-spec spec.plcc | plcc-tokens - samples/
 
 # Save spec JSON first, then tokenize
-plcc-spec spec.plcc > build/spec.json
-plcc-tokens build/spec.json samples/
+plcc-spec spec.plcc > plcc-ng/spec.json
+plcc-tokens plcc-ng/spec.json samples/
 ```

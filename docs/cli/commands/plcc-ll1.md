@@ -25,5 +25,5 @@ plcc-ll1 [-v ...] [options]
 plcc-spec spec.plcc | plcc-ll1
 
 # Save to file for use with plcc-trees
-plcc-spec spec.plcc | plcc-ll1 > build/ll1.json
+plcc-spec spec.plcc | plcc-ll1 > plcc-ng/ll1.json
 ```

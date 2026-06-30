@@ -3,6 +3,11 @@
 
 ## v0.61.0 (2026-06-29)
 
+### Breaking Changes
+
+- The output directory has been renamed from `build/` to `plcc-ng/`. Update any
+  `.gitignore` entries, scripts, or tooling that reference the old path.
+
 ### Documentation
 
 - Add design spec for issue #123 rename syntactic to syntax [skip ci]
