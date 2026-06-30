@@ -6,12 +6,6 @@
 
 ### Docs
 
-- **[#126](issues/126-docs-diagram-syntax-command-page.md) — Add command reference page for `plcc-diagram-syntax`**
-  Issue 123 renamed the command but left no user-facing doc page behind.
-
-- **[#127](issues/127-docs-rep-protocol-language-error.md) — Document `plcc-rep` startup handshake, `specification_error`, and `LanguageError`**
-  The JSONL protocol and per-language `LanguageError` mechanism are undocumented.
-
 - **[#128](issues/128-docs-help-options-output-diagnostics.md) — Update command reference pages for Options/Output/Diagnostics help restructuring**
   Issue 115 reorganized `--help` output; command reference pages may be stale.
 
@@ -23,5 +17,11 @@
 
 ### Features
 
+- **[#131](issues/131-haskell-language-error-not-accessible-from-user-code.md) — Make `LanguageError` accessible from Haskell user code**
+  `LanguageError` is defined in generated `Main.hs` but unreachable from user semantics modules; needs a dedicated runtime module.
+
+- **[#132](issues/132-language-error-in-scope-by-default.md) — Make `LanguageError` in scope by default in user semantics code**
+  Users must manually import `LanguageError` in each class file; it should be auto-injected by the emitter.
+
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
-  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 126–129, SOP 130).
+  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 128–130, features 131–132).
