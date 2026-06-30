@@ -128,6 +128,14 @@ The function signature must be `_run :: StartModule -> String`. The return value
 
 If you do not define `_run`, the default `_run = show` is injected, which prints the `Show` instance of the root node.
 
+## `LanguageError`
+
+`LanguageError` is the intended mechanism for signaling a deliberate error in the defined language from Haskell semantics code. When thrown, `plcc-rep` prints the message and gives a fresh prompt; the session continues.
+
+`LanguageError` is currently not accessible from user-authored module files — it is defined in the generated `Main.hs`, which user modules cannot import. Support for throwing `LanguageError` from semantics code is tracked in issues 131 and 132.
+
+In the meantime, note that Haskell's built-in `error "message"` throws `ErrorCall`, which is treated as a **specification error** (not a language error) — `plcc-rep` will exit.
+
 ## Referencing other generated modules
 
 Each generated `.hs` file auto-imports only the modules its record fields reference. To use a sibling module that is not auto-imported, add an `import` fragment:

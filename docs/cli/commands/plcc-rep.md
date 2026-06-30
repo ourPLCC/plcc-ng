@@ -39,3 +39,24 @@ so far is a valid prefix.
 
 - Press `^D` at the `>>>` prompt (empty buffer) to exit.
 - Press `^D` at the `...` prompt to force-submit the buffered input and return to `>>>`.
+
+## Startup and errors
+
+When `plcc-rep` starts, it builds your spec and launches an interpreter subprocess. If the interpreter fails to start — for example, because your semantics code has a syntax error that prevents it from loading — you will see:
+
+```text
+Specification error: interpreter failed to start.
+Fix the errors in your specification and re-run.
+```
+
+During a session, `plcc-rep` distinguishes between two categories:
+
+**Language behavior** — the defined language working as designed. `plcc-rep` reports the outcome and gives you a fresh prompt:
+
+- The scanner did not recognize the input (lexical error).
+- The parser found input that does not match any rule (syntax error).
+- Your semantics code raised a `LanguageError` (semantic rejection — e.g., a type error or division by zero your language author chose to handle explicitly).
+
+**Specification errors** — a flaw in the language specification itself. Your semantics code threw an unexpected exception (not a `LanguageError`). `plcc-rep` prints the error type and message, then exits. Fix the problem in your spec and re-run.
+
+See your language's page for how to raise a `LanguageError` from semantics code.

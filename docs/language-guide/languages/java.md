@@ -129,6 +129,34 @@ The default `_Start._run()` prints `String(this)` using `System.out.println`. Ov
 
 Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Exp` in the quick reference example).
 
+## `LanguageError`
+
+Throw `LanguageError` to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. `plcc-rep` prints the message and gives a fresh prompt; the session continues.
+
+`LanguageError` is available in all generated classes without any import:
+
+```java
+public int eval() {
+    throw new LanguageError("type mismatch: expected int");
+}
+```
+
+Subclass it to create named error types:
+
+```java
+public class DivisionByZeroError extends LanguageError {
+    public DivisionByZeroError() { super("division by zero"); }
+}
+```
+
+```java
+public int eval() {
+    throw new DivisionByZeroError();
+}
+```
+
+Any other exception (not `LanguageError` or a subclass) is treated as a specification error — `plcc-rep` prints the error and exits.
+
 ## Referencing other generated classes
 
 All generated `.java` files are compiled together in the same package. You can reference any sibling class by name directly — no import needed.

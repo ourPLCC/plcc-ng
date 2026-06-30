@@ -46,6 +46,14 @@ method that is called when you run a program with `plcc-rep`. The default
 implementation prints a string representation of the parse tree root.
 Override `_run` in your start class to implement your language's semantics.
 
+## Signaling errors from semantics
+
+When your semantics code needs to report a deliberate error — a type mismatch, a precondition violation, or any condition your language treats as an error — raise a `LanguageError`. `plcc-rep` prints the message and gives a fresh prompt; the session continues.
+
+Raising any other exception is treated as a bug in your specification. `plcc-rep` prints a specification error and exits.
+
+Each language provides `LanguageError` as part of its generated runtime. See your language's page for the exact syntax.
+
 ## Hooks
 
 Hooks inject code at specific locations within a generated class file.
