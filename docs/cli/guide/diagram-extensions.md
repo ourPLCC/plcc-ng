@@ -24,3 +24,15 @@ Generates a PlantUML class diagram. Rendering is done via the public
 | [`plcc-diagram-class-plantuml-emit`](../commands/plcc-diagram-class-plantuml-emit.md) | Reads model JSON from stdin; writes a `.puml` PlantUML source file |
 | `plcc-diagram-plantuml-build` | Sends `.puml` to plantuml.com and writes the returned PNG |
 | `plcc-diagram-plantuml-run` | Prints the path to the rendered PNG |
+
+## plcc-syntax-diagram
+
+Generates a PlantUML EBNF diagram showing the syntactic grammar rules from a
+PLCC spec file. Rendering is done via the public `plantuml.com` API — no local
+PlantUML installation required.
+
+| Command | What it does |
+| --- | --- |
+| [`plcc-diagram-syntax-plantuml-emit`](../commands/plcc-diagram-syntax-plantuml-emit.md) | Reads spec JSON from stdin; writes a `.puml` PlantUML EBNF source file |
+| `plcc-diagram-plantuml-build` | Sends `.puml` to plantuml.com and writes the returned PNG |
+| `plcc-diagram-plantuml-run` | Prints the path to the rendered PNG |

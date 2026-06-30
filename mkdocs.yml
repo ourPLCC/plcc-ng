@@ -59,9 +59,13 @@ nav:
     - All Commands:
       - plcc-diagram: cli/commands/plcc-diagram.md
       - plcc-diagram-build: cli/commands/plcc-diagram-build.md
+      - plcc-diagram-class: cli/commands/plcc-diagram-class.md
+      - plcc-diagram-class-plantuml-emit: cli/commands/plcc-diagram-class-plantuml-emit.md
       - plcc-diagram-emit: cli/commands/plcc-diagram-emit.md
       - plcc-diagram-list: cli/commands/plcc-diagram-list.md
       - plcc-diagram-run: cli/commands/plcc-diagram-run.md
+      - plcc-diagram-syntax: cli/commands/plcc-diagram-syntax.md
+      - plcc-diagram-syntax-plantuml-emit: cli/commands/plcc-diagram-syntax-plantuml-emit.md
       - plcc-haskell-build: cli/commands/plcc-haskell-build.md
       - plcc-haskell-emit: cli/commands/plcc-haskell-emit.md
       - plcc-haskell-run: cli/commands/plcc-haskell-run.md
