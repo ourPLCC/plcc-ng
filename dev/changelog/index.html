@@ -2444,6 +2444,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3517,6 +3528,11 @@
 <!-- markdownlint-disable-file MD041 -->
 <h1 id="changelog">CHANGELOG</h1>
 <h2 id="v0610-2026-06-29">v0.61.0 (2026-06-29)</h2>
+<h3 id="breaking-changes">Breaking Changes</h3>
+<ul>
+<li>The output directory has been renamed from <code>build/</code> to <code>plcc-ng/</code>. Update any
+  <code>.gitignore</code> entries, scripts, or tooling that reference the old path.</li>
+</ul>
 <h3 id="documentation">Documentation</h3>
 <ul>
 <li>Add design spec for issue #123 rename syntactic to syntax [skip ci]
@@ -11422,7 +11438,7 @@
 <li>Updates for next release
   (<a href="https://github.com/ourPLCC/plcc-ng/commit/1d29683f0d1bae4e2d490db35e6998a0a4015f7b"><code>1d29683</code></a>)</li>
 </ul>
-<h2 id="breaking-changes">Breaking changes:</h2>
+<h2 id="breaking-changes_1">Breaking changes:</h2>
 <ul>
 <li>
 <p>The standalone parser is now called 'Parse' instead of 'Parser'. If the parse is successful, it

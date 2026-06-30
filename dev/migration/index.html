@@ -2862,9 +2862,9 @@ unchanged — paths are resolved relative to the file that contains the <code>%i
 <p><strong>JSON parse trees:</strong></p>
 <p>PLCC's <code>--json_ast</code> flag (passed to <code>plccmk</code> and <code>parse</code>) is not available in PLCC-ng.
 To obtain a JSON parse tree, use the lower-level pipeline:</p>
-<div class="highlight"><pre><span></span><code>plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span>&gt;<span class="w"> </span>build/spec.json
-plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>build/ll1.json
-plcc-tokens<span class="w"> </span>build/spec.json<span class="w"> </span>samples/<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span>build/ll1.json
+<div class="highlight"><pre><span></span><code>plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span>&gt;<span class="w"> </span>plcc-ng/spec.json
+plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span>plcc-ng/ll1.json
+plcc-tokens<span class="w"> </span>plcc-ng/spec.json<span class="w"> </span>samples/<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span>plcc-ng/ll1.json
 </code></pre></div>
 <p>See <a href="../cli/commands/plcc-trees/"><code>plcc-trees</code></a> for details.</p>
 <h2 id="features-not-yet-in-plcc-ng">Features not yet in PLCC-ng</h2>

@@ -2,526 +2,534 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/acknowledgments/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/changelog/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/installation/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/migration/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/quick-start/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-build/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-class-plantuml-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-class/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-list/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-run/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-build/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-run/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-build/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-run/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-javascript-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-javascript-run/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-build/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-list/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-run/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-ll1/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-make/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-model/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-parse/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-parser-list/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-parser-table/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-python-emit/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-python-run/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-rep/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-scan/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-spec/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-tokens/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-trees/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-version/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/author-commands/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/diagram-extensions/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/language-extensions/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/parser-extensions/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/under-the-hood/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/adopting/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/instructor-guide/evaluating/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/examples/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/lexical/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/semantic/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/syntactic/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/haskell/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/java/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/javascript/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/python/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-15-084-banner-opt-in/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-15-085-keyboard-interrupt/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-15-token-str-repr/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-089-grammar-cli-refactor/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-089-grammar-to-spec-phases-1-2/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-089-grammar-to-spec-phases-3-4/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-16-lexical-keyword-required/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-093-incremental-parsing-repl/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-094-docs-follow-up/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-17-095-semantic-section-redesign/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-18-096-hoist-test-setup/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-18-097-test-output-cache/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-19-098-rep-ctrl-d-non-empty-line/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-19-dark-mode/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-21-100-docs-cli-restructure/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-066-javascript-emitter/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-071-072-102-installation-migration/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-080-tabbed-code-blocks/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-081-remove-plcc-make-from-examples/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-22-101-acknowledgments-page/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-23-haskell-emitter/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-23-haskell-fragment-validation/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-106-javascript-docs/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-107-haskell-docs/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-111-mermaid-build-kroki/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-e2e-haskell-roundtrip-ci-performance/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-24-plantuml-inheritance-direction/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-25-113-phase1-diagram-type-discoverer/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-25-113-phase2-rename-restructure/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-25-116-docopts-error-messages/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-25-117-scan-trace-output-readability/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-25-syntactic-ebnf-diagram/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-26-ctrl-c-continuation-mode/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-26-spec-validation-pipeline/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-27-rep-error-taxonomy/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-28-123-rename-syntactic-to-syntax/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-29-124-drop-mermaid-support/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-29-125-rename-build-dir-to-plcc-ng/</loc>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-06-29-help-output-vs-diagnostics/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-085-keyboard-interrupt-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-token-str-repr-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-cli-refactor-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-to-spec-phases-1-2-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-089-grammar-to-spec-phases-3-4-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-16-lexical-keyword-required-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-093-incremental-parsing-repl-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-094-docs-follow-up-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-17-095-semantic-section-redesign-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-18-096-hoist-test-setup-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-18-097-test-output-cache-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-19-098-rep-ctrl-d-non-empty-line-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-19-dark-mode-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-21-100-docs-cli-command-classification-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-066-javascript-emitter-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-071-072-102-installation-migration-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-080-tabbed-code-blocks-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-081-remove-plcc-make-from-examples-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-22-101-acknowledgments-page-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-23-haskell-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-23-haskell-fragment-validation-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-106-javascript-docs-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-107-haskell-docs-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-111-mermaid-build-kroki-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-e2e-haskell-roundtrip-ci-performance-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-24-plantuml-inheritance-direction-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-25-113-rename-diagram-commands-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-25-116-docopts-error-messages-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-25-117-scan-trace-output-readability-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-25-syntactic-ebnf-diagram-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-26-ctrl-c-continuation-mode-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-26-spec-validation-pipeline-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-27-rep-error-taxonomy-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-28-123-rename-syntactic-to-syntax-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-29-125-rename-build-dir-design/</loc>
+         <lastmod>2026-06-30</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-29-help-output-vs-diagnostics-design/</loc>
-         <lastmod>2026-06-29</lastmod>
+         <lastmod>2026-06-30</lastmod>
     </url>
 </urlset>
