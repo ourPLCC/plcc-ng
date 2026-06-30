@@ -27,7 +27,7 @@ plcc-haskell-emit --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-haskell-emit --output=build/Haskell
+plcc-spec spec.plcc | plcc-model | plcc-haskell-emit --output=plcc-ng/Haskell
 ```
 
 See the [Haskell language guide](../../language-guide/languages/haskell.md) for

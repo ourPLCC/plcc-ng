@@ -114,7 +114,7 @@ author-facing command calls it before doing its own work.
 
 | Command | Input → Output |
 | --- | --- |
-| [`plcc-make`](../commands/plcc-make.md) | `.plcc` spec file → build artifacts in `build/` |
+| [`plcc-make`](../commands/plcc-make.md) | `.plcc` spec file → build artifacts in `plcc-ng/` |
 | [`plcc-spec`](../commands/plcc-spec.md) | `.plcc` file → spec JSON |
 | [`plcc-ll1`](../commands/plcc-ll1.md) | spec JSON → LL(1) analysis JSON |
 | [`plcc-tokens`](../commands/plcc-tokens.md) | spec JSON + source files → token JSONL |

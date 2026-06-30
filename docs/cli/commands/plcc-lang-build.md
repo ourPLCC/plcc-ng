@@ -23,5 +23,5 @@ plcc-lang-build [-v ...] --target=LANG --output=DIR
 ## Examples
 
 ```bash
-plcc-lang-build --target=Java --output=build/Java
+plcc-lang-build --target=Java --output=plcc-ng/Java
 ```

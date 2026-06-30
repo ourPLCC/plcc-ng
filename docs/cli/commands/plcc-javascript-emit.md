@@ -25,5 +25,5 @@ plcc-javascript-emit --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-javascript-emit --output=build/javascript
+plcc-spec spec.plcc | plcc-model | plcc-javascript-emit --output=plcc-ng/javascript
 ```

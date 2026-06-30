@@ -23,5 +23,5 @@ plcc-python-emit --output=DIR [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-spec spec.plcc | plcc-model | plcc-python-emit --output=build/Python
+plcc-spec spec.plcc | plcc-model | plcc-python-emit --output=plcc-ng/Python
 ```

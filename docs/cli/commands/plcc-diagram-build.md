@@ -26,5 +26,5 @@ plcc-diagram-build --input=FILE --output=FILE [-v ...] [options]
 ## Examples
 
 ```bash
-plcc-diagram-build --format=plantuml --input=build/diagram/diagram.puml --output=build/diagram/diagram.png
+plcc-diagram-build --format=plantuml --input=plcc-ng/diagram/diagram.puml --output=plcc-ng/diagram/diagram.png
 ```
