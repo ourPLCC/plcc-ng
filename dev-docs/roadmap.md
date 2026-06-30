@@ -1,6 +1,6 @@
 # Roadmap
 
-5 open issues as of 2026-06-30.
+6 open issues as of 2026-06-30.
 
 ## Open Issues
 
@@ -18,7 +18,10 @@
 - **[#129](issues/129-docs-parser-eof-message-example.md) — Update docs for "end of file" parser error message change**
   Example error output in docs may still show the old `eof` wording.
 
+- **[#130](issues/130-release-sop.md) — Write the release SOP**
+  `dev-docs/release-sop.md` is empty; needed before v1.0.
+
 ### Features
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
-  Define v1.0 criteria, decide emitter support tiers, and write the release SOP.
+  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 126–129, SOP 130).

@@ -18,6 +18,6 @@ A v1.0 release signals stability to users: the CLI interface and spec syntax are
   - End-user documentation covers the full workflow (install, quickstart, language guide, CLI reference)
   - Release SOP (`dev-docs/release-sop.md`) is complete and tested
   - CI is green and the test suite covers the happy path end-to-end for at least Python and Java
-- Decide which emitters are "v1 supported" vs "experimental" — Haskell and JavaScript may warrant an experimental label if they are not yet fully tested
+- All four emitters (Python, Java, Haskell, JavaScript) are v1 supported — no experimental tier
 - Write up the v1.0 milestone in the roadmap once criteria are agreed
 - The release SOP (`dev-docs/release-sop.md`) currently has no content — that needs to be written as part of this effort
