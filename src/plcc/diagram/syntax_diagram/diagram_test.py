@@ -102,5 +102,5 @@ def test_build_uses_syntax_paths(tmp_path, monkeypatch):
         run_main([])
 
     build_call = calls[2]
-    assert '--input=build/diagram/syntax.puml' in build_call
-    assert '--output=build/diagram/syntax.png' in build_call
+    assert '--input=plcc-ng/diagram/syntax.puml' in build_call
+    assert '--output=plcc-ng/diagram/syntax.png' in build_call

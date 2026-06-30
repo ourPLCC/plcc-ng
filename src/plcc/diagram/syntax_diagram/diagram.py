@@ -8,6 +8,7 @@ from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
 from plcc.version import get_version
+from plcc.build import OUTPUT_DIR
 from plcc.build.spec import read_spec, resolve_spec_path
 from plcc.cmd.spec import SPEC_OPTION, validate_spec_flag
 from plcc.cmd.output import print_banner
@@ -50,7 +51,7 @@ def main(argv=None):
 
     validate_spec_flag('plcc-diagram-syntax', args)
 
-    spec_path = resolve_spec_path(args['--spec'], read_spec('build'))
+    spec_path = resolve_spec_path(args['--spec'], read_spec(OUTPUT_DIR))
     if not os.path.exists(spec_path):
         print(f"plcc-diagram-syntax: spec file not found: {spec_path}", file=sys.stderr)
         print(file=sys.stderr)
@@ -77,7 +78,7 @@ def main(argv=None):
         print_banner(get_version(), os.path.abspath(spec_path))
 
     source_ext = _SOURCE_EXT.get(fmt, fmt)
-    build_diagram_dir = os.path.join('build', 'diagram')
+    build_diagram_dir = os.path.join(OUTPUT_DIR, 'diagram')
     os.makedirs(build_diagram_dir, exist_ok=True)
     diagram_source = os.path.join(build_diagram_dir, f'syntax.{source_ext}')
     diagram_image = os.path.join(build_diagram_dir, 'syntax.png')
