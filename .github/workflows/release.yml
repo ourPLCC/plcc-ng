@@ -88,7 +88,7 @@ jobs:
           cd "${WORK}"
           export PATH="/tmp/smoke-venv/bin:${PATH}"
           plcc-make --spec="${SPEC}"
-          test -f build/spec.json || { echo "FAIL: build/spec.json missing"; exit 1; }
+          test -f plcc-ng/spec.json || { echo "FAIL: plcc-ng/spec.json missing"; exit 1; }
           echo "TestPyPI smoke test passed"
 
       - name: Publish to PyPI
