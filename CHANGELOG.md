@@ -1,12 +1,71 @@
 # CHANGELOG
 
 
+## v0.62.0 (2026-06-30)
+
+### Bug Fixes
+
+- **125**: Update packaging smoke test to check plcc-ng/ instead of build/
+  ([`3b3dc34`](https://github.com/ourPLCC/plcc-ng/commit/3b3dc340b1691dc62d69cab4fe2f87843903868e))
+
+### Chores
+
+- Trigger CI pipeline
+  ([`eda003f`](https://github.com/ourPLCC/plcc-ng/commit/eda003fd1351dbe1bed5363259f8026576faa7a9))
+
+### Documentation
+
+- **125**: Add design spec for rename build/ to plcc-ng/ [skip ci]
+  ([`7603b51`](https://github.com/ourPLCC/plcc-ng/commit/7603b512e648998b66ac3dab8ff9b80a7ca6c138))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **125**: Add implementation plan for rename build/ to plcc-ng/ [skip ci]
+  ([`5547e4b`](https://github.com/ourPLCC/plcc-ng/commit/5547e4b101a750fce8f7df8cc82ee6c297d50e8c))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **125**: Fix missed build/ references in low-level command docs [skip ci]
+  ([`86d4873`](https://github.com/ourPLCC/plcc-ng/commit/86d4873bf292171e10ff997403c46eb7fad856b2))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **125**: Rename build/ to plcc-ng/ in user-facing docs and CHANGELOG [skip ci]
+  ([`d02990d`](https://github.com/ourPLCC/plcc-ng/commit/d02990dd6fdabbdb3c379011aed49f6a96a04060))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add scope analysis to issue 125 rename build/ to plcc-ng/ [skip ci]
+  ([`d392519`](https://github.com/ourPLCC/plcc-ng/commit/d3925194581d51149b73221015d86b98115cadc4))
+
+- **issues**: Close issue 115 (help Output vs Diagnostics), update roadmap [skip ci]
+  ([`af8c9dc`](https://github.com/ourPLCC/plcc-ng/commit/af8c9dcbf9f82dac4193149f4a1d049ec5288ce8))
+
+### Features
+
+- **125**: Add OUTPUT_DIR constant to plcc.build
+  ([`16b1309`](https://github.com/ourPLCC/plcc-ng/commit/16b13097cebd9448592e193e4f39c90f277262bb))
+
+- **125**: Update diagram commands to write to plcc-ng/
+  ([`5bedf64`](https://github.com/ourPLCC/plcc-ng/commit/5bedf641aedfd71fcec6043e56627594cce6dadf))
+
+- **125**: Update plcc-make to write output to plcc-ng/
+  ([`86dc5f4`](https://github.com/ourPLCC/plcc-ng/commit/86dc5f4e450d2433ef549168fb937809a3f6019b))
+
+- **125**: Update plcc-scan, plcc-parse, plcc-rep to read from plcc-ng/
+  ([`de879ff`](https://github.com/ourPLCC/plcc-ng/commit/de879ff7b808690e4460917f10efbac4c1815d57))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Testing
+
+- **125**: Update bats tests to expect plcc-ng/ output directory
+  ([`40e17a5`](https://github.com/ourPLCC/plcc-ng/commit/40e17a5f23b23be0753beaf392586cc1347daa25))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+
 ## v0.61.0 (2026-06-29)
-
-### Breaking Changes
-
-- The output directory has been renamed from `build/` to `plcc-ng/`. Update any
-  `.gitignore` entries, scripts, or tooling that reference the old path.
 
 ### Documentation
 
