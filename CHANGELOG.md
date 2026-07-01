@@ -1,6 +1,123 @@
 # CHANGELOG
 
 
+## v0.63.0 (2026-07-01)
+
+### Continuous Integration
+
+- Trigger CI for issue 132
+  ([`2aee4e5`](https://github.com/ourPLCC/plcc-ng/commit/2aee4e5632d8e126561a8511bc16c4c15abd2039))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Documentation
+
+- **cli**: Add command pages for plcc-diagram-syntax and emitter (issue 126) [skip ci]
+  ([`7f41270`](https://github.com/ourPLCC/plcc-ng/commit/7f41270d62cc1f3102b9c796157f4cd0c7ba00a4))
+
+- **guide**: Document plcc-syntax-diagram type in diagram-extensions (issue 126) [skip ci]
+  ([`b97a278`](https://github.com/ourPLCC/plcc-ng/commit/b97a278d8b4a41dad5533d7e3f6c1015b3c61742))
+
+- **issues**: Add issues 126-129 for docs gaps since Haskell docs effort [skip ci]
+  ([`4d0bba1`](https://github.com/ourPLCC/plcc-ng/commit/4d0bba14c95dd8038ff803ca4a1d390619f973f6))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issues 126-129 to roadmap [skip ci]
+  ([`eb300f1`](https://github.com/ourPLCC/plcc-ng/commit/eb300f127f84667398570369d9ed279b08288769))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Add issues 131 and 132 for LanguageError accessibility gaps [skip ci]
+  ([`f056a60`](https://github.com/ourPLCC/plcc-ng/commit/f056a60a5495d98448ec5ced34c684c250735ac1))
+
+- **issues**: Close 126 and 127, add 131 and 132 to roadmap [skip ci]
+  ([`db512ea`](https://github.com/ourPLCC/plcc-ng/commit/db512ea2032a04d06dfb5de1cde5bd64cca550df))
+
+Issues 126 (plcc-diagram-syntax command page) and 127 (plcc-rep protocol and LanguageError docs)
+  were completed in PRs #268 and #269. Move them to done/. Add open issues 131 and 132
+  (LanguageError accessibility) to the roadmap. Update issue 112's description to reference the
+  current open set.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Close issue 125 (rename build dir to plcc-ng) [skip ci]
+  ([`a68861f`](https://github.com/ourPLCC/plcc-ng/commit/a68861f271f575562a36141973b455cfc69404fc))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **issues**: Include all emitters in v1.0, add issue 130 (release SOP) [skip ci]
+  ([`00cb7bc`](https://github.com/ourPLCC/plcc-ng/commit/00cb7bc6730b41efe52372d92a9cdead60c85575))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **nav**: Add plcc-diagram-class and plcc-diagram-syntax entries to mkdocs.yml (issue 126) [skip
+  ci]
+  ([`83ffbae`](https://github.com/ourPLCC/plcc-ng/commit/83ffbae573c8e4198ac9a25a1a9ce54d14d564bc))
+
+- **plans**: Add implementation plan for issue 126 diagram-syntax pages [skip ci]
+  ([`504e656`](https://github.com/ourPLCC/plcc-ng/commit/504e656dabaee434bba08fec8c19da6e078fc6e7))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Add implementation plan for issue 132 - LanguageError in scope by default [skip ci]
+  ([`e562d84`](https://github.com/ourPLCC/plcc-ng/commit/e562d843515f3d3c673dda53f748ae3c61b63a17))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **plans**: Mark all plan steps complete for issue 132 [skip ci]
+  ([`d1a3d70`](https://github.com/ourPLCC/plcc-ng/commit/d1a3d7038d4b998abd1ff7e2914bbb4f668f8e0f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **rep**: Add LanguageError overview to semantic section guide
+  ([`996d8fd`](https://github.com/ourPLCC/plcc-ng/commit/996d8fd3e5b59e33e60d27407594a7bc6c2f97d7))
+
+- **rep**: Document LanguageError for Java
+  ([`50cb66a`](https://github.com/ourPLCC/plcc-ng/commit/50cb66add692ee8218b116f63c4d2485188c85e3))
+
+- **rep**: Document LanguageError for JavaScript
+  ([`ebc1a4b`](https://github.com/ourPLCC/plcc-ng/commit/ebc1a4b747dc0cfa7556d98bf2908496a2205f10))
+
+- **rep**: Document LanguageError for Python
+  ([`d88b112`](https://github.com/ourPLCC/plcc-ng/commit/d88b112763c3c474d8e0505bd85c71dcbd7ffd31))
+
+- **rep**: Document LanguageError limitation for Haskell
+  ([`bbf88e1`](https://github.com/ourPLCC/plcc-ng/commit/bbf88e112e16f9918c2ddc7d11da9955fb74f8e0))
+
+- **rep**: Document startup handshake and error taxonomy
+  ([`76ac1f9`](https://github.com/ourPLCC/plcc-ng/commit/76ac1f90e6d6971a5b4355e4b64e387c0dc8f0b6))
+
+- **rep**: Fix Java subclass example syntax, rename TypeError example, normalize capitalization
+  ([`53830fc`](https://github.com/ourPLCC/plcc-ng/commit/53830fc349876413842ce10b2421e33263a217a9))
+
+- **specs**: Add design spec and implementation plan for issue 127 [skip ci]
+  ([`ad2b009`](https://github.com/ourPLCC/plcc-ng/commit/ad2b009f84a8e5885cfdb1eda5c64c49fdbf7e5d))
+
+- **specs**: Add design spec for issue 132 - LanguageError in scope by default [skip ci]
+  ([`a7d24a3`](https://github.com/ourPLCC/plcc-ng/commit/a7d24a3175508f20d49d8c1a61775183e1619f61))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **specs**: Design for issue 126 diagram-syntax command pages [skip ci]
+  ([`eed4d32`](https://github.com/ourPLCC/plcc-ng/commit/eed4d32281b68174fcc854840f83d8817946b66e))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+### Features
+
+- **java-emit**: Auto-inject LanguageError import into generated class files
+  ([`de87078`](https://github.com/ourPLCC/plcc-ng/commit/de87078c054cdc74bc919b1e1ef4ad8ac49d18b3))
+
+- **javascript-emit**: Auto-inject LanguageError import into generated class files
+  ([`3bc701b`](https://github.com/ourPLCC/plcc-ng/commit/3bc701b16160a2d17f29e6bcf62550c68c28c15f))
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
+- **python-emit**: Auto-inject LanguageError import into generated class files
+  ([`ef0e773`](https://github.com/ourPLCC/plcc-ng/commit/ef0e77330273b304c47af572cb9f23481b4eae22))
+
+
 ## v0.62.1 (2026-06-30)
 
 ### Bug Fixes
