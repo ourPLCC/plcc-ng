@@ -121,6 +121,13 @@ def test_emit_copies_runtime_directory(tmp_path, monkeypatch):
     assert not (tmp_path / 'runtime' / 'base_test.py').exists()
 
 
+def test_emit_class_file_imports_language_error(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    program_js = (tmp_path / 'Program.js').read_text()
+    assert "{ Node, Token, LanguageError } = require('./runtime/base')" in program_js
+
+
 def test_concrete_class_has_rule_name_and_fields(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
     run_main([f'--output={tmp_path}'])

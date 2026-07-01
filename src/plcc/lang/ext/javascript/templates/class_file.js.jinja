@@ -1,5 +1,5 @@
 {% for frag in top_fragments %}{{ frag.body }}
-{% endfor %}const { Node, Token } = require('./runtime/base');
+{% endfor %}const { Node, Token, LanguageError } = require('./runtime/base');
 {% if cls.extends %}const { {{ cls.extends }} } = require('./{{ cls.extends }}');
 {% endif %}{% for frag in import_fragments %}{{ frag.body }}
 {% endfor %}
