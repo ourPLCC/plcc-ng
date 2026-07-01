@@ -283,3 +283,10 @@ def test_emit_copies_language_error_java(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
     run_main([f'--output={tmp_path}'])
     assert (tmp_path / 'runtime' / 'LanguageError.java').exists()
+
+
+def test_emit_class_file_imports_language_error(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    program_java = (tmp_path / 'Program.java').read_text()
+    assert 'import runtime.LanguageError;' in program_java

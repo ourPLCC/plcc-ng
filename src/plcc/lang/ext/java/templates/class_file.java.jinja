@@ -3,6 +3,7 @@
 import java.util.List;
 import java.util.Map;
 import runtime.Token;
+import runtime.LanguageError;
 
 public {% if cls.abstract %}abstract {% endif %}class {{ cls.name }}{% if cls.extends %} extends {{ cls.extends }}{% else %} extends runtime.Node{% endif %}{% for frag in class_fragments %} {{ frag.body }}{% endfor %} {
 {% if not cls.abstract %}

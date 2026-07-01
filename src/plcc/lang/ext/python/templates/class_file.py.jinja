@@ -1,6 +1,7 @@
 {% for frag in top_fragments %}{{ frag.body }}
 {% endfor %}
 import runtime.base as _plcc
+from runtime.base import LanguageError
 {% if cls.extends %}from {{ cls.extends }} import {{ cls.extends }}
 {% endif %}
 {% for frag in import_fragments %}{{ frag.body }}

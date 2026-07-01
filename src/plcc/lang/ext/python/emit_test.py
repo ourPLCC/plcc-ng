@@ -136,6 +136,13 @@ def test_emit_class_file_imports_runtime(tmp_path, monkeypatch):
     assert 'import runtime.base as _plcc' in program_py
 
 
+def test_emit_class_file_imports_language_error(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    program_py = (tmp_path / 'Program.py').read_text()
+    assert 'from runtime.base import LanguageError' in program_py
+
+
 def test_emit_subclass_imports_parent(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
     run_main([f'--output={tmp_path}'])
