@@ -27,7 +27,7 @@
 **Interfaces:**
 - Produces: every generated `<ClassName>.py` contains `from runtime.base import LanguageError`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
   Open `src/plcc/lang/ext/python/emit_test.py` and add this test after `test_emit_class_file_imports_runtime`:
 
@@ -39,7 +39,7 @@
       assert 'from runtime.base import LanguageError' in program_py
   ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/python/emit_test.py::test_emit_class_file_imports_language_error
@@ -47,7 +47,7 @@
 
   Expected: FAIL — `AssertionError` (the import line is not yet in the generated file)
 
-- [ ] **Step 3: Add the import line to the template**
+- [x] **Step 3: Add the import line to the template**
 
   Open `src/plcc/lang/ext/python/templates/class_file.py.jinja`. The current lines 3–4 are:
 
@@ -64,7 +64,7 @@
   {% if cls.extends %}from {{ cls.extends }} import {{ cls.extends }}
   ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/python/emit_test.py::test_emit_class_file_imports_language_error
@@ -72,7 +72,7 @@
 
   Expected: PASS
 
-- [ ] **Step 5: Run the full Python emit test suite to check for regressions**
+- [x] **Step 5: Run the full Python emit test suite to check for regressions**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/python/emit_test.py
@@ -80,7 +80,7 @@
 
   Expected: all tests pass
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
   ```bash
   git add src/plcc/lang/ext/python/templates/class_file.py.jinja \
@@ -99,7 +99,7 @@
 **Interfaces:**
 - Produces: every generated `<ClassName>.java` contains `import runtime.LanguageError;`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
   Open `src/plcc/lang/ext/java/emit_test.py` and add this test (after the existing runtime/import tests, around line 116):
 
@@ -111,7 +111,7 @@
       assert 'import runtime.LanguageError;' in program_java
   ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/java/emit_test.py::test_emit_class_file_imports_language_error
@@ -119,7 +119,7 @@
 
   Expected: FAIL — `AssertionError`
 
-- [ ] **Step 3: Add the import line to the template**
+- [x] **Step 3: Add the import line to the template**
 
   Open `src/plcc/lang/ext/java/templates/class_file.java.jinja`. The current lines 3–6 are:
 
@@ -138,7 +138,7 @@
   import runtime.LanguageError;
   ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/java/emit_test.py::test_emit_class_file_imports_language_error
@@ -146,7 +146,7 @@
 
   Expected: PASS
 
-- [ ] **Step 5: Run the full Java emit test suite to check for regressions**
+- [x] **Step 5: Run the full Java emit test suite to check for regressions**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/java/emit_test.py
@@ -154,7 +154,7 @@
 
   Expected: all tests pass
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
   ```bash
   git add src/plcc/lang/ext/java/templates/class_file.java.jinja \
@@ -173,7 +173,7 @@
 **Interfaces:**
 - Produces: every generated `<ClassName>.js` contains `LanguageError` in the `require('./runtime/base')` destructure
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
   Open `src/plcc/lang/ext/javascript/emit_test.py` and add this test (after `test_emit_copies_runtime_directory`, around line 122):
 
@@ -185,7 +185,7 @@
       assert "{ Node, Token, LanguageError } = require('./runtime/base')" in program_js
   ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/javascript/emit_test.py::test_emit_class_file_imports_language_error
@@ -193,7 +193,7 @@
 
   Expected: FAIL — `AssertionError`
 
-- [ ] **Step 3: Update the destructure in the template**
+- [x] **Step 3: Update the destructure in the template**
 
   Open `src/plcc/lang/ext/javascript/templates/class_file.js.jinja`. Line 2 currently reads:
 
@@ -207,7 +207,7 @@
   {% endfor %}const { Node, Token, LanguageError } = require('./runtime/base');
   ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/javascript/emit_test.py::test_emit_class_file_imports_language_error
@@ -215,7 +215,7 @@
 
   Expected: PASS
 
-- [ ] **Step 5: Run the full JavaScript emit test suite to check for regressions**
+- [x] **Step 5: Run the full JavaScript emit test suite to check for regressions**
 
   ```bash
   bin/test/units.bash src/plcc/lang/ext/javascript/emit_test.py
@@ -223,7 +223,7 @@
 
   Expected: all tests pass
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
   ```bash
   git add src/plcc/lang/ext/javascript/templates/class_file.js.jinja \
@@ -235,7 +235,7 @@
 
 ## Task 4: Full test suite verification
 
-- [ ] **Step 1: Run all unit tests**
+- [x] **Step 1: Run all unit tests**
 
   ```bash
   bin/test/units.bash
@@ -243,7 +243,7 @@
 
   Expected: all tests pass (1165+ passed, 0 failed)
 
-- [ ] **Step 2: Run command-level bats tests**
+- [x] **Step 2: Run command-level bats tests**
 
   ```bash
   bin/test/commands.bash
@@ -251,6 +251,6 @@
 
   Expected: all tests pass
 
-- [ ] **Step 3: If both pass, the feature is complete**
+- [x] **Step 3: If both pass, the feature is complete**
 
   No further tasks. Haskell support is tracked in issue 131.
