@@ -1,0 +1,3697 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/0.64/superpowers/plans/2026-06-22-066-javascript-emitter/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>JavaScript Emitter Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#javascript-emitter-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              JavaScript Emitter Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../quick-start/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration from PLCC
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../acknowledgments/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Acknowledgments
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration from PLCC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/haskell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Haskell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acknowledgments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="javascript-emitter-implementation-plan">JavaScript Emitter Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Add a JavaScript (Node.js/CommonJS) language backend to plcc-ng, mirroring the structure of the existing <code>python</code> and <code>java</code> extensions.</p>
+<p><strong>Architecture:</strong> A new extension at <code>src/plcc/lang/ext/javascript/</code> containing a Python emitter (<code>emit.py</code>) that reads model JSON from stdin and writes CommonJS <code>.js</code> files using Jinja2 templates, a runner (<code>run.py</code>) that invokes <code>node main.js</code>, and a runtime library (<code>runtime/</code>) that is copied into the output directory. Tests at every layer: Python pytest tests for the emitter and runner, and pytest+subprocess tests for the JavaScript runtime modules.</p>
+<p><strong>Tech Stack:</strong> Python (emitter/runner/tests), Jinja2 (templates), Node.js/CommonJS (generated code and runtime), pytest + subprocess (runtime testing).</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>All generated JavaScript uses CommonJS (<code>require</code>/<code>module.exports</code>) — no ESM, no <code>package.json</code> in the output dir</li>
+<li>Spec section tag: <code>javascript</code> (case-insensitive match)</li>
+<li>CLI entry points: <code>plcc-javascript-emit</code>, <code>plcc-javascript-run</code> — no <code>plcc-javascript-build</code></li>
+<li>Fragment kinds supported: <code>top</code>, <code>import</code>, <code>init</code>, <code>body</code>, <code>file</code> — no <code>class</code> (JS has no interfaces or multiple inheritance)</li>
+<li>Abstract classes: no <code>_RULE_NAME</code>, <code>_FIELDS</code>, or constructor in generated output</li>
+<li>Start class with no explicit <code>extends</code> gets <code>extends _Start</code>; <code>_Start.js</code> always written to output</li>
+<li>Runtime test files (<code>*_test.py</code>) are excluded when copying the runtime dir</li>
+<li>Entry point method: <code>_run</code></li>
+<li>Follow <code>src/plcc/lang/ext/python/emit_test.py</code> as the testing style reference</li>
+</ul>
+<hr />
+<h2 id="file-map">File Map</h2>
+<p><strong>New files — extension:</strong>
+- <code>src/plcc/lang/ext/javascript/__init__.py</code> — empty package marker
+- <code>src/plcc/lang/ext/javascript/emit.py</code> — reads model JSON, writes <code>.js</code> files via Jinja2
+- <code>src/plcc/lang/ext/javascript/emit_test.py</code> — pytest tests for the emitter
+- <code>src/plcc/lang/ext/javascript/run.py</code> — invokes <code>node main.js</code>
+- <code>src/plcc/lang/ext/javascript/run_test.py</code> — pytest tests for the runner</p>
+<p><strong>New files — templates:</strong>
+- <code>src/plcc/lang/ext/javascript/templates/class_file.js.jinja</code> — per-class file template
+- <code>src/plcc/lang/ext/javascript/templates/main.js.jinja</code> — entry-point template</p>
+<p><strong>New files — runtime (JS):</strong>
+- <code>src/plcc/lang/ext/javascript/runtime/base.js</code> — <code>Node</code> and <code>Token</code> classes
+- <code>src/plcc/lang/ext/javascript/runtime/registry.js</code> — <code>Registry</code> class
+- <code>src/plcc/lang/ext/javascript/runtime/deserialize.js</code> — <code>deserialize</code> function</p>
+<p><strong>New files — runtime tests (Python):</strong>
+- <code>src/plcc/lang/ext/javascript/runtime/base_test.py</code>
+- <code>src/plcc/lang/ext/javascript/runtime/registry_test.py</code>
+- <code>src/plcc/lang/ext/javascript/runtime/deserialize_test.py</code></p>
+<p><strong>Modified files:</strong>
+- <code>pyproject.toml</code> — add two <code>[project.scripts]</code> entries (Task 5)</p>
+<hr />
+<h2 id="task-1-runtime-basejs">Task 1: Runtime base.js</h2>
+<p>Scaffold the extension directory and implement <code>Node</code> and <code>Token</code>.</p>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/lang/ext/javascript/__init__.py</code>
+- Create: <code>src/plcc/lang/ext/javascript/runtime/base.js</code>
+- Create: <code>src/plcc/lang/ext/javascript/runtime/base_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Produces: <code>Node</code> (empty base class), <code>Token(kind, lexeme)</code> with <code>.toString()</code> returning lexeme — both exported via <code>module.exports = { Node, Token }</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create the extension package</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>src/plcc/lang/ext/javascript/runtime
+mkdir<span class="w"> </span>-p<span class="w"> </span>src/plcc/lang/ext/javascript/templates
+touch<span class="w"> </span>src/plcc/lang/ext/javascript/__init__.py
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Write the failing tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/runtime/base_test.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">RUNTIME_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_node</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">cwd</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">RUNTIME_DIR</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_node_is_a_class</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;const { Node } = require(&#39;./base&#39;); console.log(new Node() instanceof Node);&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_token_stores_kind_and_lexeme</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;const { Token } = require(&#39;./base&#39;); const t = new Token(&#39;NUM&#39;, &#39;42&#39;); console.log(t.kind, t.lexeme);&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;NUM 42&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_token_tostring_returns_lexeme</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;const { Token } = require(&#39;./base&#39;); const t = new Token(&#39;NUM&#39;, &#39;42&#39;); console.log(String(t));&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;42&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_token_is_not_a_node</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;const { Node, Token } = require(&#39;./base&#39;); console.log(new Token(&#39;X&#39;, &#39;x&#39;) instanceof Node);&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;false&#39;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Run tests to verify they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/base_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 4 failures mentioning <code>Cannot find module './base'</code></p>
+<ul>
+<li>[ ] <strong>Step 4: Implement base.js</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/runtime/base.js</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">Node</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nx">Token</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">kind</span><span class="p">,</span><span class="w"> </span><span class="nx">lexeme</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">kind</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">lexeme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">lexeme</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">toString</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">lexeme</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Node</span><span class="p">,</span><span class="w"> </span><span class="nx">Token</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/base_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 4 passed</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/javascript/
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(javascript): scaffold extension and add runtime base.js&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-2-runtime-registryjs">Task 2: Runtime registry.js</h2>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/lang/ext/javascript/runtime/registry.js</code>
+- Create: <code>src/plcc/lang/ext/javascript/runtime/registry_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: nothing from earlier tasks
+- Produces: <code>Registry</code> class — <code>register(...classes)</code> reads <code>cls._RULE_NAME</code> and <code>cls._FIELDS</code>; <code>lookup(ruleName, fieldNames)</code> returns the matching class or throws; exported via <code>module.exports = { Registry }</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/runtime/registry_test.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">RUNTIME_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_node</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">cwd</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">RUNTIME_DIR</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_register_and_lookup_by_rule_and_fields</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">class Foo { static _RULE_NAME = &#39;foo&#39;; static _FIELDS = [&#39;x&#39;, &#39;y&#39;]; }</span>
+<span class="s2">const reg = new Registry();</span>
+<span class="s2">reg.register(Foo);</span>
+<span class="s2">console.log(reg.lookup(&#39;foo&#39;, [&#39;x&#39;, &#39;y&#39;]) === Foo);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_lookup_unknown_rule_throws</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">const reg = new Registry();</span>
+<span class="s2">try { reg.lookup(&#39;missing&#39;, []); console.log(&#39;no error&#39;); }</span>
+<span class="s2">catch(e) { console.log(&#39;threw&#39;); }</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;threw&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_lookup_wrong_fields_throws</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">class Foo { static _RULE_NAME = &#39;foo&#39;; static _FIELDS = [&#39;x&#39;]; }</span>
+<span class="s2">const reg = new Registry();</span>
+<span class="s2">reg.register(Foo);</span>
+<span class="s2">try { reg.lookup(&#39;foo&#39;, [&#39;y&#39;]); console.log(&#39;no error&#39;); }</span>
+<span class="s2">catch(e) { console.log(&#39;threw&#39;); }</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;threw&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_field_order_does_not_matter</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">class Foo { static _RULE_NAME = &#39;foo&#39;; static _FIELDS = [&#39;x&#39;, &#39;y&#39;]; }</span>
+<span class="s2">const reg = new Registry();</span>
+<span class="s2">reg.register(Foo);</span>
+<span class="s2">console.log(reg.lookup(&#39;foo&#39;, [&#39;y&#39;, &#39;x&#39;]) === Foo);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_two_classes_same_rule_different_fields</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">class A { static _RULE_NAME = &#39;r&#39;; static _FIELDS = [&#39;x&#39;]; }</span>
+<span class="s2">class B { static _RULE_NAME = &#39;r&#39;; static _FIELDS = [&#39;x&#39;, &#39;y&#39;]; }</span>
+<span class="s2">const reg = new Registry();</span>
+<span class="s2">reg.register(A, B);</span>
+<span class="s2">console.log(reg.lookup(&#39;r&#39;, [&#39;x&#39;]) === A, reg.lookup(&#39;r&#39;, [&#39;x&#39;, &#39;y&#39;]) === B);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true true&#39;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/registry_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 5 failures mentioning <code>Cannot find module './registry'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Implement registry.js</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/runtime/registry.js</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nx">Registry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">constructor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_byRule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">register</span><span class="p">(...</span><span class="nx">classes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">const</span><span class="w"> </span><span class="nx">cls</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="nx">classes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">ruleName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">cls</span><span class="p">.</span><span class="nx">_RULE_NAME</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">const</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">([...</span><span class="nx">cls</span><span class="p">.</span><span class="nx">_FIELDS</span><span class="p">].</span><span class="nx">sort</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_byRule</span><span class="p">[</span><span class="nx">ruleName</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="nx">_byRule</span><span class="p">[</span><span class="nx">ruleName</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="nx">_byRule</span><span class="p">[</span><span class="nx">ruleName</span><span class="p">][</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">cls</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">lookup</span><span class="p">(</span><span class="nx">ruleName</span><span class="p">,</span><span class="w"> </span><span class="nx">fieldNames</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">candidates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_byRule</span><span class="p">[</span><span class="nx">ruleName</span><span class="p">];</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">candidates</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`No class registered for rule &#39;</span><span class="si">${</span><span class="nx">ruleName</span><span class="si">}</span><span class="sb">&#39;`</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">([...</span><span class="nx">fieldNames</span><span class="p">].</span><span class="nx">sort</span><span class="p">());</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">candidates</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">cls</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="sb">`No class for rule &#39;</span><span class="si">${</span><span class="nx">ruleName</span><span class="si">}</span><span class="sb">&#39; with fields [</span><span class="si">${</span><span class="p">[...</span><span class="nx">fieldNames</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="si">}</span><span class="sb">]`</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">cls</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Registry</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/registry_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 5 passed</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/registry.js<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/registry_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(javascript): add runtime registry.js&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-3-runtime-deserializejs">Task 3: Runtime deserialize.js</h2>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/lang/ext/javascript/runtime/deserialize.js</code>
+- Create: <code>src/plcc/lang/ext/javascript/runtime/deserialize_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>Token</code> from <code>./base</code>; <code>Registry.lookup</code> from Task 2
+- Produces: <code>deserialize(tree, registry)</code> — returns a <code>Token</code> for <code>{kind: 'token', ...}</code> nodes, or a class instance for rule nodes; exported via <code>module.exports = { deserialize }</code></p>
+<p>Tree format (from model JSON produced by <code>plcc-model</code>):
+- Token node: <code>{ kind: 'token', name: 'TOKNAME', lexeme: 'text' }</code>
+- Rule node: <code>{ kind: 'rule', rule: 'ruleName', children: [['fieldName', value], ...] }</code>
+- <code>value</code> is a token node, a rule node, or an array of either</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/runtime/deserialize_test.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">RUNTIME_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_node</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="n">code</span><span class="p">],</span>
+        <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">cwd</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">RUNTIME_DIR</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_deserialize_token_node</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { deserialize } = require(&#39;./deserialize&#39;);</span>
+<span class="s2">const { Token } = require(&#39;./base&#39;);</span>
+<span class="s2">const t = deserialize({ kind: &#39;token&#39;, name: &#39;NUM&#39;, lexeme: &#39;42&#39; }, null);</span>
+<span class="s2">console.log(t instanceof Token, t.kind, t.lexeme);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true NUM 42&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_deserialize_rule_node_with_token_field</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { deserialize } = require(&#39;./deserialize&#39;);</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">const { Token } = require(&#39;./base&#39;);</span>
+<span class="s2">class Num {</span>
+<span class="s2">    static _RULE_NAME = &#39;num&#39;; static _FIELDS = [&#39;val&#39;];</span>
+<span class="s2">    constructor(val) { this.val = val; }</span>
+<span class="s2">}</span>
+<span class="s2">const reg = new Registry(); reg.register(Num);</span>
+<span class="s2">const node = deserialize({</span>
+<span class="s2">    kind: &#39;rule&#39;, rule: &#39;num&#39;,</span>
+<span class="s2">    children: [[&#39;val&#39;, { kind: &#39;token&#39;, name: &#39;INT&#39;, lexeme: &#39;5&#39; }]]</span>
+<span class="s2">}, reg);</span>
+<span class="s2">console.log(node instanceof Num, node.val instanceof Token, node.val.lexeme);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true true 5&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_deserialize_nested_rule_nodes</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { deserialize } = require(&#39;./deserialize&#39;);</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">class Inner {</span>
+<span class="s2">    static _RULE_NAME = &#39;inner&#39;; static _FIELDS = [];</span>
+<span class="s2">    constructor() </span><span class="si">{}</span>
+<span class="s2">}</span>
+<span class="s2">class Outer {</span>
+<span class="s2">    static _RULE_NAME = &#39;outer&#39;; static _FIELDS = [&#39;inner&#39;];</span>
+<span class="s2">    constructor(inner) { this.inner = inner; }</span>
+<span class="s2">}</span>
+<span class="s2">const reg = new Registry(); reg.register(Inner, Outer);</span>
+<span class="s2">const node = deserialize({</span>
+<span class="s2">    kind: &#39;rule&#39;, rule: &#39;outer&#39;,</span>
+<span class="s2">    children: [[&#39;inner&#39;, { kind: &#39;rule&#39;, rule: &#39;inner&#39;, children: [] }]]</span>
+<span class="s2">}, reg);</span>
+<span class="s2">console.log(node instanceof Outer, node.inner instanceof Inner);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true true&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_deserialize_list_field</span><span class="p">():</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_node</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">const { deserialize } = require(&#39;./deserialize&#39;);</span>
+<span class="s2">const { Registry } = require(&#39;./registry&#39;);</span>
+<span class="s2">const { Token } = require(&#39;./base&#39;);</span>
+<span class="s2">class Lst {</span>
+<span class="s2">    static _RULE_NAME = &#39;lst&#39;; static _FIELDS = [&#39;items&#39;];</span>
+<span class="s2">    constructor(items) { this.items = items; }</span>
+<span class="s2">}</span>
+<span class="s2">const reg = new Registry(); reg.register(Lst);</span>
+<span class="s2">const node = deserialize({</span>
+<span class="s2">    kind: &#39;rule&#39;, rule: &#39;lst&#39;,</span>
+<span class="s2">    children: [[&#39;items&#39;, [</span>
+<span class="s2">        { kind: &#39;token&#39;, name: &#39;N&#39;, lexeme: &#39;1&#39; },</span>
+<span class="s2">        { kind: &#39;token&#39;, name: &#39;N&#39;, lexeme: &#39;2&#39; },</span>
+<span class="s2">    ]]]</span>
+<span class="s2">}, reg);</span>
+<span class="s2">console.log(Array.isArray(node.items), node.items.length, node.items[0].lexeme);</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true 2 1&#39;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/deserialize_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 4 failures mentioning <code>Cannot find module './deserialize'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Implement deserialize.js</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/runtime/deserialize.js</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Token</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./base&#39;</span><span class="p">);</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">deserialize</span><span class="p">(</span><span class="nx">tree</span><span class="p">,</span><span class="w"> </span><span class="nx">registry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tree</span><span class="p">.</span><span class="nx">kind</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;token&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Token</span><span class="p">(</span><span class="nx">tree</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">tree</span><span class="p">.</span><span class="nx">lexeme</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">tree</span><span class="p">.</span><span class="nx">children</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">fieldNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">children</span><span class="p">.</span><span class="nx">map</span><span class="p">(([</span><span class="nx">name</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">name</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">registry</span><span class="p">.</span><span class="nx">lookup</span><span class="p">(</span><span class="nx">tree</span><span class="p">.</span><span class="nx">rule</span><span class="p">,</span><span class="w"> </span><span class="nx">fieldNames</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">children</span><span class="p">.</span><span class="nx">map</span><span class="p">(([,</span><span class="w"> </span><span class="nx">val</span><span class="p">])</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_deserializeValue</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span><span class="w"> </span><span class="nx">registry</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">cls</span><span class="p">(...</span><span class="nx">args</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">_deserializeValue</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span><span class="w"> </span><span class="nx">registry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">val</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">_deserializeValue</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span><span class="w"> </span><span class="nx">registry</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">val</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">val</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">val</span><span class="p">.</span><span class="nx">kind</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;token&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Token</span><span class="p">(</span><span class="nx">val</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">val</span><span class="p">.</span><span class="nx">lexeme</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">val</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">val</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nx">deserialize</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span><span class="w"> </span><span class="nx">registry</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">val</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">deserialize</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/deserialize_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 4 passed</p>
+<ul>
+<li>[ ] <strong>Step 5: Run all runtime tests together</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 13 passed</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/deserialize.js<span class="w"> </span>src/plcc/lang/ext/javascript/runtime/deserialize_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(javascript): add runtime deserialize.js&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-4-templates-emitpy">Task 4: Templates + emit.py</h2>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/lang/ext/javascript/templates/class_file.js.jinja</code>
+- Create: <code>src/plcc/lang/ext/javascript/templates/main.js.jinja</code>
+- Create: <code>src/plcc/lang/ext/javascript/emit.py</code>
+- Create: <code>src/plcc/lang/ext/javascript/emit_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: runtime files from Tasks 1–3 (copied to output dir by <code>_copy_runtime</code>)
+- Produces: <code>plcc.lang.ext.javascript.emit:main</code> — reads model JSON from stdin, writes <code>&lt;ClassName&gt;.js</code>, <code>_Start.js</code>, <code>main.js</code>, and <code>runtime/</code> to <code>--output</code> dir</p>
+<p>Model JSON schema (what <code>plcc-model</code> produces, passed via stdin):
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;program&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;classes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Program&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;abstract&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;extends&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rule_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;program&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;expr&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Expr&quot;</span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;semantic_sections&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;javascript&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;fragments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">&quot;class_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Program&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;body&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;method() {}&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing emit tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/emit_test.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docopt</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocoptExit</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.emit</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">run_main</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_minimal_model</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;program&quot;</span><span class="p">},</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;semantic_sections&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_arith_model</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;classes&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;expr&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Expr&quot;</span><span class="p">}]},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Expr&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Expr&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Term&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">}]},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span> <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;AddRest&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Term&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;rest&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">}]},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NilRest&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span> <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Term&quot;</span><span class="p">,</span> <span class="s2">&quot;abstract&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;extends&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="s2">&quot;rule_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Term&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Token&quot;</span><span class="p">}]},</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;semantic_sections&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;javascript&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;fragments&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;_run() {</span><span class="se">\n</span><span class="s2">    return this.expr.eval();</span><span class="se">\n</span><span class="s2">}&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;AddRest&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;eval(acc) {</span><span class="se">\n</span><span class="s2">    return this.rest.eval(acc + this.term.eval());</span><span class="se">\n</span><span class="s2">}&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;NilRest&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;eval(acc) {</span><span class="se">\n</span><span class="s2">    return acc;</span><span class="se">\n</span><span class="s2">}&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Term&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;eval() {</span><span class="se">\n</span><span class="s2">    return parseInt(this.num.lexeme);</span><span class="se">\n</span><span class="s2">}&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Expr&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;body&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;eval() {</span><span class="se">\n</span><span class="s2">    return this.rest.eval(this.term.eval());</span><span class="se">\n</span><span class="s2">}&quot;</span><span class="p">},</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_no_args_prints_usage</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">((</span><span class="n">DocoptExit</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">)):</span>
+        <span class="n">run_main</span><span class="p">([])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_emit_generates_start_js</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_minimal_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;_Start.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_start_class_extends_start</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_minimal_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Program.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;require(&#39;./_Start&#39;)&quot;</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;class Program extends _Start&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_start_class_with_explicit_parent_does_not_get_start</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">_minimal_model</span><span class="p">()</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;extends&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SomeBase&#39;</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Program.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;_Start&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_non_start_class_does_not_extend_start</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Term.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;_Start&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_emit_produces_one_js_file_per_class</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;Expr&quot;</span><span class="p">,</span> <span class="s2">&quot;ExprRest&quot;</span><span class="p">,</span> <span class="s2">&quot;AddRest&quot;</span><span class="p">,</span> <span class="s2">&quot;NilRest&quot;</span><span class="p">,</span> <span class="s2">&quot;Term&quot;</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.js missing&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_emit_produces_main_js</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;main.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_emit_copies_runtime_directory</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_minimal_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;runtime&#39;</span> <span class="o">/</span> <span class="s1">&#39;base.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;runtime&#39;</span> <span class="o">/</span> <span class="s1">&#39;registry.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;runtime&#39;</span> <span class="o">/</span> <span class="s1">&#39;deserialize.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;runtime&#39;</span> <span class="o">/</span> <span class="s1">&#39;base_test.py&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_concrete_class_has_rule_name_and_fields</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Term.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;_RULE_NAME&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;_FIELDS&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;constructor&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_abstract_class_has_no_rule_name_or_constructor</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;ExprRest.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;_RULE_NAME&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;_FIELDS&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;constructor&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_subclass_requires_parent</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;AddRest.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;require(&#39;./ExprRest&#39;)&quot;</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;class AddRest extends ExprRest&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_body_fragment_placed_in_class</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Term.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;eval()&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+    <span class="k">assert</span> <span class="s1">&#39;parseInt(this.num.lexeme)&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_top_fragment_placed_before_requires</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">_minimal_model</span><span class="p">()</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;javascript&quot;</span><span class="p">,</span> <span class="s2">&quot;fragments&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;&#39;use strict&#39;;&quot;</span><span class="p">}</span>
+    <span class="p">]}]</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Program.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;&#39;use strict&#39;;&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;require(&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_import_fragment_placed_before_class</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">_minimal_model</span><span class="p">()</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;javascript&quot;</span><span class="p">,</span> <span class="s2">&quot;fragments&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;import&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;const fs = require(&#39;fs&#39;);&quot;</span><span class="p">}</span>
+    <span class="p">]}]</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Program.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;const fs = require(&#39;fs&#39;);&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;class Program&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_init_fragment_placed_in_constructor</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">_minimal_model</span><span class="p">()</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Token&quot;</span><span class="p">}]</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;javascript&quot;</span><span class="p">,</span> <span class="s2">&quot;fragments&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Program&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;init&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;this.extra = 42;&quot;</span><span class="p">}</span>
+    <span class="p">]}]</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Program.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="n">ctor_start</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;constructor(&#39;</span><span class="p">)</span>
+    <span class="n">ctor_end</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span> <span class="n">ctor_start</span><span class="p">)</span>
+    <span class="n">ctor_body</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">ctor_start</span><span class="p">:</span><span class="n">ctor_end</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="s1">&#39;this.extra = 42;&#39;</span> <span class="ow">in</span> <span class="n">ctor_body</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_file_fragment_replaces_entire_file</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">_arith_model</span><span class="p">()</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;fragments&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;class_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Env&quot;</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;class Env </span><span class="si">{}</span><span class="se">\n</span><span class="s2">module.exports = { Env };</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Env.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">content</span> <span class="o">==</span> <span class="s2">&quot;class Env </span><span class="si">{}</span><span class="se">\n</span><span class="s2">module.exports = { Env };</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_language_tag_is_case_insensitive</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">_arith_model</span><span class="p">()</span>
+    <span class="n">model</span><span class="p">[</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;language&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;JavaScript&#39;</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;Term.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s1">&#39;parseInt(this.num.lexeme)&#39;</span> <span class="ow">in</span> <span class="n">content</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_emit_generated_main_is_runnable</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;main.js&#39;</span><span class="p">)],</span>
+        <span class="nb">input</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_emit_generated_main_exits_130_on_sigint</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">&#39;sys.stdin&#39;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_arith_model</span><span class="p">())))</span>
+    <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;COV_CORE&#39;</span><span class="p">)}</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;main.js&#39;</span><span class="p">)],</span>
+        <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">send_signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s2">&quot;subprocess did not exit after SIGINT within 5 seconds&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">130</span>
+    <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;Traceback&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stderr</span>
+    <span class="k">assert</span> <span class="sa">b</span><span class="s1">&#39;User interrupted execution by ^C.&#39;</span> <span class="ow">in</span> <span class="n">stdout</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/emit_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all failures mentioning <code>cannot import name 'main' from 'plcc.lang.ext.javascript.emit'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Create the Jinja2 class template</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/templates/class_file.js.jinja</code>:</p>
+<div class="highlight"><pre><span></span><code>{% for frag in top_fragments %}{{ frag.body }}
+{% endfor %}const { Node, Token } = require(&#39;./runtime/base&#39;);
+{% if cls.extends %}const { {{ cls.extends }} } = require(&#39;./{{ cls.extends }}&#39;);
+{% endif %}{% for frag in import_fragments %}{{ frag.body }}
+{% endfor %}
+class {{ cls.name }} extends {% if cls.extends %}{{ cls.extends }}{% else %}Node{% endif %} {
+{% if not cls.abstract %}
+
+    static _RULE_NAME = {{ cls.rule_name | tojson }};
+    static _FIELDS = [{% for field in cls.fields %}{{ field.name | tojson }}{% if not loop.last %}, {% endif %}{% endfor %}];
+
+    constructor({% for field in cls.fields %}{{ field.name }}{% if not loop.last %}, {% endif %}{% endfor %}) {
+        super();
+{% for field in cls.fields %}        this.{{ field.name }} = {{ field.name }};
+{% endfor %}{% for frag in init_fragments %}        {{ frag.body | indent(8) }}
+{% endfor %}    }
+
+{% endif %}{% for frag in body_fragments %}    {{ frag.body | indent(4) }}
+
+{% endfor %}}
+
+module.exports = { {{ cls.name }} };
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Create the Jinja2 main template</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/templates/main.js.jinja</code>:</p>
+<div class="highlight"><pre><span></span><code>{% set concrete = classes | selectattr(&#39;abstract&#39;, &#39;equalto&#39;, false) | list %}
+const { Registry } = require(&#39;./runtime/registry&#39;);
+const { deserialize } = require(&#39;./runtime/deserialize&#39;);
+{% for cls in concrete %}const { {{ cls.name }} } = require(&#39;./{{ cls.name }}&#39;);
+{% endfor %}
+const registry = new Registry();
+registry.register({% for cls in concrete %}{{ cls.name }}{% if not loop.last %}, {% endif %}{% endfor %});
+
+process.on(&#39;SIGINT&#39;, () =&gt; {
+    process.stdout.write(&#39;User interrupted execution by ^C.\n&#39;);
+    process.exit(130);
+});
+
+const readline = require(&#39;readline&#39;);
+const rl = readline.createInterface({ input: process.stdin });
+
+rl.on(&#39;line&#39;, (line) =&gt; {
+    line = line.trim();
+    if (!line) return;
+    try {
+        const tree = deserialize(JSON.parse(line), registry);
+        const result = tree.{{ entry_point }}();
+        console.log(JSON.stringify({ kind: &#39;result&#39;, value: result != null ? String(result) : null }));
+    } catch (e) {
+        console.log(JSON.stringify({ kind: &#39;error&#39;, type: e.constructor.name, message: e.message ?? &#39;&#39; }));
+    }
+});
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 5: Implement emit.py</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/emit.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;plcc-javascript-emit</span>
+<span class="sd">    Emit a JavaScript interpreter from model JSON.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    plcc-javascript-emit --output=DIR [-v ...] [options]</span>
+
+<span class="sd">Options:</span>
+<span class="sd">    --output=DIR    Directory to write output files into.</span>
+<span class="sd">    -h --help       Show this message.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jinja2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">docopt</span><span class="w"> </span><span class="kn">import</span> <span class="n">docopt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.verbose</span><span class="w"> </span><span class="kn">import</span> <span class="n">VerboseContext</span><span class="p">,</span> <span class="n">VERBOSE_OPTIONS</span>
+
+<span class="vm">__doc__</span> <span class="o">=</span> <span class="vm">__doc__</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+
+<span class="n">_DEFAULT_ENTRY_POINT</span> <span class="o">=</span> <span class="s1">&#39;_run&#39;</span>
+
+<span class="n">_START_JS</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">const { Node } = require(&#39;./runtime/base&#39;);</span>
+
+<span class="s2">class _Start extends Node {</span>
+<span class="s2">    _run() {</span>
+<span class="s2">        console.log(String(this));</span>
+<span class="s2">    }</span>
+<span class="s2">}</span>
+
+<span class="s2">module.exports = { _Start };</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Events</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">STARTED</span> <span class="o">=</span> <span class="s2">&quot;started&quot;</span>
+    <span class="n">FINISHED</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">docopt</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">VerboseContext</span><span class="o">.</span><span class="n">from_args</span><span class="p">(</span><span class="s2">&quot;plcc-javascript-emit&quot;</span><span class="p">,</span> <span class="n">Events</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">&#39;--output&#39;</span><span class="p">])</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;emitting to </span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+    <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">_copy_runtime</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="s1">&#39;classes&#39;</span><span class="p">]</span>
+    <span class="n">start_class_name</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">model</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="n">_find_javascript_section</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">entry_point</span> <span class="o">=</span> <span class="n">_DEFAULT_ENTRY_POINT</span>
+    <span class="n">fragments_by_class</span> <span class="o">=</span> <span class="n">_group_fragments</span><span class="p">(</span><span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fragments&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">section</span> <span class="k">else</span> <span class="p">[])</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span>
+        <span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;templates&#39;</span><span class="p">)),</span>
+        <span class="n">keep_trailing_newline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">class_template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;class_file.js.jinja&#39;</span><span class="p">)</span>
+    <span class="n">main_template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s1">&#39;main.js.jinja&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">start_class_name</span> <span class="ow">and</span> <span class="bp">cls</span><span class="p">[</span><span class="s1">&#39;extends&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="p">[</span><span class="s1">&#39;extends&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_Start&#39;</span>
+        <span class="n">frags</span> <span class="o">=</span> <span class="n">fragments_by_class</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="p">[])</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">class_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">=</span><span class="bp">cls</span><span class="p">,</span>
+            <span class="n">top_fragments</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">],</span>
+            <span class="n">import_fragments</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;import&#39;</span><span class="p">],</span>
+            <span class="n">init_fragments</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;init&#39;</span><span class="p">],</span>
+            <span class="n">body_fragments</span><span class="o">=</span><span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frags</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;body&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.js&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;_Start.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">_START_JS</span><span class="p">)</span>
+
+    <span class="n">all_frags</span> <span class="o">=</span> <span class="n">section</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fragments&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="k">if</span> <span class="n">section</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">all_frags</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">frag</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;file&#39;</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">frag</span><span class="p">[</span><span class="s1">&#39;class_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.js&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">frag</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span>
+
+    <span class="n">main_content</span> <span class="o">=</span> <span class="n">main_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span> <span class="n">entry_point</span><span class="o">=</span><span class="n">entry_point</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;main.js&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">main_content</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_runtime</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;runtime&#39;</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;runtime&#39;</span>
+    <span class="k">if</span> <span class="n">dst</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">shutil</span><span class="o">.</span><span class="n">ignore_patterns</span><span class="p">(</span><span class="s1">&#39;*_test.py&#39;</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_javascript_section</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;semantic_sections&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;javascript&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">s</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_group_fragments</span><span class="p">(</span><span class="n">fragments</span><span class="p">):</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">frag</span> <span class="ow">in</span> <span class="n">fragments</span><span class="p">:</span>
+        <span class="n">groups</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">frag</span><span class="p">[</span><span class="s1">&#39;class_name&#39;</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frag</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">groups</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 6: Run tests to verify they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/emit_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all passed. If <code>test_emit_generated_main_exits_130_on_sigint</code> is flaky on the CI environment (SIGINT timing), that is acceptable to skip with <code>@pytest.mark.skip</code>.</p>
+<ul>
+<li>[ ] <strong>Step 7: Run full unit suite to check for regressions</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
+<p>Expected: all passing (973+ tests).</p>
+<ul>
+<li>[ ] <strong>Step 8: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/javascript/emit.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/lang/ext/javascript/emit_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/lang/ext/javascript/templates/
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(javascript): add emit.py and Jinja2 templates&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-5-runpy-entry-points">Task 5: run.py + entry points</h2>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/lang/ext/javascript/run.py</code>
+- Create: <code>src/plcc/lang/ext/javascript/run_test.py</code>
+- Modify: <code>pyproject.toml</code> (add two entries under <code>[project.scripts]</code>)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>node</code> on PATH, output directory from emit (Task 4)
+- Produces: <code>plcc.lang.ext.javascript.run:main</code> — invokes <code>node main.js</code> passing stdin/stdout/stderr through</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing run tests</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/run_test.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.run</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">run_main</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_keyboard_interrupt_exits_130</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">raise_ki</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">KeyboardInterrupt</span><span class="p">()</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="n">raise_ki</span><span class="p">)</span>
+    <span class="n">exit_code</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">SystemExit</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">exit_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="n">pytest</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s2">&quot;KeyboardInterrupt escaped — should be converted to sys.exit(130)&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">exit_code</span> <span class="o">==</span> <span class="mi">130</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_run_exits_with_node_return_code</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">FakeResult</span><span class="p">:</span>
+        <span class="n">returncode</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s1">&#39;run&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">FakeResult</span><span class="p">())</span>
+    <span class="n">exit_code</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--output=</span><span class="si">{</span><span class="n">tmp_path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="k">except</span> <span class="ne">SystemExit</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">exit_code</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">code</span>
+    <span class="k">assert</span> <span class="n">exit_code</span> <span class="o">==</span> <span class="mi">42</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/run_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 2 failures mentioning <code>cannot import name 'main' from 'plcc.lang.ext.javascript.run'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Implement run.py</strong></li>
+</ul>
+<p>Create <code>src/plcc/lang/ext/javascript/run.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;plcc-javascript-run</span>
+<span class="sd">    Run a generated JavaScript interpreter.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    plcc-javascript-run --output=DIR [-v ...] [options]</span>
+
+<span class="sd">Options:</span>
+<span class="sd">    --output=DIR    Directory containing generated JavaScript files.</span>
+<span class="sd">    -h --help       Show this message.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">docopt</span><span class="w"> </span><span class="kn">import</span> <span class="n">docopt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.verbose</span><span class="w"> </span><span class="kn">import</span> <span class="n">VerboseContext</span><span class="p">,</span> <span class="n">VERBOSE_OPTIONS</span>
+
+<span class="vm">__doc__</span> <span class="o">=</span> <span class="vm">__doc__</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Events</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">STARTED</span> <span class="o">=</span> <span class="s2">&quot;started&quot;</span>
+    <span class="n">FINISHED</span> <span class="o">=</span> <span class="s2">&quot;finished&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">docopt</span><span class="p">(</span><span class="vm">__doc__</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">VerboseContext</span><span class="o">.</span><span class="n">from_args</span><span class="p">(</span><span class="s2">&quot;plcc-javascript-run&quot;</span><span class="p">,</span> <span class="n">Events</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--output&#39;</span><span class="p">]</span>
+    <span class="n">main_js</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;main.js&#39;</span><span class="p">)</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;running </span><span class="si">{</span><span class="n">main_js</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">,</span> <span class="n">main_js</span><span class="p">],</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span>
+            <span class="n">stderr</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;exit </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">returncode</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to verify they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/lang/ext/javascript/run_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 2 passed</p>
+<ul>
+<li>[ ] <strong>Step 5: Add entry points to pyproject.toml</strong></li>
+</ul>
+<p>In <code>pyproject.toml</code>, find the block with <code>plcc-python-emit</code> and add after <code>plcc-java-run</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">plcc-javascript-emit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.javascript.emit:main&quot;</span>
+<span class="n">plcc-javascript-run</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.javascript.run:main&quot;</span>
+</code></pre></div>
+<p>The relevant section of <code>pyproject.toml</code> currently ends with:
+<div class="highlight"><pre><span></span><code><span class="n">plcc-java-emit</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.java.emit:main&quot;</span>
+<span class="n">plcc-java-build</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.java.build:main&quot;</span>
+<span class="n">plcc-java-run</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.java.run:main&quot;</span>
+<span class="n">plcc-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.version:main&quot;</span>
+</code></pre></div></p>
+<p>It should become:
+<div class="highlight"><pre><span></span><code><span class="n">plcc-java-emit</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.java.emit:main&quot;</span>
+<span class="n">plcc-java-build</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.java.build:main&quot;</span>
+<span class="n">plcc-java-run</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.java.run:main&quot;</span>
+<span class="n">plcc-javascript-emit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.javascript.emit:main&quot;</span>
+<span class="n">plcc-javascript-run</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.lang.ext.javascript.run:main&quot;</span>
+<span class="n">plcc-version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;plcc.version:main&quot;</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 6: Reinstall to register the entry points</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/build/package.bash
+</code></pre></div>
+<p>Expected: build succeeds, ends with <code>Built wheel at dist/...</code></p>
+<ul>
+<li>[ ] <strong>Step 7: Verify entry points are on PATH</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>which<span class="w"> </span>plcc-javascript-emit<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>which<span class="w"> </span>plcc-javascript-run
+</code></pre></div>
+<p>Expected: both resolve to paths under <code>.venv/bin/</code></p>
+<ul>
+<li>[ ] <strong>Step 8: Smoke-test the full pipeline with a minimal grammar</strong></li>
+</ul>
+<p>Run the following. It pipes a hand-crafted model JSON (matching a grammar with one <code>Program</code> class that has no fields) directly to the emitter, then runs it:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">OUTDIR</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;start&quot;:&quot;program&quot;,&quot;classes&quot;:[{&quot;name&quot;:&quot;Program&quot;,&quot;abstract&quot;:false,&quot;extends&quot;:null,&quot;rule_name&quot;:&quot;program&quot;,&quot;fields&quot;:[]}],&quot;semantic_sections&quot;:[]}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>plcc-javascript-emit<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;kind&quot;:&quot;rule&quot;,&quot;rule&quot;:&quot;program&quot;,&quot;children&quot;:[]}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>plcc-javascript-run<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUTDIR</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>Expected: second command prints something like <code>{"kind":"result","value":null}</code> or similar (the default <code>_run()</code> in <code>_Start</code> calls <code>console.log(String(this))</code>; with no <code>toString()</code> override on <code>Program</code>, it prints <code>[object Object]</code> as the result).</p>
+<ul>
+<li>[ ] <strong>Step 9: Run full unit suite</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
+<p>Expected: all tests pass.</p>
+<ul>
+<li>[ ] <strong>Step 10: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/lang/ext/javascript/run.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>src/plcc/lang/ext/javascript/run_test.py<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>pyproject.toml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(javascript): add run.py and register entry points&quot;</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

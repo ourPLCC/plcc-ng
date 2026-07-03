@@ -1,0 +1,3625 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/0.64/superpowers/plans/2026-06-24-106-javascript-docs/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>JavaScript Language Extension Documentation Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#javascript-language-extension-documentation-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              JavaScript Language Extension Documentation Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../quick-start/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration from PLCC
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../acknowledgments/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Acknowledgments
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration from PLCC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/haskell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Haskell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acknowledgments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="javascript-language-extension-documentation-implementation-plan">JavaScript Language Extension Documentation Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Add student-facing documentation for the JavaScript language extension and restructure per-language docs into a scalable per-language page pattern.</p>
+<p><strong>Architecture:</strong> Create a <code>docs/language-guide/languages/</code> directory with one self-contained page per language (JavaScript, Java, Python). Slim <code>docs/language-guide/semantic.md</code> to language-agnostic concepts with links to the per-language pages. Add CLI command reference pages for <code>plcc-javascript-emit</code> and <code>plcc-javascript-run</code>. Update nav and the language-extensions guide.</p>
+<p><strong>Tech Stack:</strong> MkDocs (static site), Markdown, MkDocs Material (tabbed blocks use <code>=== "Tab"</code> syntax).</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>Node.js minimum version: 18 or later (generated code uses ES6 classes, static class fields, CommonJS).</li>
+<li>Java minimum version: JDK 21 or later (from <code>quick-start.md</code>).</li>
+<li>Python minimum version: 3.12 or later (from <code>quick-start.md</code>).</li>
+<li>JavaScript language tag in spec: <code>javascript</code> (lowercase).</li>
+<li>Java language tag in spec: <code>Java</code> (capital J, from fixture <code>trivial-java.plcc</code>).</li>
+<li>Python language tag in spec: <code>Python</code> (capital P, from fixture <code>arith.plcc</code>).</li>
+<li>All per-language pages follow the exact same section order (see Task 1).</li>
+<li>The canonical example grammar is identical across all language pages; only the semantic section changes.</li>
+<li>All files in a JavaScript emit output directory are overwritten on every <code>plcc-javascript-emit</code> run.</li>
+<li>No <code>plcc-javascript-build</code> command exists; <code>plcc-lang-build</code> exits silently when no build command is found.</li>
+</ul>
+<hr />
+<h2 id="canonical-example-used-in-all-language-pages">Canonical Example (used in all language pages)</h2>
+<p>This grammar is written to <code>spec.plcc</code> and referenced throughout the plan.</p>
+<div class="highlight"><pre><span></span><code>token NUM   &#39;\d+&#39;
+token PLUS  &#39;\+&#39;
+skip  SPACE &#39;\s+&#39;
+%
+&lt;Prog&gt;       **= &lt;Exp&gt;
+&lt;Exp:AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
+&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;
+</code></pre></div>
+<p>Constructs exercised:</p>
+<table>
+<thead>
+<tr>
+<th>Construct</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arbno (zero or more)</td>
+<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code> → field <code>expList</code></td>
+</tr>
+<tr>
+<td>Abstract non-terminal (alternatives, no constructor)</td>
+<td><code>&lt;Exp&gt;</code> (implied by <code>:AddExp</code>/<code>:NumExp</code> variants)</td>
+</tr>
+<tr>
+<td>Concrete non-terminal with named non-terminal fields</td>
+<td><code>&lt;Exp:AddExp&gt;</code> — <code>left</code>, <code>right</code> named to avoid collision</td>
+</tr>
+<tr>
+<td>Captured terminal field</td>
+<td><code>&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;</code> → field <code>num</code></td>
+</tr>
+<tr>
+<td>Uncaptured terminal</td>
+<td><code>PLUS</code> in <code>&lt;Exp:AddExp&gt;</code> — matched but not stored</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td><code>docs/language-guide/languages/javascript.md</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>docs/language-guide/languages/java.md</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>docs/language-guide/languages/python.md</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>docs/cli/commands/plcc-javascript-emit.md</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>docs/cli/commands/plcc-javascript-run.md</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>docs/language-guide/semantic.md</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>docs/cli/guide/language-extensions.md</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>mkdocs.yml</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-create-docslanguage-guidelanguagesjavascriptmd">Task 1: Create <code>docs/language-guide/languages/javascript.md</code></h2>
+<p><strong>Files:</strong>
+- Create: <code>docs/language-guide/languages/javascript.md</code></p>
+<p><strong>Note:</strong> <code>docs/language-guide/languages/</code> does not exist yet. Create it as part of this task.</p>
+<ul>
+<li>[ ] <strong>Step 1: Create the file with full content</strong></li>
+</ul>
+<p>Write <code>docs/language-guide/languages/javascript.md</code> with exactly this content:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># JavaScript</span>
+
+<span class="gu">## Prerequisites</span>
+
+Node.js 18 or later. Install from [<span class="nt">nodejs.org</span>](<span class="na">https://nodejs.org</span>).
+
+Verify your installation:
+
+<span class="sb">```bash</span>
+node<span class="w"> </span>--version
+<span class="sb">```</span>
+
+<span class="gu">## Enabling in a spec</span>
+
+Add a bare <span class="sb">`%`</span> separator after the syntactic section, then write <span class="sb">`javascript`</span> on the first non-blank line:
+
+<span class="sb">```text</span>
+%
+javascript
+<span class="sb">```</span>
+
+<span class="gu">## Quick reference example</span>
+
+This example exercises every grammar construct. Later sections reference it by name.
+
+<span class="sb">```text</span>
+token NUM   &#39;\d+&#39;
+token PLUS  &#39;\+&#39;
+skip  SPACE &#39;\s+&#39;
+%
+&lt;Prog&gt;       **= &lt;Exp&gt;
+&lt;Exp:AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
+&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;
+%
+javascript
+
+Prog
+%%%
+_run() {
+    return this.expList.map(exp =&gt; String(exp.eval())).join(&#39;\n&#39;);
+}
+%%%
+
+AddExp
+%%%
+eval() {
+    return this.left.eval() + this.right.eval();
+}
+%%%
+
+NumExp
+%%%
+eval() {
+    return parseInt(this.num.lexeme);
+}
+%%%
+<span class="sb">```</span>
+
+Running this with <span class="sb">`echo &quot;1 + 2&quot; | plcc-rep`</span> prints <span class="sb">`3`</span>.
+
+<span class="gu">## BNF to JavaScript constructs</span>
+
+| Grammar construct | JavaScript | Example from spec |
+| --- | --- | --- |
+| Concrete non-terminal rule | ES6 class with constructor and fields | <span class="sb">`&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;`</span> |
+| Abstract non-terminal (has alternatives) | ES6 class, no constructor | <span class="sb">`&lt;Exp&gt;`</span> |
+| Named non-terminal field (<span class="sb">`:name`</span> on RHS) | <span class="sb">`this.name`</span> — instance of that class | <span class="sb">`&lt;Exp:left&gt;`</span> → <span class="sb">`this.left`</span> |
+| Captured terminal (<span class="sb">`&lt;TOKEN&gt;`</span>) | <span class="sb">`this.name`</span> — a <span class="sb">`Token`</span> | <span class="sb">`&lt;NUM&gt;`</span> → <span class="sb">`this.num`</span> |
+| Token string value | <span class="sb">`.lexeme`</span> on the token | <span class="sb">`this.num.lexeme`</span> → <span class="sb">`&quot;42&quot;`</span> |
+| Uncaptured terminal (no angle brackets) | Not stored, no field | <span class="sb">`PLUS`</span> in <span class="sb">`&lt;Exp:AddExp&gt;`</span> |
+| Arbno (<span class="sb">`**=`</span>) | Array field named <span class="sb">`&lt;symbol&gt;List`</span> | <span class="sb">`&lt;Prog&gt; **= &lt;Exp&gt;`</span> → <span class="sb">`this.expList`</span> |
+
+Without explicit <span class="sb">`:name`</span> on a RHS symbol, the field name is the symbol name lowercased (e.g., <span class="sb">`&lt;Exp&gt;`</span> → <span class="sb">`exp`</span>, <span class="sb">`&lt;NUM&gt;`</span> → <span class="sb">`num`</span>). Use explicit names when two RHS symbols would produce the same field name.
+
+<span class="gu">## Fragment kinds</span>
+
+Fragments inject code at specific locations in the generated file. Use <span class="sb">`ClassName:kind`</span> to name the target class and location.
+
+| Kind | Where injected | Typical use |
+| --- | --- | --- |
+| <span class="sb">`top`</span> | Before all <span class="sb">`require`</span> lines | File-level constants, <span class="sb">`&#39;use strict&#39;`</span> |
+| <span class="sb">`import`</span> | After generated <span class="sb">`require`</span> lines, before the class | Additional <span class="sb">`require`</span> calls |
+| <span class="sb">`init`</span> | Inside the constructor, after field assignments | Initialize extra instance state |
+| <span class="sb">`body`</span> | Inside the class body | Methods |
+| <span class="sb">`file`</span> | Replaces the entire file | Standalone helper modules |
+
+<span class="sb">`body`</span> is the default when no kind is given (plain <span class="sb">`ClassName`</span> with no colon).
+
+JavaScript has no <span class="sb">`class`</span> hook. JavaScript classes do not support interface declarations or multiple inheritance, so there is nothing to inject into the class declaration line.
+
+<span class="gu">### Example</span>
+
+<span class="sb">```text</span>
+NumExp:import
+%%%
+const { MathHelper } = require(&#39;./MathHelper&#39;);
+%%%
+
+NumExp
+%%%
+eval() {
+    return MathHelper.parse(this.num.lexeme);
+}
+%%%
+
+MathHelper:file
+%%%
+class MathHelper {
+    static parse(s) { return parseInt(s, 10); }
+}
+module.exports = { MathHelper };
+%%%
+<span class="sb">```</span>
+
+<span class="gu">## `_run` entry point</span>
+
+<span class="sb">`_run()`</span> is called by the runtime on the root node of each parsed tree. Define it on your start class (the class derived from the first grammar rule — <span class="sb">`Prog`</span> in the quick reference example).
+
+<span class="sb">```javascript</span>
+<span class="nx">Prog</span>
+<span class="o">%%%</span>
+<span class="nx">_run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Compute and return a value, or return undefined to produce no output.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">expList</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">exp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">exp</span><span class="p">.</span><span class="nb">eval</span><span class="p">())).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">%%%</span>
+<span class="sb">```</span>
+
+The return value is converted to a string and printed by <span class="sb">`plcc-rep`</span>. Return <span class="sb">`undefined`</span> (or nothing) to suppress output for that input.
+
+The default <span class="sb">`_Start._run()`</span> prints <span class="sb">`String(this)`</span> to stdout. Override it to replace the default behavior entirely.
+
+<span class="gu">## Referencing other generated classes</span>
+
+Generated files use CommonJS modules. To use a sibling generated class from semantic code, require it with an <span class="sb">`import`</span> fragment:
+
+<span class="sb">```text</span>
+MyClass:import
+%%%
+const { OtherClass } = require(&#39;./OtherClass&#39;);
+%%%
+<span class="sb">```</span>
+
+Within the same generated class file, sibling generated classes are not automatically visible — you must require them explicitly.
+
+<span class="gu">## Generated output</span>
+
+<span class="sb">`plcc-javascript-emit`</span> writes the following to <span class="sb">`--output=DIR`</span>. <span class="gs">**All files are overwritten on every run.**</span>
+
+<span class="sb">```</span>
+<span class="sb">DIR/</span>
+<span class="sb">  main.js           — entry point; reads parse tree JSON, calls _run()</span>
+<span class="sb">  _Start.js         — default base for the start class</span>
+<span class="sb">  Prog.js           — one .js file per class from the grammar</span>
+<span class="sb">  AddExp.js</span>
+<span class="sb">  NumExp.js</span>
+<span class="sb">  runtime/</span>
+<span class="sb">    base.js         — Node and Token base classes</span>
+<span class="sb">    registry.js     — class registry used by deserialization</span>
+<span class="sb">    deserialize.js  — tree deserialization</span>
+<span class="sb">```</span>
+
+Do not edit these files directly. Put all custom code in the spec&#39;s semantic section.
+
+<span class="gu">## Running the quick reference example</span>
+
+Save the spec above as <span class="sb">`spec.plcc`</span>. In the same directory:
+
+<span class="sb">```bash</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1 + 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-rep
+<span class="sb">```</span>
+
+Expected output:
+
+<span class="sb">```text</span>
+3
+<span class="sb">```</span>
+
+<span class="sb">`plcc-rep`</span> auto-discovers <span class="sb">`spec.plcc`</span>, emits the interpreter to a temporary directory, and runs it.
+
+<span class="gu">## Commands</span>
+
+| Command | What it does |
+| --- | --- |
+| [<span class="sb">`plcc-javascript-emit`</span>](../../cli/commands/plcc-javascript-emit.md) | Writes <span class="sb">`.js`</span> class files and a <span class="sb">`main.js`</span> entry point to the output directory |
+| [<span class="sb">`plcc-javascript-run`</span>](../../cli/commands/plcc-javascript-run.md) | Runs <span class="sb">`main.js`</span> with <span class="sb">`node`</span>; requires Node.js on <span class="sb">`PATH`</span> |
+
+No build step is required — Node.js does not need a compilation step, so <span class="sb">`plcc-lang-build`</span> skips silently.
+
+<span class="gu">## Restrictions</span>
+
+<span class="k">-</span><span class="w"> </span>No <span class="sb">`class`</span> hook (unlike Python). There is no equivalent in JavaScript.
+<span class="k">-</span><span class="w"> </span>Generated code uses CommonJS (<span class="sb">`require`</span> / <span class="sb">`module.exports`</span>). ESM (<span class="sb">`import`</span> / <span class="sb">`export`</span>) is not supported.
+<span class="k">-</span><span class="w"> </span>All output files are overwritten on every emit run — do not edit them directly.
+<span class="k">-</span><span class="w"> </span>Sibling generated classes are not automatically in scope; require them explicitly with an <span class="sb">`import`</span> fragment.
+
+<span class="gu">## Tips</span>
+
+<span class="k">-</span><span class="w"> </span>Use <span class="sb">`console.error(...)`</span> for debug output. The runtime reads <span class="sb">`_run()`</span>&#39;s return value and passes it to <span class="sb">`plcc-rep`</span> via stdout; writing to stdout from inside <span class="sb">`_run()`</span> will corrupt the output.
+<span class="k">-</span><span class="w"> </span><span class="sb">`this.num.lexeme`</span> is always a string. Use <span class="sb">`parseInt(this.num.lexeme)`</span> or <span class="sb">`parseFloat(this.num.lexeme)`</span> to get a numeric value.
+<span class="k">-</span><span class="w"> </span>Abstract classes (<span class="sb">`Exp`</span> in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.
+<span class="k">-</span><span class="w"> </span>The arbno field name is always <span class="sb">`&lt;lowerCasedSymbol&gt;List`</span>. For <span class="sb">`&lt;Prog&gt; **= &lt;Exp&gt;`</span>, the field is <span class="sb">`this.expList`</span>.
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/language-guide/languages/javascript.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add JavaScript language extension page&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-2-create-docslanguage-guidelanguagesjavamd">Task 2: Create <code>docs/language-guide/languages/java.md</code></h2>
+<p><strong>Files:</strong>
+- Create: <code>docs/language-guide/languages/java.md</code>
+- Reference: <code>docs/language-guide/semantic.md</code> (existing Java tabs to reorganize)
+- Reference: <code>docs/cli/commands/plcc-java-emit.md</code>, <code>plcc-java-build.md</code>, <code>plcc-java-run.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create the file with full content</strong></li>
+</ul>
+<p>Write <code>docs/language-guide/languages/java.md</code> with exactly this content:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Java</span>
+
+<span class="gu">## Prerequisites</span>
+
+Java JDK 21 or later. Install from [<span class="nt">adoptium.net</span>](<span class="na">https://adoptium.net</span>) or use your system package manager.
+
+Verify your installation:
+
+<span class="sb">```bash</span>
+java<span class="w"> </span>--version
+javac<span class="w"> </span>--version
+<span class="sb">```</span>
+
+<span class="gu">## Enabling in a spec</span>
+
+Add a bare <span class="sb">`%`</span> separator after the syntactic section, then write <span class="sb">`Java`</span> on the first non-blank line:
+
+<span class="sb">```text</span>
+%
+Java
+<span class="sb">```</span>
+
+<span class="gu">## Quick reference example</span>
+
+This example exercises every grammar construct. Later sections reference it by name.
+
+<span class="sb">```text</span>
+token NUM   &#39;\d+&#39;
+token PLUS  &#39;\+&#39;
+skip  SPACE &#39;\s+&#39;
+%
+&lt;Prog&gt;       **= &lt;Exp&gt;
+&lt;Exp:AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
+&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;
+%
+Java
+
+Exp
+%%%
+public abstract int eval();
+%%%
+
+Prog
+%%%
+public void _run() {
+    for (Exp exp : expList) {
+        System.out.println(exp.eval());
+    }
+}
+%%%
+
+AddExp
+%%%
+public int eval() {
+    return left.eval() + right.eval();
+}
+%%%
+
+NumExp
+%%%
+public int eval() {
+    return Integer.parseInt(num.lexeme);
+}
+%%%
+<span class="sb">```</span>
+
+Running this with <span class="sb">`echo &quot;1 + 2&quot; | plcc-rep`</span> prints <span class="sb">`3`</span>.
+
+<span class="gu">## BNF to Java constructs</span>
+
+| Grammar construct | Java | Example from spec |
+| --- | --- | --- |
+| Concrete non-terminal rule | Java class with public fields and constructor | <span class="sb">`&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;`</span> |
+| Abstract non-terminal (has alternatives) | <span class="sb">`abstract`</span> Java class | <span class="sb">`&lt;Exp&gt;`</span> |
+| Named non-terminal field (<span class="sb">`:name`</span> on RHS) | <span class="sb">`this.name`</span> — instance of that class | <span class="sb">`&lt;Exp:left&gt;`</span> → <span class="sb">`left`</span> |
+| Captured terminal (<span class="sb">`&lt;TOKEN&gt;`</span>) | <span class="sb">`this.name`</span> — a <span class="sb">`Token`</span> | <span class="sb">`&lt;NUM&gt;`</span> → <span class="sb">`num`</span> |
+| Token string value | <span class="sb">`.lexeme`</span> on the token | <span class="sb">`num.lexeme`</span> → <span class="sb">`&quot;42&quot;`</span> |
+| Uncaptured terminal (no angle brackets) | Not stored, no field | <span class="sb">`PLUS`</span> in <span class="sb">`&lt;Exp:AddExp&gt;`</span> |
+| Arbno (<span class="sb">`**=`</span>) | <span class="sb">`ArrayList&lt;ClassName&gt; nameList`</span> | <span class="sb">`&lt;Prog&gt; **= &lt;Exp&gt;`</span> → <span class="sb">`expList`</span> |
+
+Without explicit <span class="sb">`:name`</span> on a RHS symbol, the field name is the symbol name lowercased. Use explicit names when two RHS symbols would produce the same field name.
+
+All generated classes are in the same package, so sibling classes are accessible without explicit imports.
+
+<span class="gu">## Fragment kinds</span>
+
+| Kind | Where injected | Typical use |
+| --- | --- | --- |
+| <span class="sb">`top`</span> | Top of the file, before the class | Package declarations |
+| <span class="sb">`import`</span> | Import section | <span class="sb">`import`</span> statements |
+| <span class="sb">`class`</span> | Class declaration line | <span class="sb">`implements`</span> clauses, additional <span class="sb">`extends`</span> |
+| <span class="sb">`init`</span> | Constructor body, after field assignments | Initialize extra instance state |
+| <span class="sb">`body`</span> | Class body | Methods, static fields |
+| <span class="sb">`file`</span> | Replaces the entire file | Standalone helper classes |
+
+<span class="sb">`body`</span> is the default when no kind is given (plain <span class="sb">`ClassName`</span> with no colon).
+
+<span class="gu">### Example</span>
+
+<span class="sb">```text</span>
+WholeExp:import
+%%%
+import java.io.*;
+%%%
+
+WholeExp
+%%%
+public int eval() {
+    int x = Integer.parseInt(whole.lexeme);
+    System.err.println(&quot;eval: &quot; + x);
+    return x;
+}
+%%%
+<span class="sb">```</span>
+
+<span class="gu">## `_run` entry point</span>
+
+<span class="sb">`_run()`</span> is called by the runtime on the root node of each parsed tree. Define it on your start class (<span class="sb">`Prog`</span> in the quick reference example).
+
+<span class="sb">```java</span>
+<span class="n">Prog</span>
+<span class="o">%%%</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// your implementation</span>
+<span class="p">}</span>
+<span class="o">%%%</span>
+<span class="sb">```</span>
+
+The default <span class="sb">`_Start._run()`</span> prints <span class="sb">`String(this)`</span> using <span class="sb">`System.out.println`</span>. Override it to replace the default behavior. Return type is <span class="sb">`void`</span>.
+
+Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see <span class="sb">`Exp`</span> in the quick reference example).
+
+<span class="gu">## Referencing other generated classes</span>
+
+All generated <span class="sb">`.java`</span> files are compiled together in the same package. You can reference any sibling class by name directly — no import needed.
+
+<span class="gu">## Generated output</span>
+
+<span class="sb">`plcc-java-emit`</span> writes <span class="sb">`.java`</span> source files. <span class="sb">`plcc-java-build`</span> compiles them with <span class="sb">`javac`</span>. <span class="gs">**All source files are overwritten on every emit run.**</span>
+
+<span class="sb">```</span>
+<span class="sb">DIR/</span>
+<span class="sb">  Main.java         — entry point</span>
+<span class="sb">  _Start.java       — default base for the start class</span>
+<span class="sb">  Prog.java         — one .java file per class from the grammar</span>
+<span class="sb">  AddExp.java</span>
+<span class="sb">  NumExp.java</span>
+<span class="sb">  *.class           — compiled after plcc-java-build</span>
+<span class="sb">```</span>
+
+Do not edit these files directly.
+
+<span class="gu">## Running the quick reference example</span>
+
+Save the spec above as <span class="sb">`spec.plcc`</span>. In the same directory:
+
+<span class="sb">```bash</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1 + 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-rep
+<span class="sb">```</span>
+
+Expected output:
+
+<span class="sb">```text</span>
+3
+<span class="sb">```</span>
+
+<span class="gu">## Commands</span>
+
+| Command | What it does |
+| --- | --- |
+| [<span class="sb">`plcc-java-emit`</span>](../../cli/commands/plcc-java-emit.md) | Writes <span class="sb">`.java`</span> class files and a <span class="sb">`Main.java`</span> entry point to the output directory |
+| [<span class="sb">`plcc-java-build`</span>](../../cli/commands/plcc-java-build.md) | Compiles all <span class="sb">`.java`</span> files with <span class="sb">`javac`</span>; requires Java JDK 21+ on <span class="sb">`PATH`</span> |
+| [<span class="sb">`plcc-java-run`</span>](../../cli/commands/plcc-java-run.md) | Runs the compiled interpreter with <span class="sb">`java`</span>; requires Java JDK 21+ on <span class="sb">`PATH`</span> |
+
+<span class="gu">## Restrictions</span>
+
+<span class="k">-</span><span class="w"> </span>Requires Java JDK 21 or later for both building and running.
+<span class="k">-</span><span class="w"> </span>All generated source files are overwritten on every emit run — do not edit them directly.
+<span class="k">-</span><span class="w"> </span>Abstract classes need abstract method declarations added via <span class="sb">`body`</span> fragments if you want the compiler to enforce them on subclasses.
+
+<span class="gu">## Tips</span>
+
+<span class="k">-</span><span class="w"> </span>Use <span class="sb">`System.err.println(...)`</span> for debug output so it does not interfere with the output protocol.
+<span class="k">-</span><span class="w"> </span><span class="sb">`num.lexeme`</span> is always a <span class="sb">`String`</span>. Use <span class="sb">`Integer.parseInt(num.lexeme)`</span> or <span class="sb">`Double.parseDouble(num.lexeme)`</span> to get a numeric value.
+<span class="k">-</span><span class="w"> </span>All generated classes are in the same package — you can use any generated class by name without importing it.
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/language-guide/languages/java.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add Java language extension page&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-3-create-docslanguage-guidelanguagespythonmd">Task 3: Create <code>docs/language-guide/languages/python.md</code></h2>
+<p><strong>Files:</strong>
+- Create: <code>docs/language-guide/languages/python.md</code>
+- Reference: <code>docs/language-guide/semantic.md</code> (existing Python tabs to reorganize)
+- Reference: <code>docs/cli/commands/plcc-python-emit.md</code>, <code>plcc-python-run.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create the file with full content</strong></li>
+</ul>
+<p>Write <code>docs/language-guide/languages/python.md</code> with exactly this content:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Python</span>
+
+<span class="gu">## Prerequisites</span>
+
+Python 3.12 or later. Python is typically pre-installed on macOS and Linux.
+
+Verify your installation:
+
+<span class="sb">```bash</span>
+python3<span class="w"> </span>--version
+<span class="sb">```</span>
+
+<span class="gu">## Enabling in a spec</span>
+
+Add a bare <span class="sb">`%`</span> separator after the syntactic section, then write <span class="sb">`Python`</span> on the first non-blank line:
+
+<span class="sb">```text</span>
+%
+Python
+<span class="sb">```</span>
+
+<span class="gu">## Quick reference example</span>
+
+This example exercises every grammar construct. Later sections reference it by name.
+
+<span class="sb">```text</span>
+token NUM   &#39;\d+&#39;
+token PLUS  &#39;\+&#39;
+skip  SPACE &#39;\s+&#39;
+%
+&lt;Prog&gt;       **= &lt;Exp&gt;
+&lt;Exp:AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
+&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;
+%
+Python
+
+Prog
+%%%
+def _run(self):
+    return &#39;\n&#39;.join(str(exp.eval()) for exp in self.expList)
+%%%
+
+AddExp
+%%%
+def eval(self):
+    return self.left.eval() + self.right.eval()
+%%%
+
+NumExp
+%%%
+def eval(self):
+    return int(self.num.lexeme)
+%%%
+<span class="sb">```</span>
+
+Running this with <span class="sb">`echo &quot;1 + 2&quot; | plcc-rep`</span> prints <span class="sb">`3`</span>.
+
+<span class="gu">## BNF to Python constructs</span>
+
+| Grammar construct | Python | Example from spec |
+| --- | --- | --- |
+| Concrete non-terminal rule | Python dataclass with fields | <span class="sb">`&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;`</span> |
+| Abstract non-terminal (has alternatives) | Python class, no fields or constructor | <span class="sb">`&lt;Exp&gt;`</span> |
+| Named non-terminal field (<span class="sb">`:name`</span> on RHS) | <span class="sb">`self.name`</span> — instance of that class | <span class="sb">`&lt;Exp:left&gt;`</span> → <span class="sb">`self.left`</span> |
+| Captured terminal (<span class="sb">`&lt;TOKEN&gt;`</span>) | <span class="sb">`self.name`</span> — a <span class="sb">`Token`</span> | <span class="sb">`&lt;NUM&gt;`</span> → <span class="sb">`self.num`</span> |
+| Token string value | <span class="sb">`.lexeme`</span> on the token | <span class="sb">`self.num.lexeme`</span> → <span class="sb">`&quot;42&quot;`</span> |
+| Uncaptured terminal (no angle brackets) | Not stored, no field | <span class="sb">`PLUS`</span> in <span class="sb">`&lt;Exp:AddExp&gt;`</span> |
+| Arbno (<span class="sb">`**=`</span>) | <span class="sb">`List[ClassName] nameList`</span> | <span class="sb">`&lt;Prog&gt; **= &lt;Exp&gt;`</span> → <span class="sb">`self.expList`</span> |
+
+Without explicit <span class="sb">`:name`</span> on a RHS symbol, the field name is the symbol name lowercased. Use explicit names when two RHS symbols would produce the same field name.
+
+<span class="gu">## Fragment kinds</span>
+
+| Kind | Where injected | Typical use |
+| --- | --- | --- |
+| <span class="sb">`top`</span> | Top of the file, before imports | Module-level constants or directives |
+| <span class="sb">`import`</span> | Import section | <span class="sb">`import`</span> or <span class="sb">`from … import`</span> statements |
+| <span class="sb">`class`</span> | Class declaration line | Additional base classes (multiple inheritance) |
+| <span class="sb">`init`</span> | <span class="sb">`__init__`</span> body, after field assignments | Initialize extra instance state |
+| <span class="sb">`body`</span> | Class body | Methods, class variables |
+| <span class="sb">`file`</span> | Replaces the entire file | Standalone helper modules |
+
+<span class="sb">`body`</span> is the default when no kind is given (plain <span class="sb">`ClassName`</span> with no colon).
+
+<span class="gu">### Example</span>
+
+<span class="sb">```text</span>
+WholeExp:import
+%%%
+import sys
+%%%
+
+WholeExp
+%%%
+def eval(self):
+    x = int(self.whole.lexeme)
+    sys.stderr.write(f&quot;eval: {x}\n&quot;)
+    return x
+%%%
+<span class="sb">```</span>
+
+<span class="gu">## `_run` entry point</span>
+
+<span class="sb">`_run()`</span> is called by the runtime on the root node of each parsed tree. Define it on your start class (<span class="sb">`Prog`</span> in the quick reference example).
+
+<span class="sb">```python</span>
+<span class="n">Prog</span>
+<span class="o">%%%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># compute and return a value, or return None to produce no output</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">eval</span><span class="p">())</span> <span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">expList</span><span class="p">)</span>
+<span class="o">%%%</span>
+<span class="sb">```</span>
+
+The return value is converted to a string and printed by <span class="sb">`plcc-rep`</span>. Return <span class="sb">`None`</span> to suppress output.
+
+The default <span class="sb">`_Start._run()`</span> prints <span class="sb">`str(self)`</span>. Override it to replace the default behavior.
+
+<span class="gu">## Referencing other generated classes</span>
+
+Generated <span class="sb">`.py`</span> files are separate modules. To use a sibling class, import it with an <span class="sb">`import`</span> fragment:
+
+<span class="sb">```text</span>
+MyClass:import
+%%%
+from .OtherClass import OtherClass
+%%%
+<span class="sb">```</span>
+
+<span class="gu">## Generated output</span>
+
+<span class="sb">`plcc-python-emit`</span> writes <span class="sb">`.py`</span> files. <span class="gs">**All files are overwritten on every emit run.**</span>
+
+<span class="sb">```</span>
+<span class="sb">DIR/</span>
+<span class="sb">  main.py           — entry point</span>
+<span class="sb">  _Start.py         — default base for the start class</span>
+<span class="sb">  Prog.py           — one .py file per class from the grammar</span>
+<span class="sb">  AddExp.py</span>
+<span class="sb">  NumExp.py</span>
+<span class="sb">  runtime/</span>
+<span class="sb">    ...</span>
+<span class="sb">```</span>
+
+Do not edit these files directly.
+
+<span class="gu">## Running the quick reference example</span>
+
+Save the spec above as <span class="sb">`spec.plcc`</span>. In the same directory:
+
+<span class="sb">```bash</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1 + 2&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-rep
+<span class="sb">```</span>
+
+Expected output:
+
+<span class="sb">```text</span>
+3
+<span class="sb">```</span>
+
+<span class="gu">## Commands</span>
+
+| Command | What it does |
+| --- | --- |
+| [<span class="sb">`plcc-python-emit`</span>](../../cli/commands/plcc-python-emit.md) | Writes <span class="sb">`.py`</span> class files and a <span class="sb">`main.py`</span> entry point to the output directory |
+| [<span class="sb">`plcc-python-run`</span>](../../cli/commands/plcc-python-run.md) | Runs <span class="sb">`main.py`</span> with the system Python interpreter |
+
+No build step is required — Python does not need a compilation step, so <span class="sb">`plcc-lang-build`</span> skips silently.
+
+<span class="gu">## Restrictions</span>
+
+<span class="k">-</span><span class="w"> </span>Generated files are overwritten on every emit run — do not edit them directly.
+<span class="k">-</span><span class="w"> </span>Sibling generated classes are not automatically in scope; import them explicitly with an <span class="sb">`import`</span> fragment.
+
+<span class="gu">## Tips</span>
+
+<span class="k">-</span><span class="w"> </span>Use <span class="sb">`sys.stderr.write(...)`</span> (after <span class="sb">`import sys`</span>) for debug output so it does not interfere with the output protocol.
+<span class="k">-</span><span class="w"> </span><span class="sb">`self.num.lexeme`</span> is always a string. Use <span class="sb">`int(self.num.lexeme)`</span> or <span class="sb">`float(self.num.lexeme)`</span> to get a numeric value.
+<span class="k">-</span><span class="w"> </span>Abstract classes have no constructor. You can add methods to them via <span class="sb">`body`</span> fragments; subclasses inherit them.
+<span class="k">-</span><span class="w"> </span>The <span class="sb">`class`</span> hook enables multiple inheritance. Use it to add a base class: <span class="sb">`MyClass:class\n%%%\n, MyMixin\n%%%`</span>.
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/language-guide/languages/python.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add Python language extension page&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-4-create-cli-command-reference-pages-for-javascript">Task 4: Create CLI command reference pages for JavaScript</h2>
+<p><strong>Files:</strong>
+- Create: <code>docs/cli/commands/plcc-javascript-emit.md</code>
+- Create: <code>docs/cli/commands/plcc-javascript-run.md</code>
+- Reference: <code>docs/cli/commands/plcc-python-emit.md</code> (pattern to follow)</p>
+<ul>
+<li>[ ] <strong>Step 1: Create <code>plcc-javascript-emit.md</code></strong></li>
+</ul>
+<p>Write <code>docs/cli/commands/plcc-javascript-emit.md</code> with exactly this content:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># plcc-javascript-emit</span>
+
+Emit a JavaScript interpreter from model JSON. Reads model JSON from stdin and
+writes <span class="sb">`.js`</span> class files and a <span class="sb">`main.js`</span> entry point to the output directory.
+
+Called by [<span class="sb">`plcc-lang-emit --target=javascript`</span>](plcc-lang-emit.md).
+
+Requires Node.js 18 or later on <span class="sb">`PATH`</span> to run the emitted interpreter.
+
+<span class="gu">## Usage</span>
+
+```text
+plcc-javascript-emit --output=DIR [-v ...] [options]
+</code></pre></div>
+<h2 id="arguments-and-options">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory to write generated JavaScript files into. Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples">Examples</h2>
+<p><div class="highlight"><pre><span></span><code>plcc-spec<span class="w"> </span>spec.plcc<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-model<span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-javascript-emit<span class="w"> </span>--output<span class="o">=</span>build/javascript
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>- [ ] **Step 2: Create `plcc-javascript-run.md`**
+
+Write `docs/cli/commands/plcc-javascript-run.md` with exactly this content:
+
+```markdown
+# plcc-javascript-run
+
+Run a generated JavaScript interpreter. Reads parse tree JSON from stdin and
+passes it to `main.js` in the output directory using `node`.
+
+Called by [`plcc-lang-run --target=javascript`](plcc-lang-run.md).
+
+Requires Node.js 18 or later on `PATH`.
+
+## Usage
+
+```text
+plcc-javascript-run --output=DIR [-v ...] [options]
+</code></pre></div></p>
+<h2 id="arguments-and-options_1">Arguments and Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output=DIR</code></td>
+<td>Directory containing generated JavaScript files (from <code>plcc-javascript-emit</code>). Required.</td>
+</tr>
+<tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
+</tr>
+<tr>
+<td><code>--verbose-format=FMT</code></td>
+<td>Verbosity output format: <code>text</code> (default) or <code>json</code>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="examples_1">Examples</h2>
+<p><div class="highlight"><pre><span></span><code>plcc-javascript-run<span class="w"> </span>--output<span class="o">=</span>build/javascript
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>- [ ] **Step 3: Commit**
+
+```bash
+git add docs/cli/commands/plcc-javascript-emit.md docs/cli/commands/plcc-javascript-run.md
+git commit -m &quot;docs: add plcc-javascript-emit and plcc-javascript-run command reference pages&quot;
+</code></pre></div></p>
+<hr />
+<h2 id="task-5-slim-docslanguage-guidesemanticmd">Task 5: Slim <code>docs/language-guide/semantic.md</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>docs/language-guide/semantic.md</code></p>
+<p>Remove all language-specific tabbed examples. Replace with language-agnostic concepts and a "Choose your language" section at the bottom linking to the per-language pages. The per-language pages now own all language-specific examples.</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace the file content entirely</strong></li>
+</ul>
+<p>Overwrite <code>docs/language-guide/semantic.md</code> with exactly this content:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># Semantic Section</span>
+
+The semantic section lets you implement language semantics by injecting
+target-language code into classes generated from the syntactic section.
+
+<span class="gu">## Section header</span>
+
+A bare <span class="sb">`%`</span> line separates the previous section from the semantic section.
+The first non-blank line of the semantic section body names the target language.
+
+```text
+%
+javascript
+</code></pre></div>
+<h2 id="code-blocks">Code blocks</h2>
+<p>To inject code into a class, name the class and follow it with a <code>%%%</code> block:</p>
+<div class="highlight"><pre><span></span><code>ClassName
+%%%
+# your code here
+%%%
+</code></pre></div>
+<p>The block's content is injected into the class body. Multiple blocks for the
+same class are injected in the order they appear.</p>
+<h2 id="field-access">Field access</h2>
+<p>Fields generated from production rules become instance variables in the
+generated class. For example:</p>
+<div class="highlight"><pre><span></span><code>&lt;AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
+</code></pre></div>
+<p>generates a class with fields <code>left</code> and <code>right</code>. How you access them depends
+on your target language — see your language's page below.</p>
+<h2 id="entry-point-_run">Entry point: <code>_run</code></h2>
+<p>The start symbol's class inherits from <code>_Start</code>, which defines a <code>_run</code>
+method that is called when you run a program with <code>plcc-rep</code>. The default
+implementation prints a string representation of the parse tree root.
+Override <code>_run</code> in your start class to implement your language's semantics.</p>
+<h2 id="hooks">Hooks</h2>
+<p>Hooks inject code at specific locations within a generated class file.
+Append the hook name to the class name with a colon:</p>
+<div class="highlight"><pre><span></span><code>ClassName:hook
+%%%
+# code injected at the hook location
+%%%
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>Where code is injected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>top</code></td>
+<td>Top of the generated file</td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td>File-level import section</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td>Class declaration line (extend/implement)</td>
+</tr>
+<tr>
+<td><code>init</code></td>
+<td>Constructor / initializer</td>
+</tr>
+</tbody>
+</table>
+<p>Supported hooks and their exact placement vary by language. See your language's
+page for the full list and any language-specific restrictions.</p>
+<h2 id="adding-standalone-classes">Adding standalone classes</h2>
+<p>You can create a file that is not derived from a grammar nonterminal.
+Name a class that does not appear in the grammar and follow it with a <code>%%%</code>
+block; plcc-ng writes the block's content verbatim to a file named after
+the class.</p>
+<h2 id="choose-your-language">Choose your language</h2>
+<p>Each language page covers: prerequisites, enabling in a spec, a quick
+reference example, how BNF constructs map to language constructs, supported
+hooks, the <code>_run</code> contract, generated output, commands, restrictions, and tips.</p>
+<ul>
+<li><a href="languages/javascript.md">JavaScript</a></li>
+<li><a href="languages/java.md">Java</a></li>
+<li><a href="languages/python.md">Python</a>
+<div class="highlight"><pre><span></span><code>- [ ] **Step 2: Commit**
+
+```bash
+git add docs/language-guide/semantic.md
+git commit -m &quot;docs: slim semantic.md to concepts, link to per-language pages&quot;
+</code></pre></div></li>
+</ul>
+<hr />
+<h2 id="task-6-update-docscliguidelanguage-extensionsmd">Task 6: Update <code>docs/cli/guide/language-extensions.md</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>docs/cli/guide/language-extensions.md</code></p>
+<p>Add a <code>## plcc-javascript</code> section and update the intro sentence to mention JavaScript.</p>
+<ul>
+<li>[ ] <strong>Step 1: Update the intro sentence</strong></li>
+</ul>
+<p>Change the first paragraph from:</p>
+<div class="highlight"><pre><span></span><code>Language extensions provide the emit, build, and run steps for a specific
+target language. plcc-ng ships with Python and Java support.
+</code></pre></div>
+<p>to:</p>
+<div class="highlight"><pre><span></span><code>Language extensions provide the emit, build, and run steps for a specific
+target language. plcc-ng ships with Python, Java, and JavaScript support.
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Add the <code>## plcc-javascript</code> section</strong></li>
+</ul>
+<p>Append this section at the end of the file (after <code>## plcc-java</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## plcc-javascript</span>
+
+Emits a JavaScript interpreter from model JSON, then runs it with Node.js.
+No build step is required.
+
+| Command | What it does |
+| --- | --- |
+| [<span class="sb">`plcc-javascript-emit`</span>](../commands/plcc-javascript-emit.md) | Writes <span class="sb">`.js`</span> class files and a <span class="sb">`main.js`</span> entry point to the output directory |
+| [<span class="sb">`plcc-javascript-run`</span>](../commands/plcc-javascript-run.md) | Runs <span class="sb">`main.js`</span> with <span class="sb">`node`</span>; requires Node.js 18+ on <span class="sb">`PATH`</span> |
+
+No build step is required for JavaScript — <span class="sb">`plcc-lang-build`</span> exits silently if
+<span class="sb">`plcc-javascript-build`</span> is not found.
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/cli/guide/language-extensions.md
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add plcc-javascript section to language-extensions guide&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-7-update-mkdocsyml-and-verify-build">Task 7: Update <code>mkdocs.yml</code> and verify build</h2>
+<p><strong>Files:</strong>
+- Modify: <code>mkdocs.yml</code></p>
+<p>Add the <code>Languages</code> sub-nav under <code>Language Guide</code> and add the two new JS command docs under <code>All Commands</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Add Languages sub-nav under Language Guide</strong></li>
+</ul>
+<p>In <code>mkdocs.yml</code>, find the <code>Language Guide:</code> nav block. It currently looks like:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Language Guide</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/index.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Lexical Section</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/lexical.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Syntactic Section</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/syntactic.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Semantic Section</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/semantic.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Examples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/examples.md</span>
+</code></pre></div>
+<p>Replace it with:</p>
+<div class="highlight"><pre><span></span><code><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Language Guide</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/index.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Lexical Section</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/lexical.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Syntactic Section</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/syntactic.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Semantic Section</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/semantic.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Languages</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">JavaScript</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/languages/javascript.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Java</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/languages/java.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Python</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/languages/python.md</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Examples</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">language-guide/examples.md</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Add JS command docs to All Commands</strong></li>
+</ul>
+<p>In <code>mkdocs.yml</code>, find the <code>All Commands:</code> block. Add these two entries in alphabetical order alongside the existing command docs:</p>
+<div class="highlight"><pre><span></span><code><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-javascript-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-javascript-emit.md</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-javascript-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-javascript-run.md</span>
+</code></pre></div>
+<p>They belong between <code>plcc-java-run</code> and <code>plcc-lang-build</code> alphabetically.</p>
+<ul>
+<li>[ ] <strong>Step 3: Verify the site builds</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>mkdocs<span class="w"> </span>build<span class="w"> </span>--strict<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
+<p>Expected: build completes with no errors. If there are broken link warnings, fix them before committing.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>mkdocs.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;docs: add Languages nav and JavaScript command docs to mkdocs.yml&quot;</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
