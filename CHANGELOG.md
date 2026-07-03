@@ -1,6 +1,26 @@
 # CHANGELOG
 
 
+## v0.64.2 (2026-07-03)
+
+### Bug Fixes
+
+- **docs**: Consolidate gh-pages pushes to stop competing Pages deploys
+  ([`0d111cb`](https://github.com/ourPLCC/plcc-ng/commit/0d111cbd02fb3baf5129a4998b2839235fae9105))
+
+deploy-user-docs (mike) and deploy-dev-docs (peaceiris) each pushed to gh-pages independently, and
+  each push separately triggers GitHub's automatic Pages build-and-deploy. The two pushes landed
+  ~50s apart, so the first deployment was routinely superseded by the second and reported as
+  "Deployment failed, try again later" even though the site content was fine.
+
+Merge into one job: run mike without --push, checkout the resulting local gh-pages branch, merge the
+  built dev-docs into it, and push once. Verified the git/mike mechanics against an isolated clone
+  with a fake remote (mike's local-commit-without-push behavior, the gh-pages checkout picking it
+  up, and idempotent no-op pushes on repeat runs).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+
 ## v0.64.1 (2026-07-03)
 
 ### Bug Fixes
