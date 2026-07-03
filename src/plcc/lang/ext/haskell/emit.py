@@ -44,7 +44,7 @@ def emit(model, output_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
     modules = _group_modules(model['classes'])
     _write_cabal(modules, output_dir)
-    _copy_token(output_dir)
+    _copy_runtime_files(output_dir)
     section = _find_haskell_section(model)
     all_frags = section.get('fragments', []) if section else []
     fragments_by_class = _group_fragments(all_frags)
@@ -65,14 +65,12 @@ def _write_main(start_module, modules, output_dir):
         '{-# LANGUAGE OverloadedStrings, ScopedTypeVariables #-}\n'
         'module Main where\n'
         '\n'
-        'import Control.Exception (Exception, SomeException, catch, evaluate)\n'
+        'import Control.Exception (SomeException, catch, evaluate)\n'
         'import Data.Aeson (eitherDecode, encode, object, (.=))\n'
         'import qualified Data.ByteString.Lazy.Char8 as BL\n'
         'import System.IO (hSetBuffering, stdout, BufferMode (..))\n'
+        'import LanguageError\n'
         f'{import_lines}\n'
-        '\n'
-        'newtype LanguageError = LanguageError String deriving Show\n'
-        'instance Exception LanguageError\n'
         '\n'
         'main :: IO ()\n'
         'main = do\n'
@@ -140,7 +138,7 @@ def _group_modules(classes):
 
 
 def _write_cabal(modules, output_dir):
-    module_list = ', '.join(['Token'] + sorted(modules))
+    module_list = ', '.join(['Token', 'LanguageError'] + sorted(modules))
     content = (
         'cabal-version: 3.0\n'
         'name:          interpreter\n'
@@ -156,9 +154,10 @@ def _write_cabal(modules, output_dir):
     (output_dir / 'interpreter.cabal').write_text(content)
 
 
-def _copy_token(output_dir):
-    src = Path(__file__).parent / 'runtime' / 'Token.hs'
-    shutil.copy(src, output_dir / 'Token.hs')
+def _copy_runtime_files(output_dir):
+    for name in ('Token.hs', 'LanguageError.hs'):
+        src = Path(__file__).parent / 'runtime' / name
+        shutil.copy(src, output_dir / name)
 
 
 def _write_module(module_name, module_info, fragments_by_class, output_dir, is_start=False):
@@ -187,6 +186,8 @@ def _render_module(module_name, module_info, fragments_by_class):
     lines.append('import Data.Aeson (FromJSON (..), Value (..), withObject, (.:))')
     lines.append('import Data.List (sort)')
     lines.append('import Token')
+    lines.append('import LanguageError')
+    lines.append('import Control.Exception (throw)')
     for imp in _collect_imports(module_name, module_info):
         lines.append(f'import {imp}')
     for f in import_frags:

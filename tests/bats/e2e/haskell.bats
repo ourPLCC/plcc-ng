@@ -56,6 +56,7 @@ teardown() {
 
     [ -f "$OUT_DIR/interpreter.cabal" ]
     [ -f "$OUT_DIR/Token.hs" ]
+    [ -f "$OUT_DIR/LanguageError.hs" ]
     [ -f "$OUT_DIR/Main.hs" ]
     [ -f "$OUT_DIR/Program.hs" ]
 }

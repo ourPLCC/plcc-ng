@@ -64,6 +64,12 @@ def test_cabal_file_lists_token_module(monkeypatch, tmp_path):
     assert 'Token' in text
 
 
+def test_cabal_file_lists_language_error_module(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'interpreter.cabal').read_text()
+    assert 'LanguageError' in text.split('other-modules:')[1].splitlines()[0]
+
+
 def test_emit_copies_token_hs(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     assert (tmp_path / 'Token.hs').exists()
@@ -73,6 +79,17 @@ def test_token_hs_contains_token_module(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     text = (tmp_path / 'Token.hs').read_text()
     assert 'module Token' in text
+
+
+def test_emit_copies_language_error_hs(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    assert (tmp_path / 'LanguageError.hs').exists()
+
+
+def test_language_error_hs_contains_module(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'LanguageError.hs').read_text()
+    assert 'module LanguageError' in text
 
 
 def test_emit_writes_module_for_abstract_rule(monkeypatch, tmp_path):
@@ -96,6 +113,18 @@ def test_concrete_constructor_has_token_field(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     text = (tmp_path / 'Expr.hs').read_text()
     assert 'num :: Token' in text
+
+
+def test_generated_module_imports_language_error(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'import LanguageError' in text
+
+
+def test_generated_module_imports_throw(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'import Control.Exception (throw)' in text
 
 
 def test_emit_writes_module_for_lone_concrete(monkeypatch, tmp_path):
@@ -307,6 +336,20 @@ def test_write_main_contains_language_error(tmp_path):
     _write_main("Program", {}, tmp_path)
     main_hs = (tmp_path / 'Main.hs').read_text()
     assert 'LanguageError' in main_hs
+
+
+def test_write_main_imports_language_error_module(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert 'import LanguageError' in main_hs
+
+
+def test_write_main_does_not_define_language_error_inline(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert 'newtype LanguageError' not in main_hs
 
 
 def test_write_main_contains_ready_signal(tmp_path):

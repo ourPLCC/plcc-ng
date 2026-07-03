@@ -31,3 +31,12 @@ bats_require_minimum_version 1.5.0
     [ -f "$out/Token.hs" ]
     rm -rf "$out"
 }
+
+@test "plcc-haskell-emit: emits LanguageError.hs given minimal model" {
+    local out
+    out=$(mktemp -d)
+    echo '{"start":"prog","classes":[{"name":"Prog","extends":null,"abstract":false,"rule_name":"prog","fields":[]}],"semantic_sections":[]}' \
+        | plcc-haskell-emit --output="$out"
+    [ -f "$out/LanguageError.hs" ]
+    rm -rf "$out"
+}
