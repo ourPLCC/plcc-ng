@@ -405,6 +405,10 @@
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-07-03-131-haskell-language-error-runtime-module/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
@@ -562,6 +566,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-07-01-language-error-in-scope-by-default-design/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-07-03-131-haskell-language-error-runtime-module-design/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
 </urlset>
