@@ -11,11 +11,12 @@
 ## Global Constraints
 
 - Design doc: `docs/superpowers/specs/2026-07-03-133-docs-gate-pypi-publish-design.md`
-- Scope is limited to issue 133 (ordering/gating). Do not touch retry logic (issue 134) or PyPI environment protection (issue 138).
-- `docs.yml` must not be modified — the design relies on the existing `release: published` trigger continuing to work unchanged, just firing later.
+- Scope covers issue 133 (ordering/gating) and issue 139 (GITHUB_TOKEN-created releases don't trigger downstream workflows — folded in because it's a direct prerequisite for this fix to have any effect). Do not touch retry logic (issue 134) or PyPI environment protection (issue 138).
+- `docs.yml` must not be modified — the design relies on the existing `release: published` trigger continuing to work unchanged, just firing later (and, per issue 139, actually reaching it).
 - The `create-release` job's gating condition must be exactly:
   `needs.semantic-release.outputs.released == 'true' && needs.publish.result == 'success'`
   (omitting the `needs.publish.result` check reproduces the bug — see design doc §2).
+- The `create-release` job must authenticate `gh release create` with a GitHub App installation token (via `actions/create-github-app-token@v1`, `secrets.RELEASE_APP_ID` / `secrets.RELEASE_APP_PRIVATE_KEY`), not `secrets.GITHUB_TOKEN` — see design doc's "Release creation must use the GitHub App token" section.
 - No CI test tier exists for GitHub Actions YAML in this repo (no `actionlint`/`yamllint` installed). Verification is YAML-syntax parsing plus manual trace against the design doc's behavior matrix.
 
 ---
@@ -76,12 +77,19 @@ Add this job to `.github/workflows/release.yml`, after the `publish` job (i.e., 
       needs.publish.result == 'success'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ format('v{0}', needs.semantic-release.outputs.version) }}
+          token: ${{ steps.app-token.outputs.token }}
       - name: Create GitHub Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           VERSION="${{ needs.semantic-release.outputs.version }}"
           gh release create "v${VERSION}" \
@@ -89,6 +97,8 @@ Add this job to `.github/workflows/release.yml`, after the `publish` job (i.e., 
             --target "${{ github.sha }}" \
             --generate-notes
 ```
+
+This uses the GitHub App installation token (same secrets `semantic-release` already uses) instead of `secrets.GITHUB_TOKEN`, and checks out the pushed `v{version}` tag instead of `github.sha` — see design doc's "Release creation must use the GitHub App token" section for why (issue 139: `GITHUB_TOKEN`-created releases don't trigger downstream workflows, so `docs.yml` would never receive `release: published` regardless of this task's gating fix).
 
 - [ ] **Step 4: Validate YAML syntax**
 
@@ -134,6 +144,34 @@ semantic-release and publish, with an explicit check on
 needs.publish.result since a custom `if:` on a job disables the
 implicit success-of-dependencies check GitHub Actions would otherwise
 apply.
+EOF
+)"
+```
+
+- [ ] **Step 8: Fold in issue 139's fix (GitHub App token instead of GITHUB_TOKEN)**
+
+Raised by PR review after Step 7's commit landed: `secrets.GITHUB_TOKEN` is
+subject to GitHub's recursion-prevention rule, so events it creates
+(including the `release: published` this whole task depends on) may never
+reach `docs.yml`. Apply the `create-release` job changes shown in Step 3
+above (the `actions/create-github-app-token@v1` step, checkout `ref`/`token`,
+and `GH_TOKEN: ${{ steps.app-token.outputs.token }}`), then repeat Step 4
+(YAML syntax check) and Step 6 (`bin/test/units.bash` regression check).
+
+Commit:
+
+```bash
+git add .github/workflows/release.yml
+git commit -m "$(cat <<'EOF'
+fix(release): authenticate create-release with GitHub App token
+
+gh release create was authenticated with secrets.GITHUB_TOKEN, which
+GitHub Actions exempts from triggering downstream workflows (recursion
+prevention). That meant docs.yml's release:published listener likely
+never fired on any past release, regardless of this branch's ordering
+fix. Switch to the GitHub App installation token semantic-release
+already uses, and checkout the pushed version tag for consistency with
+the publish job's checkout. Closes issue 139.
 EOF
 )"
 ```

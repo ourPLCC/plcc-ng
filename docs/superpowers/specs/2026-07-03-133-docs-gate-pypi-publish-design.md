@@ -17,8 +17,11 @@ can point users at a version that isn't installable yet, or never will be if
 
 ## Scope
 
-This design covers only the ordering/gating bug (issue 133). It does not
-address:
+This design covers the ordering/gating bug (issue 133) and, since it was
+discovered mid-implementation to be a direct prerequisite for the fix to
+have any effect, issue 139 (releases created with `GITHUB_TOKEN` don't
+trigger downstream workflows — see "Release creation must use the GitHub
+App token" below). It does not address:
 - Issue 134 (no recovery path if a tagged release's `publish` job fails)
 - Issue 138 (whether the `pypi` environment has a required-reviewer gate)
 
@@ -64,12 +67,19 @@ create-release:
     needs.publish.result == 'success'
   runs-on: ubuntu-latest
   steps:
+    - uses: actions/create-github-app-token@v1
+      id: app-token
+      with:
+        app-id: ${{ secrets.RELEASE_APP_ID }}
+        private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        ref: ${{ format('v{0}', needs.semantic-release.outputs.version) }}
+        token: ${{ steps.app-token.outputs.token }}
     - name: Create GitHub Release
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
       run: |
         VERSION="${{ needs.semantic-release.outputs.version }}"
         gh release create "v${VERSION}" \
@@ -81,6 +91,30 @@ create-release:
 Without the explicit `needs.publish.result == 'success'` clause, a failed
 `publish` job would still leave `create-release` free to run, reproducing
 the bug this design fixes.
+
+### Release creation must use the GitHub App token, not GITHUB_TOKEN (issue 139)
+
+The original step (both before this design and in an earlier draft of it)
+authenticated `gh release create` with `secrets.GITHUB_TOKEN`. GitHub
+Actions suppresses downstream workflow triggers for events created by the
+automatic `GITHUB_TOKEN` (recursion prevention) — for `release: published`,
+this means `docs.yml` may never run at all, regardless of timing. Evidence
+for this in this repo: `gh-pages`'s `versions.json` shows only a `dev`
+entry despite 60+ tagged releases — the release-triggered docs deploy job
+appears to have never fired.
+
+The fix is to mint a GitHub App installation token (`actions/create-github-app-token@v1`,
+the same `RELEASE_APP_ID` / `RELEASE_APP_PRIVATE_KEY` secrets the
+`semantic-release` job already uses) and use that token both for checkout
+and as `GH_TOKEN` when calling `gh release create`. Events created with an
+app installation token are not subject to the `GITHUB_TOKEN` recursion
+restriction, so `release: published` reaches `docs.yml` as intended.
+
+The checkout is also changed to check out the pushed `v{version}` tag
+(via `ref:`) rather than `github.sha`, matching how the `publish` job
+checks out the same tag — consistent, and necessary once checkout needs
+the app token's ref resolution to match the tag `gh release create`
+operates on.
 
 ### Behavior across trigger types
 
