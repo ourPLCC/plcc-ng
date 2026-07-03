@@ -2,7 +2,7 @@
 
 This document is the practical guide for working in this repository: the commands you run, the test tiers, and the conventions that keep work consistent. Read it before making changes.
 
-For architectural context, see [docs/design/2026-04-12-multi-lang-pipeline.md](docs/design/2026-04-12-multi-lang-pipeline.md) (architectural spec) and [docs/design/2026-04-12-multi-lang-implementation-plan.md](docs/design/2026-04-12-multi-lang-implementation-plan.md) (roadmap). This document does not duplicate them.
+For architectural context, see [dev-docs/specs/2026-04-12-multi-lang-pipeline.md](dev-docs/specs/2026-04-12-multi-lang-pipeline.md) (architectural spec). Open work is tracked in [dev-docs/roadmap.md](dev-docs/roadmap.md); the issue workflow behind it is described in [dev-docs/issue-conventions.md](dev-docs/issue-conventions.md). This document does not duplicate them.
 
 ## Common commands
 
@@ -94,6 +94,6 @@ Check [bin/](bin/) first. If a script there does what you need, use it. If one a
 
 ## Workflow
 
-Work happens on feature branches, not on `main`. Branch names describe the work (e.g. `fix-scanner-skip-regression`, `add-python-emitter`). Long-running initiatives may use a shared integration branch — v9 development, for example, currently lives on `multi-lang` per the roadmap (§2) and will merge into `main` at the Phase 5 cutover — but that is a property of the initiative, not a general rule.
+Work happens on feature branches, not on `main`. Branch names describe the work (e.g. `fix-scanner-skip-regression`, `add-python-emitter`). Long-running initiatives may use a shared integration branch, but that is a property of the initiative, not a general rule — there is currently no such branch; everything merges directly to `main`.
 
 Commits follow conventional-commit style (`feat(scope): …`, `fix(scope): …`, `docs(scope): …`, `test(scope): …`, `refactor(scope): …`, `build(scope): …`, `ci: …`, `chore: …`). Match the scope names already in use in the git log. The CI workflow skips automatically for pull requests that touch only `dev-docs/`, `docs/`, top-level `*.md` files, `mkdocs.yml`, or `mkdocs-dev.yml` — no `[skip ci]` annotation needed.
