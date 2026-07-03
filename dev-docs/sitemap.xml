@@ -41,14 +41,6 @@
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/131-haskell-language-error-not-accessible-from-user-code/</loc>
-         <lastmod>2026-07-03</lastmod>
-    </url>
-    <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/133-release-docs-deploy-decoupled-from-pypi-publish/</loc>
-         <lastmod>2026-07-03</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/134-release-pypi-publish-failure-recovery/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
@@ -581,7 +573,15 @@
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/131-haskell-language-error-not-accessible-from-user-code/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/132-language-error-in-scope-by-default/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/133-release-docs-deploy-decoupled-from-pypi-publish/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
