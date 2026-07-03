@@ -9,14 +9,29 @@ then evaluates it using the generated semantics.
 plcc-rep [-v ...] [options] [SOURCE ...]
 ```
 
-## Arguments and Options
+## Arguments
 
-| Argument/Option | Description |
+| Argument | Description |
 |---|---|
 | `SOURCE` | Source files to evaluate. Omit (or pass `-`) to enter interactive mode. |
-| `-s PATH`, `--spec=PATH` | Spec file to build from. Remembered across invocations in the same directory. Defaults to `spec.plcc`. |
-| `-b`, `--banner` | Print the plcc-ng version, spec path, and target language to stderr. |
+
+## Options
+
+| Option | Description |
+|---|---|
 | `-h`, `--help` | Show usage and exit. |
+| `-s PATH`, `--spec=PATH` | Spec file to build from. Remembered across invocations in the same directory. Defaults to `spec.plcc`. |
+
+## Output
+
+| Option | Description |
+|---|---|
+| `-b`, `--banner` | Print the plcc-ng version, spec path, and target language to stderr. |
+
+## Diagnostics
+
+| Option | Description |
+|---|---|
 | `-v` | Increase verbosity (repeat for more: `-v`, `-vv`, `-vvv`). |
 | `--verbose-format=FMT` | Verbosity output format: `text` (default) or `json`. |
 
