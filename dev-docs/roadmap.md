@@ -1,13 +1,10 @@
 # Roadmap
 
-10 open issues as of 2026-07-03.
+9 open issues as of 2026-07-03.
 
 ## Open Issues
 
 ### Docs
-
-- **[#128](issues/128-docs-help-options-output-diagnostics.md) — Update command reference pages for Options/Output/Diagnostics help restructuring**
-  Issue 115 reorganized `--help` output; command reference pages may be stale.
 
 - **[#130](issues/130-release-sop.md) — Write the release SOP**
   `dev-docs/release-sop.md` is empty; needed before v1.0.
