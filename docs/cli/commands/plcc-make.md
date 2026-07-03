@@ -13,14 +13,24 @@ You can also call it directly to pre-build before running other commands.
 plcc-make [-v ...] [options]
 ```
 
-## Arguments and Options
+## Options
 
 | Option | Description |
 |---|---|
+| `-h`, `--help` | Show usage and exit. |
 | `-s PATH`, `--spec=PATH` | Spec file to build from. Remembered across invocations in the same directory. Defaults to `spec.plcc` on first use. |
 | `--through=LEVEL` | Build up to this level: `scan`, `parse`, `model`, or `all`. Default: `all`. |
+
+## Output
+
+| Option | Description |
+|---|---|
 | `-b`, `--banner` | Print the plcc-ng version and spec path to stderr. |
-| `-h`, `--help` | Show usage and exit. |
+
+## Diagnostics
+
+| Option | Description |
+|---|---|
 | `-v` | Increase verbosity (repeat for more: `-v`, `-vv`, `-vvv`). |
 | `--verbose-format=FMT` | Verbosity output format: `text` (default) or `json`. |
 
