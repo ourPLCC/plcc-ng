@@ -14,8 +14,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy-user-docs:
-    name: Deploy user docs
+  deploy-docs:
+    name: Deploy docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,9 +36,9 @@ jobs:
       - name: Deploy dev docs preview (on push to main)
         if: github.event_name == 'push'
         run: |
-          pdm run mike deploy --push dev
+          pdm run mike deploy dev
           if ! pdm run mike list 2>/dev/null | grep -qw 'latest'; then
-            pdm run mike set-default --push dev
+            pdm run mike set-default dev
           fi
       - name: Deploy versioned docs (on release)
         if: github.event_name == 'release'
@@ -46,31 +46,16 @@ jobs:
           VERSION="${{ github.ref_name }}"
           # Strip leading 'v' (v1.2.3 → 1.2.3), then take major.minor (1.2)
           MAJOR_MINOR=$(echo "${VERSION#v}" | cut -d. -f1,2)
-          pdm run mike deploy --push --update-aliases "${MAJOR_MINOR}" latest
-          pdm run mike set-default --push latest
-
-  deploy-dev-docs:
-    name: Deploy developer docs
-    needs: [deploy-user-docs]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.14'
-      - name: Install PDM
-        run: pip install pdm
-      - name: Install dependencies
-        run: pdm install
+          pdm run mike deploy --update-aliases "${MAJOR_MINOR}" latest
+          pdm run mike set-default latest
       - name: Build developer docs
         run: pdm run mkdocs build --config-file mkdocs-dev.yml
-      - name: Deploy developer docs
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site-dev
-          destination_dir: dev-docs
-          keep_files: true
+      - name: Merge developer docs into gh-pages
+        run: |
+          git checkout gh-pages
+          rsync -a --delete site-dev/ dev-docs/
+          git add dev-docs
+          git diff --cached --quiet || git commit -m "deploy: dev-docs for ${GITHUB_SHA}"
+      - name: Push gh-pages
+        run: |
+          git push origin gh-pages
