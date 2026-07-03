@@ -44,7 +44,7 @@ instance Exception LanguageError
 - Replace `_copy_token(output_dir)` with `_copy_runtime_files(output_dir)`, which copies both `Token.hs` and `LanguageError.hs` from `runtime/` into the output root (one loop instead of two near-duplicate functions).
 - `_write_main`: remove the inline `newtype LanguageError ...` / `instance Exception LanguageError` lines. Add a hardcoded `import LanguageError` to `Main.hs`'s import block (alongside `Control.Exception`, `Data.Aeson`, etc.) since `Main.hs`'s `catch` handler still pattern-matches on `LanguageError`.
 - `_write_cabal`: `module_list` becomes `', '.join(['Token', 'LanguageError'] + sorted(modules))`.
-- `_render_module`: add `lines.append('import LanguageError')` next to the existing `lines.append('import Token')` (`emit.py:189`), so every generated user module gets it automatically.
+- `_render_module`: add `lines.append('import LanguageError')` next to the existing `lines.append('import Token')` (`emit.py:189`), so every generated user module gets it automatically. Also add `lines.append('import Control.Exception (throw)')` — `LanguageError` is only useful if user code can also call `throw`, and `throw` is a plain function from `Control.Exception` (part of `base`, already a build-depends), not a keyword, so it needs the same auto-import treatment. Usage becomes `throw (LanguageError "message")`, directly analogous to Python's `raise LanguageError(...)` and Java's `throw new LanguageError(...)`.
 
 ## What Does Not Change
 
@@ -58,7 +58,7 @@ instance Exception LanguageError
 - `emit_test.py`:
   - Update `test_write_main_contains_language_error` to assert `import LanguageError` appears in `Main.hs` (replacing the old inline-`newtype` assertion).
   - Assert `LanguageError.hs` is copied into the emitted output directory.
-  - Assert a rendered module (`_render_module` output) contains `import LanguageError`.
+  - Assert a rendered module (`_render_module` output) contains `import LanguageError` and `import Control.Exception (throw)`.
   - Assert the cabal `other-modules` list includes `LanguageError`.
 
 No bats/e2e test is added — none of the other three languages have a `LanguageError` bats/e2e test either; unit-level coverage plus the existing `haskell_roundtrip.bats` (unaffected) is the established bar.
@@ -67,5 +67,5 @@ No bats/e2e test is added — none of the other three languages have a `Language
 
 `docs/language-guide/languages/haskell.md`:
 
-- Rewrite the `## LanguageError` section (lines 131-137): drop the "not currently accessible" caveat, add a `throw (LanguageError "message")` usage example, and note that Haskell has no subclassing — unlike the other three languages' "named error type via subclass" convention, `LanguageError "msg"` (with a distinguishing message) is the only form available.
+- Rewrite the `## LanguageError` section (lines 131-137): drop the "not currently accessible" caveat, add a `throw (LanguageError "message")` usage example (both `LanguageError` and `throw` are in scope without an import fragment), and note that Haskell has no subclassing — unlike the other three languages' "named error type via subclass" convention, `LanguageError "msg"` (with a distinguishing message) is the only form available.
 - Add `LanguageError.hs` to the generated-output file listing (~lines 150-161).
