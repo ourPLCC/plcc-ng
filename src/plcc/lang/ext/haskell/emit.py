@@ -44,7 +44,7 @@ def emit(model, output_dir):
     output_dir.mkdir(parents=True, exist_ok=True)
     modules = _group_modules(model['classes'])
     _write_cabal(modules, output_dir)
-    _copy_token(output_dir)
+    _copy_runtime_files(output_dir)
     section = _find_haskell_section(model)
     all_frags = section.get('fragments', []) if section else []
     fragments_by_class = _group_fragments(all_frags)
@@ -156,9 +156,10 @@ def _write_cabal(modules, output_dir):
     (output_dir / 'interpreter.cabal').write_text(content)
 
 
-def _copy_token(output_dir):
-    src = Path(__file__).parent / 'runtime' / 'Token.hs'
-    shutil.copy(src, output_dir / 'Token.hs')
+def _copy_runtime_files(output_dir):
+    for name in ('Token.hs', 'LanguageError.hs'):
+        src = Path(__file__).parent / 'runtime' / name
+        shutil.copy(src, output_dir / name)
 
 
 def _write_module(module_name, module_info, fragments_by_class, output_dir, is_start=False):

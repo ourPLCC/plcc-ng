@@ -75,6 +75,17 @@ def test_token_hs_contains_token_module(monkeypatch, tmp_path):
     assert 'module Token' in text
 
 
+def test_emit_copies_language_error_hs(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    assert (tmp_path / 'LanguageError.hs').exists()
+
+
+def test_language_error_hs_contains_module(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'LanguageError.hs').read_text()
+    assert 'module LanguageError' in text
+
+
 def test_emit_writes_module_for_abstract_rule(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     assert (tmp_path / 'Expr.hs').exists()
