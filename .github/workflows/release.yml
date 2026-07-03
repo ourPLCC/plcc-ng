@@ -38,17 +38,6 @@ jobs:
           changelog: "true"
           vcs_release: "false"
 
-      - name: Create GitHub Release
-        if: steps.release.outputs.released == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION="${{ steps.release.outputs.version }}"
-          gh release create "v${VERSION}" \
-            --title "v${VERSION}" \
-            --target "${{ github.sha }}" \
-            --generate-notes
-
   publish:
     name: Publish to PyPI
     needs: semantic-release
@@ -94,3 +83,31 @@ jobs:
       - name: Publish to PyPI
         if: github.event_name != 'workflow_dispatch'
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  create-release:
+    name: Create GitHub Release
+    needs: [semantic-release, publish]
+    if: |
+      needs.semantic-release.outputs.released == 'true' &&
+      needs.publish.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ format('v{0}', needs.semantic-release.outputs.version) }}
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          VERSION="${{ needs.semantic-release.outputs.version }}"
+          gh release create "v${VERSION}" \
+            --title "v${VERSION}" \
+            --target "${{ github.sha }}" \
+            --generate-notes
