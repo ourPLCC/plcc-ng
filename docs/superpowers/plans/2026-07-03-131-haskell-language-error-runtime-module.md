@@ -13,7 +13,7 @@
 - GHC 9.4+ and cabal 3.0+ (existing project requirement — see `docs/language-guide/languages/haskell.md` Prerequisites).
 - `interpreter.cabal`'s `build-depends` stays `base, aeson, bytestring, text` — no new dependency; `Control.Exception` and the `Exception` typeclass are part of `base`.
 - Follow `Token.hs`'s existing idiom: runtime files are copied flat into the output root (`output_dir/LanguageError.hs`), **not** into an `output_dir/runtime/` subdirectory (unlike Python/Java/JS, which copy the whole `runtime/` tree).
-- No bats/e2e test is added for `LanguageError` — none of the other three languages have one either; unit-level coverage is the established bar for this feature. `tests/bats/e2e/haskell_roundtrip.bats` must still pass unmodified.
+- No new bats/e2e *behavioral* test file is added for `LanguageError` — none of the other three languages have one either; unit-level coverage is the established bar for that. However, per project convention (emitter output changes get bats coverage), the *existing* bats assertions that check individual emitted files must be extended with a `LanguageError.hs` existence check, alongside their existing `Token.hs` check: `tests/bats/commands/plcc-haskell-emit.bats` and `tests/bats/e2e/haskell.bats`. `tests/bats/e2e/haskell_roundtrip.bats` must still pass unmodified.
 - Generated output files are always fully overwritten on every emit run — do not special-case `LanguageError.hs`.
 
 ---
@@ -23,7 +23,7 @@
 **Files:**
 - Create: `src/plcc/lang/ext/haskell/runtime/LanguageError.hs`
 - Modify: `src/plcc/lang/ext/haskell/emit.py:43-47,159-161` (the `emit()` function and `_copy_token`)
-- Test: `src/plcc/lang/ext/haskell/emit_test.py`
+- Test: `src/plcc/lang/ext/haskell/emit_test.py`, `tests/bats/commands/plcc-haskell-emit.bats`, `tests/bats/e2e/haskell.bats`
 
 **Interfaces:**
 - Produces: `runtime/LanguageError.hs` containing `newtype LanguageError = LanguageError String deriving Show` and `instance Exception LanguageError`. `_copy_runtime_files(output_dir)` replaces `_copy_token(output_dir)` and copies both `Token.hs` and `LanguageError.hs` into `output_dir`.
@@ -99,10 +99,40 @@ becomes:
 Run: `bin/test/units.bash src/plcc/lang/ext/haskell/emit_test.py -v`
 Expected: PASS — all tests in the file, including the two new ones and the pre-existing `test_emit_copies_token_hs` / `test_token_hs_contains_token_module` (must still pass unchanged).
 
+- [ ] **Step 5b: Extend the bats command and e2e tests to cover the new emitted file**
+
+Per project convention, emitter output changes get bats coverage alongside the pytest unit tests. Add a `LanguageError.hs` existence check next to the existing `Token.hs` check in both files.
+
+In `tests/bats/commands/plcc-haskell-emit.bats`, add directly after the `"plcc-haskell-emit: emits Token.hs given minimal model"` test (lines 26-33):
+
+```bash
+@test "plcc-haskell-emit: emits LanguageError.hs given minimal model" {
+    local out
+    out=$(mktemp -d)
+    echo '{"start":"prog","classes":[{"name":"Prog","extends":null,"abstract":false,"rule_name":"prog","fields":[]}],"semantic_sections":[]}' \
+        | plcc-haskell-emit --output="$out"
+    [ -f "$out/LanguageError.hs" ]
+    rm -rf "$out"
+}
+```
+
+In `tests/bats/e2e/haskell.bats`, in the `"haskell pipeline: spec to model to emit produces expected files"` test, add a line next to the existing `[ -f "$OUT_DIR/Token.hs" ]` assertion:
+
+```bash
+    [ -f "$OUT_DIR/interpreter.cabal" ]
+    [ -f "$OUT_DIR/Token.hs" ]
+    [ -f "$OUT_DIR/LanguageError.hs" ]
+    [ -f "$OUT_DIR/Main.hs" ]
+    [ -f "$OUT_DIR/Program.hs" ]
+```
+
+Run: `bin/test/commands.bash` and `bin/test/e2e.bash` (or, if `bats` is not directly runnable in this environment, run `bin/install/bats.bash` first).
+Expected: PASS — both new assertions pass alongside all pre-existing bats assertions in these two files.
+
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/plcc/lang/ext/haskell/runtime/LanguageError.hs src/plcc/lang/ext/haskell/emit.py src/plcc/lang/ext/haskell/emit_test.py
+git add src/plcc/lang/ext/haskell/runtime/LanguageError.hs src/plcc/lang/ext/haskell/emit.py src/plcc/lang/ext/haskell/emit_test.py tests/bats/commands/plcc-haskell-emit.bats tests/bats/e2e/haskell.bats
 git commit -m "feat(haskell): add runtime/LanguageError.hs and copy it into emitted output"
 ```
 
