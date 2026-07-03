@@ -1,6 +1,100 @@
 # CHANGELOG
 
 
+## v0.64.1 (2026-07-03)
+
+### Bug Fixes
+
+- **release**: Authenticate create-release with GitHub App token
+  ([`e4843c5`](https://github.com/ourPLCC/plcc-ng/commit/e4843c520ce2f0b39f8c30c3c824b13db2887fff))
+
+gh release create was authenticated with secrets.GITHUB_TOKEN, which GitHub Actions exempts from
+  triggering downstream workflows (recursion prevention). That meant docs.yml's release:published
+  listener likely never fired on any past release, regardless of this branch's ordering fix. Switch
+  to the GitHub App installation token semantic-release already uses, and checkout the pushed
+  version tag for consistency with the publish job's checkout.
+
+Closes issue 139, raised via PR review.
+
+- **release**: Gate GitHub Release creation on publish job success
+  ([`799189c`](https://github.com/ourPLCC/plcc-ng/commit/799189c0916bcd8fa55c52b41ca8b4061613f3d0))
+
+The semantic-release job used to create the GitHub Release immediately after tagging, before the
+  publish job (TestPyPI, smoke test, real PyPI) ran. docs.yml deploys and promotes docs to `latest`
+  on release:published, so it could fire before, or even if, the version ever reached PyPI.
+
+Move release creation into a new create-release job that needs both semantic-release and publish,
+  with an explicit check on needs.publish.result since a custom `if:` on a job disables the implicit
+  success-of-dependencies check GitHub Actions would otherwise apply.
+
+### Chores
+
+- **issues**: Bump next-id counter after filing issue 139
+  ([`0dd5645`](https://github.com/ourPLCC/plcc-ng/commit/0dd564568767309ec2cd46951dd5066d2c2e291f))
+
+### Documentation
+
+- **cli**: Split plcc-diagram reference into Options/Output/Diagnostics sections
+  ([`83d12ea`](https://github.com/ourPLCC/plcc-ng/commit/83d12eadcebb16d4152ffca785ae0548fb690a47))
+
+- **cli**: Split plcc-make reference into Options/Output/Diagnostics sections
+  ([`1ba4d07`](https://github.com/ourPLCC/plcc-ng/commit/1ba4d0711ae0d0584b66fb69a1d687cd4b7e38be))
+
+- **cli**: Split plcc-parse reference into Options/Output/Diagnostics sections
+  ([`1665d9c`](https://github.com/ourPLCC/plcc-ng/commit/1665d9ccef070c3a753b3970be909a5d339342cd))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **cli**: Split plcc-rep reference into Options/Output/Diagnostics sections
+  ([`7f38d1a`](https://github.com/ourPLCC/plcc-ng/commit/7f38d1a9a65295da4d408ec431b95d9741653f79))
+
+- **cli**: Split plcc-scan reference into Options/Output/Diagnostics sections
+  ([`36966d7`](https://github.com/ourPLCC/plcc-ng/commit/36966d78eb39af26d8cb8e144e88f6a5f7421653))
+
+- **issues**: Add issue 139 for GITHUB_TOKEN not triggering release:published
+  ([`fda3bac`](https://github.com/ourPLCC/plcc-ng/commit/fda3bacd910404f3b50140083f6f973695d41c83))
+
+Found during issue 133's whole-branch review: gh-pages/versions.json shows no versioned docs have
+  ever deployed despite 60+ tagged releases, matching GitHub's documented recursion-prevention
+  behavior for GITHUB_TOKEN-created events.
+
+- **issues**: Add issues 133-138 for release pipeline gaps, update roadmap
+  ([`697c6ee`](https://github.com/ourPLCC/plcc-ng/commit/697c6ee6a23a75d0ee7fa537220462d2c3e6f5cc))
+
+Found while writing the release SOP (issue 130): docs deploy isn't gated on PyPI publish success, no
+  recovery path for a failed publish, inconsistent skip-existing handling, divergent changelog
+  sources, narrow smoke test coverage, and an unverified PyPI environment gate.
+
+- **issues**: Close issue 128 (CLI docs Options/Output/Diagnostics), update roadmap
+  ([`79577ad`](https://github.com/ourPLCC/plcc-ng/commit/79577ade7a41de3bc4865550029b18800904ccf7))
+
+- **plan**: Implementation plan for issue 128 CLI docs Options/Output/Diagnostics
+  ([`25d9ff9`](https://github.com/ourPLCC/plcc-ng/commit/25d9ff9a76db9af483ee83c3ece946889ead2c8f))
+
+- **plan**: Spec for issue 128 CLI docs Options/Output/Diagnostics restructuring
+  ([`11e2198`](https://github.com/ourPLCC/plcc-ng/commit/11e2198d8234db4607ec8af5cc109505c4a2e0cc))
+
+- **plans**: Add implementation plan for gating docs deploy on PyPI publish
+  ([`5810167`](https://github.com/ourPLCC/plcc-ng/commit/5810167add23de48c87bcb23660bccf55d0ff4ae))
+
+- **roadmap**: Drop stale issue 128 reference from #112 description
+  ([`1e5455b`](https://github.com/ourPLCC/plcc-ng/commit/1e5455bae4f63aac625166c8987f13afcce81c6d))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add design for gating docs deploy on PyPI publish success
+  ([`05d2438`](https://github.com/ourPLCC/plcc-ng/commit/05d2438909e34a49e58c64e89e537870c68309b3))
+
+Issue 133 - the GitHub Release (and thus docs.yml's release:published trigger) currently fires
+  before the publish job confirms PyPI success.
+
+- **specs,plans**: Update 133 design/plan to reflect issue 139 fold-in
+  ([`8679cc4`](https://github.com/ourPLCC/plcc-ng/commit/8679cc4eb877f771602c241d320f172e5a22e1a3))
+
+Documents the GitHub App token requirement discovered via PR review, so a future reader doesn't
+  assume release:published reliably reaches docs.yml without it.
+
+
 ## v0.64.0 (2026-07-03)
 
 ### Documentation
