@@ -1,6 +1,6 @@
 # Roadmap
 
-9 open issues as of 2026-07-03.
+8 open issues as of 2026-07-03.
 
 ## Open Issues
 
@@ -11,22 +11,19 @@
 
 ### Fixes
 
-- **[#133](issues/133-release-docs-deploy-decoupled-from-pypi-publish.md) — Docs deploy is not gated on PyPI publish success**
-  `docs.yml` deploys versioned docs on `release: published`, which fires before the `publish` job finishes — a version can show as `latest` in the docs before, or even if, it reaches PyPI.
-
 - **[#135](issues/135-release-pypi-publish-skip-existing.md) — Real PyPI publish step lacks skip-existing, unlike TestPyPI**
   The "Publish to PyPI" step has no `skip-existing: true`, so a rerun against an already-published version fails hard instead of skipping.
 
-### Features
+- **[#140](issues/140-release-smoke-test-testpypi-propagation.md) — Smoke test races TestPyPI index propagation**
+  The post-upload `pip install` from TestPyPI can run before the index has propagated, intermittently failing the `publish` job even though the upload succeeded.
 
-- **[#131](issues/131-haskell-language-error-not-accessible-from-user-code.md) — Make `LanguageError` accessible from Haskell user code**
-  `LanguageError` is defined in generated `Main.hs` but unreachable from user semantics modules; needs a dedicated runtime module.
+### Features
 
 - **[#134](issues/134-release-pypi-publish-failure-recovery.md) — No recovery path when PyPI publish fails after tagging**
   Once semantic-release tags a version, a subsequent publish failure can't be retried — reruns find no new releasable commits and skip the publish job.
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
-  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, feature 131, release-pipeline gaps 133-138).
+  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, release-pipeline gaps 134-138 and 140).
 
 ### Refactors
 
