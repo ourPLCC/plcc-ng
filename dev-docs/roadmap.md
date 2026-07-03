@@ -26,7 +26,7 @@
   Once semantic-release tags a version, a subsequent publish failure can't be retried — reruns find no new releasable commits and skip the publish job.
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
-  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 128, 130, feature 131, release-pipeline gaps 133-138).
+  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, feature 131, release-pipeline gaps 133-138).
 
 ### Refactors
 
