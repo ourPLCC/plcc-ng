@@ -1,6 +1,73 @@
 # CHANGELOG
 
 
+## v0.64.0 (2026-07-03)
+
+### Documentation
+
+- **issues**: Close 129 and 132, update roadmap
+  ([`4609665`](https://github.com/ourPLCC/plcc-ng/commit/4609665b6a0d7515b0e6b6748862324857af9d8d))
+
+Issue 129 (eof -> "end of file" wording) is done: no stale examples remain anywhere in docs/. Issue
+  132 (LanguageError in scope by default) is done for its actual scope -- Python, Java, and
+  JavaScript all auto-inject the import per the implementation plan, and full tests pass (1168
+  passed, 1 skipped). Haskell was explicitly out of scope for 132 and remains tracked separately as
+  issue 131.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Add design for issue 131 - move Haskell LanguageError to runtime module
+  ([`6f69e62`](https://github.com/ourPLCC/plcc-ng/commit/6f69e62477a717d4ea02d0bcc086e921af26d53a))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Add implementation plan for issue 131 - Haskell LanguageError runtime module
+  ([`9dd168d`](https://github.com/ourPLCC/plcc-ng/commit/9dd168d4edcb7ed97782c72dbf6a44b00a3dfe73))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Amend design for issue 131 to auto-import Control.Exception (throw)
+  ([`05e96a5`](https://github.com/ourPLCC/plcc-ng/commit/05e96a540a493b90c50b303f24ea319f1a7fc5a9))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Amend Task 1 to extend bats coverage for LanguageError.hs
+  ([`68dcd78`](https://github.com/ourPLCC/plcc-ng/commit/68dcd7896870723c2d05668b519625de35cdd9f7))
+
+Per project convention, emitter output changes get bats coverage alongside pytest unit tests, not
+  just the new-behavior bar the other three languages set.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Features
+
+- **haskell**: Add runtime/LanguageError.hs and copy it into emitted output
+  ([`2d2e3a2`](https://github.com/ourPLCC/plcc-ng/commit/2d2e3a24c7bb67508e0d669b56ad34df18727a0f))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **haskell**: Auto-import LanguageError and throw into every generated module
+  ([`ddd5c74`](https://github.com/ourPLCC/plcc-ng/commit/ddd5c74ce476f0d8ca881885f92eb37831f2a36f))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **haskell**: Import LanguageError from runtime module instead of defining it inline in Main.hs
+  ([`8eb2a79`](https://github.com/ourPLCC/plcc-ng/commit/8eb2a79e49f0260e0d78cd34cbd919f006384ec0))
+
+- Remove inline newtype LanguageError definition from _write_main - Remove Exception from
+  Control.Exception import (moved to LanguageError.hs) - Add import LanguageError statement to
+  Main.hs - Add LanguageError to other-modules list in interpreter.cabal - Add tests to verify
+  LanguageError is imported and not defined inline - Add test to verify LanguageError is in cabal
+  other-modules list
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Testing
+
+- **haskell**: Add bats coverage for LanguageError.hs in emitted output
+  ([`f8e231f`](https://github.com/ourPLCC/plcc-ng/commit/f8e231f65d5a54903f53a427ba3cc17e32b72a2a))
+
+
 ## v0.63.0 (2026-07-01)
 
 ### Continuous Integration
