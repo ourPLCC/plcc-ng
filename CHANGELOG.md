@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v0.64.3 (2026-07-03)
+
+### Bug Fixes
+
+- **docs**: Only deploy developer docs on push events
+  ([`bd69359`](https://github.com/ourPLCC/plcc-ng/commit/bd693595def76ed90c16aab2e4a3e10e83331f03))
+
+Release-triggered docs runs check out the release tag, which can lag main's tip when commits land
+  between tagging and the release event. Rebuilding dev-docs from the tag then clobbers newer
+  content the push-triggered run already deployed — observed live when the v0.64.2 release run
+  deleted the just-deployed issue-140 page. Developer docs track main, so build and merge them only
+  on push; release runs still deploy the versioned user docs and push mike's commits.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: File 140 - smoke test races TestPyPI index propagation
+  ([`99affc9`](https://github.com/ourPLCC/plcc-ng/commit/99affc9bd60f70459ab6644e9bc5860c44d71d88))
+
+Observed live with v0.64.2: the TestPyPI upload succeeded but the smoke test's pip install ran
+  seconds later, before the index propagated, so the publish job failed and left the tag in the
+  issue-134 state.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+
 ## v0.64.2 (2026-07-03)
 
 ### Bug Fixes
