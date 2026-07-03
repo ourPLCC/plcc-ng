@@ -186,6 +186,8 @@ def _render_module(module_name, module_info, fragments_by_class):
     lines.append('import Data.Aeson (FromJSON (..), Value (..), withObject, (.:))')
     lines.append('import Data.List (sort)')
     lines.append('import Token')
+    lines.append('import LanguageError')
+    lines.append('import Control.Exception (throw)')
     for imp in _collect_imports(module_name, module_info):
         lines.append(f'import {imp}')
     for f in import_frags:

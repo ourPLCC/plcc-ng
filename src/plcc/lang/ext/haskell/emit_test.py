@@ -115,6 +115,18 @@ def test_concrete_constructor_has_token_field(monkeypatch, tmp_path):
     assert 'num :: Token' in text
 
 
+def test_generated_module_imports_language_error(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'import LanguageError' in text
+
+
+def test_generated_module_imports_throw(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'Expr.hs').read_text()
+    assert 'import Control.Exception (throw)' in text
+
+
 def test_emit_writes_module_for_lone_concrete(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     assert (tmp_path / 'Prog.hs').exists()
