@@ -8,14 +8,29 @@ Parse source input and print the parse tree in human-readable format.
 plcc-parse [-v ...] [options] [SOURCE ...]
 ```
 
-## Arguments and Options
+## Arguments
 
-| Argument/Option | Description |
+| Argument | Description |
 |---|---|
 | `SOURCE` | Source files to parse. Reads stdin if none given. |
-| `-s PATH`, `--spec=PATH` | Spec file to build from. Remembered across invocations in the same directory. Defaults to `spec.plcc`. |
-| `-b`, `--banner` | Print the plcc-ng version and spec path to stderr. |
+
+## Options
+
+| Option | Description |
+|---|---|
 | `-h`, `--help` | Show usage and exit. |
+| `-s PATH`, `--spec=PATH` | Spec file to build from. Remembered across invocations in the same directory. Defaults to `spec.plcc`. |
+
+## Output
+
+| Option | Description |
+|---|---|
+| `-b`, `--banner` | Print the plcc-ng version and spec path to stderr. |
+
+## Diagnostics
+
+| Option | Description |
+|---|---|
 | `-v` | Increase verbosity (repeat for more: `-v`, `-vv`, `-vvv`). |
 | `--verbose-format=FMT` | Verbosity output format: `text` (default) or `json`. |
 
