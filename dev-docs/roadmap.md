@@ -2,6 +2,20 @@
 
 8 open issues as of 2026-07-03.
 
+## Path to v1.0
+
+Recommended order. Fix release-pipeline reliability first, then settle design
+decisions, then broaden verification, then document the result and ship.
+
+1. [#140](issues/140-release-smoke-test-testpypi-propagation.md) — the propagation race is actively breaking releases; retry/poll before installing.
+2. [#135](issues/135-release-pypi-publish-skip-existing.md) — one-line `skip-existing` fix; prerequisite for any rerun/retry story (could ride with #140).
+3. [#134](issues/134-release-pypi-publish-failure-recovery.md) — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.
+4. [#136](issues/136-release-changelog-vcs-release-divergence.md) — decide `vcs_release` vs. PR-based notes; the answer changes what the SOP documents.
+5. [#138](issues/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
+6. [#137](issues/137-release-smoke-test-emitter-coverage.md) — extend the smoke test to all four emitters; defines post-release verification for the SOP.
+7. [#130](issues/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
+8. [#112](issues/112-first-major-release.md) — agree on v1.0 criteria and cut the release.
+
 ## Open Issues
 
 ### Docs
