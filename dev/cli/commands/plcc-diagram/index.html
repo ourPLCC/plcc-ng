@@ -1346,10 +1346,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#arguments-and-options" class="md-nav__link">
+  <a href="#options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Arguments and Options
+        Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostics
       
     </span>
   </a>
@@ -2661,7 +2683,7 @@ runs each installed <code>plcc-diagram-{type}</code> command in alphabetical ord
 <h2 id="usage">Usage</h2>
 <div class="highlight"><pre><span></span><code>plcc-diagram [-v ...] [options]
 </code></pre></div>
-<h2 id="arguments-and-options">Arguments and Options</h2>
+<h2 id="options">Options</h2>
 <table>
 <thead>
 <tr>
@@ -2671,17 +2693,39 @@ runs each installed <code>plcc-diagram-{type}</code> command in alphabetical ord
 </thead>
 <tbody>
 <tr>
+<td><code>-h</code>, <code>--help</code></td>
+<td>Show usage and exit.</td>
+</tr>
+<tr>
 <td><code>-s PATH</code>, <code>--spec=PATH</code></td>
 <td>Spec file. Remembered across invocations. Defaults to <code>spec.plcc</code>.</td>
 </tr>
+</tbody>
+</table>
+<h2 id="output">Output</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>-b</code>, <code>--banner</code></td>
 <td>Print the plcc-ng version and spec path to stderr.</td>
 </tr>
+</tbody>
+</table>
+<h2 id="diagnostics">Diagnostics</h2>
+<table>
+<thead>
 <tr>
-<td><code>-h</code>, <code>--help</code></td>
-<td>Show usage and exit.</td>
+<th>Option</th>
+<th>Description</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td><code>-v</code></td>
 <td>Increase verbosity (repeat for more: <code>-v</code>, <code>-vv</code>, <code>-vvv</code>).</td>
