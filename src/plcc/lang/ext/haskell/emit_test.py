@@ -64,6 +64,12 @@ def test_cabal_file_lists_token_module(monkeypatch, tmp_path):
     assert 'Token' in text
 
 
+def test_cabal_file_lists_language_error_module(monkeypatch, tmp_path):
+    _run_emit(monkeypatch, tmp_path, _minimal_model())
+    text = (tmp_path / 'interpreter.cabal').read_text()
+    assert 'LanguageError' in text.split('other-modules:')[1].splitlines()[0]
+
+
 def test_emit_copies_token_hs(monkeypatch, tmp_path):
     _run_emit(monkeypatch, tmp_path, _minimal_model())
     assert (tmp_path / 'Token.hs').exists()
@@ -318,6 +324,20 @@ def test_write_main_contains_language_error(tmp_path):
     _write_main("Program", {}, tmp_path)
     main_hs = (tmp_path / 'Main.hs').read_text()
     assert 'LanguageError' in main_hs
+
+
+def test_write_main_imports_language_error_module(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert 'import LanguageError' in main_hs
+
+
+def test_write_main_does_not_define_language_error_inline(tmp_path):
+    from .emit import _write_main
+    _write_main("Program", {}, tmp_path)
+    main_hs = (tmp_path / 'Main.hs').read_text()
+    assert 'newtype LanguageError' not in main_hs
 
 
 def test_write_main_contains_ready_signal(tmp_path):

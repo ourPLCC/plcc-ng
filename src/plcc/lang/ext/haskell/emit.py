@@ -65,14 +65,12 @@ def _write_main(start_module, modules, output_dir):
         '{-# LANGUAGE OverloadedStrings, ScopedTypeVariables #-}\n'
         'module Main where\n'
         '\n'
-        'import Control.Exception (Exception, SomeException, catch, evaluate)\n'
+        'import Control.Exception (SomeException, catch, evaluate)\n'
         'import Data.Aeson (eitherDecode, encode, object, (.=))\n'
         'import qualified Data.ByteString.Lazy.Char8 as BL\n'
         'import System.IO (hSetBuffering, stdout, BufferMode (..))\n'
+        'import LanguageError\n'
         f'{import_lines}\n'
-        '\n'
-        'newtype LanguageError = LanguageError String deriving Show\n'
-        'instance Exception LanguageError\n'
         '\n'
         'main :: IO ()\n'
         'main = do\n'
@@ -140,7 +138,7 @@ def _group_modules(classes):
 
 
 def _write_cabal(modules, output_dir):
-    module_list = ', '.join(['Token'] + sorted(modules))
+    module_list = ', '.join(['Token', 'LanguageError'] + sorted(modules))
     content = (
         'cabal-version: 3.0\n'
         'name:          interpreter\n'
