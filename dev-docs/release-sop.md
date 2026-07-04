@@ -41,8 +41,9 @@ workflow file from `main`, not from the failed run).
    existing tag (with the leading `v`).
 3. The run skips semantic-release, builds the wheel from the tag, and
    reruns the whole publish path. Every step is idempotent —
-   `skip-existing` on TestPyPI and PyPI, GitHub Release created only if
-   missing — so there is no need to know how far the failed run got.
+   `skip-existing` on TestPyPI and PyPI, GitHub Release created (with
+   notes from the tag's `CHANGELOG.md` section) only if missing — so
+   there is no need to know how far the failed run got.
    An input that is not an existing tag (a typo, or a branch name)
    fails immediately at a validation step right after checkout.
 4. Verify: the version appears on <https://pypi.org/project/plcc-ng/>
@@ -53,3 +54,16 @@ workflow file from `main`, not from the failed run).
 Dispatch with the **latest already-published** tag. Every step no-ops
 gracefully and the run goes green without publishing anything. Do this
 after any change to the publish jobs.
+
+## GitHub Release notes
+
+GitHub Release notes are the tag's `CHANGELOG.md` section, extracted by
+[bin/release/extract-changelog.bash](../bin/release/extract-changelog.bash)
+in the `create-release` job — the same conventional-commit content
+python-semantic-release writes to the changelog, so the two never
+diverge. There is deliberately no fallback to GitHub's PR-based
+auto-notes: if extraction fails (e.g. a malformed changelog heading),
+the `create-release` job fails. Fix the cause, then recover with the
+republish dispatch above. Extraction only runs when the release is
+missing, so republishing a tag that predates the script still no-ops
+green.
