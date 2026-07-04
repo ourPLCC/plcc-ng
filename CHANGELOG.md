@@ -1,6 +1,29 @@
 # CHANGELOG
 
 
+## v0.64.5 (2026-07-04)
+
+### Bug Fixes
+
+- **release**: Add skip-existing to real PyPI publish step
+  ([`ee91b42`](https://github.com/ourPLCC/plcc-ng/commit/ee91b42402af4036a3d1d2952c3580b9a27c136d))
+
+The TestPyPI publish step already sets skip-existing: true, but the real PyPI step had no with:
+  block, so rerunning the publish job after a version was already uploaded failed hard instead of
+  no-opping.
+
+Closes issue 135.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: Close issue 135 (PyPI publish skip-existing), update roadmap
+  ([`291480c`](https://github.com/ourPLCC/plcc-ng/commit/291480c7ac012a936be3168c1fffdfe489f71892))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.64.4 (2026-07-04)
 
 ### Bug Fixes
