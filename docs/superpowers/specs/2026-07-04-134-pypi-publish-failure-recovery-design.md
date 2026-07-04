@@ -62,9 +62,15 @@ conditions below behave correctly for both trigger types.
   output directly.
 - The real-PyPI step's `if: github.event_name != 'workflow_dispatch'` is
   deleted. The publish steps are now identical in both modes.
-- A nonexistent tag makes the checkout step fail immediately with
-  "couldn't find remote ref" — checkout is the input validation; no
-  separate validation step.
+- A nonexistent ref makes the checkout step fail immediately with
+  "couldn't find remote ref". Checkout alone is not sufficient
+  validation — it accepts any ref (branch, SHA), and a non-tag input
+  would build from an unintended ref and fail confusingly later (or,
+  for a branch named like a tag, publish it). A validation step
+  immediately after checkout asserts that `RELEASE_TAG` resolves to an
+  existing tag and that the checked-out HEAD is that tag's commit
+  (checkout prefers branches on ambiguous names), failing fast with a
+  clear message otherwise.
 
 **`create-release`:**
 

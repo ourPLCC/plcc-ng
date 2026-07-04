@@ -57,6 +57,16 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ env.RELEASE_TAG }}
+      - name: Verify input is an existing tag
+        run: |
+          TAG_SHA=$(git rev-parse -q --verify "refs/tags/${RELEASE_TAG}^{commit}") || {
+            echo "FAIL: '${RELEASE_TAG}' is not an existing tag"
+            exit 1
+          }
+          if [ "$(git rev-parse HEAD)" != "${TAG_SHA}" ]; then
+            echo "FAIL: checked-out ref does not match tag ${RELEASE_TAG} (${TAG_SHA})"
+            exit 1
+          fi
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'

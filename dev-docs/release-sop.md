@@ -43,7 +43,8 @@ workflow file from `main`, not from the failed run).
    reruns the whole publish path. Every step is idempotent —
    `skip-existing` on TestPyPI and PyPI, GitHub Release created only if
    missing — so there is no need to know how far the failed run got.
-   A nonexistent tag fails immediately at checkout.
+   An input that is not an existing tag (a typo, or a branch name)
+   fails immediately at a validation step right after checkout.
 4. Verify: the version appears on <https://pypi.org/project/plcc-ng/>
    and the GitHub Release exists.
 
