@@ -68,10 +68,21 @@ jobs:
         run: |
           VERSION="${{ needs.semantic-release.outputs.version }}"
           python -m venv /tmp/smoke-venv
-          /tmp/smoke-venv/bin/pip install \
-            --index-url https://test.pypi.org/simple/ \
-            --extra-index-url https://pypi.org/simple/ \
-            "plcc-ng==${VERSION}"
+          for attempt in $(seq 1 20); do
+            if /tmp/smoke-venv/bin/pip install \
+                --no-cache-dir \
+                --index-url https://test.pypi.org/simple/ \
+                --extra-index-url https://pypi.org/simple/ \
+                "plcc-ng==${VERSION}"; then
+              break
+            fi
+            if [ "${attempt}" -eq 20 ]; then
+              echo "FAIL: plcc-ng==${VERSION} not installable from TestPyPI after 20 attempts"
+              exit 1
+            fi
+            echo "TestPyPI index not ready (attempt ${attempt}/20); retrying in 15s"
+            sleep 15
+          done
           SPEC="$(pwd)/tests/fixtures/trivial.plcc"
           WORK=$(mktemp -d)
           cd "${WORK}"
