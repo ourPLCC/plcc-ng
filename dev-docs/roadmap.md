@@ -8,7 +8,7 @@ Completed items are checked off (and stay listed) so this section tracks
 progress toward the milestone; the section retires when v1.0 ships.
 
 1. [x] [#140](issues/done/140-release-smoke-test-testpypi-propagation.md) — the propagation race is actively breaking releases; retry/poll before installing.
-2. [ ] [#135](issues/135-release-pypi-publish-skip-existing.md) — one-line `skip-existing` fix; prerequisite for any rerun/retry story (could ride with #140).
+2. [x] [#135](issues/done/135-release-pypi-publish-skip-existing.md) — one-line `skip-existing` fix; prerequisite for any rerun/retry story (could ride with #140).
 3. [ ] [#134](issues/134-release-pypi-publish-failure-recovery.md) — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.
 4. [ ] [#136](issues/136-release-changelog-vcs-release-divergence.md) — decide `vcs_release` vs. PR-based notes; the answer changes what the SOP documents.
 5. [ ] [#138](issues/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
@@ -22,11 +22,6 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 - **[#130](issues/130-release-sop.md) — Write the release SOP**
   `dev-docs/release-sop.md` is empty; needed before v1.0.
-
-### Fixes
-
-- **[#135](issues/135-release-pypi-publish-skip-existing.md) — Real PyPI publish step lacks skip-existing, unlike TestPyPI**
-  The "Publish to PyPI" step has no `skip-existing: true`, so a rerun against an already-published version fails hard instead of skipping.
 
 ### Features
 
