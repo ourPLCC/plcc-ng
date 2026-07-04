@@ -1,6 +1,102 @@
 # CHANGELOG
 
 
+## v0.64.4 (2026-07-04)
+
+### Bug Fixes
+
+- **release**: Retry TestPyPI smoke-test install until index propagates
+  ([`8bb5b88`](https://github.com/ourPLCC/plcc-ng/commit/8bb5b88aa5571c4fa8ab4f475188f9a43d91aa0a))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Chores
+
+- **issues**: Add close.bash and check.bash
+  ([`8553c2b`](https://github.com/ourPLCC/plcc-ng/commit/8553c2b41d7786cf323db3281f3b420b53f353c7))
+
+close.bash moves an issue to done/, removes its Open Issues roadmap entry (and its group heading if
+  now empty), checks its box in milestone lists, and stages the result. check.bash verifies the
+  roadmap/issue invariants and is run automatically by close.bash as a drift backstop.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **contributing**: Fix stale design-doc links and integration-branch note
+  ([`0388f56`](https://github.com/ourPLCC/plcc-ng/commit/0388f56c4200c5237322f3336f244084a9f636d8))
+
+The architectural spec and implementation plan moved from docs/design/ to dev-docs/specs/ in the
+  docs reorganization, and the maintained roadmap is dev-docs/roadmap.md. The multi-lang integration
+  branch described at the end never materialized — work merges directly to main.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **design**: Retry TestPyPI smoke-test install for issue 140
+  ([`c7b8956`](https://github.com/ourPLCC/plcc-ng/commit/c7b89566d572ab3625349c730a7257ba3331ffef))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 140 (smoke test races TestPyPI propagation), update roadmap
+  ([`122739f`](https://github.com/ourPLCC/plcc-ng/commit/122739f13ac690a8ef49fe1d5f29927008480ae6))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Close issues 131 and 133, update roadmap
+  ([`e804801`](https://github.com/ourPLCC/plcc-ng/commit/e80480199f09cacd7df999085ffeeb7e2b0f6063))
+
+Issue 131 (Haskell LanguageError runtime module) landed in PR #273; issue 133 (docs deploy gated on
+  PyPI publish) landed via PR #275, which gates GitHub Release creation — and thus the
+  release:published docs deploy — on the publish job succeeding.
+
+Also add issue 140 to the roadmap; it was filed in PR #278 without a roadmap entry.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Write the issue conventions
+  ([`6a4e954`](https://github.com/ourPLCC/plcc-ng/commit/6a4e9547fcd4cae2ea25029ffe961bb179584bad))
+
+Capture the workflow the git history already follows: file with new.bash plus a roadmap entry in the
+  same commit; close with close.bash as the work branch's final commit; inventory entries are
+  removed on close while milestone items are checked off; check.bash guards the invariants. Also
+  documents the close-on-verification exception for fixes only a later release run can prove. Point
+  CLAUDE.md at the new scripts and conventions.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **plan**: Implementation plan for issue 140 smoke-test retry
+  ([`b8c96b7`](https://github.com/ourPLCC/plcc-ng/commit/b8c96b75fa3cadeb5cf327cbe28c421fdbabbd54))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **roadmap**: Add ordered path to v1.0
+  ([`78923b3`](https://github.com/ourPLCC/plcc-ng/commit/78923b38e0042d559329af92774d62e90ab5c7c1))
+
+Sequence the eight open issues: pipeline reliability first (140, 135, 134), then design decisions
+  (136, 138), broader smoke-test coverage (137), the release SOP (130), and finally the v1.0 cut
+  (112).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **roadmap**: Drop derived open-issue count, checkbox the v1.0 milestone list
+  ([`93f34ba`](https://github.com/ourPLCC/plcc-ng/commit/93f34ba97bcd836fd767df86aef733d7c714bba4))
+
+The count line drifted once already (issue 140 was filed without it being updated). Milestone items
+  are now GFM task-list items that get checked off rather than removed, so the section tracks
+  progress toward v1.0.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **superpowers**: Fix issue link and use mktemp in plan verification
+  ([`e258746`](https://github.com/ourPLCC/plcc-ng/commit/e2587467c5d4cd07f754324affa4278b95286181))
+
+Review feedback: the spec's issue link now points at dev-docs/issues/done/ where this branch moved
+  the file, and the plan's bash -n step writes its extracted script to mktemp instead of a
+  session-specific scratchpad path.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.64.3 (2026-07-03)
 
 ### Bug Fixes
