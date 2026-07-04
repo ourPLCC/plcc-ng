@@ -623,6 +623,13 @@
 <li>Found while writing the release SOP (issue 130).</li>
 <li>Action: check GitHub repo Settings → Environments → <code>pypi</code> for required reviewers / protection rules. If none exist, decide whether to add one (trades release speed for a manual gate) or document that the lack of a gate is intentional.</li>
 <li>This is a verification/decision task, not necessarily a code change.</li>
+<li>Follow-up from issue 134: the same Settings → Environments → <code>pypi</code> page
+  also supports deployment branch policies. Restricting the <code>pypi</code>
+  environment to <code>main</code> would enforce the release SOP's "dispatch from
+  <code>main</code> only" guidance in settings rather than prose — a dispatch from any
+  other branch (which runs that branch's copy of release.yml) could then
+  never reach the publish job. Worth configuring while checking the
+  approval gate.</li>
 </ul>
 
 

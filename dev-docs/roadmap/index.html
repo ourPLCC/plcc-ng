@@ -621,7 +621,7 @@ progress toward the milestone; the section retires when v1.0 ships.</p>
 <ol>
 <li>[x] <a href="../issues/done/140-release-smoke-test-testpypi-propagation/">#140</a> — the propagation race is actively breaking releases; retry/poll before installing.</li>
 <li>[x] <a href="../issues/done/135-release-pypi-publish-skip-existing/">#135</a> — one-line <code>skip-existing</code> fix; prerequisite for any rerun/retry story (could ride with #140).</li>
-<li>[ ] <a href="../issues/134-release-pypi-publish-failure-recovery/">#134</a> — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.</li>
+<li>[x] <a href="../issues/done/134-release-pypi-publish-failure-recovery/">#134</a> — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.</li>
 <li>[ ] <a href="../issues/136-release-changelog-vcs-release-divergence/">#136</a> — decide <code>vcs_release</code> vs. PR-based notes; the answer changes what the SOP documents.</li>
 <li>[ ] <a href="../issues/138-release-pypi-environment-protection-check/">#138</a> — settings check + decision; an SOP input, doable any time.</li>
 <li>[ ] <a href="../issues/137-release-smoke-test-emitter-coverage/">#137</a> — extend the smoke test to all four emitters; defines post-release verification for the SOP.</li>
@@ -636,14 +636,8 @@ progress toward the milestone; the section retires when v1.0 ships.</p>
 </ul>
 <h3 id="features">Features</h3>
 <ul>
-<li>
-<p><strong><a href="../issues/134-release-pypi-publish-failure-recovery/">#134</a> — No recovery path when PyPI publish fails after tagging</strong>
-  Once semantic-release tags a version, a subsequent publish failure can't be retried — reruns find no new releasable commits and skip the publish job.</p>
-</li>
-<li>
-<p><strong><a href="../issues/112-first-major-release/">#112</a> — Prepare for first major release (v1.0.0)</strong>
-  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, release-pipeline gaps 134-138 and 140).</p>
-</li>
+<li><strong><a href="../issues/112-first-major-release/">#112</a> — Prepare for first major release (v1.0.0)</strong>
+  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, release-pipeline gaps 134-138 and 140).</li>
 </ul>
 <h3 id="refactors">Refactors</h3>
 <ul>

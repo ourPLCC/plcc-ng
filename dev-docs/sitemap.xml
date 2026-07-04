@@ -41,10 +41,6 @@
          <lastmod>2026-07-04</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/134-release-pypi-publish-failure-recovery/</loc>
-         <lastmod>2026-07-04</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/136-release-changelog-vcs-release-divergence/</loc>
          <lastmod>2026-07-04</lastmod>
     </url>
@@ -574,6 +570,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/133-release-docs-deploy-decoupled-from-pypi-publish/</loc>
+         <lastmod>2026-07-04</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/134-release-pypi-publish-failure-recovery/</loc>
          <lastmod>2026-07-04</lastmod>
     </url>
     <url>

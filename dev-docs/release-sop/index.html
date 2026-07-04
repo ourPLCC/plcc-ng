@@ -479,6 +479,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -495,6 +513,75 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#manual-triggers-and-publish-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual triggers and publish recovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Manual triggers and publish recovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normal-release-leave-tag-empty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normal release (leave tag empty)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#republish-an-existing-tag-set-tag-eg-v0644" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Republish an existing tag (set tag, e.g. v0.64.4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-end-to-end-test-of-the-republish-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe end-to-end test of the republish path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -629,7 +716,51 @@
 
 
 <h1 id="release-sop">Release SOP</h1>
-<p><em>Content coming soon.</em></p>
+<p><em>The full SOP (release procedure, verification checklist) is tracked in
+issue 130. The section below documents the release workflow's manual
+triggers.</em></p>
+<h2 id="manual-triggers-and-publish-recovery">Manual triggers and publish recovery</h2>
+<p>The release workflow (<code>.github/workflows/release.yml</code>) runs automatically
+on every push to <code>main</code>. It can also be run by hand: <strong>Actions → Release
+→ Run workflow</strong>, always from <code>main</code> (the selected branch decides which
+version of the workflow file runs). The <code>tag</code> input selects one of two
+modes.</p>
+<h3 id="normal-release-leave-tag-empty">Normal release (leave <code>tag</code> empty)</h3>
+<p>Identical to a push-triggered release: semantic-release computes the next
+version from unreleased commits; if there is something to release it
+tags, updates the CHANGELOG, builds, publishes to TestPyPI, smoke-tests
+the TestPyPI install, publishes to PyPI, and creates the GitHub Release.
+If nothing is releasable, the run ends after the semantic-release job.</p>
+<p><strong>This is a real release.</strong> Manual runs used to stop at TestPyPI; that
+behavior is gone. Do not dispatch with an empty <code>tag</code> to "test" the
+workflow — use the republish mode below with an already-published tag
+instead.</p>
+<h3 id="republish-an-existing-tag-set-tag-eg-v0644">Republish an existing tag (set <code>tag</code>, e.g. <code>v0.64.4</code>)</h3>
+<p>Use this when a release run failed <em>after</em> tagging: the tag exists, but
+the version is missing from PyPI and/or GitHub Releases, and re-running
+the workflow does nothing because semantic-release finds no new
+releasable commits. This works regardless of why or when the original
+run failed — including workflow bugs fixed since (the run uses the
+workflow file from <code>main</code>, not from the failed run).</p>
+<ol>
+<li>Confirm the state: the tag exists in the repo, but
+   <a href="https://pypi.org/project/plcc-ng/">https://pypi.org/project/plcc-ng/</a> lacks the version and/or the
+   GitHub Release is missing.</li>
+<li><strong>Actions → Release → Run workflow</strong> from <code>main</code>, set <code>tag</code> to the
+   existing tag (with the leading <code>v</code>).</li>
+<li>The run skips semantic-release, builds the wheel from the tag, and
+   reruns the whole publish path. Every step is idempotent —
+   <code>skip-existing</code> on TestPyPI and PyPI, GitHub Release created only if
+   missing — so there is no need to know how far the failed run got.
+   An input that is not an existing tag (a typo, or a branch name)
+   fails immediately at a validation step right after checkout.</li>
+<li>Verify: the version appears on <a href="https://pypi.org/project/plcc-ng/">https://pypi.org/project/plcc-ng/</a>
+   and the GitHub Release exists.</li>
+</ol>
+<h3 id="safe-end-to-end-test-of-the-republish-path">Safe end-to-end test of the republish path</h3>
+<p>Dispatch with the <strong>latest already-published</strong> tag. Every step no-ops
+gracefully and the run goes green without publishing anything. Do this
+after any change to the publish jobs.</p>
 
 
 
