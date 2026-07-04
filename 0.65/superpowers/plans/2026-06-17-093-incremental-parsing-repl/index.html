@@ -1,0 +1,3492 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/0.65/superpowers/plans/2026-06-17-093-incremental-parsing-repl/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Incremental Parsing in Interactive Mode — Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#incremental-parsing-in-interactive-mode-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Incremental Parsing in Interactive Mode — Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../quick-start/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration from PLCC
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../acknowledgments/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Acknowledgments
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration from PLCC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/haskell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Haskell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acknowledgments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="incremental-parsing-in-interactive-mode-implementation-plan">Incremental Parsing in Interactive Mode — Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Replace the <code>SubmitOn.EOF</code> interactive model in <code>plcc-rep</code>/<code>plcc-parse</code> with incremental parsing that auto-detects complete sentences, holds extensible/incomplete input at a <code>...</code> prompt, and makes <code>^D</code> a single-press context exit.</p>
+<p><strong>Architecture:</strong> The LL(1) parser learns to report whether a successful parse is <em>extensible</em> (could be a prefix of a longer sentence). <code>plcc-parser-table</code> surfaces that signal as a sibling <code>hold</code> marker record (keeping the forwarded tree clean) and tags trailing incomplete fragments with their start position. A new pure function decides, per fed buffer, which complete sentences to commit and what text to retain. <code>SourceRunner</code> drives an incremental buffer and the new <code>^D</code> semantics. <code>pipeline.run()</code> is unchanged.</p>
+<p><strong>Tech Stack:</strong> Python 3.14, pytest. Run tests with <code>bin/test/units.bash</code> (whole suite) or <code>python -m pytest &lt;path&gt;</code> (single file/test) from the worktree root.</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>Work entirely in the worktree <code>/workspaces/plcc-ng/.worktrees/093</code> on branch <code>093</code>. Never commit to <code>main</code>.</li>
+<li>TDD throughout: write the failing test, watch it fail, implement minimally, watch it pass, commit.</li>
+<li>All <code>eof=True</code> (force-submit / file / pipe / batch) output must stay byte-identical to today — changes are additive on that path so <code>plcc-parse</code> batch behavior and existing tests do not regress.</li>
+<li>Token <code>source</code> dicts use <strong>1-based</strong> <code>line</code> and <code>column</code> (confirmed in <code>src/plcc/tokens/jsonl_formatter.py</code>).</li>
+<li><code>docs(...)</code> commit subjects must end with <code>[skip ci]</code>.</li>
+<li>Commit message footer for every commit:
+  <div class="highlight"><pre><span></span><code>Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;
+</code></pre></div></li>
+</ul>
+<hr />
+<h3 id="task-1-parser-reports-extensibility">Task 1: Parser reports extensibility</h3>
+<p><code>parse()</code> returns a third value, <code>extensible</code>, that is <code>True</code> when the parse stopped on the <code>eof</code> sentinel at a point where a real terminal could have continued the sentence.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/predictive_parser.py</code>
+- Modify: <code>src/plcc/parser/table_cli.py</code> (call sites only, lines 80 and 116)
+- Test: <code>src/plcc/parser/predictive_parser_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Produces: <code>parse(ll1, tokens, tracer=None) -&gt; (tree: dict, consumed: int, extensible: bool)</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Add to <code>src/plcc/parser/predictive_parser_test.py</code>. <code>_TRIVIAL_LL1</code> (<code>program → NUM</code>) and <code>_RANDS_LL1</code> (an arbno with a <code>COMMA</code> separator) already exist. The extensible-via-nullable-tail case needs a new grammar constant — add it near the other <code>_LL1</code> constants:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># E → NUM Tail ; Tail → PLUS NUM Tail | ε</span>
+<span class="c1"># A single NUM is a complete parse, but &quot;NUM + NUM&quot; is also valid, so NUM is extensible.</span>
+<span class="n">_EXTENSIBLE_LL1</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;is_ll1&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;start_symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parse_table&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;NUM&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;n&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;Tail&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;t&quot;</span><span class="p">},</span>
+        <span class="p">]}},</span>
+        <span class="s2">&quot;Tail&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;PLUS&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;PLUS&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="s2">&quot;Tail&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="p">]},</span>
+            <span class="s2">&quot;eof&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;production&quot;</span><span class="p">:</span> <span class="p">[]},</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_parse_returns_extensible_false_for_nonextensible_grammar</span><span class="p">():</span>
+    <span class="c1"># program -&gt; NUM ; a single NUM is complete and cannot be extended.</span>
+    <span class="n">_tree</span><span class="p">,</span> <span class="n">_consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">_TRIVIAL_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;42&quot;</span><span class="p">)])</span>
+    <span class="k">assert</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">False</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_returns_extensible_true_when_more_terminals_could_follow</span><span class="p">():</span>
+    <span class="c1"># Nullable tail: parsing &quot;3&quot; takes Tail -&gt; eps on eof, but PLUS could follow.</span>
+    <span class="n">_tree</span><span class="p">,</span> <span class="n">_consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">_EXTENSIBLE_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">)])</span>
+    <span class="k">assert</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">True</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_parse_returns_extensible_true_when_arbno_could_repeat</span><span class="p">():</span>
+    <span class="c1"># Arbno list: after consuming one operand at eof, another (COMMA NUM) could follow.</span>
+    <span class="n">_tree</span><span class="p">,</span> <span class="n">_consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">_RANDS_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)])</span>
+    <span class="k">assert</span> <span class="n">extensible</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/parser/predictive_parser_test.py -k extensible -v</code>
+Expected: FAIL — <code>parse()</code> returns a 2-tuple, so unpacking three values raises <code>ValueError: not enough values to unpack</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Implement extensibility detection</strong></li>
+</ul>
+<p>In <code>src/plcc/parser/predictive_parser.py</code>, inside <code>parse()</code>, add a mutable flag right after <code>cursor = [0]</code>:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">cursor</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">extensible</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
+</code></pre></div>
+<p>In <code>_parse_regular</code>, immediately after the <code>production is None</code> check (after the <code>raise ParseError(... "no production for" ...)</code> block), add:</p>
+<div class="highlight"><pre><span></span><code>        <span class="c1"># The parse reached eof here but a real terminal could have continued</span>
+        <span class="c1"># this nonterminal — the sentence is a prefix of a longer one.</span>
+        <span class="k">if</span> <span class="n">lookahead</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;eof&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">nt_table</span><span class="p">):</span>
+            <span class="n">extensible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+<p>In <code>_parse_arbno</code>, just before <code>return builder</code>, add:</p>
+<div class="highlight"><pre><span></span><code>        <span class="c1"># Sitting at eof where another iteration could have started: extensible.</span>
+        <span class="k">if</span> <span class="n">current</span><span class="p">()[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span> <span class="ow">and</span> <span class="n">lookahead_set</span><span class="p">:</span>
+            <span class="n">extensible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</code></pre></div>
+<p>Change the final return of <code>parse()</code> from:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">root_builder</span> <span class="o">=</span> <span class="n">parse_nt</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">root_builder</span><span class="o">.</span><span class="n">to_node</span><span class="p">(),</span> <span class="n">cursor</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+<p>to:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">root_builder</span> <span class="o">=</span> <span class="n">parse_nt</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">root_builder</span><span class="o">.</span><span class="n">to_node</span><span class="p">(),</span> <span class="n">cursor</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">extensible</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Update the two production call sites in <code>table_cli.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/parser/table_cli.py</code>, change both <code>tree, consumed = parse(ll1, tokens[cursor:], tracer=tracer)</code> lines (around lines 80 and 116) to:</p>
+<div class="highlight"><pre><span></span><code>            <span class="n">tree</span><span class="p">,</span> <span class="n">consumed</span><span class="p">,</span> <span class="n">extensible</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">ll1</span><span class="p">,</span> <span class="n">tokens</span><span class="p">[</span><span class="n">cursor</span><span class="p">:],</span> <span class="n">tracer</span><span class="o">=</span><span class="n">tracer</span><span class="p">)</span>
+</code></pre></div>
+<p>(The <code>extensible</code> value is consumed in Task 2; binding it now keeps the unpacking valid.)</p>
+<ul>
+<li>[ ] <strong>Step 5: Update existing test call sites mechanically</strong></li>
+</ul>
+<p>The existing tests unpack a 2-tuple. Update them in place:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/workspaces/plcc-ng/.worktrees/093
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;s/tree, _ = parse(/tree, _, _ = parse(/g; s/tree, consumed = parse(/tree, consumed, _ = parse(/g; s/_, consumed = parse(/_, consumed, _ = parse(/g&#39;</span><span class="w"> </span>src/plcc/parser/predictive_parser_test.py
+</code></pre></div>
+<p>Confirm no other file unpacks <code>parse()</code>:</p>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s2">&quot;= parse(&quot;</span><span class="w"> </span>src/plcc<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.py&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;_, _ = parse\|consumed, _ = parse\|def parse\|ParseError&quot;</span>
+</code></pre></div>
+<p>Expected: only the bare <code>parse(...)</code> calls inside <code>pytest.raises</code>/tracer tests (no two-value unpacks) remain.</p>
+<ul>
+<li>[ ] <strong>Step 6: Run the parser suite to verify it passes</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/parser/predictive_parser_test.py -v</code>
+Expected: PASS (all tests, including the three new ones).</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/parser/predictive_parser.py<span class="w"> </span>src/plcc/parser/predictive_parser_test.py<span class="w"> </span>src/plcc/parser/table_cli.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): parser reports sentence extensibility\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-2-plcc-parser-table-surfaces-hold-marker-and-fragment-start">Task 2: <code>plcc-parser-table</code> surfaces hold marker and fragment start</h3>
+<p>For the trailing parse, emit a sibling <code>hold</code> marker when the sentence is complete-but-extensible (so the forwarded tree stays clean), and attach the fragment <code>start</code> source to a trailing incomplete (<code>found="eof"</code>) error.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/parser/table_cli.py</code>
+- Test: <code>src/plcc/parser/table_cli_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>parse(...) -&gt; (tree, consumed, extensible)</code> from Task 1.
+- Produces (on stdout JSONL, in addition to existing trees/errors):
+  - <code>{"kind": "hold", "source": {"file","line","column",...}}</code> — emitted immediately after the trailing tree when that final parse consumed all remaining tokens and was extensible. <code>source</code> is the trailing tree's own <code>source</code> (its start position).
+  - Trailing incomplete error gains <code>"start": {&lt;source of the first token of the failed parse&gt;}</code> alongside the existing <code>"found": "eof"</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the failing tests</strong></li>
+</ul>
+<p>Add to <code>src/plcc/parser/table_cli_test.py</code> (reuse the existing <code>_run</code>, <code>_tok</code>, <code>_sentinel</code>, <code>_TRIVIAL_LL1</code>, and <code>_ADDITION_LL1</code> helpers). This file does <strong>not</strong> have an extensible grammar — add the same <code>_EXTENSIBLE_LL1</code> constant defined in Task 1 (<code>E → NUM Tail ; Tail → PLUS NUM Tail | ε</code>) near the other <code>_LL1</code> constants:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_trailing_extensible_parse_emits_hold_marker</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="c1"># Nullable tail: &quot;3&quot; is complete but extensible -&gt; tree then a hold marker.</span>
+    <span class="n">ll1_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_EXTENSIBLE_LL1</span><span class="p">,</span> <span class="n">ll1_file</span><span class="p">)</span>
+        <span class="n">ll1_file</span><span class="o">.</span><span class="n">flush</span><span class="p">();</span> <span class="n">ll1_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">_sentinel</span><span class="p">()]</span>
+        <span class="n">stdin_data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;sys.stdin&quot;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">stdin_data</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--ll1=</span><span class="si">{</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+        <span class="n">kinds</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="s2">&quot;tree&quot;</span> <span class="ow">in</span> <span class="n">kinds</span>
+        <span class="k">assert</span> <span class="n">kinds</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;hold&quot;</span>
+        <span class="k">assert</span> <span class="n">records</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;source&quot;</span><span class="p">][</span><span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_nonextensible_parse_emits_no_hold_marker</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="c1"># program -&gt; NUM : &quot;42&quot; is final, no hold marker.</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">_run</span><span class="p">(</span><span class="n">_TRIVIAL_LL1</span><span class="p">,</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;42&quot;</span><span class="p">),</span> <span class="n">_sentinel</span><span class="p">()])</span>
+    <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;hold&quot;</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_trailing_incomplete_error_carries_start_source</span><span class="p">(</span><span class="n">capsys</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
+    <span class="c1"># program -&gt; NUM PLUS NUM ; &quot;1 +&quot; at col 1 is incomplete.</span>
+    <span class="n">ll1_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.json&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_ADDITION_LL1</span><span class="p">,</span> <span class="n">ll1_file</span><span class="p">)</span>
+        <span class="n">ll1_file</span><span class="o">.</span><span class="n">flush</span><span class="p">();</span> <span class="n">ll1_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;NUM&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">_tok</span><span class="p">(</span><span class="s2">&quot;PLUS&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">_sentinel</span><span class="p">()]</span>
+        <span class="n">stdin_data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;sys.stdin&quot;</span><span class="p">,</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">stdin_data</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">run_main</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--ll1=</span><span class="si">{</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">SystemExit</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;found&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span>
+        <span class="k">assert</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">][</span><span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">ll1_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to verify they fail</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/parser/table_cli_test.py -k "hold or start_source" -v</code>
+Expected: FAIL — no <code>hold</code> record is emitted; the error has no <code>start</code> key.</p>
+<ul>
+<li>[ ] <strong>Step 3: Implement the hold marker (success branch)</strong></li>
+</ul>
+<p>In <code>src/plcc/parser/table_cli.py</code>, in the main <code>while</code> loop, replace the success block (currently):</p>
+<div class="highlight"><pre><span></span><code>            <span class="k">if</span> <span class="n">trace</span><span class="p">:</span>
+                <span class="n">_emit_trace</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">,</span> <span class="n">token_count</span><span class="o">=</span><span class="n">consumed</span><span class="p">,</span> <span class="n">rule_count</span><span class="o">=</span><span class="n">_count_rules</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tree</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">+=</span> <span class="n">consumed</span>
+</code></pre></div>
+<p>with:</p>
+<div class="highlight"><pre><span></span><code>            <span class="k">if</span> <span class="n">trace</span><span class="p">:</span>
+                <span class="n">_emit_trace</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">COMPLETE</span><span class="p">,</span> <span class="n">token_count</span><span class="o">=</span><span class="n">consumed</span><span class="p">,</span> <span class="n">rule_count</span><span class="o">=</span><span class="n">_count_rules</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tree</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">+=</span> <span class="n">consumed</span>
+            <span class="n">at_end</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tokens</span><span class="p">[</span><span class="n">cursor</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span>
+            <span class="k">if</span> <span class="n">at_end</span> <span class="ow">and</span> <span class="n">extensible</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;hold&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="p">{})}),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Implement the <code>start</code> source on the incomplete error (failure branch)</strong></li>
+</ul>
+<p>In the same loop, the <code>except ParseError as e:</code> block currently builds <code>record</code> and adds <code>record["found"] = e.found</code>. The first token of the failed attempt is <code>tokens[cursor]</code>. Update that block to:</p>
+<div class="highlight"><pre><span></span><code>        <span class="k">except</span> <span class="n">ParseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">_emit_trace</span><span class="p">(</span><span class="n">tracer</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+                <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;plcc-parser-table&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">found</span><span class="p">:</span>
+                <span class="n">record</span><span class="p">[</span><span class="s2">&quot;found&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">found</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">found</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span> <span class="ow">and</span> <span class="n">cursor</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
+                <span class="n">record</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="n">cursor</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">record</span><span class="p">),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">break</span>
+</code></pre></div>
+<p>Leave the second (epsilon-grammar) <code>except ParseError</code> block near the bottom unchanged — it handles empty input where <code>cursor</code> has no first token to point at.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/parser/table_cli_test.py -v</code>
+Expected: PASS (new tests plus all existing — <code>eof=True</code>-equivalent batch output is unchanged except the additive <code>hold</code>/<code>start</code> fields).</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/parser/table_cli.py<span class="w"> </span>src/plcc/parser/table_cli_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): emit hold marker and incomplete-fragment start\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-3-commithold-split-helper">Task 3: Commit/hold split helper</h3>
+<p>A pure function that, given <code>pipeline.run()</code> output, the original buffer bytes, and the <code>eof</code> flag, returns the records to dispatch and the remainder bytes to retain.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/pipeline.py</code> (add functions; <code>TreePipeline.run</code> is unchanged)
+- Test: <code>src/plcc/cmd/pipeline_test.py</code>
+- Modify: <code>src/plcc/cmd/_test_helpers.py</code> (add a <code>hold</code> marker helper)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>pipeline.run()</code> output — a list of <code>(record_dict, raw_bytes)</code> pairs.
+- Produces:
+  - <code>split_committed(items, content, eof) -&gt; (dispatch_items: list, remainder: bytes)</code>.
+  - <code>slice_from_source(content: bytes, source: dict) -&gt; bytes</code> (helper; returns all of <code>content</code> if <code>source</code> lacks <code>line</code>/<code>column</code>).</p>
+<ul>
+<li>[ ] <strong>Step 1: Add a hold-marker test helper</strong></li>
+</ul>
+<p>Add to <code>src/plcc/cmd/_test_helpers.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_hold_record</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;hold&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="n">file</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="n">line</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">},</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Write the failing tests</strong></li>
+</ul>
+<p>Add a new test section to <code>src/plcc/cmd/pipeline_test.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_committed</span><span class="p">,</span> <span class="n">slice_from_source</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._test_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_hold_record</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_items</span><span class="p">(</span><span class="o">*</span><span class="n">raws</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build (record, raw) pairs from raw JSONL byte chunks (one record each).&quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">raws</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">line</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slice_from_source_single_line</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;3 + 4</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;4</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slice_from_source_multiline</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">bc</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;c</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_slice_from_source_without_position_returns_all</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;abc&quot;</span><span class="p">,</span> <span class="p">{})</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;abc&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_eof_dispatches_all_and_strips_hold</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">(),</span> <span class="n">_hold_record</span><span class="p">())</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_holds_trailing_extensible_tree</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">(),</span> <span class="n">_hold_record</span><span class="p">(</span><span class="n">line</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dispatch</span> <span class="o">==</span> <span class="p">[]</span>           <span class="c1"># the extensible tree is held, not dispatched</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_commits_leading_tree_holds_incomplete</span><span class="p">():</span>
+    <span class="c1"># A committed final tree followed by a trailing incomplete fragment at col 3.</span>
+    <span class="n">eof_err</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;plcc-parser-table&quot;</span><span class="p">,</span> <span class="s2">&quot;found&quot;</span><span class="p">:</span> <span class="s2">&quot;eof&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;unexpected end of input&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;file&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+    <span class="p">})</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">(),</span> <span class="n">eof_err</span><span class="p">)</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;5;1+</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;1+</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_commits_final_tree_no_remainder</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_tree_record</span><span class="p">())</span>   <span class="c1"># final tree, no hold marker</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;42</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_split_trial_commits_genuine_error_no_remainder</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">_items</span><span class="p">(</span><span class="n">_error_record</span><span class="p">(</span><span class="s2">&quot;bad token&quot;</span><span class="p">))</span>
+    <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;@</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;error&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">remainder</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
+<p>(<code>5;1+</code> assumes a grammar with <code>;</code>-separated statements; the test only exercises the split logic, not real parsing, so the byte content just needs the <code>start</code> column to point at <code>1+</code>. Column 3 of <code>5;1+\n</code> is <code>1</code>, giving remainder <code>b"1+\n"</code>.)</p>
+<ul>
+<li>[ ] <strong>Step 3: Run tests to verify they fail</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/pipeline_test.py -k "split or slice" -v</code>
+Expected: FAIL — <code>ImportError: cannot import name 'split_committed'</code>.</p>
+<ul>
+<li>[ ] <strong>Step 4: Implement the helper functions</strong></li>
+</ul>
+<p>Add to <code>src/plcc/cmd/pipeline.py</code> (module-level, after <code>print_parse_error</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">slice_from_source</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return content from the 1-based (line, column) in source to the end.</span>
+
+<span class="sd">    Returns all of content when source lacks position info, so the caller</span>
+<span class="sd">    holds the whole buffer rather than losing input.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">source</span> <span class="ow">or</span> <span class="s2">&quot;line&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span> <span class="ow">or</span> <span class="s2">&quot;column&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">content</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;line&quot;</span><span class="p">]</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="n">source</span><span class="p">[</span><span class="s2">&quot;column&quot;</span><span class="p">]</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[:</span> <span class="n">line</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split pipeline.run() output into records to dispatch and bytes to retain.</span>
+
+<span class="sd">    items     — list of (record, raw) pairs from TreePipeline.run().</span>
+<span class="sd">    content   — the buffer that produced these records.</span>
+<span class="sd">    eof       — True to force-submit (commit everything, retain nothing).</span>
+
+<span class="sd">    Returns (dispatch_items, remainder_bytes).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">eof</span><span class="p">:</span>
+        <span class="n">dispatch</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">raw</span><span class="p">)</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;hold&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dispatch</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+
+    <span class="n">last</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;hold&quot;</span><span class="p">:</span>
+        <span class="c1"># Trailing complete-but-extensible sentence: hold the tree before it.</span>
+        <span class="k">return</span> <span class="n">items</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="k">if</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span> <span class="ow">and</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;found&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;eof&quot;</span><span class="p">:</span>
+        <span class="c1"># Trailing incomplete fragment: commit leading trees, hold the fragment.</span>
+        <span class="k">return</span> <span class="n">items</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">slice_from_source</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">last</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="c1"># Trailing is a final tree or a genuine error: commit everything.</span>
+    <span class="k">return</span> <span class="n">items</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 5: Run tests to verify they pass</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/pipeline_test.py -v</code>
+Expected: PASS (new tests plus all existing <code>TreePipeline.run</code> tests, which are untouched).</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/pipeline.py<span class="w"> </span>src/plcc/cmd/pipeline_test.py<span class="w"> </span>src/plcc/cmd/_test_helpers.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): add commit/hold split helper\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-4-handlers-return-remainder-bytes">Task 4: Handlers return remainder bytes</h3>
+<p><code>RepHandler.feed</code> and <code>ParseHandler.feed</code> change their return type from <code>bool</code> to remainder <code>bytes</code> (<code>b""</code> = fully consumed → <code>&gt;&gt;&gt;</code>; non-empty = hold → <code>...</code>), using <code>split_committed</code>.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/rep.py</code> (<code>RepHandler.feed</code>)
+- Modify: <code>src/plcc/cmd/parse.py</code> (<code>ParseHandler.feed</code>)
+- Test: <code>src/plcc/cmd/rep_test.py</code>, <code>src/plcc/cmd/parse_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>split_committed</code>, <code>slice_from_source</code> from Task 3; <code>pipeline.run()</code> (returns list or <code>None</code>).
+- Produces: <code>feed(content, source, eof=False) -&gt; bytes</code> (remainder).</p>
+<ul>
+<li>[ ] <strong>Step 1: Rewrite the rep feed tests</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep_test.py</code>, the existing feed tests assert <code>is True</code> / <code>is False</code>. Update them to the bytes contract. Replace the bodies of the affected assertions as follows (keep the <code>procs</code>/<code>monkeypatch</code> setup lines):</p>
+<ul>
+<li><code>test_feed_returns_false_when_no_tree</code>: assert <code>h.feed(b"1+\n", "-") == b"1+\n"</code> (no output → hold all).</li>
+<li><code>test_feed_returns_true_when_tree_produced</code>: assert <code>h.feed(b"42\n", "-") == b""</code>.</li>
+<li><code>test_feed_accepts_eof_kwarg</code>: assert <code>h.feed(b"\n", "-", eof=True) == b""</code>.</li>
+<li><code>test_feed_returns_true_on_error_record</code>: assert <code>h.feed(b"bad\n", "-") == b""</code>.</li>
+<li><code>test_feed_returns_false_for_eof_only_error_when_trial</code>: assert <code>h.feed(b"1+\n", "-", eof=False) == b"1+\n"</code>.</li>
+<li><code>test_feed_returns_true_for_eof_only_error_when_force_submit</code>: assert <code>h.feed(b"1+\n", "-", eof=True) == b""</code>.</li>
+<li><code>test_feed_returns_true_for_genuine_error_regardless_of_eof</code>: assert <code>h.feed(b"@\n", "-", eof=False) == b""</code>.</li>
+</ul>
+<p>Add one new test for the hold-trailing-extensible path:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_feed_holds_trailing_extensible_without_dispatch</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._test_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">_hold_record</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">interp</span> <span class="o">=</span> <span class="n">handler</span>
+    <span class="n">procs</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="n">_proc</span><span class="p">(),</span> <span class="n">_proc</span><span class="p">(</span><span class="n">stdout</span><span class="o">=</span><span class="n">_tree_record</span><span class="p">()</span> <span class="o">+</span> <span class="n">_hold_record</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">))])</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">subprocess</span><span class="p">,</span> <span class="s2">&quot;Popen&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">procs</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">h</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;3</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="n">interp</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>  <span class="c1"># extensible tree was NOT sent to interpreter</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run rep feed tests to verify they fail</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/rep_test.py -k feed -v</code>
+Expected: FAIL — feed currently returns <code>True</code>/<code>False</code>, not bytes.</p>
+<ul>
+<li>[ ] <strong>Step 3: Rewrite <code>RepHandler.feed</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep.py</code>, update the import line:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreePipeline</span><span class="p">,</span> <span class="n">print_parse_error</span><span class="p">,</span> <span class="n">split_committed</span>
+</code></pre></div>
+<p>Replace <code>RepHandler.feed</code> with:</p>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">eof</span> <span class="k">else</span> <span class="n">content</span>
+        <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">record</span><span class="p">,</span> <span class="n">raw</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+                <span class="n">print_parse_error</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">default_stage</span><span class="o">=</span><span class="s2">&quot;plcc-rep&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;tree&quot;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">raw</span> <span class="o">+</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">BrokenPipeError</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;plcc-rep: interpreter exited unexpectedly&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">_read_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpreter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose_format</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">remainder</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run rep feed tests to verify they pass</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/rep_test.py -k feed -v</code>
+Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Rewrite the parse feed tests</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/parse_test.py</code>, update the analogous feed assertions to the bytes contract (mirror of Step 1):</p>
+<ul>
+<li>The "returns False" / "no tree" cases → assert <code>== b"&lt;input&gt;"</code> (hold).</li>
+<li>The "returns True" / tree / genuine-error / force-submit cases → assert <code>== b""</code>.</li>
+</ul>
+<p>Keep the trace-buffering and tree-printing assertions as they are; only the return-value checks change.</p>
+<ul>
+<li>[ ] <strong>Step 6: Run parse feed tests to verify they fail</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/parse_test.py -k feed -v</code>
+Expected: FAIL.</p>
+<ul>
+<li>[ ] <strong>Step 7: Rewrite <code>ParseHandler.feed</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/parse.py</code>, update the import:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">TreePipeline</span><span class="p">,</span> <span class="n">print_parse_error</span><span class="p">,</span> <span class="n">location_str</span><span class="p">,</span> <span class="n">split_committed</span>
+</code></pre></div>
+<p>Replace <code>ParseHandler.feed</code> with:</p>
+<div class="highlight"><pre><span></span><code>    <span class="k">def</span><span class="w"> </span><span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">eof</span> <span class="k">else</span> <span class="n">content</span>
+        <span class="n">dispatch</span><span class="p">,</span> <span class="n">remainder</span> <span class="o">=</span> <span class="n">split_committed</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">)</span>
+        <span class="n">buffered_steps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">record</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">dispatch</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;parse-step&quot;</span><span class="p">:</span>
+                <span class="n">buffered_steps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+                <span class="n">_render_trace</span><span class="p">(</span><span class="n">buffered_steps</span><span class="p">)</span>
+                <span class="n">print_parse_error</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">default_stage</span><span class="o">=</span><span class="s2">&quot;plcc-parse&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">had_error</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">record</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;tree&quot;</span><span class="p">:</span>
+                <span class="n">buffered_steps</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">_print_tree</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">remainder</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 8: Run parse feed tests to verify they pass</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/parse_test.py -k feed -v</code>
+Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 9: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/parse.py<span class="w"> </span>src/plcc/cmd/parse_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): handlers return remainder bytes\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-5-incremental-sourcerunner-with-new-d-semantics">Task 5: Incremental <code>SourceRunner</code> with new <code>^D</code> semantics</h3>
+<p>Replace the all-or-nothing accumulate model and <code>SubmitOn.EOF</code>/double-<code>^D</code> machinery with a single incremental mode: each line feeds the buffer (<code>eof=False</code>) and the returned remainder becomes the new buffer; <code>^D</code> is a single-press context exit / force-submit.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/source_runner.py</code>
+- Test: <code>src/plcc/cmd/source_runner_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>handler.feed(content, source, eof) -&gt; bytes</code> (Task 4).
+- Produces: <code>SourceRunner(hint=HINT, prompt=PROMPT, continuation=CONTINUATION)</code> (no <code>submit_on</code>); <code>run(sources, handler)</code> returns <code>None</code>. <code>SubmitOn</code> enum removed.</p>
+<ul>
+<li>[ ] <strong>Step 1: Rewrite the test handler and the affected tests</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/source_runner_test.py</code>:</p>
+<p>Change <code>RecordingHandler.feed</code> to return <strong>bytes</strong> (the remainder) instead of booleans, and update its <code>results</code> to be byte strings:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RecordingHandler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Captures feed() calls for assertions. results: iterator of remainder bytes.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">results</span> <span class="ow">or</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>       <span class="c1"># list of (content, source)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eof_flags</span> <span class="o">=</span> <span class="p">[]</span>   <span class="c1"># parallel list of eof values</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">feed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eof_flags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eof</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+</code></pre></div>
+<p>Update the <code>runner</code> fixture and helpers to construct <code>SourceRunner()</code> with no <code>submit_on</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">runner</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">SourceRunner</span><span class="p">()</span>
+</code></pre></div>
+<p>Remove the entire <code># --- SubmitOn enum and EOF mode ---</code> section (every <code>test_eof_mode_*</code>, <code>test_submit_on_required</code>, <code>test_eol_mode_*</code>, the <code>_eof_runner</code>, <code>_read1_tty</code>, and the <code>SubmitOn</code> import). Remove the double-<code>^D</code> tests <code>test_first_ctrl_d_on_empty_prompt_prints_warning</code> and <code>test_second_ctrl_d_on_empty_prompt_exits_without_feed</code> and <code>test_input_after_ctrl_d_warning_clears_pending_exit</code>. Remove the <code>_InteractiveState.pending_exit</code> tests. Update the remaining behavior tests to the bytes/remainder contract and the new <code>^D</code> rules:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_interactive_remainder_becomes_next_buffer</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># First line is held (remainder == the line); second line completes it.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;b</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;a</span><span class="se">\n</span><span class="s2">b</span><span class="se">\n</span><span class="s2">&quot;</span>   <span class="c1"># accumulated, fed again</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_interactive_empty_remainder_resets_to_prompt</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">err</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; &quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_interactive_nonempty_remainder_shows_continuation</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="s2">&quot;... &quot;</span> <span class="ow">in</span> <span class="n">err</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_empty_buffer_exits_immediately</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># Single ^D on the top-level prompt exits; feed is never called.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">()</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span> <span class="o">==</span> <span class="p">[]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_empty_buffer_prints_newline</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">RecordingHandler</span><span class="p">())</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">err</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;&gt;&gt;&gt; </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ctrl_d_nonempty_buffer_force_submits_and_returns_to_prompt</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">,</span> <span class="n">capsys</span><span class="p">):</span>
+    <span class="c1"># line1 is held; ^D on the continuation prompt force-submits with eof=True.</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">eof_flags</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;line1</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_partial_line_then_ctrl_d_force_submits_with_partial</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">runner</span><span class="p">):</span>
+    <span class="c1"># &quot;world&quot; arrives with no trailing newline (text then ^D).</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;stdin&quot;</span><span class="p">,</span> <span class="n">_tty_stdin</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;world&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">]))</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">RecordingHandler</span><span class="p">(</span><span class="n">results</span><span class="o">=</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">],</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;hello</span><span class="se">\n</span><span class="s2">world&quot;</span>
+    <span class="k">assert</span> <span class="n">handler</span><span class="o">.</span><span class="n">eof_flags</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
+<p>Keep the file-source, non-tty, and <code>^C</code> (<code>KeyboardInterrupt</code>) tests, updating any <code>results=[True/False]</code> to bytes (<code>results=[b""]</code> for success, <code>results=[b"&lt;content&gt;"]</code> for hold). The <code>^C</code> semantics (<code>_clear_buffer_or_exit</code>) are unchanged.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run the source_runner tests to verify they fail</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/source_runner_test.py -v</code>
+Expected: FAIL — <code>SourceRunner()</code> still requires <code>submit_on</code>; feed-bytes behavior not implemented.</p>
+<ul>
+<li>[ ] <strong>Step 3: Rewrite <code>source_runner.py</code></strong></li>
+</ul>
+<p>Replace the whole file with:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="n">HINT</span> <span class="o">=</span> <span class="s2">&quot;Enter input. Press ^D (EOF) when done.&quot;</span>
+<span class="n">PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&gt;&gt;&gt; &quot;</span>
+<span class="n">CONTINUATION</span> <span class="o">=</span> <span class="s2">&quot;... &quot;</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_InteractiveState</span><span class="p">:</span>
+    <span class="n">buffer</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">done</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">SourceRunner</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hint</span><span class="o">=</span><span class="n">HINT</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">continuation</span><span class="o">=</span><span class="n">CONTINUATION</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hint</span> <span class="o">=</span> <span class="n">hint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span> <span class="o">=</span> <span class="n">prompt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_continuation</span> <span class="o">=</span> <span class="n">continuation</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run handler over sources. Interactive stdin parses incrementally;</span>
+<span class="sd">        files and piped stdin are fed whole with eof=True.&quot;&quot;&quot;</span>
+        <span class="n">effective</span> <span class="o">=</span> <span class="n">sources</span> <span class="k">if</span> <span class="n">sources</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">effective</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;-&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_run_interactive</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">handler</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="n">handler</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_interactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_hint</span><span class="p">()</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_line</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">prompt</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_line</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_print_hint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hint</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clear_buffer_or_exit</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ctrl_d</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_submit</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incremental</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span> <span class="o">+</span> <span class="n">line</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ctrl_d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_submit</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">,</span> <span class="n">done</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_force_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">remainder</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PLCC internal error: forced submission left unconsumed input.&quot;</span><span class="p">,</span>
+                  <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_incremental</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">remainder</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_continuation</span>
+        <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="n">remainder</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_buffer_or_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">buffer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KeyboardInterrupt&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_InteractiveState</span><span class="p">(</span><span class="n">buffer</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_prompt</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">eof</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">handler</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">eof</span><span class="o">=</span><span class="n">eof</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">130</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run the source_runner tests to verify they pass</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/source_runner_test.py -v</code>
+Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/source_runner.py<span class="w"> </span>src/plcc/cmd/source_runner_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): incremental SourceRunner with single-press ^D\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-6-wire-orchestrators-to-the-incremental-runner">Task 6: Wire orchestrators to the incremental runner</h3>
+<p><code>plcc-rep</code> and <code>plcc-parse</code> construct <code>SourceRunner()</code> without <code>SubmitOn</code> and drop the now-dead <code>completed</code> exit branch.</p>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/rep.py</code>
+- Modify: <code>src/plcc/cmd/parse.py</code>
+- Test: <code>src/plcc/cmd/rep_test.py</code>, <code>src/plcc/cmd/parse_test.py</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>SourceRunner()</code> (Task 5).</p>
+<ul>
+<li>[ ] <strong>Step 1: Update the rep main test</strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep_test.py</code>, <code>test_main_uses_eof_submit_mode</code> asserts the old <code>SubmitOn.EOF</code>. Replace it with a test that the runner is constructed without a submit mode:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_main_constructs_runner_without_submit_mode</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;plcc-rep uses the single incremental SourceRunner (no SubmitOn).&quot;&quot;&quot;</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">build</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;build&quot;</span>
+    <span class="n">build</span><span class="o">.</span><span class="n">mkdir</span><span class="p">()</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;.spec&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tmp_path</span> <span class="o">/</span> <span class="s2">&quot;grammar.plcc&quot;</span><span class="p">))</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;spec.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">_json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;semantics&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;Python&quot;</span><span class="p">}}))</span>
+    <span class="p">(</span><span class="n">build</span> <span class="o">/</span> <span class="s2">&quot;ll1.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">captured</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">capturing_runner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">_MagicMock</span><span class="p">()</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">m</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">_rep_module</span><span class="p">,</span> <span class="s2">&quot;SourceRunner&quot;</span><span class="p">,</span> <span class="n">capturing_runner</span><span class="p">)</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.run&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">_MagicMock</span><span class="p">(</span><span class="n">returncode</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;subprocess.Popen&quot;</span><span class="p">,</span>
+                        <span class="k">lambda</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">_MagicMock</span><span class="p">(</span><span class="n">stdin</span><span class="o">=</span><span class="n">_MagicMock</span><span class="p">(),</span> <span class="n">wait</span><span class="o">=</span><span class="n">_MagicMock</span><span class="p">()))</span>
+
+    <span class="n">_rep_module</span><span class="o">.</span><span class="n">main</span><span class="p">([</span><span class="s2">&quot;--spec=grammar.plcc&quot;</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="s2">&quot;submit_on&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">captured</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">()</span>
+</code></pre></div>
+<p>Remove the now-unused <code>from .source_runner import SubmitOn</code> import from the test file.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run to verify it fails</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/rep_test.py -k construct_runner -v</code>
+Expected: FAIL — <code>rep.main</code> still imports/uses <code>SubmitOn.EOF</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Update <code>rep.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/rep.py</code>:</p>
+<p>Change the import <code>from .source_runner import SourceRunner, SubmitOn</code> to:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.source_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourceRunner</span>
+</code></pre></div>
+<p>Replace the runner construction and the trailing <code>completed</code> branch (currently):</p>
+<div class="highlight"><pre><span></span><code>        <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">(</span><span class="n">submit_on</span><span class="o">=</span><span class="n">SubmitOn</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+        <span class="n">completed</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">completed</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>with:</p>
+<div class="highlight"><pre><span></span><code>        <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">()</span>
+        <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="o">...</span>
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">FINISHED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>(Leave the <code>finally</code> block body unchanged.)</p>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>parse.py</code></strong></li>
+</ul>
+<p>In <code>src/plcc/cmd/parse.py</code>:</p>
+<p>Change <code>from .source_runner import SourceRunner, SubmitOn</code> to <code>from .source_runner import SourceRunner</code>.</p>
+<p>Replace:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">(</span><span class="n">submit_on</span><span class="o">=</span><span class="n">SubmitOn</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+    <span class="n">completed</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">completed</span> <span class="ow">or</span> <span class="n">handler</span><span class="o">.</span><span class="n">had_error</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p>with:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">runner</span> <span class="o">=</span> <span class="n">SourceRunner</span><span class="p">()</span>
+    <span class="n">runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sources</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">handler</span><span class="o">.</span><span class="n">had_error</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 5: Update the parse main test if needed</strong></li>
+</ul>
+<p>If <code>src/plcc/cmd/parse_test.py</code> has a test asserting <code>SubmitOn.EOF</code> or the <code>completed</code>/exit-on-incomplete behavior, update it the same way as Step 1 (assert <code>SourceRunner</code> is constructed with no args) or remove the obsolete incomplete-exit assertion. Run <code>grep -n "SubmitOn\|completed" src/plcc/cmd/parse_test.py</code> to find them.</p>
+<ul>
+<li>[ ] <strong>Step 6: Run rep and parse suites to verify they pass</strong></li>
+</ul>
+<p>Run: <code>python -m pytest src/plcc/cmd/rep_test.py src/plcc/cmd/parse_test.py -v</code>
+Expected: PASS.</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py<span class="w"> </span>src/plcc/cmd/parse.py<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>src/plcc/cmd/parse_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;feat(093): wire orchestrators to incremental runner\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-7-end-to-end-verification-and-docs">Task 7: End-to-end verification and docs</h3>
+<p>Verify the full behavior against a real grammar and update the orchestrator docs.</p>
+<p><strong>Files:</strong>
+- Test: add an e2e/functional test under the existing e2e tree (see <code>bin/test/e2e.bash</code> / <code>bin/test/functional.bash</code> for the layout; place the new test beside the existing <code>plcc-rep</code>/<code>plcc-parse</code> e2e tests).
+- Modify: <code>docs/cli/orchestrators.md</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Locate the existing interactive e2e tests</strong></li>
+</ul>
+<p>Run: <code>grep -rln "plcc-rep\|SubmitOn\|continuation\|&gt;&gt;&gt; " test e2e tests 2&gt;/dev/null; ls bin/test</code>
+Identify where <code>plcc-rep</code>/<code>plcc-parse</code> interactive behavior is exercised so the new test matches the established harness style.</p>
+<ul>
+<li>[ ] <strong>Step 2: Write a failing e2e test for the incremental flow</strong></li>
+</ul>
+<p>Using the existing harness conventions, add a test that drives <code>plcc-parse</code> (or <code>plcc-rep</code>) against a small expression grammar via a pipe and asserts:
+- Feeding <code>3\n</code> then EOF (<code>^D</code>) produces one parse result (held <code>3</code> is force-submitted at EOF), not two.
+- Feeding <code>3\n4\n</code> then EOF: <code>3</code> is held and extended-attempted; on the second line <code>3</code> and <code>4</code> are independent complete sentences — assert two results are produced (the first <code>3</code> committed when <code>4</code> begins a new sentence on its own line) per the split rule.
+- Feeding a complete-final sentence followed on the same line by the start of another (e.g. <code>5;1+</code>) splits: the first is evaluated, <code>1+</code> is retained.</p>
+<p>Match the exact assertion mechanism (golden files vs. inline string asserts) used by the neighboring e2e tests.</p>
+<ul>
+<li>[ ] <strong>Step 3: Run it to verify it fails, then run the full suite</strong></li>
+</ul>
+<p>Run: <code>bin/test/units.bash</code> and the relevant <code>bin/test/e2e.bash</code> (or <code>functional.bash</code>).
+Expected: the new e2e test fails first if the harness wiring is incomplete; fix wiring until it passes. Then the full unit suite passes with no regressions (the pre-existing <code>test_emit_generated_main_exits_130_on_sigint</code> failure noted at baseline is unrelated to this work — confirm it is the only remaining failure).</p>
+<ul>
+<li>[ ] <strong>Step 4: Update <code>docs/cli/orchestrators.md</code></strong></li>
+</ul>
+<p>Document the new interactive behavior for <code>plcc-rep</code> and <code>plcc-parse</code>:
+- After each line, complete sentences are evaluated; a complete-but-extensible or incomplete prefix continues at the <code>...</code> prompt.
+- <code>^D</code> at <code>&gt;&gt;&gt;</code> exits immediately (no second press). <code>^D</code> at <code>...</code> force-submits the buffer (evaluating complete sentences and reporting any trailing incomplete fragment as an error) and returns to <code>&gt;&gt;&gt;</code>.
+- No submit chord is needed; remove any references to "press ^D when done to submit the whole buffer" that describe the old <code>SubmitOn.EOF</code> model.</p>
+<p>Verify any rendered command examples still match actual output.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>docs/cli/orchestrators.md<span class="w"> </span><span class="nb">test</span><span class="w">  </span><span class="c1"># plus the new e2e test path</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;docs(093): document incremental interactive mode and ^D [skip ci]\n\nCo-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>(Split into two commits — a <code>feat(093)</code> for the e2e test and a <code>docs(093): ... [skip ci]</code> for the docs — if you prefer the e2e test to run in CI.)</p>
+<hr />
+<h2 id="self-review">Self-Review</h2>
+<p><strong>Spec coverage:</strong>
+- Incremental evaluation (peel complete-final, hold extensible/incomplete) → Tasks 1–4.
+- The three parser scenarios (final / extensible / complete+leftover) → Task 1 (extensible flag), Task 2 (hold marker + start), table_cli's existing multi-tree loop (leftover).
+- <code>^D</code> rules 1–3 (single-press exit; force-submit at <code>...</code>; partial-line force-submit) → Task 5.
+- Force-submit never holds; trailing incomplete reported as error → Task 3 (<code>split_committed</code> with <code>eof=True</code>) + Task 4.
+- Global application, remove <code>SubmitOn.EOF</code> and double-<code>^D</code> → Tasks 5–6.
+- Docs → Task 7.</p>
+<p><strong>Placeholder scan:</strong> No "TBD"/"handle edge cases" left; Task 7 Steps 1–2 intentionally defer exact assertion mechanics to the discovered harness, with concrete behaviors to assert.</p>
+<p><strong>Type consistency:</strong> <code>parse() -&gt; (tree, consumed, extensible)</code> (Task 1) consumed in Task 2; <code>split_committed(items, content, eof) -&gt; (dispatch, remainder)</code> and <code>slice_from_source(content, source) -&gt; bytes</code> (Task 3) consumed identically in Task 4; <code>feed(...) -&gt; bytes</code> (Task 4) consumed by <code>SourceRunner._evaluate</code> (Task 5); <code>SourceRunner()</code> no-arg (Task 5) consumed in Task 6. The <code>hold</code> marker shape <code>{"kind":"hold","source":{...}}</code> is produced in Task 2 and matched in Tasks 3–4.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

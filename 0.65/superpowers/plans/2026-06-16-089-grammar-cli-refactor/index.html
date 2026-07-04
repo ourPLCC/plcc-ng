@@ -1,0 +1,3323 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/0.65/superpowers/plans/2026-06-16-089-grammar-cli-refactor/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Grammar CLI Refactor Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#grammar-cli-refactor-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Grammar CLI Refactor Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../quick-start/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration from PLCC
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../acknowledgments/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Acknowledgments
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration from PLCC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/haskell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Haskell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acknowledgments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="grammar-cli-refactor-implementation-plan">Grammar CLI Refactor Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Centralize the <code>--grammar</code>/<code>-g</code> CLI option text, validation logic, default filename, and path resolution into shared modules without changing any user-visible behavior.</p>
+<p><strong>Architecture:</strong> Two new additions — <code>DEFAULT_GRAMMAR_FILE</code> and <code>resolve_grammar_path()</code> go into <code>build/grammar.py</code> (build-level concerns); a new <code>cmd/grammar.py</code> module holds the CLI option string and arg-handling helpers (cmd-level concerns). Five command files are then updated to use these.</p>
+<p><strong>Tech Stack:</strong> Python, docopt (for CLI option string format), pytest</p>
+<hr />
+<h2 id="file-map">File Map</h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/build/grammar.py</code></td>
+<td>Add <code>DEFAULT_GRAMMAR_FILE</code> constant and <code>resolve_grammar_path()</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/build/grammar_test.py</code></td>
+<td>Tests for the two new additions</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/cmd/grammar.py</code></td>
+<td><code>GRAMMAR_OPTION</code>, <code>validate_grammar_flag()</code>, <code>grammar_flag_for_child()</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>src/plcc/cmd/grammar_test.py</code></td>
+<td>Tests for the new cmd helpers</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/make.py</code></td>
+<td>Use <code>resolve_grammar_path()</code> and <code>GRAMMAR_OPTION</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/scan.py</code></td>
+<td>Use <code>GRAMMAR_OPTION</code>, <code>validate_grammar_flag()</code>, <code>grammar_flag_for_child()</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/parse.py</code></td>
+<td>Same as scan.py</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/rep.py</code></td>
+<td>Same as scan.py</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>src/plcc/cmd/diagram.py</code></td>
+<td>Same as scan.py</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="task-1-add-default_grammar_file-and-resolve_grammar_path-to-buildgrammarpy">Task 1: Add <code>DEFAULT_GRAMMAR_FILE</code> and <code>resolve_grammar_path</code> to <code>build/grammar.py</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/build/grammar_test.py</code>
+- Modify: <code>src/plcc/build/grammar.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add failing tests to <code>src/plcc/build/grammar_test.py</code></strong></li>
+</ul>
+<p>Append these tests after the existing ones (keep the existing import line, add the new import):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">resolve_grammar_path</span><span class="p">,</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_resolve_grammar_path_explicit_wins</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">resolve_grammar_path</span><span class="p">(</span><span class="s1">&#39;explicit.plcc&#39;</span><span class="p">,</span> <span class="s1">&#39;stored.plcc&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;explicit.plcc&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_resolve_grammar_path_uses_stored_when_no_explicit</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">resolve_grammar_path</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;stored.plcc&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;stored.plcc&#39;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_resolve_grammar_path_falls_back_to_default</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">resolve_grammar_path</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/build/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 3 failures with <code>ImportError: cannot import name 'resolve_grammar_path'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Add <code>DEFAULT_GRAMMAR_FILE</code> and <code>resolve_grammar_path</code> to <code>src/plcc/build/grammar.py</code></strong></li>
+</ul>
+<p>The full file after changes:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">_GRAMMAR_FILE</span> <span class="o">=</span> <span class="s2">&quot;.grammar&quot;</span>
+<span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="o">=</span> <span class="s2">&quot;grammar.plcc&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_grammar</span><span class="p">(</span><span class="n">build_dir</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">build_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">_GRAMMAR_FILE</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">write_grammar</span><span class="p">(</span><span class="n">build_dir</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">build_dir</span><span class="p">)</span> <span class="o">/</span> <span class="n">_GRAMMAR_FILE</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_grammar_path</span><span class="p">(</span><span class="n">explicit</span><span class="p">,</span> <span class="n">stored</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">explicit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">explicit</span>
+    <span class="k">elif</span> <span class="n">stored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stored</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to confirm they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/build/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 8 passed (5 existing + 3 new)</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/build/grammar.py<span class="w"> </span>src/plcc/build/grammar_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(build): add DEFAULT_GRAMMAR_FILE and resolve_grammar_path&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-2-create-cmdgrammarpy-with-cli-helpers">Task 2: Create <code>cmd/grammar.py</code> with CLI helpers</h2>
+<p><strong>Files:</strong>
+- Create: <code>src/plcc/cmd/grammar_test.py</code>
+- Create: <code>src/plcc/cmd/grammar.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create <code>src/plcc/cmd/grammar_test.py</code> with failing tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span><span class="p">,</span> <span class="n">GRAMMAR_OPTION</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_option_contains_flag</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="s1">&#39;--grammar&#39;</span> <span class="ow">in</span> <span class="n">GRAMMAR_OPTION</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_option_contains_default_filename</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">DEFAULT_GRAMMAR_FILE</span> <span class="ow">in</span> <span class="n">GRAMMAR_OPTION</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_none_does_nothing</span><span class="p">():</span>
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_existing_file_does_nothing</span><span class="p">(</span><span class="n">tmp_path</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">tmp_path</span> <span class="o">/</span> <span class="s1">&#39;foo.plcc&#39;</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_missing_file_exits_nonzero</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="n">exc</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_missing_file_prints_cmd_name</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="s1">&#39;plcc-test&#39;</span> <span class="ow">in</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span><span class="o">.</span><span class="n">err</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_validate_grammar_flag_missing_file_prints_path</span><span class="p">(</span><span class="n">capsys</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">SystemExit</span><span class="p">):</span>
+        <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-test&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent.plcc&#39;</span><span class="p">})</span>
+    <span class="k">assert</span> <span class="s1">&#39;nonexistent.plcc&#39;</span> <span class="ow">in</span> <span class="n">capsys</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span><span class="o">.</span><span class="n">err</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_flag_for_child_none_returns_empty</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">grammar_flag_for_child</span><span class="p">({</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span> <span class="o">==</span> <span class="p">[]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_grammar_flag_for_child_path_returns_flag</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">grammar_flag_for_child</span><span class="p">({</span><span class="s1">&#39;--grammar&#39;</span><span class="p">:</span> <span class="s1">&#39;foo.plcc&#39;</span><span class="p">})</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;--grammar=foo.plcc&#39;</span><span class="p">]</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Run tests to confirm they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 9 failures with <code>ModuleNotFoundError: No module named 'plcc.cmd.grammar'</code></p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>src/plcc/cmd/grammar.py</code></strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEFAULT_GRAMMAR_FILE</span>
+
+<span class="n">GRAMMAR_OPTION</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;</span>
+<span class="s2">                            Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to </span><span class="si">{</span><span class="n">DEFAULT_GRAMMAR_FILE</span><span class="si">}</span><span class="s2"> on first use.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_grammar_flag</span><span class="p">(</span><span class="n">cmd_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--grammar&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2">: grammar file not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run &#39;</span><span class="si">{</span><span class="n">cmd_name</span><span class="si">}</span><span class="s2"> --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--grammar&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;--grammar=</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 4: Run tests to confirm they pass</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/grammar_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: 9 passed</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/grammar.py<span class="w"> </span>src/plcc/cmd/grammar_test.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(cmd): add shared grammar CLI helpers&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-3-update-makepy">Task 3: Update <code>make.py</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/make.py</code></p>
+<p><code>make.py</code> uses <code>resolve_grammar_path()</code> (from Task 1) and <code>GRAMMAR_OPTION</code> (from Task 2). It does NOT use <code>validate_grammar_flag</code> or <code>grammar_flag_for_child</code> — its validation has two distinct error messages and it does not forward <code>--grammar</code> to a single child in the same pattern.</p>
+<ul>
+<li>[ ] <strong>Step 1: Update imports in <code>src/plcc/cmd/make.py</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span><span class="p">,</span> <span class="n">write_grammar</span>
+</code></pre></div>
+To:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span><span class="p">,</span> <span class="n">write_grammar</span><span class="p">,</span> <span class="n">resolve_grammar_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 2: Replace the inline grammar option text in the <code>__doc__</code> string</strong></li>
+</ul>
+<p>Change the Options section from:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-make</span>
+<span class="s2">    Build a PLCC project from a grammar file.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-make [-v ...] [options]</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;</span>
+<span class="s2">                            Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to grammar.plcc on first use.</span>
+<span class="s2">    --through=&lt;level&gt;       Build up to this level: scan, parse, model, or all [default: all].</span>
+<span class="s2">    -b --banner             Show the version and grammar banner on stderr.</span>
+<span class="s2">    -h --help               Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-make</span>
+<span class="s2">    Build a PLCC project from a grammar file.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-make [-v ...] [options]</span>
+
+<span class="s2">Options:</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">GRAMMAR_OPTION</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    --through=&lt;level&gt;       Build up to this level: scan, parse, model, or all [default: all].</span>
+<span class="s2">    -b --banner             Show the version and grammar banner on stderr.</span>
+<span class="s2">    -h --help               Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 3: Replace the 3-way <code>if/elif/else</code> with <code>resolve_grammar_path()</code></strong></li>
+</ul>
+<p>In <code>main()</code>, change:
+<div class="highlight"><pre><span></span><code>    <span class="k">if</span> <span class="n">explicit_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="n">explicit_grammar</span>
+    <span class="k">elif</span> <span class="n">stored_grammar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="n">stored_grammar</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="s1">&#39;grammar.plcc&#39;</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code>    <span class="n">grammar</span> <span class="o">=</span> <span class="n">resolve_grammar_path</span><span class="p">(</span><span class="n">explicit_grammar</span><span class="p">,</span> <span class="n">stored_grammar</span><span class="p">)</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/make_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all existing tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/make.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(make): use resolve_grammar_path and GRAMMAR_OPTION&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-4-update-scanpy">Task 4: Update <code>scan.py</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/scan.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update imports</strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+</code></pre></div>
+To:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 2: Replace inline grammar option text in <code>__doc__</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-scan</span>
+<span class="s2">    Tokenize source input and print tokens in human-readable format.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-scan [-v ...] [options] [SOURCE ...]</span>
+
+<span class="s2">Arguments:</span>
+<span class="s2">    SOURCE      Source files to tokenize. Reads stdin if none given.</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -h --help                   Show this message.</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;  Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                                commands until changed. Defaults to grammar.plcc on first use.</span>
+<span class="s2">    -t --trace                  Show detailed scanning output.</span>
+<span class="s2">    -b --banner                 Show the version and grammar banner on stderr.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-scan</span>
+<span class="s2">    Tokenize source input and print tokens in human-readable format.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-scan [-v ...] [options] [SOURCE ...]</span>
+
+<span class="s2">Arguments:</span>
+<span class="s2">    SOURCE      Source files to tokenize. Reads stdin if none given.</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -h --help                   Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">GRAMMAR_OPTION</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -t --trace                  Show detailed scanning output.</span>
+<span class="s2">    -b --banner                 Show the version and grammar banner on stderr.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 3: Replace validation block and flag expression in <code>main()</code></strong></li>
+</ul>
+<p>In <code>main()</code>, remove the <code>grammar_file</code> local variable and its inline validation, and replace the subprocess flag expression.</p>
+<p>Change this block:
+<div class="highlight"><pre><span></span><code>    <span class="n">grammar_file</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--grammar&quot;</span><span class="p">]</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;SOURCE&quot;</span><span class="p">]</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--trace&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-scan: grammar file not found: </span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run &#39;plcc-scan --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;scanning&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags</span><span class="p">()</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=scan&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--grammar=</span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code>    <span class="n">sources</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;SOURCE&quot;</span><span class="p">]</span>
+    <span class="n">trace</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--trace&quot;</span><span class="p">]</span>
+
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-scan&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;scanning&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags</span><span class="p">()</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=scan&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 4: Run unit and command tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/scan_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all existing scan tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/scan.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(scan): use shared grammar CLI helpers&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-5-update-parsepy">Task 5: Update <code>parse.py</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/parse.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update imports</strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+</code></pre></div>
+To:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 2: Replace inline grammar option text in <code>__doc__</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-parse</span>
+<span class="s2">    Parse source input and print parse tree in human-readable format.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-parse [-v ...] [options] [SOURCE ...]</span>
+
+<span class="s2">Arguments:</span>
+<span class="s2">    SOURCE      Source files to parse. Reads stdin if none given.</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -h --help                   Show this message.</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;  Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                                commands until changed. Defaults to grammar.plcc on first use.</span>
+<span class="s2">    -b --banner                 Show the version and grammar banner on stderr.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-parse</span>
+<span class="s2">    Parse source input and print parse tree in human-readable format.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-parse [-v ...] [options] [SOURCE ...]</span>
+
+<span class="s2">Arguments:</span>
+<span class="s2">    SOURCE      Source files to parse. Reads stdin if none given.</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -h --help                   Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">GRAMMAR_OPTION</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    -b --banner                 Show the version and grammar banner on stderr.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 3: Replace validation block and flag expression in <code>main()</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="n">grammar_file</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;--grammar&quot;</span><span class="p">]</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;SOURCE&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-parse: grammar file not found: </span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run &#39;plcc-parse --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;parsing&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=parse&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">([</span><span class="sa">f</span><span class="s2">&quot;--grammar=</span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code>    <span class="n">sources</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;SOURCE&quot;</span><span class="p">]</span>
+
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-parse&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;parsing&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;plcc-make&quot;</span><span class="p">,</span> <span class="s2">&quot;--through=parse&quot;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/parse_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all existing parse tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/parse.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(parse): use shared grammar CLI helpers&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-6-update-reppy">Task 6: Update <code>rep.py</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/rep.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update imports</strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+</code></pre></div>
+To:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 2: Replace inline grammar option text in <code>__doc__</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-rep</span>
+<span class="s2">    REPL — read, eval, print loop for a PLCC grammar.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-rep [-v ...] [options] [SOURCE ...]</span>
+
+<span class="s2">Arguments:</span>
+<span class="s2">    SOURCE      Source files to evaluate before entering interactive mode.</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;</span>
+<span class="s2">                            Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to grammar.plcc on first use.</span>
+<span class="s2">    --tool=NAME             Semantic section to run (inferred if only one exists).</span>
+<span class="s2">    -b --banner             Show the version and grammar banner on stderr.</span>
+<span class="s2">    -h --help               Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-rep</span>
+<span class="s2">    REPL — read, eval, print loop for a PLCC grammar.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-rep [-v ...] [options] [SOURCE ...]</span>
+
+<span class="s2">Arguments:</span>
+<span class="s2">    SOURCE      Source files to evaluate before entering interactive mode.</span>
+
+<span class="s2">Options:</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">GRAMMAR_OPTION</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    --tool=NAME             Semantic section to run (inferred if only one exists).</span>
+<span class="s2">    -b --banner             Show the version and grammar banner on stderr.</span>
+<span class="s2">    -h --help               Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 3: Replace validation block and flag expression in <code>main()</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="n">grammar_file</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--grammar&#39;</span><span class="p">]</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;SOURCE&#39;</span><span class="p">]</span>
+    <span class="n">tool_name</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--tool&#39;</span><span class="p">]</span>
+    <span class="n">verbose_format</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--verbose-format&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;text&#39;</span>
+
+    <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-rep: grammar file not found: </span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run &#39;plcc-rep --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;starting&#39;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--grammar=</span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code>    <span class="n">sources</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;SOURCE&#39;</span><span class="p">]</span>
+    <span class="n">tool_name</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--tool&#39;</span><span class="p">]</span>
+    <span class="n">verbose_format</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--verbose-format&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;text&#39;</span>
+
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-rep&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;starting&#39;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/rep_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all existing rep tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/rep.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(rep): use shared grammar CLI helpers&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-7-update-diagrampy">Task 7: Update <code>diagram.py</code></h2>
+<p><strong>Files:</strong>
+- Modify: <code>src/plcc/cmd/diagram.py</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update imports</strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+</code></pre></div>
+To:
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">plcc.build.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_grammar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">plcc.cmd.grammar</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRAMMAR_OPTION</span><span class="p">,</span> <span class="n">validate_grammar_flag</span><span class="p">,</span> <span class="n">grammar_flag_for_child</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 2: Replace inline grammar option text in <code>__doc__</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-diagram</span>
+<span class="s2">    Generate and display a class diagram from a PLCC grammar file.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-diagram [-v ...] [options]</span>
+
+<span class="s2">Options:</span>
+<span class="s2">    -g &lt;path&gt; --grammar=&lt;path&gt;</span>
+<span class="s2">                            Grammar to build from. Once set, remembered for subsequent</span>
+<span class="s2">                            commands until changed. Defaults to grammar.plcc on first use.</span>
+<span class="s2">    --format=FMT            Diagram format [default: plantuml].</span>
+<span class="s2">    -b --banner             Show the version and grammar banner on stderr.</span>
+<span class="s2">    -h --help               Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;plcc-diagram</span>
+<span class="s2">    Generate and display a class diagram from a PLCC grammar file.</span>
+
+<span class="s2">Usage:</span>
+<span class="s2">    plcc-diagram [-v ...] [options]</span>
+
+<span class="s2">Options:</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">GRAMMAR_OPTION</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">    --format=FMT            Diagram format [default: plantuml].</span>
+<span class="s2">    -b --banner             Show the version and grammar banner on stderr.</span>
+<span class="s2">    -h --help               Show this message.</span>
+<span class="s2">&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">VERBOSE_OPTIONS</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 3: Replace validation block and flag expression in <code>main()</code></strong></li>
+</ul>
+<p>Change:
+<div class="highlight"><pre><span></span><code>    <span class="n">grammar_file</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--grammar&#39;</span><span class="p">]</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--format&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">grammar_file</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plcc-diagram: grammar file not found: </span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run &#39;plcc-diagram --help&#39; for more information.&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;generating diagram&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">,</span> <span class="s1">&#39;--through=model&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">([</span><span class="sa">f</span><span class="s1">&#39;--grammar=</span><span class="si">{</span><span class="n">grammar_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">grammar_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<p>To:
+<div class="highlight"><pre><span></span><code>    <span class="n">fmt</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s1">&#39;--format&#39;</span><span class="p">]</span>
+
+    <span class="n">validate_grammar_flag</span><span class="p">(</span><span class="s1">&#39;plcc-diagram&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+    <span class="n">verbose</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">STARTED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;generating diagram&quot;</span><span class="p">)</span>
+    <span class="n">child_flags</span> <span class="o">=</span> <span class="n">verbose</span><span class="o">.</span><span class="n">child_flags_for_orchestrator</span><span class="p">(</span><span class="n">min_level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">make_result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s1">&#39;plcc-make&#39;</span><span class="p">,</span> <span class="s1">&#39;--through=model&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">grammar_flag_for_child</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">child_flags</span><span class="p">,</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 4: Run unit tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash<span class="w"> </span>src/plcc/cmd/diagram_test.py<span class="w"> </span>-v
+</code></pre></div>
+<p>Expected: all existing diagram tests pass</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>src/plcc/cmd/diagram.py
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(diagram): use shared grammar CLI helpers&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-8-final-verification">Task 8: Final verification</h2>
+<ul>
+<li>[ ] <strong>Step 1: Run the full functional test suite</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/functional.bash
+</code></pre></div>
+<p>Expected: all tests pass (units + commands + integration + e2e)</p>
+<ul>
+<li>[ ] <strong>Step 2: If any bats tests fail, check the <code>--help</code> output for the affected command</strong></li>
+</ul>
+<p>The docstring format change (two-line grammar option instead of one-line) may affect tests that match against <code>--help</code> output. If so, update the failing bats test assertions to match the new format. The option behavior is identical — only the whitespace layout of the description changed.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
