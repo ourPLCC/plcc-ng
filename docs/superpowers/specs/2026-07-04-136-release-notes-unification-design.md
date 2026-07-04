@@ -42,9 +42,11 @@ Explored during brainstorming (2026-07-04):
 The `create-release` job stops using `--generate-notes`. Instead:
 
 1. A new script `bin/release/extract-changelog.bash <version>` prints the
-   CHANGELOG.md section for the given version (the block from its
+   CHANGELOG.md section for the given version (the block below its
    second-level `##` heading up to, but excluding, the next second-level
-   heading or end of file) to stdout. The version argument is given without the leading `v` (e.g.
+   heading or end of file) to stdout. The version heading line itself is
+   excluded — the GitHub Release title already names the tag — and
+   leading/trailing blank lines are trimmed. The version argument is given without the leading `v` (e.g.
    `0.65.0`); the script prepends `v` to match headings of the form
    `## v{version} (date)`. If no matching heading exists, the script
    prints a diagnostic to stderr and exits non-zero.
@@ -77,8 +79,11 @@ the existing republish path after fixing the cause.
   neighboring sections' content.
 - Safe end-to-end check after merge, per the release SOP: dispatch the
   release workflow with the latest already-published tag and confirm the
-  run no-ops green (release exists, so creation is skipped; the extraction
-  step still runs and must succeed).
+  run no-ops green. Extraction runs only when a release is actually
+  created (inside the release-missing branch) — tags predating the script
+  cannot run it, and republishing them must stay green. The first real
+  release after merge verifies the wiring: its GitHub Release body must
+  match its CHANGELOG.md section.
 
 ### Documentation
 
