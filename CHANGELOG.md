@@ -1,6 +1,61 @@
 # CHANGELOG
 
 
+## v0.65.0 (2026-07-04)
+
+### Bug Fixes
+
+- **release**: Validate republish tag input resolves to an existing tag
+  ([`d288667`](https://github.com/ourPLCC/plcc-ng/commit/d2886673b5926ca644073e95c1f530d4262b8a3c))
+
+actions/checkout accepts any ref, so a branch or SHA passed as the tag input would build from an
+  unintended ref and fail confusingly at the smoke test — or, for a branch named like an unpublished
+  version tag, publish it and mint a new tag. Assert right after checkout that the input is an
+  existing tag and that HEAD is that tag's commit (checkout prefers branches on ambiguous names).
+  Raised by Copilot review on the PR; spec and SOP wording updated to match.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: Close issue 134 (PyPI publish failure recovery), update roadmap
+  ([`560f7d7`](https://github.com/ourPLCC/plcc-ng/commit/560f7d74106375c7f2fcef0ca8a42e25778f7f3d))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Note deployment branch policy option on issue 138
+  ([`6ea0934`](https://github.com/ourPLCC/plcc-ng/commit/6ea0934ce44c7f4c9d1fd481b22b220b3d7536d5))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Design spec for issue 134 publish-failure recovery
+  ([`6f064f3`](https://github.com/ourPLCC/plcc-ng/commit/6f064f349852371259b1b3587f8ae078e38f41c7))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Document manual triggers and republish recovery in SOP
+  ([`8ff37fc`](https://github.com/ourPLCC/plcc-ng/commit/8ff37fc9ca74c6418da2e15a51e90a353041c4b1))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Implementation plan for issue 134 publish-failure recovery
+  ([`dc1e86d`](https://github.com/ourPLCC/plcc-ng/commit/dc1e86d8e6f0ae66b28082942a38db1c72da6eb7))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Features
+
+- **release**: Add republish-tag dispatch input, drop TestPyPI-only dry run
+  ([`d6241ae`](https://github.com/ourPLCC/plcc-ng/commit/d6241ae2ddffcf547cc8b48a35b193271d7a319d))
+
+A failed publish after tagging left no recovery path: reruns found no releasable commits, and the
+  old dispatch mode stopped at TestPyPI while still tagging and creating a GitHub Release.
+  Dispatching with the new tag input skips semantic-release and reruns the full idempotent publish
+  path for an existing tag; dispatching without it is now a normal full release.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.64.5 (2026-07-04)
 
 ### Bug Fixes
