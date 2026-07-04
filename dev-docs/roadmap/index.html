@@ -620,7 +620,7 @@ Completed items are checked off (and stay listed) so this section tracks
 progress toward the milestone; the section retires when v1.0 ships.</p>
 <ol>
 <li>[x] <a href="../issues/done/140-release-smoke-test-testpypi-propagation/">#140</a> — the propagation race is actively breaking releases; retry/poll before installing.</li>
-<li>[ ] <a href="../issues/135-release-pypi-publish-skip-existing/">#135</a> — one-line <code>skip-existing</code> fix; prerequisite for any rerun/retry story (could ride with #140).</li>
+<li>[x] <a href="../issues/done/135-release-pypi-publish-skip-existing/">#135</a> — one-line <code>skip-existing</code> fix; prerequisite for any rerun/retry story (could ride with #140).</li>
 <li>[ ] <a href="../issues/134-release-pypi-publish-failure-recovery/">#134</a> — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.</li>
 <li>[ ] <a href="../issues/136-release-changelog-vcs-release-divergence/">#136</a> — decide <code>vcs_release</code> vs. PR-based notes; the answer changes what the SOP documents.</li>
 <li>[ ] <a href="../issues/138-release-pypi-environment-protection-check/">#138</a> — settings check + decision; an SOP input, doable any time.</li>
@@ -633,11 +633,6 @@ progress toward the milestone; the section retires when v1.0 ships.</p>
 <ul>
 <li><strong><a href="../issues/130-release-sop/">#130</a> — Write the release SOP</strong>
   <code>dev-docs/release-sop.md</code> is empty; needed before v1.0.</li>
-</ul>
-<h3 id="fixes">Fixes</h3>
-<ul>
-<li><strong><a href="../issues/135-release-pypi-publish-skip-existing/">#135</a> — Real PyPI publish step lacks skip-existing, unlike TestPyPI</strong>
-  The "Publish to PyPI" step has no <code>skip-existing: true</code>, so a rerun against an already-published version fails hard instead of skipping.</li>
 </ul>
 <h3 id="features">Features</h3>
 <ul>
