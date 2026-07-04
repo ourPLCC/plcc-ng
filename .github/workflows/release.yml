@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to republish (e.g. v0.64.4). Leave empty for a normal release."
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -12,6 +17,7 @@ permissions:
 jobs:
   semantic-release:
     name: Semantic release
+    if: inputs.tag == ''
     runs-on: ubuntu-latest
     outputs:
       released: ${{ steps.release.outputs.released }}
@@ -41,14 +47,16 @@ jobs:
   publish:
     name: Publish to PyPI
     needs: semantic-release
-    if: needs.semantic-release.outputs.released == 'true'
+    if: ${{ !cancelled() && (inputs.tag != '' || needs.semantic-release.outputs.released == 'true') }}
     runs-on: ubuntu-latest
     environment: pypi
+    env:
+      RELEASE_TAG: ${{ inputs.tag != '' && inputs.tag || format('v{0}', needs.semantic-release.outputs.version) }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ needs.semantic-release.outputs.version && format('v{0}', needs.semantic-release.outputs.version) || github.sha }}
+          ref: ${{ env.RELEASE_TAG }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.14'
@@ -66,7 +74,7 @@ jobs:
 
       - name: Smoke test TestPyPI install
         run: |
-          VERSION="${{ needs.semantic-release.outputs.version }}"
+          VERSION="${RELEASE_TAG#v}"
           python -m venv /tmp/smoke-venv
           for attempt in $(seq 1 20); do
             if /tmp/smoke-venv/bin/pip install \
@@ -92,7 +100,6 @@ jobs:
           echo "TestPyPI smoke test passed"
 
       - name: Publish to PyPI
-        if: github.event_name != 'workflow_dispatch'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
@@ -100,10 +107,10 @@ jobs:
   create-release:
     name: Create GitHub Release
     needs: [semantic-release, publish]
-    if: |
-      needs.semantic-release.outputs.released == 'true' &&
-      needs.publish.result == 'success'
+    if: ${{ !cancelled() && needs.publish.result == 'success' }}
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag != '' && inputs.tag || format('v{0}', needs.semantic-release.outputs.version) }}
     steps:
       - uses: actions/create-github-app-token@v1
         id: app-token
@@ -113,14 +120,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ format('v{0}', needs.semantic-release.outputs.version) }}
+          ref: ${{ env.RELEASE_TAG }}
           token: ${{ steps.app-token.outputs.token }}
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          VERSION="${{ needs.semantic-release.outputs.version }}"
-          gh release create "v${VERSION}" \
-            --title "v${VERSION}" \
-            --target "${{ github.sha }}" \
-            --generate-notes
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            echo "Release ${RELEASE_TAG} already exists; nothing to do"
+          else
+            gh release create "${RELEASE_TAG}" \
+              --title "${RELEASE_TAG}" \
+              --generate-notes
+          fi
