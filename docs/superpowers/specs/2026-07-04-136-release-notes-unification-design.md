@@ -42,9 +42,9 @@ Explored during brainstorming (2026-07-04):
 The `create-release` job stops using `--generate-notes`. Instead:
 
 1. A new script `bin/release/extract-changelog.bash <version>` prints the
-   CHANGELOG.md section for the given version (the block from its `## `
-   heading up to, but excluding, the next `## ` heading or end of file) to
-   stdout. The version argument is given without the leading `v` (e.g.
+   CHANGELOG.md section for the given version (the block from its
+   second-level `##` heading up to, but excluding, the next second-level
+   heading or end of file) to stdout. The version argument is given without the leading `v` (e.g.
    `0.65.0`); the script prepends `v` to match headings of the form
    `## v{version} (date)`. If no matching heading exists, the script
    prints a diagnostic to stderr and exits non-zero.
@@ -111,6 +111,11 @@ own issue.
 - **First entry:** timed with the approach to 1.0 — a highlights tour of
   PLCC-ng, especially relative to PLCC, linking to `docs/migration.md`
   rather than duplicating it.
+- **CHANGELOG.md moves to the dev-docs site.** Once the What's New page
+  exists, the changelog page (`docs/changelog.md`, which includes
+  `CHANGELOG.md`) leaves the user docs site and nav (`mkdocs.yml`); the
+  developer-facing changelog is published on the dev-docs site
+  (`mkdocs-dev.yml`) instead.
 
 This branch's only Part 2 work: create the issue via
 `bin/issues/new.bash` with a roadmap entry, capturing the above.
