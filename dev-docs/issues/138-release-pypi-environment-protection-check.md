@@ -14,3 +14,10 @@ Today, once conventional commits land on `main`, the entire pipeline (tag, chang
 - Found while writing the release SOP (issue 130).
 - Action: check GitHub repo Settings → Environments → `pypi` for required reviewers / protection rules. If none exist, decide whether to add one (trades release speed for a manual gate) or document that the lack of a gate is intentional.
 - This is a verification/decision task, not necessarily a code change.
+- Follow-up from issue 134: the same Settings → Environments → `pypi` page
+  also supports deployment branch policies. Restricting the `pypi`
+  environment to `main` would enforce the release SOP's "dispatch from
+  `main` only" guidance in settings rather than prose — a dispatch from any
+  other branch (which runs that branch's copy of release.yml) could then
+  never reach the publish job. Worth configuring while checking the
+  approval gate.
