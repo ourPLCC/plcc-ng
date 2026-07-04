@@ -64,6 +64,13 @@ semantic-release's in-run state, so the issue-134 recovery properties are
 preserved: the GitHub Release is still created only after PyPI publish
 succeeds, only if missing, and republish can recreate it.
 
+Known limitation (accepted at review): a tag predating the script whose
+GitHub Release is missing cannot be recreated by the workflow — the
+checkout at the tag lacks the script. Recovery is manual
+(`gh release create --notes-file` with the section extracted from that
+tag's CHANGELOG.md). All tags published before this change already have
+releases, so this arises only if one is deleted.
+
 ### Error handling
 
 If extraction fails (missing or malformed heading), the `create-release`

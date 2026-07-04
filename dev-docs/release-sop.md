@@ -67,3 +67,8 @@ the `create-release` job fails. Fix the cause, then recover with the
 republish dispatch above. Extraction only runs when the release is
 missing, so republishing a tag that predates the script still no-ops
 green.
+The one gap: a pre-script tag whose GitHub Release is missing
+(e.g. deleted) cannot be recreated by the workflow, because the checkout
+at the tag lacks the script. Recover by hand: extract that version's
+section from the tag's `CHANGELOG.md` and run
+`gh release create <tag> --title <tag> --notes-file <file>`.
