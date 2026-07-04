@@ -1,7 +1,7 @@
 # 140 — Retry the TestPyPI smoke-test install
 
 **Date:** 2026-07-03
-**Issue:** [dev-docs/issues/140-release-smoke-test-testpypi-propagation.md](../../../dev-docs/issues/140-release-smoke-test-testpypi-propagation.md)
+**Issue:** [dev-docs/issues/done/140-release-smoke-test-testpypi-propagation.md](../../../dev-docs/issues/done/140-release-smoke-test-testpypi-propagation.md)
 
 ## Problem
 

@@ -84,14 +84,16 @@ Expected: `yaml ok`
 The run block contains a `${{ ... }}` template that is not valid bash, so substitute it before checking. Run:
 
 ```bash
-python - <<'EOF' > /tmp/claude-1000/-workspaces-plcc-ng/64280e51-71d0-4689-832d-d52db021da29/scratchpad/smoke.bash
+SMOKE_SCRIPT=$(mktemp)
+python - <<'EOF' > "${SMOKE_SCRIPT}"
 import re, yaml
 wf = yaml.safe_load(open('.github/workflows/release.yml'))
 step = next(s for s in wf['jobs']['publish']['steps']
             if s.get('name') == 'Smoke test TestPyPI install')
 print(re.sub(r'\$\{\{.*?\}\}', '0.0.0', step['run']))
 EOF
-bash -n /tmp/claude-1000/-workspaces-plcc-ng/64280e51-71d0-4689-832d-d52db021da29/scratchpad/smoke.bash && echo "bash syntax ok"
+bash -n "${SMOKE_SCRIPT}" && echo "bash syntax ok"
+rm -f "${SMOKE_SCRIPT}"
 ```
 
 Expected: `bash syntax ok`
