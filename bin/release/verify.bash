@@ -74,7 +74,7 @@ echo "${VERSIONS_JSON}" | python3 -c "
 import json, sys
 want = '${MAJOR_MINOR}'
 entries = json.load(sys.stdin)
-entry = next((e for e in entries if e['version'] == want), None)
+entry = next((e for e in entries if e.get('version') == want), None)
 if entry is None:
     sys.exit('FAIL: docs version ' + want + ' not deployed')
 if 'latest' not in entry.get('aliases', []):
