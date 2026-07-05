@@ -52,18 +52,11 @@ _run() {
     echo "${DIAGRAM_LIST}" | grep -q "syntax/plantuml" || { echo "FAIL: plcc-diagram-list missing 'syntax/plantuml'"; exit 1; }
     echo "OK: plcc-diagram-list reports syntax/plantuml"
 
-    # Run end-to-end in the installed venv
-    WORK_DIR="$(mktemp -d)"
-    trap 'rm -rf "${VENV}" "${WORK_DIR}"' EXIT
-    (
-        cd "${WORK_DIR}"
-        cp "${PROJECT_ROOT}/tests/fixtures/trivial.plcc" spec.plcc
-        plcc-make
-        test -f plcc-ng/spec.json   || { echo "FAIL: plcc-ng/spec.json missing"; exit 1; }
-        test -f plcc-ng/model.json  || { echo "FAIL: plcc-ng/model.json missing"; exit 1; }
-    )
+    # Smoke test the installed package (plcc-make + all four emitters)
+    "${SCRIPT_DIR}/smoke.bash"
+
     DIAGRAM_DIR="$(mktemp -d)"
-    trap 'rm -rf "${VENV}" "${WORK_DIR}" "${DIAGRAM_DIR}"' EXIT
+    trap 'rm -rf "${VENV}" "${DIAGRAM_DIR}"' EXIT
     plcc-spec "${PROJECT_ROOT}/tests/fixtures/arith.plcc" | plcc-model | plcc-diagram-class-plantuml-emit --output="${DIAGRAM_DIR}"
     test -f "${DIAGRAM_DIR}/diagram.puml" || { echo "FAIL: diagram.puml missing"; exit 1; }
     echo "packaging: all checks passed"

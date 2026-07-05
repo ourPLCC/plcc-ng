@@ -101,12 +101,8 @@ jobs:
             echo "TestPyPI index not ready (attempt ${attempt}/20); retrying in 15s"
             sleep 15
           done
-          SPEC="$(pwd)/tests/fixtures/trivial.plcc"
-          WORK=$(mktemp -d)
-          cd "${WORK}"
           export PATH="/tmp/smoke-venv/bin:${PATH}"
-          plcc-make --spec="${SPEC}"
-          test -f plcc-ng/spec.json || { echo "FAIL: plcc-ng/spec.json missing"; exit 1; }
+          bin/test/smoke.bash
           echo "TestPyPI smoke test passed"
 
       - name: Publish to PyPI
