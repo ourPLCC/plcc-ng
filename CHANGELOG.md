@@ -1,6 +1,90 @@
 # CHANGELOG
 
 
+## v0.66.0 (2026-07-05)
+
+### Documentation
+
+- **issues**: Close issue 136 (release notes unification), update roadmap
+  ([`525a030`](https://github.com/ourPLCC/plcc-ng/commit/525a030ca8aa2f3e1dd1d7c365767fc2f5de84d3))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Open issue 141 (user-facing what's-new page)
+  ([`b810bfd`](https://github.com/ourPLCC/plcc-ng/commit/b810bfd6b294fd550db78f9b900a2d6fb3fc5881))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Design spec for issue 136 release-notes unification
+  ([`3742fb3`](https://github.com/ourPLCC/plcc-ng/commit/3742fb3829a335bb36f50db566b25a997a4714c4))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Document changelog-sourced GitHub Release notes in SOP
+  ([`448b014`](https://github.com/ourPLCC/plcc-ng/commit/448b01478722d2c90bc1b3cb91152b29a62807a0))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Document republish gap for pre-script tags missing a release
+  ([`4f451ba`](https://github.com/ourPLCC/plcc-ng/commit/4f451baf32becc64457e0df73b438228e619205f))
+
+Review finding: the create-release job checks out the tag, so tags predating
+  bin/release/extract-changelog.bash cannot have a missing GitHub Release recreated by the workflow.
+  Accepted as a rare manual recovery; SOP and spec now say so instead of over-claiming.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Implementation plan for issue 136 release-notes unification
+  ([`954bf23`](https://github.com/ourPLCC/plcc-ng/commit/954bf23637062e3ad98546381af2208383372566))
+
+Spec aligned with two planning decisions: the extracted section excludes the version heading line,
+  and extraction runs only when a release is actually created (tags predating the script must
+  republish green).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Point spec issue link at done/ after close
+  ([`fe44ee8`](https://github.com/ourPLCC/plcc-ng/commit/fe44ee8311179c38e43732a062aaef2602d6edc4))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Scope changelog relocation to dev-docs site into part 2
+  ([`6a898e8`](https://github.com/ourPLCC/plcc-ng/commit/6a898e8b7b3e75332f4f56f9de28675f2bedca95))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Features
+
+- **release**: Add extract-changelog script for version release notes
+  ([`b6eeefc`](https://github.com/ourPLCC/plcc-ng/commit/b6eeefc4fef2e833403f604bed136de60ebce208))
+
+Prints one version's CHANGELOG.md section, excluding the heading line, for use as GitHub Release
+  notes. Fails loudly on an unknown version.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Source GitHub Release notes from CHANGELOG.md
+  ([`0230fc0`](https://github.com/ourPLCC/plcc-ng/commit/0230fc053c3cadc7aba58f28ff4c1b3ad4ca19fe))
+
+Replace --generate-notes (PR-based auto-notes) with the tag's CHANGELOG.md section via
+  bin/release/extract-changelog.bash, so each release has one narrative. Extraction failure fails
+  the job; recovery is the existing republish path. Runs only when the release is missing, so
+  republishing tags that predate the script still no-ops green.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Testing
+
+- **release**: Assert exact extract-changelog output
+  ([`08d8f02`](https://github.com/ourPLCC/plcc-ng/commit/08d8f024564f404d016032c938aff61e6bb3bda3))
+
+Review feedback: the trim/pad test only checked content order (bats lines[] skips blank lines) and
+  its name overpromised. Assert the whole section body instead, pinning that the interior blank line
+  survives and leading blank lines are trimmed.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.65.0 (2026-07-04)
 
 ### Bug Fixes
