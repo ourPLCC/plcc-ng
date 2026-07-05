@@ -530,6 +530,51 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#how-a-release-happens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How a release happens
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cutting-a-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cutting a release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-a-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying a release
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recovery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#manual-triggers-and-publish-recovery" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -578,8 +623,25 @@
     </nav>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#the-pypi-environment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -589,8 +651,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#github-release-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -598,6 +660,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -738,36 +805,172 @@
 
 
 <h1 id="release-sop">Release SOP</h1>
-<p><em>The full SOP (release procedure, verification checklist) is tracked in
-issue 130. The section below documents the release workflow's manual
-triggers.</em></p>
-<h2 id="manual-triggers-and-publish-recovery">Manual triggers and publish recovery</h2>
-<p>The release workflow (<code>.github/workflows/release.yml</code>) runs automatically
-on every push to <code>main</code>. It can also be run by hand: <strong>Actions → Release
-→ Run workflow</strong>, always from <code>main</code> (the selected branch decides which
-version of the workflow file runs). The <code>tag</code> input selects one of two
-modes.</p>
-<h3 id="normal-release-leave-tag-empty">Normal release (leave <code>tag</code> empty)</h3>
-<p>Identical to a push-triggered release: semantic-release computes the next
-version from unreleased commits; if there is something to release it
-tags, updates the CHANGELOG, builds, publishes to TestPyPI, smoke-tests
-the TestPyPI install, publishes to PyPI, and creates the GitHub Release.
-If nothing is releasable, the run ends after the semantic-release job.</p>
+<p>Standard operating procedure for releasing plcc-ng: how a release
+happens, how to cut one, how to verify it landed, and how to recover
+when a run fails.</p>
+<h2 id="how-a-release-happens">How a release happens</h2>
+<p>Releases are fully automated. Merging releasable conventional commits
+to <code>main</code> <strong>is</strong> the release — no human bumps a version, tags, or
+uploads anything. Two workflows do everything:</p>
+<ul>
+<li><code>.github/workflows/release.yml</code> — runs on every push to <code>main</code>:
+  semantic-release → build → TestPyPI → smoke test → PyPI → GitHub
+  Release.</li>
+<li><code>.github/workflows/docs.yml</code> — deploys versioned docs when the
+  GitHub Release is published.</li>
+</ul>
+<p>python-semantic-release decides the version from the
+conventional-commit types on <code>main</code> since the last tag
+(<code>major_on_zero = false</code> — the project is pre-1.0):</p>
+<table>
+<thead>
+<tr>
+<th>Commits since the last tag include</th>
+<th>Next version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>feat:</code></td>
+<td>minor bump</td>
+</tr>
+<tr>
+<td><code>fix:</code> or <code>perf:</code></td>
+<td>patch bump</td>
+</tr>
+<tr>
+<td>a <code>BREAKING CHANGE:</code> footer or <code>!</code> after the type</td>
+<td>minor bump (pre-1.0; major after v1.0)</td>
+</tr>
+<tr>
+<td>only other types (<code>docs:</code>, <code>chore:</code>, <code>ci:</code>, <code>test:</code>, <code>refactor:</code>, …)</td>
+<td>no release</td>
+</tr>
+</tbody>
+</table>
+<p>When nothing is releasable, the run ends quietly after the
+semantic-release job. Otherwise the stages are:</p>
+<ol>
+<li><strong>Semantic release</strong> — computes the version, rewrites
+   <code>CHANGELOG.md</code>, commits <code>chore(release): vX.Y.Z [skip ci]</code>, tags
+   <code>vX.Y.Z</code>, and pushes both to <code>main</code>.</li>
+<li><strong>Publish to PyPI</strong> — checks out the tag, builds the wheel
+   (<code>bin/build/package.bash</code>), uploads to TestPyPI, installs from
+   TestPyPI into a clean venv and runs <code>bin/test/smoke.bash</code>
+   (<code>plcc-make</code> plus all four emitters), then uploads to PyPI. Runs
+   under the <code>pypi</code> GitHub Environment (see Reference).</li>
+<li><strong>Create GitHub Release</strong> — creates the release for the tag, with
+   notes extracted from the tag's <code>CHANGELOG.md</code> section (see
+   Reference).</li>
+<li><strong>Docs deploy</strong> — the <code>release: published</code> event triggers
+   <code>docs.yml</code>, which runs <code>mike deploy --update-aliases X.Y latest</code>
+   and publishes the versioned docs site.</li>
+</ol>
+<h2 id="cutting-a-release">Cutting a release</h2>
+<ol>
+<li><strong>Before merging to <code>main</code>:</strong> confirm CI is green on the branch,
+   and that the branch's commit types produce the bump you expect
+   (table above).</li>
+<li><strong>Merge.</strong> Watch the run under <strong>Actions → Release</strong>.</li>
+<li><strong>If a stage fails</strong>, nothing after it ran. Find the failed stage:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Failed stage</th>
+<th>State it leaves</th>
+<th>Recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semantic release</td>
+<td>No tag, nothing published.</td>
+<td>Fix the cause, then <strong>Re-run failed jobs</strong> on the same run. (A <em>fresh</em> run would find no releasable commits if the release commit was already pushed.)</td>
+</tr>
+<tr>
+<td>Publish: build / TestPyPI / smoke test</td>
+<td>Tagged, nothing on PyPI.</td>
+<td>A smoke-test failure means the wheel is broken — fix forward with a new release. For transient failures, <strong>Re-run failed jobs</strong> or use the republish dispatch (Recovery below).</td>
+</tr>
+<tr>
+<td>Publish: PyPI upload</td>
+<td>Tagged and on TestPyPI, not on PyPI.</td>
+<td>Republish dispatch (Recovery below); every step is idempotent.</td>
+</tr>
+<tr>
+<td>Create GitHub Release</td>
+<td>On PyPI, no GitHub Release.</td>
+<td>Republish dispatch (Recovery below); the publish steps no-op.</td>
+</tr>
+<tr>
+<td>Docs deploy (<code>docs.yml</code>)</td>
+<td>Release complete, docs stale.</td>
+<td>"Deployment failed, try again later" from Pages is a transient GitHub backend error — re-run the docs workflow.</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li><strong>Verify</strong> — next section.</li>
+</ol>
+<h2 id="verifying-a-release">Verifying a release</h2>
+<p>From the repository root:</p>
+<pre><code class="language-bash">bin/release/verify.bash vX.Y.Z
+</code></pre>
+<p>The script fails fast with a <code>FAIL:</code> diagnostic. Checks, in order:</p>
+<ol>
+<li>PyPI serves <code>plcc-ng==X.Y.Z</code> (retries briefly — the index can lag
+   the upload).</li>
+<li>The GitHub Release <code>vX.Y.Z</code> exists.</li>
+<li>The docs site's <code>versions.json</code> lists <code>X.Y</code> and points the
+   <code>latest</code> alias at it.</li>
+<li><code>pip install plcc-ng==X.Y.Z</code> from real PyPI into a throwaway venv,
+   then <code>bin/test/smoke.bash</code> against the installed entry points. This
+   is the only place the artifact served by real PyPI (rather than
+   TestPyPI, which CI smoke-tests) is ever exercised.</li>
+</ol>
+<p><code>--no-install</code> skips check 4 — useful for cheaply re-checking the
+observational state. In particular, <code>docs.yml</code> starts only after the
+GitHub Release is published and takes a few minutes; a failing docs
+check right after a release usually means it hasn't finished — re-run
+with <code>--no-install</code> once it has. <code>PLCC_VERIFY_RETRY_DELAY</code> overrides
+the retry delay in seconds (default 15).</p>
+<p>Optionally, eyeball <a href="https://ourplcc.github.io/plcc-ng/">https://ourplcc.github.io/plcc-ng/</a>: the version
+switcher should show <code>X.Y</code> as <code>latest</code>.</p>
+<h2 id="recovery">Recovery</h2>
+<p>If a run failed <strong>before</strong> the tag was created, there is nothing to
+republish: fix the cause and use <strong>Re-run failed jobs</strong> on the same
+run (see the table above). The procedures below are for runs that
+failed <strong>after</strong> tagging.</p>
+<h3 id="manual-triggers-and-publish-recovery">Manual triggers and publish recovery</h3>
+<p>The release workflow (<code>.github/workflows/release.yml</code>) runs
+automatically on every push to <code>main</code>. It can also be run by hand:
+<strong>Actions → Release → Run workflow</strong>, always from <code>main</code> (the selected
+branch decides which version of the workflow file runs). The <code>tag</code>
+input selects one of two modes.</p>
+<h4 id="normal-release-leave-tag-empty">Normal release (leave <code>tag</code> empty)</h4>
+<p>Identical to a push-triggered release: semantic-release computes the
+next version from unreleased commits; if there is something to release
+it tags, updates the CHANGELOG, builds, publishes to TestPyPI,
+smoke-tests the TestPyPI install, publishes to PyPI, and creates the
+GitHub Release. If nothing is releasable, the run ends after the
+semantic-release job.</p>
 <p><strong>This is a real release.</strong> Manual runs used to stop at TestPyPI; that
 behavior is gone. Do not dispatch with an empty <code>tag</code> to "test" the
 workflow — use the republish mode below with an already-published tag
 instead.</p>
-<h3 id="republish-an-existing-tag-set-tag-eg-v0644">Republish an existing tag (set <code>tag</code>, e.g. <code>v0.64.4</code>)</h3>
-<p>Use this when a release run failed <em>after</em> tagging: the tag exists, but
-the version is missing from PyPI and/or GitHub Releases, and re-running
-the workflow does nothing because semantic-release finds no new
-releasable commits. This works regardless of why or when the original
-run failed — including workflow bugs fixed since (the run uses the
-workflow file from <code>main</code>, not from the failed run).</p>
+<h4 id="republish-an-existing-tag-set-tag-eg-v0644">Republish an existing tag (set <code>tag</code>, e.g. <code>v0.64.4</code>)</h4>
+<p>Use this when a release run failed <em>after</em> tagging: the tag exists,
+but the version is missing from PyPI and/or GitHub Releases, and
+re-running the workflow does nothing because semantic-release finds no
+new releasable commits. This works regardless of why or when the
+original run failed — including workflow bugs fixed since (the run
+uses the workflow file from <code>main</code>, not from the failed run).</p>
 <ol>
 <li>Confirm the state: the tag exists in the repo, but
    <a href="https://pypi.org/project/plcc-ng/">https://pypi.org/project/plcc-ng/</a> lacks the version and/or the
-   GitHub Release is missing.</li>
+   GitHub Release is missing (<code>bin/release/verify.bash --no-install</code>
+   shows exactly which).</li>
 <li><strong>Actions → Release → Run workflow</strong> from <code>main</code>, set <code>tag</code> to the
    existing tag (with the leading <code>v</code>).</li>
 <li>The run skips semantic-release, builds the wheel from the tag, and
@@ -777,14 +980,15 @@ workflow file from <code>main</code>, not from the failed run).</p>
    there is no need to know how far the failed run got.
    An input that is not an existing tag (a typo, or a branch name)
    fails immediately at a validation step right after checkout.</li>
-<li>Verify: the version appears on <a href="https://pypi.org/project/plcc-ng/">https://pypi.org/project/plcc-ng/</a>
-   and the GitHub Release exists.</li>
+<li>Verify: run <code>bin/release/verify.bash</code> with the tag (see Verifying
+   a release above).</li>
 </ol>
-<h3 id="safe-end-to-end-test-of-the-republish-path">Safe end-to-end test of the republish path</h3>
+<h4 id="safe-end-to-end-test-of-the-republish-path">Safe end-to-end test of the republish path</h4>
 <p>Dispatch with the <strong>latest already-published</strong> tag. Every step no-ops
 gracefully and the run goes green without publishing anything. Do this
 after any change to the publish jobs.</p>
-<h2 id="the-pypi-environment">The <code>pypi</code> environment</h2>
+<h2 id="reference">Reference</h2>
+<h3 id="the-pypi-environment">The <code>pypi</code> environment</h3>
 <p>The <code>publish</code> job in <code>.github/workflows/release.yml</code> runs under the
 <code>pypi</code> GitHub Environment. Its protection configuration (Settings →
 Environments → <code>pypi</code>; verified 2026-07-05 via the environments API,
@@ -804,7 +1008,7 @@ which is anonymously readable for this public repo):</p>
   gains maintainers who want a human checkpoint (issue 138 has the
   original analysis).</li>
 </ul>
-<h2 id="github-release-notes">GitHub Release notes</h2>
+<h3 id="github-release-notes">GitHub Release notes</h3>
 <p>GitHub Release notes are the tag's <code>CHANGELOG.md</code> section, extracted by
 <a href="../bin/release/extract-changelog.bash">bin/release/extract-changelog.bash</a>
 in the <code>create-release</code> job — the same conventional-commit content

@@ -757,6 +757,25 @@
 <li>In CI — the variable is set automatically for all test steps.</li>
 <li>When you suspect the cache is stale and <code>bin/test/cache/clear.bash</code> is more than you need.</li>
 </ul>
+<h3 id="release">Release</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../bin/release/extract-changelog.bash">bin/release/extract-changelog.bash</a></td>
+<td>Print the <code>CHANGELOG.md</code> section for a version. Used by the release workflow for GitHub Release notes.</td>
+</tr>
+<tr>
+<td><a href="../bin/release/verify.bash">bin/release/verify.bash</a></td>
+<td>Verify a published release: PyPI has the version, the GitHub Release exists, versioned docs are deployed, and the package installs from PyPI and passes the smoke test. See <a href="../release-sop/">dev-docs/release-sop.md</a>.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="tdd-inner-loop">TDD inner loop</h2>
 <p>plcc-ng is built test-first.</p>
 <ol>
