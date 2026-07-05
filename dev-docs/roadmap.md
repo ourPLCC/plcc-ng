@@ -11,7 +11,7 @@ progress toward the milestone; the section retires when v1.0 ships.
 2. [x] [#135](issues/done/135-release-pypi-publish-skip-existing.md) — one-line `skip-existing` fix; prerequisite for any rerun/retry story (could ride with #140).
 3. [x] [#134](issues/done/134-release-pypi-publish-failure-recovery.md) — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.
 4. [x] [#136](issues/done/136-release-changelog-vcs-release-divergence.md) — resolved: GitHub Release notes now come from the tag's CHANGELOG.md section (`--notes-file`); `vcs_release` stays false; SOP updated.
-5. [ ] [#138](issues/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
+5. [x] [#138](issues/done/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
 6. [ ] [#137](issues/137-release-smoke-test-emitter-coverage.md) — extend the smoke test to all four emitters; defines post-release verification for the SOP.
 7. [ ] [#130](issues/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
 8. [ ] [#112](issues/112-first-major-release.md) — agree on v1.0 criteria and cut the release.
@@ -36,8 +36,3 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 - **[#137](issues/137-release-smoke-test-emitter-coverage.md) — Release smoke test only exercises one trivial fixture, no emitters**
   The post-publish smoke test never invokes any of the four emitters, so a broken published package for Java/Haskell/JS wouldn't be caught.
-
-### Chores
-
-- **[#138](issues/138-release-pypi-environment-protection-check.md) — Confirm the `pypi` GitHub Environment has an approval gate**
-  Whether the `pypi` environment requires reviewer approval before publish can't be confirmed from the repo; needs a settings check.
