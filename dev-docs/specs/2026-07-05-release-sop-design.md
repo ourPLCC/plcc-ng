@@ -1,6 +1,6 @@
 # Release SOP — design
 
-**Issue:** [130](../issues/130-release-sop.md)
+**Issue:** [130](../issues/done/130-release-sop.md)
 **Date:** 2026-07-05
 
 ## Problem
