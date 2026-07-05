@@ -69,11 +69,11 @@ teardown() {
     [[ "$output" != *"## v0.1.1"* ]]
 }
 
-@test "extract-changelog: does not trim or pad output content" {
+@test "extract-changelog: emits exact section body, interior blank line intact" {
     run bash "${EXTRACT}" 0.1.1
     [ "$status" -eq 0 ]
-    [ "${lines[0]}" = "### Features" ]
-    [ "${lines[1]}" = "- middle feature entry" ]
+    expected=$'### Features\n\n- middle feature entry'
+    [ "$output" = "$expected" ]
 }
 
 @test "extract-changelog: version is not treated as a prefix" {
