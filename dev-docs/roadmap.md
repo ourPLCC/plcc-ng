@@ -13,15 +13,10 @@ progress toward the milestone; the section retires when v1.0 ships.
 4. [x] [#136](issues/done/136-release-changelog-vcs-release-divergence.md) — resolved: GitHub Release notes now come from the tag's CHANGELOG.md section (`--notes-file`); `vcs_release` stays false; SOP updated.
 5. [x] [#138](issues/done/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
 6. [x] [#137](issues/done/137-release-smoke-test-emitter-coverage.md) — extend the smoke test to all four emitters; defines post-release verification for the SOP.
-7. [ ] [#130](issues/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
+7. [x] [#130](issues/done/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
 8. [ ] [#112](issues/112-first-major-release.md) — agree on v1.0 criteria and cut the release.
 
 ## Open Issues
-
-### Docs
-
-- **[#130](issues/130-release-sop.md) — Write the release SOP**
-  `dev-docs/release-sop.md` is empty; needed before v1.0.
 
 ### Features
 
