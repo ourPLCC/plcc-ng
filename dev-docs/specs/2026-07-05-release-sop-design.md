@@ -59,7 +59,7 @@ the artifact served by **real PyPI**.
 Interface: one required argument, the tag with leading `v` (e.g. `v0.64.4`) — the same
 convention as the republish dispatch input. An optional `--no-install` flag runs only the
 observational checks. No arguments, extra arguments, or a tag not shaped `vX.Y.Z` → usage
-message on stderr, exit 1 (matching `extract-changelog.bash`).
+message on stdout, exit 1 (matching `extract-changelog.bash`).
 
 Checks, in order, cheap first, fail-fast, with `OK:`/`FAIL:` lines in the
 `bin/test/smoke.bash` style:
