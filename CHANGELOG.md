@@ -1,6 +1,150 @@
 # CHANGELOG
 
 
+## v0.67.0 (2026-07-05)
+
+### Bug Fixes
+
+- **release**: Tolerate versions.json entries without a version key
+  ([`2e5d79b`](https://github.com/ourPLCC/plcc-ng/commit/2e5d79b49c5528a040900db8b5938b3d3dee1a16))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Continuous Integration
+
+- **release**: Exercise all four emitters in TestPyPI smoke test
+  ([`e8b413a`](https://github.com/ourPLCC/plcc-ng/commit/e8b413a37f36d1d607e5b7b3ee916f8072eecc5f))
+
+The smoke step now runs bin/test/smoke.bash, which emits for python, java, javascript, and haskell
+  and asserts runtime package data landed in the published package, instead of only checking
+  spec.json exists.
+
+Refs #137
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: Close issue 130 (release SOP), update roadmap
+  ([`841202d`](https://github.com/ourPLCC/plcc-ng/commit/841202d27cb0a75f4175aec04d2b2cba071fa0ed))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 137 (release smoke test emitter coverage), update roadmap
+  ([`89e6a9b`](https://github.com/ourPLCC/plcc-ng/commit/89e6a9b7530abe729ee8ed0aac8b2b4c0da36440))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 138 (pypi environment protection check), update roadmap
+  ([`3da2a31`](https://github.com/ourPLCC/plcc-ng/commit/3da2a3159eba9b9559857d5c49c430438c779a66))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Track the SOP end-to-end exercise under issue 112
+  ([`42cd001`](https://github.com/ourPLCC/plcc-ng/commit/42cd001b9d0270c91323445bfe7db1832c00cecb))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **plans**: Add issue 130 release SOP implementation plan
+  ([`440342d`](https://github.com/ourPLCC/plcc-ng/commit/440342d49ab715aae5e2093cd90de51aff6f8848))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for issue 137 (smoke test emitter coverage)
+  ([`f09ce91`](https://github.com/ourPLCC/plcc-ng/commit/f09ce913fb6eb66e5bd3a4ae0aed72c714ec7c40))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Document intentional lack of pypi approval gate
+  ([`00f192f`](https://github.com/ourPLCC/plcc-ng/commit/00f192f2875a2af85926326e684db86c32fa2eda))
+
+Verified via the environments API: the pypi environment has no required reviewers, and its
+  deployment branch policy already restricts it to main and v*.*.* tags (the issue-134 follow-up).
+  Record the configuration and the decision to keep the pipeline ungated in the release SOP.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release-sop**: Write the release SOP
+  ([`97c241d`](https://github.com/ourPLCC/plcc-ng/commit/97c241da65fe696283c59d76ccea27123fbaf2ad))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Add release SOP design (issue 130)
+  ([`31aeb53`](https://github.com/ourPLCC/plcc-ng/commit/31aeb53e23dc44dc54c263b3ed7df97cd6a76390))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Design for release smoke test emitter coverage (issue 137)
+  ([`1595ac3`](https://github.com/ourPLCC/plcc-ng/commit/1595ac34adae1a0a6043e947bc7454642e472da5))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Point issue 130 link at its done/ path
+  ([`592cc8f`](https://github.com/ourPLCC/plcc-ng/commit/592cc8f3239613d45be5f85dff4946ff85b733ef))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Point issue 137 link at its done/ path
+  ([`f57f5a1`](https://github.com/ourPLCC/plcc-ng/commit/f57f5a165fa7fe8253400143737bd8b7fd5dbd54))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Usage goes to stdout, matching extract-changelog precedent
+  ([`0f5233d`](https://github.com/ourPLCC/plcc-ng/commit/0f5233dad6db336deb0a62111bf69bd8ea0102c4))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Features
+
+- **release**: Add post-release verification script
+  ([`ea3b6b6`](https://github.com/ourPLCC/plcc-ng/commit/ea3b6b6940212df4fbc364fa29e6a4c1c1caedc7))
+
+bin/release/verify.bash checks PyPI, the GitHub Release, and the versioned docs, then installs the
+  release from real PyPI and runs the smoke test -- the only place the real-PyPI artifact is
+  exercised. Releasable on merge by design: the resulting release is the SOP exercise opportunity
+  (issue 112).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Testing
+
+- **packaging**: Add smoke script covering all four emitters
+  ([`263532c`](https://github.com/ourPLCC/plcc-ng/commit/263532c0584773ca261266abed12e395a917dc1f))
+
+Emit-only checks for python, java, javascript, and haskell against an installed plcc-ng, asserting
+  generated files and runtime package data exist. Shared by the release workflow and
+  bin/test/packaging.bash.
+
+Refs #137
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **packaging**: Run emitter smoke checks in packaging test
+  ([`5cbeed2`](https://github.com/ourPLCC/plcc-ng/commit/5cbeed224df78cf5f2e5363e28d65604b0d96aa3))
+
+Replaces the inline trivial plcc-make block with bin/test/smoke.bash so the local wheel-install test
+  covers the same emitter package-data checks as the release workflow.
+
+Refs #137
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Add bats tests for release verify script
+  ([`565d737`](https://github.com/ourPLCC/plcc-ng/commit/565d737e05eb8e8376bb3bc21029bce07bd80a45))
+
+Red: bin/release/verify.bash lands in the next commit.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Make negated fail-fast assertions able to fail
+  ([`8d38b25`](https://github.com/ourPLCC/plcc-ng/commit/8d38b25eda8e92640e3cccf3b148487248508d75))
+
+Bash exempts !-prefixed pipelines from errexit, so a non-final "! grep" line could never fail the
+  test. Use bats' "run !" form.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.66.0 (2026-07-05)
 
 ### Documentation
