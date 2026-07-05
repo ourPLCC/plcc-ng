@@ -139,7 +139,9 @@ jobs:
           if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
             echo "Release ${RELEASE_TAG} already exists; nothing to do"
           else
+            bin/release/extract-changelog.bash "${RELEASE_TAG#v}" \
+              > "${RUNNER_TEMP}/release-notes.md"
             gh release create "${RELEASE_TAG}" \
               --title "${RELEASE_TAG}" \
-              --generate-notes
+              --notes-file "${RUNNER_TEMP}/release-notes.md"
           fi
