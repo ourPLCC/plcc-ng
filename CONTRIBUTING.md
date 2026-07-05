@@ -58,6 +58,13 @@ All test scripts cache their output to `/tmp` so agents and tools can grep resul
 - In CI — the variable is set automatically for all test steps.
 - When you suspect the cache is stale and `bin/test/cache/clear.bash` is more than you need.
 
+### Release
+
+| Command | What it does |
+|---|---|
+| [bin/release/extract-changelog.bash](bin/release/extract-changelog.bash) | Print the `CHANGELOG.md` section for a version. Used by the release workflow for GitHub Release notes. |
+| [bin/release/verify.bash](bin/release/verify.bash) | Verify a published release: PyPI has the version, the GitHub Release exists, versioned docs are deployed, and the package installs from PyPI and passes the smoke test. See [dev-docs/release-sop.md](dev-docs/release-sop.md). |
+
 ## TDD inner loop
 
 plcc-ng is built test-first.
