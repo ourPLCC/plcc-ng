@@ -99,8 +99,8 @@ teardown() {
     run bash "${VERIFY}" --no-install v0.65.0
     [ "$status" -ne 0 ]
     grep -q 'pypi.org/pypi' "${STUB_DIR}/requests.log"
-    ! grep -q 'api.github.com' "${STUB_DIR}/requests.log"
-    ! grep -q 'versions.json' "${STUB_DIR}/requests.log"
+    run ! grep -q 'api.github.com' "${STUB_DIR}/requests.log"
+    run ! grep -q 'versions.json' "${STUB_DIR}/requests.log"
 }
 
 @test "verify: retries the PyPI check five times" {
