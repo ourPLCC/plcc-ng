@@ -1,0 +1,3087 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/0.67/superpowers/plans/2026-06-24-e2e-haskell-roundtrip-ci-performance/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-ProperDocs 1.6.7, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>E2E Haskell Roundtrip CI Performance Implementation Plan - plcc-ng</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#e2e-haskell-roundtrip-ci-performance-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="plcc-ng" class="md-header__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              E2E Haskell Roundtrip CI Performance Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../quick-start/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Migration from PLCC
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../language-guide/" class="md-tabs__link">
+          
+  
+  
+  Language Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cli/" class="md-tabs__link">
+          
+  
+  
+  CLI
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../instructor-guide/" class="md-tabs__link">
+          
+  
+  
+  Instructor Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../acknowledgments/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Acknowledgments
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="plcc-ng" class="md-nav__button md-logo" aria-label="plcc-ng" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration from PLCC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/lexical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lexical Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/syntactic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntactic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/semantic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Semantic Section
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/haskell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Haskell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/java/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../language-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/author-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Author-facing commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/under-the-hood/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Under the hood
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/language-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/parser-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/guide/diagram-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagram extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    All Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-class-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-class-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-diagram-syntax-plantuml-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-diagram-syntax-plantuml-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-haskell-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-haskell-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-java-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-java-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-javascript-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-javascript-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-lang-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-lang-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-ll1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-ll1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-make
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-list
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-parser-table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-parser-table
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-plantuml-diagram-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-emit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-python-run/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-python-run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-rep/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-rep
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-scan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-scan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-spec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-tokens/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-tokens
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-trees/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-trees
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli/commands/plcc-version/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plcc-version
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Instructor Guide
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Instructor Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/evaluating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Evaluating plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../instructor-guide/adopting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adopting plcc-ng
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acknowledgments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="e2e-haskell-roundtrip-ci-performance-implementation-plan">E2E Haskell Roundtrip CI Performance Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Split the slow Haskell roundtrip test out of the main e2e suite, add a dedicated local script and CI job for it, and cache aggressively so CI wall time equals the slowest parallel job rather than their sum.</p>
+<p><strong>Architecture:</strong> Three independent changes applied in order: (1) split the bats file so the fast emit test and the slow roundtrip test are separate files; (2) add a new <code>bin/test/e2e_haskell_roundtrip.bash</code> script and update <code>e2e.bash</code> and <code>all.bash</code> to exclude/include the roundtrip appropriately; (3) rewrite <code>ci.yml</code> to run all six tiers as parallel jobs with <code>.venv/</code>, cabal store, and <code>dist-newstyle/</code> caches.</p>
+<p><strong>Tech Stack:</strong> bash, bats, GitHub Actions, cabal (Haskell), PDM (Python)</p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>All <code>bin/test/*.bash</code> scripts must follow the existing pattern: <code>set -euo pipefail</code>, <code>SCRIPT_DIR</code>/<code>PROJECT_ROOT</code> setup, <code>source _cache.bash</code>, <code>_run()</code> function, <code>run_cached /tmp/plcc-test-&lt;name&gt;.log _run</code>.</li>
+<li><code>SKIP_SETUP=1</code> skips <code>bats.bash</code> + <code>pdm install</code> inside scripts (used by <code>functional.bash</code> to avoid repeated setup).</li>
+<li>All bats e2e tests live in <code>tests/bats/e2e/</code>. The <code>find</code> command in <code>e2e.bash</code> excludes files by name.</li>
+<li>Commits touching only docs/specs/plans must include <code>[skip ci]</code> in the subject line.</li>
+<li>Run <code>bin/test/units.bash</code> after every code change to keep the fast tier green.</li>
+</ul>
+<hr />
+<h3 id="task-1-split-haskellbats-into-fast-and-slow-files">Task 1: Split haskell.bats into fast and slow files</h3>
+<p><strong>Files:</strong>
+- Modify: <code>tests/bats/e2e/haskell.bats</code>
+- Create: <code>tests/bats/e2e/haskell_roundtrip.bats</code></p>
+<p><strong>Interfaces:</strong>
+- Produces: <code>tests/bats/e2e/haskell_roundtrip.bats</code> — a standalone bats file containing exactly one test ("haskell pipeline: emit-build-run roundtrip") that respects <code>HASKELL_ROUNDTRIP_OUT_DIR</code> for its output directory.
+- Produces: <code>tests/bats/e2e/haskell.bats</code> — retains exactly one test ("haskell pipeline: spec to model to emit produces expected files"), no cabal dependency.</p>
+<ul>
+<li>[ ] <strong>Step 1: Create <code>tests/bats/e2e/haskell_roundtrip.bats</code></strong></li>
+</ul>
+<p>This file is the roundtrip test extracted from the current <code>haskell.bats</code>, with two changes: (a) <code>OUT_DIR</code> uses <code>HASKELL_ROUNDTRIP_OUT_DIR</code> when set so CI can cache the <code>dist-newstyle/</code> directory; (b) teardown only removes <code>OUT_DIR</code> when it was a temp dir.</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
+
+bats_require_minimum_version<span class="w"> </span><span class="m">1</span>.5.0
+
+setup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span>!<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-v<span class="w"> </span>cabal<span class="w"> </span><span class="p">&amp;</span>&gt;/dev/null<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>skip<span class="w"> </span><span class="s2">&quot;cabal not available&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+<span class="w">    </span>cabal<span class="w"> </span>update
+<span class="w">    </span><span class="nv">SPEC_DIR</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
+<span class="w">    </span><span class="nv">OUT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HASKELL_ROUNDTRIP_OUT_DIR</span><span class="k">:-$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>cat<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">/arith.plcc&quot;</span><span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">token NUM &#39;\d+&#39;</span>
+<span class="s">token PLUS &#39;\+&#39;</span>
+<span class="s">skip SPACE &#39;\s+&#39;</span>
+<span class="s">%</span>
+<span class="s">&lt;Program&gt;              ::= &lt;Expr:expr&gt;</span>
+<span class="s">&lt;Expr&gt;                 ::= &lt;Term:term&gt; &lt;ExprRest:rest&gt;</span>
+<span class="s">&lt;ExprRest:AddRest&gt;     ::= PLUS &lt;Term:term&gt; &lt;ExprRest:rest&gt;</span>
+<span class="s">&lt;ExprRest:NilRest&gt;     ::=</span>
+<span class="s">&lt;Term&gt;                 ::= &lt;NUM:num&gt;</span>
+<span class="s">%</span>
+<span class="s">Haskell</span>
+<span class="s">Program</span>
+<span class="s">%%%</span>
+<span class="s">_run :: Program -&gt; String</span>
+<span class="s">_run (Program e) = evalExpr e</span>
+<span class="s">%%%</span>
+<span class="s">Expr</span>
+<span class="s">%%%</span>
+<span class="s">evalExpr :: Expr -&gt; String</span>
+<span class="s">evalExpr (Expr t r) = evalRest r (read (evalTerm t) :: Int)</span>
+<span class="s">%%%</span>
+<span class="s">ExprRest</span>
+<span class="s">%%%</span>
+<span class="s">evalRest :: ExprRest -&gt; Int -&gt; String</span>
+<span class="s">evalRest (AddRest t r) acc = evalRest r (acc + read (evalTerm t) :: Int)</span>
+<span class="s">evalRest NilRest acc = show acc</span>
+<span class="s">%%%</span>
+<span class="s">Term</span>
+<span class="s">%%%</span>
+<span class="s">evalTerm :: Term -&gt; String</span>
+<span class="s">evalTerm (Term n) = lexeme n</span>
+<span class="s">%%%</span>
+<span class="s">EOF</span>
+<span class="o">}</span>
+
+teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HASKELL_ROUNDTRIP_OUT_DIR</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">fi</span>
+<span class="o">}</span>
+
+@test<span class="w"> </span><span class="s2">&quot;haskell pipeline: emit-build-run roundtrip&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">SPEC_JSON</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<span class="w">    </span><span class="nv">MODEL_JSON</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<span class="w">    </span><span class="nv">LL1_JSON</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<span class="w">    </span><span class="nb">trap</span><span class="w"> </span><span class="s2">&quot;rm -f &#39;</span><span class="nv">$SPEC_JSON</span><span class="s2">&#39; &#39;</span><span class="nv">$MODEL_JSON</span><span class="s2">&#39; &#39;</span><span class="nv">$LL1_JSON</span><span class="s2">&#39;&quot;</span><span class="w"> </span>RETURN
+
+<span class="w">    </span>plcc-spec<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">/arith.plcc&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_JSON</span><span class="s2">&quot;</span>
+<span class="w">    </span>plcc-model<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_JSON</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MODEL_JSON</span><span class="s2">&quot;</span>
+<span class="w">    </span>plcc-spec<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">/arith.plcc&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>plcc-ll1<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LL1_JSON</span><span class="s2">&quot;</span>
+<span class="w">    </span>plcc-haskell-emit<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span>&lt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MODEL_JSON</span><span class="s2">&quot;</span>
+<span class="w">    </span>plcc-haskell-build<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
+
+<span class="w">    </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;1 + 2&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="p">|</span><span class="w"> </span>plcc-tokens<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_JSON</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="p">|</span><span class="w"> </span>plcc-trees<span class="w"> </span>--ll1<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$LL1_JSON</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span><span class="p">|</span><span class="w"> </span>plcc-haskell-run<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span><span class="k">)</span>
+
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s1">&#39;&quot;value&quot;:&quot;3&quot;&#39;</span>
+<span class="o">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Update <code>tests/bats/e2e/haskell.bats</code></strong></li>
+</ul>
+<p>Remove <code>cabal update</code> from <code>setup()</code> (cabal is not needed for the emit test), and remove the roundtrip <code>@test</code> block entirely. The file becomes:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bats</span>
+
+bats_require_minimum_version<span class="w"> </span><span class="m">1</span>.5.0
+
+setup<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">SPEC_DIR</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
+<span class="w">    </span><span class="nv">OUT_DIR</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-d<span class="k">)</span>
+<span class="w">    </span>cat<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">/arith.plcc&quot;</span><span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">token NUM &#39;\d+&#39;</span>
+<span class="s">token PLUS &#39;\+&#39;</span>
+<span class="s">skip SPACE &#39;\s+&#39;</span>
+<span class="s">%</span>
+<span class="s">&lt;Program&gt;              ::= &lt;Expr:expr&gt;</span>
+<span class="s">&lt;Expr&gt;                 ::= &lt;Term:term&gt; &lt;ExprRest:rest&gt;</span>
+<span class="s">&lt;ExprRest:AddRest&gt;     ::= PLUS &lt;Term:term&gt; &lt;ExprRest:rest&gt;</span>
+<span class="s">&lt;ExprRest:NilRest&gt;     ::=</span>
+<span class="s">&lt;Term&gt;                 ::= &lt;NUM:num&gt;</span>
+<span class="s">%</span>
+<span class="s">Haskell</span>
+<span class="s">Program</span>
+<span class="s">%%%</span>
+<span class="s">_run :: Program -&gt; String</span>
+<span class="s">_run (Program e) = evalExpr e</span>
+<span class="s">%%%</span>
+<span class="s">Expr</span>
+<span class="s">%%%</span>
+<span class="s">evalExpr :: Expr -&gt; String</span>
+<span class="s">evalExpr (Expr t r) = evalRest r (read (evalTerm t) :: Int)</span>
+<span class="s">%%%</span>
+<span class="s">ExprRest</span>
+<span class="s">%%%</span>
+<span class="s">evalRest :: ExprRest -&gt; Int -&gt; String</span>
+<span class="s">evalRest (AddRest t r) acc = evalRest r (acc + read (evalTerm t) :: Int)</span>
+<span class="s">evalRest NilRest acc = show acc</span>
+<span class="s">%%%</span>
+<span class="s">Term</span>
+<span class="s">%%%</span>
+<span class="s">evalTerm :: Term -&gt; String</span>
+<span class="s">evalTerm (Term n) = lexeme n</span>
+<span class="s">%%%</span>
+<span class="s">EOF</span>
+<span class="o">}</span>
+
+teardown<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
+<span class="o">}</span>
+
+@test<span class="w"> </span><span class="s2">&quot;haskell pipeline: spec to model to emit produces expected files&quot;</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nv">SPEC_JSON</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<span class="w">    </span><span class="nv">MODEL_JSON</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="k">)</span>
+<span class="w">    </span><span class="nb">trap</span><span class="w"> </span><span class="s2">&quot;rm -f &#39;</span><span class="nv">$SPEC_JSON</span><span class="s2">&#39; &#39;</span><span class="nv">$MODEL_JSON</span><span class="s2">&#39;&quot;</span><span class="w"> </span>RETURN
+
+<span class="w">    </span>plcc-spec<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_DIR</span><span class="s2">/arith.plcc&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_JSON</span><span class="s2">&quot;</span>
+<span class="w">    </span>plcc-model<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SPEC_JSON</span><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MODEL_JSON</span><span class="s2">&quot;</span>
+<span class="w">    </span>plcc-haskell-emit<span class="w"> </span>--output<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span><span class="w"> </span>&lt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$MODEL_JSON</span><span class="s2">&quot;</span>
+
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/interpreter.cabal&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/Token.hs&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/Main.hs&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="w">    </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/Program.hs&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Run <code>haskell.bats</code> and verify only the fast test runs</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>pdm<span class="w"> </span>run<span class="w"> </span>bats<span class="w"> </span>tests/bats/e2e/haskell.bats
+</code></pre></div>
+<p>Expected: 1 test, 0 failures. No cabal involvement. Completes in seconds.</p>
+<ul>
+<li>[ ] <strong>Step 4: Run <code>haskell_roundtrip.bats</code> and verify it runs or skips cleanly</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>pdm<span class="w"> </span>run<span class="w"> </span>bats<span class="w"> </span>tests/bats/e2e/haskell_roundtrip.bats
+</code></pre></div>
+<p>Expected: either 1 test passed (if cabal is available) or 1 test skipped with "cabal not available". Either outcome is correct.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run unit tests to confirm nothing is broken</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
+<p>Expected: 1073 passed, 1 skipped (or similar — no failures).</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>tests/bats/e2e/haskell.bats<span class="w"> </span>tests/bats/e2e/haskell_roundtrip.bats
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test: split haskell.bats into fast emit and slow roundtrip&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-2-add-e2e_haskell_roundtripbash-and-update-e2ebash-allbash">Task 2: Add e2e_haskell_roundtrip.bash and update e2e.bash / all.bash</h3>
+<p><strong>Files:</strong>
+- Modify: <code>bin/test/e2e.bash</code>
+- Create: <code>bin/test/e2e_haskell_roundtrip.bash</code>
+- Modify: <code>bin/test/all.bash</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>tests/bats/e2e/haskell_roundtrip.bats</code> from Task 1.
+- Produces: <code>bin/test/e2e_haskell_roundtrip.bash</code> — a script that runs only <code>haskell_roundtrip.bats</code>, caches output to <code>/tmp/plcc-test-e2e-haskell-roundtrip.log</code>, and respects <code>SKIP_SETUP</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Add <code>haskell_roundtrip.bats</code> exclusion to <code>bin/test/e2e.bash</code></strong></li>
+</ul>
+<p>The <code>find</code> line currently reads:
+<div class="highlight"><pre><span></span><code>bats<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>tests/bats/e2e/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.bats&quot;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;languages-java.bats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="k">)</span>
+</code></pre></div></p>
+<p>Change it to:
+<div class="highlight"><pre><span></span><code>bats<span class="w"> </span><span class="k">$(</span>find<span class="w"> </span>tests/bats/e2e/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.bats&quot;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;languages-java.bats&quot;</span><span class="w"> </span>!<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;haskell_roundtrip.bats&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="k">)</span>
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 2: Verify <code>bin/test/e2e.bash</code> no longer runs the roundtrip</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">PLCC_NO_TEST_CACHE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bin/test/e2e.bash<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;haskell|roundtrip|tests,&quot;</span>
+</code></pre></div>
+<p>Expected: output mentions the fast emit test ("spec to model to emit") but NOT "roundtrip". The summary line will show one fewer test than before.</p>
+<ul>
+<li>[ ] <strong>Step 3: Create <code>bin/test/e2e_haskell_roundtrip.bash</code></strong></li>
+</ul>
+<p>Follow the identical structure as <code>bin/test/commands.bash</code> and <code>bin/test/integration.bash</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/e2e_haskell_roundtrip.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;------------------------------------&quot;</span>
+
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">PROJECT_ROOT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/../..&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
+
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>-z<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SKIP_SETUP</span><span class="k">:-</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/bin/install/bats.bash&quot;</span>
+<span class="w">        </span>pdm<span class="w"> </span>install
+<span class="w">    </span><span class="k">fi</span>
+<span class="w">    </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PROJECT_ROOT</span><span class="si">}</span><span class="s2">/.venv/bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="w">    </span>bats<span class="w"> </span>tests/bats/e2e/haskell_roundtrip.bats
+<span class="o">}</span>
+
+run_cached<span class="w"> </span>/tmp/plcc-test-e2e-haskell-roundtrip.log<span class="w"> </span>_run
+</code></pre></div>
+<p>Make it executable:
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span>+x<span class="w"> </span>bin/test/e2e_haskell_roundtrip.bash
+</code></pre></div></p>
+<ul>
+<li>[ ] <strong>Step 4: Verify <code>bin/test/e2e_haskell_roundtrip.bash</code> runs the roundtrip</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">PLCC_NO_TEST_CACHE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bin/test/e2e_haskell_roundtrip.bash<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;roundtrip|skipped|passed&quot;</span>
+</code></pre></div>
+<p>Expected: output contains "roundtrip" and either "1 test" (passed or skipped). No failures.</p>
+<ul>
+<li>[ ] <strong>Step 5: Update <code>bin/test/all.bash</code></strong></li>
+</ul>
+<p>Add <code>e2e_haskell_roundtrip.bash</code> between <code>functional.bash</code> and <code>packaging.bash</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;bin/test/all.bash&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;-----------------&quot;</span>
+
+<span class="nv">SCRIPT_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span><span class="w"> </span>dirname<span class="w"> </span>--<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">&amp;</span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">pwd</span><span class="w"> </span><span class="k">)</span><span class="s2">&quot;</span>
+
+<span class="c1"># shellcheck source=bin/test/_cache.bash</span>
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/_cache.bash&quot;</span>
+
+_run<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/functional.bash&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/e2e_haskell_roundtrip.bash&quot;</span>
+<span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SCRIPT_DIR</span><span class="si">}</span><span class="s2">/packaging.bash&quot;</span>
+<span class="o">}</span>
+
+run_cached<span class="w"> </span>/tmp/plcc-test-all.log<span class="w"> </span>_run
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 6: Run unit tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
+<p>Expected: all pass, no failures.</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>bin/test/e2e.bash<span class="w"> </span>bin/test/e2e_haskell_roundtrip.bash<span class="w"> </span>bin/test/all.bash
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat: add e2e_haskell_roundtrip.bash and exclude roundtrip from e2e suite&quot;</span>
+</code></pre></div>
+<hr />
+<h3 id="task-3-restructure-ci-with-parallel-jobs-and-caches">Task 3: Restructure CI with parallel jobs and caches</h3>
+<p><strong>Files:</strong>
+- Modify: <code>.github/workflows/ci.yml</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>bin/test/e2e_haskell_roundtrip.bash</code> from Task 2.
+- Consumes: <code>HASKELL_ROUNDTRIP_OUT_DIR</code> env var support in <code>haskell_roundtrip.bats</code> from Task 1.</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace <code>.github/workflows/ci.yml</code> with six parallel jobs</strong></li>
+</ul>
+<p>Completely replace the file contents:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CI</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">main</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">paths-ignore</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;dev-docs/**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;docs/**&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;*.md&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;mkdocs.yml&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;mkdocs-dev.yml&#39;</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">units</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unit tests</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.14&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.venv</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-venv-${{ hashFiles(&#39;pdm.lock&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install PDM</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pdm</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run unit tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/units.bash</span>
+
+<span class="w">  </span><span class="nt">commands</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Command tests</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.14&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.venv</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-venv-${{ hashFiles(&#39;pdm.lock&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install PDM</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pdm</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run command tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/commands.bash</span>
+
+<span class="w">  </span><span class="nt">integration</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Integration tests</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.14&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.venv</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-venv-${{ hashFiles(&#39;pdm.lock&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install PDM</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pdm</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run integration tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/integration.bash</span>
+
+<span class="w">  </span><span class="nt">e2e</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E2E tests</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.14&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-java@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">distribution</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temurin</span>
+<span class="w">          </span><span class="nt">java-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;17&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.venv</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-venv-${{ hashFiles(&#39;pdm.lock&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install PDM</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pdm</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Clone languages repo at pinned commit</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">PIN=$(cat tests/fixtures/languages-pin.txt)</span>
+<span class="w">          </span><span class="no">git clone https://github.com/ourPLCC/languages.git /tmp/languages</span>
+<span class="w">          </span><span class="no">git -C /tmp/languages checkout &quot;${PIN}&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run e2e tests</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">LANGUAGES_REPO_PATH</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/languages</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/e2e.bash</span>
+
+<span class="w">  </span><span class="nt">e2e-haskell-roundtrip</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">E2E Haskell roundtrip</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.14&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.venv</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-venv-${{ hashFiles(&#39;pdm.lock&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">            </span><span class="no">~/.cabal/packages</span>
+<span class="w">            </span><span class="no">~/.cabal/store</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-cabal-${{ hashFiles(&#39;src/plcc/lang/ext/haskell/emit.py&#39;) }}</span>
+<span class="w">          </span><span class="nt">restore-keys</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-cabal-</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.cache/plcc-haskell-roundtrip</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-dist-newstyle-${{ hashFiles(&#39;src/plcc/lang/ext/haskell/emit.py&#39;, &#39;src/plcc/lang/ext/haskell/runtime/**&#39;, &#39;tests/bats/e2e/haskell_roundtrip.bats&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install PDM</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pdm</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run Haskell roundtrip test</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">HASKELL_ROUNDTRIP_OUT_DIR</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.cache/plcc-haskell-roundtrip</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/e2e_haskell_roundtrip.bash</span>
+
+<span class="w">  </span><span class="nt">package</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Packaging</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.14&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.venv</span>
+<span class="w">          </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ runner.os }}-venv-${{ hashFiles(&#39;pdm.lock&#39;) }}</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install PDM</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pdm</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build wheel</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/build/package.bash</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate metadata and README</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install twine &amp;&amp; twine check dist/*</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run packaging smoke test</span>
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">PLCC_NO_TEST_CACHE</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bin/test/packaging.bash</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Validate the YAML is well-formed</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import yaml; yaml.safe_load(open(&#39;.github/workflows/ci.yml&#39;))&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;YAML valid&quot;</span>
+</code></pre></div>
+<p>Expected: prints <code>YAML valid</code> with no errors.</p>
+<ul>
+<li>[ ] <strong>Step 3: Confirm the old <code>unit-and-integration</code> and <code>languages-corpus</code> job names are gone</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;unit-and-integration|languages-corpus&quot;</span><span class="w"> </span>.github/workflows/ci.yml
+</code></pre></div>
+<p>Expected: no output (both old job names are gone).</p>
+<ul>
+<li>[ ] <strong>Step 4: Confirm all six job names are present</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s2">&quot;^  [a-z]&quot;</span><span class="w"> </span>.github/workflows/ci.yml
+</code></pre></div>
+<p>Expected: six lines — <code>units:</code>, <code>commands:</code>, <code>integration:</code>, <code>e2e:</code>, <code>e2e-haskell-roundtrip:</code>, <code>package:</code>.</p>
+<ul>
+<li>[ ] <strong>Step 5: Run unit tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>bin/test/units.bash
+</code></pre></div>
+<p>Expected: all pass, no failures.</p>
+<ul>
+<li>[ ] <strong>Step 6: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>.github/workflows/ci.yml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;ci: parallelize all test jobs and add venv/cabal/dist-newstyle caches&quot;</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest", "content.tabs", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
