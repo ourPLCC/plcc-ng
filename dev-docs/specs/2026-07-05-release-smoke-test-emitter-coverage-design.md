@@ -1,6 +1,6 @@
 # Release smoke test emitter coverage — design
 
-**Issue:** [137](../issues/137-release-smoke-test-emitter-coverage.md)
+**Issue:** [137](../issues/done/137-release-smoke-test-emitter-coverage.md)
 **Date:** 2026-07-05
 
 ## Problem
