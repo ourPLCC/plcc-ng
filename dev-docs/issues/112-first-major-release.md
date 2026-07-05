@@ -20,4 +20,4 @@ A v1.0 release signals stability to users: the CLI interface and spec syntax are
   - CI is green and the test suite covers the happy path end-to-end for at least Python and Java
 - All four emitters (Python, Java, Haskell, JavaScript) are v1 supported — no experimental tier
 - Write up the v1.0 milestone in the roadmap once criteria are agreed
-- The release SOP (`dev-docs/release-sop.md`) currently has no content — that needs to be written as part of this effort
+- The release SOP is written (issue 130). Before v1.0, exercise it end-to-end on a pre-1.0 release: cut a release per `dev-docs/release-sop.md` and run `bin/release/verify.bash <tag>` (without `--no-install`) against it
