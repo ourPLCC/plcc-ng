@@ -1,0 +1,956 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/plans/2026-07-05-137-release-smoke-test-emitter-coverage/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Release Smoke Test Emitter Coverage Implementation Plan - plcc-ng Developer Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#release-smoke-test-emitter-coverage-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-header__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            plcc-ng Developer Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Release Smoke Test Emitter Coverage Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../contributing/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../code-of-conduct/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Code of Conduct
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release-sop/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../issue-conventions/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issue Conventions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../specs/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Design Specs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Implementation Plans
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="plcc-ng Developer Docs" class="md-nav__button md-logo" aria-label="plcc-ng Developer Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    plcc-ng Developer Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ourPLCC/plcc-ng" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    ourPLCC/plcc-ng
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-of-conduct/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code of Conduct
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release-sop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release SOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../issue-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Issue Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implementation Plans
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="release-smoke-test-emitter-coverage-implementation-plan">Release Smoke Test Emitter Coverage Implementation Plan</h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Extend the release smoke test (and its local analog) to exercise all four emitters — Python, Java, Haskell, JavaScript — so a published wheel missing emitter runtime package data fails the smoke test instead of shipping broken.</p>
+<p><strong>Architecture:</strong> One new shared script, <code>bin/test/smoke.bash</code>, assumes the <code>plcc-*</code> entry points are already on <code>PATH</code> and runs emit-only checks (<code>plcc-lang-emit --target=&lt;lang&gt;</code> per language, asserting generated + runtime files exist). Two call sites consume it: the "Smoke test TestPyPI install" step in <code>.github/workflows/release.yml</code>, and <code>bin/test/packaging.bash</code> after its wheel install.</p>
+<p><strong>Tech Stack:</strong> Bash, bats-style assertion messages (<code>FAIL: ...</code>), GitHub Actions.</p>
+<p><strong>Spec:</strong> <a href="../../specs/2026-07-05-release-smoke-test-emitter-coverage-design/">dev-docs/specs/2026-07-05-release-smoke-test-emitter-coverage-design.md</a></p>
+<h2 id="global-constraints">Global Constraints</h2>
+<ul>
+<li>The script must NOT source <code>bin/test/_cache.bash</code> or use <code>run_cached</code>: its result depends on which package is installed on <code>PATH</code>, not on git state, so caching would be incorrect.</li>
+<li>Emitters are invoked through the <code>plcc-lang-emit --target=&lt;lang&gt;</code> dispatcher, never <code>plcc-&lt;lang&gt;-emit</code> directly, so language discovery in the installed package is exercised.</li>
+<li>The four languages (python, java, javascript, haskell) are hard-coded — this is a v1 release gate (issue 112), not a plugin enumeration.</li>
+<li>Fixture: <code>tests/fixtures/trivial.plcc</code> for everything. Do not add new fixtures.</li>
+<li>Follow <code>bin/test/</code> house style: <code>set -euo pipefail</code>, header echo, <code>SCRIPT_DIR</code>/<code>PROJECT_ROOT</code> derivation, <code>FAIL: ...</code> + <code>exit 1</code> on assertion failure.</li>
+<li>Never add <code>[skip ci]</code> to any commit message.</li>
+</ul>
+<hr />
+<h3 id="task-1-create-bintestsmokebash">Task 1: Create <code>bin/test/smoke.bash</code></h3>
+<p><strong>Files:</strong>
+- Create: <code>bin/test/smoke.bash</code> (mode 755)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>plcc-make</code>, <code>plcc-spec</code>, <code>plcc-model</code>, <code>plcc-lang-emit</code> entry points on <code>PATH</code>; <code>tests/fixtures/trivial.plcc</code>.
+- Produces: an executable script that exits 0 printing <code>smoke: all checks passed</code> when the installed package is healthy, exits 1 with <code>FAIL: ...</code> otherwise. Tasks 2 and 3 call it as <code>bin/test/smoke.bash</code> (repo-relative) with entry points already on <code>PATH</code>.</p>
+<ul>
+<li>[ ] <strong>Step 1: Write the script</strong></li>
+</ul>
+<p>Create <code>bin/test/smoke.bash</code> with exactly this content:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+set -euo pipefail
+
+echo &quot;bin/test/smoke.bash&quot;
+echo &quot;-------------------&quot;
+
+# Smoke test an installed plcc-ng. Assumes the plcc-* entry points are
+# already on PATH (installed from a wheel or from TestPyPI).
+#
+# Deliberately not cached via _cache.bash: the result depends on which
+# package is installed on PATH, not on git state.
+
+SCRIPT_DIR=&quot;$( cd -- &quot;$( dirname -- &quot;${BASH_SOURCE[0]}&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+PROJECT_ROOT=&quot;$( cd &quot;${SCRIPT_DIR}/../..&quot; &amp;&gt; /dev/null &amp;&amp; pwd )&quot;
+
+SPEC=&quot;${PROJECT_ROOT}/tests/fixtures/trivial.plcc&quot;
+
+WORK_DIR=&quot;$(mktemp -d)&quot;
+EMIT_DIR=&quot;$(mktemp -d)&quot;
+trap 'rm -rf &quot;${WORK_DIR}&quot; &quot;${EMIT_DIR}&quot;' EXIT
+
+(
+    cd &quot;${WORK_DIR}&quot;
+    plcc-make --spec=&quot;${SPEC}&quot;
+    test -f plcc-ng/spec.json  || { echo &quot;FAIL: plcc-ng/spec.json missing&quot;; exit 1; }
+    test -f plcc-ng/model.json || { echo &quot;FAIL: plcc-ng/model.json missing&quot;; exit 1; }
+)
+echo &quot;OK: plcc-make produces spec.json and model.json&quot;
+
+MODEL_JSON=&quot;${WORK_DIR}/model.json&quot;
+plcc-spec &quot;${SPEC}&quot; | plcc-model &gt; &quot;${MODEL_JSON}&quot;
+
+# check_emitted &lt;lang&gt; &lt;expected-glob&gt;...
+# Emits for &lt;lang&gt; into a fresh directory, then asserts each expected
+# glob matches at least one file there.
+check_emitted() {
+    local lang=&quot;$1&quot;; shift
+    local out=&quot;${EMIT_DIR}/${lang}&quot;
+    mkdir -p &quot;${out}&quot;
+    plcc-lang-emit --target=&quot;${lang}&quot; --output=&quot;${out}&quot; &lt; &quot;${MODEL_JSON}&quot;
+    local pattern
+    for pattern in &quot;$@&quot;; do
+        compgen -G &quot;${out}/${pattern}&quot; &gt; /dev/null \
+            || { echo &quot;FAIL: ${lang}: ${pattern} missing&quot;; exit 1; }
+    done
+    echo &quot;OK: ${lang} emit produces expected files&quot;
+}
+
+check_emitted python     Program.py   runtime/base.py
+check_emitted java       Program.java runtime/Token.java &quot;runtime/org.json-*.jar&quot;
+check_emitted javascript Program.js   runtime/base.js
+check_emitted haskell    Program.hs   Token.hs interpreter.cabal
+
+echo &quot;smoke: all checks passed&quot;
+</code></pre>
+<p>Notes for the implementer:
+- <code>plcc-lang-emit</code> reads the model JSON from stdin (same contract the e2e bats tests use).
+- The model is generated once and reused for all four languages; each emit still goes through the dispatcher.
+- <code>compgen -G</code> is the glob-match assertion; it is needed because the Java runtime jar is version-pinned in its filename (<code>org.json-20250107.jar</code> today) — assert <code>runtime/org.json-*.jar</code>, never the pinned name.
+- The <code>exit 1</code> inside <code>check_emitted</code>'s <code>{ ...; }</code> group exits the whole script (it is not a subshell), which is intended.</p>
+<ul>
+<li>[ ] <strong>Step 2: Make it executable</strong></li>
+</ul>
+<pre><code class="language-bash">chmod +x bin/test/smoke.bash
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 3: Run it against the dev venv (expect pass)</strong></li>
+</ul>
+<p>The dev environment installs the entry points into the project venv, so <code>pdm run</code> puts them on <code>PATH</code>:</p>
+<pre><code class="language-bash">pdm run bin/test/smoke.bash
+</code></pre>
+<p>Expected output ends with:</p>
+<pre><code>OK: plcc-make produces spec.json and model.json
+OK: python emit produces expected files
+OK: java emit produces expected files
+OK: javascript emit produces expected files
+OK: haskell emit produces expected files
+smoke: all checks passed
+</code></pre>
+<p>and exit status 0 (<code>echo $?</code> → <code>0</code>).</p>
+<ul>
+<li>[ ] <strong>Step 4: Verify the failure path fires</strong></li>
+</ul>
+<p>Run once with a target that cannot exist, by temporarily exercising the assertion helper — simplest reliable probe: check the script fails fast when entry points are absent.</p>
+<pre><code class="language-bash">env PATH=/usr/bin:/bin bash bin/test/smoke.bash; echo &quot;exit=$?&quot;
+</code></pre>
+<p>Expected: a <code>plcc-make: command not found</code> error and <code>exit=127</code> (non-zero). This confirms <code>set -euo pipefail</code> aborts the script when the installed package is broken rather than printing <code>smoke: all checks passed</code>.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/smoke.bash
+git commit -m &quot;test(packaging): add smoke script covering all four emitters
+
+Emit-only checks for python, java, javascript, and haskell against an
+installed plcc-ng, asserting generated files and runtime package data
+exist. Shared by the release workflow and bin/test/packaging.bash.
+
+Refs #137
+
+Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;&quot;
+</code></pre>
+<hr />
+<h3 id="task-2-call-smokebash-from-bintestpackagingbash">Task 2: Call <code>smoke.bash</code> from <code>bin/test/packaging.bash</code></h3>
+<p><strong>Files:</strong>
+- Modify: <code>bin/test/packaging.bash:55-64</code> (the <code>WORK_DIR</code> block)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>bin/test/smoke.bash</code> from Task 1 (invoked as <code>"${SCRIPT_DIR}/smoke.bash"</code>; entry points already on <code>PATH</code> from line 41's <code>export PATH="${VENV}/bin:${PATH}"</code>).
+- Produces: <code>bin/test/packaging.bash</code> whose wheel-install test now covers all four emitters.</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace the trivial <code>plcc-make</code> block with a <code>smoke.bash</code> call</strong></li>
+</ul>
+<p>In <code>bin/test/packaging.bash</code>, replace this block (currently lines 55–64):</p>
+<pre><code class="language-bash">    # Run end-to-end in the installed venv
+    WORK_DIR=&quot;$(mktemp -d)&quot;
+    trap 'rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot;' EXIT
+    (
+        cd &quot;${WORK_DIR}&quot;
+        cp &quot;${PROJECT_ROOT}/tests/fixtures/trivial.plcc&quot; spec.plcc
+        plcc-make
+        test -f plcc-ng/spec.json   || { echo &quot;FAIL: plcc-ng/spec.json missing&quot;; exit 1; }
+        test -f plcc-ng/model.json  || { echo &quot;FAIL: plcc-ng/model.json missing&quot;; exit 1; }
+    )
+    DIAGRAM_DIR=&quot;$(mktemp -d)&quot;
+    trap 'rm -rf &quot;${VENV}&quot; &quot;${WORK_DIR}&quot; &quot;${DIAGRAM_DIR}&quot;' EXIT
+</code></pre>
+<p>with:</p>
+<pre><code class="language-bash">    # Smoke test the installed package (plcc-make + all four emitters)
+    &quot;${SCRIPT_DIR}/smoke.bash&quot;
+
+    DIAGRAM_DIR=&quot;$(mktemp -d)&quot;
+    trap 'rm -rf &quot;${VENV}&quot; &quot;${DIAGRAM_DIR}&quot;' EXIT
+</code></pre>
+<p>Note the trap rewrite: <code>WORK_DIR</code> no longer exists in this script, so the second trap must drop it (<code>smoke.bash</code> cleans up its own temp dirs via its own trap). The diagram-emit check below the block stays unchanged.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run the packaging test fresh (expect pass)</strong></li>
+</ul>
+<pre><code class="language-bash">PLCC_NO_TEST_CACHE=1 bin/test/packaging.bash
+</code></pre>
+<p>This builds nothing itself but installs <code>dist/*.whl</code>; if <code>dist/</code> is empty or stale, first run <code>bin/build/package.bash</code>. Takes on the order of a minute.</p>
+<p>Expected output includes, in order: the <code>OK: &lt;cmd&gt;</code> entry-point lines, <code>OK: plcc-lang-list reports python and java</code>, the <code>smoke.bash</code> header and its five <code>OK:</code> lines ending <code>smoke: all checks passed</code>, then <code>packaging: all checks passed</code>. Exit 0.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add bin/test/packaging.bash
+git commit -m &quot;test(packaging): run emitter smoke checks in packaging test
+
+Replaces the inline trivial plcc-make block with bin/test/smoke.bash so
+the local wheel-install test covers the same emitter package-data
+checks as the release workflow.
+
+Refs #137
+
+Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;&quot;
+</code></pre>
+<hr />
+<h3 id="task-3-call-smokebash-from-the-release-workflow">Task 3: Call <code>smoke.bash</code> from the release workflow</h3>
+<p><strong>Files:</strong>
+- Modify: <code>.github/workflows/release.yml:85-110</code> (the "Smoke test TestPyPI install" step)</p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>bin/test/smoke.bash</code> from Task 1 (the step runs from the repo checkout root, with the TestPyPI-installed venv prepended to <code>PATH</code>).
+- Produces: a release workflow whose smoke test fails if any emitter's package data is missing from the published package.</p>
+<ul>
+<li>[ ] <strong>Step 1: Replace the inline <code>plcc-make</code> lines</strong></li>
+</ul>
+<p>In <code>.github/workflows/release.yml</code>, the step currently reads:</p>
+<pre><code class="language-yaml">      - name: Smoke test TestPyPI install
+        run: |
+          VERSION=&quot;${RELEASE_TAG#v}&quot;
+          python -m venv /tmp/smoke-venv
+          for attempt in $(seq 1 20); do
+            if /tmp/smoke-venv/bin/pip install \
+                --no-cache-dir \
+                --index-url https://test.pypi.org/simple/ \
+                --extra-index-url https://pypi.org/simple/ \
+                &quot;plcc-ng==${VERSION}&quot;; then
+              break
+            fi
+            if [ &quot;${attempt}&quot; -eq 20 ]; then
+              echo &quot;FAIL: plcc-ng==${VERSION} not installable from TestPyPI after 20 attempts&quot;
+              exit 1
+            fi
+            echo &quot;TestPyPI index not ready (attempt ${attempt}/20); retrying in 15s&quot;
+            sleep 15
+          done
+          SPEC=&quot;$(pwd)/tests/fixtures/trivial.plcc&quot;
+          WORK=$(mktemp -d)
+          cd &quot;${WORK}&quot;
+          export PATH=&quot;/tmp/smoke-venv/bin:${PATH}&quot;
+          plcc-make --spec=&quot;${SPEC}&quot;
+          test -f plcc-ng/spec.json || { echo &quot;FAIL: plcc-ng/spec.json missing&quot;; exit 1; }
+          echo &quot;TestPyPI smoke test passed&quot;
+</code></pre>
+<p>Keep the <code>VERSION</code>/venv/retry-loop lines unchanged, and replace everything from <code>SPEC="$(pwd)/..."</code> to the final <code>echo</code> with:</p>
+<pre><code class="language-yaml">          export PATH=&quot;/tmp/smoke-venv/bin:${PATH}&quot;
+          bin/test/smoke.bash
+          echo &quot;TestPyPI smoke test passed&quot;
+</code></pre>
+<p>(No <code>cd</code> — the step must stay in the checkout root so <code>bin/test/smoke.bash</code> resolves; the script manages its own temp dirs.)</p>
+<ul>
+<li>[ ] <strong>Step 2: Lint the workflow</strong></li>
+</ul>
+<pre><code class="language-bash">command -v actionlint &amp;&amp; actionlint .github/workflows/release.yml || python -c &quot;import yaml, pathlib; yaml.safe_load(pathlib.Path('.github/workflows/release.yml').read_text()); print('yaml ok')&quot;
+</code></pre>
+<p>Expected: <code>actionlint</code> reports nothing (exit 0), or if actionlint is not installed, <code>yaml ok</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: Rehearse the step's shell locally</strong></li>
+</ul>
+<p>The workflow shell after the retry loop is exactly <code>export PATH=...; bin/test/smoke.bash</code> from the repo root, which Task 1 Step 3 already exercised (<code>pdm run</code> ≈ venv on <code>PATH</code>). Re-run to confirm nothing in Tasks 2–3 broke it:</p>
+<pre><code class="language-bash">pdm run bin/test/smoke.bash
+</code></pre>
+<p>Expected: ends with <code>smoke: all checks passed</code>, exit 0.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<pre><code class="language-bash">git add .github/workflows/release.yml
+git commit -m &quot;ci(release): exercise all four emitters in TestPyPI smoke test
+
+The smoke step now runs bin/test/smoke.bash, which emits for python,
+java, javascript, and haskell and asserts runtime package data landed
+in the published package, instead of only checking spec.json exists.
+
+Refs #137
+
+Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;&quot;
+</code></pre>
+<hr />
+<h3 id="task-4-run-the-test-suite-and-close-issue-137">Task 4: Run the test suite and close issue 137</h3>
+<p><strong>Files:</strong>
+- Modify (via script): <code>dev-docs/issues/137-release-smoke-test-emitter-coverage.md</code> → <code>dev-docs/issues/done/</code>, <code>dev-docs/roadmap.md</code></p>
+<p><strong>Interfaces:</strong>
+- Consumes: <code>bin/issues/close.bash</code> (stages the move + roadmap edit; you commit), <code>bin/issues/check.bash</code> (runs automatically at the end of close.bash).
+- Produces: the branch's final commit; issue 137 closed per repo convention.</p>
+<ul>
+<li>[ ] <strong>Step 1: Run the functional test tiers (expect pass)</strong></li>
+</ul>
+<pre><code class="language-bash">bin/test/units.bash &amp;&amp; bin/test/commands.bash
+</code></pre>
+<p>Expected: pytest ends <code>1175 passed, 1 skipped</code> (the pre-existing timing-sensitive JavaScript skip; count may drift slightly with main), bats commands all pass. Nothing in this branch touches <code>src/</code>, so failures here mean environment trouble, not this change — investigate before proceeding, do not skip.</p>
+<ul>
+<li>[ ] <strong>Step 2: Close the issue</strong></li>
+</ul>
+<pre><code class="language-bash">bin/issues/close.bash 137
+</code></pre>
+<p>Expected output: <code>closed: dev-docs/issues/done/137-release-smoke-test-emitter-coverage.md</code> and a reminder to review the roadmap. Review <code>git diff --cached dev-docs/roadmap.md</code> — the script does not auto-edit milestone rationale prose; if any paragraph still describes the smoke-test gap as open, fix it and <code>git add</code> it.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit (final commit of the branch)</strong></li>
+</ul>
+<pre><code class="language-bash">git commit -m &quot;docs(issues): close issue 137 (release smoke test emitter coverage), update roadmap
+
+Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;&quot;
+</code></pre>
+<ul>
+<li>[ ] <strong>Step 4: Verify issue consistency</strong></li>
+</ul>
+<pre><code class="language-bash">bin/issues/check.bash
+</code></pre>
+<p>Expected: exit 0, no complaints.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
