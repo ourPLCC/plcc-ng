@@ -9,6 +9,25 @@
 
 Today, once conventional commits land on `main`, the entire pipeline (tag, changelog, GitHub release, PyPI publish) runs with no other human checkpoint before the package reaches real PyPI, unless the `pypi` environment has required reviewers configured.
 
+## Decision
+
+Verified 2026-07-05 via the GitHub environments API (the repo is
+public, so the configuration is anonymously readable):
+
+- The `pypi` environment has **no required reviewers** and no wait
+  timer — its only protection rule is a deployment branch policy.
+- That branch policy already restricts the environment to the `main`
+  branch and `v*.*.*` tags, so the issue-134 follow-up below is in
+  place: a dispatch from any other branch can never reach the publish
+  job.
+
+**Decision: keep the pipeline ungated and document the absence of an
+approval gate as intentional.** The automation is the point of the
+release design: TestPyPI publish + smoke test run before the real PyPI
+upload, and the branch policy pins the publish job to `main`. The
+configuration and rationale are now recorded in the release SOP
+(`dev-docs/release-sop.md`, "The `pypi` environment").
+
 ## Notes
 
 - Found while writing the release SOP (issue 130).

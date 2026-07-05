@@ -55,6 +55,27 @@ Dispatch with the **latest already-published** tag. Every step no-ops
 gracefully and the run goes green without publishing anything. Do this
 after any change to the publish jobs.
 
+## The `pypi` environment
+
+The `publish` job in `.github/workflows/release.yml` runs under the
+`pypi` GitHub Environment. Its protection configuration (Settings →
+Environments → `pypi`; verified 2026-07-05 via the environments API,
+which is anonymously readable for this public repo):
+
+- **Deployment branch policy: `main` branch and `v*.*.*` tags.** A
+  workflow dispatched from any other branch can never reach the publish
+  job, so the "always from `main`" rule above is enforced in settings,
+  not just prose.
+- **No required reviewers — intentional.** Once conventional commits
+  land on `main`, the pipeline runs to real PyPI with no manual
+  approval step. The safeguards are the review that lands the commits
+  on `main`, the TestPyPI publish + smoke test that precede the PyPI
+  upload, and the branch policy above. A gate would trade release speed
+  for an approval click on every release; if a bad release ships, the
+  recovery is a follow-up release, not a gate. Revisit if the project
+  gains maintainers who want a human checkpoint (issue 138 has the
+  original analysis).
+
 ## GitHub Release notes
 
 GitHub Release notes are the tag's `CHANGELOG.md` section, extracted by
