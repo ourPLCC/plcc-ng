@@ -45,10 +45,6 @@
          <lastmod>2026-07-05</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/138-release-pypi-environment-protection-check/</loc>
-         <lastmod>2026-07-05</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/141-whats-new-user-release-notes/</loc>
          <lastmod>2026-07-05</lastmod>
     </url>
@@ -582,6 +578,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/136-release-changelog-vcs-release-divergence/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/138-release-pypi-environment-protection-check/</loc>
          <lastmod>2026-07-05</lastmod>
     </url>
     <url>
