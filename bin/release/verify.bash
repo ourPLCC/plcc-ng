@@ -45,6 +45,45 @@ MAJOR_MINOR="$(echo "${VERSION}" | cut -d. -f1,2)"
 echo "bin/release/verify.bash ${TAG}"
 echo "------------------------------"
 
+# Preflight for the install check: the throwaway venv inherits its
+# interpreter, and one older than pyproject's requires-python makes pip
+# filter out every release and fail with a misleading 'No matching
+# distribution found' after the full retry loop (issue 143) — the
+# devcontainer's default python3 is such a one. Pick a satisfying
+# interpreter: the ambient python3, else the project venv's.
+# PLCC_VERIFY_PYTHON overrides the search. Cheapest check of all, so it
+# runs before the network checks.
+PYTHON_BIN=""
+if [[ -z "${NO_INSTALL}" ]]; then
+    REQUIRES_PYTHON="$(sed -n 's/^requires-python *= *">=\([0-9.]*\)".*/\1/p' "${PROJECT_ROOT}/pyproject.toml")"
+    [[ -n "${REQUIRES_PYTHON}" ]] \
+        || { echo "FAIL: could not parse requires-python from pyproject.toml"; exit 1; }
+    if [[ -n "${PLCC_VERIFY_PYTHON:-}" ]]; then
+        CANDIDATES=("${PLCC_VERIFY_PYTHON}")
+    else
+        CANDIDATES=(python3 "${PROJECT_ROOT}/.venv/bin/python3")
+    fi
+    TRIED=""
+    for candidate in "${CANDIDATES[@]}"; do
+        if ! command -v "${candidate}" >/dev/null 2>&1; then
+            TRIED="${TRIED} ${candidate} (missing)"
+            continue
+        fi
+        PYTHON_VERSION="$("${candidate}" --version 2>&1 | awk '{print $2}')"
+        if [[ "$(printf '%s\n' "${REQUIRES_PYTHON}" "${PYTHON_VERSION}" | sort -V | head -n1)" == "${REQUIRES_PYTHON}" ]]; then
+            PYTHON_BIN="${candidate}"
+            break
+        fi
+        TRIED="${TRIED} ${candidate} (${PYTHON_VERSION})"
+    done
+    if [[ -z "${PYTHON_BIN}" ]]; then
+        echo "FAIL: no python3 satisfying requires-python >=${REQUIRES_PYTHON} found; tried:${TRIED}"
+        echo "      run 'pdm install' to create ${PROJECT_ROOT}/.venv, or set PLCC_VERIFY_PYTHON"
+        exit 1
+    fi
+    echo "OK: install check will use $("${PYTHON_BIN}" --version 2>&1) (${PYTHON_BIN})"
+fi
+
 # 1. PyPI has the version (retry: the index can lag the upload). Poll
 # the simple index — the one pip resolves against — not the JSON API,
 # which updates sooner and can claim a version exists before pip can
@@ -96,7 +135,7 @@ fi
 # TestPyPI, which CI smoke-tests) is ever exercised.
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "${WORK_DIR}"' EXIT
-python3 -m venv "${WORK_DIR}/venv"
+"${PYTHON_BIN}" -m venv "${WORK_DIR}/venv"
 installed=""
 for attempt in $(seq 1 "${RETRY_ATTEMPTS}"); do
     if "${WORK_DIR}/venv/bin/pip" install --quiet --no-cache-dir "plcc-ng==${VERSION}"; then

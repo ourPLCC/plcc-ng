@@ -61,6 +61,28 @@ teardown() {
     rm -rf "${STUB_DIR}"
 }
 
+# A stub python3 that reports ${STUB_PYTHON_VERSION} for --version and
+# delegates everything else (the docs-check JSON parsing) to the real
+# interpreter. Lets tests simulate an ambient python3 too old for the
+# package's requires-python (issue 143).
+create_python3_stub() {
+    local real_python3
+    real_python3="$(command -v python3)"
+    cat > "${STUB_DIR}/python3" <<EOF
+#!/usr/bin/env bash
+if [[ "\${1:-}" == "--version" ]]; then
+    echo "Python \${STUB_PYTHON_VERSION}"
+    exit 0
+fi
+if [[ "\${1:-}" == "-m" && "\${2:-}" == "venv" ]]; then
+    echo "stub python3: refusing to create a venv in tests" >&2
+    exit 1
+fi
+exec "${real_python3}" "\$@"
+EOF
+    chmod +x "${STUB_DIR}/python3"
+}
+
 @test "verify: fails with usage when called without arguments" {
     run bash "${VERIFY}"
     [ "$status" -ne 0 ]
@@ -155,6 +177,29 @@ EOF
     run bash "${VERIFY}" --no-install v0.65.0
     [ "$status" -ne 0 ]
     [[ "$output" == *"FAIL: docs latest alias is not on 0.65"* ]]
+}
+
+@test "verify: fails fast when no python3 satisfies requires-python" {
+    create_python3_stub
+    export STUB_PYTHON_VERSION=3.9.2
+    # Restrict the interpreter search to the stub so the project venv's
+    # python cannot rescue the run (which would then really install).
+    export PLCC_VERIFY_PYTHON="${STUB_DIR}/python3"
+    run bash "${VERIFY}" v0.65.0
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"FAIL: no python3 satisfying requires-python"* ]]
+    [[ "$output" == *"(3.9.2)"* ]]
+    # Fails before any network check or install retry.
+    [[ "$output" != *"OK: PyPI"* ]]
+    [[ "$output" != *"PyPI install not ready"* ]]
+}
+
+@test "verify: --no-install skips the python3 preflight" {
+    create_python3_stub
+    export STUB_PYTHON_VERSION=3.9.2
+    run bash "${VERIFY}" --no-install v0.65.0
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"verify: all checks passed for v0.65.0 (install skipped)"* ]]
 }
 
 @test "verify: fails when versions.json cannot be fetched" {
