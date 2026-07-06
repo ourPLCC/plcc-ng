@@ -1,7 +1,7 @@
 [project]
 name = "plcc-ng"
 dynamic = ["version"]
-description = "Programming Languages Compiler Compiler — experimental rewrite of PLCC"
+description = "Programming Languages Compiler Compiler for teaching and learning programming language concepts"
 authors = [
     {name = "PLCC Community", email = "https://discord.gg/EVtNSxS9E2"},
 ]
@@ -14,7 +14,7 @@ readme = "README.md"
 license = {text = "AGPL-3.0-or-later"}
 keywords = ["compiler", "parser", "education", "plcc", "teaching", "programming-languages"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
