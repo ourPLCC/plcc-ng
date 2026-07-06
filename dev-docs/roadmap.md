@@ -23,6 +23,9 @@ progress toward the milestone; the section retires when v1.0 ships.
 - **[#142](issues/142-verify-pypi-simple-index-race.md) — verify.bash PyPI check races the simple index**
   Check 1 polls the JSON API, but pip installs from the simple index, which
   lags it; the check passes while the install step fails.
+- **[#143](issues/143-verify-python-version-preflight.md) — verify.bash install check needs a python3 preflight**
+  An ambient python3 older than requires-python makes pip fail every
+  release with a misleading "No matching distribution found".
 
 ### Features
 

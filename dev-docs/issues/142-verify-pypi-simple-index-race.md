@@ -12,7 +12,10 @@ installs from the simple index (`pypi.org/simple/plcc-ng/`), which is
 CDN-served and updates later. Right after a publish the JSON API can know
 the version while the simple index does not, so the check passes without
 the release actually being installable — a false positive that wastes the
-maintainer's time chasing a healthy release (seen on v0.67.0, 2026-07-05).
+maintainer's time chasing a healthy release. (The v0.67.0 failure that
+prompted this issue turned out to be #143, an ambient python3 older than
+requires-python — but the race is real; the issue-140 spec documents the
+same propagation gap on TestPyPI.)
 
 ## Steps to Reproduce
 
