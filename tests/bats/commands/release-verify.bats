@@ -6,11 +6,11 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 VERIFY="${PROJECT_ROOT}/bin/release/verify.bash"
 
 # The script's observational checks are plain curl calls. A stub curl on
-# PATH serves canned responses per URL (controlled by STUB_FAIL_* and
-# ${STUB_DIR}/versions.json) and logs every requested URL, making the
-# checks hermetic and the request order observable. The install path
-# (check 4) is deliberately untested here; it is exercised for real on a
-# release (issue 112).
+# PATH serves canned responses per URL (controlled by STUB_FAIL_*,
+# ${STUB_DIR}/simple-index.html, and ${STUB_DIR}/versions.json) and logs
+# every requested URL, making the checks hermetic and the request order
+# observable. The install path (check 4) is deliberately untested here;
+# it is exercised for real on a release (issue 112).
 
 setup() {
     STUB_DIR="$(mktemp -d)"
@@ -26,8 +26,11 @@ done
 echo "${url}" >> "${STUB_DIR}/requests.log"
 case "${url}" in
     *pypi.org/pypi/*)
-        [[ -n "${STUB_FAIL_PYPI:-}" ]] && exit 22
         echo '{}'
+        ;;
+    *pypi.org/simple/plcc-ng/*)
+        [[ -n "${STUB_FAIL_PYPI:-}" ]] && exit 22
+        cat "${STUB_DIR}/simple-index.html"
         ;;
     *api.github.com/repos/*/releases/tags/*)
         [[ -n "${STUB_FAIL_GITHUB:-}" ]] && exit 22
@@ -48,6 +51,10 @@ EOF
     export PLCC_VERIFY_RETRY_DELAY=0
     echo '[{"version": "0.65", "title": "0.65", "aliases": ["latest"]}]' \
         > "${STUB_DIR}/versions.json"
+    cat > "${STUB_DIR}/simple-index.html" <<'EOF'
+<a href="https://files.pythonhosted.org/x/plcc_ng-0.65.0-py3-none-any.whl">plcc_ng-0.65.0-py3-none-any.whl</a>
+<a href="https://files.pythonhosted.org/x/plcc_ng-0.65.0.tar.gz">plcc_ng-0.65.0.tar.gz</a>
+EOF
 }
 
 teardown() {
@@ -87,6 +94,23 @@ teardown() {
     [[ "$output" == *"verify: all checks passed for v0.65.0"* ]]
 }
 
+@test "verify: PyPI check polls the simple index pip installs from, not the JSON API" {
+    run bash "${VERIFY}" --no-install v0.65.0
+    [ "$status" -eq 0 ]
+    grep -q 'pypi.org/simple/plcc-ng/' "${STUB_DIR}/requests.log"
+    run ! grep -q 'pypi.org/pypi/' "${STUB_DIR}/requests.log"
+}
+
+@test "verify: fails when the simple index lags the JSON API (no wheel for the version yet)" {
+    cat > "${STUB_DIR}/simple-index.html" <<'EOF'
+<a href="https://files.pythonhosted.org/x/plcc_ng-0.64.0-py3-none-any.whl">plcc_ng-0.64.0-py3-none-any.whl</a>
+<a href="https://files.pythonhosted.org/x/plcc_ng-0.64.0.tar.gz">plcc_ng-0.64.0.tar.gz</a>
+EOF
+    run bash "${VERIFY}" --no-install v0.65.0
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"FAIL: plcc-ng 0.65.0 not on PyPI"* ]]
+}
+
 @test "verify: fails when PyPI lacks the version" {
     export STUB_FAIL_PYPI=1
     run bash "${VERIFY}" --no-install v0.65.0
@@ -98,7 +122,7 @@ teardown() {
     export STUB_FAIL_PYPI=1
     run bash "${VERIFY}" --no-install v0.65.0
     [ "$status" -ne 0 ]
-    grep -q 'pypi.org/pypi' "${STUB_DIR}/requests.log"
+    grep -q 'pypi.org/simple/plcc-ng/' "${STUB_DIR}/requests.log"
     run ! grep -q 'api.github.com' "${STUB_DIR}/requests.log"
     run ! grep -q 'versions.json' "${STUB_DIR}/requests.log"
 }
@@ -107,7 +131,7 @@ teardown() {
     export STUB_FAIL_PYPI=1
     run bash "${VERIFY}" --no-install v0.65.0
     [ "$status" -ne 0 ]
-    [ "$(grep -c 'pypi.org/pypi' "${STUB_DIR}/requests.log")" -eq 5 ]
+    [ "$(grep -c 'pypi.org/simple/plcc-ng/' "${STUB_DIR}/requests.log")" -eq 5 ]
 }
 
 @test "verify: fails when the GitHub Release is missing" {

@@ -45,10 +45,14 @@ MAJOR_MINOR="$(echo "${VERSION}" | cut -d. -f1,2)"
 echo "bin/release/verify.bash ${TAG}"
 echo "------------------------------"
 
-# 1. PyPI has the version (retry: the index can lag the upload).
+# 1. PyPI has the version (retry: the index can lag the upload). Poll
+# the simple index — the one pip resolves against — not the JSON API,
+# which updates sooner and can claim a version exists before pip can
+# install it (issue 142). Filenames use the normalized name, plcc_ng;
+# waiting for the wheel means the artifact pip will pick is present.
 pypi_ok=""
 for attempt in $(seq 1 "${RETRY_ATTEMPTS}"); do
-    if curl -fsS -o /dev/null "https://pypi.org/pypi/plcc-ng/${VERSION}/json"; then
+    if curl -fsS "https://pypi.org/simple/plcc-ng/" | grep -qF "plcc_ng-${VERSION}-"; then
         pypi_ok=1
         break
     fi
