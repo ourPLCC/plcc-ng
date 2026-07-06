@@ -64,8 +64,11 @@ message on stdout, exit 1 (matching `extract-changelog.bash`).
 Checks, in order, cheap first, fail-fast, with `OK:`/`FAIL:` lines in the
 `bin/test/smoke.bash` style:
 
-1. **PyPI has the version** — `curl -fsS https://pypi.org/pypi/plcc-ng/<version>/json`,
-   with a short retry loop (the operator may run this moments after publish).
+1. **PyPI has the version** — fetch `https://pypi.org/simple/plcc-ng/` and look for a
+   `plcc_ng-<version>-` wheel, with a short retry loop (the operator may run this
+   moments after publish). The simple index, not the JSON API: pip resolves against
+   the simple index, and the JSON API updates sooner — polling it can report OK
+   while the install still fails (issue 142).
 2. **GitHub Release exists** —
    `curl -fsS https://api.github.com/repos/ourPLCC/plcc-ng/releases/tags/<tag>`
    (anonymous API; deliberately `curl`, not `gh`).
@@ -75,7 +78,12 @@ Checks, in order, cheap first, fail-fast, with `OK:`/`FAIL:` lines in the
 4. **Real-PyPI install + smoke** (skipped by `--no-install`) — `python -m venv` in a
    `mktemp -d` (trap cleanup), `pip install --no-cache-dir plcc-ng==<version>` with the
    same retry pattern, prepend the venv's `bin` to `PATH`, run `bin/test/smoke.bash`
-   (which exercises `plcc-make` plus all four emitters).
+   (which exercises `plcc-make` plus all four emitters). The venv's interpreter must
+   satisfy `requires-python` or pip fails every release with a misleading `No matching
+   distribution found` (issue 143), so a preflight — run before the network checks,
+   cheapest first — selects one: the ambient `python3`, else the project venv's,
+   overridable via `PLCC_VERIFY_PYTHON`; if none qualifies it fails naming what it
+   tried.
 
 Retry loops read their delay from `PLCC_VERIFY_RETRY_DELAY` (default 15 seconds) so
 tests run fast. The script is deliberately **not** cached via `bin/test/_cache.bash`: like

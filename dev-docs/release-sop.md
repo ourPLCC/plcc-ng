@@ -71,10 +71,15 @@ From the repository root:
 bin/release/verify.bash vX.Y.Z
 ```
 
-The script fails fast with a `FAIL:` diagnostic. Checks, in order:
+The script fails fast with a `FAIL:` diagnostic. Check 4 needs a
+python3 satisfying the package's `requires-python`; the script finds
+one itself (ambient `python3`, else the project venv's — so run
+`pdm install` once) and fails fast naming what it tried if neither
+qualifies. `PLCC_VERIFY_PYTHON` overrides the search. Checks, in order:
 
-1. PyPI serves `plcc-ng==X.Y.Z` (retries briefly — the index can lag
-   the upload).
+1. PyPI serves `plcc-ng==X.Y.Z` on the simple index — the index pip
+   installs from (retries briefly — it can lag the upload and it lags
+   the JSON API).
 2. The GitHub Release `vX.Y.Z` exists.
 3. The docs site's `versions.json` lists `X.Y` and points the
    `latest` alias at it.
