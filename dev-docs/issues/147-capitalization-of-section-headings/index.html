@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/146-cut-v1.0.0-release/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/147-capitalization-of-section-headings/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>146 - Cut the v1.0.0 release - plcc-ng Developer Docs</title>
+        <title>147 - Capitalization of section headings - plcc-ng Developer Docs</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#146-cut-the-v100-release" class="md-skip">
+        <a href="#147-capitalization-of-section-headings" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              146 - Cut the v1.0.0 release
+              147 - Capitalization of section headings
             
           </span>
         </div>
@@ -704,34 +704,21 @@
   
 
 
-<h1 id="146-cut-the-v100-release">146 - Cut the v1.0.0 release</h1>
-<p><strong>Type:</strong> chore
+<h1 id="147-capitalization-of-section-headings">147 - Capitalization of section headings</h1>
+<p><strong>Type:</strong> docs
 <strong>Date:</strong> 2026-07-06</p>
 <h2 id="description">Description</h2>
-<p>Issue #112 agreed and recorded the v1.0 readiness criteria — see
-<a href="../../v1.0-criteria/"><code>dev-docs/v1.0-criteria.md</code></a>, all seven met. This
-issue is the actual release cutover: get a real <code>v1.0.0</code> tag published.</p>
-<p>python-semantic-release currently has <code>major_on_zero = false</code> in
-<code>pyproject.toml</code>, so even a <code>BREAKING CHANGE:</code> commit only bumps minor
-pre-1.0 (see <code>dev-docs/release-sop.md</code>'s version table) — it will not
-produce <code>v1.0.0</code> on its own. That needs to change (or the version needs
-to be forced another way) before the release can land.</p>
-<h2 id="steps-to-reproduce">Steps to Reproduce</h2>
-<p>(Not a bug — omit)</p>
+<p>Capitalization of section headings in the documentation is not
+consistent. It appears to be either (1) capitalize only the first
+word except if the word is a proper name or (2) capitalize every
+word except for conjunctions, articles, two-letter prepositions, and
+the word "for".</p>
+<p>No strong preference either way, but consistency is the goal.
+Option (1) is being used for the textbook for now, but that's open to
+change.</p>
 <h2 id="notes">Notes</h2>
-<ul>
-<li>Flip <code>major_on_zero</code> to <code>true</code> in <code>pyproject.toml</code> (or otherwise force
-  a <code>1.0.0</code> tag) — confirm this doesn't retroactively reinterpret past
-  commits when semantic-release next runs.</li>
-<li>Cut the release per <code>dev-docs/release-sop.md</code>.</li>
-<li>Update <code>docs/whats-new.md</code>: replace the first entry's <code>2026-07-XX</code>
-  placeholder with the actual release date, and confirm the entry
-  heading and the <code>&lt;!-- last-covered: ... --&gt;</code> marker match <code>v1.0.0</code>.</li>
-<li>Run <code>bin/release/verify.bash &lt;tag&gt;</code> (without <code>--no-install</code>) against
-  the published release.</li>
-<li>Carried over verbatim from issue #112's notes, which this issue
-  supersedes for the cutover work.</li>
-</ul>
+<p>Reported upstream as
+<a href="https://github.com/ourPLCC/plcc-ng/issues/284">ourPLCC/plcc-ng#284</a>.</p>
 
 
 
