@@ -22,7 +22,3 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
   Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, release-pipeline gaps 134-138 and 140).
-- **[#141](issues/141-whats-new-user-release-notes.md) — Add a user-facing "What's New" page**
-  Milestone-cadence, AI-drafted/human-reviewed release notes in the user
-  docs; moves the changelog page to the dev-docs site. First entry
-  targets v1.0. Design in the issue-136 spec (Part 2).
