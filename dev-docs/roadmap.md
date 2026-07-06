@@ -22,3 +22,8 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
   Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, release-pipeline gaps 134-138 and 140).
+
+### Docs
+
+- **[#145](issues/145-mkdocs-strict-warnings-cleanup.md) — Clean up mkdocs build --strict warnings in dev-docs**
+  74 pre-existing warnings (nav-missing pages, broken issue links in specs) block a clean `--strict` build.
