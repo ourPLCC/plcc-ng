@@ -9,10 +9,6 @@
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev/changelog/</loc>
-         <lastmod>2026-07-06</lastmod>
-    </url>
-    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/installation/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
@@ -22,6 +18,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/quick-start/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/whats-new/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
@@ -429,6 +429,10 @@
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/plans/2026-07-06-141-whats-new-page/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-15-084-banner-opt-in-design/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
@@ -610,6 +614,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-07-04-136-release-notes-unification-design/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-07-06-141-whats-new-page-design/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
 </urlset>

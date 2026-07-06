@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-06-21-100-docs-cli-command-classification-design/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev/superpowers/specs/2026-07-06-141-whats-new-page-design/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>CLI Documentation Restructure Design - plcc-ng</title>
+        <title>What's New page (issue 141) — design - plcc-ng</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cli-documentation-restructure-design" class="md-skip">
+        <a href="#whats-new-page-issue-141-design" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              CLI Documentation Restructure Design
+              What's New page (issue 141) — design
             
           </span>
         </div>
@@ -2545,240 +2545,149 @@
   
 
 
-<h1 id="cli-documentation-restructure-design">CLI Documentation Restructure Design</h1>
-<p><strong>Issue:</strong> 100 — Reconsider how CLI commands are classified and presented in the docs
-<strong>Date:</strong> 2026-06-21</p>
+<h1 id="whats-new-page-issue-141-design">What's New page (issue 141) — design</h1>
+<p><strong>Date:</strong> 2026-07-06
+<strong>Issue:</strong> <a href="../../../dev-docs/issues/141-whats-new-user-release-notes.md">141 - whats-new-user-release-notes</a></p>
 <h2 id="problem">Problem</h2>
-<p>The current CLI docs group commands as "Level 2 orchestrators" and "Level 0 primitives." These labels reflect internal pipeline architecture, not how a language author experiences the tool. The result is that students have no signal about which commands matter to them, and the docs mix architectural explanation with command reference in a way that serves neither purpose well.</p>
-<p>Additionally, many commands shipped in <code>pyproject.toml</code> are entirely undocumented.</p>
-<h2 id="goals">Goals</h2>
+<p>The user docs have no user-facing release narrative. <code>docs/changelog.md</code>
+republishes the developer-grade CHANGELOG.md, which tells users nothing
+about what changed <em>for them</em> or why it matters. The issue-136 design
+(Part 2) agreed the shape of the fix: a hand-curated <code>docs/whats-new.md</code>,
+with the changelog page moving to the dev-docs site. This spec designs the
+page and its first entry.</p>
+<h2 id="decisions">Decisions</h2>
+<p>Explored during brainstorming (2026-07-06):</p>
 <ol>
-<li>Replace the internal classification with one grounded in the author's actual experience</li>
-<li>Separate guide content (orientation, architecture, how things relate) from reference content (flags, arguments, examples)</li>
-<li>Document all 33 commands, including those currently absent from the docs</li>
-<li>Make the package structure (core vs. optional packages vs. extensions) visible to readers</li>
+<li><strong>This issue lands before the v1.0 release, not after.</strong> The first
+   entry greets users at the v1.0 announcement, so the page (and the
+   changelog move) must be in place when v1.0 is cut. The only
+   release-dependent detail — the entry's date — is deferred to issue
+   112's release checklist.</li>
+<li><strong>First entry speaks to PLCC veterans first.</strong> Highlights are framed
+   as "what's different/better than PLCC," matching the issue-136 spec's
+   "especially relative to PLCC." Newcomers still benefit, but
+   comparisons anchor the story.</li>
+<li><strong>Themed prose sections, not a bullet list.</strong> Each highlight is a
+   <code>###</code> section of 2–4 sentences ending in links into the user docs.
+   A flat bullet list was rejected as changelog-shaped — the thing this
+   page exists to not be.</li>
+<li><strong>Grammar-analysis tooling (<code>plcc-ll1</code>, <code>plcc-parser-table</code>) is not a
+   first-entry highlight.</strong> Extensibility, the docs site itself, and an
+   honest breaking-changes/gaps section are in.</li>
+<li><strong>Installation is framed as "native install simplified"</strong> (one
+   <code>pip install</code> vs PLCC's shell-script setup). It is <em>not</em> framed as
+   replacing Docker/DevContainers — container options will still be
+   offered.</li>
+<li><strong>The CLI highlight leads with the three daily drivers</strong>
+   (<code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>; no separate compile step),
+   with the composable lower-level commands (per-language
+   <code>emit</code>/<code>build</code>/<code>run</code>) as the "workbench underneath."</li>
+<li><strong>The closing section leads with breaking changes</strong> (spec syntax is
+   not backwards compatible; the migration guide walks through every
+   change), with the "features not yet in PLCC-ng" pointer as a closing
+   sentence, not the headline.</li>
 </ol>
-<h2 id="command-inventory">Command Inventory</h2>
-<p>All commands registered in <code>pyproject.toml</code>, grouped by package:</p>
-<h3 id="core-always-installed">core (always installed)</h3>
-<p><strong>Author-facing:</strong>
-- <code>plcc-scan</code> — tokenize source input, print tokens in human-readable format
-- <code>plcc-parse</code> — parse source input, print parse tree in human-readable format
-- <code>plcc-rep</code> — REPL: read, eval, print loop for a PLCC spec
-- <code>plcc-version</code> — print the installed plcc-ng version
-- <code>plcc-lang-list</code> — list installed language plugins
-- <code>plcc-parser-list</code> — list installed parser plugins</p>
-<p><strong>Pipeline internals:</strong>
-- <code>plcc-make</code> — build orchestrator; runs the full pipeline up to a specified stage
-- <code>plcc-spec</code> — parse, validate, and emit a <code>.plcc</code> spec file as JSON
-- <code>plcc-ll1</code> — perform LL(1) analysis on spec JSON; emit LL(1) analysis JSON
-- <code>plcc-tokens</code> — tokenize source files given spec JSON; emit token JSONL
-- <code>plcc-trees</code> — dispatch to a parser plugin; reads token JSONL, emits parse tree
-- <code>plcc-model</code> — transform spec JSON into a language-neutral code model
-- <code>plcc-lang-emit</code> — dispatch to the appropriate <code>plcc-&lt;lang&gt;-emit</code> plugin
-- <code>plcc-lang-build</code> — dispatch to the appropriate <code>plcc-&lt;lang&gt;-build</code> plugin
-- <code>plcc-lang-run</code> — dispatch to the appropriate <code>plcc-&lt;lang&gt;-run</code> plugin</p>
-<h3 id="plcc-diagram-optional-package">plcc-diagram (optional package)</h3>
-<p><strong>Author-facing:</strong>
-- <code>plcc-diagram</code> — generate and display a class diagram from a PLCC spec
-- <code>plcc-diagram-list</code> — list installed diagram plugins</p>
-<p><strong>Pipeline internals:</strong>
-- <code>plcc-diagram-emit</code> — dispatch to the appropriate <code>plcc-&lt;fmt&gt;-diagram-emit</code> plugin
-- <code>plcc-diagram-build</code> — dispatch to the appropriate <code>plcc-&lt;fmt&gt;-diagram-build</code> plugin
-- <code>plcc-diagram-run</code> — dispatch to the appropriate <code>plcc-&lt;fmt&gt;-diagram-run</code> plugin</p>
-<h3 id="parser-extensions">parser-extensions</h3>
-<ul>
-<li><code>plcc-parser-table</code> — LL(1) table-driven parser plugin (called by <code>plcc-trees</code>)</li>
-</ul>
-<h3 id="language-extensions">language-extensions</h3>
-<p><strong>plcc-java:</strong>
-- <code>plcc-java-emit</code> — emit Java source from model JSON
-- <code>plcc-java-build</code> — compile emitted Java source
-- <code>plcc-java-run</code> — run the compiled Java interpreter</p>
-<p><strong>plcc-python:</strong>
-- <code>plcc-python-emit</code> — emit Python source from model JSON
-- <code>plcc-python-build</code> — build step for Python (no-op or minimal)
-- <code>plcc-python-run</code> — run the Python interpreter</p>
-<h3 id="diagram-extensions">diagram-extensions</h3>
-<p><strong>plcc-mermaid-diagram:</strong>
-- <code>plcc-mermaid-diagram-emit</code> — emit Mermaid class diagram source from model JSON
-- <code>plcc-mermaid-diagram-build</code> — render Mermaid source to PNG
-- <code>plcc-mermaid-diagram-run</code> — display the rendered PNG</p>
-<p><strong>plcc-plantuml-diagram:</strong>
-- <code>plcc-plantuml-diagram-emit</code> — emit PlantUML class diagram source from model JSON
-- <code>plcc-plantuml-diagram-build</code> — render PlantUML source to PNG via plantuml.com
-- <code>plcc-plantuml-diagram-run</code> — display the rendered PNG</p>
-<h2 id="dependency-diagram">Dependency Diagram</h2>
-<p>The call dependency diagram (A → B means A calls B) is saved at:
-<code>dev-docs/diagrams/cli-command-dependencies.puml</code></p>
-<p>Key structural observations:
-- <code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code> all call <code>plcc-make</code> internally, then call pipeline stages directly
-- <code>plcc-make</code> is the central build orchestrator — it is not author-facing, but is called by every high-level command
-- <code>plcc-trees</code> is the parser dispatcher (analogous to <code>plcc-lang-emit</code>); a dedicated <code>plcc-parser</code> dispatch command was not created but may be added in future
-- All extension packages communicate through their dispatcher commands in core or plcc-diagram</p>
-<h2 id="document-structure">Document Structure</h2>
-<h3 id="file-layout">File Layout</h3>
-<div class="highlight"><pre><span></span><code>docs/cli/
-  index.md                        ← landing page: brief intro + links to guide and reference
-  guide/
-    author-commands.md            ← daily drivers, diagram, metadata, extension intro
-    under-the-hood.md             ← dependency diagram, core pipeline walkthrough
-    language-extensions.md        ← plcc-java and plcc-python: what they provide
-    parser-extensions.md          ← plcc-parser-table: what it provides
-    diagram-extensions.md         ← plcc-mermaid-diagram, plcc-plantuml-diagram
-  commands/                       ← flat alphabetical reference, one file per command
-    plcc-diagram.md
-    plcc-diagram-build.md
-    plcc-diagram-emit.md
-    plcc-diagram-list.md
-    plcc-diagram-run.md
-    plcc-java-build.md
-    plcc-java-emit.md
-    plcc-java-run.md
-    plcc-lang-build.md
-    plcc-lang-emit.md
-    plcc-lang-list.md
-    plcc-lang-run.md
-    plcc-ll1.md
-    plcc-make.md
-    plcc-mermaid-diagram-build.md
-    plcc-mermaid-diagram-emit.md
-    plcc-mermaid-diagram-run.md
-    plcc-model.md
-    plcc-parse.md
-    plcc-parser-list.md
-    plcc-parser-table.md
-    plcc-plantuml-diagram-build.md
-    plcc-plantuml-diagram-emit.md
-    plcc-plantuml-diagram-run.md
-    plcc-python-build.md
-    plcc-python-emit.md
-    plcc-python-run.md
-    plcc-rep.md
-    plcc-scan.md
-    plcc-spec.md
-    plcc-tokens.md
-    plcc-trees.md
-    plcc-version.md
+<h2 id="page-skeleton-docswhats-newmd">Page skeleton — <code>docs/whats-new.md</code></h2>
+<p>A short standing preamble, the pickup marker, then entries newest-first:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># What&#39;s New</span>
+
+Curated highlights of what&#39;s changed in PLCC-ng and why it matters
+to you. For the full commit-level history, see
+[<span class="nt">GitHub Releases</span>](<span class="na">https://github.com/ourPLCC/plcc-ng/releases</span>).
+
+&lt;!-- last-covered: v1.0.0 --&gt;
+
+<span class="gu">## 2026-07-XX — PLCC-ng v1.0.0</span>
+...
 </code></pre></div>
-<p>Delete: <code>docs/cli/primitives.md</code>, <code>docs/cli/orchestrators.md</code></p>
-<h3 id="mkdocsyml-nav">mkdocs.yml Nav</h3>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CLI</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/index.md</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Guide</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Author-facing commands</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/guide/author-commands.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Under the hood</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/guide/under-the-hood.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Language extensions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/guide/language-extensions.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Parser extensions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/guide/parser-extensions.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Diagram extensions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/guide/diagram-extensions.md</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">All Commands</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-diagram</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-diagram.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-diagram-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-diagram-build.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-diagram-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-diagram-emit.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-diagram-list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-diagram-list.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-diagram-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-diagram-run.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-java-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-java-build.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-java-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-java-emit.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-java-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-java-run.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-lang-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-lang-build.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-lang-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-lang-emit.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-lang-list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-lang-list.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-lang-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-lang-run.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-ll1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-ll1.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-make</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-make.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-mermaid-diagram-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-mermaid-diagram-build.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-mermaid-diagram-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-mermaid-diagram-emit.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-mermaid-diagram-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-mermaid-diagram-run.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-model.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-parse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-parse.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-parser-list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-parser-list.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-parser-table</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-parser-table.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-plantuml-diagram-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-plantuml-diagram-build.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-plantuml-diagram-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-plantuml-diagram-emit.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-plantuml-diagram-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-plantuml-diagram-run.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-python-build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-python-build.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-python-emit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-python-emit.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-python-run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-python-run.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-rep</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-rep.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-scan</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-scan.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-spec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-spec.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-tokens</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-tokens.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-trees</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-trees.md</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plcc-version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cli/commands/plcc-version.md</span>
-</code></pre></div>
-<h2 id="page-content-specifications">Page Content Specifications</h2>
-<h3 id="cliindexmd-landing-page"><code>cli/index.md</code> — Landing page</h3>
-<p>Two to three sentences introducing plcc-ng's CLI. Then two links:
-- "Guide — start here if you're new"
-- "All Commands — jump straight to a command reference"</p>
-<p>Nothing else.</p>
-<h3 id="cliguideauthor-commandsmd-author-facing-commands"><code>cli/guide/author-commands.md</code> — Author-facing commands</h3>
-<p><strong>Intro:</strong> one sentence framing these as the commands authors use directly.</p>
-<p><strong>Daily drivers (<code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-rep</code>):</strong>
-A short paragraph on each: what it does, when you reach for it, one minimal example. No flag tables (those live in the reference pages).</p>
-<p><strong>Visualization (<code>plcc-diagram</code>):</strong>
-Same treatment as daily drivers. Note that it requires the <code>plcc-diagram</code> package.</p>
-<p><strong>Metadata and extensions (<code>plcc-version</code>, <code>plcc-lang-list</code>, <code>plcc-parser-list</code>, <code>plcc-diagram-list</code>):</strong>
-Brief description of each. Then a short paragraph introducing the extension point concept: plcc-ng ships with built-in support for Python and Java, but the system is designed to be extended. <code>plcc-lang-list</code> and <code>plcc-parser-list</code> show what language and parser plugins are installed; <code>plcc-diagram-list</code> (requires <code>plcc-diagram</code>) shows what diagram plugins are installed.</p>
-<h3 id="cliguideunder-the-hoodmd-internal-architecture"><code>cli/guide/under-the-hood.md</code> — Internal architecture</h3>
-<p>Opens with the detailed dependency diagram from <code>dev-docs/diagrams/cli-command-dependencies.puml</code> (embedded via Kroki).</p>
-<p>An orientation paragraph: how the author-facing commands from the previous page fit into the full picture.</p>
-<p>A pipeline walkthrough — one sentence per stage explaining what it consumes and produces:
-- <code>plcc-make</code> — the build orchestrator; called internally by every author-facing command
-- <code>plcc-spec</code> — <code>.plcc</code> file → spec JSON
-- <code>plcc-ll1</code> — spec JSON → LL(1) analysis JSON
-- <code>plcc-tokens</code> — spec JSON + source → token JSONL
-- <code>plcc-trees</code> — token JSONL + LL(1) JSON → parse tree (dispatches to parser plugin)
-- <code>plcc-model</code> — spec JSON → language-neutral model JSON
-- <code>plcc-lang-emit</code> / <code>plcc-lang-build</code> / <code>plcc-lang-run</code> — model JSON → language source → built → evaluated (dispatches to language plugin)</p>
-<h3 id="cliguidelanguage-extensionsmd"><code>cli/guide/language-extensions.md</code></h3>
 <ul>
-<li>What language extensions provide</li>
-<li>How they plug into <code>plcc-lang-emit</code>, <code>plcc-lang-build</code>, <code>plcc-lang-run</code> via the <code>--target</code> flag</li>
-<li>The built-in extensions: <code>plcc-java</code> and <code>plcc-python</code> — what each provides</li>
-<li>How <code>plcc-lang-list</code> shows what is installed</li>
+<li>The marker records where the next drafting session picks up
+  (per the issue-136 Part 2 process).</li>
+<li>The marker says <code>v1.0.0</code> from day one: the entry is written <em>as</em> the
+  v1.0 entry. Any 0.x releases landing between merge and the 1.0 cut are
+  covered by the tour anyway.</li>
+<li><code>2026-07-XX</code> is a deliberate placeholder. Issue 112's notes gain a
+  release-checklist line: "set the What's New entry date and confirm the
+  version stamp."</li>
 </ul>
-<h3 id="cliguideparser-extensionsmd"><code>cli/guide/parser-extensions.md</code></h3>
+<h2 id="first-entry-content">First entry content</h2>
+<p>An intro paragraph, then seven themed sections, ordered biggest wins
+first, caveat last. Every claim must have a user-docs page to link to.</p>
+<ol>
+<li><strong>Intro paragraph</strong> — PLCC-ng reaches 1.0; a tour of what's new
+   relative to <a href="https://github.com/ourPLCC/plcc">PLCC</a>; migrating a
+   course? start with the migration guide.</li>
+<li><strong>Four target languages</strong> — PLCC generated Java only; PLCC-ng
+   generates scanners, parsers, and interpreters in Python, Java,
+   Haskell, and JavaScript. → Language Guide.</li>
+<li><strong>Simpler native installation</strong> — a single <code>pip install plcc-ng</code>
+   replaces PLCC's shell-script installation. → Installation.</li>
+<li><strong>Three commands, and a workbench underneath</strong> — day-to-day use is
+   <code>plcc-scan</code>, <code>plcc-parse</code>, and <code>plcc-rep</code>: tokenize, see the parse
+   tree, or run the language interactively, with no separate compile
+   step. Underneath, composable lower-level commands (per-language
+   <code>emit</code>/<code>build</code>/<code>run</code>) expose each pipeline stage. → author-facing
+   commands + under-the-hood guides.</li>
+<li><strong>Diagrams from your spec</strong> — the <code>plcc-diagram</code> add-on package
+   generates class diagrams of the object model and syntax (EBNF)
+   diagrams of the grammar. Framed honestly as an add-on: the commands
+   require the separate <code>plcc-diagram</code> package. → plcc-diagram /
+   plcc-diagram-syntax command pages.</li>
+<li><strong>Built to extend</strong> — language, parser, and diagram extension
+   points. → the three extension guides.</li>
+<li><strong>A real documentation site</strong> — language guide with worked
+   examples, CLI reference for every command. The instructor guide is
+   NOT mentioned: its page is still a "content coming soon" stub, and
+   every claim in the entry must have a real page behind it. → language
+   guide / CLI reference.</li>
+<li><strong>Spec syntax has changed — not backwards compatible</strong> — PLCC spec
+   files need updating (regex flavor, nonterminal casing, captured-field
+   syntax, and more); the migration guide walks through every change.
+   Closing sentence points at the migration guide's "Features not yet in
+   PLCC-ng" section so veterans know the gaps before switching.</li>
+</ol>
+<p>Drafting process per issue-136 Part 2: AI drafts, the human review before
+merge is the quality gate; user-facing claims must be verified against
+the docs pages they link to.</p>
+<h2 id="nav-changes-and-the-changelog-move">Nav changes and the changelog move</h2>
 <ul>
-<li>What parser extensions provide</li>
-<li>How they plug into <code>plcc-trees</code> via the <code>--parser</code> flag</li>
-<li>The built-in extension: <code>plcc-parser-table</code> — the LL(1) table-driven parser</li>
-<li>How <code>plcc-parser-list</code> shows what is installed</li>
-<li>Note: a dedicated <code>plcc-parser</code> dispatch command does not currently exist; <code>plcc-trees</code> handles dispatch directly</li>
+<li><strong><code>mkdocs.yml</code>:</strong> add <code>What's New: whats-new.md</code> directly after
+  <code>Home</code>; remove the <code>Changelog: changelog.md</code> nav entry. Delete
+  <code>docs/changelog.md</code>.</li>
+<li><strong><code>mkdocs-dev.yml</code>:</strong> add a <code>Changelog</code> nav entry (after <code>Home</code>,
+  before <code>Contributing</code>) backed by a new <code>dev-docs/changelog.md</code> that
+  includes <code>../CHANGELOG.md</code> — using the dev config's <code>{! ... !}</code>
+  include-markdown tags, not the user site's <code>{% %}</code> tags.</li>
 </ul>
-<h3 id="cliguidediagram-extensionsmd"><code>cli/guide/diagram-extensions.md</code></h3>
+<h2 id="out-of-scope">Out of scope</h2>
 <ul>
-<li>What diagram extensions provide</li>
-<li>How they plug into <code>plcc-diagram-emit</code>, <code>plcc-diagram-build</code>, <code>plcc-diagram-run</code> via the <code>--format</code> flag</li>
-<li>The built-in extensions: <code>plcc-mermaid-diagram</code> and <code>plcc-plantuml-diagram</code> — what each provides</li>
-<li>How <code>plcc-diagram-list</code> shows what is installed</li>
+<li>Cutting the v1.0 release (issue 112).</li>
+<li>Automation of entry drafting (towncrier-style tooling was rejected in
+  issue 136; the cadence and process are conventions, not code).</li>
+<li>Changes to CHANGELOG.md generation or GitHub Release notes (issue 136
+  Part 1, already landed).</li>
 </ul>
-<h3 id="clicommandsmd-per-command-reference-template"><code>cli/commands/*.md</code> — Per-command reference template</h3>
-<div class="highlight"><pre><span></span><code><span class="gh"># plcc-&lt;name&gt;</span>
-
-One-sentence description.
-
-<span class="gu">## Usage</span>
-
-​```text
-synopsis
-​```
-
-<span class="gu">## Arguments and Options</span>
-
-| Argument/Option | Description |
-|---|---|
-| ... | ... |
-
-<span class="gu">## Examples</span>
-
-​```bash
-example
-​```
-</code></pre></div>
-<p>Content migrated from existing <code>primitives.md</code> and <code>orchestrators.md</code> where it exists; written fresh from source for undocumented commands.</p>
-<h2 id="common-options">Common Options</h2>
-<p>All commands accept <code>-h</code>/<code>--help</code>, <code>-v</code> (repeatable for verbosity), and <code>--verbose-format=FMT</code>. These are noted in the options table on each reference page and summarised once in <code>cli/guide/author-commands.md</code> after the daily drivers section.</p>
+<h2 id="verification">Verification</h2>
+<ul>
+<li><code>pdm run mkdocs build</code> (user site) and
+  <code>pdm run mkdocs build --config-file mkdocs-dev.yml</code> (dev site) both
+  succeed with no new warnings — matching the builds CI runs
+  (<code>docs.yml</code> deploys the user site via mike and builds the dev site
+  with the same command).</li>
+<li>The removed changelog page no longer appears in the user site nav;
+  the dev site renders the changelog content.</li>
+<li><code>bin/issues/check.bash</code> passes after the close commit.</li>
+</ul>
+<h2 id="implementation-shape">Implementation shape</h2>
+<ol>
+<li><code>docs/whats-new.md</code> with preamble, marker, and drafted first entry.</li>
+<li><code>mkdocs.yml</code> nav: add What's New, remove Changelog; delete
+   <code>docs/changelog.md</code>.</li>
+<li><code>dev-docs/changelog.md</code> + <code>mkdocs-dev.yml</code> nav entry.</li>
+<li>Release-checklist line added to issue 112's notes.</li>
+<li>Human review of the entry text (the quality gate).</li>
+<li>Close issue 141 via <code>bin/issues/close.bash</code> as the final commit.</li>
+</ol>
 
 
 
