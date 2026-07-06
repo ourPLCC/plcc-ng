@@ -32,7 +32,7 @@ Verify the new version:
 plcc-version
 ```
 
-Check the [Changelog](changelog.md) for breaking changes between versions before upgrading.
+Check the [release notes](https://github.com/ourPLCC/plcc-ng/releases) for breaking changes between versions before upgrading.
 
 ## Pin a Specific Version
 
