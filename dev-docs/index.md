@@ -2,7 +2,7 @@
 
 Documentation for contributors and maintainers.
 
-- [Contributing](contributing.md)
+- [Contributing](../CONTRIBUTING.md)
 - [Release SOP](release-sop.md)
 - [Architecture](architecture.md)
 - [Issue Conventions](issue-conventions.md)
