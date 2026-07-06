@@ -41,6 +41,6 @@ When `readline()` returns an empty bytes object (^D, line 52), add
 `print(file=sys.stderr)` before the `break`. This mirrors the `print` already
 emitted on line 43 for the ^C exit path.
 
-Related to issue [013](done/013-ctrl-c-does-not-exit-interactive-shell.md),
+Related to issue [013](013-ctrl-c-does-not-exit-interactive-shell.md),
 which fixed ^C exit behavior. The newline on the ^C path was added as part of
 that fix; the ^D path was not updated to match.

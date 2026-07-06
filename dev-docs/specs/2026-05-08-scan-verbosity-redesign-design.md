@@ -1,7 +1,7 @@
 # Design: Scan verbosity redesign — split diagnostics from output richness
 
 **Date:** 2026-05-08
-**Issue:** [003-scan-verbosity-levels-2-3-unused](../../issues/003-scan-verbosity-levels-2-3-unused.md)
+**Issue:** [003-scan-verbosity-levels-2-3-unused](../issues/done/003-scan-verbosity-levels-2-3-unused.md)
 
 ## Problem
 

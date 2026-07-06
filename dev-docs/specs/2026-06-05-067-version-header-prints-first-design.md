@@ -1,7 +1,7 @@
 # Design: Issue 067 — Version Header Prints First
 
 **Date:** 2026-06-05
-**Issue:** [067-version-header-prints-first](../../../issues/067-version-header-prints-first.md)
+**Issue:** [067-version-header-prints-first](../issues/done/067-version-header-prints-first.md)
 
 ## Problem
 

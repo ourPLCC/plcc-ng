@@ -1,7 +1,7 @@
 # Design: Replace `--verbose=LEVEL` with `-v` counting flag
 
 **Date:** 2026-05-07
-**Issue:** [docs/issues/004-verbosity-short-flag.md](../../issues/004-verbosity-short-flag.md)
+**Issue:** [docs/issues/004-verbosity-short-flag.md](../issues/done/004-verbosity-short-flag.md)
 
 ## Summary
 

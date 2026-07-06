@@ -1,7 +1,7 @@
 # Design: Issue 043 — LL(1) conflict message formatting
 
 **Date:** 2026-05-27
-**Issue:** [docs/issues/043-ll1-conflict-message-whitespace.md](../../issues/043-ll1-conflict-message-whitespace.md)
+**Issue:** [docs/issues/043-ll1-conflict-message-whitespace.md](../issues/done/043-ll1-conflict-message-whitespace.md)
 
 ## Problem
 

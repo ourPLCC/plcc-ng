@@ -1,7 +1,7 @@
 # Design: Issue 049 — Level-2 Startup Info
 
 **Date:** 2026-06-01
-**Issue:** [049-level-2-startup-info](../../../issues/049-level-2-startup-info.md)
+**Issue:** [049-level-2-startup-info](../issues/done/049-level-2-startup-info.md)
 
 ## Problem
 

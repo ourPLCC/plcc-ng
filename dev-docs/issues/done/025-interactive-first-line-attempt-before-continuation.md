@@ -50,4 +50,4 @@ a visual cue from the prompt itself about when `^D` is needed.
 - This only affects the `>>>` → attempt → `...` transition. Behavior once in
   continuation mode is unchanged.
 - Related to issues [016](016-interactive-session-drops-whitespace-only-lines.md)
-  and [done/020](done/020-ctrl-d-behavior-in-continuation.md).
+  and [020](020-ctrl-d-behavior-in-continuation.md).

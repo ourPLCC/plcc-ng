@@ -1,7 +1,7 @@
 # Design: 039 — Level-2 errors to stdout
 
 **Date:** 2026-05-28
-**Issue:** [039](../../issues/039-level-2-errors-to-stdout.md)
+**Issue:** [039](../issues/done/039-level-2-errors-to-stdout.md)
 
 ## Problem
 

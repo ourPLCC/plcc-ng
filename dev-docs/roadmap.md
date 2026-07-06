@@ -12,7 +12,7 @@ Completed items are checked off (and stay listed) so this section
 tracks progress; it retires when all three ship.
 
 1. [x] [#148](issues/done/148-decommission-dev-docs-mkdocs-site.md) — remove the mkdocs-dev.yml build/deploy and its published gh-pages content; ~70% of #145's warnings exist only because of this build.
-2. [ ] [#149](issues/149-fix-stale-issues-done-links.md) — fix broken issues/NNN links that should point to issues/done/; independent of #148, real breakage on GitHub either way.
+2. [x] [#149](issues/done/149-fix-stale-issues-done-links.md) — fix broken issues/NNN links that should point to issues/done/; independent of #148, real breakage on GitHub either way.
 3. [ ] [#150](issues/150-close-script-auto-fix-links.md) — harden close.bash to prevent #149's bug class from recurring.
 
 ## Open Issues
@@ -21,9 +21,6 @@ tracks progress; it retires when all three ship.
 
 - **[#147](issues/147-capitalization-of-section-headings.md) — Capitalization of section headings**
   Section heading capitalization is inconsistent across the docs; needs a single agreed-upon rule.
-
-- **[#149](issues/149-fix-stale-issues-done-links.md) — Fix stale issues/NNN links that should point to issues/done/**
-  ~23 links in specs/*.md and v1.0-criteria.md 404 because the issues they reference have since closed and moved to issues/done/.
 
 ### Feat
 
