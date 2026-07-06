@@ -96,10 +96,6 @@ nav:
       - plcc-tokens: cli/commands/plcc-tokens.md
       - plcc-trees: cli/commands/plcc-trees.md
       - plcc-version: cli/commands/plcc-version.md
-  - Instructor Guide:
-    - Overview: instructor-guide/index.md
-    - Evaluating plcc-ng: instructor-guide/evaluating.md
-    - Adopting plcc-ng: instructor-guide/adopting.md
   - Acknowledgments: acknowledgments.md
 
 extra:
