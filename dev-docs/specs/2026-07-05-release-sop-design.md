@@ -64,8 +64,11 @@ message on stdout, exit 1 (matching `extract-changelog.bash`).
 Checks, in order, cheap first, fail-fast, with `OK:`/`FAIL:` lines in the
 `bin/test/smoke.bash` style:
 
-1. **PyPI has the version** — `curl -fsS https://pypi.org/pypi/plcc-ng/<version>/json`,
-   with a short retry loop (the operator may run this moments after publish).
+1. **PyPI has the version** — fetch `https://pypi.org/simple/plcc-ng/` and look for a
+   `plcc_ng-<version>-` wheel, with a short retry loop (the operator may run this
+   moments after publish). The simple index, not the JSON API: pip resolves against
+   the simple index, and the JSON API updates sooner — polling it can report OK
+   while the install still fails (issue 142).
 2. **GitHub Release exists** —
    `curl -fsS https://api.github.com/repos/ourPLCC/plcc-ng/releases/tags/<tag>`
    (anonymous API; deliberately `curl`, not `gh`).
