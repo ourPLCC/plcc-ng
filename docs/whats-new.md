@@ -6,7 +6,7 @@ to you. For the full commit-level history, see
 
 <!-- last-covered: v1.0.0 -->
 
-## 2026-07-XX — PLCC-ng v1.0.0
+## 2026-07-06 — PLCC-ng v1.0.0
 
 PLCC-ng reaches 1.0: the next generation of
 [PLCC](https://github.com/ourPLCC/plcc) is ready for classroom use.
