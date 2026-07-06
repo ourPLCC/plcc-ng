@@ -1,7 +1,7 @@
 # Design: Issue 064 — Block rules discard opening/closing delimiters
 
 **Date:** 2026-06-05
-**Issue:** [064-block-rule-discards-delimiters](../../issues/064-block-rule-discards-delimiters.md)
+**Issue:** [064-block-rule-discards-delimiters](../issues/done/064-block-rule-discards-delimiters.md)
 
 ## Problem
 

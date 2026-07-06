@@ -1,7 +1,7 @@
 # Design: Fix 047 — Sticky grammar not persisted on syntax error
 
 **Date:** 2026-05-29
-**Issue:** [047](../../issues/047-sticky-grammar-not-persisted-on-syntax-error.md)
+**Issue:** [047](../issues/done/047-sticky-grammar-not-persisted-on-syntax-error.md)
 
 ## Problem
 

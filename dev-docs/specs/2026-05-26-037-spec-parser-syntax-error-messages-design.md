@@ -1,7 +1,7 @@
 # Design: Issue 037 — Spec Parser Syntax Error Messages
 
 **Date:** 2026-05-26
-**Issue:** [037-spec-parser-syntax-error-messages](../../issues/037-spec-parser-syntax-error-messages.md)
+**Issue:** [037-spec-parser-syntax-error-messages](../issues/done/037-spec-parser-syntax-error-messages.md)
 
 ## Problem
 

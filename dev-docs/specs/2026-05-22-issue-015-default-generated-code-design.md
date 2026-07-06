@@ -1,7 +1,7 @@
 # Design: Default Generated Code Should Run (Issue 015)
 
 **Date:** 2026-05-22
-**Issue:** [docs/issues/015-default-generated-code-should-run.md](../../issues/015-default-generated-code-should-run.md)
+**Issue:** [docs/issues/015-default-generated-code-should-run.md](../issues/done/015-default-generated-code-should-run.md)
 
 ## Problem
 

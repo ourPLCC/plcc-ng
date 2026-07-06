@@ -1,7 +1,7 @@
 # Design: Scan token output file provenance
 
 **Date:** 2026-05-07
-**Issue:** [002-scan-tokens-missing-file-info](../../issues/002-scan-tokens-missing-file-info.md)
+**Issue:** [002-scan-tokens-missing-file-info](../issues/done/002-scan-tokens-missing-file-info.md)
 
 ## Problem
 

@@ -1,7 +1,7 @@
 # Design: Issue 061 — Line.string Newline Normalization
 
 **Date:** 2026-06-04
-**Issue:** [061-scanner-block-double-newline](../../issues/061-scanner-block-double-newline.md)
+**Issue:** [061-scanner-block-double-newline](../issues/done/061-scanner-block-double-newline.md)
 
 ## Problem
 

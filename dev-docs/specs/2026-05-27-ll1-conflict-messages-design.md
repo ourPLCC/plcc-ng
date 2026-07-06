@@ -1,7 +1,7 @@
 # Design: Improve LL(1) Conflict Error Messages
 
 **Date:** 2026-05-27
-**Issue:** [036 - Improve LL(1) conflict error messages](../../issues/036-ll1-conflict-error-messages.md)
+**Issue:** [036 - Improve LL(1) conflict error messages](../issues/done/036-ll1-conflict-error-messages.md)
 
 ## Overview
 

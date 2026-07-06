@@ -1,7 +1,7 @@
 # Design: Thread altName through the LL(1) pipeline (issue 045)
 
 **Date:** 2026-05-26
-**Issue:** [045 — Alternative class name lost in LL(1) pipeline](../../../issues/045-altname-lost-in-ll1-pipeline.md)
+**Issue:** [045 — Alternative class name lost in LL(1) pipeline](../issues/done/045-altname-lost-in-ll1-pipeline.md)
 
 ## Problem
 
