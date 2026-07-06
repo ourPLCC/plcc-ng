@@ -1,22 +1,5 @@
 # Roadmap
 
-## Path to v1.0
-
-Recommended order. Fix release-pipeline reliability first, then settle design
-decisions, then broaden verification, then document the result and ship.
-Completed items are checked off (and stay listed) so this section tracks
-progress toward the milestone; the section retires when v1.0 ships.
-
-1. [x] [#140](issues/done/140-release-smoke-test-testpypi-propagation.md) — the propagation race is actively breaking releases; retry/poll before installing.
-2. [x] [#135](issues/done/135-release-pypi-publish-skip-existing.md) — one-line `skip-existing` fix; prerequisite for any rerun/retry story (could ride with #140).
-3. [x] [#134](issues/done/134-release-pypi-publish-failure-recovery.md) — recovery path for tagged-but-not-published; builds on #135, may reduce to documenting "Re-run failed jobs" plus a republish dispatch input.
-4. [x] [#136](issues/done/136-release-changelog-vcs-release-divergence.md) — resolved: GitHub Release notes now come from the tag's CHANGELOG.md section (`--notes-file`); `vcs_release` stays false; SOP updated.
-5. [x] [#138](issues/done/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
-6. [x] [#137](issues/done/137-release-smoke-test-emitter-coverage.md) — extend the smoke test to all four emitters; defines post-release verification for the SOP.
-7. [x] [#130](issues/done/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
-8. [x] [#112](issues/done/112-first-major-release.md) — agree on v1.0 criteria — all seven met, recorded in `dev-docs/v1.0-criteria.md`.
-9. [ ] [#146](issues/146-cut-v1.0.0-release.md) — cut the v1.0.0 release: flip `major_on_zero`, run the SOP, verify, update the whats-new date.
-
 ## Open Issues
 
 ### Docs
@@ -24,7 +7,5 @@ progress toward the milestone; the section retires when v1.0 ships.
 - **[#145](issues/145-mkdocs-strict-warnings-cleanup.md) — Clean up mkdocs build --strict warnings in dev-docs**
   74 pre-existing warnings (nav-missing pages, broken issue links in specs) block a clean `--strict` build.
 
-### Chore
-
-- **[#146](issues/146-cut-v1.0.0-release.md) — Cut the v1.0.0 release**
-  Flip `major_on_zero`, run the release SOP, verify, and update `docs/whats-new.md`'s placeholder date.
+- **[#147](issues/147-capitalization-of-section-headings.md) — Capitalization of section headings**
+  Section heading capitalization is inconsistent across the docs; needs a single agreed-upon rule.
