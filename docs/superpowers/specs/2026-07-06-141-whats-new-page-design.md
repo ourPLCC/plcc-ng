@@ -90,13 +90,18 @@ first, caveat last. Every claim must have a user-docs page to link to.
    step. Underneath, composable lower-level commands (per-language
    `emit`/`build`/`run`) expose each pipeline stage. → author-facing
    commands + under-the-hood guides.
-5. **Diagrams from your spec** — class diagrams generated from the
-   grammar via `plcc-diagram`. → author-facing commands (visualization)
-   / diagram-extensions guide.
+5. **Diagrams from your spec** — the `plcc-diagram` add-on package
+   generates class diagrams of the object model and syntax (EBNF)
+   diagrams of the grammar. Framed honestly as an add-on: the commands
+   require the separate `plcc-diagram` package. → plcc-diagram /
+   plcc-diagram-syntax command pages.
 6. **Built to extend** — language, parser, and diagram extension
    points. → the three extension guides.
-7. **A real documentation site** — language guide, CLI reference for
-   every command, instructor guide. → docs index / instructor guide.
+7. **A real documentation site** — language guide with worked
+   examples, CLI reference for every command. The instructor guide is
+   NOT mentioned: its page is still a "content coming soon" stub, and
+   every claim in the entry must have a real page behind it. → language
+   guide / CLI reference.
 8. **Spec syntax has changed — not backwards compatible** — PLCC spec
    files need updating (regex flavor, nonterminal casing, captured-field
    syntax, and more); the migration guide walks through every change.
