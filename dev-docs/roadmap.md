@@ -14,7 +14,8 @@ progress toward the milestone; the section retires when v1.0 ships.
 5. [x] [#138](issues/done/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
 6. [x] [#137](issues/done/137-release-smoke-test-emitter-coverage.md) — extend the smoke test to all four emitters; defines post-release verification for the SOP.
 7. [x] [#130](issues/done/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
-8. [ ] [#112](issues/112-first-major-release.md) — agree on v1.0 criteria and cut the release.
+8. [ ] [#112](issues/112-first-major-release.md) — agree on v1.0 criteria — all seven met, recorded in `dev-docs/v1.0-criteria.md`.
+9. [ ] [#146](issues/146-cut-v1.0.0-release.md) — cut the v1.0.0 release: flip `major_on_zero`, run the SOP, verify, update the whats-new date.
 
 ## Open Issues
 
@@ -27,3 +28,8 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 - **[#145](issues/145-mkdocs-strict-warnings-cleanup.md) — Clean up mkdocs build --strict warnings in dev-docs**
   74 pre-existing warnings (nav-missing pages, broken issue links in specs) block a clean `--strict` build.
+
+### Chore
+
+- **[#146](issues/146-cut-v1.0.0-release.md) — Cut the v1.0.0 release**
+  Flip `major_on_zero`, run the release SOP, verify, and update `docs/whats-new.md`'s placeholder date.
