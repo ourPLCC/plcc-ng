@@ -18,12 +18,6 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 ## Open Issues
 
-### Fixes
-
-- **[#143](issues/143-verify-python-version-preflight.md) — verify.bash install check needs a python3 preflight**
-  An ambient python3 older than requires-python makes pip fail every
-  release with a misleading "No matching distribution found".
-
 ### Features
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
