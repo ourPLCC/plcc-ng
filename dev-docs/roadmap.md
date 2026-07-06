@@ -14,15 +14,10 @@ progress toward the milestone; the section retires when v1.0 ships.
 5. [x] [#138](issues/done/138-release-pypi-environment-protection-check.md) — settings check + decision; an SOP input, doable any time.
 6. [x] [#137](issues/done/137-release-smoke-test-emitter-coverage.md) — extend the smoke test to all four emitters; defines post-release verification for the SOP.
 7. [x] [#130](issues/done/130-release-sop.md) — write the SOP once the pipeline is stable; exercise it on a pre-1.0 release.
-8. [ ] [#112](issues/112-first-major-release.md) — agree on v1.0 criteria — all seven met, recorded in `dev-docs/v1.0-criteria.md`.
+8. [x] [#112](issues/done/112-first-major-release.md) — agree on v1.0 criteria — all seven met, recorded in `dev-docs/v1.0-criteria.md`.
 9. [ ] [#146](issues/146-cut-v1.0.0-release.md) — cut the v1.0.0 release: flip `major_on_zero`, run the SOP, verify, update the whats-new date.
 
 ## Open Issues
-
-### Features
-
-- **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
-  Define v1.0 criteria and coordinate the remaining pre-1.0 work (docs 130, release-pipeline gaps 134-138 and 140).
 
 ### Docs
 
