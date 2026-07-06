@@ -21,6 +21,8 @@ tracks progress; it retires when all three ship.
 
 - **[#147](issues/147-capitalization-of-section-headings.md) — Capitalization of section headings**
   Section heading capitalization is inconsistent across the docs; needs a single agreed-upon rule.
+- **[#151](issues/151-migrate-superpowers-docs-to-dev-docs.md) — Migrate docs/superpowers/ into dev-docs/**
+  docs/superpowers/specs/ and docs/superpowers/plans/ duplicate dev-docs/specs/ and dev-docs/plans/; consolidate into the latter.
 
 ### Feat
 
