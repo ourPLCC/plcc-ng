@@ -12,7 +12,9 @@ pip install plcc-ng
 ```
 
 > This package has a separate identity from the original `plcc` package.
-> `plcc-ng` is experimental — no compatibility guarantees with `plcc` until a stable 1.0 release.
+> `plcc-ng` reached a stable 1.0 release: the CLI, `.plcc` spec syntax, and
+> all four language extensions are committed to. See the
+> [migration guide](docs/migration.md) if you're coming from `plcc`.
 
 ## Licensing
 
