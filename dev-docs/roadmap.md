@@ -18,12 +18,6 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 ## Open Issues
 
-### Fixes
-
-- **[#144](issues/144-close-roadmap-adjacent-entries.md) — close.bash deletes neighboring roadmap entries**
-  Its awk paragraph mode treats back-to-back Open Issues entries as one
-  block, so closing one issue removes the others' entries too.
-
 ### Features
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
