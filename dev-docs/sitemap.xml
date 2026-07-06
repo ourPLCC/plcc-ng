@@ -41,11 +41,19 @@
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/145-mkdocs-strict-warnings-cleanup/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/147-capitalization-of-section-headings/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/147-capitalization-of-section-headings/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/148-decommission-dev-docs-mkdocs-site/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/149-fix-stale-issues-done-links/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/150-close-script-auto-fix-links/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
@@ -618,6 +626,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/144-close-roadmap-adjacent-entries/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/145-mkdocs-strict-warnings-cleanup/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
