@@ -917,10 +917,15 @@ semantic-release job. Otherwise the stages are:</p>
 <p>From the repository root:</p>
 <pre><code class="language-bash">bin/release/verify.bash vX.Y.Z
 </code></pre>
-<p>The script fails fast with a <code>FAIL:</code> diagnostic. Checks, in order:</p>
+<p>The script fails fast with a <code>FAIL:</code> diagnostic. Check 4 needs a
+python3 satisfying the package's <code>requires-python</code>; the script finds
+one itself (ambient <code>python3</code>, else the project venv's — so run
+<code>pdm install</code> once) and fails fast naming what it tried if neither
+qualifies. <code>PLCC_VERIFY_PYTHON</code> overrides the search. Checks, in order:</p>
 <ol>
-<li>PyPI serves <code>plcc-ng==X.Y.Z</code> (retries briefly — the index can lag
-   the upload).</li>
+<li>PyPI serves <code>plcc-ng==X.Y.Z</code> on the simple index — the index pip
+   installs from (retries briefly — it can lag the upload and it lags
+   the JSON API).</li>
 <li>The GitHub Release <code>vX.Y.Z</code> exists.</li>
 <li>The docs site's <code>versions.json</code> lists <code>X.Y</code> and points the
    <code>latest</code> alias at it.</li>

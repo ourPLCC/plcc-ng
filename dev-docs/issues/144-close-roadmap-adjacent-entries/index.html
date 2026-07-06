@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/specs/2026-07-05-release-sop-design/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/144-close-roadmap-adjacent-entries/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Release SOP — design - plcc-ng Developer Docs</title>
+        <title>144 - close-roadmap-adjacent-entries - plcc-ng Developer Docs</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#release-sop-design" class="md-skip">
+        <a href="#144-close-roadmap-adjacent-entries" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Release SOP — design
+              144 - close-roadmap-adjacent-entries
             
           </span>
         </div>
@@ -297,7 +297,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../" class="md-tabs__link">
+      <a href="../../specs/" class="md-tabs__link">
         
   
   
@@ -545,7 +545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../specs/" class="md-nav__link">
         
   
   
@@ -612,129 +612,35 @@
   
 
 
-<h1 id="release-sop-design">Release SOP — design</h1>
-<p><strong>Issue:</strong> <a href="../../issues/done/130-release-sop/">130</a>
-<strong>Date:</strong> 2026-07-05</p>
-<h2 id="problem">Problem</h2>
-<p><code>dev-docs/release-sop.md</code> documents manual triggers, publish recovery, the <code>pypi</code>
-environment, and release-notes extraction (accumulated from issues 134–138), but not what
-issue 130 asks for: the normal release procedure end-to-end and a post-release verification
-checklist. The release pipeline is now stable (issues 134, 135, 136, 137, 138, 140 all
-closed), so this is the right time to write the SOP. Issue 112 lists "Release SOP is
-complete and tested" as a v1.0 criterion.</p>
-<p>One verification gap motivates a new script: CI smoke-tests the <strong>TestPyPI</strong> install
-(all four emitters, via <code>bin/test/smoke.bash</code>), but nothing ever installs and exercises
-the artifact served by <strong>real PyPI</strong>.</p>
-<h2 id="decision-summary">Decision summary</h2>
-<ul>
-<li><strong>Framing:</strong> the SOP is an operator checklist ("how to cut and verify a release"), not a
-  narrative of the workflows. The pipeline is fully automated — merging releasable
-  conventional commits to <code>main</code> <em>is</em> the release — so the human steps are: check what a
-  merge will release, watch the run, verify the result, recover if needed.</li>
-<li><strong>Structure:</strong> one document, reorganized around the release lifecycle. Existing recovery
-  and reference content is preserved, re-homed under later sections.</li>
-<li><strong>Verification:</strong> a new <code>bin/release/verify.bash &lt;tag&gt;</code> script performs the post-release
-  checks, including installing from real PyPI into a throwaway venv and running
-  <code>bin/test/smoke.bash</code>. The SOP invokes the script rather than listing copy-paste commands.</li>
-<li><strong>Exercise:</strong> issue 130 closes on this branch. The "exercise the SOP on a pre-1.0
-  release" requirement moves to an explicit item in issue 112. Landing <code>verify.bash</code> as
-  <code>feat(release)</code> (the same type <code>extract-changelog.bash</code> used) makes the merge of this
-  branch releasable, which supplies the pre-1.0 release to exercise the SOP on.</li>
-</ul>
-<h2 id="dev-docsrelease-sopmd-structure"><code>dev-docs/release-sop.md</code> structure</h2>
+<h1 id="144-close-roadmap-adjacent-entries">144 - close-roadmap-adjacent-entries</h1>
+<p><strong>Type:</strong> fix
+<strong>Date:</strong> 2026-07-06</p>
+<h2 id="description">Description</h2>
+<p><code>bin/issues/close.bash</code>'s roadmap pass 2 reads the file in awk paragraph
+mode (<code>RS = ""</code>), so consecutive Open Issues entries with no blank line
+between them — the layout the conventions' two-line format produces —
+form a single paragraph. Removing one issue's entry then deletes every
+entry in that paragraph, and the now-"empty" <code>###</code> heading with it. The
+follow-up <code>check.bash</code> catches the damage (open issue left without a
+roadmap entry), but the operator has to repair the roadmap by hand.</p>
+<p>Observed closing #142 while #143 sat directly below it in <code>### Fixes</code>:
+both entries and the heading vanished. The <code>### Features</code> group
+currently has #112 and #141 adjacent, so closing #112 would do the same
+to #141.</p>
+<h2 id="steps-to-reproduce">Steps to Reproduce</h2>
 <ol>
-<li><strong>How a release happens</strong> — merging releasable conventional commits to <code>main</code> is the
-   release; no human step cuts a version. A table of commit types: <code>feat</code> → minor;
-   <code>fix</code>/<code>perf</code> → patch; <code>BREAKING CHANGE</code> → minor while <code>major_on_zero = false</code>; all
-   other types (<code>docs</code>, <code>chore</code>, <code>ci</code>, <code>test</code>, <code>refactor</code>, …) do not release. Names the
-   two workflows once: <code>release.yml</code> (semantic-release → build → TestPyPI → smoke → PyPI →
-   GitHub Release) and <code>docs.yml</code> (versioned docs via mike on <code>release: published</code>).</li>
-<li><strong>Cutting a release</strong> — the operator checklist: before merging, confirm CI is green and
-   the branch's commit types produce the expected bump; merge; watch <strong>Actions → Release</strong>
-   with a stage-by-stage table (job/step, what it does, what its failure means, which
-   recovery procedure applies); then verify.</li>
-<li><strong>Verifying a release</strong> — run <code>bin/release/verify.bash &lt;tag&gt;</code>; optionally eyeball the
-   docs site version switcher. Lists what the script checks so the SOP is meaningful
-   without reading the script.</li>
-<li><strong>Recovery</strong> — the existing "Manual triggers and publish recovery" content essentially
-   as-is, plus one addition: a run that fails <em>before</em> tagging is recovered with
-   "Re-run failed jobs" on the same run; the republish dispatch is for
-   tagged-but-not-published.</li>
-<li><strong>Reference</strong> — the existing <code>pypi</code> environment and GitHub Release notes sections,
-   unchanged.</li>
+<li>Have two Open Issues entries back-to-back (no blank line) under one
+   <code>###</code> heading.</li>
+<li><code>bin/issues/close.bash</code> the first one.</li>
+<li>Its internal <code>check.bash</code> fails: the second issue's entry was
+   removed along with the first's.</li>
 </ol>
-<h2 id="binreleaseverifybash"><code>bin/release/verify.bash</code></h2>
-<p>Interface: one required argument, the tag with leading <code>v</code> (e.g. <code>v0.64.4</code>) — the same
-convention as the republish dispatch input. An optional <code>--no-install</code> flag runs only the
-observational checks. No arguments, extra arguments, or a tag not shaped <code>vX.Y.Z</code> → usage
-message on stdout, exit 1 (matching <code>extract-changelog.bash</code>).</p>
-<p>Checks, in order, cheap first, fail-fast, with <code>OK:</code>/<code>FAIL:</code> lines in the
-<code>bin/test/smoke.bash</code> style:</p>
-<ol>
-<li><strong>PyPI has the version</strong> — fetch <code>https://pypi.org/simple/plcc-ng/</code> and look for a
-   <code>plcc_ng-&lt;version&gt;-</code> wheel, with a short retry loop (the operator may run this
-   moments after publish). The simple index, not the JSON API: pip resolves against
-   the simple index, and the JSON API updates sooner — polling it can report OK
-   while the install still fails (issue 142).</li>
-<li><strong>GitHub Release exists</strong> —
-   <code>curl -fsS https://api.github.com/repos/ourPLCC/plcc-ng/releases/tags/&lt;tag&gt;</code>
-   (anonymous API; deliberately <code>curl</code>, not <code>gh</code>).</li>
-<li><strong>Versioned docs deployed</strong> — fetch
-   <code>https://ourplcc.github.io/plcc-ng/versions.json</code> (written by mike) and confirm the
-   <code>major.minor</code> entry exists and carries the <code>latest</code> alias.</li>
-<li><strong>Real-PyPI install + smoke</strong> (skipped by <code>--no-install</code>) — <code>python -m venv</code> in a
-   <code>mktemp -d</code> (trap cleanup), <code>pip install --no-cache-dir plcc-ng==&lt;version&gt;</code> with the
-   same retry pattern, prepend the venv's <code>bin</code> to <code>PATH</code>, run <code>bin/test/smoke.bash</code>
-   (which exercises <code>plcc-make</code> plus all four emitters). The venv's interpreter must
-   satisfy <code>requires-python</code> or pip fails every release with a misleading <code>No matching
-   distribution found</code> (issue 143), so a preflight — run before the network checks,
-   cheapest first — selects one: the ambient <code>python3</code>, else the project venv's,
-   overridable via <code>PLCC_VERIFY_PYTHON</code>; if none qualifies it fails naming what it
-   tried.</li>
-</ol>
-<p>Retry loops read their delay from <code>PLCC_VERIFY_RETRY_DELAY</code> (default 15 seconds) so
-tests run fast. The script is deliberately <strong>not</strong> cached via <code>bin/test/_cache.bash</code>: like
-<code>smoke.bash</code>, its result depends on external state, not git state — a comment says so.
-Ends with <code>verify: all checks passed for v&lt;version&gt;</code>.</p>
-<h2 id="testing">Testing</h2>
-<p><code>tests/bats/commands/release-verify.bats</code>, following the <code>release-extract-changelog.bats</code>
-precedent. Checks 1–3 are made hermetic by stubbing <code>curl</code> via PATH injection — a fake
-<code>curl</code> in a temp dir that returns canned responses per URL and logs every request.
-Check 4 is not stubbed (faking <code>python -m venv</code> + pip + four emitters is test-induced
-complexity); the full install path is covered by the real end-to-end exercise under
-issue 112, the same tier philosophy as <code>smoke.bash</code> itself.</p>
-<p>Coverage:</p>
-<ul>
-<li>Usage error on no/extra arguments; malformed tag rejected (missing <code>v</code>, not <code>X.Y.Z</code>).</li>
-<li>Each observational check failing → its specific <code>FAIL:</code> diagnostic, nonzero exit.</li>
-<li>Fail-fast: when the PyPI check fails, the GitHub and docs URLs are never requested
-  (asserted via the stub's request log).</li>
-<li><code>versions.json</code> logic: passes with the <code>major.minor</code> entry carrying <code>latest</code>; fails when
-  the entry is missing; fails when <code>latest</code> is on a different version.</li>
-<li>Full success path via <code>--no-install</code> prints the summary line.</li>
-<li>Retry loop honors the delay-override environment variable.</li>
-</ul>
-<p>TDD order per CONTRIBUTING: bats tests first, watch them fail via
-<code>bin/test/commands.bash</code>, then the script.</p>
-<h2 id="bookkeeping">Bookkeeping</h2>
-<p>Commits on this branch, in order:</p>
-<ol>
-<li><code>docs(specs)</code> — this design doc.</li>
-<li><code>test(release)</code> — the bats tests (failing).</li>
-<li><code>feat(release)</code> — <code>verify.bash</code>; rides with a CONTRIBUTING.md addition: a "Release"
-   command table listing <code>extract-changelog.bash</code> and <code>verify.bash</code> (CONTRIBUTING indexes
-   <code>bin/</code> but has no Release section today). <strong>Releasable on merge — intentional</strong>; the
-   resulting release is the SOP exercise opportunity.</li>
-<li><code>docs(release-sop)</code> — the restructured SOP.</li>
-<li><code>docs(issues)</code> — add the explicit exercise item to issue 112's notes: follow the SOP
-   and run <code>bin/release/verify.bash</code> on a pre-1.0 release.</li>
-<li><code>bin/issues/close.bash 130</code>; verify with <code>bin/issues/check.bash</code>.</li>
-<li><code>docs(specs)</code> — repoint this spec's issue link at its <code>done/</code> path (same follow-up as
-   issue 137).</li>
-</ol>
-<p>No nav changes: <code>mkdocs-dev.yml</code> and <code>dev-docs/index.md</code> already link <code>release-sop.md</code>.
-The roadmap update is handled by <code>close.bash</code>. After the final commit the branch is
-pushed; the maintainer opens the PR.</p>
+<h2 id="notes">Notes</h2>
+<p>Either make close.bash operate on the two-line entry (match the bullet
+line plus its indented continuation lines) instead of the paragraph, or
+have new.bash/conventions put a blank line between entries so the
+paragraph assumption holds. check.bash could also verify the blank-line
+invariant if the latter.</p>
 
 
 
