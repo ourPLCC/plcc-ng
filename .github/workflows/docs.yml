@@ -48,19 +48,6 @@ jobs:
           MAJOR_MINOR=$(echo "${VERSION#v}" | cut -d. -f1,2)
           pdm run mike deploy --update-aliases "${MAJOR_MINOR}" latest
           pdm run mike set-default latest
-      # Developer docs track main, not releases. Release events check out
-      # the tag, which can lag main; rebuilding dev-docs from it would
-      # clobber newer content deployed by the push-triggered run.
-      - name: Build developer docs
-        if: github.event_name == 'push'
-        run: pdm run mkdocs build --config-file mkdocs-dev.yml
-      - name: Merge developer docs into gh-pages
-        if: github.event_name == 'push'
-        run: |
-          git checkout gh-pages
-          rsync -a --delete site-dev/ dev-docs/
-          git add dev-docs
-          git diff --cached --quiet || git commit -m "deploy: dev-docs for ${GITHUB_SHA}"
       - name: Push gh-pages
         run: |
           git push origin gh-pages

@@ -25,7 +25,7 @@ Developers license contributions under [AGPL-3.0-or-later](LICENSES/AGPL-3.0-or-
 
 - [Code of conduct](CODE_OF_CONDUCT.md)
 - [Discord server](https://discord.gg/EVtNSxS9E2)
-- [Developer docs](https://ourplcc.github.io/plcc-ng/dev-docs/)
+- [Developer docs](dev-docs/)
 
 ## Development
 
