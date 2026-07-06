@@ -78,7 +78,12 @@ Checks, in order, cheap first, fail-fast, with `OK:`/`FAIL:` lines in the
 4. **Real-PyPI install + smoke** (skipped by `--no-install`) — `python -m venv` in a
    `mktemp -d` (trap cleanup), `pip install --no-cache-dir plcc-ng==<version>` with the
    same retry pattern, prepend the venv's `bin` to `PATH`, run `bin/test/smoke.bash`
-   (which exercises `plcc-make` plus all four emitters).
+   (which exercises `plcc-make` plus all four emitters). The venv's interpreter must
+   satisfy `requires-python` or pip fails every release with a misleading `No matching
+   distribution found` (issue 143), so a preflight — run before the network checks,
+   cheapest first — selects one: the ambient `python3`, else the project venv's,
+   overridable via `PLCC_VERIFY_PYTHON`; if none qualifies it fails naming what it
+   tried.
 
 Retry loops read their delay from `PLCC_VERIFY_RETRY_DELAY` (default 15 seconds) so
 tests run fast. The script is deliberately **not** cached via `bin/test/_cache.bash`: like
