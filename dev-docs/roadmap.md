@@ -18,6 +18,12 @@ progress toward the milestone; the section retires when v1.0 ships.
 
 ## Open Issues
 
+### Fixes
+
+- **[#142](issues/142-verify-pypi-simple-index-race.md) — verify.bash PyPI check races the simple index**
+  Check 1 polls the JSON API, but pip installs from the simple index, which
+  lags it; the check passes while the install step fails.
+
 ### Features
 
 - **[#112](issues/112-first-major-release.md) — Prepare for first major release (v1.0.0)**
