@@ -53,19 +53,28 @@ sed -i \
     -e "s|\[ \] \(\[#[0-9]*\](issues/\)${basename})|[x] \1done/${basename})|" \
     "${ROADMAP}"
 
-# Roadmap, pass 2: drop the issue's Open Issues entry (its whole paragraph),
+# Roadmap, pass 2: drop the issue's Open Issues entry — the bullet line plus
+# its indented continuation lines, so back-to-back neighbors are untouched —
 # then drop any "###" heading whose section is now empty.
 awk -v link="(issues/${basename})" '
-    BEGIN { RS = ""; n = 0 }
-    index($0, link) && /^- / { next }
-    { paras[n++] = $0 }
+    skip { if ($0 ~ /^[ \t]/) next; skip = 0 }
+    /^- / && index($0, link) { skip = 1; next }
+    { lines[n++] = $0 }
     END {
         for (i = 0; i < n; i++) {
-            if (paras[i] ~ /^### / && (i + 1 >= n || paras[i + 1] ~ /^##/))
-                continue
-            printf "%s%s", (out++ ? "\n\n" : ""), paras[i]
+            if (lines[i] ~ /^### /) {
+                j = i + 1
+                while (j < n && lines[j] == "") j++
+                if (j >= n || lines[j] ~ /^##/) { i = j - 1; continue }
+            }
+            keep[m++] = lines[i]
         }
-        print ""
+        for (k = 0; k < m; k++) {
+            if (keep[k] == "") { blank = 1; continue }
+            if (printed && blank) print ""
+            print keep[k]
+            blank = 0; printed = 1
+        }
     }
 ' "${ROADMAP}" > "${ROADMAP}.tmp"
 mv "${ROADMAP}.tmp" "${ROADMAP}"
