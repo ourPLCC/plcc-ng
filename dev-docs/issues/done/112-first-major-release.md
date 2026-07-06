@@ -22,4 +22,4 @@ A v1.0 release signals stability to users: the CLI interface and spec syntax are
 - Write up the v1.0 milestone in the roadmap once criteria are agreed
 - The release SOP is written (issue 130). Before v1.0, exercise it end-to-end on a pre-1.0 release: cut a release per `dev-docs/release-sop.md` and run `bin/release/verify.bash <tag>` (without `--no-install`) against it
 - Release-day step (from issue 141): in `docs/whats-new.md`, replace the first entry's `2026-07-XX` date placeholder with the release date, and confirm the entry heading and the `<!-- last-covered: ... -->` marker match the actual v1.0.0 version.
-- v1.0 criteria are agreed and all met — see [`dev-docs/v1.0-criteria.md`](../v1.0-criteria.md). Remaining work here is the release cutover itself (major_on_zero, tag, whats-new date).
+- v1.0 criteria are agreed and all met — see [`dev-docs/v1.0-criteria.md`](../../v1.0-criteria.md). The release cutover itself (major_on_zero, tag, whats-new date) is tracked in issue #146.
