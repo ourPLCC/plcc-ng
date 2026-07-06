@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v0.67.2 (2026-07-06)
+
+### Bug Fixes
+
+- **issues**: Make close.bash remove only its own roadmap entry
+  ([`56aea16`](https://github.com/ourPLCC/plcc-ng/commit/56aea16bd04d53c543e854cd024c6f2583b79958))
+
+Pass 2 read the roadmap in awk paragraph mode, so back-to-back Open Issues entries — the layout the
+  conventions' two-line format produces — formed one paragraph and closing one issue deleted its
+  neighbors and their heading. Match the two-line entry instead: the bullet line plus its indented
+  continuation lines. Empty-heading removal and blank-line normalization behave as before.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: Close issue 144 (close.bash adjacent roadmap entries), update roadmap
+  ([`260c139`](https://github.com/ourPLCC/plcc-ng/commit/260c1395d742bb43f1a7022a4a6c937411d0b8e7))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.67.1 (2026-07-06)
 
 ### Bug Fixes
