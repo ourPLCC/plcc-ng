@@ -34,6 +34,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - What's New: whats-new.md
   - Quick Start: quick-start.md
   - Installation: installation.md
   - Migration from PLCC: migration.md
@@ -99,7 +100,6 @@ nav:
     - Overview: instructor-guide/index.md
     - Evaluating plcc-ng: instructor-guide/evaluating.md
     - Adopting plcc-ng: instructor-guide/adopting.md
-  - Changelog: changelog.md
   - Acknowledgments: acknowledgments.md
 
 extra:
