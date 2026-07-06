@@ -1,6 +1,72 @@
 # CHANGELOG
 
 
+## v0.67.1 (2026-07-06)
+
+### Bug Fixes
+
+- **release**: Pick a requires-python-satisfying interpreter in verify.bash
+  ([`b313f01`](https://github.com/ourPLCC/plcc-ng/commit/b313f01949ba30829cb64a4176355b3daabc905f))
+
+The install check built its venv from the ambient python3; one older than requires-python (the
+  devcontainer default is 3.9.2) made pip filter out every release and fail with a misleading 'No
+  matching distribution found' after the full retry loop — this, not the index race, is what broke
+  verifying v0.67.0. Search ambient python3 then the project venv's before any network check, honor
+  PLCC_VERIFY_PYTHON as an override, and fail fast naming what was tried when none qualifies.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Poll the PyPI simple index in verify.bash, not the JSON API
+  ([`8549752`](https://github.com/ourPLCC/plcc-ng/commit/8549752ad1b32083523f89ef45eb32fa99c19d66))
+
+The JSON API updates before the simple index pip resolves against, so check 1 could report OK while
+  pip install still failed with 'No matching distribution found' (seen on v0.67.0). Poll the simple
+  index for the version's wheel instead, so the retry loop waits on the thing that actually gates
+  the install.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: Close issue 142 (verify.bash simple-index race), update roadmap
+  ([`4c9f6a3`](https://github.com/ourPLCC/plcc-ng/commit/4c9f6a368847c741c62f31e51cc8591d370a3f6f))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 143 (verify.bash python3 preflight), update roadmap
+  ([`ef45e21`](https://github.com/ourPLCC/plcc-ng/commit/ef45e2181bc06aa2770c73923b49ec50516f4104))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: File 142 - verify.bash PyPI check races the simple index
+  ([`83f85c9`](https://github.com/ourPLCC/plcc-ng/commit/83f85c97d8843e057c67ec128550663c46e32bcd))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: File 143 - verify.bash needs a python3 preflight
+  ([`2777c26`](https://github.com/ourPLCC/plcc-ng/commit/2777c2699274dd3617e1d83586eeaed2b8ba69de))
+
+Also correct 142's claim that the simple-index race broke v0.67.0 verification; the actual cause was
+  the ambient python3 (143).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: File 144 - close.bash deletes neighboring roadmap entries
+  ([`b7f26c2`](https://github.com/ourPLCC/plcc-ng/commit/b7f26c2b876826cc4ecee884429aade45644a6bf))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **release**: Document verify.bash interpreter preflight and simple-index poll
+  ([`2b64410`](https://github.com/ourPLCC/plcc-ng/commit/2b64410a054c27bbc64163b9eb688f1c52e7ba20))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Verify.bash check 1 polls the simple index, not the JSON API
+  ([`30248ae`](https://github.com/ourPLCC/plcc-ng/commit/30248ae4643cd54b4421591011bb403adc2039e2))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+
 ## v0.67.0 (2026-07-05)
 
 ### Bug Fixes
