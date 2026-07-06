@@ -118,6 +118,6 @@ dev = [
 tag_format = "v{version}"
 version_variables = []
 version_toml = []
-major_on_zero = false
+major_on_zero = true
 changelog_file = "CHANGELOG.md"
 commit_message = "chore(release): v{version} [skip ci]"
