@@ -21,3 +21,4 @@ A v1.0 release signals stability to users: the CLI interface and spec syntax are
 - All four emitters (Python, Java, Haskell, JavaScript) are v1 supported — no experimental tier
 - Write up the v1.0 milestone in the roadmap once criteria are agreed
 - The release SOP is written (issue 130). Before v1.0, exercise it end-to-end on a pre-1.0 release: cut a release per `dev-docs/release-sop.md` and run `bin/release/verify.bash <tag>` (without `--no-install`) against it
+- Release-day step (from issue 141): in `docs/whats-new.md`, replace the first entry's `2026-07-XX` date placeholder with the release date, and confirm the entry heading and the `<!-- last-covered: ... -->` marker match the actual v1.0.0 version.
