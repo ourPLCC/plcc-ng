@@ -33,11 +33,19 @@
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/v1.0-criteria/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/112-first-major-release/</loc>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/145-mkdocs-strict-warnings-cleanup/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/146-cut-v1.0.0-release/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>
@@ -478,6 +486,10 @@
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/111-mermaid-extension-redesign/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://ourplcc.github.io/plcc-ng/dev-docs/issues/done/112-first-major-release/</loc>
          <lastmod>2026-07-06</lastmod>
     </url>
     <url>

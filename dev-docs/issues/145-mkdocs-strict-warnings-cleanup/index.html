@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/112-first-major-release/">
+        <link rel="canonical" href="https://ourplcc.github.io/plcc-ng/dev-docs/issues/145-mkdocs-strict-warnings-cleanup/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>112 - Prepare for first major release (v1.0.0) - plcc-ng Developer Docs</title>
+        <title>145 - Clean up mkdocs build --strict warnings in dev-docs - plcc-ng Developer Docs</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#112-prepare-for-first-major-release-v100" class="md-skip">
+        <a href="#145-clean-up-mkdocs-build-strict-warnings-in-dev-docs" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              112 - Prepare for first major release (v1.0.0)
+              145 - Clean up mkdocs build --strict warnings in dev-docs
             
           </span>
         </div>
@@ -266,6 +266,25 @@
     
   
   Release SOP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../v1.0-criteria/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  V1.0 Criteria
 
       </a>
     </li>
@@ -537,6 +556,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../v1.0-criteria/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V1.0 Criteria
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../architecture/" class="md-nav__link">
         
   
@@ -658,25 +704,44 @@
   
 
 
-<h1 id="112-prepare-for-first-major-release-v100">112 - Prepare for first major release (v1.0.0)</h1>
-<p><strong>Type:</strong> feat
-<strong>Date:</strong> 2026-06-24</p>
+<h1 id="145-clean-up-mkdocs-build-strict-warnings-in-dev-docs">145 - Clean up mkdocs build --strict warnings in dev-docs</h1>
+<p><strong>Type:</strong> docs
+<strong>Date:</strong> 2026-07-06</p>
 <h2 id="description">Description</h2>
-<p>plcc-ng is currently at v0.52.0. The project has working emitters (Python, Java, Haskell, JavaScript), a REPL, diagram generation, a docs site, and a growing test suite. It is time to define what "done enough for v1.0" means and work toward it.</p>
-<p>A v1.0 release signals stability to users: the CLI interface and spec syntax are committed to, breaking changes will be deliberate and versioned, and the tool is ready for classroom and production use.</p>
+<p><code>mkdocs build -f mkdocs-dev.yml --strict</code> currently fails with 74
+warnings. Discovered while adding <code>dev-docs/v1.0-criteria.md</code> for
+issue #112 — the new page introduces zero new warnings, but the
+pre-existing count means the dev-docs site can't be strict-built
+clean, and CI/local builds silently tolerate broken links.</p>
+<p>The warnings fall into two categories:</p>
+<ol>
+<li><strong>Pages missing from <code>mkdocs-dev.yml</code> nav</strong> — <code>roadmap.md</code>,
+   <code>issues/index.md</code>, <code>issues/TEMPLATE.md</code>, and every file under
+   <code>issues/done/</code> and <code>issues/*.md</code>. These are intentionally excluded
+   from the published nav (they're working files, not end-user
+   pages), so this category likely needs <code>not_in_nav:</code> entries in
+   <code>mkdocs-dev.yml</code> rather than actual nav additions — or the plugin
+   config needs a documented reason these are expected.</li>
+<li><strong>Broken relative links in <code>dev-docs/specs/*.md</code></strong> — many older
+   design-spec docs link to <code>../../issues/NNN-*.md</code> or
+   <code>../issues/NNN-*.md</code> for issues that have since moved to
+   <code>issues/done/NNN-*.md</code> when they were closed. The links were never
+   updated to point at the new location.</li>
+</ol>
+<h2 id="steps-to-reproduce">Steps to Reproduce</h2>
+<ol>
+<li><code>export PATH="$(git rev-parse --show-toplevel)/.venv/bin:${PATH}"</code></li>
+<li><code>mkdocs build -f mkdocs-dev.yml --strict</code></li>
+<li>Observe "Aborted with 74 warnings in strict mode!"</li>
+</ol>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Define the v1.0 criteria — what must be true before cutting a 1.0? Candidates:</li>
-<li>No known correctness bugs in the core pipeline (scan → parse → emit)</li>
-<li>Stable CLI surface (command names, flags, output formats) that we are willing to maintain</li>
-<li>Stable spec syntax — no planned breaking changes to <code>.plcc</code> file format</li>
-<li>End-user documentation covers the full workflow (install, quickstart, language guide, CLI reference)</li>
-<li>Release SOP (<code>dev-docs/release-sop.md</code>) is complete and tested</li>
-<li>CI is green and the test suite covers the happy path end-to-end for at least Python and Java</li>
-<li>All four emitters (Python, Java, Haskell, JavaScript) are v1 supported — no experimental tier</li>
-<li>Write up the v1.0 milestone in the roadmap once criteria are agreed</li>
-<li>The release SOP is written (issue 130). Before v1.0, exercise it end-to-end on a pre-1.0 release: cut a release per <code>dev-docs/release-sop.md</code> and run <code>bin/release/verify.bash &lt;tag&gt;</code> (without <code>--no-install</code>) against it</li>
-<li>Release-day step (from issue 141): in <code>docs/whats-new.md</code>, replace the first entry's <code>2026-07-XX</code> date placeholder with the release date, and confirm the entry heading and the <code>&lt;!-- last-covered: ... --&gt;</code> marker match the actual v1.0.0 version.</li>
+<li>Not urgent — the non-strict build succeeds and the dev-docs site
+  deploys fine today. This is a hygiene issue, not a broken deploy.</li>
+<li>Once fixed, consider wiring <code>mkdocs build --strict</code> into CI (or a
+  <code>bin/docs/</code> script) so this doesn't silently regress again.</li>
+<li>Related but out of scope: issue #112's v1.0 criteria doc
+  (<code>dev-docs/v1.0-criteria.md</code>) and the audit that surfaced this.</li>
 </ul>
 
 
