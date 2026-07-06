@@ -1,6 +1,178 @@
 # CHANGELOG
 
 
+## v1.0.0 (2026-07-06)
+
+### Bug Fixes
+
+- **docs**: Use absolute URL for migration guide link in README
+  ([`0847175`](https://github.com/ourPLCC/plcc-ng/commit/084717588a88a89fea7753bb9541f128849d9932))
+
+README.md is published as-is as the PyPI long description (readme = "README.md" in pyproject.toml).
+  Relative links like docs/migration.md only resolve on GitHub's repo browser, not on PyPI, so the
+  link would render broken there. Point it at the hosted docs site instead, matching the other
+  README links.
+
+- **packaging**: Mark plcc-ng stable for the v1.0.0 release
+  ([`b8d1e52`](https://github.com/ourPLCC/plcc-ng/commit/b8d1e5299eff14bac6f8268a0f58ec76fb294522))
+
+Development Status :: 3 - Alpha and the "experimental rewrite" description were left behind when
+  README.md was updated to declare v1.0 stability. PyPI releases are immutable, so these must be
+  correct before the v1.0.0 tag is cut - fixing them in a later release is not possible for this
+  tag.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Chores
+
+- **deps**: Constrain python-semantic-release below v10
+  ([`494cbc8`](https://github.com/ourPLCC/plcc-ng/commit/494cbc81ce67651c8fe55017af51d21eb763294e))
+
+CI's release workflow pins the python-semantic-release GitHub Action to @v9 (core 9.21.2), but
+  pyproject.toml's unbounded >=9.0.0 let local installs drift to 10.5.3 - a version with a different
+  allow_zero_version default that forces bumps CI's pinned version won't actually perform. Constrain
+  to <10.0.0 so local dry-runs stay representative of CI.
+
+- **release**: Enable major bumps pre-1.0
+  ([`16b4ab1`](https://github.com/ourPLCC/plcc-ng/commit/16b4ab156907f5461a4647ced04b2002d64e09f1))
+
+major_on_zero=false meant a BREAKING CHANGE commit could only bump minor pre-1.0. Flipping it lets
+  the next breaking-change commit produce v1.0.0. Verified this does not retroactively affect
+  already-released versions: with no new releasable commit, `semantic-release version --print` still
+  reports 0.67.2 with no release made.
+
+### Documentation
+
+- Add v1.0 readiness criteria (issue 112)
+  ([`8c181fc`](https://github.com/ourPLCC/plcc-ng/commit/8c181fcb85eb2bb188353f1669b4a369dbafff27))
+
+- Add v1.0 readiness criteria design (issue 112)
+  ([`ff078f7`](https://github.com/ourPLCC/plcc-ng/commit/ff078f7bf029cfe9b580e58644f76be912179c5c))
+
+Records the agreed v1.0 criteria, an audit of the repo against them, and the project owner's
+  stability declarations for the CLI surface, spec syntax, and the four language extensions. All
+  seven criteria are met; the release cutover itself stays open under issue 112.
+
+- Add What's New page with v1.0.0 first entry
+  ([`939e4b7`](https://github.com/ourPLCC/plcc-ng/commit/939e4b702985abd0ab6638b6ec41893431e16bf6))
+
+First entry is a highlights tour of PLCC-ng relative to PLCC, per the issue-141 design spec. Date
+  placeholder and version stamps are finalized at release time (issue 112).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- Fix v1.0-criteria.md links after issue 112 moved to done/
+  ([`1bdd199`](https://github.com/ourPLCC/plcc-ng/commit/1bdd199f6b9d6d7307461792af4e1dd071811471))
+
+close.bash doesn't rewrite relative links in the moved file or its referrers; update both to point
+  correctly and reference the new follow-on issue 146 for the release cutover.
+
+- Move changelog page from user site to dev-docs site
+  ([`d0370d6`](https://github.com/ourPLCC/plcc-ng/commit/d0370d61877abbccba46ffea3c53d670fa63343b))
+
+What's New replaces it as the user-facing release narrative (issue-141 design; agreed in the
+  issue-136 spec, Part 2).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- Remove empty instructor guide before v1.0.0
+  ([`e2599d8`](https://github.com/ourPLCC/plcc-ng/commit/e2599d8ce584956182c96a15c937b0de56a81d8c))
+
+The instructor guide pages were stubs with no content. Rather than ship placeholder pages, remove
+  the section from the nav and site until there is real content to publish.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- Repoint installation changelog link to GitHub Releases
+  ([`225df1d`](https://github.com/ourPLCC/plcc-ng/commit/225df1de2d49c68cc2a62dcb0fc69e2254d80231))
+
+The changelog page left the user site (issue 141).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- Set v1.0.0 release date in What's New
+  ([`df925ed`](https://github.com/ourPLCC/plcc-ng/commit/df925ed3a060d26a15754eae44a5af8c3608799e))
+
+- **issues**: Add What's New release-day step to issue 112
+  ([`72dfa38`](https://github.com/ourPLCC/plcc-ng/commit/72dfa3872c235b1de1cfd32e1758728c77a1d024))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: Bump next-id counter after filing 145
+  ([`2ebf8a8`](https://github.com/ourPLCC/plcc-ng/commit/2ebf8a835226b502c66e3362c2311d6f57d2f948))
+
+Missed staging this alongside the issue 145 filing commit.
+
+- **issues**: Close issue 112 (first major release criteria), update roadmap
+  ([`1fe0913`](https://github.com/ourPLCC/plcc-ng/commit/1fe0913b3c6e4a7f2752d3c001af9a15421c52ea))
+
+- **issues**: Close issue 141 (What's New page)
+  ([`e4831dc`](https://github.com/ourPLCC/plcc-ng/commit/e4831dc75871df07f31b58ddd1ce38ccae960933))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **issues**: File 145 - clean up mkdocs build --strict warnings
+  ([`a178d6e`](https://github.com/ourPLCC/plcc-ng/commit/a178d6e9bccb83daac102802fab09cf20b3d7540))
+
+Discovered while adding dev-docs/v1.0-criteria.md for issue 112: the dev-docs site has 74
+  pre-existing --strict warnings (nav-missing pages, broken issue links in old spec docs) unrelated
+  to that change.
+
+- **issues**: File 146 - cut the v1.0.0 release
+  ([`6ede5fc`](https://github.com/ourPLCC/plcc-ng/commit/6ede5fcfe3cd46ade912c028a5a001015d0e9e71))
+
+Follow-on to issue 112: criteria are agreed and met, but landing an actual v1.0.0 tag still needs
+  major_on_zero flipped in pyproject.toml, the release SOP run, and the whats-new.md date filled in.
+  Splitting this out lets 112 close now that its "agree on criteria" scope is done.
+
+- **issues**: Point issue 112 at the v1.0 criteria doc
+  ([`5b42d89`](https://github.com/ourPLCC/plcc-ng/commit/5b42d89a842eb7e42d029364c0613b7fba7cff17))
+
+- **plans**: Fix Task 1 verification step (issue 112 criteria plan)
+  ([`2696a12`](https://github.com/ourPLCC/plcc-ng/commit/2696a12d31d7dbe14894c785675ee209c9832fc9))
+
+The dev-docs site has 74 pre-existing mkdocs --strict warnings (tracked as issue 145), so requiring
+  a clean strict build was wrong. Verify no new warnings instead.
+
+- **plans**: Implementation plan for cutting the v1.0.0 release (issue 146)
+  ([`c6f0226`](https://github.com/ourPLCC/plcc-ng/commit/c6f0226c5544198f1461d153767aecf511b693fa))
+
+- **plans**: Implementation plan for v1.0 criteria doc (issue 112)
+  ([`963a0ee`](https://github.com/ourPLCC/plcc-ng/commit/963a0eefa8947f20708bc4dbc0faa0022924c7a2))
+
+- **plans**: Implementation plan for What's New page (issue 141)
+  ([`83ad2de`](https://github.com/ourPLCC/plcc-ng/commit/83ad2de10f8d3c36b5d8910a30648e9fd2da2dfe))
+
+Also corrects two spec claims found during fact-checking: diagrams are an add-on package, and the
+  instructor guide (still a stub) is not a first-entry highlight.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+- **specs**: Design for cutting the v1.0.0 release (issue 146)
+  ([`65eaf5d`](https://github.com/ourPLCC/plcc-ng/commit/65eaf5dbc8ad051e1605793b5a5187ef7c51a4ea))
+
+Validates the major_on_zero flip + trigger-commit approach against the exact PSR core version CI
+  runs, and finds/fixes a local/CI version drift discovered along the way.
+
+- **specs**: Design for What's New page (issue 141)
+  ([`8706bbd`](https://github.com/ourPLCC/plcc-ng/commit/8706bbd6cb3515edeed95473a6b7fc56cb788522))
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+### Features
+
+- Declare plcc-ng v1.0.0
+  ([`435f04f`](https://github.com/ourPLCC/plcc-ng/commit/435f04f4a31a76b985288fa52e887c7976767ab2))
+
+BREAKING CHANGE: plcc-ng reaches 1.0 - the CLI surface, .plcc spec syntax, and all four language
+  extensions are declared stable per dev-docs/v1.0-criteria.md.
+
+### Breaking Changes
+
+- Plcc-ng reaches 1.0 - the CLI surface, .plcc spec syntax, and all four language extensions are
+  declared stable per dev-docs/v1.0-criteria.md.
+
+
 ## v0.67.2 (2026-07-06)
 
 ### Bug Fixes
