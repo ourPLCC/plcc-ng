@@ -34,6 +34,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - What's New: whats-new.md
   - Quick Start: quick-start.md
   - Installation: installation.md
   - Migration from PLCC: migration.md
