@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python 3, `hashlib` (stdlib), `json` (stdlib), `docopt-ng`, `subprocess`, `bats-core` for CLI tests, `pytest` for unit tests.
 
-**Spec:** `docs/superpowers/specs/2026-05-11-unified-build-design.md`
+**Spec:** `dev-docs/specs/2026-05-11-unified-build-design.md`
 
 ---
 

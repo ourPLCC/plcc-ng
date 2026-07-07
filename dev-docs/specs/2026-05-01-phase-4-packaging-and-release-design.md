@@ -2,8 +2,8 @@
 
 **Date:** 2026-05-01
 **Status:** Draft — pending review
-**Companion architectural spec:** `docs/superpowers/specs/2026-04-12-multi-lang-pipeline.md`
-**Roadmap reference:** `docs/superpowers/specs/2026-04-12-multi-lang-implementation-plan.md` §7
+**Companion architectural spec:** `dev-docs/specs/2026-04-12-multi-lang-pipeline.md`
+**Roadmap reference:** `dev-docs/specs/2026-04-12-multi-lang-implementation-plan.md` §7
 
 ---
 
@@ -65,7 +65,7 @@ All of the following must be true before Phase 4 implementation begins:
 
 1. Phase 3 corpus is closed: every grammar in the Phase 3 target list is either in `tests/fixtures/languages-corpus.txt` or explicitly deferred (with a note in the Phase 3 retro).
 2. `bin/test/functional.bash` (units, commands, integration, e2e) passes locally with `LANGUAGES_REPO_PATH` set.
-3. Phase 3 retro is appended to `docs/superpowers/specs/2026-04-29-phase-3-java-emitter-design.md` (see §9 of this document for content guidance).
+3. Phase 3 retro is appended to `dev-docs/specs/2026-04-29-phase-3-java-emitter-design.md` (see §9 of this document for content guidance).
 4. This Phase 4 design doc is approved and committed.
 
 The Phase 4 implementation plan (produced by the writing-plans skill after this design is approved) will gate task 1 on these conditions.
@@ -284,7 +284,7 @@ Bumping the pin is a one-line PR. The PR's CI run uses the new pin, so any break
 
 ## 9. Phase 3 Retro
 
-Phase 3 retro is appended to `docs/superpowers/specs/2026-04-29-phase-3-java-emitter-design.md` as a new `## 11. Phase 3 Retro` section, mirroring how Phase 1's retro was captured in its design doc.
+Phase 3 retro is appended to `dev-docs/specs/2026-04-29-phase-3-java-emitter-design.md` as a new `## 11. Phase 3 Retro` section, mirroring how Phase 1's retro was captured in its design doc.
 
 Suggested sections (the maintainer fills in actual content):
 
@@ -333,7 +333,7 @@ Phase 4 is complete when all of the following hold.
 
 **Phase 3 wrap-up:**
 
-18. Phase 3 retro is appended to `docs/superpowers/specs/2026-04-29-phase-3-java-emitter-design.md`.
+18. Phase 3 retro is appended to `dev-docs/specs/2026-04-29-phase-3-java-emitter-design.md`.
 
 ---
 

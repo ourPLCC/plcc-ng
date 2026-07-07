@@ -11,7 +11,7 @@ matters to them, and where to learn more — distinct from the
 developer-facing CHANGELOG.md and GitHub Releases.
 
 Agreed design (Part 2 of
-[the issue-136 design spec](../../docs/superpowers/specs/2026-07-04-136-release-notes-unification-design.md)):
+[the issue-136 design spec](../../specs/2026-07-04-136-release-notes-unification-design.md)):
 
 - `docs/whats-new.md`, in the mkdocs nav near the top. Newest entry
   first. Each entry: date, version range covered, prose sections, links

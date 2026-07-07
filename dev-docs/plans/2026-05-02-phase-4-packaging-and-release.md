@@ -15,8 +15,8 @@
 Before beginning, confirm all of the following are true:
 
 - [ ] `tests/fixtures/languages-corpus.txt` has 29 grammars (GINGER included)
-- [ ] `docs/superpowers/specs/2026-04-29-phase-3-java-emitter-design.md` has an `## 11. Phase 3 Retro` section
-- [ ] This Phase 4 design doc (`docs/superpowers/specs/2026-05-01-phase-4-packaging-and-release-design.md`) is approved and committed
+- [ ] `dev-docs/specs/2026-04-29-phase-3-java-emitter-design.md` has an `## 11. Phase 3 Retro` section
+- [ ] This Phase 4 design doc (`dev-docs/specs/2026-05-01-phase-4-packaging-and-release-design.md`) is approved and committed
 - [ ] `bin/test/functional.bash` passes locally with `LANGUAGES_REPO_PATH` set
 
 ---

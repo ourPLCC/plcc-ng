@@ -14,14 +14,9 @@ retires once every item below is checked off.
 1. [x] [#148](issues/done/148-decommission-dev-docs-mkdocs-site.md) — remove the mkdocs-dev.yml build/deploy and its published gh-pages content; ~70% of #145's warnings exist only because of this build.
 2. [x] [#149](issues/done/149-fix-stale-issues-done-links.md) — fix broken issues/NNN links that should point to issues/done/; independent of #148, real breakage on GitHub either way.
 3. [x] [#150](issues/done/150-close-script-auto-fix-links.md) — harden close.bash to prevent #149's bug class from recurring.
-4. [ ] [#151](issues/151-migrate-superpowers-docs-to-dev-docs.md) — migrate docs/superpowers/specs/ and docs/superpowers/plans/ into dev-docs/; discovered while working #150, same content/tooling hygiene as the rest of this cleanup.
+4. [x] [#151](issues/done/151-migrate-superpowers-docs-to-dev-docs.md) — migrate docs/superpowers/specs/ and docs/superpowers/plans/ into dev-docs/; discovered while working #150, same content/tooling hygiene as the rest of this cleanup.
 
 ## Open Issues
-
-### Docs
-
-- **[#151](issues/151-migrate-superpowers-docs-to-dev-docs.md) — Migrate docs/superpowers/ into dev-docs/**
-  docs/superpowers/specs/ and docs/superpowers/plans/ duplicate dev-docs/specs/ and dev-docs/plans/; consolidate into the latter.
 
 ### Test
 

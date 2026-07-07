@@ -23,4 +23,4 @@ In an interactive REPL session this means the user gets no feedback — the prom
 - There are two raise sites in `predictive_parser.py`: one in `expect()` (single expected terminal) and one in `_parse_regular()` (set of expected terminals from the parse table).
 - A partial parse tree is not available at the point of failure — `NodeBuilder` objects live only on the call stack and are abandoned when the exception unwinds. Partial-tree diagnostics would require significant parser restructuring and are out of scope here.
 - `ParseHandler` requires no changes — it already handles `{"kind": "error", ...}` records by printing the message and returning `True`, which allows the interactive session to continue normally.
-- See plan at `docs/superpowers/plans/` (created during the 2026-05-15 session) for a detailed implementation sketch.
+- See plan at `dev-docs/plans/` (created during the 2026-05-15 session) for a detailed implementation sketch.

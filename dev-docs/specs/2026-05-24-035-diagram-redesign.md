@@ -2,7 +2,7 @@
 title: 035 - plcc-diagram interface redesign
 date: 2026-05-24
 issue: docs/issues/035-plcc-diagram-output-build-hangs.md
-superseded_by: docs/superpowers/specs/2026-05-25-diagram-decouple-from-make-design.md
+superseded_by: dev-docs/specs/2026-05-25-diagram-decouple-from-make-design.md
 ---
 
 > **Superseded.** The `--through=diagram` / `--diagram-format` interface described here was replaced by the design in [2026-05-25-diagram-decouple-from-make-design.md](2026-05-25-diagram-decouple-from-make-design.md). `plcc-make` no longer has any diagram stages; `plcc-diagram` now owns the full emit → build → run pipeline. The historical record below is preserved for context.
