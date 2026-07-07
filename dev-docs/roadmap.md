@@ -9,7 +9,7 @@ since it's the largest scope cut and removes the premise that a strict
 build must stay green; the rest are independent content/tooling
 hygiene with no urgency relative to each other. Completed items are
 checked off (and stay listed) so this section tracks progress; it
-retires when all four ship.
+retires once every item below is checked off.
 
 1. [x] [#148](issues/done/148-decommission-dev-docs-mkdocs-site.md) — remove the mkdocs-dev.yml build/deploy and its published gh-pages content; ~70% of #145's warnings exist only because of this build.
 2. [x] [#149](issues/done/149-fix-stale-issues-done-links.md) — fix broken issues/NNN links that should point to issues/done/; independent of #148, real breakage on GitHub either way.
