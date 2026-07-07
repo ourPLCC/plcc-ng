@@ -1,4 +1,4 @@
-# Lexical Specification
+# Lexical specification
 
 The lexical specification defines what the scanner recognizes and which
 matches it should emit as a token.

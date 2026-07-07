@@ -15,7 +15,7 @@ Requires cabal 3.0 or later on `PATH`. Run
 plcc-haskell-run --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

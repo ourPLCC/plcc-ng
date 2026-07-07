@@ -9,7 +9,7 @@ and calls `plcc-<lang>-emit` for the specified target language.
 plcc-lang-emit [-v ...] --target=LANG --output=DIR
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

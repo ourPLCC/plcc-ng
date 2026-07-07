@@ -34,7 +34,7 @@ plcc-version
 
 Check the [release notes](https://github.com/ourPLCC/plcc-ng/releases) for breaking changes between versions before upgrading.
 
-## Pin a Specific Version
+## Pin a specific version
 
 To install a specific version:
 

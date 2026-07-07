@@ -10,7 +10,7 @@ PREDICT sets, any conflicts, and any left-recursion cycles.
 plcc-ll1 [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

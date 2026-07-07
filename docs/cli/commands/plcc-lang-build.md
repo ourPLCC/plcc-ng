@@ -10,7 +10,7 @@ success — not all languages require a build step (Python does not).
 plcc-lang-build [-v ...] --target=LANG --output=DIR
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

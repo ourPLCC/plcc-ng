@@ -16,7 +16,7 @@ using dedicated command-line tools.
 - [Language Guide](language-guide/index.md) — Token rules, BNF syntax, code generation, worked examples.
 - [CLI Reference](cli/index.md) — Every command, every flag.
 
-## Join Our Community
+## Join our community
 
 - [Discord server](https://discord.gg/EVtNSxS9E2): get help and receive announcements.
 - [GitHub](https://github.com/ourPLCC/plcc-ng): report bugs, view the source, make a contribution.

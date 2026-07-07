@@ -11,7 +11,7 @@ Called by [`plcc-diagram-emit --type=syntax --format=plantuml`](plcc-diagram-emi
 plcc-diagram-syntax-plantuml-emit [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

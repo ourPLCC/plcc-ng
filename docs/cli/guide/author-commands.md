@@ -1,4 +1,4 @@
-# Author-Facing Commands
+# Author-facing commands
 
 These are the commands you interact with directly when working with plcc-ng.
 Everything else runs behind the scenes.
