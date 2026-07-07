@@ -44,7 +44,7 @@ Close in the same PR that completes the work — as the branch's final commit �
 bin/issues/close.bash <id>
 ```
 
-It moves the issue file to `issues/done/`, removes the Open Issues entry (and its group heading if now empty), checks the issue's box in any milestone list, and stages the changes. Review the roadmap before committing — milestone rationale text is prose and is not auto-edited.
+It moves the issue file to `issues/done/`, removes the Open Issues entry (and its group heading if now empty), checks the issue's box in any milestone list, rewrites any `dev-docs/` links to the issue's old path, adjusts the moved file's own links for its new depth, and stages the changes. Review the roadmap before committing — milestone rationale text is prose and is not auto-edited.
 
 Commit message: `docs(issues): close issue N (<short title>), update roadmap`.
 

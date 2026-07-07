@@ -13,10 +13,27 @@ setup() {
     mkdir -p "${REPO}/bin/issues" "${REPO}/dev-docs/issues/done"
     cp "${PROJECT_ROOT}"/bin/issues/*.bash "${REPO}/bin/issues/"
 
-    echo '# 1 - first-bug' > "${REPO}/dev-docs/issues/001-first-bug.md"
+    cat > "${REPO}/dev-docs/issues/001-first-bug.md" <<'EOF'
+# 1 - first-bug
+
+See also issue [005](done/005-already-done.md) and issue
+[003](003-a-feature.md). Related design doc:
+[v1.0 criteria](../v1.0-criteria.md).
+EOF
     echo '# 2 - second-bug' > "${REPO}/dev-docs/issues/002-second-bug.md"
     echo '# 3 - a-feature' > "${REPO}/dev-docs/issues/003-a-feature.md"
-    echo '004' > "${REPO}/dev-docs/issues/.next-id.txt"
+    echo '006' > "${REPO}/dev-docs/issues/.next-id.txt"
+
+    echo '# 5 - already-done' > "${REPO}/dev-docs/issues/done/005-already-done.md"
+    echo '# v1.0 criteria' > "${REPO}/dev-docs/v1.0-criteria.md"
+
+    mkdir -p "${REPO}/dev-docs/specs"
+    cat > "${REPO}/dev-docs/specs/2026-01-01-example-design.md" <<'EOF'
+# Example design
+
+Fixes issue [1](../issues/001-first-bug.md) using the same approach as
+issue [2](../issues/002-second-bug.md).
+EOF
 
     cat > "${ROADMAP}" <<'EOF'
 # Roadmap
@@ -77,4 +94,36 @@ teardown() {
     grep -q 'Summary of first bug.' "${ROADMAP}"
     grep -q '^### Fixes' "${ROADMAP}"
     ! grep -q '002-second-bug' "${ROADMAP}"
+}
+
+@test "closing an issue rewrites an external link to the issue's done/ path" {
+    run "${REPO}/bin/issues/close.bash" 1
+    [ "$status" -eq 0 ]
+    grep -qF '(../issues/done/001-first-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
+    ! grep -qF '(../issues/001-first-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
+}
+
+@test "closing an issue leaves an unrelated external link untouched" {
+    run "${REPO}/bin/issues/close.bash" 1
+    [ "$status" -eq 0 ]
+    grep -qF '(../issues/002-second-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
+}
+
+@test "closing an issue strips the done/ prefix from an already-closed sibling link" {
+    run "${REPO}/bin/issues/close.bash" 1
+    [ "$status" -eq 0 ]
+    grep -qF '(005-already-done.md)' "${REPO}/dev-docs/issues/done/001-first-bug.md"
+    ! grep -qF '(done/005-already-done.md)' "${REPO}/dev-docs/issues/done/001-first-bug.md"
+}
+
+@test "closing an issue adds a leading ../ to a link that already climbs above issues/" {
+    run "${REPO}/bin/issues/close.bash" 1
+    [ "$status" -eq 0 ]
+    grep -qF '(../../v1.0-criteria.md)' "${REPO}/dev-docs/issues/done/001-first-bug.md"
+}
+
+@test "closing an issue adds a leading ../ to a bare link to a still-open sibling" {
+    run "${REPO}/bin/issues/close.bash" 1
+    [ "$status" -eq 0 ]
+    grep -qF '(../003-a-feature.md)' "${REPO}/dev-docs/issues/done/001-first-bug.md"
 }
