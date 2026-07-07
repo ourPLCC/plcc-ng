@@ -1,6 +1,6 @@
 # 152 - test-cache-content-hash-invalidation
 
-**Type:** fix
+**Type:** test
 **Date:** 2026-07-07
 
 ## Description
@@ -29,6 +29,9 @@ cache; any content change — even to an already-dirty file — always misses.
 
 ## Notes
 
+- Classified `test`, not `fix`: `bin/test/_cache.bash` is dev-only test
+  tooling, not shipped in the package (`src/`), so a bug in it isn't
+  user-facing and shouldn't bump the release version.
 - Hit this twice in one session while working issue #150: once directly,
   once inside `bin/test/functional.bash`'s internal `commands` sub-run.
   Both times the cached result showed a failing test that the on-disk code
