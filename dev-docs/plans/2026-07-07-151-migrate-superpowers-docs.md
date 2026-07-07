@@ -401,7 +401,7 @@ Expected: same pass count as the pre-work baseline (1175 passed, 1 skipped) — 
 ### Task 7: Close issue 151
 
 **Files:**
-- Move: `dev-docs/issues/done/151-migrate-superpowers-docs-to-dev-docs.md` → `dev-docs/issues/done/`
+- Move: `dev-docs/issues/151-migrate-superpowers-docs-to-dev-docs.md` → `dev-docs/issues/done/`
 - Modify: `dev-docs/roadmap.md`
 
 - [ ] **Step 1: Close the issue**
