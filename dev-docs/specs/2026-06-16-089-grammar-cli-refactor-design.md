@@ -1,7 +1,7 @@
 # Design: Grammar CLI Refactor (089 preparatory)
 
 **Date:** 2026-06-16
-**Issue:** Preparatory refactor for [089 - Rename "grammar file" to "specification file"](../../../dev-docs/issues/089-grammar-to-spec-rename.md)
+**Issue:** Preparatory refactor for [089 - Rename "grammar file" to "specification file"](../issues/done/089-grammar-to-spec-rename.md)
 
 ## Goal
 

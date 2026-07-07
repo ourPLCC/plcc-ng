@@ -1497,7 +1497,7 @@ plcc-diagram-class --format=mermaid
 
 `plcc-diagram-class` dispatches to diagram extension plugins via `--format`.
 Use [`plcc-diagram-list`](plcc-diagram-list.md) to see installed formats.
-See [Diagram extensions](../guide/diagram-extensions.md) for details.
+See [Diagram extensions](../../docs/cli/guide/diagram-extensions.md) for details.
 ```
 
 - [ ] **Step 2: Create `docs/cli/commands/plcc-diagram-class-plantuml-emit.md`**

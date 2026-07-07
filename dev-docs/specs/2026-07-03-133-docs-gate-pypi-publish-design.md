@@ -1,6 +1,6 @@
 # Design: gate docs deploy on PyPI publish success
 
-Issue: [dev-docs/issues/133-release-docs-gate-pypi-publish.md](../../../dev-docs/issues/133-release-docs-gate-pypi-publish.md)
+Issue: [dev-docs/issues/133-release-docs-gate-pypi-publish.md](../issues/done/133-release-docs-deploy-decoupled-from-pypi-publish.md)
 
 ## Problem
 

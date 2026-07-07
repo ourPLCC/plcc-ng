@@ -1,6 +1,6 @@
 # Design: mkdocs --strict warnings investigation, and the decision to decommission the dev-docs site
 
-Issue: [dev-docs/issues/done/145-mkdocs-strict-warnings-cleanup.md](../../../dev-docs/issues/done/145-mkdocs-strict-warnings-cleanup.md)
+Issue: [dev-docs/issues/done/145-mkdocs-strict-warnings-cleanup.md](../issues/done/145-mkdocs-strict-warnings-cleanup.md)
 Date: 2026-07-06
 
 ## Resolution summary
@@ -29,9 +29,9 @@ not as part of a build-gating cleanup.
 This issue closes with three follow-up issues filed instead of a
 direct fix, ordered in `dev-docs/roadmap.md` under "Dev-docs cleanup":
 
-1. **[#148](../../../dev-docs/issues/148-decommission-dev-docs-mkdocs-site.md)** — remove the mkdocs-dev.yml build/deploy pipeline and its published gh-pages content.
-2. **[#149](../../../dev-docs/issues/149-fix-stale-issues-done-links.md)** — fix the stale `issues/NNN` → `issues/done/NNN` links (the investigation's "Bucket B", below), independent of #148.
-3. **[#150](../../../dev-docs/issues/150-close-script-auto-fix-links.md)** — harden `bin/issues/close.bash` so #149's bug class doesn't recur on future closes.
+1. **[#148](../issues/done/148-decommission-dev-docs-mkdocs-site.md)** — remove the mkdocs-dev.yml build/deploy pipeline and its published gh-pages content.
+2. **[#149](../issues/done/149-fix-stale-issues-done-links.md)** — fix the stale `issues/NNN` → `issues/done/NNN` links (the investigation's "Bucket B", below), independent of #148.
+3. **[#150](../issues/done/150-close-script-auto-fix-links.md)** — harden `bin/issues/close.bash` so #149's bug class doesn't recur on future closes.
 
 ## Investigation: what the 77 warnings actually were
 

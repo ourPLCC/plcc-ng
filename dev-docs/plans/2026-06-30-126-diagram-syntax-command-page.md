@@ -70,7 +70,7 @@ plcc-diagram-syntax -s subtract.plcc
 
 `plcc-diagram-syntax` dispatches to diagram extension plugins via `--format`.
 Use [`plcc-diagram-list`](plcc-diagram-list.md) to see installed formats.
-See [Diagram extensions](../guide/diagram-extensions.md) for details.
+See [Diagram extensions](../../docs/cli/guide/diagram-extensions.md) for details.
 ```
 
 - [ ] **Step 2: Create `docs/cli/commands/plcc-diagram-syntax-plantuml-emit.md`**
@@ -238,7 +238,7 @@ PlantUML installation required.
 
 | Command | What it does |
 | --- | --- |
-| [`plcc-diagram-syntax-plantuml-emit`](../commands/plcc-diagram-syntax-plantuml-emit.md) | Reads spec JSON from stdin; writes a `.puml` PlantUML EBNF source file |
+| [`plcc-diagram-syntax-plantuml-emit`](../../docs/cli/commands/plcc-diagram-syntax-plantuml-emit.md) | Reads spec JSON from stdin; writes a `.puml` PlantUML EBNF source file |
 | `plcc-diagram-plantuml-build` | Sends `.puml` to plantuml.com and writes the returned PNG |
 | `plcc-diagram-plantuml-run` | Prints the path to the rendered PNG |
 ```

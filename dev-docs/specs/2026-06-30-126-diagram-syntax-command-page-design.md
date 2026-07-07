@@ -94,7 +94,7 @@ PlantUML installation required.
 
 | Command | What it does |
 | --- | --- |
-| [`plcc-diagram-syntax-plantuml-emit`](../commands/plcc-diagram-syntax-plantuml-emit.md) | Reads spec JSON from stdin; writes a `.puml` PlantUML EBNF source file |
+| [`plcc-diagram-syntax-plantuml-emit`](../../docs/cli/commands/plcc-diagram-syntax-plantuml-emit.md) | Reads spec JSON from stdin; writes a `.puml` PlantUML EBNF source file |
 | `plcc-diagram-plantuml-build` | Sends `.puml` to plantuml.com and writes the returned PNG |
 | `plcc-diagram-plantuml-run` | Prints the path to the rendered PNG |
 ```

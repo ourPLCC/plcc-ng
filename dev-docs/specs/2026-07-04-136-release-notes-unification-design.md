@@ -1,7 +1,7 @@
 # Release notes unification (issue 136) — design
 
 **Date:** 2026-07-04
-**Issue:** [136 - GitHub Release notes and CHANGELOG.md are generated from different sources](../../../dev-docs/issues/done/136-release-changelog-vcs-release-divergence.md)
+**Issue:** [136 - GitHub Release notes and CHANGELOG.md are generated from different sources](../issues/done/136-release-changelog-vcs-release-divergence.md)
 
 ## Problem
 

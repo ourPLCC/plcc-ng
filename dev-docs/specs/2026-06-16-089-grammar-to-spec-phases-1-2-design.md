@@ -1,7 +1,7 @@
 # Design: Grammar-to-Spec Rename — Phases 1 & 2 (089)
 
 **Date:** 2026-06-16
-**Issue:** [089 - Rename "grammar file" to "specification file"](../../../dev-docs/issues/089-grammar-to-spec-rename.md)
+**Issue:** [089 - Rename "grammar file" to "specification file"](../issues/done/089-grammar-to-spec-rename.md)
 
 ## Goal
 

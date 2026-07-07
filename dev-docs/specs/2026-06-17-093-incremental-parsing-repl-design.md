@@ -1,6 +1,6 @@
 # 093 — Incremental parsing in interactive mode
 
-**Issue:** [dev-docs/issues/093-incremental-parsing-repl.md](../../../dev-docs/issues/093-incremental-parsing-repl.md)
+**Issue:** [dev-docs/issues/093-incremental-parsing-repl.md](../issues/done/093-incremental-parsing-repl.md)
 **Date:** 2026-06-17
 **Type:** feat
 

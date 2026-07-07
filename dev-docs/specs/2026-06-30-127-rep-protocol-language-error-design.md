@@ -1,7 +1,7 @@
 # plcc-rep Protocol, `specification_error`, and `LanguageError` Documentation Design
 
 **Date:** 2026-06-30
-**Issue:** [127](../../../dev-docs/issues/127-docs-rep-protocol-language-error.md)
+**Issue:** [127](../issues/done/127-docs-rep-protocol-language-error.md)
 
 ## Problem
 

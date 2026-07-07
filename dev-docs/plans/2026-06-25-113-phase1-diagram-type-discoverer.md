@@ -415,7 +415,7 @@ plcc-diagram -s subtract.plcc
 `plcc-diagram` discovers installed diagram types by scanning PATH for
 `plcc-diagram-{type}` executables. Use [`plcc-diagram-list`](plcc-diagram-list.md)
 to see installed formats per type.
-See [Diagram extensions](../guide/diagram-extensions.md) for details.
+See [Diagram extensions](../../docs/cli/guide/diagram-extensions.md) for details.
 ```
 
 - [ ] **Step 6: Run the full unit test suite**

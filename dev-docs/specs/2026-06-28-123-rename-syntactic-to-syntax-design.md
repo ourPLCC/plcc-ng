@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-28
 **Type:** refactor
-**Issue:** [123](../../../dev-docs/issues/123-rename-syntactic-to-syntax-in-plcc-diagram.md)
+**Issue:** [123](../issues/done/123-rename-syntactic-to-syntax-in-plcc-diagram.md)
 
 ## Summary
 

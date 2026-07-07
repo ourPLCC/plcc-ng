@@ -316,7 +316,7 @@ In `dev-docs/release-sop.md`, append a new section at the end of the file:
 ## GitHub Release notes
 
 GitHub Release notes are the tag's `CHANGELOG.md` section, extracted by
-[bin/release/extract-changelog.bash](../bin/release/extract-changelog.bash)
+[bin/release/extract-changelog.bash](../../bin/release/extract-changelog.bash)
 in the `create-release` job — the same conventional-commit content
 python-semantic-release writes to the changelog, so the two never
 diverge. There is deliberately no fallback to GitHub's PR-based
@@ -391,7 +391,7 @@ matters to them, and where to learn more — distinct from the
 developer-facing CHANGELOG.md and GitHub Releases.
 
 Agreed design (Part 2 of
-[the issue-136 design spec](../../docs/superpowers/specs/2026-07-04-136-release-notes-unification-design.md)):
+[the issue-136 design spec](../specs/2026-07-04-136-release-notes-unification-design.md)):
 
 - `docs/whats-new.md`, in the mkdocs nav near the top. Newest entry
   first. Each entry: date, version range covered, prose sections, links

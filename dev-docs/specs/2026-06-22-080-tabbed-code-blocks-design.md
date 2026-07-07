@@ -1,7 +1,7 @@
 # Design: Tabbed Code Blocks for Language-Specific Alternatives (Issue 080)
 
 **Date:** 2026-06-22
-**Issue:** [080](../../../../dev-docs/issues/080-tabbed-code-blocks.md)
+**Issue:** [080](../../../dev-docs/issues/080-tabbed-code-blocks.md)
 
 ## Problem
 

@@ -1,7 +1,7 @@
 # Design: E2E Haskell Roundtrip CI Performance (Issue 110)
 
 **Date:** 2026-06-24
-**Issue:** [110 - e2e test 15: Haskell build roundtrip is too slow](../../../dev-docs/issues/110-e2e-haskell-build-test-performance.md)
+**Issue:** [110 - e2e test 15: Haskell build roundtrip is too slow](../issues/done/110-e2e-haskell-build-test-performance.md)
 
 ## Problem
 

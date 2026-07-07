@@ -1,7 +1,7 @@
 # 111 — Redesign Mermaid diagram build to use kroki.io
 
 **Date:** 2026-06-24
-**Issue:** [111 - Redesign the Mermaid diagram extension](../../../dev-docs/issues/111-mermaid-extension-redesign.md)
+**Issue:** [111 - Redesign the Mermaid diagram extension](../issues/done/111-mermaid-extension-redesign.md)
 
 ## Problem
 

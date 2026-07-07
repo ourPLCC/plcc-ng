@@ -1,7 +1,7 @@
 # Design: Grammar-to-Spec Rename — Phases 3 & 4 (089)
 
 **Date:** 2026-06-16
-**Issue:** [089 - Rename "grammar file" to "specification file"](../../../dev-docs/issues/089-grammar-to-spec-rename.md)
+**Issue:** [089 - Rename "grammar file" to "specification file"](../issues/done/089-grammar-to-spec-rename.md)
 **Prior work:** Phases 1 & 2 shipped in PRs #205 and #206 (CLI flags, default filename, error messages, help text).
 
 ## Goal

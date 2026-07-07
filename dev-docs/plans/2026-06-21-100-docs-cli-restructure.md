@@ -440,15 +440,15 @@ author-facing command calls it before doing its own work.
 
 | Command | Input → Output |
 |---|---|
-| [`plcc-make`](../commands/plcc-make.md) | `.plcc` spec file → build artifacts in `build/` |
-| [`plcc-spec`](../commands/plcc-spec.md) | `.plcc` file → spec JSON |
-| [`plcc-ll1`](../commands/plcc-ll1.md) | spec JSON → LL(1) analysis JSON |
-| [`plcc-tokens`](../commands/plcc-tokens.md) | spec JSON + source files → token JSONL |
-| [`plcc-trees`](../commands/plcc-trees.md) | token JSONL + LL(1) JSON → parse tree JSON (dispatches to parser plugin) |
-| [`plcc-model`](../commands/plcc-model.md) | spec JSON → language-neutral model JSON |
-| [`plcc-lang-emit`](../commands/plcc-lang-emit.md) | model JSON → language source files (dispatches to language plugin) |
-| [`plcc-lang-build`](../commands/plcc-lang-build.md) | language source files → compiled output (dispatches to language plugin) |
-| [`plcc-lang-run`](../commands/plcc-lang-run.md) | compiled output + parse tree JSON → evaluation result (dispatches to language plugin) |
+| [`plcc-make`](../../docs/cli/commands/plcc-make.md) | `.plcc` spec file → build artifacts in `build/` |
+| [`plcc-spec`](../../docs/cli/commands/plcc-spec.md) | `.plcc` file → spec JSON |
+| [`plcc-ll1`](../../docs/cli/commands/plcc-ll1.md) | spec JSON → LL(1) analysis JSON |
+| [`plcc-tokens`](../../docs/cli/commands/plcc-tokens.md) | spec JSON + source files → token JSONL |
+| [`plcc-trees`](../../docs/cli/commands/plcc-trees.md) | token JSONL + LL(1) JSON → parse tree JSON (dispatches to parser plugin) |
+| [`plcc-model`](../../docs/cli/commands/plcc-model.md) | spec JSON → language-neutral model JSON |
+| [`plcc-lang-emit`](../../docs/cli/commands/plcc-lang-emit.md) | model JSON → language source files (dispatches to language plugin) |
+| [`plcc-lang-build`](../../docs/cli/commands/plcc-lang-build.md) | language source files → compiled output (dispatches to language plugin) |
+| [`plcc-lang-run`](../../docs/cli/commands/plcc-lang-run.md) | compiled output + parse tree JSON → evaluation result (dispatches to language plugin) |
 
 ## The diagram pipeline
 
@@ -457,9 +457,9 @@ model, then runs its own sub-pipeline:
 
 | Command | Input → Output |
 |---|---|
-| [`plcc-diagram-emit`](../commands/plcc-diagram-emit.md) | model JSON → diagram source (dispatches to diagram plugin) |
-| [`plcc-diagram-build`](../commands/plcc-diagram-build.md) | diagram source → PNG image (dispatches to diagram plugin) |
-| [`plcc-diagram-run`](../commands/plcc-diagram-run.md) | PNG path → prints path to stdout (dispatches to diagram plugin) |
+| [`plcc-diagram-emit`](../../docs/cli/commands/plcc-diagram-emit.md) | model JSON → diagram source (dispatches to diagram plugin) |
+| [`plcc-diagram-build`](../../docs/cli/commands/plcc-diagram-build.md) | diagram source → PNG image (dispatches to diagram plugin) |
+| [`plcc-diagram-run`](../../docs/cli/commands/plcc-diagram-run.md) | PNG path → prints path to stdout (dispatches to diagram plugin) |
 ````
 
 - [ ] **Step 2: Verify build**
@@ -497,12 +497,12 @@ target language. plcc-ng ships with Python and Java support.
 When `plcc-make` (or any command that calls it) builds a spec with a semantic
 section, it runs three dispatch commands in sequence:
 
-1. [`plcc-lang-emit --target=LANG`](../commands/plcc-lang-emit.md) — calls `plcc-<lang>-emit`
-2. [`plcc-lang-build --target=LANG`](../commands/plcc-lang-build.md) — calls `plcc-<lang>-build` (no-op if not found)
-3. [`plcc-lang-run --target=LANG`](../commands/plcc-lang-run.md) — calls `plcc-<lang>-run`
+1. [`plcc-lang-emit --target=LANG`](../../docs/cli/commands/plcc-lang-emit.md) — calls `plcc-<lang>-emit`
+2. [`plcc-lang-build --target=LANG`](../../docs/cli/commands/plcc-lang-build.md) — calls `plcc-<lang>-build` (no-op if not found)
+3. [`plcc-lang-run --target=LANG`](../../docs/cli/commands/plcc-lang-run.md) — calls `plcc-<lang>-run`
 
 The `LANG` value comes from the `language` declaration in the spec's semantic
-section. Use [`plcc-lang-list`](../commands/plcc-lang-list.md) to see what is
+section. Use [`plcc-lang-list`](../../docs/cli/commands/plcc-lang-list.md) to see what is
 installed.
 
 ## plcc-python
@@ -512,8 +512,8 @@ Python.
 
 | Command | What it does |
 |---|---|
-| [`plcc-python-emit`](../commands/plcc-python-emit.md) | Writes `.py` class files and a `main.py` entry point to the output directory |
-| [`plcc-python-run`](../commands/plcc-python-run.md) | Runs `main.py` with the system Python interpreter |
+| [`plcc-python-emit`](../../docs/cli/commands/plcc-python-emit.md) | Writes `.py` class files and a `main.py` entry point to the output directory |
+| [`plcc-python-run`](../../docs/cli/commands/plcc-python-run.md) | Runs `main.py` with the system Python interpreter |
 
 No build step is required for Python — `plcc-lang-build` exits silently if
 `plcc-python-build` is not found.
@@ -525,9 +525,9 @@ runs it with `java`.
 
 | Command | What it does |
 |---|---|
-| [`plcc-java-emit`](../commands/plcc-java-emit.md) | Writes `.java` class files and a `Main.java` entry point to the output directory |
-| [`plcc-java-build`](../commands/plcc-java-build.md) | Compiles all `.java` files with `javac`; requires Java JDK 21+ on `PATH` |
-| [`plcc-java-run`](../commands/plcc-java-run.md) | Runs `Main` with `java`; requires Java JDK 21+ on `PATH` |
+| [`plcc-java-emit`](../../docs/cli/commands/plcc-java-emit.md) | Writes `.java` class files and a `Main.java` entry point to the output directory |
+| [`plcc-java-build`](../../docs/cli/commands/plcc-java-build.md) | Compiles all `.java` files with `javac`; requires Java JDK 21+ on `PATH` |
+| [`plcc-java-run`](../../docs/cli/commands/plcc-java-run.md) | Runs `Main` with `java`; requires Java JDK 21+ on `PATH` |
 ```
 
 - [ ] **Step 2: Write `parser-extensions.md`**
@@ -540,11 +540,11 @@ built-in parser: `plcc-parser-table`, an LL(1) table-driven parser.
 
 ## How parser extensions plug in
 
-[`plcc-trees`](../commands/plcc-trees.md) dispatches to a parser plugin via
+[`plcc-trees`](../../docs/cli/commands/plcc-trees.md) dispatches to a parser plugin via
 the `--parser=KIND` flag (default: `table`). It calls `plcc-parser-<kind>`,
 passing the LL(1) analysis JSON and token JSONL on stdin.
 
-Use [`plcc-parser-list`](../commands/plcc-parser-list.md) to see what is
+Use [`plcc-parser-list`](../../docs/cli/commands/plcc-parser-list.md) to see what is
 installed.
 
 > **Note:** there is no dedicated `plcc-parser` dispatch command — `plcc-trees`
@@ -557,7 +557,7 @@ LL(1) analysis JSON from `--ll1`, emits parse tree JSON to stdout.
 
 | Command | What it does |
 |---|---|
-| [`plcc-parser-table`](../commands/plcc-parser-table.md) | Table-driven LL(1) parse; emits parse tree JSON or error records |
+| [`plcc-parser-table`](../../docs/cli/commands/plcc-parser-table.md) | Table-driven LL(1) parse; emits parse tree JSON or error records |
 
 `plcc-parser-table` also supports `--trace`, which emits `parse-step` records
 interleaved with the parse tree for debugging.
@@ -573,13 +573,13 @@ diagram format. plcc-ng ships with Mermaid and PlantUML support.
 
 ## How diagram extensions plug in
 
-[`plcc-diagram`](../commands/plcc-diagram.md) runs three dispatch commands:
+[`plcc-diagram`](../../docs/cli/commands/plcc-diagram.md) runs three dispatch commands:
 
-1. [`plcc-diagram-emit --format=FMT`](../commands/plcc-diagram-emit.md) — calls `plcc-<fmt>-diagram-emit`
-2. [`plcc-diagram-build --format=FMT`](../commands/plcc-diagram-build.md) — calls `plcc-<fmt>-diagram-build`
-3. [`plcc-diagram-run --format=FMT`](../commands/plcc-diagram-run.md) — calls `plcc-<fmt>-diagram-run`
+1. [`plcc-diagram-emit --format=FMT`](../../docs/cli/commands/plcc-diagram-emit.md) — calls `plcc-<fmt>-diagram-emit`
+2. [`plcc-diagram-build --format=FMT`](../../docs/cli/commands/plcc-diagram-build.md) — calls `plcc-<fmt>-diagram-build`
+3. [`plcc-diagram-run --format=FMT`](../../docs/cli/commands/plcc-diagram-run.md) — calls `plcc-<fmt>-diagram-run`
 
-The default format is `plantuml`. Use [`plcc-diagram-list`](../commands/plcc-diagram-list.md)
+The default format is `plantuml`. Use [`plcc-diagram-list`](../../docs/cli/commands/plcc-diagram-list.md)
 to see what is installed.
 
 ## plcc-mermaid-diagram
@@ -589,9 +589,9 @@ Generates a Mermaid class diagram. Requires the `mmdc` CLI
 
 | Command | What it does |
 |---|---|
-| [`plcc-mermaid-diagram-emit`](../commands/plcc-mermaid-diagram-emit.md) | Reads model JSON from stdin; writes a `.mmd` Mermaid source file |
-| [`plcc-mermaid-diagram-build`](../commands/plcc-mermaid-diagram-build.md) | Renders `.mmd` to PNG using `mmdc` |
-| [`plcc-mermaid-diagram-run`](../commands/plcc-mermaid-diagram-run.md) | Prints the path to the rendered PNG |
+| [`plcc-mermaid-diagram-emit`](../../docs/cli/commands/plcc-mermaid-diagram-emit.md) | Reads model JSON from stdin; writes a `.mmd` Mermaid source file |
+| [`plcc-mermaid-diagram-build`](../../docs/cli/commands/plcc-mermaid-diagram-build.md) | Renders `.mmd` to PNG using `mmdc` |
+| [`plcc-mermaid-diagram-run`](../../docs/cli/commands/plcc-mermaid-diagram-run.md) | Prints the path to the rendered PNG |
 
 ## plcc-plantuml-diagram
 
@@ -600,9 +600,9 @@ Generates a PlantUML class diagram. Rendering is done via the public
 
 | Command | What it does |
 |---|---|
-| [`plcc-plantuml-diagram-emit`](../commands/plcc-plantuml-diagram-emit.md) | Reads model JSON from stdin; writes a `.puml` PlantUML source file |
-| [`plcc-plantuml-diagram-build`](../commands/plcc-plantuml-diagram-build.md) | Sends `.puml` to plantuml.com and writes the returned PNG |
-| [`plcc-plantuml-diagram-run`](../commands/plcc-plantuml-diagram-run.md) | Prints the path to the rendered PNG |
+| [`plcc-plantuml-diagram-emit`](../../docs/cli/commands/plcc-plantuml-diagram-emit.md) | Reads model JSON from stdin; writes a `.puml` PlantUML source file |
+| [`plcc-plantuml-diagram-build`](../../docs/cli/commands/plcc-plantuml-diagram-build.md) | Sends `.puml` to plantuml.com and writes the returned PNG |
+| [`plcc-plantuml-diagram-run`](../../docs/cli/commands/plcc-plantuml-diagram-run.md) | Prints the path to the rendered PNG |
 ```
 
 - [ ] **Step 4: Verify build**
@@ -1013,7 +1013,7 @@ plcc-tokens build/spec.json samples/ | plcc-trees --ll1=build/ll1.json
 
 `plcc-trees` calls `plcc-parser-<kind>` for the given `--parser` value.
 Use [`plcc-parser-list`](plcc-parser-list.md) to see available plugins.
-See [Parser extensions](../guide/parser-extensions.md) for details.
+See [Parser extensions](../../docs/cli/guide/parser-extensions.md) for details.
 ```
 
 - [ ] **Step 5: Write `plcc-model.md`**
@@ -1109,7 +1109,7 @@ plcc-spec spec.plcc | plcc-model | plcc-lang-emit --target=Python --output=build
 
 `plcc-lang-emit` calls `plcc-<lang>-emit` for the target language.
 Use [`plcc-lang-list`](plcc-lang-list.md) to see available plugins.
-See [Language extensions](../guide/language-extensions.md) for details.
+See [Language extensions](../../docs/cli/guide/language-extensions.md) for details.
 ```
 
 - [ ] **Step 2: Write `plcc-lang-build.md`**
@@ -1345,7 +1345,7 @@ plcc-diagram --format=mermaid
 
 `plcc-diagram` dispatches to diagram extension plugins via `--format`.
 Use [`plcc-diagram-list`](plcc-diagram-list.md) to see installed formats.
-See [Diagram extensions](../guide/diagram-extensions.md) for details.
+See [Diagram extensions](../../docs/cli/guide/diagram-extensions.md) for details.
 ```
 
 - [ ] **Step 2: Write `plcc-diagram-list.md`**

@@ -1,7 +1,7 @@
 # plcc-rep Error Taxonomy Design
 
 **Date:** 2026-06-27
-**Issue:** [121](../../../dev-docs/issues/121-rep-python-syntax-error-continues.md)
+**Issue:** [121](../issues/done/121-rep-python-syntax-error-continues.md)
 
 ## Problem
 

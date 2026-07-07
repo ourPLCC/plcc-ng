@@ -1,6 +1,6 @@
 # 098 — ^D on a non-empty line requires a second ^D
 
-**Issue:** [dev-docs/issues/098-rep-ctrl-d-non-empty-line.md](../../../dev-docs/issues/098-rep-ctrl-d-non-empty-line.md)
+**Issue:** [dev-docs/issues/098-rep-ctrl-d-non-empty-line.md](../issues/done/098-rep-ctrl-d-non-empty-line.md)
 **Date:** 2026-06-19
 **Type:** fix
 

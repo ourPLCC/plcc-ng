@@ -1,7 +1,7 @@
 # Design: Make Banner Opt-In (Issue 084)
 
 **Date:** 2026-06-15
-**Issue:** [084](../../../dev-docs/issues/084-make-no-banner-the-default-print-banner-to-stderr-with-v.md)
+**Issue:** [084](../issues/done/084-no-banner-default.md)
 
 ## Problem
 

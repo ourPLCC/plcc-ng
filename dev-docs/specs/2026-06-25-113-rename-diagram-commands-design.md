@@ -1,7 +1,7 @@
 # Design: Rename Diagram Commands to `plcc-diagram-*` Namespace (Issue 113)
 
 **Date:** 2026-06-25
-**Issue:** [113 - Rename diagram commands to consistent `plcc-diagram-*` namespace](../../../dev-docs/issues/113-rename-diagram-commands.md)
+**Issue:** [113 - Rename diagram commands to consistent `plcc-diagram-*` namespace](../issues/done/113-rename-diagram-commands.md)
 
 ## Summary
 

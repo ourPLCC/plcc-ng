@@ -1,7 +1,7 @@
 # 095 — Semantic Section Redesign
 
 **Date:** 2026-06-17
-**Issue:** [095-redesign-semantic-section-format](../../../dev-docs/issues/095-redesign-semantic-section-format.md)
+**Issue:** [095-redesign-semantic-section-format](../issues/done/095-semantic-section-redesign.md)
 
 ## Overview
 

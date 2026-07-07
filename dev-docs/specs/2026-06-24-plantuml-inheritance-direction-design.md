@@ -1,7 +1,7 @@
 # PlantUML Inheritance Arrow Direction
 
 **Date:** 2026-06-24
-**Issue:** [108 - PlantUML diagram: point inheritance arrows up](../../../dev-docs/issues/108-plantuml-inheritance-direction.md)
+**Issue:** [108 - PlantUML diagram: point inheritance arrows up](../issues/done/108-plantuml-inheritance-direction.md)
 
 ## Problem
 

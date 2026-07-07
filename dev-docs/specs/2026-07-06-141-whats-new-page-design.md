@@ -1,7 +1,7 @@
 # What's New page (issue 141) — design
 
 **Date:** 2026-07-06
-**Issue:** [141 - whats-new-user-release-notes](../../../dev-docs/issues/141-whats-new-user-release-notes.md)
+**Issue:** [141 - whats-new-user-release-notes](../issues/done/141-whats-new-user-release-notes.md)
 
 ## Problem
 

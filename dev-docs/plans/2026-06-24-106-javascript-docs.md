@@ -260,8 +260,8 @@ Expected output:
 
 | Command | What it does |
 | --- | --- |
-| [`plcc-javascript-emit`](../../cli/commands/plcc-javascript-emit.md) | Writes `.js` class files and a `main.js` entry point to the output directory |
-| [`plcc-javascript-run`](../../cli/commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js on `PATH` |
+| [`plcc-javascript-emit`](../../docs/cli/commands/plcc-javascript-emit.md) | Writes `.js` class files and a `main.js` entry point to the output directory |
+| [`plcc-javascript-run`](../../docs/cli/commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js on `PATH` |
 
 No build step is required — Node.js does not need a compilation step, so `plcc-lang-build` skips silently.
 
@@ -471,9 +471,9 @@ Expected output:
 
 | Command | What it does |
 | --- | --- |
-| [`plcc-java-emit`](../../cli/commands/plcc-java-emit.md) | Writes `.java` class files and a `Main.java` entry point to the output directory |
-| [`plcc-java-build`](../../cli/commands/plcc-java-build.md) | Compiles all `.java` files with `javac`; requires Java JDK 21+ on `PATH` |
-| [`plcc-java-run`](../../cli/commands/plcc-java-run.md) | Runs the compiled interpreter with `java`; requires Java JDK 21+ on `PATH` |
+| [`plcc-java-emit`](../../docs/cli/commands/plcc-java-emit.md) | Writes `.java` class files and a `Main.java` entry point to the output directory |
+| [`plcc-java-build`](../../docs/cli/commands/plcc-java-build.md) | Compiles all `.java` files with `javac`; requires Java JDK 21+ on `PATH` |
+| [`plcc-java-run`](../../docs/cli/commands/plcc-java-run.md) | Runs the compiled interpreter with `java`; requires Java JDK 21+ on `PATH` |
 
 ## Restrictions
 
@@ -673,8 +673,8 @@ Expected output:
 
 | Command | What it does |
 | --- | --- |
-| [`plcc-python-emit`](../../cli/commands/plcc-python-emit.md) | Writes `.py` class files and a `main.py` entry point to the output directory |
-| [`plcc-python-run`](../../cli/commands/plcc-python-run.md) | Runs `main.py` with the system Python interpreter |
+| [`plcc-python-emit`](../../docs/cli/commands/plcc-python-emit.md) | Writes `.py` class files and a `main.py` entry point to the output directory |
+| [`plcc-python-run`](../../docs/cli/commands/plcc-python-run.md) | Runs `main.py` with the system Python interpreter |
 
 No build step is required — Python does not need a compilation step, so `plcc-lang-build` skips silently.
 
@@ -933,8 +933,8 @@ No build step is required.
 
 | Command | What it does |
 | --- | --- |
-| [`plcc-javascript-emit`](../commands/plcc-javascript-emit.md) | Writes `.js` class files and a `main.js` entry point to the output directory |
-| [`plcc-javascript-run`](../commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js 18+ on `PATH` |
+| [`plcc-javascript-emit`](../../docs/cli/commands/plcc-javascript-emit.md) | Writes `.js` class files and a `main.js` entry point to the output directory |
+| [`plcc-javascript-run`](../../docs/cli/commands/plcc-javascript-run.md) | Runs `main.js` with `node`; requires Node.js 18+ on `PATH` |
 
 No build step is required for JavaScript — `plcc-lang-build` exits silently if
 `plcc-javascript-build` is not found.
