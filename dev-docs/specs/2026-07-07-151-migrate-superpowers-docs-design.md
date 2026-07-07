@@ -104,11 +104,22 @@ rmdir docs/superpowers/specs docs/superpowers/plans docs/superpowers
 ## Verification
 
 - Every relative markdown link inside `dev-docs/specs/*.md` and
-  `dev-docs/plans/*.md` resolves to a file that exists on disk — the
+  `dev-docs/plans/*.md` that was broken by this move (one of the three
+  tiers above) resolves to a file that exists on disk — the
   authoritative check that all three tiers were actually fixed, not
-  just mechanically transformed.
-- `grep -r docs/superpowers .` (excluding `.git`) returns nothing —
-  confirms no stray references, tooling or prose, remain anywhere.
+  just mechanically transformed. Pre-existing broken links unrelated
+  to `docs/superpowers` (e.g. references to doc pages that were never
+  written) predate this move and are out of scope; a plain `--verify`
+  pass will still report them.
+- `grep -rn '](.*docs/superpowers' . --include='*.md'` (excluding
+  `.git`) turns up no *live* markdown link into the removed directory
+  — every hit it does return is either the greedy pattern spanning
+  past a real link into unrelated trailing prose, or this issue's own
+  plan/design docs quoting the old path as illustration. Neither is a
+  dead link. A plain string grep for `docs/superpowers` is not the
+  acceptance test: it also matches legitimate historical prose
+  (elsewhere in this document included) describing the directory as a
+  past fact, which correctly stays unchanged.
 - `bin/issues/check.bash` still passes.
 - `bin/test/units.bash` stays green (docs-only change; confirms no
   unrelated regression).
@@ -117,8 +128,11 @@ rmdir docs/superpowers/specs docs/superpowers/plans docs/superpowers
 
 If the issue-index lookup can't resolve some link (a typo'd issue
 number that never existed, not a close-rename), it's left untouched
-and called out in the commit rather than guessed at. The repo-wide
-grep for `docs/superpowers` found no references outside the files this
-plan already accounts for, so no new follow-up issue is expected — this
-finishes cleanup that #149/#150 already established, scoped to exactly
-the files this move touches.
+and called out in the commit rather than guessed at. A plain-string
+repo-wide grep for `docs/superpowers` does surface hits outside the
+files this plan directly touches — CHANGELOG.md, and prior plans/specs
+that describe the directory as history (`moved from docs/superpowers/`,
+"frozen historical records", and similar) — all confirmed to be
+accurate historical prose, not stray dead links, so no follow-up issue
+is expected. This finishes cleanup that #149/#150 already established,
+scoped to exactly the files this move touches.
