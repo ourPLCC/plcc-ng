@@ -23,3 +23,8 @@ tracks progress; it retires when all three ship.
   Section heading capitalization is inconsistent across the docs; needs a single agreed-upon rule.
 - **[#151](issues/151-migrate-superpowers-docs-to-dev-docs.md) — Migrate docs/superpowers/ into dev-docs/**
   docs/superpowers/specs/ and docs/superpowers/plans/ duplicate dev-docs/specs/ and dev-docs/plans/; consolidate into the latter.
+
+### Fix
+
+- **[#152](issues/152-test-cache-content-hash-invalidation.md) — Test cache stale-hit on content-only changes**
+  bin/test/_cache.bash keys on the dirty-file list, not content; editing an already-dirty file can replay a stale cached result.
