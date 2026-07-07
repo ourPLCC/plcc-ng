@@ -8,7 +8,7 @@
 
 **Tech Stack:** Python, pytest, bats, docopt, subprocess JSONL pipeline.
 
-**Spec:** `docs/superpowers/specs/2026-05-15-plcc-trees-error-handling-design.md`
+**Spec:** `dev-docs/specs/2026-05-15-plcc-trees-error-handling-design.md`
 
 **Run tests with:** `bin/test-unit` (Python unit tests), `bin/test-integration` (bats integration tests).
 

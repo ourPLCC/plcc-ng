@@ -4,7 +4,7 @@
 
 **Goal:** Stop the release pipeline's TestPyPI smoke test from flaking when the TestPyPI simple index lags the upload, by retrying the pip install for up to ~5 minutes.
 
-**Architecture:** A single workflow step in `.github/workflows/release.yml` changes: the `pip install` from TestPyPI is wrapped in a fixed-backoff retry loop (20 attempts, 15s apart) with `--no-cache-dir`. Everything else in the step — venv creation before the loop, `plcc-make` smoke assertions after it — is unchanged. Spec: `docs/superpowers/specs/2026-07-03-140-testpypi-smoke-retry-design.md`.
+**Architecture:** A single workflow step in `.github/workflows/release.yml` changes: the `pip install` from TestPyPI is wrapped in a fixed-backoff retry loop (20 attempts, 15s apart) with `--no-cache-dir`. Everything else in the step — venv creation before the loop, `plcc-make` smoke assertions after it — is unchanged. Spec: `dev-docs/specs/2026-07-03-140-testpypi-smoke-retry-design.md`.
 
 **Tech Stack:** GitHub Actions workflow YAML, bash. No Python code changes; no unit-test tier covers workflows, so verification is a YAML parse plus `bash -n` on the extracted script (no `actionlint`/`shellcheck` in this container).
 

@@ -2,8 +2,8 @@
 
 **Date:** 2026-04-28
 **Status:** APPROVED
-**Companion architectural spec:** `docs/superpowers/specs/2026-04-12-multi-lang-pipeline.md`
-**Roadmap reference:** `docs/superpowers/specs/2026-04-12-multi-lang-implementation-plan.md` §5
+**Companion architectural spec:** `dev-docs/specs/2026-04-12-multi-lang-pipeline.md`
+**Roadmap reference:** `dev-docs/specs/2026-04-12-multi-lang-implementation-plan.md` §5
 
 ---
 

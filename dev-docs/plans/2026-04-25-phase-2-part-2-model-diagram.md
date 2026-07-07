@@ -12,7 +12,7 @@
 
 ## Spec Reference
 
-Design doc: `docs/superpowers/specs/2026-04-25-phase-2-part-2-model-diagram-design.md`
+Design doc: `dev-docs/specs/2026-04-25-phase-2-part-2-model-diagram-design.md`
 
 Key facts about the spec JSON produced by `plcc-spec`:
 

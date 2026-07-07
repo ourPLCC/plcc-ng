@@ -12,7 +12,7 @@
 
 > **Worktree:** All work goes in `.worktrees/first-error-wins` on branch `feat/first-error-wins`.
 > Commands that operate on files run from inside the worktree. Git commands use `-C .worktrees/first-error-wins` or are run from that directory.
-> The spec is at `docs/superpowers/specs/2026-05-24-first-error-wins-design.md`.
+> The spec is at `dev-docs/specs/2026-05-24-first-error-wins-design.md`.
 
 ---
 

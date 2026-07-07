@@ -147,4 +147,4 @@ Existing bats tests for `plcc-scan`, `plcc-parse`, and `plcc-rep` cover the end-
 
 ## Supersedes
 
-The planned TTY hint for `plcc-scan` (issue 005 / `docs/superpowers/plans/2026-05-12-scan-tty-hint.md`) is subsumed by this design. The hint and prompt behavior specified there is now owned by `SourceRunner` and applies uniformly to all three commands. Issue 005 should be closed in favour of this work.
+The planned TTY hint for `plcc-scan` (issue 005 / `dev-docs/plans/2026-05-12-scan-tty-hint.md`) is subsumed by this design. The hint and prompt behavior specified there is now owned by `SourceRunner` and applies uniformly to all three commands. Issue 005 should be closed in favour of this work.
