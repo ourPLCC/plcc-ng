@@ -87,7 +87,9 @@ Commits on this branch, in order:
 1. `docs(specs)` — this design doc.
 2. `test(issues)` — extend `issues-close.bats` with the new fixtures and cases
    (failing).
-3. `feat(issues)` — Pass 3 and Pass 4 in `close.bash`.
+3. `chore(issues)` — Pass 3 and Pass 4 in `close.bash`. Internal repo tooling,
+   not part of the shipped package, so this type deliberately does not
+   trigger a release.
 4. `bin/issues/close.bash 150`; verify with `bin/issues/check.bash`.
 
 The roadmap update on close is handled by `close.bash` itself. After the final commit

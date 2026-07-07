@@ -16,7 +16,7 @@
 - Match the existing script's style: plain (non-`-F`) `sed`/`grep` patterns, no defensive over-escaping beyond what's needed for correctness (see Task 2 for the one place escaping matters).
 - TDD per CONTRIBUTING: extend the bats file and watch new cases fail before touching `close.bash`.
 - Test command: `bin/test/commands.bash tests/bats/commands/issues-close.bats` runs the *entire* `commands.bash` suite (it doesn't filter to one file) — read the output for `issues-close.bats`'s own lines, and confirm `0` failures overall.
-- Commit message types: `test(issues)` for the bats-only commit, `feat(issues)` for the `close.bash` implementation commit.
+- Commit message types: `test(issues)` for the bats-only commit, `chore(issues)` for the `close.bash` implementation commit — this is internal repo tooling, not part of the shipped package, so it must not trigger a semantic-release version bump.
 
 ---
 
@@ -207,7 +207,7 @@ Expected: exit 0, `0` failures.
 ```bash
 git add bin/issues/close.bash dev-docs/issue-conventions.md
 git commit -m "$(cat <<'EOF'
-feat(issues): auto-fix links on close.bash (issue 150)
+chore(issues): auto-fix links on close.bash (issue 150)
 
 close.bash now rewrites other dev-docs/ files' links to the closed
 issue's old open path, and adjusts the moved file's own outbound
