@@ -23,7 +23,7 @@ directory level deeper than when it was written.
 
 The full file-by-file list of affected links (16 spec files, plus
 `v1.0-criteria.md`, plus the 3 depth-bug files) is captured in
-`docs/superpowers/specs/2026-07-06-145-mkdocs-strict-warnings-cleanup-design.md`,
+`dev-docs/specs/2026-07-06-145-mkdocs-strict-warnings-cleanup-design.md`,
 under "Bucket B" — that content is unaffected by the #148
 decommission decision and still accurate.
 

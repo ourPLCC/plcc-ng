@@ -42,7 +42,7 @@ Work:
 
 ## Notes
 
-- Full investigation and rationale: `docs/superpowers/specs/2026-07-06-145-mkdocs-strict-warnings-cleanup-design.md`.
+- Full investigation and rationale: `dev-docs/specs/2026-07-06-145-mkdocs-strict-warnings-cleanup-design.md`.
 - Does not touch the remaining ~25 warnings caused by stale
   `issues/NNN` links (tracked separately as #149) — those are real
   broken links on GitHub regardless of whether this site exists.
