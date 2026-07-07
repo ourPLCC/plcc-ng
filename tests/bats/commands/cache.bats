@@ -9,11 +9,13 @@ setup() {
     CACHE_DIR="$(mktemp -d)"
     CACHE_FILE="${CACHE_DIR}/plcc-test-units.log"
     export PLCC_TEST_STATS_LOG="${CACHE_DIR}/stats.log"
+    DIRTY_FILE="${PROJECT_ROOT}/tmp_test_dirty_$$.txt"
     unset PLCC_NO_TEST_CACHE
 }
 
 teardown() {
     rm -rf "${CACHE_DIR}"
+    rm -f "${DIRTY_FILE}"
 }
 
 @test "cache miss: runs command and creates cache and meta files" {
@@ -96,6 +98,14 @@ teardown() {
 @test "stderr: prints [cache skip] with PLCC_NO_TEST_CACHE=1" {
     run bash -c "export PLCC_NO_TEST_CACHE=1; source '${CACHE_HELPER}'; run_cached '${CACHE_FILE}' echo hello 2>&1 >/dev/null"
     [[ "$output" == *"[cache skip] units"* ]]
+}
+
+@test "content change on already-dirty file invalidates cache" {
+    echo "version1" > "${DIRTY_FILE}"
+    bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo first-run 2>/dev/null" || true
+    echo "version2" > "${DIRTY_FILE}"
+    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo second-run 2>/dev/null"
+    [[ "$output" == "second-run" ]]
 }
 
 @test "fallback: runs uncached when git is unavailable" {
