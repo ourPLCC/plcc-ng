@@ -11,7 +11,7 @@ Called by [`plcc-lang-emit --target=Python`](plcc-lang-emit.md).
 plcc-python-emit --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

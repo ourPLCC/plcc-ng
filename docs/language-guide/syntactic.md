@@ -1,4 +1,4 @@
-# Syntactic Specification
+# Syntactic specification
 
 The syntactic specification defines the structure of your language
 in a dialect of BNF. Each production rule maps a nonterminal to
@@ -31,7 +31,7 @@ Here is an example that will be referenced in the sections below.
 Literals such as "+" and "," are not supported. Instead, define the literal
 as a token in the lexical section and refer to it here.
 
-## Start Symbol
+## Start symbol
 
 The first rule defines the start symbol.
 

@@ -6,3 +6,4 @@ Documentation for contributors and maintainers.
 - [Release SOP](release-sop.md)
 - [Architecture](architecture.md)
 - [Issue Conventions](issue-conventions.md)
+- [Security Notes](security-notes.md)

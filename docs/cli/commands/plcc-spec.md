@@ -8,7 +8,7 @@ Parse, validate, and print a PLCC grammar file as JSON.
 plcc-spec [-v ...] [options] FILE
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Argument/Option | Description |
 |---|---|

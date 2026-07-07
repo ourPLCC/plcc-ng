@@ -12,7 +12,7 @@ Requires the `plcc-diagram` package.
 plcc-diagram-run --input=FILE [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

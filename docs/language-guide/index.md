@@ -1,4 +1,4 @@
-# Language Guide
+# Language guide
 
 A plcc-ng specification describes
 a language's tokens, syntax, and semantics.

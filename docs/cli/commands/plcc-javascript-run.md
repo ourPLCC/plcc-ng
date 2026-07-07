@@ -13,7 +13,7 @@ Requires Node.js 18 or later on `PATH`.
 plcc-javascript-run --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

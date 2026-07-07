@@ -9,7 +9,7 @@ record per line, each record representing a token, skip, or error).
 plcc-tokens [-v ...] [options] SPEC_JSON [SOURCE ...]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Argument/Option | Description |
 |---|---|

@@ -1,4 +1,4 @@
-# Language Extensions
+# Language extensions
 
 Language extensions provide the emit, build, and run steps for a specific
 target language. plcc-ng ships with Python, Java, JavaScript, and Haskell support.

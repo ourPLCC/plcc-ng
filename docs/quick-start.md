@@ -1,4 +1,4 @@
-# Quick Start
+# Quick start
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ pip install plcc-ng
 
 For upgrade, version pinning, and uninstall instructions, see [Installation](installation.md).
 
-## Test Drive
+## Test drive
 
 Let's build a tiny language whose programs consist of a sequence of integers.
 Running a program will print their sum.
@@ -131,7 +131,7 @@ Congratulations! You've defined a language,
 scanned it with `plcc-scan`, parsed it with `plcc-parse`,
 and executed it with `plcc-rep`.
 
-## What Next
+## What next
 
 - [Language Guide](language-guide/index.md) - Learn to specify languages.
 - [CLI Reference](cli/index.md) - Learn about commands.

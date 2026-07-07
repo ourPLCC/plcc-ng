@@ -10,7 +10,7 @@ JSON to stdout. Called by [`plcc-trees --parser=table`](plcc-trees.md)
 plcc-parser-table [-v ...] [options] --ll1=LL1_JSON
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

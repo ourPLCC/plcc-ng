@@ -9,7 +9,7 @@ and calls `plcc-<lang>-run` for the target language.
 plcc-lang-run --target=LANG --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

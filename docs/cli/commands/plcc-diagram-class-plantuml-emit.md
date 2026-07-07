@@ -11,7 +11,7 @@ Called by [`plcc-diagram-emit --type=class --format=plantuml`](plcc-diagram-emit
 plcc-diagram-class-plantuml-emit [--output=DIR] [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

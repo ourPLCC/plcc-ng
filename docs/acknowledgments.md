@@ -38,12 +38,12 @@ The following have provided significant code contributions to PLCC-ng.
 For a full list of contributors, see the
 [GitHub contributors page](https://github.com/ourPLCC/plcc-ng/graphs/contributors).
 
-## Institutions & Funding
+## Institutions & funding
 
 - Western New England University through independent studies and research
 releases has supported the development of PLCC-ng.
 
-## Open-Source Dependencies
+## Open-source dependencies
 
 We stand on the shoulders of giants: Codespace, VS Code, Docker, GitHub,
 Claude Code, Copilot, Material for MkDocs, MkDocs, Linux, Bats, Pytest, PyPi,

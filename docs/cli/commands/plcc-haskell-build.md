@@ -13,7 +13,7 @@ Requires GHC 9.4 or later and cabal 3.0 or later on `PATH`.
 plcc-haskell-build --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

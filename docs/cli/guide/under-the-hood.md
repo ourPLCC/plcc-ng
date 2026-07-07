@@ -1,4 +1,4 @@
-# Under the Hood
+# Under the hood
 
 The commands you use every day — `plcc-scan`, `plcc-parse`, `plcc-rep`, and
 `plcc-diagram` — each orchestrate a pipeline of lower-level commands. This
