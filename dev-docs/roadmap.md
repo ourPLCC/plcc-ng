@@ -35,3 +35,5 @@ tracks progress; it retires when all three ship.
 
 - **[#154](issues/154-update-python-semantic-release.md) — Update python-semantic-release**
   Pinned to 9.x (locked 9.21.2); latest is 10.5.3. Dev-only dependency, consider updating.
+- **[#155](issues/155-test-scripts-path-filter.md) — Top-level test scripts should accept a path filter**
+  bin/test/commands.bash, integration.bash, e2e.bash ignore arguments and always run their whole tier; only units.bash forwards args to pytest.
