@@ -14,7 +14,7 @@
 - Section order within each file must match the order sections appear in that command's actual `--help` output: Arguments (if any positional args), Options, Output, Diagnostics.
 - Only commands touched by issue 115 are in scope: `plcc-scan`, `plcc-parse`, `plcc-rep`, `plcc-make`, `plcc-diagram`. No other file under `docs/cli/commands/` changes.
 - Do not add `[skip ci]` to any commit message — CI already skips via `paths-ignore` for doc-only changes.
-- Reference: spec at `docs/superpowers/specs/2026-07-03-128-cli-docs-options-output-diagnostics-design.md`.
+- Reference: spec at `dev-docs/specs/2026-07-03-128-cli-docs-options-output-diagnostics-design.md`.
 
 ---
 

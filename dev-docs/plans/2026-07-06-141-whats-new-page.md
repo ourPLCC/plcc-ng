@@ -8,7 +8,7 @@
 
 **Tech Stack:** mkdocs (material theme), include-markdown plugin, `bin/issues/` scripts.
 
-**Spec:** `docs/superpowers/specs/2026-07-06-141-whats-new-page-design.md`
+**Spec:** `dev-docs/specs/2026-07-06-141-whats-new-page-design.md`
 
 ## Global Constraints
 

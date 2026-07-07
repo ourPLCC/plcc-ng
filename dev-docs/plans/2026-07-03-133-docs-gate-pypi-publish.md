@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Design doc: `docs/superpowers/specs/2026-07-03-133-docs-gate-pypi-publish-design.md`
+- Design doc: `dev-docs/specs/2026-07-03-133-docs-gate-pypi-publish-design.md`
 - Scope covers issue 133 (ordering/gating) and issue 139 (GITHUB_TOKEN-created releases don't trigger downstream workflows — folded in because it's a direct prerequisite for this fix to have any effect). Do not touch retry logic (issue 134) or PyPI environment protection (issue 138).
 - `docs.yml` must not be modified — the design relies on the existing `release: published` trigger continuing to work unchanged, just firing later (and, per issue 139, actually reaching it).
 - The `create-release` job's gating condition must be exactly:

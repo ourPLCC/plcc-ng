@@ -8,7 +8,7 @@
 
 **Tech Stack:** GitHub Actions YAML, bash, python-semantic-release, pypa/gh-action-pypi-publish, `gh` CLI (in CI only — the local `gh` is a fake; do not run `gh` locally).
 
-**Spec:** `docs/superpowers/specs/2026-07-04-134-pypi-publish-failure-recovery-design.md`
+**Spec:** `dev-docs/specs/2026-07-04-134-pypi-publish-failure-recovery-design.md`
 
 ## Global Constraints
 

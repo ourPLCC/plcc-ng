@@ -8,7 +8,7 @@
 
 **Tech Stack:** bash, awk, bats (`tests/bats/commands/`), GitHub Actions, `gh` CLI.
 
-**Spec:** `docs/superpowers/specs/2026-07-04-136-release-notes-unification-design.md`
+**Spec:** `dev-docs/specs/2026-07-04-136-release-notes-unification-design.md`
 
 ## Global Constraints
 

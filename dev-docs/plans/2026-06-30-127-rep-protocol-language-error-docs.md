@@ -4,7 +4,7 @@
 
 **Goal:** Add user-facing documentation for `plcc-rep`'s startup/error behavior, the `LanguageError` mechanism, and how `plcc-rep` distinguishes language behavior from specification errors.
 
-**Architecture:** Pure documentation edits across six existing Markdown files. No code changes. All six tasks are fully independent and can be done in any order. The design spec is at `docs/superpowers/specs/2026-06-30-127-rep-protocol-language-error-design.md`.
+**Architecture:** Pure documentation edits across six existing Markdown files. No code changes. All six tasks are fully independent and can be done in any order. The design spec is at `dev-docs/specs/2026-06-30-127-rep-protocol-language-error-design.md`.
 
 **Tech Stack:** Markdown, MkDocs (`bin/docs/serve.bash` to preview).
 
