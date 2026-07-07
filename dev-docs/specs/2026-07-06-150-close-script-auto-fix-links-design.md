@@ -38,20 +38,25 @@ matches" doesn't trip `set -e`.
 ### Pass 4 — internal outbound links
 
 Applied only to the moved file (now at `issues/done/${basename}`). Three rules, keyed
-off what immediately follows `](`, mutually exclusive by their leading characters:
+off what immediately follows `](`:
 
-1. **`](done/...)` → strip the `done/`.** The linked issue was already closed before
-   this one, so it's now a true sibling in the same `issues/done/` directory.
-2. **`](../...)` → prepend one more `../`.** The file is one directory deeper than
+1. **`](../...)` → prepend one more `../`.** The file is one directory deeper than
    before, so anything already climbing out of `issues/` (to another `dev-docs/` file,
    or further up to `src/`, etc.) needs an extra level.
-3. **`](NNN-slug.md)` (bare, digit-led, no prefix) → prepend `../`.** Covers a link to a
+2. **`](NNN-slug.md)` (bare, digit-led, no prefix) → prepend `../`.** Covers a link to a
    still-open sibling, which remains in `issues/` — one level up from the file's new
    location. Regex anchored on `[0-9]{3}-[^)]+\.md` right after `(` so it can't misfire
    on external URLs or anchors elsewhere in the body.
+3. **`](done/...)` → strip the `done/`.** The linked issue was already closed before
+   this one, so it's now a true sibling in the same `issues/done/` directory.
 
-Each rule is one `sed -E` substitution; order among the three doesn't matter since the
-patterns are disjoint by their first character after `(` (`d`, `.`, or a digit).
+Each rule is a separate `sed` substitution, and **this order is required** — the three
+patterns look disjoint on the original text, but each rule's output can look like a
+later rule's input if run out of order: rule 2's output (`](../NNN-...`) would
+re-match rule 1's `../` pattern if rule 1 ran after it, and rule 3's output (a bare
+`NNN-slug.md`, with `done/` stripped) would re-match rule 2's bare-digit pattern if
+rule 2 ran after it. Running climb-adjust, then bare-prepend, then `done/`-strip last
+avoids all three rules seeing another rule's output.
 
 ## Testing
 

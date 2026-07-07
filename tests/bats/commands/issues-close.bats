@@ -31,8 +31,8 @@ EOF
     cat > "${REPO}/dev-docs/specs/2026-01-01-example-design.md" <<'EOF'
 # Example design
 
-Fixes issue [1](issues/001-first-bug.md) using the same approach as
-issue [2](issues/002-second-bug.md).
+Fixes issue [1](../issues/001-first-bug.md) using the same approach as
+issue [2](../issues/002-second-bug.md).
 EOF
 
     cat > "${ROADMAP}" <<'EOF'
@@ -99,14 +99,14 @@ teardown() {
 @test "closing an issue rewrites an external link to the issue's done/ path" {
     run "${REPO}/bin/issues/close.bash" 1
     [ "$status" -eq 0 ]
-    grep -qF '(issues/done/001-first-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
-    ! grep -qF '(issues/001-first-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
+    grep -qF '(../issues/done/001-first-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
+    ! grep -qF '(../issues/001-first-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
 }
 
 @test "closing an issue leaves an unrelated external link untouched" {
     run "${REPO}/bin/issues/close.bash" 1
     [ "$status" -eq 0 ]
-    grep -qF '(issues/002-second-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
+    grep -qF '(../issues/002-second-bug.md)' "${REPO}/dev-docs/specs/2026-01-01-example-design.md"
 }
 
 @test "closing an issue strips the done/ prefix from an already-closed sibling link" {
