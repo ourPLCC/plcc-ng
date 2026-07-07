@@ -30,3 +30,8 @@ tracks progress; it retires when all three ship.
   bin/test/_cache.bash keys on the dirty-file list, not content; editing an already-dirty file can replay a stale cached result.
 - **[#153](issues/153-test-artifacts-outside-project-dir.md) — Test artifacts land outside the project directory**
   Tests that run plcc-make must build in a directory created outside the project; plcc-ng/'s default build-dir name matches the project's own, and .gitignore doesn't exclude it.
+
+### Chore
+
+- **[#154](issues/154-update-python-semantic-release.md) — Update python-semantic-release**
+  Pinned to 9.x (locked 9.21.2); latest is 10.5.3. Dev-only dependency, consider updating.
