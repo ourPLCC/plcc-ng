@@ -13,7 +13,7 @@ tracks progress; it retires when all three ship.
 
 1. [x] [#148](issues/done/148-decommission-dev-docs-mkdocs-site.md) — remove the mkdocs-dev.yml build/deploy and its published gh-pages content; ~70% of #145's warnings exist only because of this build.
 2. [x] [#149](issues/done/149-fix-stale-issues-done-links.md) — fix broken issues/NNN links that should point to issues/done/; independent of #148, real breakage on GitHub either way.
-3. [ ] [#150](issues/150-close-script-auto-fix-links.md) — harden close.bash to prevent #149's bug class from recurring.
+3. [x] [#150](issues/done/150-close-script-auto-fix-links.md) — harden close.bash to prevent #149's bug class from recurring.
 
 ## Open Issues
 
@@ -23,8 +23,3 @@ tracks progress; it retires when all three ship.
   Section heading capitalization is inconsistent across the docs; needs a single agreed-upon rule.
 - **[#151](issues/151-migrate-superpowers-docs-to-dev-docs.md) — Migrate docs/superpowers/ into dev-docs/**
   docs/superpowers/specs/ and docs/superpowers/plans/ duplicate dev-docs/specs/ and dev-docs/plans/; consolidate into the latter.
-
-### Feat
-
-- **[#150](issues/150-close-script-auto-fix-links.md) — Harden close.bash to auto-fix links on close**
-  close.bash moves an issue file to done/ but doesn't fix links, so #149's bug class recurs on every future close.

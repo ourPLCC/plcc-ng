@@ -225,7 +225,7 @@ EOF
 ### Task 3: Close issue 150
 
 **Files:**
-- Modify: `dev-docs/roadmap.md`, moves `dev-docs/issues/150-close-script-auto-fix-links.md` to `dev-docs/issues/done/`
+- Modify: `dev-docs/roadmap.md`, moves `dev-docs/issues/done/150-close-script-auto-fix-links.md` to `dev-docs/issues/done/`
 
 **Interfaces:**
 - Consumes: the working `bin/issues/close.bash` from Task 2.
@@ -235,7 +235,7 @@ EOF
 
 Run: `bin/issues/close.bash 150`
 
-Expected: prints `closed: dev-docs/issues/done/150-close-script-auto-fix-links.md` followed by the reminder to review the roadmap and commit. Since this is the *first* real (non-test-fixture) use of the new Pass 3/4 logic, also check by hand whether anything changed under `dev-docs/` beyond `roadmap.md` and the moved issue file — the design doc committed earlier links to `dev-docs/issues/150-close-script-auto-fix-links.md`, so Pass 3 is expected to rewrite that one link in `dev-docs/specs/2026-07-06-150-close-script-auto-fix-links-design.md` to point at `issues/done/`.
+Expected: prints `closed: dev-docs/issues/done/150-close-script-auto-fix-links.md` followed by the reminder to review the roadmap and commit. Since this is the *first* real (non-test-fixture) use of the new Pass 3/4 logic, also check by hand whether anything changed under `dev-docs/` beyond `roadmap.md` and the moved issue file — the design doc committed earlier links to `dev-docs/issues/done/150-close-script-auto-fix-links.md`, so Pass 3 is expected to rewrite that one link in `dev-docs/specs/2026-07-06-150-close-script-auto-fix-links-design.md` to point at `issues/done/`.
 
 - [ ] **Step 2: Review the roadmap diff**
 
