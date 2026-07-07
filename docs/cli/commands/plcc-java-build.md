@@ -13,7 +13,7 @@ Requires Java JDK 21 or later on `PATH`.
 plcc-java-build --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

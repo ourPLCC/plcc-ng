@@ -11,7 +11,7 @@ Called by [`plcc-lang-run --target=Python`](plcc-lang-run.md).
 plcc-python-run --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

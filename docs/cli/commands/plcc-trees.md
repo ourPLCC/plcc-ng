@@ -9,7 +9,7 @@ tree JSON to stdout. The parser plugin is selected with `--parser`.
 plcc-trees [-v ...] [options] --ll1=LL1_JSON
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

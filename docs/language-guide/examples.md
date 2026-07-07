@@ -1,6 +1,6 @@
 # Examples
 
-## Example: Subtraction language
+## Example: subtraction language
 
 This end-to-end example implements a small expression language that evaluates
 subtraction expressions. It walks through all three grammar sections and shows

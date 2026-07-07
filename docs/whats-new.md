@@ -1,4 +1,4 @@
-# What's New
+# What's new
 
 Curated highlights of what's changed in PLCC-ng and why it matters
 to you. For the full commit-level history, see

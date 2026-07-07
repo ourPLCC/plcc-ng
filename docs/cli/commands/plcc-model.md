@@ -10,7 +10,7 @@ uses to generate source code.
 plcc-model [-v ...] [options] [SPEC_JSON]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Argument/Option | Description |
 |---|---|

@@ -9,7 +9,7 @@ commands and prints each discovered language name, one per line.
 plcc-lang-list [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

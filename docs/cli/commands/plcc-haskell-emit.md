@@ -15,7 +15,7 @@ the emitted interpreter.
 plcc-haskell-emit --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

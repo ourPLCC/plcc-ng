@@ -12,7 +12,7 @@ Called by [`plcc-lang-emit --target=Java`](plcc-lang-emit.md).
 plcc-java-emit --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

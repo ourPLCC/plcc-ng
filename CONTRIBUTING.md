@@ -99,6 +99,10 @@ Rules of thumb:
 
 Check [bin/](bin/) first. If a script there does what you need, use it. If one almost does what you need, prefer extending or parameterizing it over writing a parallel script. New scripts belong in [bin/](bin/) with a `.bash` extension, `set -euo pipefail`, and absolute-path resolution via `SCRIPT_DIR`/`PROJECT_ROOT` — match the existing style.
 
+## Documentation conventions
+
+Section headings in `docs/` use sentence case: capitalize only the first word and proper names (e.g. `## Arguments and options`, not `## Arguments and Options`). This applies to all heading levels.
+
 ## Workflow
 
 Work happens on feature branches, not on `main`. Branch names describe the work (e.g. `fix-scanner-skip-regression`, `add-python-emitter`). Long-running initiatives may use a shared integration branch, but that is a property of the initiative, not a general rule — there is currently no such branch; everything merges directly to `main`.

@@ -1,4 +1,4 @@
-# Diagram Extensions
+# Diagram extensions
 
 Diagram extensions implement the emit, build, and run steps for a specific
 diagram format. plcc-ng ships with PlantUML support.

@@ -9,7 +9,7 @@ and prints each discovered parser kind, one per line.
 plcc-parser-list [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

@@ -11,7 +11,7 @@ Requires the `plcc-diagram` package.
 plcc-diagram-emit --type=TYPE [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|

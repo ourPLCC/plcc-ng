@@ -1,4 +1,4 @@
-# CLI Reference
+# CLI reference
 
 plcc-ng provides a set of command-line tools for defining, building, and
 experimenting with programming languages. Most language authors interact with

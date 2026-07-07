@@ -1,4 +1,4 @@
-# Semantic Section
+# Semantic section
 
 The semantic section lets you implement language semantics by injecting
 target-language code into classes generated from the syntactic section.

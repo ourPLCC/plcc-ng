@@ -1,4 +1,4 @@
-# Parser Extensions
+# Parser extensions
 
 Parser extensions implement the parsing step. plcc-ng ships with a single
 built-in parser: `plcc-parser-table`, an LL(1) table-driven parser.

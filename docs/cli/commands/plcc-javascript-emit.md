@@ -13,7 +13,7 @@ Requires Node.js 18 or later on `PATH` to run the emitted interpreter.
 plcc-javascript-emit --output=DIR [-v ...] [options]
 ```
 
-## Arguments and Options
+## Arguments and options
 
 | Option | Description |
 |---|---|
