@@ -80,6 +80,30 @@ awk -v link="(issues/${basename})" '
 mv "${ROADMAP}.tmp" "${ROADMAP}"
 git add "${ROADMAP}"
 
+# Pass 3: external inbound links. Other dev-docs/ files may still link to
+# this issue's old open path; repoint them at issues/done/. Depth-agnostic:
+# done/ is a subdirectory of issues/, so no existing "../" needs adjusting.
+while IFS= read -r f; do
+    sed -i "s|issues/${basename}|issues/done/${basename}|g" "${f}"
+    git add "${f}"
+done < <(grep -rl --include='*.md' "issues/${basename}" dev-docs | grep -vF "${DONE_DIR}/${basename}" || true)
+
+# Pass 4: internal outbound links, now that this file itself sits one level
+# deeper (issues/done/ instead of issues/). Three link shapes, keyed off
+# what immediately follows "](". Each pass's output can look like another
+# pass's input, so order matters: climb-adjust first (its "../../" output
+# doesn't look like a bare NNN-*.md link), then the bare-NNN prepend (its
+# "../NNN-*.md" output doesn't look like a done/-prefixed link), then the
+# done/ strip last (its bare NNN-*.md output is never revisited).
+#   ../...     -> one more ../ (anything climbing out of issues/ needs an extra level)
+#   NNN-*.md   -> prepend ../ (bare links to still-open siblings now live one level up)
+#   done/...   -> strip the done/ prefix (already-closed issues are now true siblings)
+moved_file="${DONE_DIR}/${basename}"
+sed -i -e 's|](\.\./|](../../|g' "${moved_file}"
+sed -i -E 's|\]\(([0-9]{3}-[^)]+\.md)\)|](../\1)|g' "${moved_file}"
+sed -i -e 's|](done/|](|g' "${moved_file}"
+git add "${moved_file}"
+
 bin/issues/check.bash
 
 echo "closed: ${DONE_DIR}/${basename}"
