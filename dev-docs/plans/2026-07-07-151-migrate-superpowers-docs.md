@@ -26,7 +26,7 @@
 - Delete: `docs/superpowers/specs/`, `docs/superpowers/plans/`, `docs/superpowers/` (now-empty directories)
 
 **Interfaces:**
-- Produces: staged renames in the git index (`R100 docs/superpowers/specs/X.md dev-docs/specs/X.md` etc.) that Task 2's script reads via `git diff --cached --name-status -M` to discover exactly which files moved and from where.
+- Produces: a commit whose parent (`HEAD~1` at the time Task 2's script runs, since no other commits land in between) diffs as pure renames (`R100 docs/superpowers/specs/X.md dev-docs/specs/X.md` etc.). Task 2's script reads `git diff --name-status -M HEAD~1 HEAD` to discover exactly which files moved and from where — it must run before any later task adds another commit, or the range needs adjusting to name this task's actual commit SHA instead of `HEAD~1`.
 
 - [ ] **Step 1: Move the files with git mv**
 
@@ -67,7 +67,7 @@ EOF
 
 **Interfaces:**
 - Produces: a script invocable as `python3 fix_links.py` (apply), `python3 fix_links.py --dry-run` (preview only, no writes), `python3 fix_links.py --verify` (check every link resolves, exit 1 if not). Must be run with cwd set to the repo root (the worktree root).
-- Consumes: `git diff --cached --name-status -M` output staged by Task 1, to discover which files moved.
+- Consumes: `git diff --name-status -M HEAD~1 HEAD` output from Task 1's commit, to discover which files moved. This assumes Task 1's move commit is still the current `HEAD` when the script runs (true for Tasks 2-4 in this plan, since none of them commit before this script's last invocation in Task 4).
 
 - [ ] **Step 1: Write the script**
 
@@ -153,8 +153,10 @@ def fix_links(path, old_dir, new_dir, dry_run=False):
 
 
 def moved_files():
+    # Task 1's git mv is already committed by the time this runs, so read
+    # the rename from that commit (HEAD~1..HEAD), not the (now-empty) index.
     out = subprocess.run(
-        ["git", "diff", "--cached", "--name-status", "-M"],
+        ["git", "diff", "--name-status", "-M", "HEAD~1", "HEAD"],
         cwd=REPO_ROOT, capture_output=True, text=True, check=True,
     ).stdout
     specs, plans = [], []
