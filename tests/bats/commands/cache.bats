@@ -98,6 +98,16 @@ teardown() {
     [[ "$output" == *"[cache skip] units"* ]]
 }
 
+@test "content change on already-dirty file invalidates cache" {
+    local dirty_file="${PROJECT_ROOT}/tmp_test_dirty_$$.txt"
+    echo "version1" > "${dirty_file}"
+    bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo first-run 2>/dev/null" || true
+    echo "version2" > "${dirty_file}"
+    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo second-run 2>/dev/null"
+    rm -f "${dirty_file}"
+    [[ "$output" == "second-run" ]]
+}
+
 @test "fallback: runs uncached when git is unavailable" {
     local fake_bin
     fake_bin=$(mktemp -d)

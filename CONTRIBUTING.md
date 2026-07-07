@@ -36,7 +36,7 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 
 ### Test output cache
 
-All test scripts cache their output to `/tmp` so agents and tools can grep results without re-running the suite. The cache is keyed on git state (`git status --porcelain` + `git rev-parse HEAD`) and is invalidated automatically whenever the working tree or HEAD changes.
+All test scripts cache their output to `/tmp` so agents and tools can grep results without re-running the suite. The cache is keyed on git state (`git rev-parse HEAD` + `git status --porcelain` + `git diff HEAD` + the contents of untracked files) and is invalidated automatically whenever the working tree, HEAD, or any file's content changes.
 
 | Command | What it does |
 |---|---|
