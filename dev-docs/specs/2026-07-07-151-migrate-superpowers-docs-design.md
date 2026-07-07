@@ -1,6 +1,6 @@
 # 151 - Migrate docs/superpowers/ into dev-docs/
 
-**Issue:** [151](../issues/151-migrate-superpowers-docs-to-dev-docs.md)
+**Issue:** [151](../issues/done/151-migrate-superpowers-docs-to-dev-docs.md)
 
 ## Goal
 
