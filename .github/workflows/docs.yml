@@ -33,12 +33,31 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Detect docs changes
+        id: docs-changed
+        if: github.event_name == 'push'
+        run: |
+          if [ -n "$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" -- docs/)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Deploy dev docs preview (on push to main)
         if: github.event_name == 'push'
         run: |
           pdm run mike deploy dev
           if ! pdm run mike list 2>/dev/null | grep -qw 'latest'; then
             pdm run mike set-default dev
+          fi
+      - name: Sync current-version docs (docs-only push to main)
+        if: github.event_name == 'push' && steps.docs-changed.outputs.changed == 'true'
+        run: |
+          if CURRENT_JSON=$(pdm run mike list latest -j 2>/dev/null); then
+            CURRENT=$(echo "$CURRENT_JSON" | jq -r '.version')
+            echo "Re-syncing docs-only change into current version: $CURRENT"
+            pdm run mike deploy "$CURRENT"
+          else
+            echo "No 'latest' alias yet (no release published); skipping current-version sync."
           fi
       - name: Deploy versioned docs (on release)
         if: github.event_name == 'release'
