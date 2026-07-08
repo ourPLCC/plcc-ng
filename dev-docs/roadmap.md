@@ -20,8 +20,6 @@ retires once every item below is checked off.
 
 ### Test
 
-- **[#152](issues/152-test-cache-content-hash-invalidation.md) — Test cache stale-hit on content-only changes**
-  bin/test/_cache.bash keys on the dirty-file list, not content; editing an already-dirty file can replay a stale cached result.
 - **[#153](issues/153-test-artifacts-outside-project-dir.md) — Test artifacts land outside the project directory**
   Tests that run plcc-make must build in a directory created outside the project; plcc-ng/'s default build-dir name matches the project's own, and .gitignore doesn't exclude it.
 
