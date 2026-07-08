@@ -37,7 +37,7 @@ jobs:
         id: docs-changed
         if: github.event_name == 'push'
         run: |
-          if git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" -- docs/ | grep -q .; then
+          if [ -n "$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" -- docs/)" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"

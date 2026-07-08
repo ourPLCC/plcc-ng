@@ -122,6 +122,13 @@ content. It does not create a new version, move `latest`, or touch
   moments before the release pipeline deploys the *new* one via the
   `release` event. Harmless (extra `mike deploy` of soon-to-be-stale
   content) and not worth special-casing.
+- **`git diff` can't resolve `before`/`after`** (e.g.
+  `github.event.before` is the null SHA on an unusual push event —
+  not expected on a `branches: [main]`-only trigger, but not
+  impossible): the pipe-free `[ -n "$(...)" ]` test in the
+  detect-changes step evaluates false in that case, so the step
+  degrades to `changed=false` — a safe skip of this run's sync, not a
+  crash or corruption.
 
 ## Verification
 
