@@ -31,3 +31,5 @@ retires once every item below is checked off.
   bin/test/commands.bash, integration.bash, e2e.bash ignore arguments and always run their whole tier; only units.bash forwards args to pytest.
 - **[#156](issues/156-mkdocs-1x-successor-decision.md) — Decide our MkDocs 1.x successor**
   mkdocs-material hard-pins mkdocs<2; mkdocs-kroki-plugin already pulls in properdocs. Not urgent yet, but we'll need to pick ProperDocs, Zensical, or stay pinned once MkDocs 1.x actually breaks.
+- **[#158](issues/158-current-version-docs-missed-pre-157-changes.md) — Current-version docs missed pre-157 changes**
+  #157's sync only applies to pushes after it landed; docs-only changes merged between the v1.0.0 tag and 157's fix (e.g. the heading-case standardization) never reached the live 1.0/latest docs and need a one-time manual backfill.
