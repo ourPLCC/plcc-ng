@@ -20,8 +20,6 @@ retires once every item below is checked off.
 
 ### Test
 
-- **[#152](issues/152-test-cache-content-hash-invalidation.md) — Test cache stale-hit on content-only changes**
-  bin/test/_cache.bash keys on the dirty-file list, not content; editing an already-dirty file can replay a stale cached result.
 - **[#153](issues/153-test-artifacts-outside-project-dir.md) — Test artifacts land outside the project directory**
   Tests that run plcc-make must build in a directory created outside the project; plcc-ng/'s default build-dir name matches the project's own, and .gitignore doesn't exclude it.
 
@@ -33,5 +31,5 @@ retires once every item below is checked off.
   bin/test/commands.bash, integration.bash, e2e.bash ignore arguments and always run their whole tier; only units.bash forwards args to pytest.
 - **[#156](issues/156-mkdocs-1x-successor-decision.md) — Decide our MkDocs 1.x successor**
   mkdocs-material hard-pins mkdocs<2; mkdocs-kroki-plugin already pulls in properdocs. Not urgent yet, but we'll need to pick ProperDocs, Zensical, or stay pinned once MkDocs 1.x actually breaks.
-- **[#157](issues/157-docs-only-changes-never-reach-current-version-docs.md) — Docs-only changes never reach current-version docs**
-  mike only redeploys a version alias (e.g. 1.0) on a GitHub release; docs-only PRs never bump the version, so fixes merged to main only ever reach the dev preview, not the docs users are actually pinned to.
+- **[#158](issues/158-current-version-docs-missed-pre-157-changes.md) — Current-version docs missed pre-157 changes**
+  #157's sync only applies to pushes after it landed; docs-only changes merged between the v1.0.0 tag and 157's fix (e.g. the heading-case standardization) never reached the live 1.0/latest docs and need a one-time manual backfill.

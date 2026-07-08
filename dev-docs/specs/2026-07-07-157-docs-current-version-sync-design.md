@@ -1,7 +1,7 @@
 # Docs-only changes never reach current-version docs (issue 157) — design
 
 **Date:** 2026-07-07
-**Issue:** [157 - docs-only-changes-never-reach-current-version-docs](../issues/157-docs-only-changes-never-reach-current-version-docs.md)
+**Issue:** [157 - docs-only-changes-never-reach-current-version-docs](../issues/done/157-docs-only-changes-never-reach-current-version-docs.md)
 
 ## Problem
 
