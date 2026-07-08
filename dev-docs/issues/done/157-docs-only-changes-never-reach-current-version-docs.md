@@ -16,14 +16,14 @@ documentation content, and never bumps the version either way.
 ## Description
 
 Our published docs are versioned with `mike` (see
-[.github/workflows/docs.yml](../../.github/workflows/docs.yml)):
+[.github/workflows/docs.yml](../../../.github/workflows/docs.yml)):
 
 - Every push to `main` redeploys the `dev` alias.
 - Only a GitHub `release` event redeploys a version alias (e.g. `1.0`)
   and moves `latest`.
 
 Since `docs`-only commits never bump the version (by design — see the
-classification note in [issues/TEMPLATE.md](../TEMPLATE.md)), a
+classification note in [issues/TEMPLATE.md](../../TEMPLATE.md)), a
 docs-only PR merged to `main` updates `dev` but never touches `1.0` or
 `latest`. That was fine as an assumption when docs shipped in lockstep
 with the release that introduced them, but in practice docs regularly

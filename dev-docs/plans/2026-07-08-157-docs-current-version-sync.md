@@ -171,7 +171,7 @@ git commit -m "ci(docs): sync docs-only changes into the current live version"
 
 **Files:**
 - Read: `.github/workflows/docs.yml` (final state)
-- Read: `dev-docs/issues/157-docs-only-changes-never-reach-current-version-docs.md`
+- Read: `dev-docs/issues/done/157-docs-only-changes-never-reach-current-version-docs.md`
 
 - [ ] **Step 1: Read the full final `docs.yml` and confirm step order matches the design**
 
