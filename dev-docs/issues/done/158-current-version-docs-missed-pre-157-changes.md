@@ -15,7 +15,7 @@ documentation content, and never bumps the version either way.
 
 ## Description
 
-Issue [#157](done/157-docs-only-changes-never-reach-current-version-docs.md)
+Issue [#157](157-docs-only-changes-never-reach-current-version-docs.md)
 made docs-only pushes to `main` sync forward into the current live
 version (`1.0`/`latest`) from here on, but it doesn't backfill anything
 — it only reruns `mike deploy <current>` on pushes that happen *after*
