@@ -2,6 +2,11 @@
 
 ## Open Issues
 
+### Docs
+
+- **[#159](issues/159-migration-guide-missing-breaking-changes-callout.md) — Migration guide buries breaking behavior changes**
+  `plcc-parse`'s dropped `-t`/`OK` output and `plcc-scan`'s new output format are only mentioned in a comparison table, not called out as breaking changes.
+
 ### Test
 
 - **[#153](issues/153-test-artifacts-outside-project-dir.md) — Test artifacts land outside the project directory**
