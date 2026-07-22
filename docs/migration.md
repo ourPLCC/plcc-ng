@@ -4,6 +4,31 @@ PLCC-ng is a modern, pip-installable rewrite of [PLCC](https://github.com/ourPLC
 It adds Python semantics support, a cleaner CLI, and a more extensible architecture.
 It is not backward compatible — spec files and command invocations both require updates.
 
+## Breaking behavior changes
+
+These two command-output changes are easy to miss in the checklist below and
+have caught instructors migrating workshop materials by surprise.
+
+**`plcc-parse` always prints the full parse tree.** There is no `-t` flag
+for tracing and no `OK` output on success — the parse tree is the output.
+
+**`plcc-scan` output format changed.** PLCC printed `TOKEN_NAME(lexeme)`;
+PLCC-ng prints `source:line:col TOKEN_NAME 'lexeme'`, where `source` is the
+filename (or `-` for stdin) and `line`/`col` are 1-indexed.
+
+```
+# PLCC
+INTEGER(3)
+ADDOP(+)
+
+# PLCC-ng
+-:1:1 INTEGER '3'
+-:2:1 ADDOP '+'
+```
+
+Update any documentation, tests, or course materials that show the old
+`TOKEN(lexeme)` format — they will no longer match actual output.
+
 ## Migration checklist
 
 ### 1. Install PLCC-ng
