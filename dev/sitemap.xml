@@ -2,226 +2,226 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/acknowledgments/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/installation/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/migration/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/quick-start/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/whats-new/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-build/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-class-plantuml-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-class/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-list/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-run/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-syntax-plantuml-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram-syntax/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-diagram/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-build/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-haskell-run/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-build/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-java-run/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-javascript-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-javascript-run/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-build/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-list/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-lang-run/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-ll1/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-make/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-model/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-parse/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-parser-list/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-parser-table/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-python-emit/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-python-run/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-rep/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-scan/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-spec/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-tokens/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-trees/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/commands/plcc-version/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/author-commands/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/diagram-extensions/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/language-extensions/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/parser-extensions/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/cli/guide/under-the-hood/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/examples/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/lexical/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/semantic/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/syntactic/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/haskell/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/java/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/javascript/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
     <url>
          <loc>https://ourplcc.github.io/plcc-ng/dev/language-guide/languages/python/</loc>
-         <lastmod>2026-07-08</lastmod>
+         <lastmod>2026-07-22</lastmod>
     </url>
 </urlset>

@@ -599,6 +599,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#breaking-behavior-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking behavior changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#migration-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2588,6 +2599,24 @@
 <p>PLCC-ng is a modern, pip-installable rewrite of <a href="https://github.com/ourPLCC/plcc">PLCC</a>.
 It adds Python semantics support, a cleaner CLI, and a more extensible architecture.
 It is not backward compatible — spec files and command invocations both require updates.</p>
+<h2 id="breaking-behavior-changes">Breaking behavior changes</h2>
+<p>These two command-output changes are easy to miss in the checklist below and
+have caught instructors migrating workshop materials by surprise.</p>
+<p><strong><code>plcc-parse</code> always prints the full parse tree.</strong> There is no <code>-t</code> flag
+for tracing and no <code>OK</code> output on success — the parse tree is the output.</p>
+<p><strong><code>plcc-scan</code> output format changed.</strong> PLCC printed <code>TOKEN_NAME(lexeme)</code>;
+PLCC-ng prints <code>source:line:col TOKEN_NAME 'lexeme'</code>, where <code>source</code> is the
+filename (or <code>-</code> for stdin) and <code>line</code>/<code>col</code> are 1-indexed.</p>
+<div class="highlight"><pre><span></span><code># PLCC
+INTEGER(3)
+ADDOP(+)
+
+# PLCC-ng
+-:1:1 INTEGER &#39;3&#39;
+-:2:1 ADDOP &#39;+&#39;
+</code></pre></div>
+<p>Update any documentation, tests, or course materials that show the old
+<code>TOKEN(lexeme)</code> format — they will no longer match actual output.</p>
 <h2 id="migration-checklist">Migration checklist</h2>
 <h3 id="1-install-plcc-ng">1. Install PLCC-ng</h3>
 <p>Replace the PLCC shell script, Docker, or DevContainer install with:</p>
