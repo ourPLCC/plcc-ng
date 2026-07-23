@@ -29,47 +29,39 @@ token NUM   '\d+'
 token PLUS  '\+'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Expr>
-<Expr>       ::= <NUM:left> <ExprTail:tail>
-<ExprTail:Add> ::= PLUS <NUM:right>
-<ExprTail:End> ::=
+<Prog>       **= <Exp>
+<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
+<Exp:NumExp> ::= <NUM>
 %
 Java
 
-Expr
+Exp
 %%%
-public int eval() {
-    return tail.eval(Integer.parseInt(left.lexeme));
-}
-%%%
-
-ExprTail
-%%%
-public abstract int eval(int left);
+public abstract int eval();
 %%%
 
 Prog
 %%%
 public String _run() {
     java.util.List<String> lines = new java.util.ArrayList<>();
-    for (Expr expr : exprList) {
-        lines.add(String.valueOf(expr.eval()));
+    for (Exp exp : expList) {
+        lines.add(String.valueOf(exp.eval()));
     }
     return String.join("\n", lines);
 }
 %%%
 
-Add
+AddExp
 %%%
-public int eval(int left) {
-    return left + Integer.parseInt(right.lexeme);
+public int eval() {
+    return left.eval() + right.eval();
 }
 %%%
 
-End
+NumExp
 %%%
-public int eval(int left) {
-    return left;
+public int eval() {
+    return Integer.parseInt(num.lexeme);
 }
 %%%
 ```
