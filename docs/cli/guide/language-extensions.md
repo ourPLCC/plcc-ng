@@ -63,3 +63,28 @@ runs it with `cabal run`.
 | [`plcc-haskell-emit`](../commands/plcc-haskell-emit.md) | Writes `.hs` source files and an `interpreter.cabal` project file to the output directory |
 | [`plcc-haskell-build`](../commands/plcc-haskell-build.md) | Compiles with `cabal build`; requires GHC 9.4+ and cabal 3.0+ on `PATH` |
 | [`plcc-haskell-run`](../commands/plcc-haskell-run.md) | Runs `cabal run interpreter`; requires cabal 3.0+ on `PATH` |
+
+## The `_run()` protocol
+
+Every language extension's `main`/entry-point driver must implement the same
+contract for the root node's entry point method (`_run()` by default, or a
+custom name from `entry_point`):
+
+- It **returns a string**. The driver marshals it into a
+  `{"kind": "result", "value": "<string>"}` JSON record on stdout for
+  `plcc-rep` to read and print — it does not print or convert the value
+  itself.
+- If it returns anything other than a string (or, for statically-typed
+  languages, if the call otherwise fails to produce one — e.g. Java's
+  reflection returning `null`), the driver raises a `specification_error`.
+  It must never let a wrong-typed value flow into the `value` field
+  silently.
+- The entry-point implementation itself must never write to stdout. Doing
+  so bypasses the JSON envelope entirely; plain-text `plcc-rep` sessions
+  will still show it (by accident, since unparseable lines are echoed
+  as-is), but `plcc-rep --verbose-format=json` will not.
+
+This is what lets `plcc-rep --verbose-format=json` show a real, structured
+record for every result, regardless of which language emitted the
+interpreter. A new language extension must follow it to interoperate
+correctly with `plcc-rep`.
