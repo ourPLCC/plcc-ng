@@ -21,6 +21,11 @@ Python/
 # Re-include the Python language plugin source directory.
 !src/plcc/lang/ext/python/
 
+# plcc-make's default build directory shares the project's own name
+# (issue 125), so a manual/ad-hoc run in the repo root leaves it here.
+# Defense-in-depth; test isolation is the primary safeguard (issue 153).
+plcc-ng/
+
 # Created by Docker environment
 .bash_history
 
