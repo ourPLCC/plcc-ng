@@ -23,11 +23,6 @@
 - **[#167](issues/167-java-examples-doc-exp-missing-abstract-eval.md) — Java "subtraction language" example in examples.md doesn't compile — `Exp` never declares `eval()`**
   `Exp` is generated abstract (it has named alternatives) but no fragment declares `public abstract int eval();`, so every `.eval()` call on an `Exp`-typed reference fails with `cannot find symbol`.
 
-### Test
-
-- **[#153](issues/153-test-artifacts-outside-project-dir.md) — Test artifacts land outside the project directory**
-  Tests that run plcc-make must build in a directory created outside the project; plcc-ng/'s default build-dir name matches the project's own, and .gitignore doesn't exclude it.
-
 ### Chore
 
 - **[#154](issues/154-update-python-semantic-release.md) — Update python-semantic-release**
