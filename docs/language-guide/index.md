@@ -44,8 +44,8 @@ a language's tokens, syntax, and semantics.
 
     Exp
     %%%
-    public void _run() {
-        System.out.println("Hello");
+    public String _run() {
+        return "Hello";
     }
     %%%
     ```

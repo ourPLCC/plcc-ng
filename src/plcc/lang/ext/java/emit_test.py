@@ -70,6 +70,7 @@ def test_start_java_run_returns_instead_of_printing(tmp_path, monkeypatch):
     assert 'return this.toString();' in start_java
     assert 'System.out.println' not in start_java
 
+
 def test_non_start_class_does_not_extend_start(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
     run_main([f'--output={tmp_path}'])

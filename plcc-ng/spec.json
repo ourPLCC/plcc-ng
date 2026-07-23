@@ -1,0 +1,44 @@
+{
+  "lexical": {
+    "ruleList": [
+      {
+        "line": {
+          "string": "token NUM '\\d+'\n",
+          "number": 1,
+          "file": "/tmp/tmp.nfh2eaB1gT/trivial.plcc"
+        },
+        "name": "NUM",
+        "pattern": "\\d+",
+        "isSkip": false
+      }
+    ]
+  },
+  "syntax": {
+    "rules": [
+      {
+        "line": {
+          "string": "<Program> ::= NUM\n",
+          "number": 3,
+          "file": "/tmp/tmp.nfh2eaB1gT/trivial.plcc"
+        },
+        "lhs": {
+          "name": "Program",
+          "isTerminal": false,
+          "altName": null,
+          "isCapturing": false
+        },
+        "rhsSymbolList": [
+          {
+            "name": "NUM",
+            "isTerminal": true,
+            "isCapturing": false
+          }
+        ]
+      }
+    ]
+  },
+  "semantics": {
+    "language": "PlantUML",
+    "codeFragmentList": []
+  }
+}

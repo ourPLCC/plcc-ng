@@ -75,8 +75,8 @@ Create `subtract.plcc`:
 
     Prog
     %%%
-    public void _run() {
-        System.out.println(exp.eval());
+    public String _run() {
+        return String.valueOf(exp.eval());
     }
     %%%
 

@@ -145,7 +145,7 @@ Java
 
 Prog
 %%%
-  public void _run() { ... }
+  public String _run() { ... }
 %%%
 ```
 
