@@ -33,7 +33,6 @@ public class Main {
                 record.put("value", result.toString());
                 System.out.println(record.toString());
                 System.out.flush();
-                System.out.flush();
             } catch (java.lang.reflect.InvocationTargetException ite) {
                 Throwable cause = ite.getCause() != null ? ite.getCause() : ite;
                 JSONObject record = new JSONObject();
