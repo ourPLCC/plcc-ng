@@ -6,7 +6,7 @@ skip SPACE '\s+'
 Java
 Program
 %%%
-    public void _run() {
-        System.out.println(num.toString());
+    public String _run() {
+        return num.toString();
     }
 %%%

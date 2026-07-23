@@ -23,7 +23,7 @@ def _trivial_model():
                 "language": "Java",
                 "fragments": [
                     {"class_name": "Program", "kind": "body",
-                     "body": "    public void _run() {\n        System.out.println(expr.toString());\n    }"},
+                     "body": "    public String _run() {\n        return expr.toString();\n    }"},
                 ]
             }
         ]
@@ -59,9 +59,16 @@ def test_start_java_uses_underscore_run(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
     run_main([f'--output={tmp_path}'])
     start_java = (tmp_path / '_Start.java').read_text()
-    assert 'public void _run()' in start_java
+    assert 'public String _run()' in start_java
     assert '$run' not in start_java
 
+
+def test_start_java_run_returns_instead_of_printing(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    start_java = (tmp_path / '_Start.java').read_text()
+    assert 'return this.toString();' in start_java
+    assert 'System.out.println' not in start_java
 
 def test_non_start_class_does_not_extend_start(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
@@ -157,7 +164,7 @@ def test_body_fragment_pasted_into_class(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_trivial_model())))
     run_main([f'--output={tmp_path}'])
     program_java = (tmp_path / 'Program.java').read_text()
-    assert 'System.out.println(expr.toString())' in program_java
+    assert 'return expr.toString();' in program_java
 
 
 def test_body_fragment_injected_into_abstract_class(tmp_path, monkeypatch):
@@ -261,7 +268,7 @@ def test_body_fragment_pasted_into_class_when_language_is_lowercase(tmp_path, mo
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
     run_main([f'--output={tmp_path}'])
     program_java = (tmp_path / 'Program.java').read_text()
-    assert 'System.out.println(expr.toString())' in program_java
+    assert 'return expr.toString();' in program_java
 
 
 def test_emit_main_java_catches_language_error_separately(tmp_path, monkeypatch):
@@ -290,3 +297,11 @@ def test_emit_class_file_imports_language_error(tmp_path, monkeypatch):
     run_main([f'--output={tmp_path}'])
     program_java = (tmp_path / 'Program.java').read_text()
     assert 'import runtime.LanguageError;' in program_java
+
+
+def test_main_java_validates_non_null_result(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    main_java = (tmp_path / 'Main.java').read_text()
+    assert 'if (result == null)' in main_java
+    assert 'must return a string' in main_java
