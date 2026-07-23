@@ -29,7 +29,6 @@ ADDOP(+)
 Update any documentation, tests, or course materials that show the old
 `TOKEN(lexeme)` format — they will no longer match actual output.
 
-
 **The `_run()` entry point must return a string.** This applies whether
 you're migrating an old `$run()` or have already ported to `_run()`. Java's
 `_run()` changed from `void` (print inside the method) to `String` (return
@@ -42,6 +41,7 @@ non-string value (an `int`, a `list`, a bare number, ...) now fails with a
 (`str(x)` / `String(x)`) if needed. No language's `_run()` may print or
 write to stdout directly — only plain-text `plcc-rep` sessions tolerated
 that before, and only by accident.
+
 ## Migration checklist
 
 ### 1. Install PLCC-ng
