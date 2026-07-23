@@ -43,3 +43,16 @@ teardown() {
     "${PROJECT_ROOT}/bin/test/integration.bash"
     [ "$(cat "${CAPTURED_ARGS}")" = "tests/bats/integration/" ]
 }
+
+@test "e2e.bash: path argument bypasses the default file list" {
+    "${PROJECT_ROOT}/bin/test/e2e.bash" "tests/bats/e2e/happy-path.bats"
+    [ "$(cat "${CAPTURED_ARGS}")" = "tests/bats/e2e/happy-path.bats" ]
+}
+
+@test "e2e.bash: no argument runs the default file list, excluding java and haskell roundtrip" {
+    "${PROJECT_ROOT}/bin/test/e2e.bash"
+    run cat "${CAPTURED_ARGS}"
+    [[ "$output" == *"tests/bats/e2e/"* ]]
+    [[ "$output" != *"languages-java.bats"* ]]
+    [[ "$output" != *"haskell_roundtrip.bats"* ]]
+}
