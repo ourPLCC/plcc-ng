@@ -25,18 +25,18 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 
 | Command | What it does | When to use |
 |---|---|---|
-| [bin/test/units.bash](bin/test/units.bash) | Run Python unit tests via pytest (wrapped as `pdm test`). Accepts pytest args. Fastest tier. | **TDD inner loop.** Run this on every edit. |
-| [bin/test/commands.bash](bin/test/commands.bash) | Run black-box CLI tests (`tests/bats/commands/`) for individual commands exercised through their installed entry points. Covers both Level 0 primitives and Level 2 orchestrators (see architectural spec §5–6). | After finishing a command's unit tests, verify its CLI contract. |
-| [bin/test/integration.bash](bin/test/integration.bash) | Run adjacent-pair pipeline tests (`tests/bats/integration/`). | After touching a stage that sits next to another in the pipeline. |
-| [bin/test/e2e.bash](bin/test/e2e.bash) | Run end-to-end pipeline tests (`tests/bats/e2e/`). | After changes that could affect the whole pipeline. |
-| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e). Does NOT include the Haskell roundtrip (see below). | Before pushing. |
+| [bin/test/units.bash](bin/test/units.bash) | Run Python unit tests via pytest (wrapped as `pdm test`). Accepts pytest args, e.g. `bin/test/units.bash src/plcc/cmd/make_test.py`. Fastest tier. | **TDD inner loop.** Run this on every edit. |
+| [bin/test/commands.bash](bin/test/commands.bash) | Run black-box CLI tests (`tests/bats/commands/`) for individual commands exercised through their installed entry points. Covers both Level 0 primitives and Level 2 orchestrators (see architectural spec §5–6). Accepts an optional path to narrow to one file or subdirectory, e.g. `bin/test/commands.bash tests/bats/commands/plcc-make.bats`; defaults to the whole tier. | After finishing a command's unit tests, verify its CLI contract. |
+| [bin/test/integration.bash](bin/test/integration.bash) | Run adjacent-pair pipeline tests (`tests/bats/integration/`). Accepts an optional path to narrow to one file or subdirectory; defaults to the whole tier. | After touching a stage that sits next to another in the pipeline. |
+| [bin/test/e2e.bash](bin/test/e2e.bash) | Run end-to-end pipeline tests (`tests/bats/e2e/`). Accepts an optional path to narrow to one file or subdirectory; defaults to the whole tier (excluding the Java corpus and Haskell roundtrip, see below). | After changes that could affect the whole pipeline. |
+| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e). Does NOT include the Haskell roundtrip (see below). Accepts an optional path; it is routed to whichever single tier owns it (a `tests/bats/<tier>/...` path runs only that tier, anything else is treated as a pytest path and runs only `units.bash`) instead of running all four tiers in full. | Before pushing. |
 | [bin/test/e2e_haskell_roundtrip.bash](bin/test/e2e_haskell_roundtrip.bash) | Run the slow Haskell full-build roundtrip test (`tests/bats/e2e/haskell_roundtrip.bats`). Invokes `cabal build` and can take several minutes on a cold cache. | After changes to the Haskell emitter, runtime, or Haskell-specific fixtures. |
 | [bin/test/packaging.bash](bin/test/packaging.bash) | Build a wheel, install it into a throwaway venv, verify all entry points resolve, and run a smoke test against the installed package. | After changes to `pyproject.toml`, entry points, or packaging layout. |
 | [bin/test/all.bash](bin/test/all.bash) | Run `functional.bash` then `e2e_haskell_roundtrip.bash` then `packaging.bash`. | Full local pre-push check including the Haskell roundtrip. |
 
 ### Test output cache
 
-All test scripts cache their output to `/tmp` so agents and tools can grep results without re-running the suite. The cache is keyed on git state (`git rev-parse HEAD` + `git status --porcelain` + `git diff HEAD` + the contents of untracked files) and is invalidated automatically whenever the working tree, HEAD, or any file's content changes.
+All test scripts cache their output to `/tmp` so agents and tools can grep results without re-running the suite. The cache is keyed on git state (`git rev-parse HEAD` + `git status --porcelain` + `git diff HEAD` + the contents of untracked files) plus the script's own arguments, and is invalidated automatically whenever the working tree, HEAD, any file's content, or the arguments passed to the script changes — so narrowing to a different path is always a cache miss the first time, never a stale replay of a different path's result.
 
 | Command | What it does |
 |---|---|
@@ -76,6 +76,8 @@ plcc-ng is built test-first.
 5. Commit.
 
 [bin/test/units.bash](bin/test/units.bash) runs in seconds and is the tightest feedback loop available. Keep it green at every commit.
+
+The same narrow-and-rerun pattern applies to bats-covered work: [bin/test/commands.bash](bin/test/commands.bash), [bin/test/integration.bash](bin/test/integration.bash), and [bin/test/e2e.bash](bin/test/e2e.bash) all accept an optional path to a single file or subdirectory, so you can narrow to the bats test you're iterating on instead of rerunning the whole tier.
 
 ## Test tiers
 
