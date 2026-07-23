@@ -12,7 +12,7 @@ Python
 Program
 %%%
 def _run(self):
-    return [e.eval() for e in self.rands.exprList]
+    return str([e.eval() for e in self.rands.exprList])
 %%%
 LitExpr
 %%%
