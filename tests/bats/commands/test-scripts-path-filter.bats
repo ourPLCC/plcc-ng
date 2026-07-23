@@ -19,7 +19,7 @@ EOF
 }
 
 teardown() {
-    rm -rf "${FAKE_BIN}"
+    rm -rf "${FAKE_BIN}" "${STUB_ROOT:-}" "${FAKE_PDM_BIN:-}"
     unset SKIP_SETUP
     unset PLCC_NO_TEST_CACHE
 }
