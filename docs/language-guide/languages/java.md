@@ -29,37 +29,47 @@ token NUM   '\d+'
 token PLUS  '\+'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>       **= <Expr>
+<Expr>       ::= <NUM:left> <ExprTail:tail>
+<ExprTail:Add> ::= PLUS <NUM:right>
+<ExprTail:End> ::=
 %
 Java
 
-Exp
+Expr
 %%%
-public abstract int eval();
+public int eval() {
+    return tail.eval(Integer.parseInt(left.lexeme));
+}
+%%%
+
+ExprTail
+%%%
+public abstract int eval(int left);
 %%%
 
 Prog
 %%%
-public void _run() {
-    for (Exp exp : expList) {
-        System.out.println(exp.eval());
+public String _run() {
+    java.util.List<String> lines = new java.util.ArrayList<>();
+    for (Expr expr : exprList) {
+        lines.add(String.valueOf(expr.eval()));
     }
+    return String.join("\n", lines);
 }
 %%%
 
-AddExp
+Add
 %%%
-public int eval() {
-    return left.eval() + right.eval();
+public int eval(int left) {
+    return left + Integer.parseInt(right.lexeme);
 }
 %%%
 
-NumExp
+End
 %%%
-public int eval() {
-    return Integer.parseInt(num.lexeme);
+public int eval(int left) {
+    return left;
 }
 %%%
 ```
@@ -119,13 +129,17 @@ public int eval() {
 ```java
 Prog
 %%%
-public void _run() {
+public String _run() {
     // your implementation
 }
 %%%
 ```
 
-The default `_Start._run()` prints `String(this)` using `System.out.println`. Override it to replace the default behavior. Return type is `void`.
+`_run()` must return a `String`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning `null` raises a `specification_error`.
+
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `this.toString()`. Override it to replace the default behavior.
 
 Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Exp` in the quick reference example).
 
