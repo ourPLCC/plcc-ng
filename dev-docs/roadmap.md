@@ -12,6 +12,15 @@
 - **[#161](issues/161-rename-plcc-rep-to-plcc-eval.md) — Consider renaming plcc-rep to plcc-eval for phase-naming consistency**
   `plcc-rep` is named after its interaction mode (REPL), not its phase, breaking the `scan`/`parse`/`?` naming pattern; an alias or rename to `plcc-eval` would restore it.
 
+### Docs
+
+- **[#162](issues/162-python-run-return-value-quoted.md) — Python `_run()` docs show plain string return, but plcc-rep prints it quoted**
+  Docs show `_run()` returning a plain string, but returning a plain `str` prints it wrapped in quotes (e.g. `'hello'` instead of `hello`).
+- **[#163](issues/163-js-var-field-reserved-word.md) — Auto-named field colliding with a JavaScript reserved word breaks generated code**
+  A capture like `<VAR>` auto-names its field `var`, and the JavaScript target's generated `constructor(var)` is a `SyntaxError` since `var` is reserved.
+- **[#164](issues/164-multi-capture-alt-name-case-mismatch.md) — camelCase alt-names lowercased by the parser but not by code generation, breaking multi-capture rules**
+  The parser always lowercases alt-names (`getAttributeName()`), but code generation preserves their case, so camelCase alt-names like `testExp` cause a `KeyError` at runtime.
+
 ### Test
 
 - **[#153](issues/153-test-artifacts-outside-project-dir.md) — Test artifacts land outside the project directory**
