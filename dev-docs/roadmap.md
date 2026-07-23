@@ -6,6 +6,8 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
+- **[#165](issues/165-run-default-bypasses-json-envelope.md) — `_run()`'s return-and-convert contract is violated by default implementations, undocumented for overriders, and missing from the migration guide**
+  Python, JavaScript, and Java's default `_run()` print directly instead of returning a value, bypassing the JSON envelope and silently breaking `plcc-rep --format json`; the contract also isn't documented for users who override `_run()`, nor called out in the migration guide.
 
 ### Feat
 

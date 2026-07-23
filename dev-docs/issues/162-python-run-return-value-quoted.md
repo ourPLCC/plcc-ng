@@ -42,6 +42,26 @@ Originally filed as issue #3 in `ourPLCC/languages-ng`
 validating a phase-0/phase-1 plan there. That repo now uses `print(...)`
 everywhere for the Python target as a workaround rather than `return`.
 
-Either the docs should be corrected to show the actual (quoted) behavior
-of `return`-ing a string, or `plcc-rep`'s handling of `_run()`'s return
-value should be changed to match the documented behavior.
+Root cause confirmed: `src/plcc/lang/ext/python/templates/main.py.jinja`
+builds the result record with
+`repr(result) if result is not None else None`. `repr("hello")` is
+`"'hello'"`, hence the quoting.
+
+Checked the other three targets for the same "return value converted to
+a string" contract the docs describe:
+
+- **JavaScript** (`src/plcc/lang/ext/javascript/templates/main.js.jinja`):
+  uses `String(result)` — plain conversion, matches its docs.
+- **Haskell** (`src/plcc/lang/ext/haskell/emit.py`, `_write_main`):
+  `_run` returns a `String`, which Aeson's `.=` encodes as a proper
+  JSON string — matches its docs.
+- **Java**: uses a different contract entirely (void return, print
+  directly inside `_run()`), not a return-and-convert model at all —
+  tracked separately as [#165](165-java-run-void-print-model-inconsistent.md).
+
+Since JavaScript and Haskell already implement "return value converted
+to a plain string" correctly, this resolves the either/or in the
+original description: the fix is to bring Python's driver in line with
+them (`str(result)` instead of `repr(result)`), not to redocument
+`repr`-style quoting as intended behavior. Scope stays limited to
+Python; the code lives in `main.py.jinja`, not in `docs/`.
