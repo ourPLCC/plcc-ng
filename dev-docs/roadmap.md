@@ -6,8 +6,6 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
-- **[#165](issues/165-run-default-bypasses-json-envelope.md) — `_run()`'s return-and-convert contract is violated by default implementations, undocumented for overriders, and missing from the migration guide**
-  Python, JavaScript, and Java's default `_run()` print directly instead of returning a value, bypassing the JSON envelope and silently breaking `plcc-rep --format json`; the contract also isn't documented for users who override `_run()`, nor called out in the migration guide.
 
 ### Feat
 
@@ -16,8 +14,6 @@
 
 ### Docs
 
-- **[#162](issues/162-python-run-return-value-quoted.md) — Python `_run()` docs show plain string return, but plcc-rep prints it quoted**
-  Docs show `_run()` returning a plain string, but returning a plain `str` prints it wrapped in quotes (e.g. `'hello'` instead of `hello`).
 - **[#163](issues/163-js-var-field-reserved-word.md) — Auto-named field colliding with a JavaScript reserved word breaks generated code**
   A capture like `<VAR>` auto-names its field `var`, and the JavaScript target's generated `constructor(var)` is a `SyntaxError` since `var` is reserved.
 - **[#164](issues/164-multi-capture-alt-name-case-mismatch.md) — camelCase alt-names lowercased by the parser but not by code generation, breaking multi-capture rules**

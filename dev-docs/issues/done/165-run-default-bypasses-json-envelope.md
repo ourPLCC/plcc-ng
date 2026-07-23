@@ -111,7 +111,7 @@ Whichever option is chosen for Java, the default-implementation bug in
 Python and JavaScript (part 1 above) should be fixed regardless — it's
 a straightforward contract violation, not a design question.
 
-Related: [#162](162-python-run-return-value-quoted.md) (Python's
+Related: [#162](../162-python-run-return-value-quoted.md) (Python's
 return-value conversion uses `repr()` instead of `str()` for
 user-returned values — a distinct bug in the same code path as this
 issue's default-implementation problem, but scoped to explicit

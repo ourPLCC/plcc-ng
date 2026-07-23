@@ -57,7 +57,7 @@ a string" contract the docs describe:
   JSON string — matches its docs.
 - **Java**: uses a different contract entirely (void return, print
   directly inside `_run()`), not a return-and-convert model at all —
-  tracked separately as [#165](165-java-run-void-print-model-inconsistent.md).
+  tracked separately as [#165](../165-java-run-void-print-model-inconsistent.md).
 
 Since JavaScript and Haskell already implement "return value converted
 to a plain string" correctly, this resolves the either/or in the
