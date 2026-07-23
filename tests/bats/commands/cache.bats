@@ -32,18 +32,22 @@ teardown() {
 }
 
 @test "cache hit: replays cached output without re-running command" {
+    local run_marker="${CACHE_DIR}/run-count"
     # Prime the cache
-    bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo first-run 2>/dev/null" || true
-    # Second run — command would print "second-run" but cache should return "first-run"
-    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo second-run 2>/dev/null"
+    bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' bash -c 'echo -n x >> \"${run_marker}\"; echo cached-result' 2>/dev/null" || true
+    # Second run with identical arguments should hit cache, not re-run the command
+    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' bash -c 'echo -n x >> \"${run_marker}\"; echo cached-result' 2>/dev/null"
     [ "$status" -eq 0 ]
-    [[ "$output" == "first-run" ]]
+    [[ "$output" == "cached-result" ]]
+    [ "$(wc -c < "${run_marker}")" -eq 1 ]
 }
 
 @test "cache hit: replays non-zero exit code" {
-    bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' bash -c 'echo fail-output; exit 42' 2>/dev/null" || true
-    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo should-not-run 2>/dev/null"
+    local run_marker="${CACHE_DIR}/run-count"
+    bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' bash -c 'echo -n x >> \"${run_marker}\"; echo fail-output; exit 42' 2>/dev/null" || true
+    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' bash -c 'echo -n x >> \"${run_marker}\"; echo fail-output; exit 42' 2>/dev/null"
     [ "$status" -eq 42 ]
+    [ "$(wc -c < "${run_marker}")" -eq 1 ]
 }
 
 @test "cache miss: non-zero exit code is preserved" {
@@ -106,6 +110,13 @@ teardown() {
     echo "version2" > "${DIRTY_FILE}"
     run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo second-run 2>/dev/null"
     [[ "$output" == "second-run" ]]
+}
+
+@test "different arguments produce independent cache entries (no false hit)" {
+    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo arg-one 2>/dev/null"
+    [[ "$output" == "arg-one" ]]
+    run bash -c "source '${CACHE_HELPER}' && run_cached '${CACHE_FILE}' echo arg-two 2>/dev/null"
+    [[ "$output" == "arg-two" ]]
 }
 
 @test "fallback: runs uncached when git is unavailable" {

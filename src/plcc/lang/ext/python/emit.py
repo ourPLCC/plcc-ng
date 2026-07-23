@@ -30,7 +30,7 @@ import runtime.base as _plcc
 
 class _Start(_plcc.Node):
     def _run(self):
-        print(str(self))
+        return str(self)
 """
 
 

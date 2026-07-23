@@ -119,15 +119,16 @@ module.exports = { MathHelper };
 Prog
 %%%
 _run() {
-    // Compute and return a value, or return undefined to produce no output.
     return this.expList.map(exp => String(exp.eval())).join('\n');
 }
 %%%
 ```
 
-The return value is converted to a string and printed by `plcc-rep`. Return `undefined` (or nothing) to suppress output for that input.
+`_run()` must return a `string`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning anything else (a `number`, an `array`, `undefined`, ...) raises a `specification_error`; convert explicitly (`String(x)`) if needed.
 
-The default `_Start._run()` prints `String(this)` to stdout. Override it to replace the default behavior entirely.
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `String(this)`. Override it to replace the default behavior entirely.
 
 ## `LanguageError`
 

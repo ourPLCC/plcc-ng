@@ -106,14 +106,15 @@ def eval(self):
 Prog
 %%%
 def _run(self):
-    # compute and return a value, or return None to produce no output
     return '\n'.join(str(exp.eval()) for exp in self.expList)
 %%%
 ```
 
-The return value is converted to a string and printed by `plcc-rep`. Return `None` to suppress output.
+`_run()` must return a `str`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning anything else (an `int`, a `list`, `None`, ...) raises a `specification_error`; convert explicitly (`str(x)`) if needed.
 
-The default `_Start._run()` prints `str(self)`. Override it to replace the default behavior.
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `str(self)`. Override it to replace the default behavior.
 
 ## `LanguageError`
 

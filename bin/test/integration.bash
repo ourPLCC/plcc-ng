@@ -17,7 +17,7 @@ _run() {
         pdm install
     fi
     export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
-    bats tests/bats/integration/
+    bats "${1:-tests/bats/integration/}"
 }
 
-run_cached /tmp/plcc-test-integration.log _run
+run_cached /tmp/plcc-test-integration.log _run "$@"

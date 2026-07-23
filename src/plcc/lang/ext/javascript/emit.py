@@ -29,7 +29,7 @@ const { Node } = require('./runtime/base');
 
 class _Start extends Node {
     _run() {
-        console.log(String(this));
+        return String(this);
     }
 }
 

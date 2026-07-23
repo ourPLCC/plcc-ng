@@ -26,8 +26,8 @@ _DEFAULT_ENTRY_POINT = '_run'
 
 _START_JAVA = """\
 public abstract class _Start extends runtime.Node {
-    public void _run() {
-        System.out.println(this.toString());
+    public String _run() {
+        return this.toString();
     }
 }
 """

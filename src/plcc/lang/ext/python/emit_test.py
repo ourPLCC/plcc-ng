@@ -33,7 +33,7 @@ def _arith_model():
             {
                 "language": "Python",
                 "fragments": [
-                    {"class_name": "Program", "kind": "body", "body": "def _run(self):\n    return self.expr.eval()"},
+                    {"class_name": "Program", "kind": "body", "body": "def _run(self):\n    return str(self.expr.eval())"},
                     {"class_name": "AddRest", "kind": "body", "body": "def eval(self, acc):\n    return self.rest.eval(acc + self.term.eval())"},
                     {"class_name": "NilRest", "kind": "body", "body": "def eval(self, acc):\n    return acc"},
                     {"class_name": "Term", "kind": "body", "body": "def eval(self):\n    return int(self.num.lexeme)"},
@@ -285,4 +285,76 @@ def test_emit_generated_main_other_exception_returns_specification_error(tmp_pat
     spec_error_records = [r for r in records if r.get('kind') == 'specification_error']
     assert spec_error_records, f"No specification_error record found in: {result.stdout}"
     assert 'stack underflow' in spec_error_records[0]['message']
+    assert result.returncode != 0
+
+
+def test_default_run_returns_instead_of_printing(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    start_py = (tmp_path / '_Start.py').read_text()
+    assert 'return str(self)' in start_py
+    assert 'print(' not in start_py
+
+
+def test_emit_generated_main_result_value_is_unquoted_string(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
+    run_main([f'--output={tmp_path}'])
+    tree_json = json.dumps({
+        "kind": "tree",
+        "rule": "program",
+        "children": [
+            ["expr", {
+                "kind": "tree", "rule": "Expr", "children": [
+                    ["term", {"kind": "tree", "rule": "Term", "children": [
+                        ["num", {"kind": "token", "name": "NUM", "lexeme": "3"}]
+                    ]}],
+                    ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}]
+                ]
+            }]
+        ]
+    })
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / 'main.py')],
+        input=tree_json + '\n',
+        capture_output=True,
+        text=True,
+    )
+    records = [json.loads(l) for l in result.stdout.splitlines() if l]
+    result_records = [r for r in records if r.get('kind') == 'result']
+    assert result_records, f"No result record found in: {result.stdout}"
+    assert result_records[0]['value'] == '3'
+
+
+def test_emit_generated_main_non_string_return_is_specification_error(tmp_path, monkeypatch):
+    model = _arith_model()
+    model['semantic_sections'][0]['fragments'][0] = {
+        "class_name": "Program", "kind": "body",
+        "body": "def _run(self):\n    return self.expr.eval()"
+    }
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    tree_json = json.dumps({
+        "kind": "tree",
+        "rule": "program",
+        "children": [
+            ["expr", {
+                "kind": "tree", "rule": "Expr", "children": [
+                    ["term", {"kind": "tree", "rule": "Term", "children": [
+                        ["num", {"kind": "token", "name": "NUM", "lexeme": "3"}]
+                    ]}],
+                    ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}]
+                ]
+            }]
+        ]
+    })
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / 'main.py')],
+        input=tree_json + '\n',
+        capture_output=True,
+        text=True,
+    )
+    records = [json.loads(l) for l in result.stdout.splitlines() if l]
+    spec_error_records = [r for r in records if r.get('kind') == 'specification_error']
+    assert spec_error_records, f"No specification_error record found in: {result.stdout}"
+    assert 'must return a string' in spec_error_records[0]['message']
     assert result.returncode != 0

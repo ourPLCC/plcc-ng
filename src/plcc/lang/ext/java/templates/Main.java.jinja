@@ -25,9 +25,12 @@ public class Main {
                 {{ start_class }} root = ({{ start_class }}) deserializer.deserialize(new JSONObject(line));
                 java.lang.reflect.Method m = {{ start_class }}.class.getMethod("{{ entry_point }}");
                 Object result = m.invoke(root);
+                if (result == null) {
+                    throw new IllegalStateException("{{ entry_point }}() must return a string, got null");
+                }
                 JSONObject record = new JSONObject();
                 record.put("kind", "result");
-                record.put("value", result != null ? result.toString() : JSONObject.NULL);
+                record.put("value", result.toString());
                 System.out.println(record.toString());
                 System.out.flush();
             } catch (java.lang.reflect.InvocationTargetException ite) {

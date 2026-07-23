@@ -17,6 +17,10 @@ _run() {
         pdm install
     fi
     export PATH="${PROJECT_ROOT}/.venv/bin:${PATH}"
+    if [ -n "${1:-}" ]; then
+        bats "$1"
+        return
+    fi
     bats $(find tests/bats/e2e/ -name "*.bats" ! -name "languages-java.bats" ! -name "haskell_roundtrip.bats" | sort)
     if [ -n "${LANGUAGES_REPO_PATH:-}" ]; then
         "${PROJECT_ROOT}/bin/install/java.bash"
@@ -26,4 +30,4 @@ _run() {
     fi
 }
 
-run_cached /tmp/plcc-test-e2e.log _run
+run_cached /tmp/plcc-test-e2e.log _run "$@"

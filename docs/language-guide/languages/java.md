@@ -42,10 +42,12 @@ public abstract int eval();
 
 Prog
 %%%
-public void _run() {
+public String _run() {
+    java.util.List<String> lines = new java.util.ArrayList<>();
     for (Exp exp : expList) {
-        System.out.println(exp.eval());
+        lines.add(String.valueOf(exp.eval()));
     }
+    return String.join("\n", lines);
 }
 %%%
 
@@ -119,13 +121,17 @@ public int eval() {
 ```java
 Prog
 %%%
-public void _run() {
+public String _run() {
     // your implementation
 }
 %%%
 ```
 
-The default `_Start._run()` prints `String(this)` using `System.out.println`. Override it to replace the default behavior. Return type is `void`.
+`_run()` must return a `String`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning `null` raises a `specification_error`.
+
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `this.toString()`. Override it to replace the default behavior.
 
 Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Exp` in the quick reference example).
 

@@ -104,3 +104,20 @@ setup_arbno_build() {
     [ "$status" -eq 0 ]
     [[ "${lines[-1]}" == "[42]" ]]
 }
+
+@test "plcc-rep --verbose-format=json shows a real value for the default _run()" {
+    cat > spec.plcc << 'EOF'
+token NUM '\d+'
+skip WS '\s+'
+%
+<Program> ::= <NUM:num>
+%
+Python
+EOF
+    run --separate-stderr bash -c "echo '42' | plcc-rep --verbose-format=json --spec=spec.plcc"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *'"kind"'* ]]
+    [[ "$output" == *'"result"'* ]]
+    [[ "$output" != *'"value": null'* ]]
+    [[ "$output" == *'"value": "'* ]]
+}

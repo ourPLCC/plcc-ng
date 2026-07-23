@@ -124,9 +124,9 @@ _run (Prog es) = unlines (map (show . eval) es)
 %%%
 ```
 
-The function signature must be `_run :: StartModule -> String`. The return value is sent to `plcc-rep` as the result string.
+The function signature must be `_run :: StartModule -> String`. `_run()` must return a string — same contract as every other language target — and the compiler enforces it: there is no way to write a Haskell `_run` that does anything else. The runtime sends the returned string to `plcc-rep` as the result, unmodified.
 
-If you do not define `_run`, the default `_run = show` is injected, which prints the `Show` instance of the root node.
+If you do not define `_run`, the default `_run = show` is injected, which returns the `Show` instance of the root node (not printed directly — `show` returns a `String`, matching the contract).
 
 ## `LanguageError`
 
