@@ -104,12 +104,15 @@ The type of a capture token field is `Token`.
 
 ### Capturing nonterminals
 
-All nonterminals are captured. Their field names will be the nonterminal
-name lower-cased. You may provide a different field name using `:fieldname`.
+All nonterminals are captured. Their field name is the nonterminal name
+with its first letter decapitalized (PascalCase -> camelCase), not the
+whole name lower-cased. You may provide a different field name using
+`:fieldname`.
 
 ```text
 <Program> ::= <Expr>              # captures Expr as field `expr`
 <Program> ::= <Expr:expression>   # captures Expr as field `expression`
+<Program> ::= <OneMore>           # captures OneMore as field `oneMore`
 ```
 
 Providing a different field name is especially important when a rule
