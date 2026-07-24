@@ -306,3 +306,16 @@ def test_main_java_validates_non_null_result(tmp_path, monkeypatch):
     main_java = (tmp_path / 'Main.java').read_text()
     assert 'if (result == null)' in main_java
     assert 'must return a string' in main_java
+
+
+def test_emit_rejects_field_name_colliding_with_reserved_word(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "class", "type": "runtime.Token", "is_list": False}]
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    with pytest.raises(SystemExit) as exc_info:
+        run_main([f'--output={tmp_path}'])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-java-emit: error:' in captured.err
+    assert "field 'class'" in captured.err
+    assert list(tmp_path.iterdir()) == []

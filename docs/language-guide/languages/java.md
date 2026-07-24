@@ -210,6 +210,7 @@ Expected output:
 - Requires Java JDK 21 or later for both building and running.
 - All generated source files are overwritten on every emit run — do not edit them directly.
 - Abstract classes need abstract method declarations added via `body` fragments if you want the compiler to enforce them on subclasses.
+- A field name that becomes a Java reserved word (e.g. `class`, `new`) is rejected by `plcc-java-emit` — rename the capture. `var` is fine (it's only reserved for local-variable type inference, not field declarations). See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 
