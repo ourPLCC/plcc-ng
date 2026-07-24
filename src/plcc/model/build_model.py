@@ -84,7 +84,7 @@ def _extract_arbno_fields(rhs_symbol_list):
             continue
         alt = symbol.get('altName')
         name = symbol.get('name', '')
-        field_name = (alt if alt else name).lower() + 'List'
+        field_name = (alt if alt else name.lower()) + 'List'
         if symbol.get('isTerminal'):
             field_type = 'Token'
         else:

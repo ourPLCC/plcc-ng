@@ -377,6 +377,35 @@ _ARBNO_SPEC = {
 }
 
 
+_ARBNO_CAMELCASE_SPEC = {
+    "lexical": {"ruleList": []},
+    "syntax": {
+        "rules": [
+            {
+                "lhs": {"name": "Program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "Rands", "isTerminal": False, "isCapturing": True, "altName": "rands"}
+                ]
+            },
+            {
+                "lhs": {"name": "Rands", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "Expr", "isTerminal": False, "isCapturing": True, "altName": "testExp"}
+                ],
+                "separator": {"name": "COMMA", "isTerminal": True, "isCapturing": False}
+            },
+            {
+                "lhs": {"name": "Expr", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "NUM", "isTerminal": True, "isCapturing": True, "altName": "num"}
+                ]
+            }
+        ]
+    },
+    "semantics": None
+}
+
+
 def test_arbno_class_field_has_is_list_true():
     model = build_model(_ARBNO_SPEC)
     rands = next(c for c in model['classes'] if c['name'] == 'Rands')
@@ -422,6 +451,12 @@ def test_arbno_token_field_has_correct_type():
     assert items['fields'][0]['name'] == 'numList'
     assert items['fields'][0]['type'] == 'Token'
     assert items['fields'][0]['is_list'] is True
+
+
+def test_arbno_field_name_preserves_camelcase_alt_name():
+    model = build_model(_ARBNO_CAMELCASE_SPEC)
+    rands = next(c for c in model['classes'] if c['name'] == 'Rands')
+    assert rands['fields'][0]['name'] == 'testExpList'
 
 
 def test_extract_body_strips_percent_markers_with_trailing_newlines():
