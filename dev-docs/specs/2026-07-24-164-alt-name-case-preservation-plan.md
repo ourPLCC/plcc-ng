@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- Bare-name (no explicit alt-name) field derivation must remain unchanged — it still fully lowercases the symbol's grammar name. This is tracked separately as issue [#168](../issues/168-bare-name-decapitalization-not-camelcase.md) and is explicitly out of scope here.
+- Bare-name (no explicit alt-name) field derivation must remain unchanged — it still fully lowercases the symbol's grammar name. This is tracked separately as issue [#168](../issues/done/168-bare-name-decapitalization-not-camelcase.md) and is explicitly out of scope here.
 - Follow CONTRIBUTING.md's TDD loop: write the failing test, confirm the failure, write the minimal fix, confirm the pass, commit.
 - Run `bin/test/units.bash <path>` to scope pytest runs to the file(s) touched in each task; run the full `bin/test/units.bash` before the final commit of the branch.
 

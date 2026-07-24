@@ -27,7 +27,7 @@ nonterminal or terminal, full-lowercasing destroys the word boundary:
 ```
 
 This is the same class of defect as
-[#164](164-multi-capture-alt-name-case-mismatch.md) (case handling in
+[#164](../164-multi-capture-alt-name-case-mismatch.md) (case handling in
 field-name derivation) but is a distinct bug: it affects the *bare*-name
 fallback branch, not the alt-name branch, and unlike #164 it does not
 crash today because both sides that derive the field name — the runtime

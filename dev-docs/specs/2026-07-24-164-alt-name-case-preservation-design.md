@@ -71,7 +71,7 @@ lowercases only the `name` branch, passing `alt` through unchanged.
 Bare-name full-lowercasing (`<OneMore>` → `onemore` instead of the
 arguably-more-correct `oneMore`) is a separate, non-crashing defect in
 the same fallback branch these sites all share, filed as
-[#168](../issues/168-bare-name-decapitalization-not-camelcase.md) rather
+[#168](../issues/done/168-bare-name-decapitalization-not-camelcase.md) rather
 than fixed here — the two sides already agree on it, so it isn't broken
 in the way #164 is, and fixing it would change generated field names for
 every multi-word bare capture across all existing grammars, a much

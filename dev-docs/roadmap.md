@@ -6,8 +6,6 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
-- **[#168](issues/168-bare-name-decapitalization-not-camelcase.md) — Bare captures derive field names by full-lowercasing instead of decapitalizing**
-  A bare (no alt-name) multi-word nonterminal capture like `<OneMore>` becomes field `onemore` instead of `oneMore`; found while fixing #164 but out of scope there since both sides already agree (no crash) and it would change generated field names across all existing grammars.
 
 ### Feat
 

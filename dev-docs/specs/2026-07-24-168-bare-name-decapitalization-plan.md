@@ -499,6 +499,6 @@ Issue 168 can be closed as the final commit of this branch, per CLAUDE.md's issu
 bin/issues/close.bash 168
 ```
 
-This moves `dev-docs/issues/168-bare-name-decapitalization-not-camelcase.md` to `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with `bin/issues/check.bash` afterward.
+This moves `dev-docs/issues/done/168-bare-name-decapitalization-not-camelcase.md` to `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with `bin/issues/check.bash` afterward.
 
 Note: issue #169 (add a `whats-new.md` entry covering this branch's whole release) is a separate, already-filed follow-up — do it once for the entire branch before merging, not as part of this plan.

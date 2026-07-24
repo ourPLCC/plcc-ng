@@ -1,6 +1,6 @@
 # Bare-name field derivation decapitalizes instead of full-lowercasing — design
 
-**Issue:** [168](../issues/168-bare-name-decapitalization-not-camelcase.md)
+**Issue:** [168](../issues/done/168-bare-name-decapitalization-not-camelcase.md)
 **Date:** 2026-07-24
 
 ## Problem
