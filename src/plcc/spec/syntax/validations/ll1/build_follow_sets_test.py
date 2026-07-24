@@ -113,6 +113,72 @@ def test_left_recursive_nonterminal_inside_nullable_does_not_crash():
     assert follows is not None
 
 
+def test_follow_propagates_eof_through_nullable_registered_second():
+    """
+    Regression test for issue #170: a nonterminal's nullability must be
+    recognized even when its epsilon-producing alternative is registered
+    after a non-empty one - the order arbno's internal desugaring always
+    uses for its continuation nonterminal. Y needs its own production
+    (`Y B`) so the Grammar model classifies it as a nonterminal at all -
+    without one, Y auto-classifies as a terminal and never gets a FOLLOW
+    entry computed in the first place, which would make this test pass
+    for the wrong reason (an empty set is not `{'A', eof}`, but it would
+    also not literally raise - always assert against a nonzero-length
+    expected set to catch this class of test-authoring mistake).
+    """
+    grammar, firsts, follows = setup([
+        'Start Y Z',
+        'Y B',
+        'Z A',
+        'Z',
+    ])
+    assert follows['Y'] == {'A', grammar.getEof()}
+
+
+def test_follow_propagates_eof_regardless_of_alternative_registration_order():
+    """
+    Same grammar, Z's two alternatives registered in opposite order in
+    each of the two separate Grammar instances below. Compare each
+    result against its OWN grammar's getEof() (not against each other
+    directly) - Grammar.getEof() returns a fresh sentinel object() per
+    instance, so follows-sets from two different setup() calls are never
+    == to each other even when they're semantically identical.
+    """
+    g1, _, follows_epsilon_first = setup([
+        'Start Y Z',
+        'Y B',
+        'Z',
+        'Z A',
+    ])
+    g2, _, follows_epsilon_second = setup([
+        'Start Y Z',
+        'Y B',
+        'Z A',
+        'Z',
+    ])
+    assert follows_epsilon_first['Y'] == {'A', g1.getEof()}
+    assert follows_epsilon_second['Y'] == {'A', g2.getEof()}
+
+
+def test_follow_propagates_eof_through_arbno_desugared_continuation():
+    """
+    Mirrors _handle_arbno's desugaring of `<Prog> **= <Expr>` where Expr
+    itself has a nested epsilon alternative (issue #166's original,
+    abandoned grammar shape) - the continuation nonterminal (here Prog#)
+    is always registered non-empty-form-first.
+    """
+    grammar, firsts, follows = setup([
+        'Prog Expr Prog#',
+        'Prog',
+        'Prog# Expr Prog#',
+        'Prog#',
+        'Expr NUM ExprTail',
+        'ExprTail PLUS NUM',
+        'ExprTail',
+    ])
+    assert grammar.getEof() in follows['ExprTail']
+
+
 def setup(lines):
     g = Grammar()
     for line in [line.split() for line in lines]:
