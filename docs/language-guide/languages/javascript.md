@@ -214,6 +214,7 @@ No build step is required — Node.js does not need a compilation step, so `plcc
 - Generated code uses CommonJS (`require` / `module.exports`). ESM (`import` / `export`) is not supported.
 - All output files are overwritten on every emit run — do not edit them directly.
 - Sibling generated classes are not automatically in scope; require them explicitly with an `import` fragment.
+- A field name that becomes a JavaScript reserved word (e.g. `<VAR>` auto-naming field `var`) is rejected by `plcc-javascript-emit` — rename the capture, e.g. `<VAR:name>`. See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 
