@@ -1,6 +1,6 @@
 # Auto-named field colliding with a target language's reserved word — design
 
-**Issue:** [163](../issues/163-js-var-field-reserved-word.md)
+**Issue:** [163](../issues/done/163-js-var-field-reserved-word.md)
 **Date:** 2026-07-24
 
 ## Problem

@@ -889,4 +889,4 @@ Issue 163 can be closed as the final commit of this branch, per CLAUDE.md's issu
 bin/issues/close.bash 163
 ```
 
-This moves `dev-docs/issues/163-js-var-field-reserved-word.md` to `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with `bin/issues/check.bash` afterward.
+This moves `dev-docs/issues/done/163-js-var-field-reserved-word.md` to `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with `bin/issues/check.bash` afterward.
