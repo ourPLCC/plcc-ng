@@ -67,7 +67,7 @@ def _handle_arbno(grammar, arbno_rules, nt, rhs, separator_entry):
 def _arbno_field(sym: dict) -> str:
     alt = sym.get("altName")
     name = sym["name"]
-    return (alt if alt else name).lower() + "List"
+    return (alt if alt else name.lower()) + "List"
 
 
 def _field(sym: dict) -> str | None:
@@ -76,4 +76,4 @@ def _field(sym: dict) -> str | None:
         return None
     alt = sym.get("altName")
     name = sym["name"]
-    return (alt if alt else name).lower()
+    return alt if alt else name.lower()

@@ -77,6 +77,13 @@ def test_capturing_terminal_uses_alt_name():
     assert productions == {("E", ("NUM",)): Rule(alt=None, fields=["value"])}
 
 
+def test_capturing_terminal_preserves_camelcase_alt_name():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule("E", [_terminal("NUM", capturing=True, alt_name="testExp")])
+    ]))
+    assert productions == {("E", ("NUM",)): Rule(alt=None, fields=["testExp"])}
+
+
 def test_capturing_nonterminal_uses_name_lower():
     grammar, productions, arbno_rules = decode(_spec([
         _rule("E", [_nonterminal("Term", capturing=True)])
@@ -207,4 +214,17 @@ def test_arbno_terminal_rhs_item():
     grammar, productions, arbno_rules = decode(spec)
     assert arbno_rules["tokens"]["rhs"] == [
         {"field": "numList", "symbol": "NUM", "is_terminal": True}
+    ]
+
+
+def test_arbno_field_preserves_camelcase_alt_name():
+    spec = _spec([
+        _arbno_rule("rands",
+                    [_nonterminal("expr", capturing=True, alt_name="testExp")],
+                    "COMMA"),
+        _rule("expr", [_terminal("NUM")]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules["rands"]["rhs"] == [
+        {"field": "testExpList", "symbol": "expr", "is_terminal": False}
     ]
