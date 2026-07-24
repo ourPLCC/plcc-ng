@@ -22,6 +22,8 @@
   The example's `Exp` rule is left-recursive, so `plcc-rep` rejects it with an LL(1) conflict — the doc's claimed output (`prints 3`) is false as written; needs left-factoring plus updating the "BNF to Java constructs" table that references its rule names.
 - **[#167](issues/167-java-examples-doc-exp-missing-abstract-eval.md) — Java "subtraction language" example in examples.md doesn't compile — `Exp` never declares `eval()`**
   `Exp` is generated abstract (it has named alternatives) but no fragment declares `public abstract int eval();`, so every `.eval()` call on an `Exp`-typed reference fails with `cannot find symbol`.
+- **[#169](issues/169-whats-new-entry-for-next-release.md) — Add whats-new.md entry for the next release before merging this branch**
+  `docs/whats-new.md` hasn't been updated since the v1.0.0 entry; this branch has accumulated a release's worth of user-facing changes (several `fix!`/`BREAKING CHANGE` commits) that need a summarized entry before merge.
 
 ### Chore
 
