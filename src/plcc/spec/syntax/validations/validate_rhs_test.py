@@ -47,6 +47,13 @@ def test_duplicate_rhs_nonterminal_with_different_alt_name_allowed():
 <Sentence> ::= <Verb:name> <Verb:different>''')
 
 
+def test_duplicate_rhs_nonterminal_with_case_differing_alt_name_allowed():
+    # <Verb:testExp> attr "testExp"; <Verb:testexp> attr "testexp" (once
+    # case is preserved) — different, so no duplicate.
+    assertValid(DuplicateAttribute, '''<Verb> ::=
+<Sentence> ::= <Verb:testExp> <Verb:testexp>''')
+
+
 def test_duplicate_non_captured_terminals_allowed():
     assertValid(DuplicateAttribute, '''<Sentence> ::= ONE ONE ONE ONE''')
 

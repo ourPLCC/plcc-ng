@@ -11,4 +11,4 @@ class CapturingSymbol:
         if self.altName is None:
             return self.name.lower()
         else:
-            return self.altName.lower()
+            return self.altName
