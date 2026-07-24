@@ -8,7 +8,8 @@ class CapturingSymbol:
     isCapturing: bool = True
 
     def getAttributeName(self):
-        if self.altName is None:
-            return self.name.lower()
-        else:
+        if self.altName is not None:
             return self.altName
+        if self.isTerminal:
+            return self.name.lower()
+        return self.name[:1].lower() + self.name[1:]

@@ -94,6 +94,14 @@ def test_one_nonterminal_with_different_altName_allowed():
     assertValid(DuplicateAttribute, '''<Sentence> ::= <No:yes> <No>''')
 
 
+def test_duplicate_bare_multiword_nonterminals_differing_only_by_case_allowed():
+    # <OneMore> has attr "oneMore"; <Onemore> has attr "onemore" (once
+    # bare-name decapitalization lands) - different, so no duplicate.
+    assertValid(DuplicateAttribute, '''<OneMore> ::=
+<Onemore> ::=
+<Sentence> ::= <OneMore> <Onemore>''')
+
+
 def test_rhs_terminal_cannot_start_with_number():
     assertError(InvalidTerminal, "<Sentence> ::= 1WORD")
 
