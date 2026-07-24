@@ -1,6 +1,6 @@
 # LL(1) FOLLOW-set computation drops end-of-input for late-registered nullable productions — design
 
-**Issue:** [170](../issues/170-arbno-follow-set-missing-eof.md)
+**Issue:** [170](../issues/done/170-arbno-follow-set-missing-eof.md)
 
 ## Problem
 

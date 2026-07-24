@@ -194,6 +194,6 @@ Issue 170 closes as the final commit of this branch, per CLAUDE.md's issue-closi
 bin/issues/close.bash 170
 ```
 
-This moves `dev-docs/issues/170-arbno-follow-set-missing-eof.md` to
+This moves `dev-docs/issues/done/170-arbno-follow-set-missing-eof.md` to
 `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with
 `bin/issues/check.bash` afterward.

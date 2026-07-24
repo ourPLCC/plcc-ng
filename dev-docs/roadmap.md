@@ -6,8 +6,6 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
-- **[#170](issues/170-arbno-follow-set-missing-eof.md) — LL(1) FOLLOW-set computation drops end-of-input for nullable nonterminals not registered first**
-  `_allRulesCanDeriveEmpty` only checks a nonterminal's first-registered production for nullability, so `**=` (arbno) rules whose repeated element has a nested epsilon alternative wrongly reject valid input at end-of-input (`no production for '<X>'`).
 
 ### Feat
 
