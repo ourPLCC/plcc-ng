@@ -27,41 +27,50 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 Java
 
-Exp
+Op
 %%%
-public abstract int eval();
+public abstract int apply(int left, int right);
+%%%
+
+Expr
+%%%
+public int eval() {
+    return op.apply(Integer.parseInt(left.lexeme), Integer.parseInt(right.lexeme));
+}
 %%%
 
 Prog
 %%%
 public String _run() {
     java.util.List<String> lines = new java.util.ArrayList<>();
-    for (Exp exp : expList) {
-        lines.add(String.valueOf(exp.eval()));
+    for (Expr expr : exprList) {
+        lines.add(String.valueOf(expr.eval()));
     }
     return String.join("\n", lines);
 }
 %%%
 
-AddExp
+AddOp
 %%%
-public int eval() {
-    return left.eval() + right.eval();
+public int apply(int left, int right) {
+    return left + right;
 }
 %%%
 
-NumExp
+SubOp
 %%%
-public int eval() {
-    return Integer.parseInt(num.lexeme);
+public int apply(int left, int right) {
+    return left - right;
 }
 %%%
 ```
