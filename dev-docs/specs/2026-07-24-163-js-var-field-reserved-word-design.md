@@ -177,9 +177,24 @@ pass it, at each site.
 
 ## Docs
 
+- `docs/language-guide/syntactic.md`, in the "Capturing terminals" /
+  "Capturing nonterminals" sections (right after the existing
+  same-field-name-collision notes at ~lines 92-101 and 118-127): add a
+  general note that a field name — whether explicit (`:fieldname`) or
+  auto-derived — is illegal if, once translated into an identifier, it
+  collides with a reserved word of the semantic implementation language
+  in use (e.g. `<VAR>` producing field `var`, reserved in JavaScript).
+  Critically, note that this is a *late* check: it is only detected when
+  you attempt to evaluate the semantics for a specific target language
+  (e.g. `plcc-rep`, or an explicit `plcc-<lang>-emit`), not at grammar
+  validation time (`plcc-scan`/`plcc-parse`/`plcc-validate-*`) — those
+  stages are language-neutral and don't know which target you'll
+  eventually emit for, so a grammar can pass validation cleanly and still
+  fail later, per-target, at emit time.
 - `docs/language-guide/languages/javascript.md`: note that field names
   colliding with a JavaScript reserved word are rejected at generation
-  time, with the `<VAR:name>` workaround.
+  time, with the `<VAR:name>` workaround, and a pointer back to
+  `syntactic.md` for the general rule.
 - Same note added to the equivalent java/python/haskell language-guide
   pages, since all four targets now enforce this.
 
@@ -200,4 +215,5 @@ pass it, at each site.
 | `src/plcc/lang/ext/{javascript,java,python,haskell}/emit_test.py` | Reserved-word-collision test case |
 | `tests/fixtures/*.plcc` (new) | Grammar reproducing issue #163's `VAR` example |
 | `tests/bats/e2e/plcc-rep.bats` | New case: friendly rejection instead of a raw generated-code `SyntaxError` |
-| `docs/language-guide/languages/{javascript,java,python,haskell}.md` | Document the reserved-word restriction |
+| `docs/language-guide/syntactic.md` | General note: reserved-word field names are illegal, detected only at per-target emit/evaluation time, not at grammar-validation time |
+| `docs/language-guide/languages/{javascript,java,python,haskell}.md` | Document the reserved-word restriction, pointing back to `syntactic.md` |
