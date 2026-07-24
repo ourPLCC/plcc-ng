@@ -142,7 +142,7 @@ Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep
 
 The default `_Start._run()` returns `this.toString()`. Override it to replace the default behavior.
 
-Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Exp` in the quick reference example).
+Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Op` in the quick reference example).
 
 ## `LanguageError`
 
@@ -185,8 +185,9 @@ DIR/
   Main.java         — entry point
   _Start.java       — default base for the start class
   Prog.java         — one .java file per class from the grammar
-  AddExp.java
-  NumExp.java
+  Expr.java
+  AddOp.java
+  SubOp.java
   *.class           — compiled after plcc-java-build
 ```
 
