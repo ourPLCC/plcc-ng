@@ -121,3 +121,9 @@ EOF
     [[ "$output" != *'"value": null'* ]]
     [[ "$output" == *'"value": "'* ]]
 }
+
+@test "plcc-rep evaluates camelCase alt-name multi-capture rule (issue 164)" {
+    run --separate-stderr bash -c "echo 'if 1 then 2 else 3' | plcc-rep --spec='${FIXTURES}/multi-capture-camelcase.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "${lines[-1]}" == "2" ]]
+}
