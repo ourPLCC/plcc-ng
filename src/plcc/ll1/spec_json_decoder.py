@@ -64,10 +64,16 @@ def _handle_arbno(grammar, arbno_rules, nt, rhs, separator_entry):
     arbno_rules[nt] = {"rhs": arbno_rhs, "separator": separator}
 
 
+def _bare_field_name(sym: dict) -> str:
+    name = sym["name"]
+    if sym.get("isTerminal", False):
+        return name.lower()
+    return name[:1].lower() + name[1:]
+
+
 def _arbno_field(sym: dict) -> str:
     alt = sym.get("altName")
-    name = sym["name"]
-    return (alt if alt else name.lower()) + "List"
+    return (alt if alt else _bare_field_name(sym)) + "List"
 
 
 def _field(sym: dict) -> str | None:
@@ -75,5 +81,4 @@ def _field(sym: dict) -> str | None:
     if not sym.get("isCapturing", False):
         return None
     alt = sym.get("altName")
-    name = sym["name"]
-    return alt if alt else name.lower()
+    return alt if alt else _bare_field_name(sym)

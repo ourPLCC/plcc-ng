@@ -50,6 +50,28 @@ def test_class_has_num_field():
     assert any(f['name'] == 'num' and f['type'] == 'Token' for f in fields)
 
 
+_BARE_MULTIWORD_SPEC = {
+    "lexical": {"ruleList": []},
+    "syntax": {
+        "rules": [
+            {
+                "lhs": {"name": "Program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "OneMore", "isTerminal": False, "isCapturing": True}
+                ]
+            }
+        ]
+    },
+    "semantics": None
+}
+
+
+def test_bare_multiword_nonterminal_capture_decapitalizes():
+    model = build_model(_BARE_MULTIWORD_SPEC)
+    fields = model['classes'][0]['fields']
+    assert any(f['name'] == 'oneMore' for f in fields)
+
+
 def test_semantic_sections_present():
     model = build_model(_TRIVIAL_SPEC)
     sections = model['semantic_sections']
@@ -457,6 +479,35 @@ def test_arbno_field_name_preserves_camelcase_alt_name():
     model = build_model(_ARBNO_CAMELCASE_SPEC)
     rands = next(c for c in model['classes'] if c['name'] == 'Rands')
     assert rands['fields'][0]['name'] == 'testExpList'
+
+
+_ARBNO_BARE_MULTIWORD_SPEC = {
+    "lexical": {"ruleList": []},
+    "syntax": {
+        "rules": [
+            {
+                "lhs": {"name": "Program", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "Rands", "isTerminal": False, "isCapturing": True, "altName": "rands"}
+                ]
+            },
+            {
+                "lhs": {"name": "Rands", "altName": None, "isTerminal": False, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "OneMore", "isTerminal": False, "isCapturing": True}
+                ],
+                "separator": {"name": "COMMA", "isTerminal": True, "isCapturing": False}
+            }
+        ]
+    },
+    "semantics": None
+}
+
+
+def test_arbno_field_name_bare_multiword_nonterminal_decapitalizes():
+    model = build_model(_ARBNO_BARE_MULTIWORD_SPEC)
+    rands = next(c for c in model['classes'] if c['name'] == 'Rands')
+    assert rands['fields'][0]['name'] == 'oneMoreList'
 
 
 def test_extract_body_strips_percent_markers_with_trailing_newlines():
