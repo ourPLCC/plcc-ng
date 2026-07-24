@@ -18,8 +18,6 @@
 
 - **[#163](issues/163-js-var-field-reserved-word.md) — Auto-named field colliding with a JavaScript reserved word breaks generated code**
   A capture like `<VAR>` auto-names its field `var`, and the JavaScript target's generated `constructor(var)` is a `SyntaxError` since `var` is reserved.
-- **[#164](issues/164-multi-capture-alt-name-case-mismatch.md) — camelCase alt-names lowercased by the parser but not by code generation, breaking multi-capture rules**
-  The parser always lowercases alt-names (`getAttributeName()`), but code generation preserves their case, so camelCase alt-names like `testExp` cause a `KeyError` at runtime.
 - **[#166](issues/166-java-doc-quick-reference-not-ll1.md) — Java language guide's "Quick reference example" grammar is not LL(1)**
   The example's `Exp` rule is left-recursive, so `plcc-rep` rejects it with an LL(1) conflict — the doc's claimed output (`prints 3`) is false as written; needs left-factoring plus updating the "BNF to Java constructs" table that references its rule names.
 - **[#167](issues/167-java-examples-doc-exp-missing-abstract-eval.md) — Java "subtraction language" example in examples.md doesn't compile — `Exp` never declares `eval()`**

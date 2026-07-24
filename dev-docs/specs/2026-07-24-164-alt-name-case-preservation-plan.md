@@ -407,4 +407,4 @@ Issue 164 can be closed as the final commit of this branch, per CLAUDE.md's issu
 bin/issues/close.bash 164
 ```
 
-This moves `dev-docs/issues/164-multi-capture-alt-name-case-mismatch.md` to `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with `bin/issues/check.bash` afterward.
+This moves `dev-docs/issues/done/164-multi-capture-alt-name-case-mismatch.md` to `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with `bin/issues/check.bash` afterward.

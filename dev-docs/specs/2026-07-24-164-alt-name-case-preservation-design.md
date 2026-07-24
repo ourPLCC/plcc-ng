@@ -1,6 +1,6 @@
 # camelCase alt-name case preservation — design
 
-**Issue:** [164](../issues/164-multi-capture-alt-name-case-mismatch.md)
+**Issue:** [164](../issues/done/164-multi-capture-alt-name-case-mismatch.md)
 **Date:** 2026-07-24
 
 ## Problem
