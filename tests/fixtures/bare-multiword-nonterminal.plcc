@@ -1,0 +1,12 @@
+token LIT '\d+'
+skip WS '\s+'
+%
+<Program>  ::= <OneMore>
+<OneMore>  ::= <LIT>
+%
+Python
+Program
+%%%
+def _run(self):
+    return self.oneMore.lit.lexeme
+%%%

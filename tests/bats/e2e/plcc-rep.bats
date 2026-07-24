@@ -127,3 +127,9 @@ EOF
     [ "$status" -eq 0 ]
     [[ "${lines[-1]}" == "2" ]]
 }
+
+@test "plcc-rep evaluates bare multi-word nonterminal capture field (issue 168)" {
+    run --separate-stderr bash -c "echo '42' | plcc-rep --spec='${FIXTURES}/bare-multiword-nonterminal.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "${lines[-1]}" == "42" ]]
+}
