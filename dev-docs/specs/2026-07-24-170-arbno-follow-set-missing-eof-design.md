@@ -109,11 +109,15 @@ Three new tests, using the file's existing `setup()` helper
 the RHS, no RHS tokens meaning an epsilon production):
 
 1. **The issue's own minimal repro**, epsilon alternative registered
-   *second* (the order that currently breaks):
+   *second* (the order that currently breaks). `Y` needs its own
+   production (`Y B`) so the `Grammar` model classifies it as a
+   nonterminal at all — without one it auto-classifies as a terminal and
+   never gets a FOLLOW entry computed in the first place:
    ```python
    def test_follow_propagates_eof_through_nullable_registered_second():
        grammar, firsts, follows = setup([
            'Start Y Z',
+           'Y B',
            'Z A',
            'Z',
        ])
@@ -121,20 +125,28 @@ the RHS, no RHS tokens meaning an epsilon production):
    ```
 
 2. **Order-independence proof** — same grammar, epsilon alternative
-   registered *first* this time, asserting both orderings agree:
+   registered *first* in one `Grammar` instance and *second* in another,
+   asserting each matches its own expectation. Compared against each
+   instance's own `getEof()` separately, not against each other —
+   `Grammar.getEof()` returns a fresh sentinel `object()` per instance,
+   so two different `setup()` calls' FOLLOW sets are never `==` to each
+   other even when semantically identical:
    ```python
    def test_follow_propagates_eof_regardless_of_alternative_registration_order():
        g1, _, follows_epsilon_first = setup([
            'Start Y Z',
+           'Y B',
            'Z',
            'Z A',
        ])
        g2, _, follows_epsilon_second = setup([
            'Start Y Z',
+           'Y B',
            'Z A',
            'Z',
        ])
-       assert follows_epsilon_first['Y'] == follows_epsilon_second['Y'] == {'A', g1.getEof()}
+       assert follows_epsilon_first['Y'] == {'A', g1.getEof()}
+       assert follows_epsilon_second['Y'] == {'A', g2.getEof()}
    ```
 
 3. **Arbno's real internal desugared shape**, mirroring `_handle_arbno`'s
