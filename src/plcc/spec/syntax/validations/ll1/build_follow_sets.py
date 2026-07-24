@@ -66,4 +66,7 @@ class FollowSetBuilder:
             self._changed = True
 
     def _canDeriveEmpty(self, symbols):
+        # A symbol is nullable iff epsilon is in its FIRST set - already
+        # computed correctly (existential over all productions) by
+        # build_first_sets, so reuse it rather than re-deriving here.
         return all(self.grammar.getEpsilon() in self.firstSets[symbol] for symbol in symbols)
