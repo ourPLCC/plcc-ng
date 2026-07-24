@@ -123,6 +123,16 @@ PLCC-ng places it after a colon inside the brackets.
 | `<exp>exp2` (field named `exp2`) | `<Expr:exp2>` |
 | `<WHOLE>` (auto-named field `whole`) | `<WHOLE>` (same — auto-naming unchanged) |
 | `<WHOLE>` with explicit name | `<WHOLE:whole>` |
+| `<oneMore>` (auto-named field `oneMore`) | `<OneMore>` (auto-named field `oneMore`) |
+
+Auto-naming a bare nonterminal capture decapitalizes just the first
+letter of the nonterminal's (now-PascalCase) name — it doesn't lowercase
+the whole thing. For a single-word nonterminal this is invisible
+(`<Expr>` → field `expr`, same as PLCC's `<exp>` → `exp`), but it matters
+once you apply step 5's PascalCase rename to a multi-word name: renaming
+PLCC's `<oneMore>` to PLCC-ng's `<OneMore>` and then auto-naming the
+field decapitalizes only the `O`, reproducing PLCC's original `oneMore`
+spelling — not `onemore`.
 
 ### 8. Add semantic section language header
 
