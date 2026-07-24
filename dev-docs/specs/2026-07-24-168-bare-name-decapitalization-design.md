@@ -168,8 +168,9 @@ then the minimal change to pass it.
 
 Per `dev-docs/release-sop.md`: the source-fix commit is `fix!(...)` with
 a `BREAKING CHANGE:` footer — this changes generated/validated field names
-for any existing multi-word bare nonterminal or terminal capture across
-plcc-ng grammars written before this fix. The footer should also note that,
+for any existing multi-word bare nonterminal capture (terminals are
+unaffected — always full-lowercased, before and after) across plcc-ng
+grammars written before this fix. The footer should also note that,
 although this is a breaking change *for plcc-ng*, it brings plcc-ng's
 bare-name auto-naming back in line with legacy PLCC's original behavior
 (see the `docs/migration.md` reasoning above) — this was a plcc-ng-only
