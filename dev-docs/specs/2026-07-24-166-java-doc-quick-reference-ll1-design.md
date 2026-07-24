@@ -57,10 +57,15 @@ There is no way to keep the original left-factored grammar (`ExprTail`
 with an epsilon `End` alternative, under `Prog`'s arbno) and avoid this
 bug — the blocking nonterminal is internally generated, not under the
 spec author's control. Per direction, this issue does not block on
-#170 landing; instead, the grammar below was redesigned to have **no
-epsilon alternative anywhere**, which sidesteps the bug entirely (its
-trigger condition never arises) rather than working around it
-in-place. Verified empirically: the redesigned grammar parses `"1 + 2"`
+#170 landing; instead, the grammar below was redesigned so that its
+**repeated element (`Expr`) has no nested epsilon alternative of its
+own**. Precisely: every `**=` rule's internal desugaring contains an
+epsilon production (`Prog ::= ε`), including this one, and #170's buggy
+nullability check still misflags it — but that corruption is inert here,
+because nothing inside `Expr` ever needs `FOLLOW(Expr)` to contain `$`
+for correctness (there's no epsilon *choice point* nested inside `Expr`
+the way `ExprTail:End` was). So the bug is still technically hit, just
+never observable. Verified empirically: the redesigned grammar parses `"1 + 2"`
 → `3`, `"5 - 3"` → `2`, and even a two-expression single input
 (`"1 + 2 5 - 3"` → `3` then `2`, exercising the arbno list with more
 than one element) — all before writing a single line of the doc itself.
@@ -80,7 +85,7 @@ repo's convention of narrow, single-concern issues.
 
 Left-factor by moving the alternation to the *operator*, not to an
 optional trailing tail. `Expr` always requires exactly `NUM op NUM` — no
-epsilon anywhere in the grammar:
+epsilon alternative nested inside `Expr` itself:
 
 ```
 <Prog>     **= <Expr>
@@ -91,14 +96,16 @@ epsilon anywhere in the grammar:
 
 `Op:AddOp` and `Op:SubOp` are distinguished by their first (and only)
 token — `PLUS` vs. a new `MINUS` token — so there's no FIRST/FIRST
-conflict, and (unlike the reverted draft) no nonterminal ever needs to
-derive the empty string, so issue #170's bug is never exercised. This is
-a small, deliberate scope addition beyond "just remove the optionality"
-(it also adds subtraction) because it was the simplest way to keep an
-`Alternative rule` demonstration in the example without an epsilon
-alternative anywhere: an alternation needs at least two productions
-distinguished by lookahead, and `Op`'s two one-token productions are the
-minimal way to get that without optionality.
+conflict, and (unlike the reverted draft) neither `Expr` nor `Op` ever
+needs to derive the empty string, so issue #170's bug — though still
+technically present in the arbno's own internal desugaring, as it is for
+any `**=` rule — has nothing to corrupt here and produces no observable
+parsing failure. This is a small, deliberate scope addition beyond "just
+remove the optionality" (it also adds subtraction) because it was the
+simplest way to keep an `Alternative rule` demonstration in the example
+without a nested epsilon alternative: an alternation needs at least two
+productions distinguished by lookahead, and `Op`'s two one-token
+productions are the minimal way to get that without optionality.
 
 This drops support for a bare `"1"` (no operator) as valid input — that
 was never something the doc claimed in the first place; it was only
@@ -113,7 +120,7 @@ and arbno (`Prog **= Expr`).
 Renames from the current (broken) grammar: `Exp`→`Expr`, `AddExp`→`AddOp`
 (now a class over the *operator*, not the whole expression), `NumExp`→
 removed (no longer needed — `Expr` itself is now the only concrete
-"expression" shape), field `expList`→`exprList`. `SubExp`/`SubOp` and
+"expression" shape), field `expList`→`exprList`. `Op`/`AddOp`/`SubOp` and
 the `MINUS` token are new; `NumExp`'s role (a bare-number expression) no
 longer exists.
 

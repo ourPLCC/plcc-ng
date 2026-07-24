@@ -1,17 +1,7 @@
-# 173 - haskell-doc-quick-reference-not-ll1
+# 173 - Haskell language guide's "Quick reference example" grammar is not LL(1)
 
 **Type:** docs
 **Date:** 2026-07-24
-
-<!--
-Classify by user-facing impact, not by whether something was "broken".
-`fix` and `feat` bump the release version (see [tool.semantic_release]
-in pyproject.toml); reserve them for changes to the shipped package
-(src/). A bug in a test, script, or CI workflow (bin/, tests/,
-.github/) is still a bug, but it's not user-facing — classify it
-`test` or `chore` instead so it doesn't spin the version. `docs` is for
-documentation content, and never bumps the version either way.
--->
 
 ## Description
 
@@ -42,9 +32,12 @@ optional — deliberately avoid an optional/epsilon-tail shape (e.g.
 `Prog`'s arbno): that shape was tried first for #166 and hit a real,
 separately-filed PLCC-ng parser bug (#170 — LL(1) FOLLOW-set computation
 drops end-of-input for a nullable nonterminal not registered first,
-which every `**=` rule with a nested epsilon alternative triggers
-internally). The operator-alternation grammar has no epsilon alternative
-anywhere, so it doesn't hit #170.
+which every `**=` rule whose repeated element has a nested epsilon
+alternative triggers). The operator-alternation grammar's repeated
+element (`Expr`) has no nested epsilon alternative of its own, so #170's
+defect (which is still technically present, as it is in any `**=`
+rule's internal desugaring) has nothing to corrupt and produces no
+observable parsing failure.
 
 This page's own "Fragment kinds" section documents that Haskell fragment
 class names must be module names — the abstract rule name (`Exp`) or a
