@@ -133,3 +133,10 @@ EOF
     [ "$status" -eq 0 ]
     [[ "${lines[-1]}" == "42" ]]
 }
+
+@test "plcc-rep rejects a field name colliding with a JS reserved word (issue 163)" {
+    run --separate-stderr bash -c "echo 'x' | plcc-rep --spec='${FIXTURES}/js-var-field-reserved-word.plcc'"
+    [ "$status" -ne 0 ]
+    [[ "$stderr" == *"plcc-javascript-emit: error:"* ]]
+    [[ "$stderr" == *"field 'var'"* ]]
+}

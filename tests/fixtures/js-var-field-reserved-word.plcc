@@ -1,0 +1,6 @@
+token VAR '[A-Za-z]\w*'
+skip WS '\s+'
+%
+<Exp:VarExp> ::= <VAR>
+%
+javascript
