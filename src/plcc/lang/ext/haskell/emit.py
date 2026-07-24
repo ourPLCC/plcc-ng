@@ -18,7 +18,9 @@ from pathlib import Path
 from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.lang.reserved_words import reject_reserved_field_names
 from .validate import validate_fragments
+from .reserved_words import RESERVED_WORDS
 
 __doc__ = __doc__ + VERBOSE_OPTIONS
 
@@ -41,8 +43,11 @@ def main(argv=None):
 
 
 def emit(model, output_dir):
+    classes = model['classes']
+    reject_reserved_field_names(classes, 'haskell', RESERVED_WORDS, stage='plcc-haskell-emit')
+
     output_dir.mkdir(parents=True, exist_ok=True)
-    modules = _group_modules(model['classes'])
+    modules = _group_modules(classes)
     _write_cabal(modules, output_dir)
     _copy_runtime_files(output_dir)
     section = _find_haskell_section(model)

@@ -364,3 +364,15 @@ def test_write_main_contains_specification_error(tmp_path):
     _write_main("Program", {}, tmp_path)
     main_hs = (tmp_path / 'Main.hs').read_text()
     assert 'specification_error' in main_hs
+
+
+def test_emit_rejects_field_name_colliding_with_reserved_word(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "type", "type": "Token", "is_list": False}]
+    with pytest.raises(SystemExit) as exc_info:
+        _run_emit(monkeypatch, tmp_path, model)
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-haskell-emit: error:' in captured.err
+    assert "field 'type'" in captured.err
+    assert list(tmp_path.iterdir()) == []

@@ -197,6 +197,7 @@ Unlike Python and JavaScript, a build step is required before running.
 - No `init` or `class` fragment hooks.
 - Generated files are overwritten on every emit run — do not edit them directly.
 - One module per abstract rule: all concrete alternatives share the abstract rule's `.hs` file.
+- A field name that becomes a Haskell reserved word (e.g. `type`, `data`, `where`) is rejected by `plcc-haskell-emit` — rename the capture. See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 
