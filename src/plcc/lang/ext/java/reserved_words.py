@@ -3,7 +3,7 @@
 # only in local-variable-type-inference contexts, not in a field
 # declaration (how field.name is used in class_file.java.jinja).
 RESERVED_WORDS = frozenset({
-    'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch',
+    '_', 'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch',
     'char', 'class', 'const', 'continue', 'default', 'do', 'double',
     'else', 'enum', 'extends', 'false', 'final', 'finally', 'float',
     'for', 'goto', 'if', 'implements', 'import', 'instanceof', 'int',

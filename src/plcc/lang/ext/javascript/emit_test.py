@@ -141,6 +141,19 @@ def test_emit_rejects_field_name_colliding_with_reserved_word(tmp_path, monkeypa
     assert list(tmp_path.iterdir()) == []
 
 
+def test_emit_rejects_eval_as_field_name(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "eval", "type": "Token"}]
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    with pytest.raises(SystemExit) as exc_info:
+        run_main([f'--output={tmp_path}'])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-javascript-emit: error:' in captured.err
+    assert "field 'eval'" in captured.err
+    assert list(tmp_path.iterdir()) == []
+
+
 def test_concrete_class_has_rule_name_and_fields(tmp_path, monkeypatch):
     monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
     run_main([f'--output={tmp_path}'])

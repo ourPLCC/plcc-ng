@@ -319,3 +319,16 @@ def test_emit_rejects_field_name_colliding_with_reserved_word(tmp_path, monkeypa
     assert 'plcc-java-emit: error:' in captured.err
     assert "field 'class'" in captured.err
     assert list(tmp_path.iterdir()) == []
+
+
+def test_emit_rejects_underscore_as_field_name(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "_", "type": "runtime.Token", "is_list": False}]
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    with pytest.raises(SystemExit) as exc_info:
+        run_main([f'--output={tmp_path}'])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-java-emit: error:' in captured.err
+    assert "field '_'" in captured.err
+    assert list(tmp_path.iterdir()) == []
