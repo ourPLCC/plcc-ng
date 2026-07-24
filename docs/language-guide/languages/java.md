@@ -81,14 +81,14 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 | Grammar Construct | Example from spec | Java Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | Java class with public fields and constructor | `class Prog extends _Start { public ArrayList<Exp> expList; ... }` |
-| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Java class extending the base nonterminal | `class AddExp extends Exp { public Exp left, right; ... }` |
-| Named non-terminal (RHS) | `<Exp:left>` | `left` — an `Exp` instance | `left.eval()` |
-| Captured terminal (RHS) | `<NUM>` | `num` — a `Token`; `.lexeme` for the string value | `Integer.parseInt(num.lexeme)` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `expList` — `ArrayList<Exp>` | `for (Exp exp : expList)` |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Expr>` | Java class with public fields and constructor | `class Prog extends _Start { public ArrayList<Expr> exprList; ... }` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | Java class extending the base nonterminal | `class AddOp extends Op { ... }` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | `op` — an `Op` instance | `op.apply(left, right)` |
+| Captured terminal (RHS) | `<NUM:left>` | `left` — a `Token`; `.lexeme` for the string value | `Integer.parseInt(left.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `exprList` — `ArrayList<Expr>` | `for (Expr expr : exprList)` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `exp`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `expr`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
 
 All generated classes are in the same package, so sibling classes are accessible without explicit imports.
 
