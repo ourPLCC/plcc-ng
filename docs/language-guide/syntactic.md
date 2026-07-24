@@ -129,6 +129,24 @@ two fields with the same name `expr`, which would not compile and run.
 The type of a capture nonterminal field is the class with the same name
 as the nonterminal.
 
+### Reserved words
+
+A field name — whether explicit (`:fieldname`) or auto-derived — must not
+become an identifier that collides with a reserved word of the semantic
+implementation language you're targeting (e.g. `<VAR>` auto-naming field
+`var`, which is reserved in JavaScript).
+
+This is enforced per target language, so it is only detected when you
+attempt to evaluate the semantics for that language — via `plcc-rep`, or
+an explicit `plcc-<lang>-emit` — not during grammar validation
+(`plcc-scan`, `plcc-parse`, `plcc-validate-*`), which is language-neutral
+and doesn't know which target you'll eventually emit for. A grammar can
+therefore pass validation cleanly and still be rejected later, per
+target, at emit time.
+
+See each language's guide page ("Restrictions" section) for its exact
+reserved-word list.
+
 ### Alternative rules and subclasses
 
 When a nonterminal has multiple rules, each alternative must be given
