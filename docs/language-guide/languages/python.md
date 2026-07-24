@@ -192,6 +192,7 @@ No build step is required — Python does not need a compilation step, so `plcc-
 - Requires Python 3.12 or later.
 - Generated files are overwritten on every emit run — do not edit them directly.
 - Sibling generated classes are not automatically in scope; import them explicitly with an `import` fragment.
+- A field name that becomes a Python keyword (e.g. `class`, `import`, `is`) is rejected by `plcc-python-emit` — rename the capture. See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 

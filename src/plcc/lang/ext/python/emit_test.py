@@ -358,3 +358,16 @@ def test_emit_generated_main_non_string_return_is_specification_error(tmp_path, 
     assert spec_error_records, f"No specification_error record found in: {result.stdout}"
     assert 'must return a string' in spec_error_records[0]['message']
     assert result.returncode != 0
+
+
+def test_emit_rejects_field_name_colliding_with_reserved_word(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "class", "type": "Token"}]
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    with pytest.raises(SystemExit) as exc_info:
+        run_main([f'--output={tmp_path}'])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-python-emit: error:' in captured.err
+    assert "field 'class'" in captured.err
+    assert list(tmp_path.iterdir()) == []
