@@ -1,6 +1,6 @@
 # Java doc's "Quick reference example" grammar is not LL(1) — design
 
-**Issue:** [166](../issues/166-java-doc-quick-reference-not-ll1.md)
+**Issue:** [166](../issues/done/166-java-doc-quick-reference-not-ll1.md)
 **Date:** 2026-07-24 (revised same day — see "Revision" below)
 
 ## Problem

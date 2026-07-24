@@ -602,7 +602,7 @@ Issue 166 closes as the final commit of this branch, per CLAUDE.md's issue-closi
 bin/issues/close.bash 166
 ```
 
-This moves `dev-docs/issues/166-java-doc-quick-reference-not-ll1.md` to
+This moves `dev-docs/issues/done/166-java-doc-quick-reference-not-ll1.md` to
 `dev-docs/issues/done/` and updates `dev-docs/roadmap.md`. Verify with
 `bin/issues/check.bash` afterward.
 
