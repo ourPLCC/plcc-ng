@@ -1,6 +1,6 @@
 # Java subtraction-language example: `Exp` never declares abstract `eval()` — design
 
-**Issue:** [167](../issues/167-java-examples-doc-exp-missing-abstract-eval.md)
+**Issue:** [167](../issues/done/167-java-examples-doc-exp-missing-abstract-eval.md)
 **Date:** 2026-07-25
 
 ## Problem

@@ -14,8 +14,6 @@
 
 ### Docs
 
-- **[#167](issues/167-java-examples-doc-exp-missing-abstract-eval.md) — Java "subtraction language" example in examples.md doesn't compile — `Exp` never declares `eval()`**
-  `Exp` is generated abstract (it has named alternatives) but no fragment declares `public abstract int eval();`, so every `.eval()` call on an `Exp`-typed reference fails with `cannot find symbol`.
 - **[#169](issues/169-whats-new-entry-for-next-release.md) — Add whats-new.md entry for the next release before merging this branch**
   `docs/whats-new.md` hasn't been updated since the v1.0.0 entry; this branch has accumulated a release's worth of user-facing changes (several `fix!`/`BREAKING CHANGE` commits) that need a summarized entry before merge.
 - **[#171](issues/171-javascript-doc-quick-reference-not-ll1.md) — JavaScript language guide's "Quick reference example" grammar is not LL(1)**
