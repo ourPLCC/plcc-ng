@@ -80,6 +80,11 @@ Create `subtract.plcc`:
     }
     %%%
 
+    Exp
+    %%%
+    public abstract int eval();
+    %%%
+
     WholeExp
     %%%
     public int eval() {
