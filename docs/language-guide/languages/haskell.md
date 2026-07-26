@@ -93,29 +93,28 @@ Fragments inject code at specific locations in the generated `.hs` file. Use `Mo
 
 Haskell has no `init` or `class` hook — there is no constructor body to inject into, and no class declaration line.
 
-**Fragment class names must be module names** — the abstract rule name (`Exp`) or a lone concrete name (`Prog`), never a concrete alternative name (`AddExp`, `NumExp`). Using a concrete alternative name produces a fatal error:
+**Fragment class names must be module names** — the abstract rule name (`Op`) or a lone concrete name (`Prog`), never a concrete alternative name (`AddOp`, `SubOp`). Using a concrete alternative name produces a fatal error:
 
 ```text
-plcc-haskell-emit: fragment tagged 'AddExp': AddExp is a concrete alternative of Exp.
+plcc-haskell-emit: fragment tagged 'AddOp': AddOp is a concrete alternative of Op.
 In Haskell, concrete alternatives are constructors inside their abstract rule's module.
-Use 'Exp' as the fragment class name instead.
+Use 'Op' as the fragment class name instead.
 ```
 
 ### Example
 
 ```text
-Exp:import
+Expr:import
 %%%
 import Data.List (sort)
 %%%
 
-Exp
+Expr
 %%%
-eval :: Exp -> Int
-eval (AddExp l r) = eval l + eval r
-eval (NumExp t)   = read (lexeme t)
+eval :: Expr -> Int
+eval (Expr l o r) = apply o (read (lexeme l)) (read (lexeme r))
 
-sortedEvals :: [Exp] -> [Int]
+sortedEvals :: [Expr] -> [Int]
 sortedEvals es = sort (map eval es)
 %%%
 ```
