@@ -26,32 +26,41 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 javascript
+
+Expr
+%%%
+eval() {
+    return this.op.apply(parseInt(this.left.lexeme), parseInt(this.right.lexeme));
+}
+%%%
 
 Prog
 %%%
 _run() {
-    return this.expList.map(exp => String(exp.eval())).join('\n');
+    return this.exprList.map(expr => String(expr.eval())).join('\n');
 }
 %%%
 
-AddExp
+AddOp
 %%%
-eval() {
-    return this.left.eval() + this.right.eval();
+apply(left, right) {
+    return left + right;
 }
 %%%
 
-NumExp
+SubOp
 %%%
-eval() {
-    return parseInt(this.num.lexeme);
+apply(left, right) {
+    return left - right;
 }
 %%%
 ```
