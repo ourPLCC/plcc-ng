@@ -99,15 +99,15 @@ JavaScript has no `class` hook. JavaScript classes do not support interface decl
 ### Example
 
 ```text
-NumExp:import
+Expr:import
 %%%
 const { MathHelper } = require('./MathHelper');
 %%%
 
-NumExp
+Expr
 %%%
 eval() {
-    return MathHelper.parse(this.num.lexeme);
+    return this.op.apply(MathHelper.parse(this.left.lexeme), MathHelper.parse(this.right.lexeme));
 }
 %%%
 
