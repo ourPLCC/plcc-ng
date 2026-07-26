@@ -1,6 +1,1210 @@
 # CHANGELOG
 
 
+## v2.0.0 (2026-07-26)
+
+### Bug Fixes
+
+- **haskell**: Reject field names colliding with Haskell reserved words
+  ([`2f4ae1d`](https://github.com/ourPLCC/plcc-ng/commit/2f4ae1de3eee6070dcb3a0f4c8963349f6db4016))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **java**: _run() must return a String instead of void
+  ([`a331f42`](https://github.com/ourPLCC/plcc-ng/commit/a331f42b940f016cb6b5130816386137276ecfe9))
+
+_run() now returns a String that the runtime marshals into plcc-rep's JSON result envelope, matching
+  the return-and-convert contract already used by Python, JavaScript, and Haskell. The previous
+  void/print-inside-_run() model silently bypassed the envelope and broke `plcc-rep --format json`.
+
+BREAKING CHANGE: Java's `_run()` signature changed from `public void _run()` to `public String
+  _run()`. Any spec that overrides `_run()` (or a custom entry point) must change it to return a
+  String instead of printing directly — e.g. replace `System.out.println(x);` with `return
+  x.toString();`. Specs that never defined `_run()` are unaffected; the default implementation was
+  updated to match.
+
+- **java**: Reject field names colliding with Java reserved words
+  ([`d8c0beb`](https://github.com/ourPLCC/plcc-ng/commit/d8c0beba18f10814b111030017bcb6c1582924bb))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **java**: Remove duplicate System.out.flush() in Main.java.jinja
+  ([`d7efd94`](https://github.com/ourPLCC/plcc-ng/commit/d7efd942b4b0249ac8d47dfae8be9344ce1c92d5))
+
+Left over from the void-to-String signature change; the success path flushed stdout twice. Harmless
+  but redundant.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **javascript**: _run() must return a string, or it's a specification error
+  ([`d384537`](https://github.com/ourPLCC/plcc-ng/commit/d384537ddb58bf43b809652f9d7438aea370454e))
+
+The runtime no longer coerces _run()'s return value with String() — it uses the returned string
+  as-is, and validates it is actually a string before doing so. The default _Start._run() now
+  returns String(this) instead of printing it.
+
+BREAKING CHANGE: _run() (or a custom entry point) that returns a non-string value — a number, an
+  array, any object relied on for its toString() — now fails with a specification_error instead of
+  silently working. Convert the return value explicitly, e.g. `return String(x)` instead of `return
+  x`. Specs whose _run() already returns a string, or that never define _run() at all, are
+  unaffected.
+
+- **javascript**: Reject field names colliding with JS reserved words
+  ([`043a279`](https://github.com/ourPLCC/plcc-ng/commit/043a27966b22d790b8b4f7e9bfda9ffabb600328))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **javascript,java**: Add missing reserved words found in final review
+  ([`1b6d4c7`](https://github.com/ourPLCC/plcc-ng/commit/1b6d4c7d7b186ee2f5e0e4e56e1771b62f48a17c))
+
+JavaScript: added `eval` and `arguments` to RESERVED_WORDS. These are illegal as formal parameter
+  names in strict mode (where all generated JS class bodies are defined), and would cause
+  SyntaxError in the constructor() method.
+
+Java: added `_` (underscore) to RESERVED_WORDS. Since Java 9, underscore is a reserved keyword
+  (unnamed variable marker in Java 21, required by this project) and cannot be used as an
+  identifier.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **lang**: Make reserved-word collision message suggest a generic :fieldname
+  ([`f11b4e2`](https://github.com/ourPLCC/plcc-ng/commit/f11b4e2c4237f9ad06d2cb7e89492805004b1b94))
+
+The old message guessed a capture syntax (<NAME.upper():name>) from the derived field name, which is
+  only valid for a terminal auto-name and is misleading for an explicit alt-name (<NUM:class>) or
+  nonterminal capture (<Class>). The function only has the field name, not the source symbol, so
+  suggest the generally-correct fix instead.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **ll1**: Add clarifying comment to nullability check
+  ([`5974279`](https://github.com/ourPLCC/plcc-ng/commit/59742798af10cce3b908f7193d1cf4ed9631953f))
+
+Flagged as Minor by the final whole-branch review for issue 170: the new one-liner is correct but
+  doesn't spell out why epsilon-in-FIRST-set is the right nullability test, or that build_first_sets
+  is where that's actually computed.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **ll1**: Preserve alt-name case in runtime field-name decoding
+  ([`b8c149d`](https://github.com/ourPLCC/plcc-ng/commit/b8c149dd1d245287ce043001a315f74d630a150a))
+
+Preserve the case of explicit alt-names in _field() and _arbno_field() functions instead of
+  lowercasing them. Only lowercase the fallback case when no alt-name is provided. Fixes mismatch
+  between generated code and runtime parse tree when camelCase alt-names are used.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **ll1**: Recognize nullability regardless of production registration order
+  ([`c7fc0dd`](https://github.com/ourPLCC/plcc-ng/commit/c7fc0ddde8a6b10c99800aa9c1c406fd4d8cd498))
+
+_allRulesCanDeriveEmpty only checked a nonterminal's first-registered production
+  (getForms(symbol)[0]) instead of all of them, so a nonterminal whose epsilon alternative wasn't
+  registered first was wrongly treated as non-nullable - breaking FOLLOW-set propagation of
+  end-of-input through it. This reliably broke any `**=` (arbno) rule whose repeated element has a
+  nested epsilon alternative, since _handle_arbno always registers its internal continuation
+  nonterminal's non-empty form before its epsilon form.
+
+build_first_sets.py already computes nullability correctly and independently for every symbol
+  (epsilon in firstSets[symbol] iff nullable), and FollowSetBuilder already receives firstSets but
+  never reused it for this check. Delete the buggy duplicate computation (_canDeriveEmptyString,
+  _allRulesCanDeriveEmpty - confirmed unreferenced elsewhere) and reuse firstSets directly instead.
+  As a side effect, this also makes the RecursionError-on-left-recursion guard from 5cc5a05a
+  unnecessary (no recursion left in this path at all) - left in place since it's harmless and the
+  test that exercises it still passes.
+
+Design: dev-docs/specs/2026-07-24-170-arbno-follow-set-missing-eof-design.md
+
+- **model**: Decapitalize bare multi-word nonterminal capture field names
+  ([`9d55330`](https://github.com/ourPLCC/plcc-ng/commit/9d553308c80f467a4d903a91bf3d22ed11d60f7c))
+
+Bare (no alt-name) capture field names were derived by full-lowercasing the symbol's grammar name
+  instead of decapitalizing just the first letter, e.g. `<OneMore>` produced field `onemore` instead
+  of `oneMore`. Terminals are unaffected (SCREAMING_SNAKE_CASE terminals are still correctly
+  full-lowercased); only bare nonterminal captures change.
+
+Although this is a breaking change for plcc-ng, it brings bare-capture auto-naming back in line with
+  legacy PLCC's original behavior: PLCC required nonterminals to already be lowerCamelCase and used
+  the name verbatim for a bare capture's field, which was already the identity transform. plcc-ng's
+  PascalCase nonterminal convention (see the migration guide) means the equivalent identity
+  transform is decapitalize-first-letter, not full-lowercase - the full-lowercase behavior was a
+  plcc-ng-only regression from the intended PLCC-equivalent naming, not a deliberate design choice.
+
+BREAKING CHANGE: a bare (no `:fieldname`) multi-word nonterminal capture now generates/validates a
+  camelCase field name instead of an all-lowercase one, e.g. `<OneMore>` now produces field
+  `oneMore` instead of `onemore`. Semantic-section code referencing the old all-lowercase field name
+  (`self.onemore`) must update to the new camelCase name (`self.oneMore`), or add an explicit
+  `<OneMore:onemore>` alt-name to keep the old spelling. Single-word nonterminal captures and all
+  terminal captures are unaffected.
+
+- **model**: Preserve alt-name case in arbno field-name generation
+  ([`608f489`](https://github.com/ourPLCC/plcc-ng/commit/608f489581f7f117c7931f79c1076a8527b9c515))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **python**: _run() must return a str, or it's a specification error
+  ([`94faea7`](https://github.com/ourPLCC/plcc-ng/commit/94faea72dd2f53ea44e38029659a69e94a466d6f))
+
+The runtime no longer coerces _run()'s return value with repr()/str() — it uses the returned string
+  as-is, and validates it is actually a str before doing so. This also fixes _run() returning a
+  quoted string (issue #162), which was a symptom of the same repr()-based coercion. The default
+  _Start._run() now returns str(self) instead of printing it.
+
+BREAKING CHANGE: _run() (or a custom entry point) that returns a non-str value — an int, a list, any
+  object relied on for its __str__ — now fails with a specification_error instead of silently
+  working. Convert the return value explicitly, e.g. `return str(x)` instead of `return x`. Specs
+  whose _run() already returns a str, or that never define _run() at all, are unaffected.
+
+- **python**: Reject field names colliding with Python keywords
+  ([`4ad4433`](https://github.com/ourPLCC/plcc-ng/commit/4ad4433f8224e6e997205caa46f9728d4276a381))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **syntax**: Decapitalize bare nonterminal names in duplicate-capture validation
+  ([`782f506`](https://github.com/ourPLCC/plcc-ng/commit/782f506939b210062db224b87b2a829f8fb15c6e))
+
+- **syntax**: Preserve alt-name case in duplicate-capture validation
+  ([`57c3eb9`](https://github.com/ourPLCC/plcc-ng/commit/57c3eb96f39426e0043a1fe92b00b460873b803f))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **test**: Fold command arguments into the test-output cache key
+  ([`5571cbb`](https://github.com/ourPLCC/plcc-ng/commit/5571cbb0f677cfcd236d3707b50d1e9715a673e0))
+
+Updates _cache_key to accept command arguments as a parameter and include them in the hash
+  computation alongside git state. This prevents false cache hits when the same cache file is used
+  with different command arguments (e.g., different test path filters). Modifies run_cached to pass
+  its remaining arguments to _cache_key via "$*".
+
+Also updates two existing tests that relied on the old args-agnostic cache behavior to use identical
+  arguments in both runs, ensuring they test actual cache hits rather than false hits.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Chores
+
+- Gitignore plcc-ng/ build directory as defense-in-depth
+  ([`0f431fd`](https://github.com/ourPLCC/plcc-ng/commit/0f431fdc04b21f3c775e98201e8613a346b738e6))
+
+The test suite already isolates every plcc-make invocation into a mktemp -d (issue 153 audit found
+  no test needed fixing), but a manual/ad-hoc run in the repo root still leaves plcc-ng/ untracked,
+  as it has before (49c5f154).
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- Remove stray build artifacts leaked into a85e2cb5
+  ([`49c5f15`](https://github.com/ourPLCC/plcc-ng/commit/49c5f1543ae17d1af24f2b98907d02ed8e34ce5e))
+
+plcc-ng/.spec-hash, plcc-ng/ll1.json, and plcc-ng/spec.json were accidentally committed alongside
+  the docs fix - leftover output from a verification run (plcc-ng/'s default build-dir name isn't
+  gitignored, per issue #153). Unrelated to the actual doc changes; removing.
+
+- **docs**: Decommission the dev-docs mkdocs site
+  ([`636bc09`](https://github.com/ourPLCC/plcc-ng/commit/636bc0955dbad5457b0eb2fb9c54f1c9d8d5132f))
+
+Removes the mkdocs-dev.yml build/deploy pipeline: the config file, the "Build developer docs" and
+  "Merge developer docs into gh-pages" steps in docs.yml, and the mkdocs-dev.yml path trigger in
+  ci.yml. Deletes the three include-markdown shim files that only fed the dev-docs site. Points
+  README's developer docs link and dev-docs/index.md's Contributing link at the GitHub-browsable
+  repo tree instead.
+
+dev-docs/ itself is unaffected — it remains the project's issue tracker, roadmap, and design-spec
+  archive, browsable directly on GitHub.
+
+Filed while resolving #145: ~70% of that issue's mkdocs --strict warnings existed only because
+  docs_dir was scoped to dev-docs/, which can never resolve links to bin/, src/, or repo-root files.
+
+- **issues**: Auto-fix links on close.bash (issue 150)
+  ([`4c10ac5`](https://github.com/ourPLCC/plcc-ng/commit/4c10ac586376fc8d43fb6ddf10e48de2a9dfd8b3))
+
+close.bash now rewrites other dev-docs/ files' links to the closed issue's old open path, and
+  adjusts the moved file's own outbound links for its new depth under issues/done/ — preventing the
+  stale-link class fixed once already in issue 149 from recurring on every future close.
+
+Internal repo tooling only (not part of the shipped package), so this must not trigger a release.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Continuous Integration
+
+- **docs**: Detect docs/ changes on push to main
+  ([`3a0f2db`](https://github.com/ourPLCC/plcc-ng/commit/3a0f2db164ea44169555fb240bb40c7e1e03990f))
+
+- **docs**: Harden docs-change detection against pipefail false-negatives
+  ([`f04efe5`](https://github.com/ourPLCC/plcc-ng/commit/f04efe514ec4c95969c4e529eab90c61c91866d1))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **docs**: Sync docs-only changes into the current live version
+  ([`ba042ef`](https://github.com/ourPLCC/plcc-ng/commit/ba042efcdbbf8b07676c73c8cebefb07b185fd5a))
+
+### Documentation
+
+- Address final-review Minor findings for issue 166's work
+  ([`c8fe5a0`](https://github.com/ourPLCC/plcc-ng/commit/c8fe5a010f14c7577397a6bf259fb5f488c7f11d))
+
+- Design doc: correct the "no epsilon alternative anywhere" claim. Every `**=` rule's internal
+  desugaring contains an epsilon production (intrinsic to arbno), including this grammar's - #170's
+  buggy nullability check still misflags it. The fix works because the *repeated element* (Expr) has
+  no *nested* epsilon alternative of its own, so nothing needs FOLLOW(Expr) to contain end-of-input
+  for correctness - the corruption is inert, not avoided. Also fixes a stray "SubExp" (should be
+  "Op"/"AddOp"/"SubOp") left from an earlier editing pass. - Issues #171/#172/#173: same
+  epsilon-rationale correction, since these guide three future fixes and inherited the same
+  imprecise phrasing. - Issues #171/#172/#173: prose H1 titles (matching their own roadmap entries
+  and #167/#170's style) instead of the raw generated slug; removed the leftover TEMPLATE.md
+  classification comment.
+
+Flagged by the final whole-branch review as Minor, non-blocking; fixed directly since they're small
+  and correctness-affecting for docs that guide future work.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- Document the _run() protocol obligation and its migration impact
+  ([`293a986`](https://github.com/ourPLCC/plcc-ng/commit/293a9869242c269986e2c80ebea110b49e0a325a))
+
+Adds the _run() contract to language-extensions.md as an explicit obligation on any language
+  extension (existing or future) — the natural home for it, since it's the closest thing this repo
+  has to a language-extension contract doc. Updates migration.md's breaking-changes section and its
+  $run()-to-_run() rename entry (§9) to state that the contract changed, not just the name — closing
+  the gap identified in issue #165.
+
+- Document the path filter on bats-backed test scripts
+  ([`5deae26`](https://github.com/ourPLCC/plcc-ng/commit/5deae266c47dcd6f7f7b6f50f48d035d05910ccf))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- Fix remaining void _run() examples missed by the doc sweep
+  ([`a85e2cb`](https://github.com/ourPLCC/plcc-ng/commit/a85e2cb537d93a3d33e9939a54bce2e62b609132))
+
+Final whole-branch review of the _run() contract change (#162/#165) found two Java examples
+  (language-guide/index.md, examples.md) and one migration-guide snippet still showing the
+  now-invalid void+println form, which no longer compiles since Java's _run() changed to String.
+
+Also fixed PEP8 spacing in emit_test.py around test_start_java_run_returns_instead_of_printing.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- State the _run() return-a-string contract explicitly
+  ([`b9c429e`](https://github.com/ourPLCC/plcc-ng/commit/b9c429e1db9f56dd3367a9a3a7f1c2eeaea2fefb))
+
+Python, JavaScript, and Java's language guides described the return value as merely "converted to a
+  string" and, for Java, showed a void method that prints directly — both now superseded by issues
+  #162/#165. State the actual contract plainly: _run() must return a string, the runtime does not
+  convert or print for you, and a non-string return (or, for Java, null) is a specification_error.
+  Update every code example and the quick-start Java example to match the new String-returning
+  signature.
+
+- **examples**: Declare abstract eval() on Exp in java subtraction example
+  ([`2650d7b`](https://github.com/ourPLCC/plcc-ng/commit/2650d7be86dfe50012422369509ea8e3ca95fca5))
+
+The Java tab's grammar uses alternative rules <Exp:WholeExp>/<Exp:SubExp>, so PLCC-ng generates Exp
+  as an abstract base class. No fragment declared eval() on Exp, so generated Exp.java had no eval()
+  method and every exp.eval()/exp1.eval()/exp2.eval() call failed to compile with 'cannot find
+  symbol'. Add an Exp body fragment declaring 'public abstract int eval();', matching the Op pattern
+  in java.md.
+
+Verified end-to-end: echo the doc's samples through plcc-rep now compiles and prints 3/1/2 as the
+  walkthrough states.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **haskell**: Fix quick-reference grammar to be LL(1)
+  ([#173](https://github.com/ourPLCC/plcc-ng/pull/173),
+  [`f26e748`](https://github.com/ourPLCC/plcc-ng/commit/f26e748a5bc19f20da7d6d85041f1c520fcb1dfe))
+
+Replace the left-recursive <Exp:AddExp> ::= <Exp:left> PLUS <Exp:right> grammar with the
+  operator-alternation left-factoring proven in #166/#171/#172. Because Haskell emits one module per
+  rule with concrete alternatives as constructors, the operator logic lives as pattern-matched apply
+  clauses in a single Op fragment (not per-alternative fragments, which are a fatal error in the
+  Haskell target).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **haskell**: Fix stale generated-output list + pattern-match Tips line
+  ([#173](https://github.com/ourPLCC/plcc-ng/pull/173),
+  [`5cb8d93`](https://github.com/ourPLCC/plcc-ng/commit/5cb8d9381de00408a5c258c207ec831dd231b603))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **haskell**: Re-ground BNF table + naming paragraph on new grammar
+  ([#173](https://github.com/ourPLCC/plcc-ng/pull/173),
+  [`3de27a6`](https://github.com/ourPLCC/plcc-ng/commit/3de27a60e46a689968c6eb4ea0450060420f40e8))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **haskell**: Re-ground fragment-kinds constraint, error block, example
+  ([#173](https://github.com/ourPLCC/plcc-ng/pull/173),
+  [`d83d659`](https://github.com/ourPLCC/plcc-ng/commit/d83d659bd9e15d535ea0c68b43b2c09918e97b3c))
+
+Update the "fragment class names must be module names" paragraph and its fatal-error block to the
+  new grammar's names (verified real emitter output for a fragment tagged AddOp), and re-ground the
+  fragment-kinds "### Example" on the concrete Expr module.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **haskell**: State the _run() contract explicitly for consistency
+  ([`78986d7`](https://github.com/ourPLCC/plcc-ng/commit/78986d713140ff7343b5a29103a3b1208aac23d5))
+
+No behavior change — Haskell's _run :: StartModule -> String already satisfies the same "returns a
+  string" contract Python, JavaScript, and Java now state explicitly (issues #162, #165). This
+  aligns the wording so a reader comparing all four language guides sees one consistent story
+  instead of Haskell's being implicit.
+
+- **headings**: Standardize section headings to sentence case
+  ([`de4b31f`](https://github.com/ourPLCC/plcc-ng/commit/de4b31fc3574197aace8c7146018c5dbf3986954))
+
+Capitalization was inconsistent across docs/ (sentence case vs. title case). Standardize on sentence
+  case, matching what the textbook already uses, and document the rule in CONTRIBUTING.md.
+
+Fixes 49 headings across 34 files; command doc pages' "Arguments and Options" accounts for 29 of
+  them.
+
+- **issues**: Add classification note to issue template
+  ([`57b9778`](https://github.com/ourPLCC/plcc-ng/commit/57b9778154fdac886f696b00de3377d80fcc347a))
+
+Clarifies that fix/feat bump the release version and are reserved for changes to the shipped
+  package; bugs in bin/, tests/, or .github/ are still bugs but aren't user-facing and should be
+  typed test/chore.
+
+- **issues**: Apply close.bash link auto-fixes for #171 move to done/
+  ([`038858c`](https://github.com/ourPLCC/plcc-ng/commit/038858cd8fc75a68c3bccd02a858803c7dd2c0dd))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: Close #171 (javascript quick-reference LL(1))
+  ([`341ff41`](https://github.com/ourPLCC/plcc-ng/commit/341ff41f6eec98d02673bc1da63bf9b4eaa57206))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: Close issue 145 (mkdocs --strict warnings), update roadmap
+  ([`5e155d5`](https://github.com/ourPLCC/plcc-ng/commit/5e155d52770c3907224d07dab81de625262d4792))
+
+Investigation found ~70% of the strict-build warnings exist only because dev-docs's docs_dir can
+  never resolve links to bin/, src/, or repo-root files. Rather than rewrite links to work around
+  that, decided to decommission the dev-docs mkdocs site instead. Split the resulting work into #148
+  (decommission), #149 (fix the remaining stale issues/done links), and #150 (harden close.bash
+  against recurrence), ordered under a new "Dev-docs cleanup" roadmap milestone.
+
+- **issues**: Close issue 146 (cut the v1.0.0 release), update roadmap
+  ([`08c56a8`](https://github.com/ourPLCC/plcc-ng/commit/08c56a8b6258610d7866cae0ae51653ecceee98b))
+
+v1.0.0 has shipped, so all nine "Path to v1.0" items are complete; retire the milestone section per
+  issue-conventions.md.
+
+- **issues**: Close issue 147 (Capitalization of section headings), update roadmap
+  ([`e232a71`](https://github.com/ourPLCC/plcc-ng/commit/e232a71e4533797fb4183d9fe5cb5ea52fabb788))
+
+- **issues**: Close issue 148 (decommission dev-docs mkdocs site), update roadmap
+  ([`d7111a3`](https://github.com/ourPLCC/plcc-ng/commit/d7111a39954beca9e221ed125dc55664203bc7df))
+
+- **issues**: Close issue 149 (fix stale issues/done links), update roadmap
+  ([`b8c4d18`](https://github.com/ourPLCC/plcc-ng/commit/b8c4d18dd29529ae299c6a0180bfc6726ea11ee4))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 150 (close script auto-fix links), update roadmap
+  ([`2021da5`](https://github.com/ourPLCC/plcc-ng/commit/2021da529d8a728151ce656fdcd4235036a02d11))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 151 (migrate superpowers docs to dev-docs), update roadmap
+  ([`c7ee53c`](https://github.com/ourPLCC/plcc-ng/commit/c7ee53cef534e0591e0dbbd90cf7e92da2d6fa02))
+
+- **issues**: Close issue 152 (test-cache content-hash invalidation), update roadmap
+  ([`052701f`](https://github.com/ourPLCC/plcc-ng/commit/052701fb827e36bc3ca9a1d276cdf2fef366270d))
+
+Implemented in commit bc3a397c: _cache_key() now folds git diff HEAD and untracked file contents
+  into the cache key, and tests/bats/commands/cache.bats covers the already-dirty-file case.
+
+- **issues**: Close issue 153 (test artifacts outside project dir), update roadmap
+  ([`460ead2`](https://github.com/ourPLCC/plcc-ng/commit/460ead2b4d4a031f184eb39b39552e494473b1ec))
+
+Audited every bats/pytest file that invokes plcc-make, plcc-spec, plcc-model, or the emit pipeline:
+  all already isolate correctly via mktemp -d + cd (or monkeypatch.chdir), or never touch CWD at
+  all. No test file needed a fix; gitignoring plcc-ng/ (previous commit) covers the remaining
+  ad-hoc-run case.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 155 (test scripts path filter), update roadmap
+  ([`c8275f6`](https://github.com/ourPLCC/plcc-ng/commit/c8275f65092824f6414467ee78e517a6544677e5))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 157 (docs-only changes never reach current-version docs), update roadmap
+  ([`e4bd1a3`](https://github.com/ourPLCC/plcc-ng/commit/e4bd1a3f7b68eaf861a4aa08eecf8f610d300895))
+
+Implemented in PR #305 (commits 3a0f2db1, ba042efc): docs.yml now detects docs/ changes on push to
+  main and re-syncs the current live version via mike deploy.
+
+- **issues**: Close issue 158 (current-version docs missed pre-157 changes), update roadmap
+  ([`b7216d0`](https://github.com/ourPLCC/plcc-ng/commit/b7216d0d671ad3cb8ae2a636bd64e0f953143530))
+
+- **issues**: Close issue 159 (migration guide buries breaking behavior changes), update roadmap
+  ([`791b504`](https://github.com/ourPLCC/plcc-ng/commit/791b504f727df577924d07ed4748c71db81d2550))
+
+- **issues**: Close issue 163 (JS reserved-word field name), update roadmap
+  ([`34b0a86`](https://github.com/ourPLCC/plcc-ng/commit/34b0a86712ac22db6581da37e11e94dd35dce8ef))
+
+- **issues**: Close issue 164 (camelCase alt-name case mismatch), update roadmap
+  ([`22e8a69`](https://github.com/ourPLCC/plcc-ng/commit/22e8a69eb4afdffac20246f16149bb870c4ca487))
+
+- **issues**: Close issue 166 (java quick reference not LL(1)), update roadmap
+  ([`f1f73e0`](https://github.com/ourPLCC/plcc-ng/commit/f1f73e04a8157ef278f844dd8825903fb48c08ae))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 167 (java example missing abstract eval), update roadmap
+  ([`df9268d`](https://github.com/ourPLCC/plcc-ng/commit/df9268dfc3f0da928b53547bc9e0dc3cddaab516))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: Close issue 168 (bare-name decapitalization), update roadmap
+  ([`8e92831`](https://github.com/ourPLCC/plcc-ng/commit/8e92831e1bc678f5a53708be6bbb26ae8d4dcd39))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 169 (whats-new entry for next release), update roadmap
+  ([`a985bc8`](https://github.com/ourPLCC/plcc-ng/commit/a985bc8f29e07cb88c88355b41e34e60836bf27c))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: Close issue 170 (LL(1) FOLLOW-set missing EOF), update roadmap
+  ([`5fcec64`](https://github.com/ourPLCC/plcc-ng/commit/5fcec641448e8de77d0758442368d18d03dfe381))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 172 (python quick-reference LL(1)), update roadmap
+  ([`911f975`](https://github.com/ourPLCC/plcc-ng/commit/911f9752b245824eb277cdb8d4c607e2092b94d1))
+
+Move #172 to done/ and drop its roadmap entry via close.bash. The link auto-fixer's over-rewrites of
+  creation-time paths in the #166 plan (Task 4's Create/Fill-in references, which describe creating
+  #172 while open) are restored to issues/172-...; the roadmap-example and git-add references
+  correctly keep the current done/ location. The #172 design doc's issue link points to done/ (its
+  current location).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: Close issue 173 (haskell quick-reference LL(1)), update roadmap
+  ([`5aa2fbe`](https://github.com/ourPLCC/plcc-ng/commit/5aa2fbe280fabe10106e1d135205589911c74035))
+
+Move #173 to done/ and drop its roadmap entry via close.bash. The link auto-fixer's over-rewrites of
+  creation-time paths in the #166 plan (Task 4's Create/Fill-in references, which describe creating
+  #173 while open) are restored to issues/173-...; the roadmap-example and git-add references
+  correctly keep the current done/ location. The #173 design doc's issue link points to done/ (its
+  current location).
+
+This closes the last of the four sibling quick-reference LL(1) fixes (#166 java, #171 javascript,
+  #172 python, #173 haskell).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: Close issues 162 and 165 (_run() contract fixes), update roadmap
+  ([`d21d6a1`](https://github.com/ourPLCC/plcc-ng/commit/d21d6a18ae04e227e749b7f282772aaf5d1643da))
+
+Both verified fixed by the unified _run() contract work already on this branch: 162's repr()-based
+  Python quoting was removed alongside the str-return enforcement, and 165's three parts
+  (Python/JS/Java default _run() implementations, per-language doc statements, migration guide
+  entry) are all in place.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 147 - Capitalization of section headings
+  ([`5ae6cbb`](https://github.com/ourPLCC/plcc-ng/commit/5ae6cbb73d84cad057245a6e07caf647c73f44ba))
+
+Mirrors ourPLCC/plcc-ng#284: heading capitalization is inconsistent across the docs and needs a
+  single agreed-upon rule.
+
+- **issues**: File 151 - migrate docs/superpowers/ into dev-docs/
+  ([`10600f3`](https://github.com/ourPLCC/plcc-ng/commit/10600f3043078607f6769cb07ad6713b9c6e9480))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 152 - test cache stale-hit on content-only changes
+  ([`0ca0389`](https://github.com/ourPLCC/plcc-ng/commit/0ca03898d970cdf490803b421c3f61a3e5fa7f9d))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 153 - test artifacts outside project dir
+  ([`290162b`](https://github.com/ourPLCC/plcc-ng/commit/290162bfdfbd9c238e47d8c619aa4eec9521a68a))
+
+- **issues**: File 154 - update python-semantic-release
+  ([`52f013b`](https://github.com/ourPLCC/plcc-ng/commit/52f013b121a95b5d9e439d9eac0060820aba0c52))
+
+- **issues**: File 155 - test scripts path filter
+  ([`d440d92`](https://github.com/ourPLCC/plcc-ng/commit/d440d92f0c5b89f98f8da58653209556d6df12cb))
+
+- **issues**: File 156 - mkdocs 1.x successor decision
+  ([`6b5fd77`](https://github.com/ourPLCC/plcc-ng/commit/6b5fd77de16c80e756323c9f6b7695b68cbc0179))
+
+Discovered while verifying issue #147 with a strict mkdocs build: mkdocs-material hard-pins
+  mkdocs<2, and mkdocs-kroki-plugin already pulls in properdocs as a dependency solely to print a
+  migration nag. Neither forces a decision today, but we'll need to pick a successor (ProperDocs,
+  Zensical, or stay pinned) once MkDocs 1.x actually breaks. Document the full investigation trail
+  in security-notes.md so we don't have to re-derive it next time a similar warning shows up.
+
+- **issues**: File 157 - docs-only changes never reach current-version docs
+  ([`e0e97de`](https://github.com/ourPLCC/plcc-ng/commit/e0e97de49a229f73aec51db50793b9a3285f90f5))
+
+mike only redeploys a version alias (e.g. 1.0) on a GitHub release event; docs-only commits never
+  bump the version by design, so a docs-only PR merged to main only ever reaches the dev preview.
+  Discovered while merging #147: the heading-capitalization fix landed on dev but users pinned to
+  1.0 docs won't see it until an unrelated release ships. In practice docs regularly lag the release
+  they document, so being able to patch the current release's docs without cutting a new release
+  matters.
+
+- **issues**: File 158 - current-version docs missed pre-157 changes
+  ([`19fcaec`](https://github.com/ourPLCC/plcc-ng/commit/19fcaec290b9e2e6b06f39c52f0df919b88dad87))
+
+157's sync only fires on pushes after it landed, so it doesn't backfill docs-only changes merged
+  between the v1.0.0 tag and 157's fix. Confirmed on gh-pages: 1.0/acknowledgments still has the old
+  title-case headings that de4b31fc fixed on dev but never reached the live version.
+
+- **issues**: File 159 - migration guide buries breaking changes
+  ([`42aedd6`](https://github.com/ourPLCC/plcc-ng/commit/42aedd635b3eabe8b10d3e714635e2cdcf8e0c12))
+
+- **issues**: File 160 - concurrent plcc-scan/plcc-make build dir race
+  ([`cd7556f`](https://github.com/ourPLCC/plcc-ng/commit/cd7556fe03c93b2acc0b188094b7de618f8bd5d6))
+
+- **issues**: File 162 - python _run() return value quoted
+  ([`44d7ced`](https://github.com/ourPLCC/plcc-ng/commit/44d7ceddaaefc28103b764b300b45b35a8e80bce))
+
+- **issues**: File 166 - java doc quick reference example not LL(1)
+  ([`ad029c4`](https://github.com/ourPLCC/plcc-ng/commit/ad029c46415d00d20faa72f86e27bd1a33b021ac))
+
+Discovered while verifying docs/language-guide/languages/java.md's example actually runs, as part of
+  the _run() contract fix (#162/#165). Pre-existing, unrelated bug - tracked separately rather than
+  fixed here.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 167 - java examples.md subtraction example doesn't compile
+  ([`5942aac`](https://github.com/ourPLCC/plcc-ng/commit/5942aac7ce3bb0ede01ee41eb26dc559079010f1))
+
+Discovered while independently re-verifying the final whole-branch review's docs-sweep fix
+  (a85e2cb5) actually runs end-to-end. Confirmed pre-existing and unrelated to the _run() contract
+  series (#162/#165): the identical "cannot find symbol: eval()" error reproduces with the original
+  void _run() form, before any of that series' changes.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 168 - bare-name field derivation full-lowercases instead of decapitalizing
+  ([`274143b`](https://github.com/ourPLCC/plcc-ng/commit/274143bbddf952ef1f796080cdb92ae786b4c705))
+
+Found while scoping the fix for #164: alt-name case mismatch is a real codegen/runtime disagreement,
+  but the bare-name fallback branch's full-lowercasing is a separate, non-crashing naming-convention
+  issue that changes generated field names project-wide if touched, so it's filed separately rather
+  than folded into #164's fix.
+
+- **issues**: File 169 - whats-new.md entry for next release
+  ([`65a945c`](https://github.com/ourPLCC/plcc-ng/commit/65a945cfed7feb34c61aba5c8af69e1029ff519d))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 170 - LL(1) FOLLOW-set drops end-of-input for late-registered nullable
+  productions
+  ([`9cc34d6`](https://github.com/ourPLCC/plcc-ng/commit/9cc34d6f38183dd923e3767e16a7a0623678e3ea))
+
+Found while implementing #166: the left-factored quick reference grammar drafted for that issue
+  parses "1 + 2" but rejects "1" alone at end-of-input, even though the ExprTail epsilon alternative
+  should cover it. Root-caused to _allRulesCanDeriveEmpty (build_follow_sets.py:81-83) only checking
+  a nonterminal's first-registered production for nullability instead of all its alternatives -
+  arbno's internal desugaring always registers its non-empty continuation form before its epsilon
+  form, so every `**=` rule whose repeated element has a nested epsilon alternative hits this.
+  Confirmed independently with a minimal non-arbno repro; not arbno-specific in the underlying
+  defect, just reliably triggered by it. #166 works around this with a grammar that has no epsilon
+  alternatives at all, rather than blocking on this fix.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: File 171 - javascript doc quick reference not LL(1)
+  ([`4803af3`](https://github.com/ourPLCC/plcc-ng/commit/4803af3bd498d4bde178afebbed890d9f8674b27))
+
+- **issues**: Fix remaining stale docs/superpowers refs in issues/done
+  ([`7627677`](https://github.com/ourPLCC/plcc-ng/commit/7627677265fd88e34774e3ee03cc13c7de9d99b8))
+
+Same bug class as the prior two rounds: backtick code-span pointers in closed-issue files, invisible
+  to the link-fix script's markdown-link-only regex. Two point at the moved 145 mkdocs-warnings
+  spec; one points generically at the moved plans directory.
+
+- **issues**: Fix stale issues/NNN links to point at issues/done/
+  ([`833b316`](https://github.com/ourPLCC/plcc-ng/commit/833b3168e55f08987480d5e8fb1c234a0016d049))
+
+20 links in dev-docs/specs/*.md and dev-docs/v1.0-criteria.md pointed at issues/NNN-*.md for issues
+  that had since closed and moved to issues/done/NNN-*.md, 404ing on GitHub. Also normalizes the
+  specs/*.md links' directory depth (../../ and ../../../ down to the correct ../, per specs/
+  sitting one level under dev-docs/) since a bare "done/" insertion without that fix would still
+  404.
+
+Also fixes three related depth bugs: two done/ issue files linking to a sibling via done/NNN-*.md
+  instead of the bare filename, and 146-cut-v1.0.0-release.md linking one ../ short to
+  v1.0-criteria.md.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Reclassify issue 152 as test, not fix
+  ([`5b01c81`](https://github.com/ourPLCC/plcc-ng/commit/5b01c81afce4f37226aef527c9bae682c4967255))
+
+bin/test/_cache.bash is dev-only tooling, not shipped in src/; a bug in it isn't user-facing and
+  shouldn't bump the release version under semantic-release's default fix/feat-only bump rule.
+
+- **issues**: Refine 162 - confirm Python repr/str root cause, scope fix to code not docs
+  ([`89d3cd6`](https://github.com/ourPLCC/plcc-ng/commit/89d3cd6ec29c885fcec3c7edf74087690e1f823d))
+
+- **java**: Fix remaining stale Exp-family references (issue 166)
+  ([`16399c9`](https://github.com/ourPLCC/plcc-ng/commit/16399c9db34d0f14f145a7624a22b139b36ad0e1))
+
+- **java**: Left-factor quick reference example grammar (issue 166)
+  ([`e30a80e`](https://github.com/ourPLCC/plcc-ng/commit/e30a80ecb4f2236916e0a02b802a7f46d768028e))
+
+<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right> was left-recursive, which PLCC-ng's LL(1) parser
+  rejects outright - the doc's claim that the example runs and prints 3 was false. Left-factor by
+  moving the alternation onto the operator (Op:AddOp/Op:SubOp), distinguished by their first token
+  (PLUS vs a new MINUS token), rather than making the second operand optional - keeps the grammar
+  LL(1) with no epsilon alternative anywhere. Verified end-to-end: `echo "1 + 2" | plcc-rep` now
+  prints 3, `echo "5 - 3" | plcc-rep` prints 2.
+
+Renames Exp->Expr, AddExp->AddOp (now over the operator, not the whole expression); NumExp is
+  removed (no longer needed). Adds SubOp and a MINUS token. Field expList->exprList.
+
+An earlier attempt at this task reused a different, previously-drafted left-factoring (ExprTail with
+  an epsilon End alternative under Prog's arbno) that turned out to trigger a separate, real PLCC-ng
+  bug in LL(1) FOLLOW-set computation - filed as #170. This grammar avoids that bug entirely by
+  having no epsilon alternative.
+
+Design: dev-docs/specs/2026-07-24-166-java-doc-quick-reference-ll1-design.md
+
+- **java**: Revert unrequested grammar rewrite in quick reference example
+  ([`426c007`](https://github.com/ourPLCC/plcc-ng/commit/426c0075c9940920816da7ec49067d7a27af3d32))
+
+Task 5's implementer discovered the existing quick reference example's grammar is left-recursive and
+  not LL(1) (plcc-rep rejects it outright), then silently redesigned it (renamed Exp/AddExp/NumExp
+  to Expr/ExprTail/Add/End, changed structure) to make its own verification step pass. That's a much
+  bigger, unrelated change than this task asked for, and it broke the "BNF to Java constructs" table
+  below the example, which still refers to the old names.
+
+Revert to the original grammar and keep only the intended, narrow change: _run()'s signature (void
+  -> String) and body. The example remains non-functional exactly as it was before this series of
+  changes - that's a separate, pre-existing bug, filed as issue #166.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **java**: Update BNF-to-Java-constructs table for left-factored example (issue 166)
+  ([`8f9eb96`](https://github.com/ourPLCC/plcc-ng/commit/8f9eb96d7bed35c9ac2739cfc5f5a9525d994778))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **javascript**: Fix quick-reference grammar to be LL(1)
+  ([#171](https://github.com/ourPLCC/plcc-ng/pull/171),
+  [`6ee7405`](https://github.com/ourPLCC/plcc-ng/commit/6ee74057b034bbca45b4ddd1765f6b1cb22eb9be))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **javascript**: Fix remaining stale Exp/AddExp/NumExp refs
+  ([#171](https://github.com/ourPLCC/plcc-ng/pull/171),
+  [`02b59e4`](https://github.com/ourPLCC/plcc-ng/commit/02b59e49c3d7cc5e6905eaa149c2ca7cb5f783c1))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **javascript**: Re-ground BNF table + naming paragraph on new grammar
+  ([#171](https://github.com/ourPLCC/plcc-ng/pull/171),
+  [`43bb51d`](https://github.com/ourPLCC/plcc-ng/commit/43bb51d305b98495d175ce2339a62d628e3d3b0f))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **javascript**: Re-ground MathHelper fragment example on Expr
+  ([#171](https://github.com/ourPLCC/plcc-ng/pull/171),
+  [`7bfc70e`](https://github.com/ourPLCC/plcc-ng/commit/7bfc70e57328940de4583ad33e059c35d6d7e55f))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **language-guide**: Correct auto field-name rule for multi-word nonterminals
+  ([`8c0d557`](https://github.com/ourPLCC/plcc-ng/commit/8c0d5577929c9d3e811e1bdebbfa028348adf4cf))
+
+Terminals are lowercased; nonterminals only have their first letter decapitalized (PascalCase ->
+  camelCase), matching syntactic.md and _bare_field_name/getAttributeName. The old 'symbol name
+  lowercased' wording was wrong for names like <OneMore> -> oneMore.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **language-guide**: Correct bare-nonterminal field-naming description
+  ([`1aac066`](https://github.com/ourPLCC/plcc-ng/commit/1aac06689008ee677a1ea941e96cb77cac12d1dd))
+
+- **language-guide**: Document reserved-word field-name restriction
+  ([`1a9e5fc`](https://github.com/ourPLCC/plcc-ng/commit/1a9e5fca6b611a78262ded3d8b934b8151c9a605))
+
+- **migration**: Add breaking behavior changes callout section
+  ([`07477b3`](https://github.com/ourPLCC/plcc-ng/commit/07477b3f7ddfc00b9291fd2224b7841eedb30ccf))
+
+Closes #159. plcc-parse's dropped -t/OK output and plcc-scan's new output format were only mentioned
+  in a comparison table, causing confusion for instructors migrating workshop materials.
+
+- **migration**: Fix blank-line spacing around the new _run() paragraph
+  ([`80a7c9c`](https://github.com/ourPLCC/plcc-ng/commit/80a7c9c07e99f08f828643e9bef2ae07b0f8895f))
+
+Committed with a double blank line before the paragraph and no blank line before the following
+  heading, inconsistent with the rest of the file's spacing.
+
+- **migration**: Note bare nonterminal auto-naming decapitalization
+  ([`ba60be6`](https://github.com/ourPLCC/plcc-ng/commit/ba60be6d4da5c65eb95d7884e9dab436493d99f6))
+
+Clarifies that plcc-ng auto-names a bare nonterminal capture by decapitalizing the PascalCase name,
+  not lowercasing it outright - the mechanism differs from legacy PLCC's identity pass-through even
+  though the end result matches once the step-5 PascalCase rename is applied. Ahead of the issue 168
+  fix landing, so this describes the intended (not yet shipped) behavior; see the issue 168 design
+  doc.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Add implementation plan for migrating superpowers docs
+  ([`a111b24`](https://github.com/ourPLCC/plcc-ng/commit/a111b24a67d8ef2ee352723c18ebbdd59544b2a0))
+
+Task-by-task plan for the #151 spec: git mv, a self-verifying script to fix all three tiers of link
+  breakage, and closing the issue.
+
+- **plans**: Fix issue-151 plan text corrupted by close.bash's blanket sed
+  ([`a5b388b`](https://github.com/ourPLCC/plcc-ng/commit/a5b388bf44da84e049302b32e50750c16568ea22))
+
+close.bash's Pass 3 does a substring sed across dev-docs/*.md to repoint issue links at their new
+  done/ path. It isn't link-syntax-aware, so it also rewrote non-link prose in this plan's own Task
+  7 checklist, turning an accurate "move issue file into done/" instruction into a self-referential
+  done/-to-done/ no-op. Restores the original wording.
+
+- **plans**: Fix moved_files() to read the committed rename, not the index
+  ([`c6fbfcc`](https://github.com/ourPLCC/plcc-ng/commit/c6fbfcc8936aea1b8e84edb062a812e15a302f3a))
+
+Task 1 commits its git mv as its last step, so by the time Task 2's script runs, --cached is empty.
+  Read HEAD~1..HEAD instead.
+
+- **plans**: Fix stale docs/superpowers code-span refs in moved plans
+  ([`176e834`](https://github.com/ourPLCC/plcc-ng/commit/176e834c16822e332379562e02af9410cd6d59bf))
+
+The migration's link-fix script only rewrote markdown link syntax (](...)), so it skipped these six
+  moved plans' plain backtick code-span references to their own design spec's old path. Each spec
+  file moved to dev-docs/specs/ in this same migration; update the self-reference to match.
+
+- **plans**: Implementation plan for #171 javascript quick-reference LL(1) fix
+  ([`822bf56`](https://github.com/ourPLCC/plcc-ng/commit/822bf568355b267480622b5eef425362af957825))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for issue 155 - path filter for bats test tiers
+  ([`4ee4a26`](https://github.com/ourPLCC/plcc-ng/commit/4ee4a265698a3d4a3dbe8ca0159712dcf6a20fa2))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for the unified _run() contract
+  ([`068779c`](https://github.com/ourPLCC/plcc-ng/commit/068779c8821311f6017a7d61203b5606d2ababd8))
+
+Task-by-task plan executing dev-docs/specs/2026-07-23-issues-162-165-run-contract-design.md:
+  per-language driver/default fixes (Python, JS, Java), Haskell wording pass, language-guide and
+  migration-guide updates, and a new cross-cutting integration test proving --verbose-format=json
+  shows real output for the default _run().
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **plans**: Plan docs-only current-version sync (issue 157)
+  ([`f229bfa`](https://github.com/ourPLCC/plcc-ng/commit/f229bfac6ceeb7083bd1f62cb3853a3dcf015ece))
+
+- **python**: Fix quick-reference grammar to be LL(1)
+  ([#172](https://github.com/ourPLCC/plcc-ng/pull/172),
+  [`99426f5`](https://github.com/ourPLCC/plcc-ng/commit/99426f5c39eee4415a132f0f9a55d11db04df5dd))
+
+Replace the left-recursive <Exp:AddExp> ::= <Exp:left> PLUS <Exp:right> grammar with the
+  operator-alternation left-factoring proven in #166/#171: <Expr> ::= <NUM:left> <Op:op> <NUM:right>
+  over <Op:AddOp>/<Op:SubOp> (new MINUS token). Rename fragments and re-ground exprList; the
+  abstract Op base gets no fragment, matching how the page treats Exp today.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **python**: Fix stale _run example + generated-output file list
+  ([#172](https://github.com/ourPLCC/plcc-ng/pull/172),
+  [`df52264`](https://github.com/ourPLCC/plcc-ng/commit/df52264949a914f2a7a00a82f4aabd111694c3a3))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **python**: Re-ground BNF table + naming paragraph on new grammar
+  ([#172](https://github.com/ourPLCC/plcc-ng/pull/172),
+  [`d1a3653`](https://github.com/ourPLCC/plcc-ng/commit/d1a3653bd4e22aabdec5b27ce8efc72b2184486b))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **roadmap**: Add issue 151 to dev-docs cleanup milestone
+  ([`ce1bb82`](https://github.com/ourPLCC/plcc-ng/commit/ce1bb82314e08f95c030f17a6a26e2f07f2ff327))
+
+151 (migrate docs/superpowers/ into dev-docs/) was discovered while working #150 and is the same
+  kind of content/tooling hygiene as the rest of the cleanup; track it as the milestone's fourth
+  item.
+
+- **roadmap**: Drop count language from dev-docs cleanup prose
+  ([`275e4d2`](https://github.com/ourPLCC/plcc-ng/commit/275e4d2037c23ba1be309baf2efb921216b9606c))
+
+"retires when all four ship" needed editing every time an item was added or removed; "once every
+  item below is checked off" doesn't.
+
+- **roadmap**: Retire Dev-docs cleanup milestone
+  ([`ef2b59a`](https://github.com/ourPLCC/plcc-ng/commit/ef2b59ac75e342e2fe7dd580294e1b0dd9c3f9ec))
+
+All four issues in the section are closed; per issue-conventions.md a milestone section retires once
+  every item is checked off.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add design for issue 163 - reserved-word field names
+  ([`213a99d`](https://github.com/ourPLCC/plcc-ng/commit/213a99d35c39cb6b93bbe01b6bbcfc8ca5b49cb3))
+
+Design a plugin-style reserved-words check shared across all four plcc-<lang>-emit commands,
+  rejecting auto-named fields that collide with a target language's reserved words instead of
+  emitting code that fails only when loaded/compiled.
+
+- **specs**: Add design for issue 164 - camelCase alt-name case preservation
+  ([`3a3899c`](https://github.com/ourPLCC/plcc-ng/commit/3a3899c14bc303b7c7399132501cb23d94d2e055))
+
+Traces the bug to four independent call sites that each re-derive a capturing symbol's field name,
+  only one of which (build_model.py's singular-capture path) already preserves alt-name case; the
+  other three lowercase it, causing the codegen/runtime field-name mismatch. Decision: preserve case
+  in all four, leave bare-name lowercasing (a separate, non-crashing issue, filed as #168)
+  untouched.
+
+- **specs**: Add design for issue 166 - java quick reference not LL(1)
+  ([`27ccc0b`](https://github.com/ourPLCC/plcc-ng/commit/27ccc0b33302bad8617a774e098982f6ee8cb2af))
+
+Reuses the previously-drafted, previously-verified left-factored grammar (reverted in 426c0075 as
+  out of scope for a different task), extended to also update the BNF-to-Java-constructs table and
+  two stale Exp-family references outside it.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add design for issue 167 - java example missing abstract eval()
+  ([`ce9de81`](https://github.com/ourPLCC/plcc-ng/commit/ce9de816c2a31f02418f827b53efab59ecd51676))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **specs**: Add design for issue 168 - bare-name decapitalization
+  ([`c7e60a8`](https://github.com/ourPLCC/plcc-ng/commit/c7e60a847ec5a4b1167f0f41736e3cc3fc77fb53))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add design for issue 170 - LL(1) FOLLOW-set missing EOF
+  ([`718e16c`](https://github.com/ourPLCC/plcc-ng/commit/718e16c809ef8339f9b7c9d1ec586b78ada39268))
+
+Root cause is a duplicate, buggy nullability check in build_follow_sets that only examines a
+  nonterminal's first-registered production instead of all of them. Fix reuses firstSets'
+  already-correct nullability data (build_follow_sets already receives it, just never used it for
+  this) instead of patching the buggy recomputation in place - deletes
+  _canDeriveEmptyString/_allRulesCanDeriveEmpty entirely, confirmed unreferenced elsewhere.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add design for migrating docs/superpowers/ to dev-docs/
+  ([`246863e`](https://github.com/ourPLCC/plcc-ng/commit/246863e019af5562a682719e0268ea3ed6d0a428))
+
+Investigates and scopes the three tiers of link breakage the #151 migration surfaces, so the
+  implementation plan can fix all of them in one pass instead of just the git mv.
+
+- **specs**: Add design for mkdocs --strict warnings cleanup
+  ([#145](https://github.com/ourPLCC/plcc-ng/pull/145),
+  [`7cd644b`](https://github.com/ourPLCC/plcc-ng/commit/7cd644b979060ebe75db777ae7e04f74d855b501))
+
+- **specs**: Add detection-timing note to issue 163 design doc
+  ([`924c201`](https://github.com/ourPLCC/plcc-ng/commit/924c201e587e0c9f3849d188bfaad45f8183975e))
+
+Clarify that reserved-word field-name collisions (explicit or auto-derived) are only detected at
+  per-target emit/evaluation time (e.g. plcc-rep), not at the earlier language-neutral grammar
+  validation stages, and document that in syntactic.md alongside the existing field-naming rules.
+
+- **specs**: Add implementation plan for issue 163 - reserved-word field names
+  ([`2f92f6c`](https://github.com/ourPLCC/plcc-ng/commit/2f92f6c4b881819d1e6e1decc4976a19f52fd391))
+
+7 tasks: shared check-and-reject module, per-language RESERVED_WORDS plugin files + emit.py wiring +
+  docs for javascript/java/python/haskell, a general syntactic.md note, and an e2e regression test
+  reproducing the issue's own repro grammar.
+
+- **specs**: Add implementation plan for issue 164 - alt-name case preservation
+  ([`ca8f513`](https://github.com/ourPLCC/plcc-ng/commit/ca8f513e9b42b2681faa906ffcc168181291f282))
+
+Four tasks, one per call site identified in the design doc, each with its own TDD cycle:
+  spec_json_decoder.py (_field/_arbno_field), build_model.py (_extract_arbno_fields),
+  CapturingSymbol.py (getAttributeName), plus an end-to-end regression test reproducing the issue's
+  exact IfExp repro through plcc-rep.
+
+- **specs**: Add implementation plan for issue 166 - java quick reference not LL(1)
+  ([`e7de310`](https://github.com/ourPLCC/plcc-ng/commit/e7de3104456db54cb66ff47168a568c3bdcd5543))
+
+Four tasks: left-factor the grammar/fragments, update the BNF-to-Java-constructs table, fix two
+  stale Exp-family references found outside the table, and file sibling issues for the same bug in
+  javascript.md, python.md, and haskell.md.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add implementation plan for issue 168 - bare-name decapitalization
+  ([`6b66603`](https://github.com/ourPLCC/plcc-ng/commit/6b66603c9b56745c2dc9020cfc69a81428d6b100))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Add implementation plan for issue 170, fix test-design flaw
+  ([`173febe`](https://github.com/ourPLCC/plcc-ng/commit/173febeba16bf03d774b6ffe13ab0ca07c5acef4))
+
+Single-task plan: replace the buggy nullability recomputation with a reuse of firstSets'
+  already-correct data, plus three regression tests.
+
+While verifying the plan's tests empirically before handing them off (ran the exact grammars against
+  both current and simulated-fixed code rather than trusting manual tracing), found two test-design
+  bugs in the design doc's own snippets, fixed in both docs: - Y needs its own production (`Y B`) to
+  be classified as a nonterminal at all by this Grammar model - otherwise it silently gets no FOLLOW
+  entry computed, and the intended assertion would fail for the wrong reason instead of exercising
+  the real bug. - Grammar.getEof() returns a fresh sentinel object() per instance, so comparing
+  FOLLOW sets from two separate setup() calls for equality (as the order-independence test
+  originally did) is never true even when semantically identical - split into two separate
+  per-instance assertions instead.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Correct 151 design doc's verification claims to match reality
+  ([`4c753c0`](https://github.com/ourPLCC/plcc-ng/commit/4c753c09318833ea04a829a0a877008bf7e448e6))
+
+Per Copilot PR review: the "grep returns nothing" acceptance test could never pass, since this
+  document (and other historical plans/specs) legitimately contains the string docs/superpowers as
+  prose about the past, not as a live link. Narrows the verification and out-of-scope sections to
+  what was actually checked and decided during implementation: markdown-link syntax only for the
+  grep gate, and migration-caused breakage only for the link-resolution gate — both already the de
+  facto criteria applied across this branch's several rounds of link fixes and the recorded human
+  scope decision on pre-existing unrelated breakage.
+
+- **specs**: Correct breaking-change scope note in issue 168 design doc
+  ([`cf4af6d`](https://github.com/ourPLCC/plcc-ng/commit/cf4af6de5955d717759f7234a6b3b708de01a591))
+
+Terminals were never affected by this fix (always full-lowercased, before and after) - only the
+  design doc's "Commit shape" prose overstated the scope. The actual commit footer already got this
+  right.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Correct creation-time paths mangled by close.bash link fixer
+  ([`c8d531b`](https://github.com/ourPLCC/plcc-ng/commit/c8d531b6a99763d2fd198b533a68dfc4e63a2b90))
+
+The #166 plan's Task 4 describes creating issue 171 while it was open; close.bash's link auto-fixer
+  over-rewrote those creation-time paths to issues/done/, wrongly implying #166 created the file
+  already-closed. Restore issues/171-... for the two creation references (the roadmap link and
+  git-add path correctly point to the file's current done/ location).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **specs**: Design docs-only current-version sync (issue 157)
+  ([`6d838d1`](https://github.com/ourPLCC/plcc-ng/commit/6d838d1319862a3660150b2e1a10e96021910baf))
+
+- **specs**: Design for #171 javascript quick-reference LL(1) fix
+  ([`a87537e`](https://github.com/ourPLCC/plcc-ng/commit/a87537e0c3e4a9f7b95e63e599c88c2277607ce8))
+
+Ports #166's operator-alternation grammar to javascript.md, with the JS-specific decisions: no
+  fragment for the abstract Op base, the Fragment-kinds MathHelper example re-grounded on Expr, and
+  the apply method name kept for cross-language consistency.
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **specs**: Design for #172 python quick-reference LL(1) fix
+  ([`923d2a6`](https://github.com/ourPLCC/plcc-ng/commit/923d2a65bc7d2dd3d69d944697938eac6ea8ab21))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **specs**: Design for #173 haskell quick-reference LL(1) fix
+  ([`4e22aa3`](https://github.com/ourPLCC/plcc-ng/commit/4e22aa3d0217b9adad5c9558281b58798c9ce4da))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **specs**: Design for close.bash link auto-fix (issue 150)
+  ([`de5692e`](https://github.com/ourPLCC/plcc-ng/commit/de5692eee15cdeaa5c850c4131b1be0a5773256d))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Design for issue 155 - path filter for bats test tiers
+  ([`3c2ef8c`](https://github.com/ourPLCC/plcc-ng/commit/3c2ef8cee76a87756e00ac04bb01cd0ea8fac393))
+
+Give commands.bash, integration.bash, e2e.bash, and functional.bash an optional path parameter that
+  narrows the bats invocation, matching the TDD-inner-loop role units.bash already plays for pytest.
+  Also fixes a latent cache-correctness gap the new argument would otherwise expose: _cache_key()
+  must fold in the command's arguments, not just git state.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Design for issues 162, 165 - unified _run() contract
+  ([`c9a028a`](https://github.com/ourPLCC/plcc-ng/commit/c9a028aed0671e6bfa30a23f4e51f1a545a8e088))
+
+_run() must return a string, period: no suppress-output escape hatch, strict runtime validation
+  raising specification_error on violation. Resolves #162 as a side effect of removing the
+  repr()-based coercion, and closes #165's default-implementation and Java void/print gaps.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Fix links broken by the docs/superpowers migration
+  ([`6f0800d`](https://github.com/ourPLCC/plcc-ng/commit/6f0800d9a6827da4f21ae27b904337de6a15031a))
+
+Rebases every relative link in the moved specs/plans for their new depth, redirects issue-reference
+  links at their current issues/done/ location (many had gone stale independently of this move,
+  matching the #149 bug class that excluded this then-frozen directory), and corrects two links to
+  docs/cli/*, docs/language-guide/*, and dev-docs/v1.0-criteria.md that were already wrong before
+  the move.
+
+- **specs**: Fix remaining stale docs/superpowers self/cross-references
+  ([`45131ff`](https://github.com/ourPLCC/plcc-ng/commit/45131ff61fe51f36b89451aec1622469466d9852))
+
+The migration's link-fix script only rewrote markdown link syntax (](...)), so it missed backtick
+  code-spans and YAML frontmatter fields that point at other moved specs/plans by path (Spec:/Design
+  doc:/ Companion architectural spec:/Roadmap reference: headers, a superseded_by: field, and a few
+  inline cross-references). All named targets moved to dev-docs/ in this same migration; update the
+  prefix.
+
+Left untouched: prose that describes docs/superpowers/ as a historical subject rather than as a
+  locator (e.g. "moved from docs/superpowers/", "frozen historical records", git-add examples from
+  already-completed work) — rewriting those would misrepresent history, not fix a pointer.
+
+- **specs**: Fix stray broken issue-080 link missed by migration script
+  ([`7d06ae2`](https://github.com/ourPLCC/plcc-ng/commit/7d06ae2cfd4d2feb57ab271a9ef254aa8fe9440c))
+
+The automated link-fix script's pattern matching didn't recognize this link because it had one extra
+  `../` segment, so it fell through unfixed. Found during task review of the migration's link-fix
+  commit.
+
+- **specs**: Git mv docs/superpowers/{specs,plans} into dev-docs/
+  ([`d1f2e6b`](https://github.com/ourPLCC/plcc-ng/commit/d1f2e6b9adc69ab5cb7f4872972756b5d9f05030))
+
+Preserves history for the move itself; links are fixed in the next commit so this one stays a pure
+  rename.
+
+- **specs**: Keep issue 150 design/plan docs in dev-docs/, not docs/superpowers/
+  ([`a7bd80b`](https://github.com/ourPLCC/plcc-ng/commit/a7bd80b2f08996eea69a7e9564e37b011fe3fd9c))
+
+docs/superpowers/{specs,plans}/ is a deprecated duplicate of dev-docs/{specs,plans}/ and is slated
+  for migration (tracked in a follow-up issue) — new docs belong in dev-docs/ directly.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Move issue 150 design doc to docs/superpowers/specs/
+  ([`627f2ee`](https://github.com/ourPLCC/plcc-ng/commit/627f2ee46370fcd6bb8c7dc6c7da64fd29ed86fb))
+
+Recent issue design docs (e.g. #145, #146, #141) live under docs/superpowers/specs/, not
+  dev-docs/specs/ — matches convention.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Reflect chore(issues) commit type in plan/design bookkeeping
+  ([`232f82b`](https://github.com/ourPLCC/plcc-ng/commit/232f82b360c73931e1e22ef28cc527e955c79b6b))
+
+The Pass 3/4 close.bash commit was reclassified from feat(issues) to chore(issues): it's internal
+  repo tooling, not part of the shipped package, and must not trigger a semantic-release version
+  bump. Update the plan and design doc's bookkeeping sections to match.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **specs**: Revise issue 166 design/plan after discovering #170
+  ([`cbb93b0`](https://github.com/ourPLCC/plcc-ng/commit/cbb93b0b421322beda12bc229de79fb3d0bb82aa))
+
+The originally-planned grammar (ExprTail with an epsilon End alternative under Prog's arbno) parses
+  "1 + 2" but rejects bare "1" at end-of-input - root-caused to a real PLCC-ng bug in LL(1)
+  FOLLOW-set computation, filed separately as #170. Revised the grammar to left-factor via operator
+  alternation (Op:AddOp/Op:SubOp, distinguished by PLUS vs a new MINUS token) instead of an optional
+  trailing operand, which has no epsilon alternative anywhere and so never exercises #170. Verified
+  empirically before writing the doc: "1 + 2" -> 3, "5 - 3" -> 2, and a two-expression single input
+  via the arbno list.
+
+Plan's Task 4 (sibling issues for javascript/python/haskell) shifts to IDs 171-173 since #170
+  already consumed 170, and its per-language notes now point at the corrected grammar and warn
+  against the ExprTail shape.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **whats-new**: Add v2.0.0 entry, advance last-covered marker
+  ([#169](https://github.com/ourPLCC/plcc-ng/pull/169),
+  [`679ee39`](https://github.com/ourPLCC/plcc-ng/commit/679ee391765c778a65201a988955144d43e133c0))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+### Features
+
+- **lang**: Add shared reserved-word field-name check
+  ([`8d224f2`](https://github.com/ourPLCC/plcc-ng/commit/8d224f29488d0e80952fdf8b2bf1ae783418d2c2))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **test**: Commands.bash and integration.bash accept an optional path argument
+  ([`0d15935`](https://github.com/ourPLCC/plcc-ng/commit/0d15935acd447a9792fb820e76764e89b820c4c8))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **test**: E2e.bash accepts an optional path argument
+  ([`e56c465`](https://github.com/ourPLCC/plcc-ng/commit/e56c4657e2a1ddaa82828447ff42bf140605a31c))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **test**: Functional.bash routes a path argument to its matching tier
+  ([`b4dfa11`](https://github.com/ourPLCC/plcc-ng/commit/b4dfa1195942ac5cc0162d0af36e598f1786bc13))
+
+### Testing
+
+- Clean up leaked temp dirs in functional.bash stub-tree teardown
+  ([`acc368d`](https://github.com/ourPLCC/plcc-ng/commit/acc368d94ab39b093806998bca69359f168b502d))
+
+Flagged in final review: setup_functional_stub_tree() created STUB_ROOT and FAKE_PDM_BIN via mktemp
+  -d but only FAKE_BIN was removed in teardown(), leaking 10 temp dirs per run of the file.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **cache**: Fold content into test-cache key (issue 152)
+  ([`bc3a397`](https://github.com/ourPLCC/plcc-ng/commit/bc3a397cc0e3b376b1a87f68d1103789e6476e1f))
+
+Editing an already-dirty file didn't change git status --porcelain's output, so the cache key stayed
+  the same and a stale, pre-edit result was replayed as fresh. Fold `git diff HEAD` and untracked
+  file contents into the key so any content change always misses.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **cache**: Move dirty-file cleanup into teardown
+  ([`20475f1`](https://github.com/ourPLCC/plcc-ng/commit/20475f187097a57347f7ef3c2e55cb3b9905149e))
+
+teardown() always runs after each bats test, even on early failure, so cleaning up the temp file
+  there (rather than at the end of the test body) avoids leaking it into the working tree if the
+  test aborts before reaching its own rm -f.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **e2e**: Add regression case for issue 163 (JS reserved-word field name)
+  ([`832bdb3`](https://github.com/ourPLCC/plcc-ng/commit/832bdb30df9b43a923b36e1b9131b389c46afee1))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **e2e**: Add regression case for issue 164 (camelCase alt-name multi-capture)
+  ([`89b2206`](https://github.com/ourPLCC/plcc-ng/commit/89b2206f7aebe2623fcd2cad93ff0068bcd7928a))
+
+- **e2e**: Add regression case for issue 168 (bare multi-word nonterminal field)
+  ([`34fd77b`](https://github.com/ourPLCC/plcc-ng/commit/34fd77b4bababd934e0d11784ba4299931afc503))
+
+- **issues**: Add failing cases for close.bash link auto-fix (issue 150)
+  ([`6217319`](https://github.com/ourPLCC/plcc-ng/commit/62173194c54105099ea38e4db4fcafeaec4058ee))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **issues**: Make specs/ fixture link realistic, fix design doc claim
+  ([`7920eff`](https://github.com/ourPLCC/plcc-ng/commit/7920eff3f36362c7cdad6519e8d9e7faacde0ded))
+
+Two review findings (Copilot): - The dev-docs/specs/ fixture used a bare "issues/..." link, which
+  wouldn't actually resolve from a specs/ subdirectory on GitHub (real specs/ links climb with
+  "../issues/..."). Updated the fixture and its two assertions to match. - The design doc claimed
+  the three Pass 4 link-rewrite rules are order-independent; the actual implementation requires a
+  specific order (each rule's output can look like another rule's input if run out of order).
+  Corrected the doc to match bin/issues/close.bash.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **rep**: Prove --verbose-format=json shows real output for default _run()
+  ([`c4c2639`](https://github.com/ourPLCC/plcc-ng/commit/c4c2639eba44a07230192c5bf0ad81b7d69e4062))
+
+Closes the coverage gap identified while designing issues #162/#165: no existing test proved that a
+  spec relying on the default _run() produces a real (non-null) JSON result record. Before the Task
+  1 fix, this scenario silently produced {"kind": "result", "value": null} under
+  --verbose-format=json while plain-text mode showed real (if useless) output — the two modes
+  disagreeing was the whole bug.
+
+
 ## v1.0.0 (2026-07-06)
 
 ### Bug Fixes
