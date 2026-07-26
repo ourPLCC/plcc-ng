@@ -1,6 +1,6 @@
 # JavaScript doc's "Quick reference example" grammar is not LL(1) — design
 
-**Issue:** [171](../issues/171-javascript-doc-quick-reference-not-ll1.md)
+**Issue:** [171](../issues/done/171-javascript-doc-quick-reference-not-ll1.md)
 **Date:** 2026-07-25
 **Sibling of:** [166 (Java)](2026-07-24-166-java-doc-quick-reference-ll1-design.md) — reuses its
 verified grammar shape; read it for the full derivation and the #170 background.

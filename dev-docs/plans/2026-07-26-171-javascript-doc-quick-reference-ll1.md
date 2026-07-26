@@ -467,7 +467,7 @@ Expected: both pass.
 - [ ] **Step 3: Close the issue**
 
 Run: `bin/issues/close.bash 171`
-This moves `dev-docs/issues/171-javascript-doc-quick-reference-not-ll1.md` to `done/` and updates `dev-docs/roadmap.md`.
+This moves `dev-docs/issues/done/171-javascript-doc-quick-reference-not-ll1.md` to `done/` and updates `dev-docs/roadmap.md`.
 
 - [ ] **Step 4: Verify issue-tracker consistency**
 

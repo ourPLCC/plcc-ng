@@ -366,7 +366,7 @@ git commit -m "docs(java): fix remaining stale Exp-family references (issue 166)
 ### Task 4: File sibling issues for javascript.md, python.md, haskell.md
 
 **Files:**
-- Create: `dev-docs/issues/171-javascript-doc-quick-reference-not-ll1.md`
+- Create: `dev-docs/issues/done/171-javascript-doc-quick-reference-not-ll1.md`
 - Create: `dev-docs/issues/172-python-doc-quick-reference-not-ll1.md`
 - Create: `dev-docs/issues/173-haskell-doc-quick-reference-not-ll1.md`
 - Modify: `dev-docs/issues/.next-id.txt`
@@ -384,7 +384,7 @@ bin/issues/new.bash haskell-doc-quick-reference-not-ll1 docs
 
 Expected: each prints its created path; `dev-docs/issues/.next-id.txt` goes from `171` to `174`. If the printed paths don't start with `171-`, `172-`, `173-` respectively, stop — something else consumed an ID between Step 1's three invocations and this plan's hard-coded filenames above no longer match; re-run this task with the actual assigned numbers instead of forcing 171/172/173.
 
-- [ ] **Step 2: Fill in `dev-docs/issues/171-javascript-doc-quick-reference-not-ll1.md`**
+- [ ] **Step 2: Fill in `dev-docs/issues/done/171-javascript-doc-quick-reference-not-ll1.md`**
 
 Replace the template's `## Description` / `## Steps to Reproduce` / `## Notes` sections with:
 
@@ -555,7 +555,7 @@ existing `#169` entry (so the Docs group reads #166, #167, #169, #171,
 section from the design-revision commit):
 
 ```markdown
-- **[#171](issues/171-javascript-doc-quick-reference-not-ll1.md) — JavaScript language guide's "Quick reference example" grammar is not LL(1)**
+- **[#171](issues/done/171-javascript-doc-quick-reference-not-ll1.md) — JavaScript language guide's "Quick reference example" grammar is not LL(1)**
   Same left-recursive `Exp` rule as #166's Java version; `plcc-rep` rejects it with the same LL(1) conflict.
 - **[#172](issues/172-python-doc-quick-reference-not-ll1.md) — Python language guide's "Quick reference example" grammar is not LL(1)**
   Same left-recursive `Exp` rule as #166's Java version; `plcc-rep` rejects it with the same LL(1) conflict.
@@ -575,7 +575,7 @@ Expected: exits `0`, no drift reported.
 
 ```bash
 git add dev-docs/issues/.next-id.txt \
-        dev-docs/issues/171-javascript-doc-quick-reference-not-ll1.md \
+        dev-docs/issues/done/171-javascript-doc-quick-reference-not-ll1.md \
         dev-docs/issues/172-python-doc-quick-reference-not-ll1.md \
         dev-docs/issues/173-haskell-doc-quick-reference-not-ll1.md \
         dev-docs/roadmap.md
