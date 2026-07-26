@@ -71,14 +71,14 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 | Grammar Construct | Example from spec | JavaScript Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | ES6 class with constructor and fields | `class Prog extends _Start { constructor(expList) { ... } }` |
-| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | ES6 class extending the base nonterminal | `class AddExp extends Exp { constructor(left, right) { ... } }` |
-| Named non-terminal (RHS) | `<Exp:left>` | `this.left` — an `Exp` instance | `this.left.eval()` |
-| Captured terminal (RHS) | `<NUM>` | `this.num` — a `Token`; `.lexeme` for the string value | `parseInt(this.num.lexeme)` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `this.expList` — `Array` of `Exp` | `this.expList.map(e => e.eval())` |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Expr>` | ES6 class with constructor and fields | `class Prog extends _Start { constructor(exprList) { ... } }` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | ES6 class extending the base nonterminal | `class AddOp extends Op { ... }` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | `this.op` — an `Op` instance | `this.op.apply(left, right)` |
+| Captured terminal (RHS) | `<NUM:left>` | `this.left` — a `Token`; `.lexeme` for the string value | `parseInt(this.left.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `this.exprList` — `Array` of `Expr` | `this.exprList.map(e => e.eval())` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `this.exp`, `<NUM>` → `this.num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `this.expr`, `<NUM>` → `this.num`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
