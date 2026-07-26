@@ -2617,6 +2617,18 @@ ADDOP(+)
 </code></pre></div>
 <p>Update any documentation, tests, or course materials that show the old
 <code>TOKEN(lexeme)</code> format — they will no longer match actual output.</p>
+<p><strong>The <code>_run()</code> entry point must return a string.</strong> This applies whether
+you're migrating an old <code>$run()</code> or have already ported to <code>_run()</code>. Java's
+<code>_run()</code> changed from <code>void</code> (print inside the method) to <code>String</code> (return
+the text) — a spec with <code>public void _run() { System.out.println(...); }</code>
+will fail to compile and must become
+<code>public String _run() { return ...; }</code>. Python and JavaScript's <code>_run()</code>
+must now return an actual <code>str</code>/<code>string</code> — a <code>_run()</code> that returns a
+non-string value (an <code>int</code>, a <code>list</code>, a bare number, ...) now fails with a
+<code>specification_error</code> instead of silently working; convert explicitly
+(<code>str(x)</code> / <code>String(x)</code>) if needed. No language's <code>_run()</code> may print or
+write to stdout directly — only plain-text <code>plcc-rep</code> sessions tolerated
+that before, and only by accident.</p>
 <h2 id="migration-checklist">Migration checklist</h2>
 <h3 id="1-install-plcc-ng">1. Install PLCC-ng</h3>
 <p>Replace the PLCC shell script, Docker, or DevContainer install with:</p>
@@ -2745,8 +2757,20 @@ PLCC-ng places it after a colon inside the brackets.</p>
 <td><code>&lt;WHOLE&gt;</code> with explicit name</td>
 <td><code>&lt;WHOLE:whole&gt;</code></td>
 </tr>
+<tr>
+<td><code>&lt;oneMore&gt;</code> (auto-named field <code>oneMore</code>)</td>
+<td><code>&lt;OneMore&gt;</code> (auto-named field <code>oneMore</code>)</td>
+</tr>
 </tbody>
 </table>
+<p>Auto-naming a bare nonterminal capture decapitalizes just the first
+letter of the nonterminal's (now-PascalCase) name — it doesn't lowercase
+the whole thing. For a single-word nonterminal this is invisible
+(<code>&lt;Expr&gt;</code> → field <code>expr</code>, same as PLCC's <code>&lt;exp&gt;</code> → <code>exp</code>), but it matters
+once you apply step 5's PascalCase rename to a multi-word name: renaming
+PLCC's <code>&lt;oneMore&gt;</code> to PLCC-ng's <code>&lt;OneMore&gt;</code> and then auto-naming the
+field decapitalizes only the <code>O</code>, reproducing PLCC's original <code>oneMore</code>
+spelling — not <code>onemore</code>.</p>
 <h3 id="8-add-semantic-section-language-header">8. Add semantic section language header</h3>
 <p>PLCC only supports Java semantics and has no language header.
 PLCC-ng requires the first non-blank line of the semantic section to declare the language.</p>
@@ -2763,12 +2787,13 @@ Java
 
 Prog
 %%%
-  public void _run() { ... }
+  public String _run() { ... }
 %%%
 </code></pre></div></p>
 <p>The supported values are <code>Java</code> and <code>Python</code>.</p>
 <h3 id="9-rename-the-entry-point-method">9. Rename the entry point method</h3>
-<p>The method the start symbol's class uses as its execution entry point was renamed.</p>
+<p>The method the start symbol's class uses as its execution entry point was
+renamed — and its contract changed, not just its name.</p>
 <table>
 <thead>
 <tr>
@@ -2783,6 +2808,9 @@ Prog
 </tr>
 </tbody>
 </table>
+<p><code>$run()</code> was <code>void</code>; it printed its output directly. <code>_run()</code> must
+<strong>return</strong> a string — the runtime prints it for you. See "Breaking
+behavior changes" above for what this means for each language.</p>
 <p>Update this in the semantic section of your spec file.</p>
 <h3 id="10-check-include-paths">10. Check <code>%include</code> paths</h3>
 <p>Both PLCC and PLCC-ng support <code>%include FILENAME</code>. The syntax is unchanged.
