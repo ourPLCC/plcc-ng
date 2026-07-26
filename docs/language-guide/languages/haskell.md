@@ -164,7 +164,8 @@ DIR/
   Token.hs            — runtime Token type with lexeme field
   Main.hs             — entry point; deserializes parse tree JSON, calls _run
   Prog.hs             — one .hs per lone concrete rule
-  Exp.hs              — one .hs per abstract rule (contains all alternatives as constructors)
+  Expr.hs
+  Op.hs               — one .hs per abstract rule (contains all alternatives as constructors)
 ```
 
 Do not edit these files directly. Put all custom code in the spec's semantic section.
@@ -209,7 +210,7 @@ Unlike Python and JavaScript, a build step is required before running.
 ## Tips
 
 - `lexeme fieldName` — `lexeme` is a record accessor function on `Token`. Write `lexeme t`, not `t.lexeme`.
-- Pattern match on all constructors inside the abstract rule's `body` fragment: `eval (AddExp l r) = ...` and `eval (NumExp t) = ...` both go in the `Exp` fragment.
+- Pattern match on all constructors inside the abstract rule's `body` fragment: `apply AddOp l r = ...` and `apply SubOp l r = ...` both go in the `Op` fragment.
 - Use `hPutStrLn stderr "debug"` (after `import System.IO`) for debug output so it does not interfere with the output protocol.
 - `_run` must return a `String`. Use `show` to convert numeric or other results.
 - The `top` fragment is useful for language extensions: `{-# LANGUAGE TupleSections #-}`.
