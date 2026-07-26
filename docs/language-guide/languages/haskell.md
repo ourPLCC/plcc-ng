@@ -27,11 +27,13 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 Haskell
 
@@ -41,11 +43,17 @@ _run :: Prog -> String
 _run (Prog es) = unlines (map (show . eval) es)
 %%%
 
-Exp
+Expr
 %%%
-eval :: Exp -> Int
-eval (AddExp l r) = eval l + eval r
-eval (NumExp t)   = read (lexeme t)
+eval :: Expr -> Int
+eval (Expr l o r) = apply o (read (lexeme l)) (read (lexeme r))
+%%%
+
+Op
+%%%
+apply :: Op -> Int -> Int -> Int
+apply AddOp l r = l + r
+apply SubOp l r = l - r
 %%%
 ```
 
