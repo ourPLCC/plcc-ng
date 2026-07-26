@@ -128,7 +128,7 @@ module.exports = { MathHelper };
 Prog
 %%%
 _run() {
-    return this.expList.map(exp => String(exp.eval())).join('\n');
+    return this.exprList.map(expr => String(expr.eval())).join('\n');
 }
 %%%
 ```
@@ -182,8 +182,9 @@ DIR/
   main.js           — entry point; reads parse tree JSON, calls _run()
   _Start.js         — default base for the start class
   Prog.js           — one .js file per class from the grammar
-  AddExp.js
-  NumExp.js
+  Expr.js
+  AddOp.js
+  SubOp.js
   runtime/
     base.js         — Node and Token base classes
     registry.js     — class registry used by deserialization
@@ -228,6 +229,6 @@ No build step is required — Node.js does not need a compilation step, so `plcc
 ## Tips
 
 - Use `console.error(...)` for debug output. The runtime reads `_run()`'s return value and passes it to `plcc-rep` via stdout; writing to stdout from inside `_run()` will corrupt the output.
-- `this.num.lexeme` is always a string. Use `parseInt(this.num.lexeme)` or `parseFloat(this.num.lexeme)` to get a numeric value.
-- Abstract classes (`Exp` in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.
-- The arbno field name is always `<lowerCasedSymbol>List`. For `<Prog> **= <Exp>`, the field is `this.expList`.
+- `this.left.lexeme` is always a string. Use `parseInt(this.left.lexeme)` or `parseFloat(this.left.lexeme)` to get a numeric value.
+- Abstract classes (`Op` in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.
+- The arbno field name is always `<lowerCasedSymbol>List`. For `<Prog> **= <Expr>`, the field is `this.exprList`.
