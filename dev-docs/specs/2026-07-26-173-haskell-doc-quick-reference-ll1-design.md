@@ -1,6 +1,6 @@
 # Haskell doc's "Quick reference example" grammar is not LL(1) — design
 
-**Issue:** [173](../issues/173-haskell-doc-quick-reference-not-ll1.md)
+**Issue:** [173](../issues/done/173-haskell-doc-quick-reference-not-ll1.md)
 **Date:** 2026-07-26
 **Sibling of:** [166 (Java)](2026-07-24-166-java-doc-quick-reference-ll1-design.md),
 [171 (JavaScript)](2026-07-25-171-javascript-doc-quick-reference-ll1-design.md),
