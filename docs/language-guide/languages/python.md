@@ -26,30 +26,38 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 Python
 
 Prog
 %%%
 def _run(self):
-    return '\n'.join(str(exp.eval()) for exp in self.expList)
+    return '\n'.join(str(expr.eval()) for expr in self.exprList)
 %%%
 
-AddExp
+Expr
 %%%
 def eval(self):
-    return self.left.eval() + self.right.eval()
+    return self.op.apply(int(self.left.lexeme), int(self.right.lexeme))
 %%%
 
-NumExp
+AddOp
 %%%
-def eval(self):
-    return int(self.num.lexeme)
+def apply(self, left, right):
+    return left + right
+%%%
+
+SubOp
+%%%
+def apply(self, left, right):
+    return left - right
 %%%
 ```
 
