@@ -10,8 +10,8 @@ def check_reserved_field_names(classes, language, reserved_words):
             if name in reserved_words:
                 errors.append(
                     f"class '{cls['name']}' field '{name}' collides with "
-                    f"the {language} reserved word '{name}' — rename the "
-                    f"capture, e.g. <{name.upper()}:name>"
+                    f"the {language} reserved word '{name}' — give the "
+                    f"capture an explicit ':fieldname'"
                 )
     return errors
 
