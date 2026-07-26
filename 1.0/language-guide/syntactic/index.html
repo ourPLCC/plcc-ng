@@ -806,6 +806,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#reserved-words" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserved words
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#alternative-rules-and-subclasses" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2631,10 +2642,13 @@ generate two fields with the same name.</p>
 two fields with the same name <code>num</code>, which would not compile and run.</p>
 <p>The type of a capture token field is <code>Token</code>.</p>
 <h3 id="capturing-nonterminals">Capturing nonterminals</h3>
-<p>All nonterminals are captured. Their field names will be the nonterminal
-name lower-cased. You may provide a different field name using <code>:fieldname</code>.</p>
+<p>All nonterminals are captured. Their field name is the nonterminal name
+with its first letter decapitalized (PascalCase -&gt; camelCase), not the
+whole name lower-cased. You may provide a different field name using
+<code>:fieldname</code>.</p>
 <div class="highlight"><pre><span></span><code>&lt;Program&gt; ::= &lt;Expr&gt;              # captures Expr as field `expr`
 &lt;Program&gt; ::= &lt;Expr:expression&gt;   # captures Expr as field `expression`
+&lt;Program&gt; ::= &lt;OneMore&gt;           # captures OneMore as field `oneMore`
 </code></pre></div>
 <p>Providing a different field name is especially important when a rule
 has two terms on the right-hand side that would
@@ -2645,6 +2659,20 @@ generate two fields with the same name.</p>
 two fields with the same name <code>expr</code>, which would not compile and run.</p>
 <p>The type of a capture nonterminal field is the class with the same name
 as the nonterminal.</p>
+<h3 id="reserved-words">Reserved words</h3>
+<p>A field name — whether explicit (<code>:fieldname</code>) or auto-derived — must not
+become an identifier that collides with a reserved word of the semantic
+implementation language you're targeting (e.g. <code>&lt;VAR&gt;</code> auto-naming field
+<code>var</code>, which is reserved in JavaScript).</p>
+<p>This is enforced per target language, so it is only detected when you
+attempt to evaluate the semantics for that language — via <code>plcc-rep</code>, or
+an explicit <code>plcc-&lt;lang&gt;-emit</code> — not during grammar validation
+(<code>plcc-scan</code>, <code>plcc-parse</code>, <code>plcc-validate-*</code>), which is language-neutral
+and doesn't know which target you'll eventually emit for. A grammar can
+therefore pass validation cleanly and still be rejected later, per
+target, at emit time.</p>
+<p>See each language's guide page ("Restrictions" section) for its exact
+reserved-word list.</p>
 <h3 id="alternative-rules-and-subclasses">Alternative rules and subclasses</h3>
 <p>When a nonterminal has multiple rules, each alternative must be given
 a name. This name will be the class generated for that rule and will

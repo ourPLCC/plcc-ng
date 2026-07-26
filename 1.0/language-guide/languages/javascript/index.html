@@ -2620,32 +2620,41 @@ javascript
 <p>This example exercises every grammar construct. Later sections reference it by name.</p>
 <div class="highlight"><pre><span></span><code>token NUM   &#39;\d+&#39;
 token PLUS  &#39;\+&#39;
+token MINUS &#39;-&#39;
 skip  SPACE &#39;\s+&#39;
 %
-&lt;Prog&gt;       **= &lt;Exp&gt;
-&lt;Exp:AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
-&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;
+&lt;Prog&gt;     **= &lt;Expr&gt;
+&lt;Expr&gt;     ::= &lt;NUM:left&gt; &lt;Op:op&gt; &lt;NUM:right&gt;
+&lt;Op:AddOp&gt; ::= PLUS
+&lt;Op:SubOp&gt; ::= MINUS
 %
 javascript
+
+Expr
+%%%
+eval() {
+    return this.op.apply(parseInt(this.left.lexeme), parseInt(this.right.lexeme));
+}
+%%%
 
 Prog
 %%%
 _run() {
-    return this.expList.map(exp =&gt; String(exp.eval())).join(&#39;\n&#39;);
+    return this.exprList.map(expr =&gt; String(expr.eval())).join(&#39;\n&#39;);
 }
 %%%
 
-AddExp
+AddOp
 %%%
-eval() {
-    return this.left.eval() + this.right.eval();
+apply(left, right) {
+    return left + right;
 }
 %%%
 
-NumExp
+SubOp
 %%%
-eval() {
-    return parseInt(this.num.lexeme);
+apply(left, right) {
+    return left - right;
 }
 %%%
 </code></pre></div>
@@ -2663,43 +2672,43 @@ eval() {
 <tbody>
 <tr>
 <td>Concrete rule (LHS, no alt name) — generates one class</td>
-<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
+<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Expr&gt;</code></td>
 <td>ES6 class with constructor and fields</td>
-<td><code>class Prog extends _Start { constructor(expList) { ... } }</code></td>
+<td><code>class Prog extends _Start { constructor(exprList) { ... } }</code></td>
 </tr>
 <tr>
 <td>Alternative rule (LHS, with alt name) — base nonterminal becomes abstract</td>
-<td><code>&lt;Exp:AddExp&gt;</code> in <code>&lt;Exp:AddExp&gt; ::= ...</code></td>
+<td><code>&lt;Op:AddOp&gt;</code> in <code>&lt;Op:AddOp&gt; ::= PLUS</code></td>
 <td>ES6 class extending the base nonterminal</td>
-<td><code>class AddExp extends Exp { constructor(left, right) { ... } }</code></td>
+<td><code>class AddOp extends Op { ... }</code></td>
 </tr>
 <tr>
 <td>Named non-terminal (RHS)</td>
-<td><code>&lt;Exp:left&gt;</code></td>
-<td><code>this.left</code> — an <code>Exp</code> instance</td>
-<td><code>this.left.eval()</code></td>
+<td><code>&lt;Op:op&gt;</code> in <code>&lt;Expr&gt; ::= &lt;NUM:left&gt; &lt;Op:op&gt; &lt;NUM:right&gt;</code></td>
+<td><code>this.op</code> — an <code>Op</code> instance</td>
+<td><code>this.op.apply(left, right)</code></td>
 </tr>
 <tr>
 <td>Captured terminal (RHS)</td>
-<td><code>&lt;NUM&gt;</code></td>
-<td><code>this.num</code> — a <code>Token</code>; <code>.lexeme</code> for the string value</td>
-<td><code>parseInt(this.num.lexeme)</code></td>
+<td><code>&lt;NUM:left&gt;</code></td>
+<td><code>this.left</code> — a <code>Token</code>; <code>.lexeme</code> for the string value</td>
+<td><code>parseInt(this.left.lexeme)</code></td>
 </tr>
 <tr>
 <td>Uncaptured terminal (RHS)</td>
-<td><code>PLUS</code></td>
+<td><code>PLUS</code> in <code>&lt;Op:AddOp&gt; ::= PLUS</code></td>
 <td>No field generated</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Arbno rule (<code>**=</code>)</td>
-<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
-<td><code>this.expList</code> — <code>Array</code> of <code>Exp</code></td>
-<td><code>this.expList.map(e =&gt; e.eval())</code></td>
+<td><code>&lt;Prog&gt; **= &lt;Expr&gt;</code></td>
+<td><code>this.exprList</code> — <code>Array</code> of <code>Expr</code></td>
+<td><code>this.exprList.map(e =&gt; e.eval())</code></td>
 </tr>
 </tbody>
 </table>
-<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased (e.g., <code>&lt;Exp&gt;</code> → <code>this.exp</code>, <code>&lt;NUM&gt;</code> → <code>this.num</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
+<p>Without explicit <code>:name</code> on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (<code>&lt;NUM&gt;</code> → <code>this.num</code>), and a nonterminal has just its first letter decapitalized (<code>&lt;Expr&gt;</code> → <code>this.expr</code>, <code>&lt;OneMore&gt;</code> → <code>this.oneMore</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
 <h2 id="fragment-kinds">Fragment kinds</h2>
 <p>Fragments inject code at specific locations in the generated file. Use <code>ClassName:kind</code> to name the target class and location.</p>
 <table>
@@ -2741,15 +2750,15 @@ eval() {
 <p><code>body</code> is the default when no kind is given (plain <code>ClassName</code> with no colon).</p>
 <p>JavaScript has no <code>class</code> hook. JavaScript classes do not support interface declarations or multiple inheritance, so there is nothing to inject into the class declaration line.</p>
 <h3 id="example">Example</h3>
-<div class="highlight"><pre><span></span><code>NumExp:import
+<div class="highlight"><pre><span></span><code>Expr:import
 %%%
 const { MathHelper } = require(&#39;./MathHelper&#39;);
 %%%
 
-NumExp
+Expr
 %%%
 eval() {
-    return MathHelper.parse(this.num.lexeme);
+    return this.op.apply(MathHelper.parse(this.left.lexeme), MathHelper.parse(this.right.lexeme));
 }
 %%%
 
@@ -2766,13 +2775,13 @@ module.exports = { MathHelper };
 <div class="highlight"><pre><span></span><code><span class="nx">Prog</span>
 <span class="o">%%%</span>
 <span class="nx">_run</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Compute and return a value, or return undefined to produce no output.</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">expList</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">exp</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">exp</span><span class="p">.</span><span class="nb">eval</span><span class="p">())).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">exprList</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">expr</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">expr</span><span class="p">.</span><span class="nb">eval</span><span class="p">())).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
 <span class="p">}</span>
 <span class="o">%%%</span>
 </code></pre></div>
-<p>The return value is converted to a string and printed by <code>plcc-rep</code>. Return <code>undefined</code> (or nothing) to suppress output for that input.</p>
-<p>The default <code>_Start._run()</code> prints <code>String(this)</code> to stdout. Override it to replace the default behavior entirely.</p>
+<p><code>_run()</code> must return a <code>string</code>. The runtime sends that string to <code>plcc-rep</code> as-is — it is not converted or coerced. Returning anything else (a <code>number</code>, an <code>array</code>, <code>undefined</code>, ...) raises a <code>specification_error</code>; convert explicitly (<code>String(x)</code>) if needed.</p>
+<p>Do not print or write to stdout from inside <code>_run()</code> — that bypasses <code>plcc-rep</code>'s JSON result envelope. Plain-text mode will still show what you printed, but <code>plcc-rep --verbose-format=json</code> will not.</p>
+<p>The default <code>_Start._run()</code> returns <code>String(this)</code>. Override it to replace the default behavior entirely.</p>
 <h2 id="languageerror"><code>LanguageError</code></h2>
 <p>Throw <code>LanguageError</code> to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
 <p><code>LanguageError</code> is available in all generated classes without any import:</p>
@@ -2799,8 +2808,9 @@ const { OtherClass } = require(&#39;./OtherClass&#39;);
   main.js           — entry point; reads parse tree JSON, calls _run()
   _Start.js         — default base for the start class
   Prog.js           — one .js file per class from the grammar
-  AddExp.js
-  NumExp.js
+  Expr.js
+  AddOp.js
+  SubOp.js
   runtime/
     base.js         — Node and Token base classes
     registry.js     — class registry used by deserialization
@@ -2841,13 +2851,14 @@ const { OtherClass } = require(&#39;./OtherClass&#39;);
 <li>Generated code uses CommonJS (<code>require</code> / <code>module.exports</code>). ESM (<code>import</code> / <code>export</code>) is not supported.</li>
 <li>All output files are overwritten on every emit run — do not edit them directly.</li>
 <li>Sibling generated classes are not automatically in scope; require them explicitly with an <code>import</code> fragment.</li>
+<li>A field name that becomes a JavaScript reserved word (e.g. <code>&lt;VAR&gt;</code> auto-naming field <code>var</code>) is rejected by <code>plcc-javascript-emit</code> — rename the capture, e.g. <code>&lt;VAR:name&gt;</code>. See <a href="../../syntactic/#reserved-words">Reserved words</a> for details.</li>
 </ul>
 <h2 id="tips">Tips</h2>
 <ul>
 <li>Use <code>console.error(...)</code> for debug output. The runtime reads <code>_run()</code>'s return value and passes it to <code>plcc-rep</code> via stdout; writing to stdout from inside <code>_run()</code> will corrupt the output.</li>
-<li><code>this.num.lexeme</code> is always a string. Use <code>parseInt(this.num.lexeme)</code> or <code>parseFloat(this.num.lexeme)</code> to get a numeric value.</li>
-<li>Abstract classes (<code>Exp</code> in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.</li>
-<li>The arbno field name is always <code>&lt;lowerCasedSymbol&gt;List</code>. For <code>&lt;Prog&gt; **= &lt;Exp&gt;</code>, the field is <code>this.expList</code>.</li>
+<li><code>this.left.lexeme</code> is always a string. Use <code>parseInt(this.left.lexeme)</code> or <code>parseFloat(this.left.lexeme)</code> to get a numeric value.</li>
+<li>Abstract classes (<code>Op</code> in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.</li>
+<li>The arbno field name is always <code>&lt;lowerCasedSymbol&gt;List</code>. For <code>&lt;Prog&gt; **= &lt;Expr&gt;</code>, the field is <code>this.exprList</code>.</li>
 </ul>
 
 

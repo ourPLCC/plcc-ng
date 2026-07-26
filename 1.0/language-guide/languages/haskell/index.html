@@ -2621,11 +2621,13 @@ Haskell
 <p>This example exercises every grammar construct. Later sections reference it by name.</p>
 <div class="highlight"><pre><span></span><code>token NUM   &#39;\d+&#39;
 token PLUS  &#39;\+&#39;
+token MINUS &#39;-&#39;
 skip  SPACE &#39;\s+&#39;
 %
-&lt;Prog&gt;       **= &lt;Exp&gt;
-&lt;Exp:AddExp&gt; ::= &lt;Exp:left&gt; PLUS &lt;Exp:right&gt;
-&lt;Exp:NumExp&gt; ::= &lt;NUM&gt;
+&lt;Prog&gt;     **= &lt;Expr&gt;
+&lt;Expr&gt;     ::= &lt;NUM:left&gt; &lt;Op:op&gt; &lt;NUM:right&gt;
+&lt;Op:AddOp&gt; ::= PLUS
+&lt;Op:SubOp&gt; ::= MINUS
 %
 Haskell
 
@@ -2635,11 +2637,17 @@ _run :: Prog -&gt; String
 _run (Prog es) = unlines (map (show . eval) es)
 %%%
 
-Exp
+Expr
 %%%
-eval :: Exp -&gt; Int
-eval (AddExp l r) = eval l + eval r
-eval (NumExp t)   = read (lexeme t)
+eval :: Expr -&gt; Int
+eval (Expr l o r) = apply o (read (lexeme l)) (read (lexeme r))
+%%%
+
+Op
+%%%
+apply :: Op -&gt; Int -&gt; Int -&gt; Int
+apply AddOp l r = l + r
+apply SubOp l r = l - r
 %%%
 </code></pre></div>
 <p>Running this with <code>echo "1 + 2" | plcc-rep</code> prints <code>3</code>.</p>
@@ -2661,43 +2669,43 @@ not separate files.</p>
 <tbody>
 <tr>
 <td>Concrete rule (LHS, no alt name) — generates one module</td>
-<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
+<td><code>&lt;Prog&gt;</code> in <code>&lt;Prog&gt; **= &lt;Expr&gt;</code></td>
 <td>Record type with named fields</td>
-<td><code>data Prog = Prog { expList :: [Exp] }</code></td>
+<td><code>data Prog = Prog { exprList :: [Expr] }</code></td>
 </tr>
 <tr>
 <td>Alternative rule (LHS, with alt name) — all alternatives become constructors in the base nonterminal's module</td>
-<td><code>&lt;Exp:AddExp&gt;</code> in <code>&lt;Exp:AddExp&gt; ::= ...</code></td>
+<td><code>&lt;Op:AddOp&gt;</code> in <code>&lt;Op:AddOp&gt; ::= PLUS</code></td>
 <td>Constructor in the base nonterminal's <code>data</code> type</td>
-<td><code>data Exp = AddExp { left :: Exp, right :: Exp } \| NumExp { num :: Token }</code></td>
+<td><code>data Op = AddOp \| SubOp</code></td>
 </tr>
 <tr>
 <td>Named non-terminal (RHS)</td>
-<td><code>&lt;Exp:left&gt;</code></td>
+<td><code>&lt;Op:op&gt;</code> in <code>&lt;Expr&gt; ::= &lt;NUM:left&gt; &lt;Op:op&gt; &lt;NUM:right&gt;</code></td>
 <td>Named record field of the nonterminal's type</td>
-<td><code>left :: Exp</code> in the <code>AddExp</code> constructor</td>
+<td><code>op :: Op</code> in the <code>Expr</code> constructor</td>
 </tr>
 <tr>
 <td>Captured terminal (RHS)</td>
-<td><code>&lt;NUM&gt;</code></td>
+<td><code>&lt;NUM:left&gt;</code></td>
 <td>Named record field of type <code>Token</code>; <code>lexeme</code> for the string value</td>
-<td><code>num :: Token</code> → <code>lexeme num</code></td>
+<td><code>left :: Token</code> → <code>lexeme left</code></td>
 </tr>
 <tr>
 <td>Uncaptured terminal (RHS)</td>
-<td><code>PLUS</code></td>
+<td><code>PLUS</code> in <code>&lt;Op:AddOp&gt; ::= PLUS</code></td>
 <td>No field generated</td>
 <td>—</td>
 </tr>
 <tr>
 <td>Arbno rule (<code>**=</code>)</td>
-<td><code>&lt;Prog&gt; **= &lt;Exp&gt;</code></td>
-<td><code>[Exp]</code> list field named <code>expList</code></td>
-<td><code>expList :: [Exp]</code></td>
+<td><code>&lt;Prog&gt; **= &lt;Expr&gt;</code></td>
+<td><code>[Expr]</code> list field named <code>exprList</code></td>
+<td><code>exprList :: [Expr]</code></td>
 </tr>
 </tbody>
 </table>
-<p>Without explicit <code>:name</code> on a RHS symbol, the field name is the symbol name lowercased (e.g., <code>&lt;Exp&gt;</code> → <code>exp</code>, <code>&lt;NUM&gt;</code> → <code>num</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
+<p>Without explicit <code>:name</code> on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (<code>&lt;NUM&gt;</code> → <code>num</code>), and a nonterminal has just its first letter decapitalized (<code>&lt;Expr&gt;</code> → <code>expr</code>, <code>&lt;OneMore&gt;</code> → <code>oneMore</code>). Use explicit names when two RHS symbols would produce the same field name.</p>
 <h2 id="fragment-kinds">Fragment kinds</h2>
 <p>Fragments inject code at specific locations in the generated <code>.hs</code> file. Use <code>ModuleName:kind</code> to name the target module and location.</p>
 <table>
@@ -2733,24 +2741,23 @@ not separate files.</p>
 </table>
 <p><code>body</code> is the default when no kind is given (plain <code>ModuleName</code> with no colon).</p>
 <p>Haskell has no <code>init</code> or <code>class</code> hook — there is no constructor body to inject into, and no class declaration line.</p>
-<p><strong>Fragment class names must be module names</strong> — the abstract rule name (<code>Exp</code>) or a lone concrete name (<code>Prog</code>), never a concrete alternative name (<code>AddExp</code>, <code>NumExp</code>). Using a concrete alternative name produces a fatal error:</p>
-<div class="highlight"><pre><span></span><code>plcc-haskell-emit: fragment tagged &#39;AddExp&#39;: AddExp is a concrete alternative of Exp.
+<p><strong>Fragment class names must be module names</strong> — the abstract rule name (<code>Op</code>) or a lone concrete name (<code>Prog</code>), never a concrete alternative name (<code>AddOp</code>, <code>SubOp</code>). Using a concrete alternative name produces a fatal error:</p>
+<div class="highlight"><pre><span></span><code>plcc-haskell-emit: fragment tagged &#39;AddOp&#39;: AddOp is a concrete alternative of Op.
 In Haskell, concrete alternatives are constructors inside their abstract rule&#39;s module.
-Use &#39;Exp&#39; as the fragment class name instead.
+Use &#39;Op&#39; as the fragment class name instead.
 </code></pre></div>
 <h3 id="example">Example</h3>
-<div class="highlight"><pre><span></span><code>Exp:import
+<div class="highlight"><pre><span></span><code>Expr:import
 %%%
 import Data.List (sort)
 %%%
 
-Exp
+Expr
 %%%
-eval :: Exp -&gt; Int
-eval (AddExp l r) = eval l + eval r
-eval (NumExp t)   = read (lexeme t)
+eval :: Expr -&gt; Int
+eval (Expr l o r) = apply o (read (lexeme l)) (read (lexeme r))
 
-sortedEvals :: [Exp] -&gt; [Int]
+sortedEvals :: [Expr] -&gt; [Int]
 sortedEvals es = sort (map eval es)
 %%%
 </code></pre></div>
@@ -2762,8 +2769,8 @@ _run :: Prog -&gt; String
 _run (Prog es) = unlines (map (show . eval) es)
 %%%
 </code></pre></div>
-<p>The function signature must be <code>_run :: StartModule -&gt; String</code>. The return value is sent to <code>plcc-rep</code> as the result string.</p>
-<p>If you do not define <code>_run</code>, the default <code>_run = show</code> is injected, which prints the <code>Show</code> instance of the root node.</p>
+<p>The function signature must be <code>_run :: StartModule -&gt; String</code>. <code>_run()</code> must return a string — same contract as every other language target — and the compiler enforces it: there is no way to write a Haskell <code>_run</code> that does anything else. The runtime sends the returned string to <code>plcc-rep</code> as the result, unmodified.</p>
+<p>If you do not define <code>_run</code>, the default <code>_run = show</code> is injected, which returns the <code>Show</code> instance of the root node (not printed directly — <code>show</code> returns a <code>String</code>, matching the contract).</p>
 <h2 id="languageerror"><code>LanguageError</code></h2>
 <p><code>LanguageError</code> is the intended mechanism for signaling a deliberate error in the defined language from Haskell semantics code. When thrown, <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
 <p><code>LanguageError</code> is currently not accessible from user-authored module files — it is defined in the generated <code>Main.hs</code>, which user modules cannot import. Support for throwing <code>LanguageError</code> from semantics code is tracked in issues 131 and 132.</p>
@@ -2782,7 +2789,8 @@ import OtherModule
   Token.hs            — runtime Token type with lexeme field
   Main.hs             — entry point; deserializes parse tree JSON, calls _run
   Prog.hs             — one .hs per lone concrete rule
-  Exp.hs              — one .hs per abstract rule (contains all alternatives as constructors)
+  Expr.hs
+  Op.hs               — one .hs per abstract rule (contains all alternatives as constructors)
 </code></pre></div>
 <p>Do not edit these files directly. Put all custom code in the spec's semantic section.</p>
 <p>Run <code>plcc-haskell-build</code> to compile before running.</p>
@@ -2825,11 +2833,12 @@ import OtherModule
 <li>No <code>init</code> or <code>class</code> fragment hooks.</li>
 <li>Generated files are overwritten on every emit run — do not edit them directly.</li>
 <li>One module per abstract rule: all concrete alternatives share the abstract rule's <code>.hs</code> file.</li>
+<li>A field name that becomes a Haskell reserved word (e.g. <code>type</code>, <code>data</code>, <code>where</code>) is rejected by <code>plcc-haskell-emit</code> — rename the capture. See <a href="../../syntactic/#reserved-words">Reserved words</a> for details.</li>
 </ul>
 <h2 id="tips">Tips</h2>
 <ul>
 <li><code>lexeme fieldName</code> — <code>lexeme</code> is a record accessor function on <code>Token</code>. Write <code>lexeme t</code>, not <code>t.lexeme</code>.</li>
-<li>Pattern match on all constructors inside the abstract rule's <code>body</code> fragment: <code>eval (AddExp l r) = ...</code> and <code>eval (NumExp t) = ...</code> both go in the <code>Exp</code> fragment.</li>
+<li>Pattern match on all constructors inside the abstract rule's <code>body</code> fragment: <code>apply AddOp l r = ...</code> and <code>apply SubOp l r = ...</code> both go in the <code>Op</code> fragment.</li>
 <li>Use <code>hPutStrLn stderr "debug"</code> (after <code>import System.IO</code>) for debug output so it does not interfere with the output protocol.</li>
 <li><code>_run</code> must return a <code>String</code>. Use <code>show</code> to convert numeric or other results.</li>
 <li>The <code>top</code> fragment is useful for language extensions: <code>{-# LANGUAGE TupleSections #-}</code>.</li>

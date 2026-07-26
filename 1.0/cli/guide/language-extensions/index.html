@@ -1249,6 +1249,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#the-_run-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The _run() protocol
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2613,6 +2624,29 @@ runs it with <code>cabal run</code>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="the-_run-protocol">The <code>_run()</code> protocol</h2>
+<p>Every language extension's <code>main</code>/entry-point driver must implement the same
+contract for the root node's entry point method (<code>_run()</code> by default, or a
+custom name from <code>entry_point</code>):</p>
+<ul>
+<li>It <strong>returns a string</strong>. The driver marshals it into a
+  <code>{"kind": "result", "value": "&lt;string&gt;"}</code> JSON record on stdout for
+  <code>plcc-rep</code> to read and print — it does not print or convert the value
+  itself.</li>
+<li>If it returns anything other than a string (or, for statically-typed
+  languages, if the call otherwise fails to produce one — e.g. Java's
+  reflection returning <code>null</code>), the driver raises a <code>specification_error</code>.
+  It must never let a wrong-typed value flow into the <code>value</code> field
+  silently.</li>
+<li>The entry-point implementation itself must never write to stdout. Doing
+  so bypasses the JSON envelope entirely; plain-text <code>plcc-rep</code> sessions
+  will still show it (by accident, since unparseable lines are echoed
+  as-is), but <code>plcc-rep --verbose-format=json</code> will not.</li>
+</ul>
+<p>This is what lets <code>plcc-rep --verbose-format=json</code> show a real, structured
+record for every result, regardless of which language emitted the
+interpreter. A new language extension must follow it to interoperate
+correctly with <code>plcc-rep</code>.</p>
 
 
 
