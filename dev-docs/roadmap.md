@@ -12,11 +12,6 @@
 - **[#161](issues/161-rename-plcc-rep-to-plcc-eval.md) — Consider renaming plcc-rep to plcc-eval for phase-naming consistency**
   `plcc-rep` is named after its interaction mode (REPL), not its phase, breaking the `scan`/`parse`/`?` naming pattern; an alias or rename to `plcc-eval` would restore it.
 
-### Docs
-
-- **[#169](issues/169-whats-new-entry-for-next-release.md) — Add whats-new.md entry for the next release before merging this branch**
-  `docs/whats-new.md` hasn't been updated since the v1.0.0 entry; this branch has accumulated a release's worth of user-facing changes (several `fix!`/`BREAKING CHANGE` commits) that need a summarized entry before merge.
-
 ### Chore
 
 - **[#154](issues/154-update-python-semantic-release.md) — Update python-semantic-release**
