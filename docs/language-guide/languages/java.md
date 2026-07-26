@@ -88,7 +88,7 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 | Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
 | Arbno rule (`**=`) | `<Prog> **= <Expr>` | `exprList` — `ArrayList<Expr>` | `for (Expr expr : exprList)` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `expr`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `expr`, `<OneMore>` → `oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 All generated classes are in the same package, so sibling classes are accessible without explicit imports.
 

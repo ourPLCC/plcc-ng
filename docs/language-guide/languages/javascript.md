@@ -78,7 +78,7 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 | Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
 | Arbno rule (`**=`) | `<Prog> **= <Expr>` | `this.exprList` — `Array` of `Expr` | `this.exprList.map(e => e.eval())` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `this.expr`, `<NUM>` → `this.num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `this.num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `this.expr`, `<OneMore>` → `this.oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 

@@ -76,7 +76,7 @@ not separate files.
 | Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
 | Arbno rule (`**=`) | `<Prog> **= <Expr>` | `[Expr]` list field named `exprList` | `exprList :: [Expr]` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `expr`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `expr`, `<OneMore>` → `oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
