@@ -114,7 +114,7 @@ def eval(self):
 Prog
 %%%
 def _run(self):
-    return '\n'.join(str(exp.eval()) for exp in self.expList)
+    return '\n'.join(str(expr.eval()) for expr in self.exprList)
 %%%
 ```
 
@@ -164,8 +164,9 @@ DIR/
   main.py           — entry point
   _Start.py         — default base for the start class
   Prog.py           — one .py file per class from the grammar
-  AddExp.py
-  NumExp.py
+  Expr.py
+  AddOp.py
+  SubOp.py
   runtime/
     ...
 ```
