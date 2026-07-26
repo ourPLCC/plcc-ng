@@ -69,14 +69,14 @@ not separate files.
 
 | Grammar Construct | Example from spec | Haskell Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one module | `<Prog>` in `<Prog> **= <Exp>` | Record type with named fields | `data Prog = Prog { expList :: [Exp] }` |
-| Alternative rule (LHS, with alt name) — all alternatives become constructors in the base nonterminal's module | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Constructor in the base nonterminal's `data` type | `data Exp = AddExp { left :: Exp, right :: Exp } \| NumExp { num :: Token }` |
-| Named non-terminal (RHS) | `<Exp:left>` | Named record field of the nonterminal's type | `left :: Exp` in the `AddExp` constructor |
-| Captured terminal (RHS) | `<NUM>` | Named record field of type `Token`; `lexeme` for the string value | `num :: Token` → `lexeme num` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `[Exp]` list field named `expList` | `expList :: [Exp]` |
+| Concrete rule (LHS, no alt name) — generates one module | `<Prog>` in `<Prog> **= <Expr>` | Record type with named fields | `data Prog = Prog { exprList :: [Expr] }` |
+| Alternative rule (LHS, with alt name) — all alternatives become constructors in the base nonterminal's module | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | Constructor in the base nonterminal's `data` type | `data Op = AddOp \| SubOp` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | Named record field of the nonterminal's type | `op :: Op` in the `Expr` constructor |
+| Captured terminal (RHS) | `<NUM:left>` | Named record field of type `Token`; `lexeme` for the string value | `left :: Token` → `lexeme left` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `[Expr]` list field named `exprList` | `exprList :: [Expr]` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `exp`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `expr`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
