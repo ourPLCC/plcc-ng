@@ -557,7 +557,7 @@ section from the design-revision commit):
 ```markdown
 - **[#171](issues/done/171-javascript-doc-quick-reference-not-ll1.md) — JavaScript language guide's "Quick reference example" grammar is not LL(1)**
   Same left-recursive `Exp` rule as #166's Java version; `plcc-rep` rejects it with the same LL(1) conflict.
-- **[#172](issues/172-python-doc-quick-reference-not-ll1.md) — Python language guide's "Quick reference example" grammar is not LL(1)**
+- **[#172](issues/done/172-python-doc-quick-reference-not-ll1.md) — Python language guide's "Quick reference example" grammar is not LL(1)**
   Same left-recursive `Exp` rule as #166's Java version; `plcc-rep` rejects it with the same LL(1) conflict.
 - **[#173](issues/173-haskell-doc-quick-reference-not-ll1.md) — Haskell language guide's "Quick reference example" grammar is not LL(1)**
   Same left-recursive `Exp` rule as #166's Java version, but the fix must respect Haskell's fragment-naming constraint (pattern-matched clauses in one `Op` fragment, not per-alternative fragments).
@@ -576,7 +576,7 @@ Expected: exits `0`, no drift reported.
 ```bash
 git add dev-docs/issues/.next-id.txt \
         dev-docs/issues/done/171-javascript-doc-quick-reference-not-ll1.md \
-        dev-docs/issues/172-python-doc-quick-reference-not-ll1.md \
+        dev-docs/issues/done/172-python-doc-quick-reference-not-ll1.md \
         dev-docs/issues/173-haskell-doc-quick-reference-not-ll1.md \
         dev-docs/roadmap.md
 git commit -m "$(cat <<'EOF'

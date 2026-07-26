@@ -1,6 +1,6 @@
 # Python doc's "Quick reference example" grammar is not LL(1) — design
 
-**Issue:** [172](../issues/172-python-doc-quick-reference-not-ll1.md)
+**Issue:** [172](../issues/done/172-python-doc-quick-reference-not-ll1.md)
 **Date:** 2026-07-26
 **Sibling of:** [166 (Java)](2026-07-24-166-java-doc-quick-reference-ll1-design.md) and
 [171 (JavaScript)](2026-07-25-171-javascript-doc-quick-reference-ll1-design.md) — reuses their
