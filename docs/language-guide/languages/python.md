@@ -67,14 +67,14 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 | Grammar Construct | Example from spec | Python Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | Python dataclass with fields | `@dataclass class Prog(_Start): expList: List[Exp]` |
-| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Python dataclass extending the base nonterminal | `@dataclass class AddExp(Exp): left: Exp; right: Exp` |
-| Named non-terminal (RHS) | `<Exp:left>` | `self.left` — an `Exp` instance | `self.left.eval()` |
-| Captured terminal (RHS) | `<NUM>` | `self.num` — a `Token`; `.lexeme` for the string value | `int(self.num.lexeme)` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `self.expList` — `List[Exp]` | `[e.eval() for e in self.expList]` |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Expr>` | Python dataclass with fields | `@dataclass class Prog(_Start): exprList: List[Expr]` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | Python dataclass extending the base nonterminal | `@dataclass class AddOp(Op): ...` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | `self.op` — an `Op` instance | `self.op.apply(left, right)` |
+| Captured terminal (RHS) | `<NUM:left>` | `self.left` — a `Token`; `.lexeme` for the string value | `int(self.left.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `self.exprList` — `List[Expr]` | `[e.eval() for e in self.exprList]` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `self.exp`, `<NUM>` → `self.num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Expr>` → `self.expr`, `<NUM>` → `self.num`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
