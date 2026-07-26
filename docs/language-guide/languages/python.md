@@ -26,30 +26,38 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 Python
 
 Prog
 %%%
 def _run(self):
-    return '\n'.join(str(exp.eval()) for exp in self.expList)
+    return '\n'.join(str(expr.eval()) for expr in self.exprList)
 %%%
 
-AddExp
+Expr
 %%%
 def eval(self):
-    return self.left.eval() + self.right.eval()
+    return self.op.apply(int(self.left.lexeme), int(self.right.lexeme))
 %%%
 
-NumExp
+AddOp
 %%%
-def eval(self):
-    return int(self.num.lexeme)
+def apply(self, left, right):
+    return left + right
+%%%
+
+SubOp
+%%%
+def apply(self, left, right):
+    return left - right
 %%%
 ```
 
@@ -59,14 +67,14 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 | Grammar Construct | Example from spec | Python Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | Python dataclass with fields | `@dataclass class Prog(_Start): expList: List[Exp]` |
-| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Python dataclass extending the base nonterminal | `@dataclass class AddExp(Exp): left: Exp; right: Exp` |
-| Named non-terminal (RHS) | `<Exp:left>` | `self.left` — an `Exp` instance | `self.left.eval()` |
-| Captured terminal (RHS) | `<NUM>` | `self.num` — a `Token`; `.lexeme` for the string value | `int(self.num.lexeme)` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `self.expList` — `List[Exp]` | `[e.eval() for e in self.expList]` |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Expr>` | Python dataclass with fields | `@dataclass class Prog(_Start): exprList: List[Expr]` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | Python dataclass extending the base nonterminal | `@dataclass class AddOp(Op): ...` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | `self.op` — an `Op` instance | `self.op.apply(left, right)` |
+| Captured terminal (RHS) | `<NUM:left>` | `self.left` — a `Token`; `.lexeme` for the string value | `int(self.left.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `self.exprList` — `List[Expr]` | `[e.eval() for e in self.exprList]` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `self.exp`, `<NUM>` → `self.num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `self.num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `self.expr`, `<OneMore>` → `self.oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
@@ -106,14 +114,15 @@ def eval(self):
 Prog
 %%%
 def _run(self):
-    # compute and return a value, or return None to produce no output
-    return '\n'.join(str(exp.eval()) for exp in self.expList)
+    return '\n'.join(str(expr.eval()) for expr in self.exprList)
 %%%
 ```
 
-The return value is converted to a string and printed by `plcc-rep`. Return `None` to suppress output.
+`_run()` must return a `str`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning anything else (an `int`, a `list`, `None`, ...) raises a `specification_error`; convert explicitly (`str(x)`) if needed.
 
-The default `_Start._run()` prints `str(self)`. Override it to replace the default behavior.
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `str(self)`. Override it to replace the default behavior.
 
 ## `LanguageError`
 
@@ -155,8 +164,9 @@ DIR/
   main.py           — entry point
   _Start.py         — default base for the start class
   Prog.py           — one .py file per class from the grammar
-  AddExp.py
-  NumExp.py
+  Expr.py
+  AddOp.py
+  SubOp.py
   runtime/
     ...
 ```
@@ -191,6 +201,7 @@ No build step is required — Python does not need a compilation step, so `plcc-
 - Requires Python 3.12 or later.
 - Generated files are overwritten on every emit run — do not edit them directly.
 - Sibling generated classes are not automatically in scope; import them explicitly with an `import` fragment.
+- A field name that becomes a Python keyword (e.g. `class`, `import`, `is`) is rejected by `plcc-python-emit` — rename the capture. See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 

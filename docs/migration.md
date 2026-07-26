@@ -29,6 +29,19 @@ ADDOP(+)
 Update any documentation, tests, or course materials that show the old
 `TOKEN(lexeme)` format — they will no longer match actual output.
 
+**The `_run()` entry point must return a string.** This applies whether
+you're migrating an old `$run()` or have already ported to `_run()`. Java's
+`_run()` changed from `void` (print inside the method) to `String` (return
+the text) — a spec with `public void _run() { System.out.println(...); }`
+will fail to compile and must become
+`public String _run() { return ...; }`. Python and JavaScript's `_run()`
+must now return an actual `str`/`string` — a `_run()` that returns a
+non-string value (an `int`, a `list`, a bare number, ...) now fails with a
+`specification_error` instead of silently working; convert explicitly
+(`str(x)` / `String(x)`) if needed. No language's `_run()` may print or
+write to stdout directly — only plain-text `plcc-rep` sessions tolerated
+that before, and only by accident.
+
 ## Migration checklist
 
 ### 1. Install PLCC-ng
@@ -110,6 +123,16 @@ PLCC-ng places it after a colon inside the brackets.
 | `<exp>exp2` (field named `exp2`) | `<Expr:exp2>` |
 | `<WHOLE>` (auto-named field `whole`) | `<WHOLE>` (same — auto-naming unchanged) |
 | `<WHOLE>` with explicit name | `<WHOLE:whole>` |
+| `<oneMore>` (auto-named field `oneMore`) | `<OneMore>` (auto-named field `oneMore`) |
+
+Auto-naming a bare nonterminal capture decapitalizes just the first
+letter of the nonterminal's (now-PascalCase) name — it doesn't lowercase
+the whole thing. For a single-word nonterminal this is invisible
+(`<Expr>` → field `expr`, same as PLCC's `<exp>` → `exp`), but it matters
+once you apply step 5's PascalCase rename to a multi-word name: renaming
+PLCC's `<oneMore>` to PLCC-ng's `<OneMore>` and then auto-naming the
+field decapitalizes only the `O`, reproducing PLCC's original `oneMore`
+spelling — not `onemore`.
 
 ### 8. Add semantic section language header
 
@@ -132,7 +155,7 @@ Java
 
 Prog
 %%%
-  public void _run() { ... }
+  public String _run() { ... }
 %%%
 ```
 
@@ -140,11 +163,16 @@ The supported values are `Java` and `Python`.
 
 ### 9. Rename the entry point method
 
-The method the start symbol's class uses as its execution entry point was renamed.
+The method the start symbol's class uses as its execution entry point was
+renamed — and its contract changed, not just its name.
 
 | PLCC | PLCC-ng |
 |---|---|
 | `$run()` | `_run()` |
+
+`$run()` was `void`; it printed its output directly. `_run()` must
+**return** a string — the runtime prints it for you. See "Breaking
+behavior changes" above for what this means for each language.
 
 Update this in the semantic section of your spec file.
 

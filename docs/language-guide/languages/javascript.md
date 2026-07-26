@@ -26,32 +26,41 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 javascript
+
+Expr
+%%%
+eval() {
+    return this.op.apply(parseInt(this.left.lexeme), parseInt(this.right.lexeme));
+}
+%%%
 
 Prog
 %%%
 _run() {
-    return this.expList.map(exp => String(exp.eval())).join('\n');
+    return this.exprList.map(expr => String(expr.eval())).join('\n');
 }
 %%%
 
-AddExp
+AddOp
 %%%
-eval() {
-    return this.left.eval() + this.right.eval();
+apply(left, right) {
+    return left + right;
 }
 %%%
 
-NumExp
+SubOp
 %%%
-eval() {
-    return parseInt(this.num.lexeme);
+apply(left, right) {
+    return left - right;
 }
 %%%
 ```
@@ -62,14 +71,14 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 | Grammar Construct | Example from spec | JavaScript Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | ES6 class with constructor and fields | `class Prog extends _Start { constructor(expList) { ... } }` |
-| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | ES6 class extending the base nonterminal | `class AddExp extends Exp { constructor(left, right) { ... } }` |
-| Named non-terminal (RHS) | `<Exp:left>` | `this.left` — an `Exp` instance | `this.left.eval()` |
-| Captured terminal (RHS) | `<NUM>` | `this.num` — a `Token`; `.lexeme` for the string value | `parseInt(this.num.lexeme)` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `this.expList` — `Array` of `Exp` | `this.expList.map(e => e.eval())` |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Expr>` | ES6 class with constructor and fields | `class Prog extends _Start { constructor(exprList) { ... } }` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | ES6 class extending the base nonterminal | `class AddOp extends Op { ... }` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | `this.op` — an `Op` instance | `this.op.apply(left, right)` |
+| Captured terminal (RHS) | `<NUM:left>` | `this.left` — a `Token`; `.lexeme` for the string value | `parseInt(this.left.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `this.exprList` — `Array` of `Expr` | `this.exprList.map(e => e.eval())` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `this.exp`, `<NUM>` → `this.num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `this.num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `this.expr`, `<OneMore>` → `this.oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
@@ -90,15 +99,15 @@ JavaScript has no `class` hook. JavaScript classes do not support interface decl
 ### Example
 
 ```text
-NumExp:import
+Expr:import
 %%%
 const { MathHelper } = require('./MathHelper');
 %%%
 
-NumExp
+Expr
 %%%
 eval() {
-    return MathHelper.parse(this.num.lexeme);
+    return this.op.apply(MathHelper.parse(this.left.lexeme), MathHelper.parse(this.right.lexeme));
 }
 %%%
 
@@ -119,15 +128,16 @@ module.exports = { MathHelper };
 Prog
 %%%
 _run() {
-    // Compute and return a value, or return undefined to produce no output.
-    return this.expList.map(exp => String(exp.eval())).join('\n');
+    return this.exprList.map(expr => String(expr.eval())).join('\n');
 }
 %%%
 ```
 
-The return value is converted to a string and printed by `plcc-rep`. Return `undefined` (or nothing) to suppress output for that input.
+`_run()` must return a `string`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning anything else (a `number`, an `array`, `undefined`, ...) raises a `specification_error`; convert explicitly (`String(x)`) if needed.
 
-The default `_Start._run()` prints `String(this)` to stdout. Override it to replace the default behavior entirely.
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `String(this)`. Override it to replace the default behavior entirely.
 
 ## `LanguageError`
 
@@ -172,8 +182,9 @@ DIR/
   main.js           — entry point; reads parse tree JSON, calls _run()
   _Start.js         — default base for the start class
   Prog.js           — one .js file per class from the grammar
-  AddExp.js
-  NumExp.js
+  Expr.js
+  AddOp.js
+  SubOp.js
   runtime/
     base.js         — Node and Token base classes
     registry.js     — class registry used by deserialization
@@ -213,10 +224,11 @@ No build step is required — Node.js does not need a compilation step, so `plcc
 - Generated code uses CommonJS (`require` / `module.exports`). ESM (`import` / `export`) is not supported.
 - All output files are overwritten on every emit run — do not edit them directly.
 - Sibling generated classes are not automatically in scope; require them explicitly with an `import` fragment.
+- A field name that becomes a JavaScript reserved word (e.g. `<VAR>` auto-naming field `var`) is rejected by `plcc-javascript-emit` — rename the capture, e.g. `<VAR:name>`. See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 
 - Use `console.error(...)` for debug output. The runtime reads `_run()`'s return value and passes it to `plcc-rep` via stdout; writing to stdout from inside `_run()` will corrupt the output.
-- `this.num.lexeme` is always a string. Use `parseInt(this.num.lexeme)` or `parseFloat(this.num.lexeme)` to get a numeric value.
-- Abstract classes (`Exp` in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.
-- The arbno field name is always `<lowerCasedSymbol>List`. For `<Prog> **= <Exp>`, the field is `this.expList`.
+- `this.left.lexeme` is always a string. Use `parseInt(this.left.lexeme)` or `parseFloat(this.left.lexeme)` to get a numeric value.
+- Abstract classes (`Op` in the quick reference example) are never instantiated. You cannot add a constructor to them via fragments.
+- The arbno field name is always `<lowerCasedSymbol>List`. For `<Prog> **= <Expr>`, the field is `this.exprList`.

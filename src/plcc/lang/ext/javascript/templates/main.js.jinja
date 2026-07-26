@@ -23,7 +23,10 @@ rl.on('line', (line) => {
     try {
         const tree = deserialize(JSON.parse(line), registry);
         const result = tree.{{ entry_point }}();
-        console.log(JSON.stringify({ kind: 'result', value: result != null ? String(result) : null }));
+        if (typeof result !== 'string') {
+            throw new Error(`{{ entry_point }}() must return a string, got ${typeof result}`);
+        }
+        console.log(JSON.stringify({ kind: 'result', value: result }));
     } catch (e) {
         if (e instanceof LanguageError) {
             console.log(JSON.stringify({ kind: 'error', type: e.constructor.name, message: e.message ?? '' }));

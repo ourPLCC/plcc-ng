@@ -10,13 +10,14 @@ _cache_log_event() {
 }
 
 _cache_key() {
+    local extra_args="$1"
     local head status diff untracked
     head=$(git rev-parse HEAD 2>/dev/null) || return 1
     status=$(git status --porcelain 2>/dev/null) || return 1
     diff=$(git diff HEAD 2>/dev/null) || return 1
     untracked=$(git ls-files --others --exclude-standard -z 2>/dev/null \
         | xargs -0 -I{} cat "{}" 2>/dev/null) || return 1
-    printf '%s\n%s\n%s\n%s' "${head}" "${status}" "${diff}" "${untracked}" \
+    printf '%s\n%s\n%s\n%s\n%s' "${head}" "${status}" "${diff}" "${untracked}" "${extra_args}" \
         | sha256sum | cut -d' ' -f1
 }
 
@@ -34,7 +35,7 @@ run_cached() {
     fi
 
     local key
-    if ! key=$(_cache_key); then
+    if ! key=$(_cache_key "$*"); then
         "$@"
         return
     fi

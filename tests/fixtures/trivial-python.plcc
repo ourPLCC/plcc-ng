@@ -7,5 +7,5 @@ Python
 Program
 %%%
 def _run(self):
-    return int(self.num.lexeme)
+    return str(int(self.num.lexeme))
 %%%

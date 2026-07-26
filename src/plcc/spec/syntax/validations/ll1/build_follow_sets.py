@@ -66,18 +66,7 @@ class FollowSetBuilder:
             self._changed = True
 
     def _canDeriveEmpty(self, symbols):
-        return all(self._canDeriveEmptyString(symbol, set()) for symbol in symbols)
-
-    def _canDeriveEmptyString(self, symbol, computing):
-        if symbol in computing:
-            return False
-        if self.grammar.isNonterminal(symbol):
-            computing.add(symbol)
-            result = self._allRulesCanDeriveEmpty(symbol, computing)
-            computing.discard(symbol)
-            return result
-        return False
-
-    def _allRulesCanDeriveEmpty(self, symbol, computing):
-        if all(self._canDeriveEmptyString(rule, computing) for rule in self.grammar.getForms(symbol)[0]):
-            return True
+        # A symbol is nullable iff epsilon is in its FIRST set - already
+        # computed correctly (existential over all productions) by
+        # build_first_sets, so reuse it rather than re-deriving here.
+        return all(self.grammar.getEpsilon() in self.firstSets[symbol] for symbol in symbols)

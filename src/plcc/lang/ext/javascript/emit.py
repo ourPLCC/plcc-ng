@@ -19,6 +19,9 @@ import jinja2
 from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.lang.reserved_words import reject_reserved_field_names
+
+from .reserved_words import RESERVED_WORDS
 
 __doc__ = __doc__ + VERBOSE_OPTIONS
 
@@ -29,7 +32,7 @@ const { Node } = require('./runtime/base');
 
 class _Start extends Node {
     _run() {
-        console.log(String(this));
+        return String(this);
     }
 }
 
@@ -51,11 +54,13 @@ def main(argv=None):
     verbose.emit(Events.STARTED, message=f'emitting to {output_dir}')
 
     model = json.load(sys.stdin)
+    classes = model['classes']
+    reject_reserved_field_names(classes, 'javascript', RESERVED_WORDS, stage='plcc-javascript-emit')
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     _copy_runtime(output_dir)
 
-    classes = model['classes']
     start_class_name = model['start'][0].upper() + model['start'][1:]
     section = _find_javascript_section(model)
     entry_point = _DEFAULT_ENTRY_POINT

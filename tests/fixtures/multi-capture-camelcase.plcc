@@ -1,0 +1,29 @@
+skip WHITESPACE '\s+'
+token LIT '\d+'
+token IF 'if'
+token THEN 'then'
+token ELSE 'else'
+%
+<Program>    ::= <Exp>
+<Exp:LitExp> ::= <LIT>
+<Exp:IfExp>  ::= IF <Exp:testExp> THEN <Exp:trueExp> ELSE <Exp:falseExp>
+%
+Python
+Program
+%%%
+def _run(self):
+    return str(self.exp.eval())
+%%%
+LitExp
+%%%
+def eval(self):
+    return int(self.lit.lexeme)
+%%%
+IfExp
+%%%
+def eval(self):
+    if self.testExp.eval() != 0:
+        return self.trueExp.eval()
+    else:
+        return self.falseExp.eval()
+%%%

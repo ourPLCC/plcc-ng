@@ -27,39 +27,50 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 Java
 
-Exp
+Op
 %%%
-public abstract int eval();
+public abstract int apply(int left, int right);
+%%%
+
+Expr
+%%%
+public int eval() {
+    return op.apply(Integer.parseInt(left.lexeme), Integer.parseInt(right.lexeme));
+}
 %%%
 
 Prog
 %%%
-public void _run() {
-    for (Exp exp : expList) {
-        System.out.println(exp.eval());
+public String _run() {
+    java.util.List<String> lines = new java.util.ArrayList<>();
+    for (Expr expr : exprList) {
+        lines.add(String.valueOf(expr.eval()));
     }
+    return String.join("\n", lines);
 }
 %%%
 
-AddExp
+AddOp
 %%%
-public int eval() {
-    return left.eval() + right.eval();
+public int apply(int left, int right) {
+    return left + right;
 }
 %%%
 
-NumExp
+SubOp
 %%%
-public int eval() {
-    return Integer.parseInt(num.lexeme);
+public int apply(int left, int right) {
+    return left - right;
 }
 %%%
 ```
@@ -70,14 +81,14 @@ Running this with `echo "1 + 2" | plcc-rep` prints `3`.
 
 | Grammar Construct | Example from spec | Java Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Exp>` | Java class with public fields and constructor | `class Prog extends _Start { public ArrayList<Exp> expList; ... }` |
-| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Java class extending the base nonterminal | `class AddExp extends Exp { public Exp left, right; ... }` |
-| Named non-terminal (RHS) | `<Exp:left>` | `left` — an `Exp` instance | `left.eval()` |
-| Captured terminal (RHS) | `<NUM>` | `num` — a `Token`; `.lexeme` for the string value | `Integer.parseInt(num.lexeme)` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `expList` — `ArrayList<Exp>` | `for (Exp exp : expList)` |
+| Concrete rule (LHS, no alt name) — generates one class | `<Prog>` in `<Prog> **= <Expr>` | Java class with public fields and constructor | `class Prog extends _Start { public ArrayList<Expr> exprList; ... }` |
+| Alternative rule (LHS, with alt name) — base nonterminal becomes abstract | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | Java class extending the base nonterminal | `class AddOp extends Op { ... }` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | `op` — an `Op` instance | `op.apply(left, right)` |
+| Captured terminal (RHS) | `<NUM:left>` | `left` — a `Token`; `.lexeme` for the string value | `Integer.parseInt(left.lexeme)` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `exprList` — `ArrayList<Expr>` | `for (Expr expr : exprList)` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `exp`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `expr`, `<OneMore>` → `oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 All generated classes are in the same package, so sibling classes are accessible without explicit imports.
 
@@ -119,15 +130,19 @@ public int eval() {
 ```java
 Prog
 %%%
-public void _run() {
+public String _run() {
     // your implementation
 }
 %%%
 ```
 
-The default `_Start._run()` prints `String(this)` using `System.out.println`. Override it to replace the default behavior. Return type is `void`.
+`_run()` must return a `String`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning `null` raises a `specification_error`.
 
-Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Exp` in the quick reference example).
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+
+The default `_Start._run()` returns `this.toString()`. Override it to replace the default behavior.
+
+Abstract classes cannot be instantiated. Declare abstract methods on them so the Java compiler enforces that all concrete subclasses implement them (see `Op` in the quick reference example).
 
 ## `LanguageError`
 
@@ -170,8 +185,9 @@ DIR/
   Main.java         — entry point
   _Start.java       — default base for the start class
   Prog.java         — one .java file per class from the grammar
-  AddExp.java
-  NumExp.java
+  Expr.java
+  AddOp.java
+  SubOp.java
   *.class           — compiled after plcc-java-build
 ```
 
@@ -204,6 +220,7 @@ Expected output:
 - Requires Java JDK 21 or later for both building and running.
 - All generated source files are overwritten on every emit run — do not edit them directly.
 - Abstract classes need abstract method declarations added via `body` fragments if you want the compiler to enforce them on subclasses.
+- A field name that becomes a Java reserved word (e.g. `class`, `new`) is rejected by `plcc-java-emit` — rename the capture. `var` is fine (it's only reserved for local-variable type inference, not field declarations). See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 

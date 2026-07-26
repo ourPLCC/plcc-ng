@@ -27,11 +27,13 @@ This example exercises every grammar construct. Later sections reference it by n
 ```text
 token NUM   '\d+'
 token PLUS  '\+'
+token MINUS '-'
 skip  SPACE '\s+'
 %
-<Prog>       **= <Exp>
-<Exp:AddExp> ::= <Exp:left> PLUS <Exp:right>
-<Exp:NumExp> ::= <NUM>
+<Prog>     **= <Expr>
+<Expr>     ::= <NUM:left> <Op:op> <NUM:right>
+<Op:AddOp> ::= PLUS
+<Op:SubOp> ::= MINUS
 %
 Haskell
 
@@ -41,11 +43,17 @@ _run :: Prog -> String
 _run (Prog es) = unlines (map (show . eval) es)
 %%%
 
-Exp
+Expr
 %%%
-eval :: Exp -> Int
-eval (AddExp l r) = eval l + eval r
-eval (NumExp t)   = read (lexeme t)
+eval :: Expr -> Int
+eval (Expr l o r) = apply o (read (lexeme l)) (read (lexeme r))
+%%%
+
+Op
+%%%
+apply :: Op -> Int -> Int -> Int
+apply AddOp l r = l + r
+apply SubOp l r = l - r
 %%%
 ```
 
@@ -61,14 +69,14 @@ not separate files.
 
 | Grammar Construct | Example from spec | Haskell Construct | Example based on spec |
 | --- | --- | --- | --- |
-| Concrete rule (LHS, no alt name) — generates one module | `<Prog>` in `<Prog> **= <Exp>` | Record type with named fields | `data Prog = Prog { expList :: [Exp] }` |
-| Alternative rule (LHS, with alt name) — all alternatives become constructors in the base nonterminal's module | `<Exp:AddExp>` in `<Exp:AddExp> ::= ...` | Constructor in the base nonterminal's `data` type | `data Exp = AddExp { left :: Exp, right :: Exp } \| NumExp { num :: Token }` |
-| Named non-terminal (RHS) | `<Exp:left>` | Named record field of the nonterminal's type | `left :: Exp` in the `AddExp` constructor |
-| Captured terminal (RHS) | `<NUM>` | Named record field of type `Token`; `lexeme` for the string value | `num :: Token` → `lexeme num` |
-| Uncaptured terminal (RHS) | `PLUS` | No field generated | — |
-| Arbno rule (`**=`) | `<Prog> **= <Exp>` | `[Exp]` list field named `expList` | `expList :: [Exp]` |
+| Concrete rule (LHS, no alt name) — generates one module | `<Prog>` in `<Prog> **= <Expr>` | Record type with named fields | `data Prog = Prog { exprList :: [Expr] }` |
+| Alternative rule (LHS, with alt name) — all alternatives become constructors in the base nonterminal's module | `<Op:AddOp>` in `<Op:AddOp> ::= PLUS` | Constructor in the base nonterminal's `data` type | `data Op = AddOp \| SubOp` |
+| Named non-terminal (RHS) | `<Op:op>` in `<Expr> ::= <NUM:left> <Op:op> <NUM:right>` | Named record field of the nonterminal's type | `op :: Op` in the `Expr` constructor |
+| Captured terminal (RHS) | `<NUM:left>` | Named record field of type `Token`; `lexeme` for the string value | `left :: Token` → `lexeme left` |
+| Uncaptured terminal (RHS) | `PLUS` in `<Op:AddOp> ::= PLUS` | No field generated | — |
+| Arbno rule (`**=`) | `<Prog> **= <Expr>` | `[Expr]` list field named `exprList` | `exprList :: [Expr]` |
 
-Without explicit `:name` on a RHS symbol, the field name is the symbol name lowercased (e.g., `<Exp>` → `exp`, `<NUM>` → `num`). Use explicit names when two RHS symbols would produce the same field name.
+Without explicit `:name` on a RHS symbol, the field name is derived from the symbol name: a terminal is lowercased (`<NUM>` → `num`), and a nonterminal has just its first letter decapitalized (`<Expr>` → `expr`, `<OneMore>` → `oneMore`). Use explicit names when two RHS symbols would produce the same field name.
 
 ## Fragment kinds
 
@@ -85,29 +93,28 @@ Fragments inject code at specific locations in the generated `.hs` file. Use `Mo
 
 Haskell has no `init` or `class` hook — there is no constructor body to inject into, and no class declaration line.
 
-**Fragment class names must be module names** — the abstract rule name (`Exp`) or a lone concrete name (`Prog`), never a concrete alternative name (`AddExp`, `NumExp`). Using a concrete alternative name produces a fatal error:
+**Fragment class names must be module names** — the abstract rule name (`Op`) or a lone concrete name (`Prog`), never a concrete alternative name (`AddOp`, `SubOp`). Using a concrete alternative name produces a fatal error:
 
 ```text
-plcc-haskell-emit: fragment tagged 'AddExp': AddExp is a concrete alternative of Exp.
+plcc-haskell-emit: fragment tagged 'AddOp': AddOp is a concrete alternative of Op.
 In Haskell, concrete alternatives are constructors inside their abstract rule's module.
-Use 'Exp' as the fragment class name instead.
+Use 'Op' as the fragment class name instead.
 ```
 
 ### Example
 
 ```text
-Exp:import
+Expr:import
 %%%
 import Data.List (sort)
 %%%
 
-Exp
+Expr
 %%%
-eval :: Exp -> Int
-eval (AddExp l r) = eval l + eval r
-eval (NumExp t)   = read (lexeme t)
+eval :: Expr -> Int
+eval (Expr l o r) = apply o (read (lexeme l)) (read (lexeme r))
 
-sortedEvals :: [Exp] -> [Int]
+sortedEvals :: [Expr] -> [Int]
 sortedEvals es = sort (map eval es)
 %%%
 ```
@@ -124,9 +131,9 @@ _run (Prog es) = unlines (map (show . eval) es)
 %%%
 ```
 
-The function signature must be `_run :: StartModule -> String`. The return value is sent to `plcc-rep` as the result string.
+The function signature must be `_run :: StartModule -> String`. `_run()` must return a string — same contract as every other language target — and the compiler enforces it: there is no way to write a Haskell `_run` that does anything else. The runtime sends the returned string to `plcc-rep` as the result, unmodified.
 
-If you do not define `_run`, the default `_run = show` is injected, which prints the `Show` instance of the root node.
+If you do not define `_run`, the default `_run = show` is injected, which returns the `Show` instance of the root node (not printed directly — `show` returns a `String`, matching the contract).
 
 ## `LanguageError`
 
@@ -157,7 +164,8 @@ DIR/
   Token.hs            — runtime Token type with lexeme field
   Main.hs             — entry point; deserializes parse tree JSON, calls _run
   Prog.hs             — one .hs per lone concrete rule
-  Exp.hs              — one .hs per abstract rule (contains all alternatives as constructors)
+  Expr.hs
+  Op.hs               — one .hs per abstract rule (contains all alternatives as constructors)
 ```
 
 Do not edit these files directly. Put all custom code in the spec's semantic section.
@@ -197,11 +205,12 @@ Unlike Python and JavaScript, a build step is required before running.
 - No `init` or `class` fragment hooks.
 - Generated files are overwritten on every emit run — do not edit them directly.
 - One module per abstract rule: all concrete alternatives share the abstract rule's `.hs` file.
+- A field name that becomes a Haskell reserved word (e.g. `type`, `data`, `where`) is rejected by `plcc-haskell-emit` — rename the capture. See [Reserved words](../syntactic.md#reserved-words) for details.
 
 ## Tips
 
 - `lexeme fieldName` — `lexeme` is a record accessor function on `Token`. Write `lexeme t`, not `t.lexeme`.
-- Pattern match on all constructors inside the abstract rule's `body` fragment: `eval (AddExp l r) = ...` and `eval (NumExp t) = ...` both go in the `Exp` fragment.
+- Pattern match on all constructors inside the abstract rule's `body` fragment: `apply AddOp l r = ...` and `apply SubOp l r = ...` both go in the `Op` fragment.
 - Use `hPutStrLn stderr "debug"` (after `import System.IO`) for debug output so it does not interfere with the output protocol.
 - `_run` must return a `String`. Use `show` to convert numeric or other results.
 - The `top` fragment is useful for language extensions: `{-# LANGUAGE TupleSections #-}`.

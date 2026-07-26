@@ -4,7 +4,69 @@ Curated highlights of what's changed in PLCC-ng and why it matters
 to you. For the full commit-level history, see
 [GitHub Releases](https://github.com/ourPLCC/plcc-ng/releases).
 
-<!-- last-covered: v1.0.0 -->
+<!-- last-covered: v2.0.0 -->
+
+## 2026-07-26 — PLCC-ng v2.0.0
+
+The first release since 1.0 tightens the language runtime and fixes
+several ways generated code could surprise you. One change is breaking:
+if you have specs written against v1.0.0, update your `_run()` methods
+before upgrading — see below and the migration guide's
+[breaking behavior changes](migration.md#breaking-behavior-changes).
+
+### `_run()` now returns a string
+
+Your semantics' entry point, `_run()`, now **returns** its output as a
+string and lets the runtime print it — the same contract in all four
+languages. Java's `_run()` changes from `void` to `String`; Python and
+JavaScript's `_run()` must return an actual `str`/`string` rather than an
+`int`, list, or other value. A non-string return is now reported as a
+`specification_error` instead of silently producing quoted or malformed
+output, and no language's `_run()` may print to stdout directly. This is
+the one breaking change in this release: existing v1.0.0 specs need
+updating, and the
+[migration guide](migration.md#breaking-behavior-changes) shows the
+before/after for each language.
+
+### Field names can't collide with reserved words
+
+A captured field whose name is a reserved word in your target language —
+for example a field auto-named `var` in JavaScript — used to slip through
+and fail later with a confusing error from the generated code. PLCC-ng
+now detects this and reports it against your spec, in Python, Java,
+Haskell, and JavaScript. Because the check is per target language, it
+fires when you emit or run for that language, not during language-neutral
+grammar validation. See
+[Reserved words](language-guide/syntactic.md#reserved-words).
+
+### More predictable auto-generated field names
+
+Two bugs in how PLCC-ng derives captured-field names are fixed. An
+alternative name (`:name`) now keeps its original case, so a camelCase
+alt-name no longer produces a mismatched field. And a bare multi-word
+nonterminal capture now decapitalizes only its first letter
+(`<OneMore>` → field `oneMore`) instead of lowercasing the whole name
+(`onemore`), matching the naming rule in the
+[migration guide](migration.md#7-update-captured-field-syntax). A v1.0.0
+spec that relied on the old full-lowercasing will see its generated field
+names change.
+
+### More correct LL(1) grammar analysis
+
+PLCC-ng's LL(1) analysis now recognizes a nullable production no matter
+when it is registered, so FOLLOW sets are computed correctly (including
+end-of-input) for grammars whose nullable productions appear late.
+Grammars that were previously mis-analyzed are now handled correctly.
+
+### Documentation examples that actually run
+
+Every language's quick-reference example grammar is now genuinely LL(1),
+and its generated code compiles and runs exactly as shown — so copying an
+example straight from the docs works the first time. See the per-language
+guides for [Python](language-guide/languages/python.md),
+[Java](language-guide/languages/java.md),
+[Haskell](language-guide/languages/haskell.md), and
+[JavaScript](language-guide/languages/javascript.md).
 
 ## 2026-07-06 — PLCC-ng v1.0.0
 

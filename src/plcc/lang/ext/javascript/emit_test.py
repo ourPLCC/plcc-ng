@@ -49,7 +49,7 @@ def _arith_model():
                 "language": "javascript",
                 "fragments": [
                     {"class_name": "Program", "kind": "body",
-                     "body": "_run() {\n    return this.expr.eval();\n}"},
+                     "body": "_run() {\n    return String(this.expr.eval());\n}"},
                     {"class_name": "AddRest", "kind": "body",
                      "body": "eval(acc) {\n    return this.rest.eval(acc + this.term.eval());\n}"},
                     {"class_name": "NilRest", "kind": "body",
@@ -126,6 +126,32 @@ def test_emit_class_file_imports_language_error(tmp_path, monkeypatch):
     run_main([f'--output={tmp_path}'])
     program_js = (tmp_path / 'Program.js').read_text()
     assert "{ Node, Token, LanguageError } = require('./runtime/base')" in program_js
+
+
+def test_emit_rejects_field_name_colliding_with_reserved_word(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "var", "type": "Token"}]
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    with pytest.raises(SystemExit) as exc_info:
+        run_main([f'--output={tmp_path}'])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-javascript-emit: error:' in captured.err
+    assert "field 'var'" in captured.err
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_emit_rejects_eval_as_field_name(tmp_path, monkeypatch, capsys):
+    model = _minimal_model()
+    model['classes'][0]['fields'] = [{"name": "eval", "type": "Token"}]
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    with pytest.raises(SystemExit) as exc_info:
+        run_main([f'--output={tmp_path}'])
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert 'plcc-javascript-emit: error:' in captured.err
+    assert "field 'eval'" in captured.err
+    assert list(tmp_path.iterdir()) == []
 
 
 def test_concrete_class_has_rule_name_and_fields(tmp_path, monkeypatch):
@@ -250,3 +276,75 @@ def test_emit_generated_main_exits_130_on_sigint(tmp_path, monkeypatch):
     assert proc.returncode == 130
     assert b'Traceback' not in stderr
     assert b'User interrupted execution by ^C.' in stdout
+
+
+def test_default_run_returns_instead_of_printing(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_minimal_model())))
+    run_main([f'--output={tmp_path}'])
+    start_js = (tmp_path / '_Start.js').read_text()
+    assert 'return String(this);' in start_js
+    assert 'console.log' not in start_js
+
+
+def test_emit_generated_main_result_value_is_unquoted_string(tmp_path, monkeypatch):
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(_arith_model())))
+    run_main([f'--output={tmp_path}'])
+    tree_json = json.dumps({
+        "kind": "tree",
+        "rule": "program",
+        "children": [
+            ["expr", {
+                "kind": "tree", "rule": "Expr", "children": [
+                    ["term", {"kind": "tree", "rule": "Term", "children": [
+                        ["num", {"kind": "token", "name": "NUM", "lexeme": "3"}]
+                    ]}],
+                    ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}]
+                ]
+            }]
+        ]
+    })
+    result = subprocess.run(
+        ['node', str(tmp_path / 'main.js')],
+        input=tree_json + '\n',
+        capture_output=True,
+        text=True,
+    )
+    records = [json.loads(l) for l in result.stdout.splitlines() if l]
+    result_records = [r for r in records if r.get('kind') == 'result']
+    assert result_records, f"No result record found in: {result.stdout}"
+    assert result_records[0]['value'] == '3'
+
+
+def test_emit_generated_main_non_string_return_is_specification_error(tmp_path, monkeypatch):
+    model = _arith_model()
+    model['semantic_sections'][0]['fragments'][0] = {
+        "class_name": "Program", "kind": "body",
+        "body": "_run() {\n    return this.expr.eval();\n}"
+    }
+    monkeypatch.setattr('sys.stdin', io.StringIO(json.dumps(model)))
+    run_main([f'--output={tmp_path}'])
+    tree_json = json.dumps({
+        "kind": "tree",
+        "rule": "program",
+        "children": [
+            ["expr", {
+                "kind": "tree", "rule": "Expr", "children": [
+                    ["term", {"kind": "tree", "rule": "Term", "children": [
+                        ["num", {"kind": "token", "name": "NUM", "lexeme": "3"}]
+                    ]}],
+                    ["rest", {"kind": "tree", "rule": "ExprRest", "children": []}]
+                ]
+            }]
+        ]
+    })
+    result = subprocess.run(
+        ['node', str(tmp_path / 'main.js')],
+        input=tree_json + '\n',
+        capture_output=True,
+        text=True,
+    )
+    records = [json.loads(l) for l in result.stdout.splitlines() if l]
+    spec_error_records = [r for r in records if r.get('kind') == 'specification_error']
+    assert spec_error_records, f"No specification_error record found in: {result.stdout}"
+    assert 'must return a string' in spec_error_records[0]['message']
+    assert result.returncode != 0

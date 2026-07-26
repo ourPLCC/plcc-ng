@@ -65,12 +65,12 @@ Create a file named `spec.plcc`:
 
     Program
     %%%
-    public void _run() {
+    public String _run() {
         int sum = 0;
-        for (NUM num : numList) {
+        for (Token num : numList) {
             sum += Integer.parseInt(num.lexeme);
         }
-        System.out.println(sum);
+        return String.valueOf(sum);
     }
     %%%
     ```

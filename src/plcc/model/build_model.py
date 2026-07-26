@@ -77,14 +77,20 @@ def _extract_fields_for_rule(rule):
     return _extract_fields(rhs)
 
 
+def _bare_field_name(symbol):
+    name = symbol.get('name', '')
+    if symbol.get('isTerminal'):
+        return name.lower()
+    return name[:1].lower() + name[1:]
+
+
 def _extract_arbno_fields(rhs_symbol_list):
     fields = []
     for symbol in rhs_symbol_list:
         if not symbol.get('isCapturing'):
             continue
         alt = symbol.get('altName')
-        name = symbol.get('name', '')
-        field_name = (alt if alt else name).lower() + 'List'
+        field_name = (alt if alt else _bare_field_name(symbol)) + 'List'
         if symbol.get('isTerminal'):
             field_type = 'Token'
         else:
@@ -99,7 +105,7 @@ def _extract_fields(rhs_symbol_list):
     for symbol in rhs_symbol_list:
         if not symbol.get('isCapturing'):
             continue
-        field_name = symbol.get('altName') or symbol.get('name', '').lower()
+        field_name = symbol.get('altName') or _bare_field_name(symbol)
         if symbol.get('isTerminal'):
             field_type = 'Token'
         else:

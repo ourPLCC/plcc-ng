@@ -21,7 +21,9 @@ try:
         try:
             tree = registry.deserialize(json.loads(line))
             result = tree.{{ entry_point }}()
-            print(json.dumps({"kind": "result", "value": repr(result) if result is not None else None}), flush=True)
+            if not isinstance(result, str):
+                raise TypeError(f"{{ entry_point }}() must return a string, got {type(result).__name__}")
+            print(json.dumps({"kind": "result", "value": result}), flush=True)
         except LanguageError as e:
             print(json.dumps({"kind": "error", "type": type(e).__name__, "message": str(e)}), flush=True)
         except Exception as e:

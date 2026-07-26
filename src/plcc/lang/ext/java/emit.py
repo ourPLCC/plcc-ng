@@ -19,6 +19,9 @@ import jinja2
 from plcc.cli import parse_args
 
 from plcc.verbose import VerboseContext, VERBOSE_OPTIONS
+from plcc.lang.reserved_words import reject_reserved_field_names
+
+from .reserved_words import RESERVED_WORDS
 
 __doc__ = __doc__ + VERBOSE_OPTIONS
 
@@ -26,8 +29,8 @@ _DEFAULT_ENTRY_POINT = '_run'
 
 _START_JAVA = """\
 public abstract class _Start extends runtime.Node {
-    public void _run() {
-        System.out.println(this.toString());
+    public String _run() {
+        return this.toString();
     }
 }
 """
@@ -47,11 +50,13 @@ def main(argv=None):
     verbose.emit(Events.STARTED, message=f'emitting to {output_dir}')
 
     model = json.load(sys.stdin)
+    classes = model['classes']
+    reject_reserved_field_names(classes, 'java', RESERVED_WORDS, stage='plcc-java-emit')
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
     _copy_runtime(output_dir)
 
-    classes = model['classes']
     start_class_name = model['start'][0].upper() + model['start'][1:]
     section = _find_java_section(model)
     entry_point = _DEFAULT_ENTRY_POINT

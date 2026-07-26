@@ -39,7 +39,7 @@ teardown() { rm -rf "${WORK_DIR}"; }
     [ "$status" -eq 0 ]
 }
 
-@test "run outputs token lexeme from void _run()" {
+@test "run outputs token lexeme from default _run()" {
     TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [[ "$output" == *"99"* ]]
@@ -50,6 +50,32 @@ teardown() { rm -rf "${WORK_DIR}"; }
     run bash -c "echo '${TREE}' | plcc-java-run --output='${WORK_DIR}'"
     [[ "$output" == *'"kind"'* ]]
     [[ "$output" == *'"result"'* ]]
+}
+
+@test "run reports specification_error when _run() returns null" {
+    NULL_DIR="$(mktemp -d)"
+    trap "rm -rf '${NULL_DIR}'" EXIT
+    cat > "${NULL_DIR}/spec.plcc" << 'SPEC'
+token NUM '\d+'
+skip SPACE '\s+'
+%
+<Program> ::= <NUM:num>
+%
+Java
+Program
+%%%
+    public String _run() {
+        return null;
+    }
+%%%
+SPEC
+    plcc-spec "${NULL_DIR}/spec.plcc" | plcc-model | plcc-java-emit --output="${NULL_DIR}/out"
+    plcc-java-build --output="${NULL_DIR}/out"
+    TREE='{"kind":"tree","rule":"Program","children":[["num",{"kind":"token","name":"NUM","lexeme":"99"}]]}'
+    run bash -c "echo '${TREE}' | plcc-java-run --output='${NULL_DIR}/out'"
+    [[ "$output" == *'"specification_error"'* ]]
+    [[ "$output" == *'must return a string'* ]]
+    [ "$status" -ne 0 ]
 }
 
 @test "full pipeline: plcc-tokens | plcc-trees | plcc-java-run" {

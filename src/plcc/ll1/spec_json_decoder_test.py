@@ -70,6 +70,13 @@ def test_capturing_terminal_uses_name_lower():
     assert productions == {("E", ("NUM",)): Rule(alt=None, fields=["num"])}
 
 
+def test_capturing_terminal_multiword_bare_name_stays_full_lower():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule("E", [_terminal("MY_TOKEN", capturing=True)])
+    ]))
+    assert productions == {("E", ("MY_TOKEN",)): Rule(alt=None, fields=["my_token"])}
+
+
 def test_capturing_terminal_uses_alt_name():
     grammar, productions, arbno_rules = decode(_spec([
         _rule("E", [_terminal("NUM", capturing=True, alt_name="value")])
@@ -77,11 +84,25 @@ def test_capturing_terminal_uses_alt_name():
     assert productions == {("E", ("NUM",)): Rule(alt=None, fields=["value"])}
 
 
+def test_capturing_terminal_preserves_camelcase_alt_name():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule("E", [_terminal("NUM", capturing=True, alt_name="testExp")])
+    ]))
+    assert productions == {("E", ("NUM",)): Rule(alt=None, fields=["testExp"])}
+
+
 def test_capturing_nonterminal_uses_name_lower():
     grammar, productions, arbno_rules = decode(_spec([
         _rule("E", [_nonterminal("Term", capturing=True)])
     ]))
     assert productions == {("E", ("Term",)): Rule(alt=None, fields=["term"])}
+
+
+def test_capturing_nonterminal_multiword_bare_name_decapitalizes():
+    grammar, productions, arbno_rules = decode(_spec([
+        _rule("E", [_nonterminal("OneMore", capturing=True)])
+    ]))
+    assert productions == {("E", ("OneMore",)): Rule(alt=None, fields=["oneMore"])}
 
 
 def test_multiple_symbols():
@@ -207,4 +228,29 @@ def test_arbno_terminal_rhs_item():
     grammar, productions, arbno_rules = decode(spec)
     assert arbno_rules["tokens"]["rhs"] == [
         {"field": "numList", "symbol": "NUM", "is_terminal": True}
+    ]
+
+
+def test_arbno_field_preserves_camelcase_alt_name():
+    spec = _spec([
+        _arbno_rule("rands",
+                    [_nonterminal("expr", capturing=True, alt_name="testExp")],
+                    "COMMA"),
+        _rule("expr", [_terminal("NUM")]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules["rands"]["rhs"] == [
+        {"field": "testExpList", "symbol": "expr", "is_terminal": False}
+    ]
+
+
+def test_arbno_field_bare_multiword_nonterminal_decapitalizes():
+    spec = _spec([
+        _arbno_rule("rands",
+                    [_nonterminal("OneMore", capturing=True)],
+                    "COMMA"),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules["rands"]["rhs"] == [
+        {"field": "oneMoreList", "symbol": "OneMore", "is_terminal": False}
     ]

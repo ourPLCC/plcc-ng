@@ -47,6 +47,13 @@ def test_duplicate_rhs_nonterminal_with_different_alt_name_allowed():
 <Sentence> ::= <Verb:name> <Verb:different>''')
 
 
+def test_duplicate_rhs_nonterminal_with_case_differing_alt_name_allowed():
+    # <Verb:testExp> attr "testExp"; <Verb:testexp> attr "testexp" (once
+    # case is preserved) — different, so no duplicate.
+    assertValid(DuplicateAttribute, '''<Verb> ::=
+<Sentence> ::= <Verb:testExp> <Verb:testexp>''')
+
+
 def test_duplicate_non_captured_terminals_allowed():
     assertValid(DuplicateAttribute, '''<Sentence> ::= ONE ONE ONE ONE''')
 
@@ -85,6 +92,14 @@ def test_duplicate_altName_and_terminal_name_not_allowed():
 def test_one_nonterminal_with_different_altName_allowed():
     # <No:yes> attr "yes"; <No> attr "no" — different, so no duplicate
     assertValid(DuplicateAttribute, '''<Sentence> ::= <No:yes> <No>''')
+
+
+def test_duplicate_bare_multiword_nonterminals_differing_only_by_case_allowed():
+    # <OneMore> has attr "oneMore"; <Onemore> has attr "onemore" (once
+    # bare-name decapitalization lands) - different, so no duplicate.
+    assertValid(DuplicateAttribute, '''<OneMore> ::=
+<Onemore> ::=
+<Sentence> ::= <OneMore> <Onemore>''')
 
 
 def test_rhs_terminal_cannot_start_with_number():
