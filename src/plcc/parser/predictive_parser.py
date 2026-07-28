@@ -182,7 +182,7 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
         separator = entry["separator"]
         rhs = entry["rhs"]
         builder = NodeBuilder(sym)
-        list_fields = {item["field"]: [] for item in rhs}
+        list_fields = {item["field"]: [] for item in rhs if item["field"] is not None}
 
         def parse_iteration():
             if tracer:
@@ -191,11 +191,13 @@ def parse(ll1: dict, tokens: list, tracer=None) -> tuple:
                 if item["is_terminal"]:
                     tok = expect(item["symbol"])
                     builder.note_token(tok)
-                    list_fields[item["field"]].append(tok)
+                    if item["field"] is not None:
+                        list_fields[item["field"]].append(tok)
                 else:
                     child_builder = parse_nt(item["symbol"])
                     builder.note_span_from(child_builder)
-                    list_fields[item["field"]].append(child_builder.to_node())
+                    if item["field"] is not None:
+                        list_fields[item["field"]].append(child_builder.to_node())
             if tracer:
                 tracer.pop()
 
