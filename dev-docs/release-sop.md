@@ -49,7 +49,11 @@ semantic-release job. Otherwise the stages are:
 
 1. **Before merging to `main`:** confirm CI is green on the branch,
    and that the branch's commit types produce the bump you expect
-   (table above).
+   (table above). If `docs/whats-new.md` has an entry for this
+   release, replace its `2026-07-XX` date placeholder with the actual
+   release date, and confirm the entry's version heading and the
+   `<!-- last-covered: -->` marker both name the version being
+   released.
 2. **Merge.** Watch the run under **Actions → Release**.
 3. **If a stage fails**, nothing after it ran. Find the failed stage:
 
