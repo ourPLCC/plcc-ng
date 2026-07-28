@@ -444,9 +444,15 @@ bin/test/e2e.bash tests/bats/e2e/plcc-rep.bats
 after=$(ls -d /tmp/tmp.* 2>/dev/null | wc -l)
 echo "before=${before} after=${after} leaked=$((after - before))"
 ```
-Expected: `leaked=6` — three from `setup_arbno_build` and three from
-`setup_mid_body_arbno_build`. Record the number. If the tier is cached, prefix
-with `PLCC_NO_TEST_CACHE=1`.
+Expected: `leaked=7` — three from `setup_arbno_build`, three from
+`setup_mid_body_arbno_build`, and one from `EMPTY_DIR`. Six of the seven
+contain a `plcc-ng/` directory; the `EMPTY_DIR` one is empty. Record the
+number.
+
+`EMPTY_DIR` leaks despite its `trap … EXIT` because **an in-body EXIT trap does
+not fire in a bats file that defines `teardown()`** — bats installs its own EXIT
+trap to drive teardown, replacing the test's. Verified directly. This is why the
+conversion removes such traps rather than relying on them.
 
 - [ ] **Step 2: Convert `bad_block_delimiters.bats` and `error-propagation.bats`**
 

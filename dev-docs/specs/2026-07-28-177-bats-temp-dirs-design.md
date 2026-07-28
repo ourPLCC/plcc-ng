@@ -11,35 +11,47 @@ cleanup mechanisms — `teardown()`, `trap … EXIT` inside a test body, and
 `trap … RETURN` inside a helper function — plus a fourth non-mechanism, a bare
 `rm` as the last line of the test body.
 
-Most of it works. Verified against the pinned bats: an EXIT trap set in a test
-body fires even when the test fails, and a RETURN trap set in a helper fires
-when the helper returns. Files relying on either are correct today.
+Three groups leak.
 
-Two groups are not.
-
-1. **One unconditional leak.** `setup_arbno_build` and
+1. **Helpers no cleanup covers.** `setup_arbno_build` and
    `setup_mid_body_arbno_build` in `tests/bats/e2e/plcc-rep.bats` each
    `mktemp -d` a build directory, while `teardown()` removes only the `WORK_DIR`
-   that `setup()` created. Nothing else covers them. Six directories leak per
-   run of that file, each holding a complete `plcc-ng/` build tree. This is the
-   defect issue 177 was filed for.
+   that `setup()` created. Six directories leak per run of that file, each
+   holding a complete `plcc-ng/` build tree. This is the defect issue 177 was
+   filed for.
 
-2. **Six latent leaks.** Cleanup is the last line of the test body, so it runs
-   only when it is not needed — bats aborts a body at the first failing command:
+2. **In-body EXIT traps in a file that defines `teardown()` — these never
+   fire.** Bats installs its own EXIT trap to drive `teardown()`, which replaces
+   any trap the test body set. Verified directly against the pinned bats: the
+   same trap fires in a file with no `teardown()` and silently does nothing in a
+   file that has one. Every affected allocation leaks on every run, not just on
+   failure: `plcc-rep.bats` (`EMPTY_DIR`), `java-emit.bats` (`NULL_DIR`, and
+   `NO_SEM_DIR` in three tests), `python-emit.bats` (`LL1_JSON`, `TREE_FILE`,
+   and `NO_SEM_DIR` in three tests), and `happy-path.bats` (`DIAGRAM_DIR` in two
+   tests). The trap reads as cleanup and is not.
+
+   `plcc-validate-semantic.bats` and `plcc-validate-syntactic.bats` use the same
+   pattern but define no `teardown()`, so their traps do fire.
+
+3. **Cleanup as the last line of the test body.** Bats aborts a body at the
+   first failing command, so these run only when they are not needed:
    `cache.bats` (`fake_bin`), `plcc-haskell-emit.bats` (`out`, three tests),
    `plcc-tokens.bats` (`tmp`, `VERBOSITY_SPEC_JSON`),
    `plcc-parse-errors.bats` (`tmp`), `happy-path.bats` (`FULL_DIR`), and
    `java-emit.bats:88` (`SPEC_JSON`, `LL1_JSON`). These leak exactly when a
    test fails, which is when the debris is least welcome.
 
-The measured cost is consistent with that diagnosis. One development container
-had 518 leftover `tmp.*` directories totalling 32M, 134 of them holding a
-`plcc-ng/` build tree — about twenty-two runs' worth of the `plcc-rep.bats`
-leak, plus failure-path debris.
+`trap … RETURN` inside a helper function is unaffected by the `teardown()`
+interaction and does fire.
+
+The measured cost: one development container had 518 leftover `tmp.*`
+directories totalling 32M, 134 of them holding a `plcc-ng/` build tree. A single
+run of `plcc-rep.bats` alone leaks seven directories, six with build trees.
 
 The deeper problem is the variety itself. Four mechanisms for one concern means
-a reviewer must check each new test against the right one, and the two failure
-modes above are what that costs.
+a reviewer must check each new test against the right one — and as group 2
+shows, one of those mechanisms does not even work in the configuration most of
+these files use, which no reviewer had noticed.
 
 ## Approach
 
