@@ -3,7 +3,8 @@
 bats_require_minimum_version 1.5.0
 
 @test "plcc-parse: lex error reports plcc-tokens, not plcc-trees cascade" {
-    tmp=$(mktemp -d)
+    tmp="${BATS_TEST_TMPDIR}/parse"
+    mkdir -p "${tmp}"
     cat > "$tmp/trivial.plcc" <<'EOF'
 token NUM '\d+'
 %
@@ -18,5 +19,4 @@ EOF
     [[ "$output" == *"error"* ]]
     # plcc-trees's cascading error must NOT appear
     ! [[ "$output" == *"plcc-trees:"*"error"* ]]
-    rm -rf "$tmp"
 }
