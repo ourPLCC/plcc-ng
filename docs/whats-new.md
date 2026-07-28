@@ -20,12 +20,6 @@ PLCC-ng now matches every symbol in a repetition body on every repetition,
 building lists only from the ones you captured. See
 [Repetition rules](language-guide/syntactic.md#repetition-rules).
 
-Upgrading from an earlier version? If you already have a `plcc-ng/`
-build directory, delete it before rebuilding. Builds are cached on
-your spec's contents, not on the PLCC-ng version, so an existing
-build directory keeps its old parse table and the fix never reaches
-it.
-
 ## 2026-07-26 — PLCC-ng v2.0.0
 
 The first release since 1.0 tightens the language runtime and fixes

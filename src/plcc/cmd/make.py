@@ -130,6 +130,7 @@ def main(argv=None):
 
     new_hash = compute_hash(tmp_spec)
     sentinel = read_sentinel(build_dir)
+    version = get_version()
 
     with open(tmp_spec) as f:
         spec_data = json.load(f)
@@ -144,7 +145,7 @@ def main(argv=None):
     }
     required_stages = _REQUIRED[through]
 
-    if is_current(sentinel, new_hash, required_stages):
+    if is_current(sentinel, new_hash, required_stages, version):
         os.unlink(tmp_spec)
         verbose.emit(Events.FINISHED, message="build is current")
         return
@@ -200,7 +201,7 @@ def main(argv=None):
                 verbose=verbose,
             )
 
-    write_sentinel(build_dir, new_hash, required_stages)
+    write_sentinel(build_dir, new_hash, required_stages, version)
     verbose.emit(Events.FINISHED, message="done")
 
 
