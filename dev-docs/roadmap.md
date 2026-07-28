@@ -6,6 +6,8 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
+- **[#175](issues/175-build-sentinel-ignores-package-version.md) — Build sentinel ignores the installed PLCC-ng version**
+  The build sentinel keys only on the spec hash and completed stages, so upgrading PLCC-ng doesn't invalidate a cached `plcc-ng/` build directory even when the new version changes generated artifacts.
 
 ### Feat
 
