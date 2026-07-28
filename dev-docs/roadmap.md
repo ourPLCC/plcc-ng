@@ -6,6 +6,8 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
+- **[#174](issues/174-arbno-drops-mid-body-terminal.md) — arbno drops mid-body non-capturing terminal**
+  A separator-less arbno (`**=`) body silently loses a non-capturing terminal sitting between two capturing symbols: it analyzes as LL(1) but the runtime table omits the terminal, so parsing fails.
 
 ### Feat
 
