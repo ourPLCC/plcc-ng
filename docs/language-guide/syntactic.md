@@ -191,9 +191,14 @@ with an optional separator:
 ```text
 <Args>  **= <Expr:expr>
 <Pairs> **= <WHOLE:x> <WHOLE:y> +COMMA
+<Decls> **= <SYMBOL> EQUALS <Exp>
 ```
 
 Captured symbols become parallel lists:
+
+A symbol in the body that is not captured — `EQUALS` in `<Decls>` above — is
+still matched on every repetition, but produces no list. `Decls` gets
+`symbolList` and `expList` only.
 
 ```java
 class Args { List<Expr> exprList; }
