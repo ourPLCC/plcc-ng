@@ -641,7 +641,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ### Task 6: Full verification and issue close
 
 **Files:**
-- Modify: `dev-docs/issues/174-arbno-drops-mid-body-terminal.md` (moved to `dev-docs/issues/done/` by the script)
+- Modify: `dev-docs/issues/done/174-arbno-drops-mid-body-terminal.md` (moved to `dev-docs/issues/done/` by the script)
 - Modify: `dev-docs/roadmap.md` (edited by the script)
 
 **Interfaces:**

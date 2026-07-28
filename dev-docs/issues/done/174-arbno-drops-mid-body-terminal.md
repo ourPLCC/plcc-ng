@@ -68,7 +68,7 @@ with no separator.
 2.0.0 CLI):
 
 - LL(1) table *analysis* is correct.
-  [`_handle_arbno`](../../src/plcc/ll1/spec_json_decoder.py) expands
+  [`_handle_arbno`](../../../src/plcc/ll1/spec_json_decoder.py) expands
   `LetDecls -> SYMBOL EQUALS Exp LetDecls# | ε` with `EQUALS` included, so
   the grammar is (correctly) accepted as LL(1).
 - The bug is in the *runtime* arbno metadata that the same function builds.
@@ -88,7 +88,7 @@ with no separator.
   The resulting arbno entry for `LetDecls` lists only `symbolList` (SYMBOL)
   and `expList` (Exp); `EQUALS` is gone.
 - At runtime,
-  [`_parse_arbno`](../../src/plcc/parser/predictive_parser.py) walks exactly
+  [`_parse_arbno`](../../../src/plcc/parser/predictive_parser.py) walks exactly
   that `rhs` list once per iteration, so after consuming `SYMBOL` it tries
   to parse `Exp` and chokes on the unshifted `EQUALS`.
 
