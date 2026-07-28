@@ -5,38 +5,41 @@
 
 ## Problem
 
-Bats tests create temporary files and directories with `mktemp` and rely on a
-hand-written `teardown()` to remove them. That contract is unenforced, and it is
-broken in thirteen files:
+Bats tests create temporary files and directories with `mktemp` and remove them
+by hand. Forty-two files do this across 102 call sites, using three different
+cleanup mechanisms — `teardown()`, `trap … EXIT` inside a test body, and
+`trap … RETURN` inside a helper function — plus a fourth non-mechanism, a bare
+`rm` as the last line of the test body.
 
-| File | Temps never removed |
-| --- | --- |
-| `tests/bats/commands/cache.bats` | `fake_bin` |
-| `tests/bats/commands/plcc-haskell-emit.bats` | `out` |
-| `tests/bats/commands/plcc-tokens.bats` | `VERBOSITY_SPEC_JSON`, `tmp` |
-| `tests/bats/commands/plcc-validate-semantic.bats` | `SPEC_JSON` |
-| `tests/bats/commands/plcc-validate-syntactic.bats` | `SPEC_JSON` |
-| `tests/bats/e2e/happy-path.bats` | `DIAGRAM_DIR`, `FULL_DIR` |
-| `tests/bats/e2e/haskell.bats` | `SPEC_JSON`, `MODEL_JSON` |
-| `tests/bats/e2e/haskell_roundtrip.bats` | `SPEC_JSON`, `MODEL_JSON`, `LL1_JSON` |
-| `tests/bats/e2e/languages-java.bats` | `build_dir`, `ll1_json` |
-| `tests/bats/e2e/plcc-rep.bats` | `ARBNO_DIR`, `MID_BODY_DIR` |
-| `tests/bats/integration/java-emit.bats` | `SPEC_JSON`, `LL1_JSON`, `NULL_DIR`, `NO_SEM_DIR` |
-| `tests/bats/integration/plcc-parse-errors.bats` | `tmp` |
-| `tests/bats/integration/python-emit.bats` | `LL1_JSON`, `TREE_FILE`, `NO_SEM_DIR` |
+Most of it works. Verified against the pinned bats: an EXIT trap set in a test
+body fires even when the test fails, and a RETURN trap set in a helper fires
+when the helper returns. Files relying on either are correct today.
 
-Two distinct mistakes produce this:
+Two groups are not.
 
-1. **A helper allocates, but `teardown()` does not know about it.** The case
-   issue 177 was filed for: `setup_arbno_build` and `setup_mid_body_arbno_build`
-   in `plcc-rep.bats` each `mktemp -d` a build directory, while `teardown()`
-   removes only the `WORK_DIR` that `setup()` created.
-2. **Cleanup is the last line of the test body.** `plcc-haskell-emit.bats` ends
-   its tests with `rm -rf "$out"`. Bats aborts a test body at the first failing
-   command, so this line runs only when it is not needed.
+1. **One unconditional leak.** `setup_arbno_build` and
+   `setup_mid_body_arbno_build` in `tests/bats/e2e/plcc-rep.bats` each
+   `mktemp -d` a build directory, while `teardown()` removes only the `WORK_DIR`
+   that `setup()` created. Nothing else covers them. Six directories leak per
+   run of that file, each holding a complete `plcc-ng/` build tree. This is the
+   defect issue 177 was filed for.
 
-The cost is measurable. One development container had 518 leftover `tmp.*`
-directories totalling 32M, 134 of them holding a complete `plcc-ng/` build tree.
+2. **Six latent leaks.** Cleanup is the last line of the test body, so it runs
+   only when it is not needed — bats aborts a body at the first failing command:
+   `cache.bats` (`fake_bin`), `plcc-haskell-emit.bats` (`out`, three tests),
+   `plcc-tokens.bats` (`tmp`, `VERBOSITY_SPEC_JSON`),
+   `plcc-parse-errors.bats` (`tmp`), `happy-path.bats` (`FULL_DIR`), and
+   `java-emit.bats:88` (`SPEC_JSON`, `LL1_JSON`). These leak exactly when a
+   test fails, which is when the debris is least welcome.
+
+The measured cost is consistent with that diagnosis. One development container
+had 518 leftover `tmp.*` directories totalling 32M, 134 of them holding a
+`plcc-ng/` build tree — about twenty-two runs' worth of the `plcc-rep.bats`
+leak, plus failure-path debris.
+
+The deeper problem is the variety itself. Four mechanisms for one concern means
+a reviewer must check each new test against the right one, and the two failure
+modes above are what that costs.
 
 ## Approach
 
@@ -74,17 +77,24 @@ Every `mktemp` call in `tests/bats/**/*.bats` becomes a path under
 | `SPEC_JSON="$(mktemp)"` | `SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"` |
 | `BAD_SPEC="$(mktemp --suffix=.plcc)"` | `BAD_SPEC="${BATS_TEST_TMPDIR}/bad.plcc"` |
 
-A `teardown()` that only removed temporaries is deleted. One that does more
-keeps its remaining work. Inline `rm -rf` at the end of a test body and the
-`trap … EXIT` in `plcc-rep.bats` are deleted.
+All four cleanup mechanisms go with it. A `teardown()` that only removed
+temporaries is deleted; one that does more keeps its remaining work. Every
+`trap … EXIT` and `trap … RETURN` whose only job was removing a temporary is
+deleted, as is every inline `rm` at the end of a test body.
+
+Two `teardown()` bodies survive, for work unrelated to temporaries:
+`cache.bats` keeps `rm -f "${DIRTY_FILE}"` (a file it creates in the repository
+root, not a temporary), and `test-scripts-path-filter.bats` keeps its
+`unset SKIP_SETUP` and `unset PLCC_NO_TEST_CACHE`.
 
 Names replace `mktemp` randomness: `spec.json` and `model.json` read better than
 `tmp.4Xk9Qm` in a failure trace, and they document what each path holds.
 
-Scope is all 42 files that call `mktemp`, not only the 13 that leak. The
-remaining 29 are correct today but written the old way; converting them lets the
-guard below run without an allowlist. Allowlists of files exempted from a lint
-tend to outlive their justification.
+Scope is all 42 files that call `mktemp`, not only the seven with a real or
+latent leak. The other 35 are correct today but hand-rolled; converting them
+lets the guard below run without an allowlist, and allowlists of files exempted
+from a lint tend to outlive their justification. The gain there is deletion:
+those files stop carrying cleanup code for a job the runner already does.
 
 `BATS_TEST_TMPDIR` is the right scope in every case here, because each of these
 allocations happens in `setup()` or in a test body, both of which already run
@@ -95,7 +105,11 @@ Two call sites need care rather than substitution:
 - `haskell_roundtrip.bats` has
   `OUT_DIR="${HASKELL_ROUNDTRIP_OUT_DIR:-$(mktemp -d)}"`. The environment
   override is a feature and stays; only the fallback changes to
-  `"${BATS_TEST_TMPDIR}/out"`.
+  `"${BATS_TEST_TMPDIR}/out"`. Its `teardown()` then goes away entirely: the
+  guard around removing `OUT_DIR` existed precisely to avoid deleting a
+  caller-supplied directory, and once the fallback lives under
+  `BATS_TEST_TMPDIR` the runner removes it while leaving an overridden path
+  untouched.
 - Files under `bin/` also call `mktemp`. They are not bats tests, are not
   covered by the runner's cleanup, and are out of scope.
 
