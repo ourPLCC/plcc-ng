@@ -140,3 +140,33 @@ EOF
     [[ "$stderr" == *"plcc-javascript-emit: error:"* ]]
     [[ "$stderr" == *"field 'var'"* ]]
 }
+
+setup_mid_body_arbno_build() {
+    MID_BODY_DIR="$(mktemp -d)"
+    mkdir -p "${MID_BODY_DIR}/plcc-ng"
+    plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" > "${MID_BODY_DIR}/plcc-ng/spec.json"
+    plcc-ll1 < "${MID_BODY_DIR}/plcc-ng/spec.json" > "${MID_BODY_DIR}/plcc-ng/ll1.json"
+    plcc-model "${MID_BODY_DIR}/plcc-ng/spec.json" | plcc-python-emit --output="${MID_BODY_DIR}/plcc-ng/Python"
+    cd "${MID_BODY_DIR}"
+}
+
+@test "arbno-mid-body-terminal: plcc-rep evaluates two declarations" {
+    setup_mid_body_arbno_build
+    run --separate-stderr bash -c "echo 'x = 1 y = 2' | plcc-rep --spec='${FIXTURES}/arbno-mid-body-terminal.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "${lines[-1]}" == "['x=1', 'y=2']" ]]
+}
+
+@test "arbno-mid-body-terminal: plcc-rep evaluates a single declaration" {
+    setup_mid_body_arbno_build
+    run --separate-stderr bash -c "echo 'x = 1' | plcc-rep --spec='${FIXTURES}/arbno-mid-body-terminal.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "${lines[-1]}" == "['x=1']" ]]
+}
+
+@test "arbno-mid-body-terminal: plcc-rep evaluates empty input to []" {
+    setup_mid_body_arbno_build
+    run --separate-stderr bash -c "echo '' | plcc-rep --spec='${FIXTURES}/arbno-mid-body-terminal.plcc'"
+    [ "$status" -eq 0 ]
+    [[ "${lines[-1]}" == "[]" ]]
+}

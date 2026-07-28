@@ -1,0 +1,21 @@
+token SYMBOL '[A-Za-z]\w*'
+token EQUALS '='
+token NUM '\d+'
+skip  SPACE '\s+'
+%
+<Program> ::= <Decls:decls>
+<Decls>   **= <SYMBOL> EQUALS <Exp>
+<Exp>     ::= <NUM:num>
+%
+Python
+Program
+%%%
+def _run(self):
+    pairs = zip(self.decls.symbolList, self.decls.expList)
+    return str([f"{s.lexeme}={e.eval()}" for s, e in pairs])
+%%%
+Exp
+%%%
+def eval(self):
+    return int(self.num.lexeme)
+%%%
