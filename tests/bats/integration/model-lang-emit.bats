@@ -1,15 +1,13 @@
 #!/usr/bin/env bats
 
+bats_require_minimum_version 1.5.0
+
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    SPEC_JSON="$(mktemp)"
-    OUTPUT_DIR="$(mktemp -d)"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+    OUTPUT_DIR="${BATS_TEST_TMPDIR}/output"
+    mkdir -p "${OUTPUT_DIR}"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
-}
-
-teardown() {
-    rm -f "${SPEC_JSON}"
-    rm -rf "${OUTPUT_DIR}"
 }
 
 @test "plcc-model | plcc-lang-emit --target=Python produces output" {
