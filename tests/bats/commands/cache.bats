@@ -6,7 +6,8 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 CACHE_HELPER="${PROJECT_ROOT}/bin/test/_cache.bash"
 
 setup() {
-    CACHE_DIR="$(mktemp -d)"
+    CACHE_DIR="${BATS_TEST_TMPDIR}/cache"
+    mkdir -p "${CACHE_DIR}"
     CACHE_FILE="${CACHE_DIR}/plcc-test-units.log"
     export PLCC_TEST_STATS_LOG="${CACHE_DIR}/stats.log"
     DIRTY_FILE="${PROJECT_ROOT}/tmp_test_dirty_$$.txt"
@@ -14,7 +15,6 @@ setup() {
 }
 
 teardown() {
-    rm -rf "${CACHE_DIR}"
     rm -f "${DIRTY_FILE}"
 }
 
@@ -121,7 +121,8 @@ teardown() {
 
 @test "fallback: runs uncached when git is unavailable" {
     local fake_bin
-    fake_bin=$(mktemp -d)
+    fake_bin="${BATS_TEST_TMPDIR}/fake-bin"
+    mkdir -p "${fake_bin}"
     printf '#!/usr/bin/env bash\nexit 1\n' > "${fake_bin}/git"
     chmod +x "${fake_bin}/git"
     run bash -c "
@@ -132,5 +133,4 @@ teardown() {
     [ "$status" -eq 0 ]
     [[ "$output" == "fallback-output" ]]
     [ ! -f "${CACHE_FILE}" ]
-    rm -rf "${fake_bin}"
 }

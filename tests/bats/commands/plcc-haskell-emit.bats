@@ -15,28 +15,25 @@ bats_require_minimum_version 1.5.0
 }
 
 @test "plcc-haskell-emit: emits interpreter.cabal given minimal model" {
-    local out
-    out=$(mktemp -d)
+    local out="${BATS_TEST_TMPDIR}/out"
+    mkdir -p "$out"
     echo '{"start":"prog","classes":[{"name":"Prog","extends":null,"abstract":false,"rule_name":"prog","fields":[]}],"semantic_sections":[]}' \
         | plcc-haskell-emit --output="$out"
     [ -f "$out/interpreter.cabal" ]
-    rm -rf "$out"
 }
 
 @test "plcc-haskell-emit: emits Token.hs given minimal model" {
-    local out
-    out=$(mktemp -d)
+    local out="${BATS_TEST_TMPDIR}/out"
+    mkdir -p "$out"
     echo '{"start":"prog","classes":[{"name":"Prog","extends":null,"abstract":false,"rule_name":"prog","fields":[]}],"semantic_sections":[]}' \
         | plcc-haskell-emit --output="$out"
     [ -f "$out/Token.hs" ]
-    rm -rf "$out"
 }
 
 @test "plcc-haskell-emit: emits LanguageError.hs given minimal model" {
-    local out
-    out=$(mktemp -d)
+    local out="${BATS_TEST_TMPDIR}/out"
+    mkdir -p "$out"
     echo '{"start":"prog","classes":[{"name":"Prog","extends":null,"abstract":false,"rule_name":"prog","fields":[]}],"semantic_sections":[]}' \
         | plcc-haskell-emit --output="$out"
     [ -f "$out/LanguageError.hs" ]
-    rm -rf "$out"
 }

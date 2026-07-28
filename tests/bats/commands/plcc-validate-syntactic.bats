@@ -27,8 +27,7 @@ setup() {
 }
 
 @test "plcc-validate-syntactic exits 1 for spec with undefined terminal" {
-    SPEC_JSON=$(mktemp)
-    trap "rm -f '${SPEC_JSON}'" EXIT
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     cat > "${SPEC_JSON}" <<'EOF'
 {
   "lexical": {"ruleList": []},
@@ -45,8 +44,7 @@ EOF
 }
 
 @test "plcc-validate-syntactic error references offending line" {
-    SPEC_JSON=$(mktemp)
-    trap "rm -f '${SPEC_JSON}'" EXIT
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     cat > "${SPEC_JSON}" <<'EOF'
 {
   "lexical": {"ruleList": []},
