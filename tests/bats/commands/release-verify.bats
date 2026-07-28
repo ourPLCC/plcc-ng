@@ -13,7 +13,8 @@ VERIFY="${PROJECT_ROOT}/bin/release/verify.bash"
 # it is exercised for real on a release (issue 112).
 
 setup() {
-    STUB_DIR="$(mktemp -d)"
+    STUB_DIR="${BATS_TEST_TMPDIR}/stub"
+    mkdir -p "${STUB_DIR}"
     export STUB_DIR
     cat > "${STUB_DIR}/curl" <<'EOF'
 #!/usr/bin/env bash
@@ -55,10 +56,6 @@ EOF
 <a href="https://files.pythonhosted.org/x/plcc_ng-0.65.0-py3-none-any.whl">plcc_ng-0.65.0-py3-none-any.whl</a>
 <a href="https://files.pythonhosted.org/x/plcc_ng-0.65.0.tar.gz">plcc_ng-0.65.0.tar.gz</a>
 EOF
-}
-
-teardown() {
-    rm -rf "${STUB_DIR}"
 }
 
 # A stub python3 that reports ${STUB_PYTHON_VERSION} for --version and

@@ -4,13 +4,10 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    WORK_DIR="$(mktemp -d)"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
     cd "${WORK_DIR}"
     cp "${FIXTURES}/trivial.plcc" spec.plcc
-}
-
-teardown() {
-    rm -rf "${WORK_DIR}"
 }
 
 @test "plcc-parse is on PATH" { command -v plcc-parse; }

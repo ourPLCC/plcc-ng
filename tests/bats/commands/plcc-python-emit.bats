@@ -4,14 +4,13 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    WORK_DIR="$(mktemp -d)"
-    SPEC_JSON="$(mktemp)"
-    MODEL_JSON="$(mktemp)"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+    MODEL_JSON="${BATS_TEST_TMPDIR}/model.json"
     plcc-spec "${FIXTURES}/trivial-python.plcc" > "${SPEC_JSON}"
     plcc-model "${SPEC_JSON}" > "${MODEL_JSON}"
 }
-
-teardown() { rm -rf "${WORK_DIR}" "${SPEC_JSON}" "${MODEL_JSON}"; }
 
 @test "plcc-python-emit is on PATH" { command -v plcc-python-emit; }
 

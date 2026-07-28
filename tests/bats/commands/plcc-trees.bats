@@ -5,13 +5,11 @@ bats_require_minimum_version 1.5.0
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     TREE_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/tree.schema.json"
-    SPEC_JSON="$(mktemp)"
-    LL1_JSON="$(mktemp)"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+    LL1_JSON="${BATS_TEST_TMPDIR}/ll1.json"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
     plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
 }
-
-teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
 
 @test "plcc-trees is on PATH" { command -v plcc-trees; }
 

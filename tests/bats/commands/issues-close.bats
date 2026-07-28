@@ -8,7 +8,8 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 # from a throwaway git repo holding copies of the scripts and a minimal
 # dev-docs tree.
 setup() {
-    REPO="$(mktemp -d)"
+    REPO="${BATS_TEST_TMPDIR}/repo"
+    mkdir -p "${REPO}"
     ROADMAP="${REPO}/dev-docs/roadmap.md"
     mkdir -p "${REPO}/bin/issues" "${REPO}/dev-docs/issues/done"
     cp "${PROJECT_ROOT}"/bin/issues/*.bash "${REPO}/bin/issues/"
@@ -56,10 +57,6 @@ EOF
     git -C "${REPO}" -c init.defaultBranch=main init -q
     git -C "${REPO}" add -A
     git -C "${REPO}" -c user.email=test@test -c user.name=test commit -qm init
-}
-
-teardown() {
-    rm -rf "${REPO}"
 }
 
 @test "closing an issue keeps the adjacent entry in the same group" {
