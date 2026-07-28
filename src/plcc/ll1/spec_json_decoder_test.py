@@ -254,3 +254,55 @@ def test_arbno_field_bare_multiword_nonterminal_decapitalizes():
     assert arbno_rules["rands"]["rhs"] == [
         {"field": "oneMoreList", "symbol": "OneMore", "is_terminal": False}
     ]
+
+
+def test_arbno_keeps_mid_body_noncapturing_terminal_with_null_field():
+    """Regression for issue #174: a non-capturing terminal between two
+    captures must survive into the runtime arbno body with field None,
+    so the parser still shifts it. Before the fix it was filtered out
+    entirely and the parser tried to parse <Exp> at the EQUALS."""
+    spec = _spec([
+        _arbno_rule("letDecls",
+                    [_terminal("SYMBOL", capturing=True),
+                     _terminal("EQUALS"),
+                     _nonterminal("Exp", capturing=True)],
+                    None),
+        _rule("Exp", [_terminal("NUM")]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules["letDecls"]["rhs"] == [
+        {"field": "symbolList", "symbol": "SYMBOL", "is_terminal": True},
+        {"field": None, "symbol": "EQUALS", "is_terminal": True},
+        {"field": "expList", "symbol": "Exp", "is_terminal": False},
+    ]
+
+
+def test_arbno_keeps_leading_and_trailing_noncapturing_terminals():
+    spec = _spec([
+        _arbno_rule("items",
+                    [_terminal("BANG"),
+                     _nonterminal("Exp", capturing=True),
+                     _terminal("SEMI")],
+                    None),
+        _rule("Exp", [_terminal("NUM")]),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules["items"]["rhs"] == [
+        {"field": None, "symbol": "BANG", "is_terminal": True},
+        {"field": "expList", "symbol": "Exp", "is_terminal": False},
+        {"field": None, "symbol": "SEMI", "is_terminal": True},
+    ]
+
+
+def test_arbno_all_noncapturing_body_is_not_empty():
+    """<Bangs> **= BANG captures nothing, but the body still has to be
+    parsed. An empty rhs makes ll1_result_builder compute an empty
+    lookahead, which makes the arbno match zero iterations against any
+    input."""
+    spec = _spec([
+        _arbno_rule("bangs", [_terminal("BANG")], None),
+    ])
+    grammar, productions, arbno_rules = decode(spec)
+    assert arbno_rules["bangs"]["rhs"] == [
+        {"field": None, "symbol": "BANG", "is_terminal": True}
+    ]
