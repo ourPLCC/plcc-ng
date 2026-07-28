@@ -1,16 +1,15 @@
 #!/usr/bin/env bats
 
+bats_require_minimum_version 1.5.0
+
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SPEC_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/spec.schema.json"
     MODEL_SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/model.schema.json"
-    WORK_DIR="$(mktemp -d)"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
     cd "${WORK_DIR}"
     plcc-make --spec="${FIXTURES}/trivial.plcc"
-}
-
-teardown() {
-    rm -rf "${WORK_DIR}"
 }
 
 @test "plcc-make produces plcc-ng/spec.json" {
@@ -43,15 +42,15 @@ teardown() {
 }
 
 @test "plcc-spec | plcc-model | plcc-diagram-class-plantuml-emit produces diagram.puml" {
-    DIAGRAM_DIR="$(mktemp -d)"
-    trap "rm -rf '${DIAGRAM_DIR}'" EXIT
+    DIAGRAM_DIR="${BATS_TEST_TMPDIR}/diagram"
+    mkdir -p "${DIAGRAM_DIR}"
     plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-diagram-class-plantuml-emit --output="${DIAGRAM_DIR}"
     [ -f "${DIAGRAM_DIR}/diagram.puml" ]
 }
 
 @test "diagram.puml contains expected classes" {
-    DIAGRAM_DIR="$(mktemp -d)"
-    trap "rm -rf '${DIAGRAM_DIR}'" EXIT
+    DIAGRAM_DIR="${BATS_TEST_TMPDIR}/diagram"
+    mkdir -p "${DIAGRAM_DIR}"
     plcc-spec "${FIXTURES}/arith.plcc" | plcc-model | plcc-diagram-class-plantuml-emit --output="${DIAGRAM_DIR}"
     grep 'ExprRest' "${DIAGRAM_DIR}/diagram.puml"
     grep 'ExprRest <|-- AddRest' "${DIAGRAM_DIR}/diagram.puml"
@@ -63,12 +62,12 @@ teardown() {
 }
 
 @test "plcc-make trivial-full produces build output for Python" {
-    FULL_DIR="$(mktemp -d)"
+    FULL_DIR="${BATS_TEST_TMPDIR}/full"
+    mkdir -p "${FULL_DIR}"
     (
         cd "${FULL_DIR}"
         plcc-make --spec="${FIXTURES}/trivial-full.plcc"
         [ -f plcc-ng/ll1.json ]
         [ -d plcc-ng/Python ]
     )
-    rm -rf "${FULL_DIR}"
 }

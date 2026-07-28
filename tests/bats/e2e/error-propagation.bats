@@ -6,13 +6,11 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    SPEC_JSON="$(mktemp)"
-    LL1_JSON="$(mktemp)"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+    LL1_JSON="${BATS_TEST_TMPDIR}/ll1.json"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
     plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
 }
-
-teardown() { rm -f "${SPEC_JSON}" "${LL1_JSON}"; }
 
 @test "lex error causes plcc-tokens to exit 0" {
     run bash -c "echo 'abc' | plcc-tokens '${SPEC_JSON}'"

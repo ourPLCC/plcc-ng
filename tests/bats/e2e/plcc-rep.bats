@@ -4,16 +4,13 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    WORK_DIR="$(mktemp -d)"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
     cd "${WORK_DIR}"
     mkdir -p plcc-ng
     plcc-spec "${FIXTURES}/arith.plcc" > plcc-ng/spec.json
     plcc-ll1 < plcc-ng/spec.json > plcc-ng/ll1.json
     plcc-model plcc-ng/spec.json | plcc-python-emit --output=plcc-ng/Python
-}
-
-teardown() {
-    rm -rf "${WORK_DIR}"
 }
 
 @test "plcc-rep is on PATH" {
@@ -61,8 +58,8 @@ teardown() {
 }
 
 @test "plcc-rep exits non-zero when spec file does not exist" {
-    EMPTY_DIR="$(mktemp -d)"
-    trap "rm -rf '${EMPTY_DIR}'" EXIT
+    EMPTY_DIR="${BATS_TEST_TMPDIR}/empty"
+    mkdir -p "${EMPTY_DIR}"
     run bash -c "cd '${EMPTY_DIR}' && plcc-rep --spec='${EMPTY_DIR}/no-such.plcc'"
     [ "$status" -ne 0 ]
 }
@@ -76,7 +73,7 @@ teardown() {
 }
 
 setup_arbno_build() {
-    ARBNO_DIR="$(mktemp -d)"
+    ARBNO_DIR="${BATS_TEST_TMPDIR}/arbno"
     mkdir -p "${ARBNO_DIR}/plcc-ng"
     plcc-spec "${FIXTURES}/trivial-arbno.plcc" > "${ARBNO_DIR}/plcc-ng/spec.json"
     plcc-ll1 < "${ARBNO_DIR}/plcc-ng/spec.json" > "${ARBNO_DIR}/plcc-ng/ll1.json"
@@ -142,7 +139,7 @@ EOF
 }
 
 setup_mid_body_arbno_build() {
-    MID_BODY_DIR="$(mktemp -d)"
+    MID_BODY_DIR="${BATS_TEST_TMPDIR}/mid-body"
     mkdir -p "${MID_BODY_DIR}/plcc-ng"
     plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" > "${MID_BODY_DIR}/plcc-ng/spec.json"
     plcc-ll1 < "${MID_BODY_DIR}/plcc-ng/spec.json" > "${MID_BODY_DIR}/plcc-ng/ll1.json"
