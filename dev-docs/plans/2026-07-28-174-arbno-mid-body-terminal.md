@@ -550,10 +550,13 @@ git checkout 5446141a -- src/plcc/ll1/spec_json_decoder.py
 PLCC_NO_TEST_CACHE=1 bin/test/e2e.bash tests/bats/e2e/plcc-rep.bats
 ```
 
-Expected: the three `arbno-mid-body-terminal` tests FAIL, with
+Expected: the two non-empty-input `arbno-mid-body-terminal` tests FAIL, with
 `unexpected 'EQUALS', no production for 'Exp'` visible in the output — the
 exact symptom from the issue. The `trivial-arbno` and `arith` tests still
 pass, confirming the fix was needed only for this shape.
+
+The empty-input test still passes even pre-fix — zero repetitions never
+reach the dropped terminal — so 2 of 3 red is the correct outcome.
 
 Restore the fix before continuing, and confirm the tree is clean:
 
