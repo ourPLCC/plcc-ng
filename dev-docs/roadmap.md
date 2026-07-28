@@ -14,6 +14,11 @@
 - **[#161](issues/161-rename-plcc-rep-to-plcc-eval.md) — Consider renaming plcc-rep to plcc-eval for phase-naming consistency**
   `plcc-rep` is named after its interaction mode (REPL), not its phase, breaking the `scan`/`parse`/`?` naming pattern; an alias or rename to `plcc-eval` would restore it.
 
+### Test
+
+- **[#176](issues/176-integration-tier-has-no-arbno-coverage.md) — Integration tier has no repetition-rule (arbno) coverage**
+  `tests/bats/integration/` has no `**=` coverage at all; the `plcc-spec | plcc-ll1` boundary where issue #174's lookahead bug lived is only tested at the e2e and unit tiers.
+
 ### Chore
 
 - **[#154](issues/154-update-python-semantic-release.md) — Update python-semantic-release**
