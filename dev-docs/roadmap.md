@@ -18,6 +18,8 @@
 
 - **[#176](issues/176-integration-tier-has-no-arbno-coverage.md) — Integration tier has no repetition-rule (arbno) coverage**
   `tests/bats/integration/` has no `**=` coverage at all; the `plcc-spec | plcc-ll1` boundary where issue #174's lookahead bug lived is only tested at the e2e and unit tiers.
+- **[#177](issues/177-bats-helpers-leak-temp-dirs.md) — bats helpers in plcc-rep.bats leak temp build directories**
+  `setup_arbno_build` and `setup_mid_body_arbno_build` each `mktemp -d` a build directory that `teardown()` never removes, leaving directories behind in `/tmp` after every e2e run.
 
 ### Chore
 
