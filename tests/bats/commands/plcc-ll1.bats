@@ -95,6 +95,47 @@ json.dump(doc, sys.stdout)
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
+# The schema must *constrain* conflict_type, not merely tolerate it. Two
+# mutations of real plcc-ll1 output have to be rejected: dropping the key
+# (proves `required`) and giving it an unknown value (proves the `enum`).
+# Before issue 180 the schema did not mention conflict_type at all, so both
+# mutants validated clean.
+@test "ll1 schema rejects bad conflict_type in conflicts output" {
+    LL1_JSON="${BATS_TEST_TMPDIR}/conflict-ll1.json"
+    plcc-ll1 < "${CONFLICT_SPEC_JSON}" > "${LL1_JSON}"
+
+    for mutation in \
+        "delete:conflicts.0.conflict_type" \
+        "set:conflicts.0.conflict_type"
+    do
+        kind="${mutation%%:*}"
+        path="${mutation##*:}"
+        mutant="${BATS_TEST_TMPDIR}/${kind}-${path}.json"
+        MUTATE_KIND="${kind}" MUTATE_PATH="${path}" python3 -c '
+import json, os, sys
+
+doc = json.load(sys.stdin)
+segments = os.environ["MUTATE_PATH"].split(".")
+node = doc
+for segment in segments[:-1]:
+    node = node[int(segment)] if isinstance(node, list) else node[segment]
+last = int(segments[-1]) if isinstance(node, list) else segments[-1]
+if os.environ["MUTATE_KIND"] == "delete":
+    del node[last]
+else:
+    node[last]  # raises if the path does not exist
+    node[last] = "not_a_conflict_type"
+json.dump(doc, sys.stdout)
+' < "${LL1_JSON}" > "${mutant}"
+
+        run check-jsonschema --schemafile "${SCHEMA}" "${mutant}"
+        if [ "$status" -eq 0 ]; then
+            echo "schema accepted ${kind} of ${path}" >&2
+            return 1
+        fi
+    done
+}
+
 @test "plcc-ll1 accepts -v without error" {
     run bash -c "plcc-ll1 -v < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]

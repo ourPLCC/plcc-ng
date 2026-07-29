@@ -50,10 +50,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["nonterminal", "lookahead", "productions"],
+        "required": ["nonterminal", "lookahead", "conflict_type", "productions"],
         "properties": {
-          "nonterminal": { "type": "string" },
-          "lookahead":   { "type": "string" },
+          "nonterminal":   { "type": "string" },
+          "lookahead":     { "type": "string" },
+          "conflict_type": { "enum": ["first_first", "first_follow"] },
           "productions": {
             "type": "array",
             "items": {
