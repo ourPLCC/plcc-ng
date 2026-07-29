@@ -6,7 +6,7 @@ to you. For the full commit-level history, see
 
 <!-- last-covered: v2.0.1 -->
 
-## 2026-07-XX — PLCC-ng v2.0.1
+## 2026-07-29 — PLCC-ng v2.0.1
 
 A patch release fixing a parsing bug in repetition rules, and making
 sure fixes like it reach projects you have already built.
