@@ -49,7 +49,7 @@ property so a future change to the version pin fails loudly.
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: `tests/bats/commands/bats-temp-dirs.bats`, which Task 9 extends
+- Produces: `tests/bats/commands/bats-temp-dirs.bats`, which Task 8 extends
   with the lint test.
 
 - [ ] **Step 1: Record the current violation count as RED evidence**
@@ -60,7 +60,7 @@ cd /workspaces/plcc-ng/.claude/worktrees/arbno-mid-body-terminal
 grep -rln mktemp tests/bats --include='*.bats' | wc -l
 grep -rn  mktemp tests/bats --include='*.bats' | wc -l
 ```
-Expected: `42` files and `102` call sites. This is the state Task 9's lint will
+Expected: `42` files and `102` call sites. This is the state Task 8's lint will
 reject. Record the numbers; do not commit anything in this step.
 
 - [ ] **Step 2: Write the canary test**
@@ -496,7 +496,7 @@ PLCC_NO_TEST_CACHE=1 bin/test/e2e.bash tests/bats/e2e/plcc-rep.bats
 after=$(ls -d /tmp/tmp.* 2>/dev/null | wc -l)
 echo "before=${before} after=${after} leaked=$((after - before))"
 ```
-Expected: `leaked=0`, tests passing. Compare against the `6` from Step 1.
+Expected: `leaked=0`, tests passing. Compare against the `7` from Step 1.
 
 - [ ] **Step 6: Run the tier**
 
