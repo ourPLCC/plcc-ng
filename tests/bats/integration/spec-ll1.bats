@@ -12,3 +12,31 @@ setup() {
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${LL1_SCHEMA}" -
 }
+
+# --- repetition rules (**=) ---------------------------------------------
+#
+# Three body shapes, three paths through _handle_arbno in
+# src/plcc/ll1/spec_json_decoder.py: a separator form, a non-capturing
+# terminal between two capturing symbols, and a non-capturing terminal
+# leading the body. Issue 174 dropped every non-capturing terminal from
+# arbno.<nt>.rhs, which in the leading case also shifted
+# arbno.<nt>.lookahead onto the wrong symbol.
+
+@test "plcc-spec | plcc-ll1 on a separator arbno grammar produces schema-valid ll1 JSON" {
+    run bash -c "plcc-spec '${FIXTURES}/trivial-arbno.plcc' | plcc-ll1"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${LL1_SCHEMA}" -
+}
+
+@test "separator arbno: rhs, separator, and lookahead are correct" {
+    result=$(plcc-spec "${FIXTURES}/trivial-arbno.plcc" | plcc-ll1)
+    echo "$result" | python3 -c "
+import json, sys
+arbno = json.load(sys.stdin)['arbno']
+assert arbno['Rands'] == {
+    'rhs': [{'field': 'exprList', 'symbol': 'Expr', 'is_terminal': False}],
+    'separator': 'COMMA',
+    'lookahead': ['NUM', 'PLUS'],
+}, arbno['Rands']
+"
+}
