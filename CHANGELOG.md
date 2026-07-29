@@ -1,6 +1,511 @@
 # CHANGELOG
 
 
+## v2.0.1 (2026-07-29)
+
+### Bug Fixes
+
+- **build**: Invalidate cached build when the PLCC-ng version changes
+  ([`a6902ff`](https://github.com/ourPLCC/plcc-ng/commit/a6902ff880b97bb6c0d8a1509cb574c82012dc9c))
+
+The build sentinel recorded only the spec hash and completed stages, so upgrading PLCC-ng could not
+  invalidate a cached plcc-ng/ directory. With an unchanged spec, plcc-make reported the build
+  current and reused artifacts produced by the old code - the #174 repetition-rule fix never reached
+  users who already had a successful build.
+
+Record the installed version in the sentinel and require it to match. A sentinel written before this
+  change has no version key, so every existing build directory rebuilds once, automatically, on the
+  first plcc-make after upgrading. That makes the "delete your build directory" instruction in the
+  v2.0.1 whats-new entry unnecessary; it is removed.
+
+Closes #175
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **ll1**: Keep non-capturing symbols in the arbno runtime body
+  ([`7625aa8`](https://github.com/ourPLCC/plcc-ng/commit/7625aa88f9b3dc2b719b06fc798f9c093672f4c2))
+
+Non-capturing terminals in a **= body were filtered out of the runtime arbno metadata, so the parser
+  never shifted them. Keep every rhs symbol and mark non-capturing ones with field: None, matching
+  the convention regular productions already use.
+
+Refs #174
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **parser**: Shift and discard non-capturing arbno body symbols
+  ([`0c3791f`](https://github.com/ourPLCC/plcc-ng/commit/0c3791f23446a3bcd733c9db7285bdeea7996932))
+
+An arbno rhs item with field None is now consumed without being appended to a list, the same way a
+  regular production consumes an elided symbol. Discarded tokens still count toward the node's
+  source span.
+
+Refs #174
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **schema**: Describe conflict_type in the ll1 schema
+  ([`4daa426`](https://github.com/ourPLCC/plcc-ng/commit/4daa42663966e2ce96aa4bce2262efc19e5345a7))
+
+- **schema**: Describe the arbno section in the ll1 schema
+  ([`a49e328`](https://github.com/ourPLCC/plcc-ng/commit/a49e328b7ef7e098220c7ca9c97b1294ad9a9c6c))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **test**: Guard mktemp lint against silent pass on bad path
+  ([`4d6fc2b`](https://github.com/ourPLCC/plcc-ng/commit/4d6fc2bba30a6a4d5f06238f6a3aa4def8e485c7))
+
+Assert bats_dir exists before running the grep pipeline: since bats runs tests under set -eET
+  without pipefail, a missing/unreadable tests/bats would let the first grep's failure fall through
+  the existing || true undetected, reporting a false PASS.
+
+Also replace the grep -v self-exclusion with an awk literal substring check, since interpolating
+  BATS_TEST_FILENAME into a BRE let '.' path characters match any character instead of themselves.
+
+- **test**: Restore a clean build dir per corpus case in languages-java
+  ([`610c527`](https://github.com/ourPLCC/plcc-ng/commit/610c52731d5482bb9436860bc07b7c1bb29a7ed5))
+
+run_test_case used a fixed BATS_TEST_TMPDIR/build path with mkdir -p as a no-op after the first
+  call, so leftover .java/.class files from one grammar's corpus case accumulated and got compiled
+  alongside the next grammar's incompatible sources. Clear the directory before each case, restoring
+  the fresh-directory semantics the previous mktemp -d + trap RETURN provided.
+
+### Documentation
+
+- Correct conflict ordering and schema count in the 180 docs
+  ([`6b0ddaa`](https://github.com/ourPLCC/plcc-ng/commit/6b0ddaa614048e6901ff701678b3516935b74358))
+
+- Correct the EXIT-trap analysis for 177
+  ([`d447e30`](https://github.com/ourPLCC/plcc-ng/commit/d447e309efd6bc43720215926c258f20396704ad))
+
+An in-body `trap ... EXIT` does not fire in a bats file that defines teardown(): bats installs its
+  own EXIT trap to drive teardown and replaces the test's. Verified against the pinned bats 1.11.0
+  by running the same trap in a file with and without a teardown().
+
+This makes several allocations previously classed as correct into every-run leaks: plcc-rep.bats
+  EMPTY_DIR, java-emit.bats NULL_DIR and NO_SEM_DIR, python-emit.bats LL1_JSON/TREE_FILE and
+  NO_SEM_DIR, and happy-path.bats DIAGRAM_DIR. Measured leak for one run of plcc-rep.bats is seven
+  directories, so the plan's expected count moves from 6 to 7.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **contributing**: Document BATS_TEST_TMPDIR for bats tests
+  ([`8b42aa7`](https://github.com/ourPLCC/plcc-ng/commit/8b42aa73547f7ad8f0493c221ebd606c8130e92b))
+
+- **contributing**: Document the bats version declaration rule
+  ([`d7dcca4`](https://github.com/ourPLCC/plcc-ng/commit/d7dcca4707970f2c7e718a32bae45dc69573c8e3))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 174 (arbno drops mid-body terminal), update roadmap
+  ([`70054da`](https://github.com/ourPLCC/plcc-ng/commit/70054da8020b844ab031a2a091cadd35031148ae))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 175 (build sentinel records package version), update roadmap
+  ([`ad6b80f`](https://github.com/ourPLCC/plcc-ng/commit/ad6b80f75027d68340733c958830fbcb30ccee2a))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 176 (integration arbno coverage), update roadmap
+  ([`05d9a7d`](https://github.com/ourPLCC/plcc-ng/commit/05d9a7dddc811c2e08a72e202a3d135634216205))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 177 (bats temp-dir sweep), update roadmap
+  ([`019a083`](https://github.com/ourPLCC/plcc-ng/commit/019a0832294446354dda60d68cfab6512232791d))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 178 (bats version declaration lint), update roadmap
+  ([`f430455`](https://github.com/ourPLCC/plcc-ng/commit/f430455c00b58a9924a2add227987360ac8f79bd))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 179 (ll1 schema arbno section), update roadmap
+  ([`0665b8f`](https://github.com/ourPLCC/plcc-ng/commit/0665b8f2ddfd9b52c817f24934c48181e87a25f4))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 180 (ll1 schema conflict_type), update roadmap
+  ([`aaa9e4e`](https://github.com/ourPLCC/plcc-ng/commit/aaa9e4e028570c5fea29b4a8369ae242b0797e11))
+
+- **issues**: File 174 - arbno drops mid-body non-capturing terminal
+  ([`5446141`](https://github.com/ourPLCC/plcc-ng/commit/5446141a3447afaf70c4a36f9abcc4e70aae7f8c))
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+
+- **issues**: File 175 - build sentinel ignores package version
+  ([`2018c78`](https://github.com/ourPLCC/plcc-ng/commit/2018c789a7ced9d8e707bef95c7ea9fb542168b1))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 176 - integration tier has no arbno coverage
+  ([`079794b`](https://github.com/ourPLCC/plcc-ng/commit/079794b1db9490090005402864cf81e97f923877))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 177 - bats helpers leak temp dirs
+  ([`7a47bdd`](https://github.com/ourPLCC/plcc-ng/commit/7a47bdd2b75ed674810afa483124ba4fb31aff1b))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 178 - bats version declaration unenforced
+  ([`7e2d624`](https://github.com/ourPLCC/plcc-ng/commit/7e2d624e2022c2ed22bc2f50dd2437fff36b5f82))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 179 and 180 - ll1 schema coverage gaps
+  ([`ab97d57`](https://github.com/ourPLCC/plcc-ng/commit/ab97d57eb4e03c185bee6fd8094c8181766190f6))
+
+Both found while designing #176's integration coverage for repetition rules. plcc-ll1 emits a
+  top-level `arbno` section and a `conflict_type` field on each conflict; ll1.schema.json declares
+  neither, and no schema in src/plcc/schemas/ sets additionalProperties: false, so both are silently
+  accepted and unvalidated.
+
+Split out of #176 so it stays test-only and does not bump the version.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Rewrite 177 to cover the whole bats temp-dir sweep
+  ([`13ae3ff`](https://github.com/ourPLCC/plcc-ng/commit/13ae3ffd9c3a44653c9169fa2102556b841fcd3b))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **language-guide**: Fix placement of the uncaptured-symbol note
+  ([`e746a9f`](https://github.com/ourPLCC/plcc-ng/commit/e746a9f1c6db29fd3d0c920cd0bde8ad5e0f2afe))
+
+The uncaptured-symbol paragraph was spliced between "Captured symbols become parallel lists:" and
+  the code block it introduces, leaving the colon dangling. Move it after both listings, and add the
+  missing Decls class to each listing so the reader can see the symbolList/ expList fields the
+  paragraph describes.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **language-guide**: Note non-captured symbols in repetition bodies
+  ([`3a191ac`](https://github.com/ourPLCC/plcc-ng/commit/3a191ac3d7d0bbcace77f436ac84d932de2847bc))
+
+Refs #174
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Correct expected red-proof outcome for #174 task 4
+  ([`6738045`](https://github.com/ourPLCC/plcc-ng/commit/6738045aa0debc7bd7b13d27932e79e3fd204747))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Fix stale leak count in the 177 plan's Task 10
+  ([`c4f0538`](https://github.com/ourPLCC/plcc-ng/commit/c4f053835544a56519686b24cde4606188945d3a))
+
+Task 6 Step 1 was corrected from 6 to 7 leaked directories, but Task 10's cross-reference to it
+  still said 6.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Fix stale task/count references in the 177 plan
+  ([`27e025d`](https://github.com/ourPLCC/plcc-ng/commit/27e025d9a53a27ae6c457d7572a89bb2acd27a4b))
+
+The lint landed as Task 8, not Task 9 as Task 1's write-up said in two places. The leaked-directory
+  count to compare against in Task 6 Step 5 was still the old "6" instead of the corrected "7" from
+  Step 1.
+
+- **plans**: Implementation plan for #174 arbno mid-body terminal
+  ([`287a208`](https://github.com/ourPLCC/plcc-ng/commit/287a20854229fed7fd39fcf193b817f52c5c534e))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for #176 integration arbno coverage
+  ([`0928cdc`](https://github.com/ourPLCC/plcc-ng/commit/0928cdc1b021f6613485b1b884f87630044a8b11))
+
+Six tasks: one per repetition body shape, a desugaring-leak guard, a red-proof pass, and issue
+  close.
+
+Also corrects the design's Testing section. It claimed four tests go red under the pre-fix mutation;
+  only three do. The mid-body lookahead test stays green because SYMBOL is capturing and survives
+  the filter, so it remains the first body symbol even while rhs is corrupt. Only a leading
+  non-capturing terminal moves the lookahead.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for #177 bats temp-dir sweep
+  ([`c6b02a2`](https://github.com/ourPLCC/plcc-ng/commit/c6b02a23f408fcc73f11724fe83c8ccbfae40995))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for #178 bats version declaration lint
+  ([`aaa3643`](https://github.com/ourPLCC/plcc-ng/commit/aaa36437dd52771c0cd812a3aeadec5412fa55ec))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for #179 ll1 schema arbno section
+  ([`2f2bc96`](https://github.com/ourPLCC/plcc-ng/commit/2f2bc96d9a51d24384c0028df58e97867f4f5293))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for #180 ll1 schema conflict_type
+  ([`b6c2300`](https://github.com/ourPLCC/plcc-ng/commit/b6c230044def8e1fdffd25a707c5f6af6723482b))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **release-sop**: Add the whats-new date and version-stamp step
+  ([`77b7620`](https://github.com/ourPLCC/plcc-ng/commit/77b762057a72d7a44f13c3f4b66abbfe5eb9101e))
+
+docs/whats-new.md ships a deliberate 2026-07-XX date placeholder for each unreleased entry, but the
+  SOP had no step telling the releaser to replace it. Add it to the pre-merge checklist in "Cutting
+  a release," alongside confirming the entry's version heading and last-covered marker name the
+  version being released.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **release-sop**: Tie the whats-new stamp to merge, not release day
+  ([`c224c44`](https://github.com/ourPLCC/plcc-ng/commit/c224c4441a99dd65f4dbf378f25fa251bd4c2182))
+
+Releases are automated: merging to main triggers semantic-release, so there is no release-day window
+  in which to fill in the entry's date and version. Say so, and point the version stamp at the bump
+  the branch's commit types produce.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Correct the leak analysis in the 177 design
+  ([`2b172f8`](https://github.com/ourPLCC/plcc-ng/commit/2b172f821fe81b3cab5079b5a57d50909057ba5a))
+
+Traps, not just teardown(), clean up temporaries in most files. Verified that trap ... EXIT fires on
+  test failure and trap ... RETURN fires on helper return, so files using either are correct today.
+  Reclassifies the problem as one unconditional leak (plcc-rep.bats) plus six that leak only on
+  failure, and restates the rationale as removing four redundant cleanup mechanisms rather than
+  fixing thirteen leaks.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for #174 arbno mid-body non-capturing terminal
+  ([`a0f4add`](https://github.com/ourPLCC/plcc-ng/commit/a0f4add6c0cbb1c68c5cfa638dc36c23d36dd77c))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for #176 integration arbno coverage
+  ([`1d26ddf`](https://github.com/ourPLCC/plcc-ng/commit/1d26ddf3aee58eac06728b0fda7e9b27db77766b))
+
+Cover three repetition body shapes at the plcc-spec | plcc-ll1 boundary: separator, interior
+  non-capturing terminal, and leading non-capturing terminal. The last needs a new grammar-only
+  fixture and is the shape that corrupts the computed lookahead as well as rhs.
+
+Assertions use python3 rather than JSON Schema because the ll1 schema does not describe the arbno
+  section; that gap is #179, split out to keep this issue test-only.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for #178 bats version declaration lint
+  ([`6063d2e`](https://github.com/ourPLCC/plcc-ng/commit/6063d2ef15fcc432d4ecc4421e018af3c623a8cc))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for #179 ll1 schema arbno section
+  ([`b90d173`](https://github.com/ourPLCC/plcc-ng/commit/b90d173537c55bfb49a882de1b597e5dc39d2244))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for #180 ll1 schema conflict_type
+  ([`43f1e6b`](https://github.com/ourPLCC/plcc-ng/commit/43f1e6bba8739a62b82d29a026d85038f59fee9b))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for 175 - build sentinel records package version
+  ([`ac0cace`](https://github.com/ourPLCC/plcc-ng/commit/ac0cacefb4eca457a49371671401229b5d9516b2))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for 177 - bats tests use BATS_TEST_TMPDIR
+  ([`97b930c`](https://github.com/ourPLCC/plcc-ng/commit/97b930c77d0259ddeb774b68acd1803a59255523))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **test**: Correct run-scoped tmpdir cleanup wording and lint guard
+  ([`cba5550`](https://github.com/ourPLCC/plcc-ng/commit/cba55503ee180cdf2253ad9b04b11673a5f165cc))
+
+BATS_TEST_TMPDIR is per-test, but bats removes it only when the whole run's BATS_RUN_TMPDIR is torn
+  down at exit, not immediately after each test. Reword the CONTRIBUTING.md paragraph and rename the
+  canary test (which actually exercises a nested full run) to describe that accurately.
+
+Also tighten the mktemp-lint guard in bats-temp-dirs.bats to match its own comment: it claimed to
+  guard against a missing/unreadable bats test directory but only checked for missing, so an
+  unreadable directory would slip through the trailing `|| true`.
+
+- **test**: Correct run-scoped wording in the mktemp lint message
+  ([`b9f16dc`](https://github.com/ourPLCC/plcc-ng/commit/b9f16dc7ed07b294b3e52ed6ac331e1de8a74c75))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **whats-new**: Add v2.0.1 entry, advance last-covered marker
+  ([`69b7630`](https://github.com/ourPLCC/plcc-ng/commit/69b76302f32411c6875f3f1bf597a22eee3730b8))
+
+Refs #174
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **whats-new**: Cover the build-cache fix in the v2.0.1 entry
+  ([`d306112`](https://github.com/ourPLCC/plcc-ng/commit/d306112dc65952614f7443629cd48b7ef66bcd57))
+
+The v2.0.1 entry described the repetition-rule fix (#174) but said nothing about the build sentinel
+  fix (#175), even though that one is user-facing: upgrading PLCC-ng now invalidates a cached
+  plcc-ng/ build, so the first plcc-make after an upgrade rebuilds on its own.
+
+That fix is what makes the repetition-rule fix actually reach a user who already has a successful
+  build. The entry used to carry the manual "delete your build directory" workaround; a6902ff8
+  removed it along with the root cause but put nothing in its place, leaving the improvement
+  invisible. Add a section for it and correct the intro, which still claimed the release fixed
+  exactly one bug.
+
+The other branch fixes stay out: the two ll1 schema fixes (#179, #180) only strengthen test-suite
+  validation of an undocumented key, and the two test fixes are build-infrastructure only.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **whats-new**: Note that a cached build dir hides the v2.0.1 fix
+  ([`2722281`](https://github.com/ourPLCC/plcc-ng/commit/27222812a35a541cbe2fb3cc84994d54c82c9e18))
+
+A user who already hit issue #174 has a successfully-built plcc-ng/ directory. The build sentinel
+  keys on the spec hash plus completed stages, not the PLCC-ng version, so plcc-make sees an
+  unchanged hash after upgrading and reuses the old ll1.json -- the fix silently never reaches them
+  unless they delete the build directory first.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **whats-new**: Stamp the v2.0.1 entry with the merge date
+  ([`f8a0962`](https://github.com/ourPLCC/plcc-ng/commit/f8a0962501640b6154aa50e8ea372637bb2d1b28))
+
+Merging is the release trigger, so the release-sop pre-merge step requires replacing the 2026-07-XX
+  placeholder before the merge -- a placeholder that reaches main is published as-is. The version
+  heading and last-covered marker already name v2.0.1, which matches the patch bump the branch's
+  commit types produce.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+### Testing
+
+- Lint against mktemp in bats tests
+  ([`bbb7f1f`](https://github.com/ourPLCC/plcc-ng/commit/bbb7f1f905de0efabffd7f0109af3d035cc7d13d))
+
+- Pin the bats BATS_TEST_TMPDIR cleanup guarantee
+  ([`d7a69bf`](https://github.com/ourPLCC/plcc-ng/commit/d7a69bf830741cacea363225c0b6378a659f80c8))
+
+- **bats**: Enforce the bats version declaration in every bats file
+  ([`d021ad0`](https://github.com/ourPLCC/plcc-ng/commit/d021ad0b6cd951a01ff5f7ebc61670c3aa7faf0a))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **commands**: Use BATS_TEST_TMPDIR for in-body temporaries
+  ([`060607b`](https://github.com/ourPLCC/plcc-ng/commit/060607bfdf922274c593a21e1f411e544c19085f))
+
+Convert the six commands/ bats files whose temporaries were allocated inside test bodies, guarded by
+  trap, or removed by a teardown() that also does unrelated work. Replace mktemp/mktemp -d with
+  paths under BATS_TEST_TMPDIR (adding mkdir -p for former directories), and drop the now-redundant
+  traps, inline rm calls, and teardown rm -rf lines.
+
+cache.bats keeps rm -f "${DIRTY_FILE}" in teardown() since DIRTY_FILE lives in the repo root, not a
+  temp dir. test-scripts-path-filter.bats keeps its two unset lines in teardown() for the same
+  reason.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **commands**: Use BATS_TEST_TMPDIR in setup-only test files
+  ([`30270c1`](https://github.com/ourPLCC/plcc-ng/commit/30270c11a6fd4999149177a2956864428f32a635))
+
+Replace mktemp/mktemp -d calls in 22 commands/ bats files with paths under BATS_TEST_TMPDIR, which
+  bats-core creates and removes per test regardless of pass/fail. Directory replacements get an
+  explicit mkdir -p; file replacements need none since the tests write them with redirection. Drop
+  the now-empty teardown() from each file.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **e2e**: Cover arbno with a mid-body non-capturing terminal
+  ([`41b738e`](https://github.com/ourPLCC/plcc-ng/commit/41b738e42ae050de96b2d5f8d1f664d48a6a9a7c))
+
+Refs #174
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **e2e**: Use BATS_TEST_TMPDIR in haskell and java corpus tests
+  ([`db4994e`](https://github.com/ourPLCC/plcc-ng/commit/db4994ecd6ab32b88dc34312270f04a48d76d2cb))
+
+- **e2e**: Use BATS_TEST_TMPDIR, fixing leaked arbno build dirs
+  ([`e84516b`](https://github.com/ourPLCC/plcc-ng/commit/e84516b77745f4a22acbf6c1227cf9caa0051f40))
+
+setup_arbno_build and setup_mid_body_arbno_build in plcc-rep.bats each left a full plcc-ng/ build
+  tree in /tmp with no cleanup path (issue 177). Convert every mktemp/mktemp -d in
+  bad_block_delimiters.bats, error-propagation.bats, happy-path.bats, and plcc-rep.bats to paths
+  under BATS_TEST_TMPDIR, which bats-core creates and removes itself. Remove the now-redundant
+  teardown() hooks and EXIT traps -- an in-body EXIT trap does not fire in a file that defines
+  teardown(), so they were dead code.
+
+Verified: plcc-rep.bats leaked 7 temp dirs before this change, 0 after.
+
+- **integration**: Assert desugared arbno nonterminals stay out of ll1 tables
+  ([`01d4f30`](https://github.com/ourPLCC/plcc-ng/commit/01d4f30df3689e25e2e6570aa3023545ce965835))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **integration**: Cover interior-terminal arbno at the spec|ll1 boundary
+  ([`552195e`](https://github.com/ourPLCC/plcc-ng/commit/552195e7d0520851916f889c194d4f9553c9cec2))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **integration**: Cover leading-terminal arbno at the spec|ll1 boundary
+  ([`22d4085`](https://github.com/ourPLCC/plcc-ng/commit/22d40853aed1f499d06762d45a0be53a05a8986d))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **integration**: Cover separator-form arbno at the spec|ll1 boundary
+  ([`0ab518b`](https://github.com/ourPLCC/plcc-ng/commit/0ab518b3e78a75d27ac32101cbe50a20fa981152))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **integration**: Use BATS_TEST_TMPDIR for in-body temporaries
+  ([`5b3b1bd`](https://github.com/ourPLCC/plcc-ng/commit/5b3b1bd6845b15c6139b039ac51df46da7869fbb))
+
+Replaces mktemp/mktemp -d calls and their EXIT traps in java-emit.bats, python-emit.bats, and
+  plcc-parse-errors.bats with paths under BATS_TEST_TMPDIR, which bats-core creates and removes per
+  test. Behaviour is unchanged; only the allocation and cleanup mechanism differs.
+
+- **integration**: Use BATS_TEST_TMPDIR in setup-only test files
+  ([`7a6ddb1`](https://github.com/ourPLCC/plcc-ng/commit/7a6ddb1d64df79b1953807386dabc23f88e095e5))
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
+
+- **ll1**: Cover decode-to-lookahead composition for a leading terminal
+  ([`67b9012`](https://github.com/ourPLCC/plcc-ng/commit/67b90125f2301f663f2d0d24ca8ed4d76db763bb))
+
+The two lookahead tests already in this file hand-build the arbno entry directly, so they pass
+  identically before and after the #174 fix. The composition they stand in for -- decode() feeding
+  build_ll1_result() -- had no test, and that composition is exactly the "leading non-capturing
+  terminal" behavior the fix claims.
+
+Confirmed as a real regression test: checking out the pre-fix decoder (5446141a) makes this test
+  fail with lookahead == ['NUM'] instead of ['BANG'].
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **ll1**: Pin arbno lookahead to the body's first symbol
+  ([`7d72f21`](https://github.com/ourPLCC/plcc-ng/commit/7d72f2188a725b319769cefb409d209329b2788a))
+
+Refs #174
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plcc-ll1**: Validate output for a conflicting grammar
+  ([`71cab2e`](https://github.com/ourPLCC/plcc-ng/commit/71cab2ee9c727af12e241063aeb6cf5f2e267310))
+
+- **plcc-ll1**: Validate output for a repetition grammar
+  ([`24f0ee2`](https://github.com/ourPLCC/plcc-ng/commit/24f0ee2bcf74b19cbc9b65047d7cc98158837395))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plcc-tokens**: Rename input path from out.jsonl to input.txt
+  ([`94be3df`](https://github.com/ourPLCC/plcc-ng/commit/94be3df287f60f82b62d1cc116d63cb0ee3791fd))
+
+The path holds the literal input text "42" passed as the SOURCE argument to plcc-tokens, not any
+  kind of output. Follows the plan's naming rationale that paths should document what they hold.
+
+
 ## v2.0.0 (2026-07-26)
 
 ### Bug Fixes
