@@ -95,3 +95,21 @@ arbno = json.load(sys.stdin)['arbno']
 assert arbno['Items']['lookahead'] == ['BANG'], arbno['Items']['lookahead']
 "
 }
+
+@test "arbno nonterminals and their desugared continuations stay out of the ll1 tables" {
+    for pair in "trivial-arbno:Rands" "arbno-mid-body-terminal:Decls" "arbno-leading-terminal:Items"; do
+        fixture="${pair%%:*}"
+        nt="${pair##*:}"
+        result=$(plcc-spec "${FIXTURES}/${fixture}.plcc" | plcc-ll1)
+        echo "$result" | FIXTURE="${fixture}" NT="${nt}" python3 -c "
+import json, os, sys
+d = json.load(sys.stdin)
+nt = os.environ['NT']
+fixture = os.environ['FIXTURE']
+for section in ('parse_table', 'first_sets', 'follow_sets'):
+    keys = sorted(d[section])
+    assert nt not in keys, (fixture, section, nt, keys)
+    assert nt + '#' not in keys, (fixture, section, nt + '#', keys)
+"
+    done
+}
