@@ -41,6 +41,45 @@ setup() {
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
+# The schema must *constrain* the arbno section, not merely tolerate it.
+# Deleting any required key from real plcc-ll1 output has to be rejected.
+# Before issue 179 the schema did not mention arbno at all, so every one
+# of these mutants validated clean.
+@test "ll1 schema rejects arbno output missing any required key" {
+    LL1_JSON="${BATS_TEST_TMPDIR}/ll1.json"
+    plcc-ll1 < "${ARBNO_SPEC_JSON}" > "${LL1_JSON}"
+
+    for path in \
+        "arbno" \
+        "arbno.Decls.rhs" \
+        "arbno.Decls.separator" \
+        "arbno.Decls.lookahead" \
+        "arbno.Decls.rhs.0.symbol" \
+        "arbno.Decls.rhs.0.field" \
+        "arbno.Decls.rhs.0.is_terminal"
+    do
+        mutant="${BATS_TEST_TMPDIR}/without-${path}.json"
+        DROP_PATH="${path}" python3 -c '
+import json, os, sys
+
+doc = json.load(sys.stdin)
+segments = os.environ["DROP_PATH"].split(".")
+node = doc
+for segment in segments[:-1]:
+    node = node[int(segment)] if isinstance(node, list) else node[segment]
+last = segments[-1]
+del node[int(last) if isinstance(node, list) else last]
+json.dump(doc, sys.stdout)
+' < "${LL1_JSON}" > "${mutant}"
+
+        run check-jsonschema --schemafile "${SCHEMA}" "${mutant}"
+        if [ "$status" -eq 0 ]; then
+            echo "schema accepted output missing ${path}" >&2
+            return 1
+        fi
+    done
+}
+
 @test "plcc-ll1 accepts -v without error" {
     run bash -c "plcc-ll1 -v < '${SPEC_JSON}'"
     [ "$status" -eq 0 ]
