@@ -712,7 +712,7 @@ Issue 177 describes only the `plcc-rep.bats` symptom and proposes a one-line
 work before closing, so `issues/done/` records what was actually done.
 
 **Files:**
-- Modify: `dev-docs/issues/177-bats-helpers-leak-temp-dirs.md`
+- Modify: `dev-docs/issues/done/177-bats-helpers-leak-temp-dirs.md`
 - Modify: `dev-docs/roadmap.md`
 
 - [ ] **Step 1: Rewrite the issue body**
@@ -741,7 +741,7 @@ The Open Issues entry must stay in the exact two-line format
 broader change:
 
 ```markdown
-- **[#177](issues/177-bats-helpers-leak-temp-dirs.md) — bats tests hand-roll temp cleanup**
+- **[#177](issues/done/177-bats-helpers-leak-temp-dirs.md) — bats tests hand-roll temp cleanup**
   Replace mktemp and four cleanup mechanisms with BATS_TEST_TMPDIR across the suite.
 ```
 
@@ -754,7 +754,7 @@ Run: `bin/issues/check.bash`
 Expected: exit 0.
 
 ```bash
-git add dev-docs/issues/177-bats-helpers-leak-temp-dirs.md dev-docs/roadmap.md
+git add dev-docs/issues/done/177-bats-helpers-leak-temp-dirs.md dev-docs/roadmap.md
 git commit -m "docs(issues): rewrite 177 to cover the whole bats temp-dir sweep"
 ```
 

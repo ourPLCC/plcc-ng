@@ -50,4 +50,4 @@ existing mechanisms.
 
 Full corrected analysis, the rejected alternative (a shared cleanup helper,
 which has its own `teardown()`-override failure mode), and the conversion
-design: [dev-docs/specs/2026-07-28-177-bats-temp-dirs-design.md](../specs/2026-07-28-177-bats-temp-dirs-design.md).
+design: [dev-docs/specs/2026-07-28-177-bats-temp-dirs-design.md](../../specs/2026-07-28-177-bats-temp-dirs-design.md).

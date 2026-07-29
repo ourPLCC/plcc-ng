@@ -1,7 +1,7 @@
 # 177 — bats tests use `BATS_TEST_TMPDIR` instead of `mktemp`
 
 **Date:** 2026-07-28
-**Issue:** [177](../issues/177-bats-helpers-leak-temp-dirs.md)
+**Issue:** [177](../issues/done/177-bats-helpers-leak-temp-dirs.md)
 
 ## Problem
 

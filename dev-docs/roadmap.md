@@ -16,8 +16,6 @@
 
 - **[#176](issues/176-integration-tier-has-no-arbno-coverage.md) — Integration tier has no repetition-rule (arbno) coverage**
   `tests/bats/integration/` has no `**=` coverage at all; the `plcc-spec | plcc-ll1` boundary where issue #174's lookahead bug lived is only tested at the e2e and unit tiers.
-- **[#177](issues/177-bats-helpers-leak-temp-dirs.md) — bats tests hand-roll temp cleanup**
-  Replace mktemp and four cleanup mechanisms with BATS_TEST_TMPDIR across the suite.
 
 ### Chore
 
