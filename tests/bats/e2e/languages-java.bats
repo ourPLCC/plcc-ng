@@ -22,6 +22,7 @@ run_test_case() {
     [ -n "${expected_file}" ] || return 0
 
     build_dir="${BATS_TEST_TMPDIR}/build"
+    rm -rf "${build_dir}"
     mkdir -p "${build_dir}"
     ll1_json="${BATS_TEST_TMPDIR}/ll1.json"
 
