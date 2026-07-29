@@ -53,3 +53,45 @@ EOF
         return 1
     fi
 }
+
+@test "every bats test file declares the required bats version" {
+    local required='bats_require_minimum_version 1.5.0'
+    local bats_dir
+    bats_dir="$(git rev-parse --show-toplevel)/tests/bats"
+
+    if [ ! -d "${bats_dir}" ] || [ ! -r "${bats_dir}" ]; then
+        printf 'Expected a readable bats test directory at %s but found none.\n' "${bats_dir}" >&2
+        return 1
+    fi
+
+    # This lint needs no self-exclusion, unlike the mktemp one above: its own
+    # file already satisfies the rule it enforces.
+    #
+    # sed prints nothing for a file shorter than three lines, which compares
+    # unequal to ${required} and is correctly reported. No special case needed.
+    local offenders='' scanned=0 file
+    while IFS= read -r -d '' file; do
+        scanned=$(( scanned + 1 ))
+        if [ "$(sed -n '3p' -- "${file}")" != "${required}" ]; then
+            offenders+="${file}"$'\n'
+        fi
+    done < <(find "${bats_dir}" -name '*.bats' -type f -print0 | sort -z)
+
+    # A readable directory with no .bats files inside would leave ${offenders}
+    # empty and report a false PASS. Same reasoning as the guard above: fail
+    # loudly rather than silently check nothing.
+    if [ "${scanned}" -eq 0 ]; then
+        printf 'Found no .bats files under %s. This lint checked nothing.\n' "${bats_dir}" >&2
+        return 1
+    fi
+
+    if [ -n "${offenders}" ]; then
+        printf 'Every bats test file must declare the bats version floor, as\n' >&2
+        printf 'line 3, exactly:\n\n    %s\n\n' "${required}" >&2
+        printf 'BATS_TEST_TMPDIR requires bats 1.4.0 or later. Without the\n' >&2
+        printf 'declaration an older runner leaves it unset, and paths under it\n' >&2
+        printf 'silently resolve outside the sandbox instead of failing.\n\n' >&2
+        printf 'Missing the declaration:\n\n%s' "${offenders}" >&2
+        return 1
+    fi
+}
