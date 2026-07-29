@@ -1,7 +1,7 @@
 # 179 — describe the `arbno` section in the ll1 output schema
 
 **Date:** 2026-07-29
-**Issue:** [179](../issues/179-ll1-schema-omits-arbno-section.md)
+**Issue:** [179](../issues/done/179-ll1-schema-omits-arbno-section.md)
 
 ## Problem
 

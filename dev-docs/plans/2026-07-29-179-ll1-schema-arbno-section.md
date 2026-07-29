@@ -19,7 +19,7 @@ the emitted shape is already correct, only its description was missing.
 `pyproject.toml`, already used by this file).
 
 **Spec:** [2026-07-29-179-ll1-schema-arbno-section-design.md](../specs/2026-07-29-179-ll1-schema-arbno-section-design.md)
-**Issue:** [179](../issues/179-ll1-schema-omits-arbno-section.md)
+**Issue:** [179](../issues/done/179-ll1-schema-omits-arbno-section.md)
 
 ## Global Constraints
 
@@ -395,7 +395,7 @@ git commit -m "fix(schema): describe the arbno section in the ll1 schema"
 
 **Files:**
 - Modify: `dev-docs/roadmap.md` (by script)
-- Move: `dev-docs/issues/179-ll1-schema-omits-arbno-section.md` →
+- Move: `dev-docs/issues/done/179-ll1-schema-omits-arbno-section.md` →
   `dev-docs/issues/done/` (by script)
 
 **Interfaces:**

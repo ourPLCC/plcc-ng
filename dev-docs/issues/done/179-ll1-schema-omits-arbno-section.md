@@ -7,7 +7,7 @@
 
 `plcc-ll1` always emits a top-level `arbno` key — an object keyed by
 repetition-rule (`**=`) nonterminal, `{}` when the grammar has none —
-but [ll1.schema.json](../../src/plcc/schemas/ll1.schema.json) never
+but [ll1.schema.json](../../../src/plcc/schemas/ll1.schema.json) never
 mentions it. It is absent from both `required` and `properties`.
 
 Because no schema in `src/plcc/schemas/` sets
@@ -62,6 +62,6 @@ could not have caught it.
   with a required `arbno` field removed to `check-jsonschema` and assert
   it is rejected. Without that, the new schema clause has no proof it
   constrains anything.
-- Split out of [#176](176-integration-tier-has-no-arbno-coverage.md),
-  which stays test-only. See [#180](180-ll1-schema-omits-conflict-type.md)
+- Split out of [#176](../176-integration-tier-has-no-arbno-coverage.md),
+  which stays test-only. See [#180](../180-ll1-schema-omits-conflict-type.md)
   for the same class of gap in the `conflicts` section.

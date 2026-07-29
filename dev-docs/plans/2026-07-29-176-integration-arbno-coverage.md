@@ -34,7 +34,7 @@ used by five files in this tier).
   reverted within the same task and never committed.
 - Do not touch `src/plcc/schemas/ll1.schema.json`. The schema's failure to
   describe the `arbno` section is real but is tracked separately as
-  [#179](../issues/179-ll1-schema-omits-arbno-section.md); a sibling gap in the
+  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md); a sibling gap in the
   `conflicts` section is [#180](../issues/180-ll1-schema-omits-conflict-type.md).
 - All new tests go in the existing `tests/bats/integration/spec-ll1.bats`. Do
   not create a second file for this boundary — the tier names one file per

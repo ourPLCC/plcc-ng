@@ -59,7 +59,7 @@ Two alternatives were considered and rejected:
   `arbno` section at all, so `check-jsonschema` validates it as "anything goes."
   Fixing that means editing `src/plcc/schemas/ll1.schema.json`, which changes the
   shipped package and reclassifies this issue away from `test`. Split out as
-  [#179](../issues/179-ll1-schema-omits-arbno-section.md); a sibling gap in the
+  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md); a sibling gap in the
   `conflicts` section is [#180](../issues/180-ll1-schema-omits-conflict-type.md).
   This design therefore asserts structure with `python3 -c`, the same technique
   `spec-model.bats` already uses for `start`.
@@ -163,5 +163,5 @@ The full `bin/test/functional.bash` runs before the branch is pushed.
 - No change to `src/`. Issue 176 stays classified `test` and does not bump the
   release version.
 - The schema gaps found while designing this are recorded as
-  [#179](../issues/179-ll1-schema-omits-arbno-section.md) and
+  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md) and
   [#180](../issues/180-ll1-schema-omits-conflict-type.md), not fixed here.
