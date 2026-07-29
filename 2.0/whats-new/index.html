@@ -518,6 +518,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#2026-07-29-plcc-ng-v201" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-07-29 — PLCC-ng v2.0.1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2026-07-29 — PLCC-ng v2.0.1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repetition-rules-keep-their-uncaptured-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repetition rules keep their uncaptured tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-rebuilds-your-project-automatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading rebuilds your project automatically
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#2026-07-26-plcc-ng-v200" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2605,8 +2644,27 @@
 <p>Curated highlights of what's changed in PLCC-ng and why it matters
 to you. For the full commit-level history, see
 <a href="https://github.com/ourPLCC/plcc-ng/releases">GitHub Releases</a>.</p>
-<!-- last-covered: v2.0.0 -->
+<!-- last-covered: v2.0.1 -->
 
+<h2 id="2026-07-29-plcc-ng-v201">2026-07-29 — PLCC-ng v2.0.1</h2>
+<p>A patch release fixing a parsing bug in repetition rules, and making
+sure fixes like it reach projects you have already built.</p>
+<h3 id="repetition-rules-keep-their-uncaptured-tokens">Repetition rules keep their uncaptured tokens</h3>
+<p>A repetition rule (<code>**=</code>) whose body contains a token you don't capture —
+the <code>EQUALS</code> in <code>&lt;Decls&gt; **= &lt;SYMBOL&gt; EQUALS &lt;Exp&gt;</code> — used to drop that
+token silently. The grammar passed LL(1) analysis, and then parsing failed
+at the first uncaptured token with a confusing "no production for" error.
+PLCC-ng now matches every symbol in a repetition body on every repetition,
+building lists only from the ones you captured. See
+<a href="../language-guide/syntactic/#repetition-rules">Repetition rules</a>.</p>
+<h3 id="upgrading-rebuilds-your-project-automatically">Upgrading rebuilds your project automatically</h3>
+<p>PLCC-ng caches its work in <code>plcc-ng/</code> and skips stages whose inputs
+haven't changed. That cache used to key on your spec alone, so
+upgrading PLCC-ng left an existing build directory untouched — and a
+fix like the one above silently never reached you. The cache now keys
+on the PLCC-ng version as well, so the first <code>plcc-make</code> after an
+upgrade rebuilds once, on its own. See
+<a href="../cli/commands/plcc-make/">plcc-make</a>.</p>
 <h2 id="2026-07-26-plcc-ng-v200">2026-07-26 — PLCC-ng v2.0.0</h2>
 <p>The first release since 1.0 tightens the language runtime and fixes
 several ways generated code could surprise you. One change is breaking:
