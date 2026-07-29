@@ -48,7 +48,7 @@ setup() {
 }
 
 @test "plcc-tokens with SOURCE file arg labels tokens with that filename" {
-    tmp="${BATS_TEST_TMPDIR}/out.jsonl"
+    tmp="${BATS_TEST_TMPDIR}/input.txt"
     echo "42" > "$tmp"
     result=$(plcc-tokens "${SPEC_JSON}" "$tmp" | head -1)
     file_val=$(echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); print(r['source']['file'])")
@@ -101,7 +101,7 @@ for line in sys.stdin:
 }
 
 @test "plcc-tokens -v emits per-file scanning event on stderr" {
-    tmp="${BATS_TEST_TMPDIR}/out.jsonl"
+    tmp="${BATS_TEST_TMPDIR}/input.txt"
     echo "42" > "$tmp"
     run --separate-stderr plcc-tokens -v --verbose-format=text "${SPEC_JSON}" "$tmp"
     [[ "$stderr" == *"scanning $tmp"* ]]
