@@ -68,3 +68,30 @@ arbno = json.load(sys.stdin)['arbno']
 assert arbno['Decls']['lookahead'] == ['SYMBOL'], arbno['Decls']['lookahead']
 "
 }
+
+@test "leading-terminal arbno: plcc-spec | plcc-ll1 produces schema-valid ll1 JSON" {
+    run bash -c "plcc-spec '${FIXTURES}/arbno-leading-terminal.plcc' | plcc-ll1"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${LL1_SCHEMA}" -
+}
+
+@test "leading-terminal arbno: rhs keeps the leading non-capturing terminal (issue 174)" {
+    result=$(plcc-spec "${FIXTURES}/arbno-leading-terminal.plcc" | plcc-ll1)
+    echo "$result" | python3 -c "
+import json, sys
+arbno = json.load(sys.stdin)['arbno']
+assert arbno['Items']['rhs'] == [
+    {'field': None, 'symbol': 'BANG', 'is_terminal': True},
+    {'field': 'expList', 'symbol': 'Exp', 'is_terminal': False},
+], arbno['Items']['rhs']
+"
+}
+
+@test "leading-terminal arbno: lookahead is the leading terminal, not the first capture (issue 174)" {
+    result=$(plcc-spec "${FIXTURES}/arbno-leading-terminal.plcc" | plcc-ll1)
+    echo "$result" | python3 -c "
+import json, sys
+arbno = json.load(sys.stdin)['arbno']
+assert arbno['Items']['lookahead'] == ['BANG'], arbno['Items']['lookahead']
+"
+}

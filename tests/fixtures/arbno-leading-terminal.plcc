@@ -1,0 +1,7 @@
+token BANG '!'
+token NUM  '\d+'
+skip  SPACE '\s+'
+%
+<Program> ::= <Items:items>
+<Items>   **= BANG <Exp>
+<Exp>     ::= <NUM:num>
