@@ -40,3 +40,31 @@ assert arbno['Rands'] == {
 }, arbno['Rands']
 "
 }
+
+@test "mid-body-terminal arbno: plcc-spec | plcc-ll1 produces schema-valid ll1 JSON" {
+    run bash -c "plcc-spec '${FIXTURES}/arbno-mid-body-terminal.plcc' | plcc-ll1"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${LL1_SCHEMA}" -
+}
+
+@test "mid-body-terminal arbno: rhs keeps the non-capturing terminal (issue 174)" {
+    result=$(plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" | plcc-ll1)
+    echo "$result" | python3 -c "
+import json, sys
+arbno = json.load(sys.stdin)['arbno']
+assert arbno['Decls']['rhs'] == [
+    {'field': 'symbolList', 'symbol': 'SYMBOL', 'is_terminal': True},
+    {'field': None, 'symbol': 'EQUALS', 'is_terminal': True},
+    {'field': 'expList', 'symbol': 'Exp', 'is_terminal': False},
+], arbno['Decls']['rhs']
+"
+}
+
+@test "mid-body-terminal arbno: lookahead is the first body symbol" {
+    result=$(plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" | plcc-ll1)
+    echo "$result" | python3 -c "
+import json, sys
+arbno = json.load(sys.stdin)['arbno']
+assert arbno['Decls']['lookahead'] == ['SYMBOL'], arbno['Decls']['lookahead']
+"
+}
