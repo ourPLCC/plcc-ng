@@ -8,7 +8,8 @@ to you. For the full commit-level history, see
 
 ## 2026-07-XX — PLCC-ng v2.0.1
 
-A patch release fixing one parsing bug in repetition rules.
+A patch release fixing a parsing bug in repetition rules, and making
+sure fixes like it reach projects you have already built.
 
 ### Repetition rules keep their uncaptured tokens
 
@@ -19,6 +20,16 @@ at the first uncaptured token with a confusing "no production for" error.
 PLCC-ng now matches every symbol in a repetition body on every repetition,
 building lists only from the ones you captured. See
 [Repetition rules](language-guide/syntactic.md#repetition-rules).
+
+### Upgrading rebuilds your project automatically
+
+PLCC-ng caches its work in `plcc-ng/` and skips stages whose inputs
+haven't changed. That cache used to key on your spec alone, so
+upgrading PLCC-ng left an existing build directory untouched — and a
+fix like the one above silently never reached you. The cache now keys
+on the PLCC-ng version as well, so the first `plcc-make` after an
+upgrade rebuilds once, on its own. See
+[plcc-make](cli/commands/plcc-make.md).
 
 ## 2026-07-26 — PLCC-ng v2.0.0
 
