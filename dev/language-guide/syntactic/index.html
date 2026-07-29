@@ -2704,10 +2704,12 @@ has more than one production.</p>
 with an optional separator:</p>
 <div class="highlight"><pre><span></span><code>&lt;Args&gt;  **= &lt;Expr:expr&gt;
 &lt;Pairs&gt; **= &lt;WHOLE:x&gt; &lt;WHOLE:y&gt; +COMMA
+&lt;Decls&gt; **= &lt;SYMBOL&gt; EQUALS &lt;Exp&gt;
 </code></pre></div>
 <p>Captured symbols become parallel lists:</p>
 <div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Args</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Expr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">exprList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="kd">class</span> <span class="nc">Pairs</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xList</span><span class="p">;</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span><span class="w"> </span><span class="n">yList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">class</span> <span class="nc">Decls</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Token</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolList</span><span class="p">;</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Exp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">expList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Args</span><span class="p">:</span>
@@ -2717,7 +2719,15 @@ with an optional separator:</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">Pairs</span><span class="p">:</span>
     <span class="n">xList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]</span>
     <span class="n">yList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Decls</span><span class="p">:</span>
+    <span class="n">symbolList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Token</span><span class="p">]</span>
+    <span class="n">expList</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Exp</span><span class="p">]</span>
 </code></pre></div>
+<p>A symbol in the body that is not captured — <code>EQUALS</code> in <code>&lt;Decls&gt;</code> above — is
+still matched on every repetition, but produces no list. <code>Decls</code> gets
+<code>symbolList</code> and <code>expList</code> only.</p>
 <p>For example, for Pairs, assuming WHOLE matches an integer token, given this input:</p>
 <div class="highlight"><pre><span></span><code>2 3, 5 6, 7 8
 </code></pre></div>
