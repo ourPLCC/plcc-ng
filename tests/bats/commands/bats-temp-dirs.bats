@@ -48,7 +48,7 @@ EOF
 
     if [ -n "${offenders}" ]; then
         printf 'Do not call mktemp in bats tests. Name a path under\n' >&2
-        printf 'BATS_TEST_TMPDIR instead; bats removes it after the test.\n\n' >&2
+        printf 'BATS_TEST_TMPDIR instead; bats removes it when the run ends.\n\n' >&2
         printf '%s\n' "${offenders}" >&2
         return 1
     fi
