@@ -97,6 +97,23 @@ Rules of thumb:
 - Reach for a bats tier only when the contract you are verifying is at the CLI boundary, spans multiple commands, or depends on installed entry points.
 - If you are tempted to skip a test tier during active development, don't. Either migrate it to a tier that still passes, or delete it. Indefinite skips rot.
 
+### Temporary files in bats tests
+
+Bats tests never call `mktemp`. Name paths under `BATS_TEST_TMPDIR` instead:
+
+```bash
+setup() {
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+}
+```
+
+Bats creates that directory for each test and removes it afterwards, whether the
+test passes or fails, so tests need no cleanup code — no `teardown()`, no
+`trap`, no trailing `rm`. Use `bats --no-tempdir-cleanup` to keep the files
+while debugging. `tests/bats/commands/bats-temp-dirs.bats` enforces this.
+
 ## Before writing a new script
 
 Check [bin/](bin/) first. If a script there does what you need, use it. If one almost does what you need, prefer extending or parameterizing it over writing a parallel script. New scripts belong in [bin/](bin/) with a `.bash` extension, `set -euo pipefail`, and absolute-path resolution via `SCRIPT_DIR`/`PROJECT_ROOT` — match the existing style.
