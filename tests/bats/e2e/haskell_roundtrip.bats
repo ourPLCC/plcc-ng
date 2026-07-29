@@ -5,8 +5,10 @@ bats_require_minimum_version 1.5.0
 setup() {
     if ! command -v cabal &>/dev/null; then skip "cabal not available"; fi
     cabal update
-    SPEC_DIR=$(mktemp -d)
-    OUT_DIR="${HASKELL_ROUNDTRIP_OUT_DIR:-$(mktemp -d)}"
+    SPEC_DIR="${BATS_TEST_TMPDIR}/spec"
+    mkdir -p "$SPEC_DIR"
+    OUT_DIR="${HASKELL_ROUNDTRIP_OUT_DIR:-${BATS_TEST_TMPDIR}/out}"
+    mkdir -p "$OUT_DIR"
     cat > "$SPEC_DIR/arith.plcc" << 'EOF'
 token NUM '\d+'
 token PLUS '\+'
@@ -43,18 +45,10 @@ evalTerm (Term n) = lexeme n
 EOF
 }
 
-teardown() {
-    rm -rf "$SPEC_DIR"
-    if [[ -z "${HASKELL_ROUNDTRIP_OUT_DIR:-}" ]]; then
-        rm -rf "$OUT_DIR"
-    fi
-}
-
 @test "haskell pipeline: emit-build-run roundtrip" {
-    SPEC_JSON=$(mktemp)
-    MODEL_JSON=$(mktemp)
-    LL1_JSON=$(mktemp)
-    trap "rm -f '$SPEC_JSON' '$MODEL_JSON' '$LL1_JSON'" RETURN
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+    MODEL_JSON="${BATS_TEST_TMPDIR}/model.json"
+    LL1_JSON="${BATS_TEST_TMPDIR}/ll1.json"
 
     plcc-spec "$SPEC_DIR/arith.plcc" > "$SPEC_JSON"
     plcc-model "$SPEC_JSON" > "$MODEL_JSON"
