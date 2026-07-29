@@ -106,9 +106,15 @@ The file's existing `setup()` (`FIXTURES`, `LL1_SCHEMA`) needs no change.
 | 8 | `arbno-leading-terminal` | `arbno.Items.lookahead == ["BANG"]` |
 | 9 | all three | Neither the repetition nonterminal nor its desugared continuation (`Rands`/`Rands#`, `Decls`/`Decls#`, `Items`/`Items#`) appears in `parse_table`, `first_sets`, or `follow_sets` |
 
-Tests 4, 5, 7, and 8 are the #174 regression guards. They compare `rhs` by
+Tests 4, 7, and 8 are the #174 regression guards. The two `rhs` tests compare by
 whole-list equality rather than spot-checking one entry, so they fail on a
 spurious *added* symbol as well as a dropped one.
+
+Test 5 is deliberately **not** a #174 guard, despite asserting the same field as
+test 8. In `<Decls> **= <SYMBOL> EQUALS <Exp>` the first body symbol is
+capturing, so it survives the pre-fix filter and the lookahead comes out right
+even while `rhs` is corrupt. Only a *leading* non-capturing terminal moves the
+lookahead. Test 5 is a characterization test; test 8 is the guard.
 
 Test 9 guards a different property: `_handle_arbno` expands each repetition
 into right-recursive internal rules (`nt → syms nt#`, `nt# → syms nt# | ε`)
@@ -126,17 +132,22 @@ today. Those tests get sharper for free once #179 lands.
 
 Run with `bin/test/integration.bash tests/bats/integration/spec-ll1.bats`.
 
-Issue #174 is already fixed on this branch, so tests 4, 5, 7, and 8 pass on
-arrival. Passing-on-arrival is not evidence they detect anything, so each is
-red-proofed by temporarily restoring the pre-fix behaviour: in
+Issue #174 is already fixed on this branch, so every test here passes on
+arrival. Passing-on-arrival is not evidence a test detects anything, so the
+guards are red-proofed by temporarily restoring the pre-fix behaviour: in
 [spec_json_decoder.py](../../src/plcc/ll1/spec_json_decoder.py), the `arbno_rhs`
 comprehension gets its old `if s.get("isCapturing", False)` filter back. That
 one-line mutation reproduces both symptoms — the non-capturing terminal vanishes
-from `rhs`, and `lookahead` recomputes from the wrong symbol. Confirm all four
-tests fail, then revert the mutation and confirm they pass.
+from `rhs`, and, when that terminal led the body, `lookahead` recomputes from
+the wrong symbol.
 
-Tests 1, 2, 3, 6, and 9 are characterization tests for behaviour with no known
-defect; they are verified by passing against the current implementation.
+Under the mutation, exactly three tests must fail — 4, 7, and 8 — and every
+other test must stay green. A run that reds more or fewer than those three means
+the tests are not measuring what this design claims. Revert the mutation
+afterwards and confirm all ten pass.
+
+Tests 1, 2, 3, 5, 6, and 9 are characterization tests for behaviour with no
+known defect; they are verified by passing against the current implementation.
 
 The full `bin/test/functional.bash` runs before the branch is pushed.
 
