@@ -19,7 +19,7 @@ changes.
 existing tests in this file.
 
 **Spec:** [2026-07-29-178-bats-version-declaration-unenforced-design.md](../specs/2026-07-29-178-bats-version-declaration-unenforced-design.md)
-**Issue:** [178](../issues/178-bats-version-declaration-unenforced.md)
+**Issue:** [178](../issues/done/178-bats-version-declaration-unenforced.md)
 
 ## Global Constraints
 
@@ -338,7 +338,7 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ## Task 3: Full suite and close the issue
 
 **Files:**
-- Modify: `dev-docs/issues/178-bats-version-declaration-unenforced.md` (moved to
+- Modify: `dev-docs/issues/done/178-bats-version-declaration-unenforced.md` (moved to
   `dev-docs/issues/done/` by the script — do not move it by hand)
 - Modify: `dev-docs/roadmap.md` (edited by the script)
 

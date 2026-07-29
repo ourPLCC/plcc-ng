@@ -7,8 +7,8 @@
 
 Bats tests name temporary paths under `BATS_TEST_TMPDIR`, a variable the
 bats runner provides and cleans up itself (see
-[CONTRIBUTING.md](../../CONTRIBUTING.md) and issue
-[177](done/177-bats-helpers-leak-temp-dirs.md)). That variable only exists
+[CONTRIBUTING.md](../../../CONTRIBUTING.md) and issue
+[177](177-bats-helpers-leak-temp-dirs.md)). That variable only exists
 on bats 1.4.0 and later. Each file guards against an older runner by
 declaring `bats_require_minimum_version 1.5.0`, which turns a too-old bats
 into a clear startup failure.
@@ -48,4 +48,4 @@ first is probably right — the declaration is cheap, and a uniform rule has
 no exceptions to maintain.
 
 Raised by the final review of issue 177. Design context:
-[2026-07-28-177-bats-temp-dirs-design.md](../specs/2026-07-28-177-bats-temp-dirs-design.md).
+[2026-07-28-177-bats-temp-dirs-design.md](../../specs/2026-07-28-177-bats-temp-dirs-design.md).

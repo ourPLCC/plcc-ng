@@ -1,7 +1,7 @@
 # 178 — enforce `bats_require_minimum_version` in bats files
 
 **Date:** 2026-07-29
-**Issue:** [178](../issues/178-bats-version-declaration-unenforced.md)
+**Issue:** [178](../issues/done/178-bats-version-declaration-unenforced.md)
 
 ## Problem
 
