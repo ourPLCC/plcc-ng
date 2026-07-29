@@ -5,11 +5,13 @@ bats_require_minimum_version 1.5.0
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/ll1.schema.json"
-    SPEC_JSON="$(mktemp)"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
+    ARBNO_SPEC_JSON="${BATS_TEST_TMPDIR}/arbno-spec.json"
+    plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" > "${ARBNO_SPEC_JSON}"
+    CONFLICT_SPEC_JSON="${BATS_TEST_TMPDIR}/conflict-spec.json"
+    plcc-spec "${FIXTURES}/ll1-conflicts.plcc" > "${CONFLICT_SPEC_JSON}"
 }
-
-teardown() { rm -f "${SPEC_JSON}"; }
 
 @test "plcc-ll1 is on PATH" { command -v plcc-ll1; }
 
@@ -28,6 +30,110 @@ teardown() { rm -f "${SPEC_JSON}"; }
     run bash -c "cat '${SPEC_JSON}' | plcc-ll1"
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
+}
+
+# --- arbno section of the output schema ---------------------------------
+#
+# trivial.plcc has no repetition rules, so the two schema checks above
+# validate an empty "arbno": {}. These use a grammar that populates it.
+
+@test "plcc-ll1 output for a repetition grammar is schema-valid" {
+    run bash -c "plcc-ll1 < '${ARBNO_SPEC_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
+}
+
+# The schema must *constrain* the arbno section, not merely tolerate it.
+# Deleting any required key from real plcc-ll1 output has to be rejected.
+# Before issue 179 the schema did not mention arbno at all, so every one
+# of these mutants validated clean.
+@test "ll1 schema rejects arbno output missing any required key" {
+    LL1_JSON="${BATS_TEST_TMPDIR}/ll1.json"
+    plcc-ll1 < "${ARBNO_SPEC_JSON}" > "${LL1_JSON}"
+
+    for path in \
+        "arbno" \
+        "arbno.Decls.rhs" \
+        "arbno.Decls.separator" \
+        "arbno.Decls.lookahead" \
+        "arbno.Decls.rhs.0.symbol" \
+        "arbno.Decls.rhs.0.field" \
+        "arbno.Decls.rhs.0.is_terminal"
+    do
+        mutant="${BATS_TEST_TMPDIR}/without-${path}.json"
+        DROP_PATH="${path}" python3 -c '
+import json, os, sys
+
+doc = json.load(sys.stdin)
+segments = os.environ["DROP_PATH"].split(".")
+node = doc
+for segment in segments[:-1]:
+    node = node[int(segment)] if isinstance(node, list) else node[segment]
+last = segments[-1]
+del node[int(last) if isinstance(node, list) else last]
+json.dump(doc, sys.stdout)
+' < "${LL1_JSON}" > "${mutant}"
+
+        run check-jsonschema --schemafile "${SCHEMA}" "${mutant}"
+        if [ "$status" -eq 0 ]; then
+            echo "schema accepted output missing ${path}" >&2
+            return 1
+        fi
+    done
+}
+
+# --- conflicts section of the output schema ------------------------------
+#
+# Every other fixture in this repository is LL(1)-clean, so every other
+# schema check here validates an empty "conflicts": [] — which `required`
+# never reaches. ll1-conflicts.plcc is the only grammar that populates it,
+# with one entry of each conflict_type.
+
+@test "plcc-ll1 output for a conflicting grammar is schema-valid" {
+    run bash -c "plcc-ll1 < '${CONFLICT_SPEC_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
+}
+
+# The schema must *constrain* conflict_type, not merely tolerate it. Two
+# mutations of real plcc-ll1 output have to be rejected: dropping the key
+# (proves `required`) and giving it an unknown value (proves the `enum`).
+# Before issue 180 the schema did not mention conflict_type at all, so both
+# mutants validated clean.
+@test "ll1 schema rejects bad conflict_type in conflicts output" {
+    LL1_JSON="${BATS_TEST_TMPDIR}/conflict-ll1.json"
+    plcc-ll1 < "${CONFLICT_SPEC_JSON}" > "${LL1_JSON}"
+
+    for mutation in \
+        "delete:conflicts.0.conflict_type" \
+        "set:conflicts.0.conflict_type"
+    do
+        kind="${mutation%%:*}"
+        path="${mutation##*:}"
+        mutant="${BATS_TEST_TMPDIR}/${kind}-${path}.json"
+        MUTATE_KIND="${kind}" MUTATE_PATH="${path}" python3 -c '
+import json, os, sys
+
+doc = json.load(sys.stdin)
+segments = os.environ["MUTATE_PATH"].split(".")
+node = doc
+for segment in segments[:-1]:
+    node = node[int(segment)] if isinstance(node, list) else node[segment]
+last = int(segments[-1]) if isinstance(node, list) else segments[-1]
+if os.environ["MUTATE_KIND"] == "delete":
+    del node[last]
+else:
+    node[last]  # raises if the path does not exist
+    node[last] = "not_a_conflict_type"
+json.dump(doc, sys.stdout)
+' < "${LL1_JSON}" > "${mutant}"
+
+        run check-jsonschema --schemafile "${SCHEMA}" "${mutant}"
+        if [ "$status" -eq 0 ]; then
+            echo "schema accepted ${kind} of ${path}" >&2
+            return 1
+        fi
+    done
 }
 
 @test "plcc-ll1 accepts -v without error" {

@@ -5,7 +5,8 @@ bats_require_minimum_version 1.5.0
 PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 
 setup() {
-    FAKE_BIN="$(mktemp -d)"
+    FAKE_BIN="${BATS_TEST_TMPDIR}/fake-bin"
+    mkdir -p "${FAKE_BIN}"
     CAPTURED_ARGS="${FAKE_BIN}/captured-args"
     cat > "${FAKE_BIN}/bats" <<EOF
 #!/usr/bin/env bash
@@ -19,7 +20,6 @@ EOF
 }
 
 teardown() {
-    rm -rf "${FAKE_BIN}" "${STUB_ROOT:-}" "${FAKE_PDM_BIN:-}"
     unset SKIP_SETUP
     unset PLCC_NO_TEST_CACHE
 }
@@ -58,7 +58,8 @@ teardown() {
 }
 
 setup_functional_stub_tree() {
-    STUB_ROOT="$(mktemp -d)"
+    STUB_ROOT="${BATS_TEST_TMPDIR}/stub-root"
+    mkdir -p "${STUB_ROOT}"
     mkdir -p "${STUB_ROOT}/bin/test" "${STUB_ROOT}/bin/install"
     cp "${PROJECT_ROOT}/bin/test/functional.bash" "${STUB_ROOT}/bin/test/functional.bash"
     cp "${PROJECT_ROOT}/bin/test/_cache.bash" "${STUB_ROOT}/bin/test/_cache.bash"
@@ -77,7 +78,8 @@ exit 0
 EOF
         chmod +x "${STUB_ROOT}/bin/install/${installer}.bash"
     done
-    FAKE_PDM_BIN="$(mktemp -d)"
+    FAKE_PDM_BIN="${BATS_TEST_TMPDIR}/fake-pdm-bin"
+    mkdir -p "${FAKE_PDM_BIN}"
     printf '#!/usr/bin/env bash\nexit 0\n' > "${FAKE_PDM_BIN}/pdm"
     chmod +x "${FAKE_PDM_BIN}/pdm"
     export PATH="${FAKE_PDM_BIN}:${PATH}"

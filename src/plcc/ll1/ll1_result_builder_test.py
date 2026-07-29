@@ -1,5 +1,5 @@
 from plcc.spec.syntax.validations.ll1.Grammar import Grammar
-from plcc.ll1.spec_json_decoder import Rule
+from plcc.ll1.spec_json_decoder import Rule, decode
 from plcc.ll1.ll1_result_builder import build_ll1_result
 
 
@@ -296,3 +296,98 @@ def test_conflict_type_is_first_follow():
     result = build_ll1_result(g, fm)
     conflict_on_A = next(c for c in result["conflicts"] if c["nonterminal"] == "A")
     assert conflict_on_A["conflict_type"] == "first_follow"
+
+
+def _leading_terminal_arbno():
+    """Mimics <items> **= BANG <Exp> with <Exp> ::= NUM, no separator.
+    Grammar: items→BANG Exp items#|ε, items#→BANG Exp items#|ε, Exp→NUM."""
+    g = Grammar()
+    g.addRule("items", ["BANG", "Exp", "items#"])
+    g.addRule("items", [])
+    g.addRule("items#", ["BANG", "Exp", "items#"])
+    g.addRule("items#", [])
+    g.addRule("Exp", ["NUM"])
+    fm = {
+        ("items", ("BANG", "Exp", "items#")): Rule(alt=None, fields=[None, None, None]),
+        ("items", ()): Rule(alt=None, fields=[]),
+        ("items#", ("BANG", "Exp", "items#")): Rule(alt=None, fields=[None, None, None]),
+        ("items#", ()): Rule(alt=None, fields=[]),
+        ("Exp", ("NUM",)): Rule(alt=None, fields=[None]),
+    }
+    arbno = {
+        "items": {
+            "rhs": [
+                {"field": None, "symbol": "BANG", "is_terminal": True},
+                {"field": "expList", "symbol": "Exp", "is_terminal": False},
+            ],
+            "separator": None,
+        }
+    }
+    return g, fm, arbno
+
+
+def test_arbno_lookahead_uses_leading_noncapturing_terminal():
+    """Issue #174: the lookahead comes from the body's first symbol, not
+    its first capturing symbol. Predicting on FIRST(Exp) here would leave
+    BANG unshiftable."""
+    g, fm, arbno = _leading_terminal_arbno()
+    result = build_ll1_result(g, fm, arbno)
+    assert result["arbno"]["items"]["lookahead"] == ["BANG"]
+
+
+def test_arbno_lookahead_nonempty_for_all_noncapturing_body():
+    """<bangs> **= BANG captures nothing; an empty lookahead would make it
+    match zero iterations against every input."""
+    g = Grammar()
+    g.addRule("bangs", ["BANG", "bangs#"])
+    g.addRule("bangs", [])
+    g.addRule("bangs#", ["BANG", "bangs#"])
+    g.addRule("bangs#", [])
+    fm = {
+        ("bangs", ("BANG", "bangs#")): Rule(alt=None, fields=[None, None]),
+        ("bangs", ()): Rule(alt=None, fields=[]),
+        ("bangs#", ("BANG", "bangs#")): Rule(alt=None, fields=[None, None]),
+        ("bangs#", ()): Rule(alt=None, fields=[]),
+    }
+    arbno = {
+        "bangs": {
+            "rhs": [{"field": None, "symbol": "BANG", "is_terminal": True}],
+            "separator": None,
+        }
+    }
+    result = build_ll1_result(g, fm, arbno)
+    assert result["arbno"]["bangs"]["lookahead"] == ["BANG"]
+
+
+def test_lookahead_from_decoded_spec_uses_leading_noncapturing_terminal():
+    """Composition regression for issue #174: decode() must hand
+    build_ll1_result a body that still holds its leading non-capturing
+    terminal. When it did not, the lookahead came from FIRST(Exp) and
+    BANG was never shifted."""
+    spec = {
+        "lexical": {"ruleList": []},
+        "syntax": {"rules": [
+            {
+                "line": {"string": "", "number": 0, "file": ""},
+                "lhs": {"name": "items", "isTerminal": False,
+                        "altName": None, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "BANG", "isTerminal": True, "isCapturing": False},
+                    {"name": "Exp", "isTerminal": False, "isCapturing": True},
+                ],
+                "separator": None,
+            },
+            {
+                "line": {"string": "", "number": 0, "file": ""},
+                "lhs": {"name": "Exp", "isTerminal": False,
+                        "altName": None, "isCapturing": False},
+                "rhsSymbolList": [
+                    {"name": "NUM", "isTerminal": True, "isCapturing": False},
+                ],
+            },
+        ]},
+        "semantics": [],
+    }
+    grammar, productions, arbno_rules = decode(spec)
+    result = build_ll1_result(grammar, productions, arbno_rules)
+    assert result["arbno"]["items"]["lookahead"] == ["BANG"]

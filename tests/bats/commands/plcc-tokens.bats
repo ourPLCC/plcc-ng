@@ -5,12 +5,8 @@ bats_require_minimum_version 1.5.0
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/token.schema.json"
-    SPEC_JSON="$(mktemp)"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
-}
-
-teardown() {
-    rm -f "${SPEC_JSON}"
 }
 
 @test "plcc-tokens is on PATH" {
@@ -52,12 +48,11 @@ teardown() {
 }
 
 @test "plcc-tokens with SOURCE file arg labels tokens with that filename" {
-    tmp=$(mktemp)
+    tmp="${BATS_TEST_TMPDIR}/input.txt"
     echo "42" > "$tmp"
     result=$(plcc-tokens "${SPEC_JSON}" "$tmp" | head -1)
     file_val=$(echo "$result" | python3 -c "import json,sys; r=json.load(sys.stdin); print(r['source']['file'])")
     [ "$file_val" = "$tmp" ]
-    rm -f "$tmp"
 }
 
 @test "plcc-tokens default token record omits regex and source_line" {
@@ -82,7 +77,7 @@ assert r['source_line'] == '42', f'wrong source_line: {r}'
 }
 
 @test "plcc-tokens --trace emits kind=skip records" {
-    VERBOSITY_SPEC_JSON="$(mktemp)"
+    VERBOSITY_SPEC_JSON="${BATS_TEST_TMPDIR}/verbosity-spec.json"
     plcc-spec "${FIXTURES}/scan-verbosity.plcc" > "${VERBOSITY_SPEC_JSON}"
     result=$(echo '42 99' | plcc-tokens --trace "${VERBOSITY_SPEC_JSON}")
     kinds=$(echo "$result" | python3 -c "
@@ -94,23 +89,20 @@ for line in sys.stdin:
         print(r['kind'])
 ")
     [[ "$kinds" == *"skip"* ]]
-    rm -f "${VERBOSITY_SPEC_JSON}"
 }
 
 @test "plcc-tokens --trace skip records validate against schema" {
-    VERBOSITY_SPEC_JSON="$(mktemp)"
+    VERBOSITY_SPEC_JSON="${BATS_TEST_TMPDIR}/verbosity-spec.json"
     plcc-spec "${FIXTURES}/scan-verbosity.plcc" > "${VERBOSITY_SPEC_JSON}"
     echo '42 99' | plcc-tokens --trace "${VERBOSITY_SPEC_JSON}" | while IFS= read -r line || [ -n "$line" ]; do
         [ -z "$line" ] && continue
         echo "$line" | check-jsonschema --schemafile "${SCHEMA}" -
     done
-    rm -f "${VERBOSITY_SPEC_JSON}"
 }
 
 @test "plcc-tokens -v emits per-file scanning event on stderr" {
-    tmp=$(mktemp)
+    tmp="${BATS_TEST_TMPDIR}/input.txt"
     echo "42" > "$tmp"
     run --separate-stderr plcc-tokens -v --verbose-format=text "${SPEC_JSON}" "$tmp"
     [[ "$stderr" == *"scanning $tmp"* ]]
-    rm -f "$tmp"
 }

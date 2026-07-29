@@ -4,17 +4,13 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    SPEC_JSON="$(mktemp)"
-    MODEL_JSON="$(mktemp)"
-    WORK_DIR="$(mktemp -d)"
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
+    MODEL_JSON="${BATS_TEST_TMPDIR}/model.json"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
     plcc-spec "${FIXTURES}/arith.plcc" > "${SPEC_JSON}"
     plcc-model "${SPEC_JSON}" > "${MODEL_JSON}"
     plcc-python-emit --output="${WORK_DIR}" < "${MODEL_JSON}"
-}
-
-teardown() {
-    rm -f "${SPEC_JSON}" "${MODEL_JSON}"
-    rm -rf "${WORK_DIR}"
 }
 
 @test "emit produces one py file per class" {
@@ -34,9 +30,8 @@ teardown() {
 }
 
 @test "main.py evaluates 1+2 to 3 via plcc-python-run" {
-    LL1_JSON="$(mktemp)"
-    TREE_FILE="$(mktemp)"
-    trap "rm -f '${LL1_JSON}' '${TREE_FILE}'" EXIT
+    LL1_JSON="${BATS_TEST_TMPDIR}/ll1.json"
+    TREE_FILE="${BATS_TEST_TMPDIR}/tree.jsonl"
     plcc-ll1 < "${SPEC_JSON}" > "${LL1_JSON}"
     echo '1 + 2' | plcc-tokens "${SPEC_JSON}" | plcc-trees "--ll1=${LL1_JSON}" > "${TREE_FILE}"
     run plcc-python-run --output="${WORK_DIR}" < "${TREE_FILE}"
@@ -50,22 +45,22 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 @test "no-semantics grammar generates _Start.py" {
-    NO_SEM_DIR="$(mktemp -d)"
-    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    NO_SEM_DIR="${BATS_TEST_TMPDIR}/no-sem"
+    mkdir -p "${NO_SEM_DIR}"
     plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-python-emit --output="${NO_SEM_DIR}"
     [ -f "${NO_SEM_DIR}/_Start.py" ]
 }
 
 @test "no-semantics grammar: start class extends _Start" {
-    NO_SEM_DIR="$(mktemp -d)"
-    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    NO_SEM_DIR="${BATS_TEST_TMPDIR}/no-sem"
+    mkdir -p "${NO_SEM_DIR}"
     plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-python-emit --output="${NO_SEM_DIR}"
     grep 'class Program(_Start' "${NO_SEM_DIR}/Program.py"
 }
 
 @test "no-semantics grammar: main.py exits 0 on empty input" {
-    NO_SEM_DIR="$(mktemp -d)"
-    trap "rm -rf '${NO_SEM_DIR}'" EXIT
+    NO_SEM_DIR="${BATS_TEST_TMPDIR}/no-sem"
+    mkdir -p "${NO_SEM_DIR}"
     plcc-spec "${FIXTURES}/trivial.plcc" | plcc-model | plcc-python-emit --output="${NO_SEM_DIR}"
     run python3 "${NO_SEM_DIR}/main.py" <<< ""
     [ "$status" -eq 0 ]

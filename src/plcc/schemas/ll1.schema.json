@@ -3,7 +3,7 @@
   "title": "LL1Analysis",
   "description": "Output of plcc-ll1: LL(1) analysis of a grammar.",
   "type": "object",
-  "required": ["is_ll1", "start_symbol", "first_sets", "follow_sets", "predict_sets", "parse_table", "conflicts", "left_recursion"],
+  "required": ["is_ll1", "start_symbol", "first_sets", "follow_sets", "predict_sets", "parse_table", "conflicts", "left_recursion", "arbno"],
   "properties": {
     "is_ll1":         { "type": "boolean" },
     "start_symbol":   { "type": "string" },
@@ -50,10 +50,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["nonterminal", "lookahead", "productions"],
+        "required": ["nonterminal", "lookahead", "conflict_type", "productions"],
         "properties": {
-          "nonterminal": { "type": "string" },
-          "lookahead":   { "type": "string" },
+          "nonterminal":   { "type": "string" },
+          "lookahead":     { "type": "string" },
+          "conflict_type": { "enum": ["first_first", "first_follow"] },
           "productions": {
             "type": "array",
             "items": {
@@ -85,6 +86,29 @@
         "required": ["cycle"],
         "properties": {
           "cycle": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "arbno": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["rhs", "separator", "lookahead"],
+        "properties": {
+          "rhs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["symbol", "field", "is_terminal"],
+              "properties": {
+                "symbol":      { "type": "string" },
+                "field":       { "type": ["string", "null"] },
+                "is_terminal": { "type": "boolean" }
+              }
+            }
+          },
+          "separator": { "type": ["string", "null"] },
+          "lookahead": { "type": "array", "items": { "type": "string" } }
         }
       }
     }

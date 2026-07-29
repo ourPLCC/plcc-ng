@@ -597,3 +597,88 @@ def test_parse_returns_extensible_true_when_arbno_could_repeat():
     _tree, _consumed, extensible = parse(_RANDS_LL1, [_tok("NUM", "1")])
     assert extensible is True
 
+
+
+# ll1 dict for: letDecls **= SYMBOL EQUALS exp  (EQUALS non-capturing), exp → NUM
+_LET_DECLS_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "letDecls",
+    "parse_table": {
+        "exp": {
+            "NUM": {"alt": None, "production": [{"symbol": "NUM", "field": "num"}]}
+        }
+    },
+    "arbno": {
+        "letDecls": {
+            "rhs": [
+                {"field": "symbolList", "symbol": "SYMBOL", "is_terminal": True},
+                {"field": None, "symbol": "EQUALS", "is_terminal": True},
+                {"field": "expList", "symbol": "exp", "is_terminal": False},
+            ],
+            "separator": None,
+            "lookahead": ["SYMBOL"],
+        }
+    }
+}
+
+# ll1 dict for: bangs **= BANG  (nothing in the body captures)
+_BANGS_LL1 = {
+    "is_ll1": True,
+    "start_symbol": "bangs",
+    "parse_table": {},
+    "arbno": {
+        "bangs": {
+            "rhs": [{"field": None, "symbol": "BANG", "is_terminal": True}],
+            "separator": None,
+            "lookahead": ["BANG"],
+        }
+    }
+}
+
+
+def _let_decls_tokens():
+    return [
+        _tok("SYMBOL", "three"),
+        _tok("EQUALS", "="),
+        _tok("NUM", "2"),
+        _tok("SYMBOL", "four"),
+        _tok("EQUALS", "="),
+        _tok("NUM", "5"),
+    ]
+
+
+def test_arbno_mid_body_noncapturing_terminal_is_consumed():
+    """Regression for issue #174: every token of both iterations is
+    shifted, including the two EQUALS."""
+    _, consumed, _ = parse(_LET_DECLS_LL1, _let_decls_tokens())
+    assert consumed == 6
+
+
+def test_arbno_mid_body_terminal_captures_stay_parallel():
+    tree, _, _ = parse(_LET_DECLS_LL1, _let_decls_tokens())
+    children = dict(tree["children"])
+    assert [t["lexeme"] for t in children["symbolList"]] == ["three", "four"]
+    assert len(children["expList"]) == 2
+    assert children["expList"][0]["kind"] == "tree"
+
+
+def test_arbno_discarded_terminal_creates_no_child():
+    tree, _, _ = parse(_LET_DECLS_LL1, _let_decls_tokens())
+    assert [name for name, _ in tree["children"]] == ["symbolList", "expList"]
+
+
+def test_arbno_missing_mid_body_terminal_is_a_parse_error():
+    with pytest.raises(ParseError) as excinfo:
+        parse(_LET_DECLS_LL1, [_tok("SYMBOL", "x"), _tok("NUM", "1")])
+    assert "EQUALS" in str(excinfo.value)
+
+
+def test_arbno_mid_body_terminal_zero_iterations_yields_empty_lists():
+    tree, _, _ = parse(_LET_DECLS_LL1, [])
+    assert dict(tree["children"]) == {"symbolList": [], "expList": []}
+
+
+def test_arbno_all_noncapturing_body_repeats():
+    tree, consumed, _ = parse(_BANGS_LL1, [_tok("BANG", "!"), _tok("BANG", "!")])
+    assert consumed == 2
+    assert tree["children"] == []

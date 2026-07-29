@@ -6,12 +6,9 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 CACHE_STATS="${PROJECT_ROOT}/bin/test/cache/stats.bash"
 
 setup() {
-    STATS_DIR="$(mktemp -d)"
+    STATS_DIR="${BATS_TEST_TMPDIR}/stats"
+    mkdir -p "${STATS_DIR}"
     export PLCC_TEST_STATS_LOG="${STATS_DIR}/stats.log"
-}
-
-teardown() {
-    rm -rf "${STATS_DIR}"
 }
 
 @test "cache-stats: prints 'no stats yet' when log is missing" {

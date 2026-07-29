@@ -54,12 +54,11 @@ def _handle_arbno(grammar, arbno_rules, nt, rhs, separator_entry):
 
     arbno_rhs = [
         {
-            "field": _arbno_field(s),
+            "field": _arbno_field(s) if s.get("isCapturing", False) else None,
             "symbol": s["name"],
             "is_terminal": bool(s.get("isTerminal", False)),
         }
         for s in rhs
-        if s.get("isCapturing", False)
     ]
     arbno_rules[nt] = {"rhs": arbno_rhs, "separator": separator}
 

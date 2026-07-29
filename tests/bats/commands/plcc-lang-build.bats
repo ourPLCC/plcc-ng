@@ -3,11 +3,8 @@
 bats_require_minimum_version 1.5.0
 
 setup() {
-    OUTPUT_DIR="$(mktemp -d)"
-}
-
-teardown() {
-    rm -rf "${OUTPUT_DIR}"
+    OUTPUT_DIR="${BATS_TEST_TMPDIR}/output"
+    mkdir -p "${OUTPUT_DIR}"
 }
 
 @test "plcc-lang-build is on PATH" { command -v plcc-lang-build; }

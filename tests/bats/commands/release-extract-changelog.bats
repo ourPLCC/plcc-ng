@@ -6,7 +6,8 @@ PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 EXTRACT="${PROJECT_ROOT}/bin/release/extract-changelog.bash"
 
 setup() {
-    WORK_DIR="$(mktemp -d)"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
     export CHANGELOG_FILE="${WORK_DIR}/CHANGELOG.md"
     cat > "${CHANGELOG_FILE}" <<'EOF'
 # CHANGELOG
@@ -32,10 +33,6 @@ setup() {
 
 - oldest feature entry
 EOF
-}
-
-teardown() {
-    rm -rf "${WORK_DIR}"
 }
 
 @test "extract-changelog: extracts the newest section" {

@@ -21,9 +21,10 @@ run_test_case() {
     [ -n "${input_file}" ] || return 0
     [ -n "${expected_file}" ] || return 0
 
-    build_dir="$(mktemp -d)"
-    ll1_json="$(mktemp)"
-    trap "rm -rf '${build_dir}' '${ll1_json}'" RETURN
+    build_dir="${BATS_TEST_TMPDIR}/build"
+    rm -rf "${build_dir}"
+    mkdir -p "${build_dir}"
+    ll1_json="${BATS_TEST_TMPDIR}/ll1.json"
 
     plcc-spec "${grammar_dir}" | plcc-ll1 > "${ll1_json}"
     plcc-spec "${grammar_dir}" | plcc-model | plcc-java-emit --output="${build_dir}"

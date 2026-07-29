@@ -5,11 +5,7 @@ bats_require_minimum_version 1.5.0
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
     SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/spec.schema.json"
-    BAD_SPEC="$(mktemp --suffix=.plcc)"
-}
-
-teardown() {
-    rm -f "${BAD_SPEC}"
+    BAD_SPEC="${BATS_TEST_TMPDIR}/bad.plcc"
 }
 
 @test "plcc-spec is on PATH" {

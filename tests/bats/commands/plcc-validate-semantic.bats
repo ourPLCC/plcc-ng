@@ -27,8 +27,7 @@ setup() {
 }
 
 @test "plcc-validate-semantic exits 1 for spec with invalid class name" {
-    SPEC_JSON=$(mktemp)
-    trap "rm -f '${SPEC_JSON}'" EXIT
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     cat > "${SPEC_JSON}" <<'EOF'
 {
   "semantics": {
@@ -50,8 +49,7 @@ EOF
 }
 
 @test "plcc-validate-semantic error references offending line" {
-    SPEC_JSON=$(mktemp)
-    trap "rm -f '${SPEC_JSON}'" EXIT
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     cat > "${SPEC_JSON}" <<'EOF'
 {
   "semantics": {
@@ -73,8 +71,7 @@ EOF
 }
 
 @test "plcc-validate-semantic hint mentions %%% for %% prefix" {
-    SPEC_JSON=$(mktemp)
-    trap "rm -f '${SPEC_JSON}'" EXIT
+    SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     cat > "${SPEC_JSON}" <<'EOF'
 {
   "semantics": {

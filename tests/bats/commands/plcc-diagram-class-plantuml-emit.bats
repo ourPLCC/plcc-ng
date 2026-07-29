@@ -4,14 +4,10 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    MODEL_JSON="$(mktemp)"
-    OUTPUT_DIR="$(mktemp -d)"
+    MODEL_JSON="${BATS_TEST_TMPDIR}/model.json"
+    OUTPUT_DIR="${BATS_TEST_TMPDIR}/output"
+    mkdir -p "${OUTPUT_DIR}"
     plcc-spec "${FIXTURES}/arith.plcc" | plcc-model > "${MODEL_JSON}"
-}
-
-teardown() {
-    rm -f "${MODEL_JSON}"
-    rm -rf "${OUTPUT_DIR}"
 }
 
 @test "plcc-diagram-class-plantuml-emit is on PATH" {

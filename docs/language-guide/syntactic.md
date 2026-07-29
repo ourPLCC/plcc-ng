@@ -191,6 +191,7 @@ with an optional separator:
 ```text
 <Args>  **= <Expr:expr>
 <Pairs> **= <WHOLE:x> <WHOLE:y> +COMMA
+<Decls> **= <SYMBOL> EQUALS <Exp>
 ```
 
 Captured symbols become parallel lists:
@@ -198,6 +199,7 @@ Captured symbols become parallel lists:
 ```java
 class Args { List<Expr> exprList; }
 class Pairs { List<Token> xList; List<Token> yList; }
+class Decls { List<Token> symbolList; List<Exp> expList; }
 ```
 
 ```python
@@ -209,7 +211,16 @@ class Args:
 class Pairs:
     xList: List[Token]
     yList: List[Token]
+
+@dataclass
+class Decls:
+    symbolList: List[Token]
+    expList: List[Exp]
 ```
+
+A symbol in the body that is not captured — `EQUALS` in `<Decls>` above — is
+still matched on every repetition, but produces no list. `Decls` gets
+`symbolList` and `expList` only.
 
 For example, for Pairs, assuming WHOLE matches an integer token, given this input:
 

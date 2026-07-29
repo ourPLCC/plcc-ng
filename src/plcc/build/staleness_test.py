@@ -5,6 +5,10 @@ from plcc.build.staleness import (
     compute_hash, read_sentinel, write_sentinel, delete_sentinel, is_current,
 )
 
+# Stand-in for the installed package version. Tests that vary the version
+# say so explicitly; everywhere else the version simply has to match.
+_VERSION = "1.0.0"
+
 
 def test_compute_hash_returns_hex_string(tmp_path):
     f = tmp_path / "spec.json"
@@ -38,13 +42,17 @@ def test_read_sentinel_returns_none_on_malformed_json(tmp_path):
 
 
 def test_write_then_read_sentinel_roundtrips(tmp_path):
-    write_sentinel(tmp_path, "abc123", {"scan", "parse"})
+    write_sentinel(tmp_path, "abc123", {"scan", "parse"}, _VERSION)
     s = read_sentinel(tmp_path)
-    assert s == {"hash": "abc123", "stages": ["parse", "scan"]}  # sorted
+    assert s == {
+        "hash": "abc123",
+        "stages": ["parse", "scan"],  # sorted
+        "version": _VERSION,
+    }
 
 
 def test_delete_sentinel_removes_file(tmp_path):
-    write_sentinel(tmp_path, "abc123", {"scan"})
+    write_sentinel(tmp_path, "abc123", {"scan"}, _VERSION)
     delete_sentinel(tmp_path)
     assert read_sentinel(tmp_path) is None
 
@@ -54,43 +62,60 @@ def test_delete_sentinel_is_idempotent(tmp_path):
 
 
 def test_is_current_false_when_sentinel_none():
-    assert not is_current(None, "abc", {"scan"})
+    assert not is_current(None, "abc", {"scan"}, _VERSION)
 
 
 def test_is_current_false_when_hash_differs():
-    s = {"hash": "old", "stages": ["scan", "parse"]}
-    assert not is_current(s, "new", {"scan"})
+    s = {"hash": "old", "stages": ["scan", "parse"], "version": _VERSION}
+    assert not is_current(s, "new", {"scan"}, _VERSION)
 
 
 def test_is_current_true_when_required_stages_are_subset_of_completed():
-    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram"]}
-    assert is_current(s, "abc", {"scan"})
-    assert is_current(s, "abc", {"scan", "parse"})
-    assert is_current(s, "abc", {"scan", "model", "diagram"})
-    assert is_current(s, "abc", {"scan", "parse", "model", "diagram"})
+    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram"], "version": _VERSION}
+    assert is_current(s, "abc", {"scan"}, _VERSION)
+    assert is_current(s, "abc", {"scan", "parse"}, _VERSION)
+    assert is_current(s, "abc", {"scan", "model", "diagram"}, _VERSION)
+    assert is_current(s, "abc", {"scan", "parse", "model", "diagram"}, _VERSION)
 
 
 def test_is_current_false_when_required_stage_missing():
-    s = {"hash": "abc", "stages": ["scan", "parse"]}
-    assert not is_current(s, "abc", {"scan", "parse", "model"})
-    assert not is_current(s, "abc", {"scan", "model", "diagram"})
+    s = {"hash": "abc", "stages": ["scan", "parse"], "version": _VERSION}
+    assert not is_current(s, "abc", {"scan", "parse", "model"}, _VERSION)
+    assert not is_current(s, "abc", {"scan", "model", "diagram"}, _VERSION)
 
 
 def test_is_current_false_when_unknown_stage_required():
-    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram"]}
-    assert not is_current(s, "abc", {"scan", "java"})
+    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram"], "version": _VERSION}
+    assert not is_current(s, "abc", {"scan", "java"}, _VERSION)
 
 
 def test_all_stages_present_is_current():
-    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram", "java"]}
-    assert is_current(s, "abc", {"scan", "parse", "model", "diagram", "java"})
+    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram", "java"], "version": _VERSION}
+    assert is_current(s, "abc", {"scan", "parse", "model", "diagram", "java"}, _VERSION)
 
 
 def test_diagram_stored_is_not_current_for_all_with_tools():
-    s = {"hash": "abc", "stages": ["scan", "model", "diagram"]}
-    assert not is_current(s, "abc", {"scan", "parse", "model", "diagram", "java"})
+    s = {"hash": "abc", "stages": ["scan", "model", "diagram"], "version": _VERSION}
+    assert not is_current(s, "abc", {"scan", "parse", "model", "diagram", "java"}, _VERSION)
 
 
 def test_all_stored_is_current_for_diagram():
-    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram", "java"]}
-    assert is_current(s, "abc", {"scan", "model", "diagram"})
+    s = {"hash": "abc", "stages": ["scan", "parse", "model", "diagram", "java"], "version": _VERSION}
+    assert is_current(s, "abc", {"scan", "model", "diagram"}, _VERSION)
+
+
+def test_write_then_read_sentinel_records_version(tmp_path):
+    write_sentinel(tmp_path, "abc123", {"scan"}, "2.0.1")
+    assert read_sentinel(tmp_path)["version"] == "2.0.1"
+
+
+def test_is_current_false_when_version_differs():
+    s = {"hash": "abc", "stages": ["scan"], "version": "2.0.0"}
+    assert not is_current(s, "abc", {"scan"}, "2.0.1")
+
+
+def test_is_current_false_when_version_absent():
+    # A sentinel written before the version was recorded (issue #175): the
+    # build predates this release, so it must rebuild rather than be reused.
+    s = {"hash": "abc", "stages": ["scan"]}
+    assert not is_current(s, "abc", {"scan"}, "2.0.1")

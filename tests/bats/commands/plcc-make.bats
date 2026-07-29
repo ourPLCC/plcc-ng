@@ -4,12 +4,9 @@ bats_require_minimum_version 1.5.0
 
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures"
-    WORK_DIR="$(mktemp -d)"
+    WORK_DIR="${BATS_TEST_TMPDIR}/work"
+    mkdir -p "${WORK_DIR}"
     cd "${WORK_DIR}"
-}
-
-teardown() {
-    rm -rf "${WORK_DIR}"
 }
 
 # ── Basic interface ────────────────────────────────────────────────────────────
@@ -117,6 +114,38 @@ teardown() {
     second_spec=$(cat plcc-ng/spec.json)
 
     [ "$first_spec" != "$second_spec" ]
+}
+
+@test "plcc-make rebuilds when the PLCC-ng version changes" {
+    cp "${FIXTURES}/trivial-python.plcc" spec.plcc
+    plcc-make
+    python3 -c '
+import json, pathlib
+p = pathlib.Path("plcc-ng/.spec-hash")
+s = json.loads(p.read_text())
+s["version"] = "0.0.0-not-the-installed-version"
+p.write_text(json.dumps(s))
+'
+    rm plcc-ng/ll1.json          # removed artifact must come back
+
+    plcc-make                    # spec unchanged, version differs → slow path
+    [ -f plcc-ng/ll1.json ]      # rebuilt confirms slow path taken
+}
+
+@test "plcc-make rebuilds when the sentinel predates version tracking" {
+    cp "${FIXTURES}/trivial-python.plcc" spec.plcc
+    plcc-make
+    python3 -c '
+import json, pathlib
+p = pathlib.Path("plcc-ng/.spec-hash")
+s = json.loads(p.read_text())
+s.pop("version", None)           # a sentinel written before issue #175
+p.write_text(json.dumps(s))
+'
+    rm plcc-ng/ll1.json
+
+    plcc-make                    # spec unchanged, no version → slow path
+    [ -f plcc-ng/ll1.json ]
 }
 
 @test "plcc-make --through=scan then --through=all completes full build" {
