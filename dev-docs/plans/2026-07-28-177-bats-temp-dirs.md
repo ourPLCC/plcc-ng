@@ -728,7 +728,8 @@ Reproduce, and Notes with the corrected account:
   none of them and leak six build directories per run. Six further files clean
   up on the last line of the test body, so they leak whenever a test fails.
 - Steps to Reproduce: the `ls -d /tmp/tmp.* | wc -l` before/after measurement
-  from Task 6 Step 1, with the expected `leaked=6`.
+  from Task 6 Step 1, with the expected `leaked=7` (six directories holding a
+  `plcc-ng/` build tree, plus one empty one from `EMPTY_DIR`).
 - Notes: bats supplies `BATS_TEST_TMPDIR` and removes it per test, so the fix
   is to delete the hand-rolled cleanup rather than extend it. Link the design
   at `dev-docs/specs/2026-07-28-177-bats-temp-dirs-design.md`.
