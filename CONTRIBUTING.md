@@ -113,7 +113,19 @@ Bats creates that directory per test, and removes it (along with every other
 test's) when the whole run ends, whether the tests pass or fail, so tests need
 no cleanup code — no `teardown()`, no `trap`, no trailing `rm`. Use `bats
 --no-tempdir-cleanup` to keep the files while debugging.
-`tests/bats/commands/bats-temp-dirs.bats` enforces this.
+
+`BATS_TEST_TMPDIR` requires bats 1.4.0 or later; on an older runner it is unset
+and paths under it silently resolve outside the sandbox. Every bats file
+therefore declares the floor as its third line, after the shebang and a blank
+line:
+
+```bash
+#!/usr/bin/env bats
+
+bats_require_minimum_version 1.5.0
+```
+
+`tests/bats/commands/bats-temp-dirs.bats` enforces both rules.
 
 ## Before writing a new script
 
