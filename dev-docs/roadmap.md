@@ -6,8 +6,6 @@
 
 - **[#160](issues/160-concurrent-plcc-build-dir-race.md) — Concurrent plcc-scan/plcc-make invocations race on shared build dir**
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
-- **[#180](issues/180-ll1-schema-omits-conflict-type.md) — ll1 schema omits conflict_type**
-  `plcc-ll1` emits `conflict_type` on every entry of `conflicts`, but `ll1.schema.json` declares neither the property nor its `first_first`/`first_follow` values.
 
 ### Feat
 

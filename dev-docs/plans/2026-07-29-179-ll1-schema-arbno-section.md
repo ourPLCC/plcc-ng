@@ -39,7 +39,7 @@ the emitted shape is already correct, only its description was missing.
   match something other than reality — stop and re-read the spec.
 - Do not touch the `conflicts` section of the schema. Its missing
   `conflict_type` key is a real gap, tracked separately as
-  [#180](../issues/180-ll1-schema-omits-conflict-type.md).
+  [#180](../issues/done/180-ll1-schema-omits-conflict-type.md).
 - Both new tests go in the existing `tests/bats/commands/plcc-ll1.bats`. Do not
   create a new file — the commands tier names one file per command.
 - Do not modify the existing tests in that file. `setup()` gains two lines and

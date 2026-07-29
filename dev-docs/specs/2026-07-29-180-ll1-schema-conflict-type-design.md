@@ -1,7 +1,7 @@
 # 180 — describe `conflict_type` in the ll1 output schema
 
 **Date:** 2026-07-29
-**Issue:** [180](../issues/180-ll1-schema-omits-conflict-type.md)
+**Issue:** [180](../issues/done/180-ll1-schema-omits-conflict-type.md)
 
 ## Problem
 

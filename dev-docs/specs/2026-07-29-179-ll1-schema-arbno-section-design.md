@@ -214,7 +214,7 @@ in the bats tiers — so no packaging or e2e concern follows from editing one.
   `plcc-ll1.bats` run on `trivial.plcc`, whose `arbno` is `{}`; they gain only
   the top-level presence check.
 - The suite gains its first negative schema test. Issue
-  [#180](../issues/180-ll1-schema-omits-conflict-type.md) is the same class of
+  [#180](../issues/done/180-ll1-schema-omits-conflict-type.md) is the same class of
   gap in the `conflicts` section and can follow the pattern established here.
 - The schema still describes `arbno` structurally, not semantically. It cannot
   see a `lookahead` computed from the wrong symbol, or a symbol dropped from

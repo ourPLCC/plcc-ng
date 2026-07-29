@@ -22,7 +22,7 @@ emitted shape is already correct, only its description was missing.
 `pyproject.toml`, already used by this file).
 
 **Spec:** [2026-07-29-180-ll1-schema-conflict-type-design.md](../specs/2026-07-29-180-ll1-schema-conflict-type-design.md)
-**Issue:** [180](../issues/180-ll1-schema-omits-conflict-type.md)
+**Issue:** [180](../issues/done/180-ll1-schema-omits-conflict-type.md)
 
 ## Global Constraints
 
@@ -447,7 +447,7 @@ git commit -m "fix(schema): describe conflict_type in the ll1 schema"
 
 **Files:**
 - Modify: `dev-docs/roadmap.md` (by script)
-- Move: `dev-docs/issues/180-ll1-schema-omits-conflict-type.md` →
+- Move: `dev-docs/issues/done/180-ll1-schema-omits-conflict-type.md` →
   `dev-docs/issues/done/` (by script)
 
 **Interfaces:**
