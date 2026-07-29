@@ -7,6 +7,8 @@ setup() {
     SCHEMA="$(git rev-parse --show-toplevel)/src/plcc/schemas/ll1.schema.json"
     SPEC_JSON="${BATS_TEST_TMPDIR}/spec.json"
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
+    ARBNO_SPEC_JSON="${BATS_TEST_TMPDIR}/arbno-spec.json"
+    plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" > "${ARBNO_SPEC_JSON}"
 }
 
 @test "plcc-ll1 is on PATH" { command -v plcc-ll1; }
@@ -24,6 +26,17 @@ setup() {
 
 @test "plcc-ll1 reads from stdin via pipe" {
     run bash -c "cat '${SPEC_JSON}' | plcc-ll1"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
+}
+
+# --- arbno section of the output schema ---------------------------------
+#
+# trivial.plcc has no repetition rules, so the two schema checks above
+# validate an empty "arbno": {}. These use a grammar that populates it.
+
+@test "plcc-ll1 output for a repetition grammar is schema-valid" {
+    run bash -c "plcc-ll1 < '${ARBNO_SPEC_JSON}'"
     [ "$status" -eq 0 ]
     echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
