@@ -22,3 +22,19 @@ EOF
     inner="$(cat "${record}")"
     [ ! -e "${inner}" ]
 }
+
+@test "no bats test file calls mktemp" {
+    local bats_dir
+    bats_dir="$(git rev-parse --show-toplevel)/tests/bats"
+
+    local offenders
+    offenders="$(grep -rn 'mktemp' "${bats_dir}" --include='*.bats' \
+        | grep -v "^${BATS_TEST_FILENAME}:" || true)"
+
+    if [ -n "${offenders}" ]; then
+        printf 'Do not call mktemp in bats tests. Name a path under\n' >&2
+        printf 'BATS_TEST_TMPDIR instead; bats removes it after the test.\n\n' >&2
+        printf '%s\n' "${offenders}" >&2
+        return 1
+    fi
+}
