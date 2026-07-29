@@ -17,7 +17,7 @@ grammar-only fixture supplies the third body shape. No `src/` change.
 used by five files in this tier).
 
 **Spec:** [2026-07-29-176-integration-arbno-coverage-design.md](../specs/2026-07-29-176-integration-arbno-coverage-design.md)
-**Issue:** [176](../issues/176-integration-tier-has-no-arbno-coverage.md)
+**Issue:** [176](../issues/done/176-integration-tier-has-no-arbno-coverage.md)
 
 ## Global Constraints
 
@@ -525,7 +525,7 @@ There is no commit in this task.
 ### Task 6: Close the issue
 
 **Files:**
-- Move: `dev-docs/issues/176-integration-tier-has-no-arbno-coverage.md` →
+- Move: `dev-docs/issues/done/176-integration-tier-has-no-arbno-coverage.md` →
   `dev-docs/issues/done/`
 - Modify: `dev-docs/roadmap.md`
 

@@ -18,8 +18,6 @@
 
 ### Test
 
-- **[#176](issues/176-integration-tier-has-no-arbno-coverage.md) — Integration tier has no repetition-rule (arbno) coverage**
-  `tests/bats/integration/` has no `**=` coverage at all; the `plcc-spec | plcc-ll1` boundary where issue #174's lookahead bug lived is only tested at the e2e and unit tiers.
 - **[#178](issues/178-bats-version-declaration-unenforced.md) — Nothing enforces bats_require_minimum_version in bats files**
   A new bats file can use `BATS_TEST_TMPDIR` without declaring the version floor; on an older bats the variable is unset and paths silently degrade to `/work`.
 

@@ -1,7 +1,7 @@
 # 176 — integration coverage for repetition rules at the `plcc-spec | plcc-ll1` boundary
 
 **Date:** 2026-07-29
-**Issue:** [176](../issues/176-integration-tier-has-no-arbno-coverage.md)
+**Issue:** [176](../issues/done/176-integration-tier-has-no-arbno-coverage.md)
 
 ## Problem
 
