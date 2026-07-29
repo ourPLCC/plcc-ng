@@ -34,7 +34,7 @@ emitted shape is already correct, only its description was missing.
   contain the #174/#176/#179 work this builds on. Running tests from the wrong
   directory produces confusing failures.
 - **Do not add `additionalProperties: false`** to `ll1.schema.json` or to any
-  other schema. None of the five schemas in `src/plcc/schemas/` use it. The
+  other schema. None of the six schemas in `src/plcc/schemas/` use it. The
   issue and the spec both rule it out explicitly.
 - **Do not change any `.py` file.** `plcc-ll1` already emits the correct shape.
   A plan step that edits `src/plcc/ll1/` means the schema is being written to
@@ -177,7 +177,8 @@ non-LL(1) grammar — a non-zero exit here means something other than the
 conflict is wrong.
 
 Entry order matters: `conflicts[0]` is the `A`/`first_follow` entry, and Task 2
-mutates index `0`. The order follows rule declaration order and is stable
+mutates index `0`. The order is determined by sorting on nonterminal name,
+then lookahead token — not the order rules were written in — and is stable
 across runs. If this assertion fails on the tuple comparison, stop and
 investigate rather than editing the assertion to match.
 
@@ -447,7 +448,7 @@ git commit -m "fix(schema): describe conflict_type in the ll1 schema"
 
 **Files:**
 - Modify: `dev-docs/roadmap.md` (by script)
-- Move: `dev-docs/issues/done/180-ll1-schema-omits-conflict-type.md` →
+- Move: `dev-docs/issues/180-ll1-schema-omits-conflict-type.md` →
   `dev-docs/issues/done/` (by script)
 
 **Interfaces:**

@@ -106,7 +106,7 @@ Three decisions embedded there:
   and type; adding `"type": "string"` alongside it would be redundant. The file
   has no existing enum to match, so this establishes the idiom.
 - **No `additionalProperties: false`.** Per the issue and per #179: none of the
-  five schemas in `src/plcc/schemas/` use it, and adding it here would be an
+  six schemas in `src/plcc/schemas/` use it, and adding it here would be an
   unrelated tightening with its own blast radius.
 
 Nothing else in the schema changes. The `productions` sub-schema, the
@@ -144,11 +144,12 @@ exits 0, and the output carries `"is_ll1": false` with
 ]
 ```
 
-Entry order is stable across runs — it follows rule declaration order — so
-`conflicts.0` is a safe mutation target. `plcc-spec` accepts both whole-line
-and trailing `#` comments (confirmed against the fixture text above, verbatim),
-so it explains its own purpose inline. No existing fixture uses comments; this
-one earns them by being the only fixture that is broken on purpose.
+Entry order is stable across runs — entries are sorted by nonterminal name,
+then lookahead token — so `conflicts.0` is a safe mutation target.
+`plcc-spec` accepts both whole-line and trailing `#` comments (confirmed
+against the fixture text above, verbatim), so it explains its own purpose
+inline. No existing fixture uses comments; this one earns them by being the
+only fixture that is broken on purpose.
 
 Adding an intentionally broken grammar to the shared fixture directory is inert
 for the rest of the suite. Nothing globs `tests/fixtures/` — every reference in
