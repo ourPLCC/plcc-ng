@@ -9,6 +9,8 @@ setup() {
     plcc-spec "${FIXTURES}/trivial.plcc" > "${SPEC_JSON}"
     ARBNO_SPEC_JSON="${BATS_TEST_TMPDIR}/arbno-spec.json"
     plcc-spec "${FIXTURES}/arbno-mid-body-terminal.plcc" > "${ARBNO_SPEC_JSON}"
+    CONFLICT_SPEC_JSON="${BATS_TEST_TMPDIR}/conflict-spec.json"
+    plcc-spec "${FIXTURES}/ll1-conflicts.plcc" > "${CONFLICT_SPEC_JSON}"
 }
 
 @test "plcc-ll1 is on PATH" { command -v plcc-ll1; }
@@ -78,6 +80,19 @@ json.dump(doc, sys.stdout)
             return 1
         fi
     done
+}
+
+# --- conflicts section of the output schema ------------------------------
+#
+# Every other fixture in this repository is LL(1)-clean, so every other
+# schema check here validates an empty "conflicts": [] — which `required`
+# never reaches. ll1-conflicts.plcc is the only grammar that populates it,
+# with one entry of each conflict_type.
+
+@test "plcc-ll1 output for a conflicting grammar is schema-valid" {
+    run bash -c "plcc-ll1 < '${CONFLICT_SPEC_JSON}'"
+    [ "$status" -eq 0 ]
+    echo "$output" | check-jsonschema --schemafile "${SCHEMA}" -
 }
 
 @test "plcc-ll1 accepts -v without error" {

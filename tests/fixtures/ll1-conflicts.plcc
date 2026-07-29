@@ -1,0 +1,10 @@
+# Deliberately non-LL(1): exercises both conflict_type values.
+token X 'x'
+token Y 'y'
+skip  SPACE '\s+'
+%
+<Program> ::= <A:a> X <B:b>
+<A:Some>  ::= X          # FIRST/FOLLOW: X starts <A> and also follows it
+<A:None>  ::=
+<B:One>   ::= Y          # FIRST/FIRST: both alternatives start with Y
+<B:Two>   ::= Y X
