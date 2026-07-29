@@ -109,10 +109,11 @@ setup() {
 }
 ```
 
-Bats creates that directory for each test and removes it afterwards, whether the
-test passes or fails, so tests need no cleanup code — no `teardown()`, no
-`trap`, no trailing `rm`. Use `bats --no-tempdir-cleanup` to keep the files
-while debugging. `tests/bats/commands/bats-temp-dirs.bats` enforces this.
+Bats creates that directory per test, and removes it (along with every other
+test's) when the whole run ends, whether the tests pass or fail, so tests need
+no cleanup code — no `teardown()`, no `trap`, no trailing `rm`. Use `bats
+--no-tempdir-cleanup` to keep the files while debugging.
+`tests/bats/commands/bats-temp-dirs.bats` enforces this.
 
 ## Before writing a new script
 

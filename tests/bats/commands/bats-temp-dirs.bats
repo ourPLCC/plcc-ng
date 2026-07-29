@@ -2,7 +2,7 @@
 
 bats_require_minimum_version 1.5.0
 
-@test "bats removes BATS_TEST_TMPDIR after a test" {
+@test "bats removes BATS_TEST_TMPDIR when the run ends" {
     local probe="${BATS_TEST_TMPDIR}/inner.bats"
     local record="${BATS_TEST_TMPDIR}/recorded"
 
@@ -32,8 +32,8 @@ EOF
     # since neither `set -o pipefail` nor `set -e` catches a mid-pipeline
     # failure here, the `|| true` on the pipeline would swallow it and this
     # test would report a false PASS.
-    if [ ! -d "${bats_dir}" ]; then
-        printf 'Expected bats test directory at %s but found none.\n' "${bats_dir}" >&2
+    if [ ! -d "${bats_dir}" ] || [ ! -r "${bats_dir}" ]; then
+        printf 'Expected a readable bats test directory at %s but found none.\n' "${bats_dir}" >&2
         return 1
     fi
 
