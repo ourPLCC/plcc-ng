@@ -173,14 +173,28 @@ pytest identity check, then the bats tier. Wired into `bin/test/functional.bash`
 in both places — the no-argument tier list, and a `tests/bats/docs*` case in the
 path-routing `case` statement — and into `bin/test/all.bash`.
 
-`.github/workflows/docs-tests.yml` triggers on `docs/**`, `*.md`, `mkdocs.yml`,
-`tests/fixtures/docs/**`, `tests/bats/docs/**`, and `tests/docs/**`, and runs
-only `bin/test/docs.bash` with `PLCC_NO_TEST_CACHE=1`, consistent with the
-other CI steps. Docs-only PRs stay fast but stop being unchecked.
+CI needs the tier reachable from **both** directions, because a doc example can
+break in two ways:
 
-`ci.yml`'s `paths-ignore` is left alone. Dropping `docs/**` from it would make
-every docs typo run the full suite including the Haskell roundtrip; the new
-workflow covers the gap at a fraction of the cost.
+1. **A docs-only PR edits an example.** `ci.yml` skips these entirely, so
+   `.github/workflows/docs-tests.yml` triggers on `docs/**`, `*.md`,
+   `mkdocs.yml`, `tests/fixtures/docs/**`, `tests/bats/docs/**`, `tests/docs/**`,
+   and `bin/test/docs.bash`, and runs only `bin/test/docs.bash`.
+
+2. **A `src/` change breaks a working example.** This is the 2.0.0 scenario
+   exactly, and `docs-tests.yml` will not fire for it — a change to
+   `src/plcc/lang/ext/python/emit.py` touches none of those paths. So `ci.yml`
+   also gets a `docs` job running `bin/test/docs.bash`. Without it the whole
+   mechanism would miss the very regression that motivated it.
+
+Both use `PLCC_NO_TEST_CACHE=1`, consistent with the other CI steps, and both
+need `actions/setup-java@v4` (temurin 17) because half the fixtures are Java.
+A PR touching both `src/` and `docs/` runs the tier twice; that is accepted in
+exchange for neither direction having a hole.
+
+`ci.yml`'s `paths-ignore` is otherwise left alone. Dropping `docs/**` from it
+would make every docs typo run the full suite including the Haskell roundtrip;
+the two jobs above cover the gap at a fraction of the cost.
 
 ## Part 5 — Documenting the process
 
