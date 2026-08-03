@@ -1547,7 +1547,20 @@ add the fixture first, register it in the `MANIFEST` in
 Asserting the exit status is the point, not a formality. A Python or JavaScript
 `_run()` that prints instead of returning still puts the expected text on
 stdout, so an output-only comparison passes while the example is broken.
+
+The identity check departs from the co-location rule above in two ways, both
+deliberate. It lives in `tests/docs/` rather than beside a module in `src/`,
+because it tests documentation rather than a `src` module and must not ship in
+the wheel. And because `pdm test` runs bare `pytest` with no `testpaths`
+restriction, the units tier collects it too — so it runs in both tiers. That is
+kept on purpose: it means documentation drift is caught by the fastest tier.
+Do not add pytest config to suppress the second run.
 ```
+
+That closing paragraph is required, not optional garnish. It is the only place a
+reader learns why `tests/docs/` sits outside `src/`, and without it the
+docstring in `tests/docs/example_block_test.py` points at a CONTRIBUTING that
+documents only the rule this file breaks.
 
 - [ ] **Step 9: Commit**
 
