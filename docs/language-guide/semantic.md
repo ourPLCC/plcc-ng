@@ -51,7 +51,10 @@ semantics.
 Returning something other than a string is a specification error, so
 convert explicitly when your semantics produce another type. Do not print
 or write to stdout from inside `_run` — that bypasses `plcc-rep`'s result
-protocol, and `plcc-rep --verbose-format=json` will not show it.
+protocol. `plcc-rep` echoes the stray text as-is, so it surfaces in every
+verbose format: under `plcc-rep --verbose-format=json` it lands among the
+JSON records as a line that is not JSON, breaking any consumer that parses
+the stream.
 
 Signatures differ by target language — see your language's page below.
 

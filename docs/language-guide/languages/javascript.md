@@ -135,7 +135,7 @@ _run() {
 
 `_run()` must return a `string`. The runtime sends that string to `plcc-rep` as-is — it is not converted or coerced. Returning anything else (a `number`, an `array`, `undefined`, ...) raises a `specification_error`; convert explicitly (`String(x)`) if needed.
 
-Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. `plcc-rep` echoes the stray text as-is in every verbose format: plain-text mode shows it alongside the result, and `--verbose-format=json` emits it as a line that is not JSON among the JSON records, breaking any consumer that parses the stream.
 
 The default `_Start._run()` returns `String(this)`. Override it to replace the default behavior entirely.
 

@@ -80,9 +80,10 @@ custom name from `entry_point`):
   It must never let a wrong-typed value flow into the `value` field
   silently.
 - The entry-point implementation itself must never write to stdout. Doing
-  so bypasses the JSON envelope entirely; plain-text `plcc-rep` sessions
-  will still show it (by accident, since unparseable lines are echoed
-  as-is), but `plcc-rep --verbose-format=json` will not.
+  so bypasses the JSON envelope entirely. `plcc-rep` echoes unparseable
+  lines as-is, so the stray text surfaces in every verbose format — and
+  under `plcc-rep --verbose-format=json` it lands among the JSON records
+  as a line that is not JSON, breaking consumers that parse the stream.
 
 This is what lets `plcc-rep --verbose-format=json` show a real, structured
 record for every result, regardless of which language emitted the
