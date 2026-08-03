@@ -41,7 +41,7 @@ Create `subtract.plcc`:
     Prog
     %%%
     def _run(self):
-        print(self.exp.eval())
+        return str(self.exp.eval())
     %%%
 
     WholeExp

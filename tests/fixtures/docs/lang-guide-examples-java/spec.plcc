@@ -1,0 +1,39 @@
+# Subtraction language
+skip WHITESPACE '\s+'
+token WHOLE     '\d+'
+token MINUS     '\-'
+token LP        '\('
+token RP        '\)'
+token COMMA     ','
+%
+<Prog>         ::= <Exp:exp>
+<Exp:WholeExp> ::= <WHOLE:whole>
+<Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
+%
+Java
+
+Prog
+%%%
+public String _run() {
+    return String.valueOf(exp.eval());
+}
+%%%
+
+Exp
+%%%
+public abstract int eval();
+%%%
+
+WholeExp
+%%%
+public int eval() {
+    return Integer.parseInt(whole.lexeme);
+}
+%%%
+
+SubExp
+%%%
+public int eval() {
+    return exp1.eval() - exp2.eval();
+}
+%%%
