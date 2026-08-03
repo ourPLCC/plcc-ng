@@ -1,0 +1,19 @@
+# Lexical section
+skip WHITESPACE /\s+/
+token NUM /\d+/
+
+%
+
+# Syntactic section
+<Exp> ::= <NUM>
+
+%
+
+# Semantic section
+Python
+
+Exp
+%%%
+def _run(self):
+    return "Hello"
+%%%

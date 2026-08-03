@@ -22,7 +22,7 @@ a language's tokens, syntax, and semantics.
     Exp
     %%%
     def _run(self):
-        print("Hello")
+        return "Hello"
     %%%
     ```
 
