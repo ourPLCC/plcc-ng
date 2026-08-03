@@ -29,9 +29,10 @@ always edited as a pair. No `src/` change.
   `/workspaces/plcc-ng`, which is a *different* checkout on `main` and does not
   contain this work.
 - **Do not modify anything under `src/`.** Both issues are classified `docs` and
-  `test` and must stay that way so they do not bump the release version. The one
-  exception is the temporary red-proof mutation in Task 6, reverted within the
-  same task and never committed.
+  `test` and must stay that way so they do not bump the release version. No task
+  in this plan changes `src/`; Task 6's red-proof mutations are confined to
+  `docs/` and `tests/fixtures/`, and are reverted within the task and never
+  committed.
 - **A fixture's `spec.plcc` and its page's fenced block are one artifact in two
   places.** Never edit one without the other in the same step. The identity
   check exists to enforce this, and it will fail loudly if you forget.
