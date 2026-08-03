@@ -20,6 +20,7 @@ _run() {
         SKIP_SETUP=1 "${SCRIPT_DIR}/commands.bash"
         SKIP_SETUP=1 "${SCRIPT_DIR}/integration.bash"
         SKIP_SETUP=1 "${SCRIPT_DIR}/e2e.bash"
+        SKIP_SETUP=1 "${SCRIPT_DIR}/docs.bash"
         return
     fi
 
@@ -27,6 +28,7 @@ _run() {
         tests/bats/commands*)    SKIP_SETUP=1 "${SCRIPT_DIR}/commands.bash" "${path}" ;;
         tests/bats/integration*) SKIP_SETUP=1 "${SCRIPT_DIR}/integration.bash" "${path}" ;;
         tests/bats/e2e*)         SKIP_SETUP=1 "${SCRIPT_DIR}/e2e.bash" "${path}" ;;
+        tests/bats/docs*)        SKIP_SETUP=1 "${SCRIPT_DIR}/docs.bash" "${path}" ;;
         *)                       SKIP_SETUP=1 "${SCRIPT_DIR}/units.bash" "${path}" ;;
     esac
 }

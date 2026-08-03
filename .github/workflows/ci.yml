@@ -96,6 +96,29 @@ jobs:
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/e2e.bash
 
+  docs:
+    name: Documentation example tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('pdm.lock') }}
+      - name: Install PDM
+        run: pip install pdm
+      - name: Run documentation example tests
+        env:
+          PLCC_NO_TEST_CACHE: "1"
+        run: bin/test/docs.bash
+
   e2e-haskell-roundtrip:
     name: E2E Haskell roundtrip
     runs-on: ubuntu-latest

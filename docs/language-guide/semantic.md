@@ -42,9 +42,18 @@ on your target language — see your language's page below.
 ## Entry point: `_run`
 
 The start symbol's class inherits from `_Start`, which defines a `_run`
-method that is called when you run a program with `plcc-rep`. The default
-implementation prints a string representation of the parse tree root.
-Override `_run` in your start class to implement your language's semantics.
+method that is called when you run a program with `plcc-rep`. `_run`
+**returns** its output as a string; `plcc-rep` prints what it returns. The
+default implementation returns a string representation of the parse tree
+root. Override `_run` in your start class to implement your language's
+semantics.
+
+Returning something other than a string is a specification error, so
+convert explicitly when your semantics produce another type. Do not print
+or write to stdout from inside `_run` — that bypasses `plcc-rep`'s result
+protocol, and `plcc-rep --verbose-format=json` will not show it.
+
+Signatures differ by target language — see your language's page below.
 
 ## Signaling errors from semantics
 

@@ -29,7 +29,8 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 | [bin/test/commands.bash](bin/test/commands.bash) | Run black-box CLI tests (`tests/bats/commands/`) for individual commands exercised through their installed entry points. Covers both Level 0 primitives and Level 2 orchestrators (see architectural spec §5–6). Accepts an optional path to narrow to one file or subdirectory, e.g. `bin/test/commands.bash tests/bats/commands/plcc-make.bats`; defaults to the whole tier. | After finishing a command's unit tests, verify its CLI contract. |
 | [bin/test/integration.bash](bin/test/integration.bash) | Run adjacent-pair pipeline tests (`tests/bats/integration/`). Accepts an optional path to narrow to one file or subdirectory; defaults to the whole tier. | After touching a stage that sits next to another in the pipeline. |
 | [bin/test/e2e.bash](bin/test/e2e.bash) | Run end-to-end pipeline tests (`tests/bats/e2e/`). Accepts an optional path to narrow to one file or subdirectory; defaults to the whole tier (excluding the Java corpus and Haskell roundtrip, see below). | After changes that could affect the whole pipeline. |
-| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e). Does NOT include the Haskell roundtrip (see below). Accepts an optional path; it is routed to whichever single tier owns it (a `tests/bats/<tier>/...` path runs only that tier, anything else is treated as a pytest path and runs only `units.bash`) instead of running all four tiers in full. | Before pushing. |
+| [bin/test/docs.bash](bin/test/docs.bash) | Run the documentation example tests: the `tests/docs/` identity checks, then the `tests/bats/docs/` behavior tier. Accepts an optional path to narrow to one bats file. | After editing any runnable example in `docs/`. |
+| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e + docs). Does NOT include the Haskell roundtrip (see below). Accepts an optional path; it is routed to whichever single tier owns it (a `tests/bats/<tier>/...` path runs only that tier, anything else is treated as a pytest path and runs only `units.bash`) instead of running all five tiers in full. | Before pushing. |
 | [bin/test/e2e_haskell_roundtrip.bash](bin/test/e2e_haskell_roundtrip.bash) | Run the slow Haskell full-build roundtrip test (`tests/bats/e2e/haskell_roundtrip.bats`). Invokes `cabal build` and can take several minutes on a cold cache. | After changes to the Haskell emitter, runtime, or Haskell-specific fixtures. |
 | [bin/test/packaging.bash](bin/test/packaging.bash) | Build a wheel, install it into a throwaway venv, verify all entry points resolve, and run a smoke test against the installed package. | After changes to `pyproject.toml`, entry points, or packaging layout. |
 | [bin/test/all.bash](bin/test/all.bash) | Run `functional.bash` then `e2e_haskell_roundtrip.bash` then `packaging.bash`. | Full local pre-push check including the Haskell roundtrip. |
@@ -89,6 +90,7 @@ Tests are organized into tiers by scope. Each tier has its own directory and its
 | **Commands** | `tests/bats/commands/` | A single command exercised as a black box via its installed entry point. Stdin/stdout/exit-code contract. Level 2 orchestrators live here too even though they internally compose other commands — what distinguishes this tier is that only one installed command is invoked per test. |
 | **Integration** | `tests/bats/integration/` | Adjacent pipeline stages composed together (e.g. `plcc-tokens` piped into `plcc-trees`). Exercises the contract between two stages. |
 | **End-to-end** | `tests/bats/e2e/` | The full pipeline from spec file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
+| **Docs** | `tests/bats/docs/` (behavior) and `tests/docs/` (identity) | Every runnable specification in `docs/`, run through the commands its page documents and diffed against the output the page shows. The identity half asserts the page's fenced block is still byte-identical to the fixture that was run. |
 | **Packaging** | [bin/test/packaging.bash](bin/test/packaging.bash) | Builds a wheel, installs it into a fresh venv, and verifies entry points and a smoke test. Catches `pyproject.toml` regressions. |
 
 Rules of thumb:
@@ -134,6 +136,32 @@ Check [bin/](bin/) first. If a script there does what you need, use it. If one a
 ## Documentation conventions
 
 Section headings in `docs/` use sentence case: capitalize only the first word and proper names (e.g. `## Arguments and options`, not `## Arguments and Options`). This applies to all heading levels.
+
+### Documentation examples
+
+Every runnable specification in `docs/` has a fixture directory under
+`tests/fixtures/docs/` holding the spec, its input, and the output each
+documented command produces. [bin/test/docs.bash](bin/test/docs.bash) runs the
+fixture through the real commands and asserts both the output and a zero exit
+status, then asserts the page's fenced code block is byte-identical to the
+fixture.
+
+A page's fenced block and its fixture are one artifact stored in two places.
+Change both in the same commit or the identity check fails. To add an example,
+add the fixture first, register it in the `MANIFEST` in
+`tests/docs/example_block_test.py`, and write the page from it.
+
+Asserting the exit status is the point, not a formality. A Python or JavaScript
+`_run()` that prints instead of returning still puts the expected text on
+stdout, so an output-only comparison passes while the example is broken.
+
+The identity check departs from the co-location rule above in two ways, both
+deliberate. It lives in `tests/docs/` rather than beside a module in `src/`,
+because it tests documentation rather than a `src` module and must not ship in
+the wheel. And because `pdm test` runs bare `pytest` with no `testpaths`
+restriction, the units tier collects it too — so it runs in both tiers. That is
+kept on purpose: it means documentation drift is caught by the fastest tier.
+Do not add pytest config to suppress the second run.
 
 ## Workflow
 
