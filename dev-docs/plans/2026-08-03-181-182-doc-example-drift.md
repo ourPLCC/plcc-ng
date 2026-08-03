@@ -1305,7 +1305,10 @@ semantics.
 Returning something other than a string is a specification error, so
 convert explicitly when your semantics produce another type. Do not print
 or write to stdout from inside `_run` — that bypasses `plcc-rep`'s result
-protocol, and `plcc-rep --verbose-format=json` will not show it.
+protocol. `plcc-rep` echoes the stray text as-is, so it surfaces in every
+verbose format: under `plcc-rep --verbose-format=json` it lands among the
+JSON records as a line that is not JSON, breaking any consumer that parses
+the stream.
 
 Signatures differ by target language — see your language's page below.
 ```
@@ -1317,6 +1320,64 @@ conceptual home for `_run` and previously never stated the return contract at
 all, which is why three pages could drift from it unnoticed.
 
 Headings stay sentence case, per CONTRIBUTING.
+
+- [ ] **Step 1b: Correct the same false claim in the four other pages that carry it**
+
+The `--verbose-format=json` sentence above was wrong in an earlier draft of this
+plan, and the identical wrong claim is *already shipped* in four other pages.
+Verified against the running CLI: a `_run()` that prints `LEAKED` and returns
+`RETURNED-OK` produces, under `--verbose-format=json`:
+
+```
+LEAKED
+{"kind": "result", "value": "RETURNED-OK"}
+```
+
+The leak is shown, not hidden. [rep.py:179-183](src/plcc/cmd/rep.py#L179-L183)
+prints any line that is not a JSON dict with a `kind` key, unconditionally,
+before `verbose_format` is ever consulted. So the true failure mode is stream
+corruption — a non-JSON line among the JSON records — not silent omission.
+
+In `docs/language-guide/languages/python.md`, `javascript.md`, and `java.md`,
+each of which carries this sentence verbatim, replace:
+
+```markdown
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. Plain-text mode will still show what you printed, but `plcc-rep --verbose-format=json` will not.
+```
+
+with:
+
+```markdown
+Do not print or write to stdout from inside `_run()` — that bypasses `plcc-rep`'s JSON result envelope. `plcc-rep` echoes the stray text as-is in every verbose format: plain-text mode shows it alongside the result, and `--verbose-format=json` emits it as a line that is not JSON among the JSON records, breaking any consumer that parses the stream.
+```
+
+In `docs/cli/guide/language-extensions.md`, replace:
+
+```markdown
+- The entry-point implementation itself must never write to stdout. Doing
+  so bypasses the JSON envelope entirely; plain-text `plcc-rep` sessions
+  will still show it (by accident, since unparseable lines are echoed
+  as-is), but `plcc-rep --verbose-format=json` will not.
+```
+
+with:
+
+```markdown
+- The entry-point implementation itself must never write to stdout. Doing
+  so bypasses the JSON envelope entirely. `plcc-rep` echoes unparseable
+  lines as-is, so the stray text surfaces in every verbose format — and
+  under `plcc-rep --verbose-format=json` it lands among the JSON records
+  as a line that is not JSON, breaking consumers that parse the stream.
+```
+
+That page already described the mechanism correctly ("unparseable lines are
+echoed as-is") and then drew the opposite conclusion from it, which is why the
+error survived review for so long.
+
+Nothing in this plan's tier can catch a wrong prose claim about behavior — the
+tier executes examples, and these are sentences. That is a real limitation of
+the design and worth stating plainly rather than implying the tier makes all doc
+drift impossible.
 
 - [ ] **Step 2: Wire the tier into functional.bash**
 
