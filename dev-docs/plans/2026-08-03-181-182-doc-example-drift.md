@@ -388,29 +388,34 @@ PLCC_NO_TEST_CACHE=1 bin/test/docs.bash tests/bats/docs/quick-start.bats
 `PLCC_NO_TEST_CACHE=1` is needed because these are uncommitted working-tree
 changes and you want a live run.
 
-Expected: `1..6`, with exactly the three Python tests failing and all three Java
-tests passing:
+Expected: `1..6`, with **exactly one** failure — the Python `plcc-rep` test:
 
 ```
-not ok 1 quick-start Python: plcc-scan matches the documented output
-not ok 2 quick-start Python: plcc-parse matches the documented output
+ok 1 quick-start Python: plcc-scan matches the documented output
+ok 2 quick-start Python: plcc-parse matches the documented output
 not ok 3 quick-start Python: plcc-rep matches the documented output and exits 0
 ok 4 quick-start Java: plcc-scan matches the documented output
 ok 5 quick-start Java: plcc-parse matches the documented output
 ok 6 quick-start Java: plcc-rep matches the documented output and exits 0
 ```
 
-Read the failures carefully — the *reason* matters as much as the count:
+Test 3 must fail on `status`, with `_run() must return a string, got NoneType`
+visible in the output. That is the bug from issue #181.
 
-- Test 3 must fail on `status`, with `_run() must return a string, got NoneType`
-  visible in the output. That is the bug from issue #181.
-- Tests 1 and 2 fail for a different and less obvious reason: `plcc-scan` and
-  `plcc-parse` build the interpreter, and the broken semantics block makes that
-  build fail. If instead they *pass* here, do not proceed — it means the fixture
-  is not being picked up and test 3's failure may be measuring something else.
+Tests 1 and 2 **passing** against a broken spec is correct, not a symptom of a
+misplaced fixture. `plcc-scan` runs `plcc-make --through=scan` and `plcc-parse`
+runs `--through=parse`; neither reaches semantic validation or builds the
+interpreter, so neither can observe a broken `_run()`. Only `plcc-rep` uses
+`--through=all`. Verify with `src/plcc/cmd/{scan,parse,rep}.py` and `make.py`'s
+stage table if you want to see it for yourself.
 
-If all six pass, the fixture is not the broken version of the spec. Re-check
-Step 2.
+That narrows where the detection actually lives: for this class of bug the
+`plcc-rep` test is the sole detector, and its `status` assertion is the sole
+mechanism. The scan and parse tests still earn their place — they pin the output
+those pages document — but they are not what catches a `_run()` regression.
+
+If test 3 *passes*, stop: the fixture is not the broken version of the spec, and
+you should re-check Step 2.
 
 - [ ] **Step 6: Fix the page and the fixture together**
 
@@ -944,8 +949,13 @@ cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
 PLCC_NO_TEST_CACHE=1 bin/test/docs.bash tests/bats/docs/language-guide-examples.bats
 ```
 
-Expected: `1..6`, with the three Python tests failing and the three Java tests
-passing. The `plcc-rep` failure must show `got NoneType`.
+Expected: `1..6`, with **exactly one** failure — the Python `plcc-rep` test,
+showing `got NoneType`.
+
+As in Task 1, the Python `plcc-scan` and `plcc-parse` tests pass against the
+broken spec. Those commands stop at `--through=scan` and `--through=parse` and
+never build the interpreter, so they cannot see a broken `_run()`. Only the
+`plcc-rep` test detects this bug.
 
 - [ ] **Step 5: Apply the naive fix and watch it still fail**
 
@@ -1606,17 +1616,20 @@ cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
 PLCC_NO_TEST_CACHE=1 bin/test/docs.bash
 ```
 
-Expected: all 11 pytest tests pass, and the three `quick-start Python` bats
-tests fail. The `plcc-rep` failure must show
-`_run() must return a string, got NoneType`.
+Expected: all 11 pytest tests pass, and exactly one bats test fails —
+`quick-start Python: plcc-rep matches the documented output and exits 0` —
+showing `_run() must return a string, got NoneType`.
 
-Both halves of that result matter:
+Three parts of that result matter:
 
 - The identity tests **passing** is correct — the two copies agree with each
   other. They are just both wrong. This is why identity alone is insufficient.
 - The `plcc-rep` test failing on `status` is the detection this whole plan
   exists for. Note that its `$output` still contains `80`, so it would have
   passed on output alone.
+- The Python `plcc-scan` and `plcc-parse` tests **passing** is also correct:
+  they stop before the interpreter is built and cannot see a broken `_run()`.
+  For this class of bug the `plcc-rep` test is the only detector.
 
 - [ ] **Step 3: Revert the fixture only, leaving the page broken**
 
