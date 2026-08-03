@@ -1,0 +1,25 @@
+# Define the tokens of the language.
+skip  WHITESPACE '\s+'
+token NUM '\d+'
+
+%
+
+# Define the structure of the language.
+# A program consists of a sequence of numbers.
+<Program> **= <NUM:num>
+
+%
+
+# Define what happens when a program is run.
+Java
+
+Program
+%%%
+public String _run() {
+    int sum = 0;
+    for (Token num : numList) {
+        sum += Integer.parseInt(num.lexeme);
+    }
+    return String.valueOf(sum);
+}
+%%%

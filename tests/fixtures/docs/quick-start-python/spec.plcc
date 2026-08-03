@@ -1,0 +1,20 @@
+# Define the tokens of the language.
+skip  WHITESPACE '\s+'
+token NUM '\d+'
+
+%
+
+# Define the structure of the language.
+# A program consists of a sequence of numbers.
+<Program> **= <NUM:num>
+
+%
+
+# Define what happens when a program is run.
+Python
+
+Program
+%%%
+def _run(self):
+  return str(sum(int(str(num)) for num in self.numList))
+%%%
