@@ -42,7 +42,7 @@ Create a file named `spec.plcc`:
     Program
     %%%
     def _run(self):
-      print(sum(int(str(num)) for num in self.numList))
+      return str(sum(int(str(num)) for num in self.numList))
     %%%
     ```
 

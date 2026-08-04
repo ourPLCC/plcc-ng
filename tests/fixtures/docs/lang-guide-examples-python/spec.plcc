@@ -1,0 +1,31 @@
+# Subtraction language
+skip WHITESPACE '\s+'
+token WHOLE     '\d+'
+token MINUS     '\-'
+token LP        '\('
+token RP        '\)'
+token COMMA     ','
+%
+<Prog>         ::= <Exp:exp>
+<Exp:WholeExp> ::= <WHOLE:whole>
+<Exp:SubExp>   ::= MINUS LP <Exp:exp1> COMMA <Exp:exp2> RP
+%
+Python
+
+Prog
+%%%
+def _run(self):
+    return str(self.exp.eval())
+%%%
+
+WholeExp
+%%%
+def eval(self):
+    return int(self.whole.lexeme)
+%%%
+
+SubExp
+%%%
+def eval(self):
+    return self.exp1.eval() - self.exp2.eval()
+%%%

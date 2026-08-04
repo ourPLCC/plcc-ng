@@ -1,0 +1,20 @@
+# Lexical section
+skip WHITESPACE /\s+/
+token NUM /\d+/
+
+%
+
+# Syntactic section
+<Exp> ::= <NUM>
+
+%
+
+# Semantic section
+Java
+
+Exp
+%%%
+public String _run() {
+    return "Hello";
+}
+%%%

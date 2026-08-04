@@ -29,7 +29,8 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 | [bin/test/commands.bash](bin/test/commands.bash) | Run black-box CLI tests (`tests/bats/commands/`) for individual commands exercised through their installed entry points. Covers both Level 0 primitives and Level 2 orchestrators (see architectural spec §5–6). Accepts an optional path to narrow to one file or subdirectory, e.g. `bin/test/commands.bash tests/bats/commands/plcc-make.bats`; defaults to the whole tier. | After finishing a command's unit tests, verify its CLI contract. |
 | [bin/test/integration.bash](bin/test/integration.bash) | Run adjacent-pair pipeline tests (`tests/bats/integration/`). Accepts an optional path to narrow to one file or subdirectory; defaults to the whole tier. | After touching a stage that sits next to another in the pipeline. |
 | [bin/test/e2e.bash](bin/test/e2e.bash) | Run end-to-end pipeline tests (`tests/bats/e2e/`). Accepts an optional path to narrow to one file or subdirectory; defaults to the whole tier (excluding the Java corpus and Haskell roundtrip, see below). | After changes that could affect the whole pipeline. |
-| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e). Does NOT include the Haskell roundtrip (see below). Accepts an optional path; it is routed to whichever single tier owns it (a `tests/bats/<tier>/...` path runs only that tier, anything else is treated as a pytest path and runs only `units.bash`) instead of running all four tiers in full. | Before pushing. |
+| [bin/test/docs.bash](bin/test/docs.bash) | Run the documentation example tests: the `tests/docs/` identity checks, then the `tests/bats/docs/` behavior tier. Accepts an optional path to narrow to one bats file. | After editing any runnable example in `docs/`. |
+| [bin/test/functional.bash](bin/test/functional.bash) | Run all functional tiers (units + commands + integration + e2e + docs). Does NOT include the Haskell roundtrip (see below). Accepts an optional path; it is routed to whichever single tier owns it (a `tests/bats/<tier>/...` path runs only that tier, anything else is treated as a pytest path and runs only `units.bash`) instead of running all five tiers in full. | Before pushing. |
 | [bin/test/e2e_haskell_roundtrip.bash](bin/test/e2e_haskell_roundtrip.bash) | Run the slow Haskell full-build roundtrip test (`tests/bats/e2e/haskell_roundtrip.bats`). Invokes `cabal build` and can take several minutes on a cold cache. | After changes to the Haskell emitter, runtime, or Haskell-specific fixtures. |
 | [bin/test/packaging.bash](bin/test/packaging.bash) | Build a wheel, install it into a throwaway venv, verify all entry points resolve, and run a smoke test against the installed package. | After changes to `pyproject.toml`, entry points, or packaging layout. |
 | [bin/test/all.bash](bin/test/all.bash) | Run `functional.bash` then `e2e_haskell_roundtrip.bash` then `packaging.bash`. | Full local pre-push check including the Haskell roundtrip. |
@@ -58,6 +59,13 @@ All test scripts cache their output to `/tmp` so agents and tools can grep resul
 - In CI — the variable is set automatically for all test steps.
 - When you suspect the cache is stale and `bin/test/cache/clear.bash` is more than you need.
 
+### Docs
+
+| Command | What it does |
+|---|---|
+| [bin/docs/serve.bash](bin/docs/serve.bash) | Serve the documentation site locally with live reload via `mkdocs serve`. |
+| [bin/docs/build.bash](bin/docs/build.bash) | Build the site with `--strict` against `mkdocs-strict.yml`, so a broken link or a nav entry pointing at a missing file fails instead of warning. Run it before pushing a change that adds, renames, moves, or deletes a page. The config drops the `kroki` plugin, so the check needs no network. |
+
 ### Release
 
 | Command | What it does |
@@ -77,7 +85,7 @@ plcc-ng is built test-first.
 
 [bin/test/units.bash](bin/test/units.bash) runs in seconds and is the tightest feedback loop available. Keep it green at every commit.
 
-The same narrow-and-rerun pattern applies to bats-covered work: [bin/test/commands.bash](bin/test/commands.bash), [bin/test/integration.bash](bin/test/integration.bash), and [bin/test/e2e.bash](bin/test/e2e.bash) all accept an optional path to a single file or subdirectory, so you can narrow to the bats test you're iterating on instead of rerunning the whole tier.
+The same narrow-and-rerun pattern applies to bats-covered work: [bin/test/commands.bash](bin/test/commands.bash), [bin/test/integration.bash](bin/test/integration.bash), [bin/test/e2e.bash](bin/test/e2e.bash), and [bin/test/docs.bash](bin/test/docs.bash) all accept an optional path to a single file or subdirectory, so you can narrow to the bats test you're iterating on instead of rerunning the whole tier.
 
 ## Test tiers
 
@@ -89,6 +97,7 @@ Tests are organized into tiers by scope. Each tier has its own directory and its
 | **Commands** | `tests/bats/commands/` | A single command exercised as a black box via its installed entry point. Stdin/stdout/exit-code contract. Level 2 orchestrators live here too even though they internally compose other commands — what distinguishes this tier is that only one installed command is invoked per test. |
 | **Integration** | `tests/bats/integration/` | Adjacent pipeline stages composed together (e.g. `plcc-tokens` piped into `plcc-trees`). Exercises the contract between two stages. |
 | **End-to-end** | `tests/bats/e2e/` | The full pipeline from spec file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
+| **Docs** | `tests/bats/docs/` (behavior) and `tests/docs/` (identity) | A runnable specification from `docs/`, run through the commands its page documents and diffed against the output the page shows. The identity half asserts the page's fenced block and every documented output block are still byte-identical to the fixture that was run. Coverage is fixture-by-fixture, not yet every page — see below. |
 | **Packaging** | [bin/test/packaging.bash](bin/test/packaging.bash) | Builds a wheel, installs it into a fresh venv, and verifies entry points and a smoke test. Catches `pyproject.toml` regressions. |
 
 Rules of thumb:
@@ -134,6 +143,60 @@ Check [bin/](bin/) first. If a script there does what you need, use it. If one a
 ## Documentation conventions
 
 Section headings in `docs/` use sentence case: capitalize only the first word and proper names (e.g. `## Arguments and options`, not `## Arguments and Options`). This applies to all heading levels.
+
+### Documentation examples
+
+A covered runnable specification in `docs/` has a fixture directory under
+`tests/fixtures/docs/` holding the spec, its input, and the output each
+documented command produces. [bin/test/docs.bash](bin/test/docs.bash) runs the
+fixture through the real commands and asserts both the output and a zero exit
+status, then asserts the page's fenced code block and each output block it shows
+are byte-identical to the fixture.
+
+Six fixtures are covered today: the Python and Java tabs of `quick-start.md`,
+`language-guide/index.md`, and `language-guide/examples.md`. Not yet covered are
+the four quick-reference specifications in `language-guide/languages/*.md` — all
+complete and copy-and-run, so all able to drift unnoticed.
+
+The `UNCOVERED` allowlist in `tests/docs/example_block_test.py` names each
+uncovered page, why it is exempt, and **how many** `%%%` fences it holds today. A
+test fails if a page grows a runnable specification that is in neither the
+`MANIFEST` nor that allowlist — and, because of the count, also if a page already
+on the allowlist grows one. So an exemption covers the fences that existed when it
+was written, not the page in perpetuity: adding an example anywhere in `docs/`
+forces you either to give it a fixture or to raise the count and say deliberately
+that it is unguarded.
+
+A page's fenced block and its fixture are one artifact stored in two places, and
+so are a page's output blocks and the fixture's `expected-*` files. Change both
+in the same commit or the identity check fails — including when a `src/` change
+makes a command's output legitimately different, which has to be reflected on
+the page as well as in the fixture. To add an example, add the fixture first,
+register it in the `MANIFEST` in `tests/docs/example_block_test.py`, and write
+the page from it.
+
+Compare the command's full output, not just a substring of it, and assert the
+exit status too. A Python or JavaScript `_run()` that prints instead of
+returning still puts the expected text on stdout — but under the 2.0.0 contract
+it also puts `plcc-rep`'s specification error there, on stdout rather than
+stderr, so exact equality against the expected file fails on the extra lines.
+The exit-status assertion is cheap defense in depth on top of that, and catches
+a nonzero exit whose output happens to match.
+
+A page's examples are only half of what can break. Adding, renaming, moving, or
+deleting a page can leave a nav entry or a link pointing at nothing, which
+`mkdocs build` reports as a warning and otherwise ignores. Run
+[bin/docs/build.bash](bin/docs/build.bash) to turn those warnings into a failure
+before pushing; the same script is the `Build docs strictly` step in
+`.github/workflows/docs-tests.yml`.
+
+The identity check departs from the co-location rule above in two ways, both
+deliberate. It lives in `tests/docs/` rather than beside a module in `src/`,
+because it tests documentation rather than a `src` module and must not ship in
+the wheel. And because `pdm test` runs bare `pytest` with no `testpaths`
+restriction, the units tier collects it too — so it runs in both tiers. That is
+kept on purpose: it means documentation drift is caught by the fastest tier.
+Do not add pytest config to suppress the second run.
 
 ## Workflow
 

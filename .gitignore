@@ -189,3 +189,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 site-dev/
+
+# Subagent-driven development scratch (ledger, briefs, review packages)
+.superpowers/

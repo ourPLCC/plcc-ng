@@ -12,6 +12,11 @@
 - **[#161](issues/161-rename-plcc-rep-to-plcc-eval.md) — Consider renaming plcc-rep to plcc-eval for phase-naming consistency**
   `plcc-rep` is named after its interaction mode (REPL), not its phase, breaking the `scan`/`parse`/`?` naming pattern; an alias or rename to `plcc-eval` would restore it.
 
+### Test
+
+- **[#184](issues/184-docs-tier-followups.md) — Follow-ups left open by the docs example tier**
+  Six non-blocking observations from the #181/#182/#183 reviews: the strict gate re-enumerates `mkdocs.yml`'s plugin list, plus five diagnostics and test-hygiene items.
+
 ### Chore
 
 - **[#154](issues/154-update-python-semantic-release.md) — Update python-semantic-release**
