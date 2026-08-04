@@ -1787,7 +1787,7 @@ Expected: exit 0, no warnings. The `semantic.md` rewrite in Task 5 added no
 links, but `--strict` is how this repo catches a broken one, and the build is
 cheap.
 
-- [ ] **Step 3: Close both issues with the script**
+- [ ] **Step 3: Close all three issues with the script**
 
 Never move the files or edit the roadmap by hand — `close.bash` also rewrites
 `dev-docs/` links pointing at each issue's old path, fixes the moved file's own
@@ -1798,7 +1798,12 @@ entries.
 cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
 bin/issues/close.bash 181
 bin/issues/close.bash 182
+bin/issues/close.bash 183
 ```
+
+Three, not two. #183 (the orphan nav entries and the missing strict-build gate)
+was filed and fixed during this branch by Task 9, so it closes here with the
+other two.
 
 - [ ] **Step 4: Review what the script staged**
 
@@ -1808,12 +1813,13 @@ git status --short
 git diff --cached
 ```
 
-Expected: both issue files moved to `dev-docs/issues/done/`, and both the
-`### Docs` and `### Test` roadmap groups removed entirely — each held only one
-of these two issues. `dev-docs/specs/2026-08-03-doc-example-drift-design.md`
-and each issue's cross-reference to the other should now point at
-`issues/done/`. Milestone prose is not auto-edited; if the roadmap mentions
-either issue in prose, fix it by hand now.
+Expected: all three issue files moved to `dev-docs/issues/done/`, and both the
+`### Docs` and `### Test` roadmap groups removed entirely — `### Test` held only
+#182, and `### Docs` held only #181 and #183, so both groups empty out.
+`dev-docs/specs/2026-08-03-doc-example-drift-design.md` and the issues'
+cross-references to each other should now point at `issues/done/`, as should the
+plan's own link to #183. Milestone prose is not auto-edited; if the roadmap
+mentions any of the three in prose, fix it by hand now.
 
 - [ ] **Step 5: Verify issue bookkeeping is consistent**
 
@@ -1822,7 +1828,11 @@ cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
 bin/issues/check.bash
 ```
 
-Expected: `OK: 4 open issues, roadmap consistent, next id 183`.
+Expected: `OK: 4 open issues, roadmap consistent, next id 184`.
+
+Both numbers differ from an earlier draft of this plan: seven issues are open
+before this step (six originally plus #183), and `.next-id.txt` advanced to 184
+when #183 was created.
 
 - [ ] **Step 6: Commit**
 
@@ -1830,7 +1840,7 @@ Expected: `OK: 4 open issues, roadmap consistent, next id 183`.
 cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
 git add -A
 git commit -m "$(cat <<'EOF'
-docs(issues): close issues 181 and 182 (doc example drift), update roadmap
+docs(issues): close issues 181, 182, 183 (doc example drift), update roadmap
 
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 EOF
