@@ -1838,3 +1838,123 @@ EOF
 ```
 
 This is the final commit of the branch, per the issue conventions.
+
+---
+
+### Task 8: Update the functional.bash coverage that Task 5 broke
+
+**Run this BEFORE Task 7.** It is numbered 8 only because it was discovered
+during Task 7; it belongs logically with Task 5 and must land before the
+branch's final commit.
+
+Task 5 added a fifth sub-script call and a fifth routing arm to
+`bin/test/functional.bash`. `tests/bats/commands/test-scripts-path-filter.bats`
+covers that script by copying it into a stub tree and stubbing each sub-script,
+and it was never updated — so `functional.bash` now calls a `docs.bash` that the
+stub tree does not contain, and the test dies with exit 127
+(`docs.bash: No such file or directory`).
+
+This is a plan defect, not an implementer error: the plan modified
+`functional.bash` without checking what covered it. The regression is real and
+was caught only by the full-suite run in Task 7, because Task 5's own
+verification exercised the docs tier and the routing behaviour directly but not
+the commands tier.
+
+**Files:**
+- Modify: `tests/bats/commands/test-scripts-path-filter.bats:67`, `:112-120`, and append one test
+
+**Interfaces:**
+- Consumes: `bin/test/functional.bash` as Task 5 left it — five sub-scripts in
+  the no-argument path, and a `tests/bats/docs*` arm before the catch-all `*`.
+- Produces: nothing later tasks depend on.
+
+- [ ] **Step 1: Confirm the failure before changing anything**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+PLCC_NO_TEST_CACHE=1 bin/test/commands.bash tests/bats/commands/test-scripts-path-filter.bats
+```
+
+Expected: one failure, `functional.bash: no argument runs all four sub-scripts`,
+with `docs.bash: No such file or directory` and status 127 in the output. All
+other tests in the file pass.
+
+- [ ] **Step 2: Add `docs` to the stub tree**
+
+In `tests/bats/commands/test-scripts-path-filter.bats:67`, change:
+
+```bash
+    for tier in units commands integration e2e; do
+```
+
+to:
+
+```bash
+    for tier in units commands integration e2e docs; do
+```
+
+- [ ] **Step 3: Update the no-argument test to assert all five**
+
+Replace the whole final test (lines 112-120) with:
+
+```bash
+@test "functional.bash: no argument runs all five sub-scripts" {
+    setup_functional_stub_tree
+    "${STUB_ROOT}/bin/test/functional.bash"
+    run cat "${ROUTE_LOG}"
+    [[ "$output" == *"units "* ]]
+    [[ "$output" == *"commands "* ]]
+    [[ "$output" == *"integration "* ]]
+    [[ "$output" == *"e2e "* ]]
+    [[ "$output" == *"docs "* ]]
+}
+```
+
+The name changes from "four" to "five". A test whose name miscounts what it
+asserts is the same class of defect this branch exists to remove.
+
+- [ ] **Step 4: Cover the new routing arm**
+
+The file has one routing test per tier, and Task 5's `tests/bats/docs*` arm has
+none — it was verified by hand during Task 5 but nothing pins it. Append, after
+the `e2e-tier path` test and matching its form exactly:
+
+```bash
+
+@test "functional.bash: docs-tier path routes only to docs.bash" {
+    setup_functional_stub_tree
+    "${STUB_ROOT}/bin/test/functional.bash" "tests/bats/docs/quick-start.bats"
+    [ "$(cat "${ROUTE_LOG}")" = "docs tests/bats/docs/quick-start.bats" ]
+}
+```
+
+This is the test that would have caught the regression had it existed, and it
+guards the arm against being reordered after the catch-all `*` later.
+
+- [ ] **Step 5: Confirm the file passes**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+PLCC_NO_TEST_CACHE=1 bin/test/commands.bash tests/bats/commands/test-scripts-path-filter.bats
+```
+
+Expected: all tests pass, one more than before (the new routing test).
+
+- [ ] **Step 6: Commit**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+git add tests/bats/commands/test-scripts-path-filter.bats
+git commit -m "$(cat <<'EOF'
+test(commands): cover the docs tier in functional.bash's routing tests
+
+functional.bash gained a fifth sub-script and a fifth routing arm, but its
+stub tree still stubbed only four, so the no-argument test died on a
+missing docs.bash (exit 127). Adds docs to the stub tree, corrects the
+test's name and assertions from four to five, and adds the per-tier
+routing test the new arm was missing.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+EOF
+)"
+```
