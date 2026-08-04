@@ -85,22 +85,29 @@ MANIFEST = {
 # MANIFEST is a hand-enumeration, and hand-enumeration of affected docs is the
 # root cause this tier exists to remove, so every uncovered specification is
 # named here with a reason rather than being silently absent.
+# Pages whose `%%%` fences the tier does not cover, mapped to how many such
+# fences each holds today. The count is what makes this allowlist a guard rather
+# than a blanket exemption: adding a fence to a listed page changes its count and
+# fails `test_every_runnable_spec_is_covered_or_allowlisted`, so a new example
+# cannot ride in on an existing entry. Whoever adds one has to either fixture it
+# or bump the count deliberately.
 UNCOVERED = {
     # Complete, copy-and-run quick-reference specifications that work today but
-    # are unguarded. Extending the tier to them is deliberately out of scope
-    # (see dev-docs/specs/2026-08-03-doc-example-drift-design.md, "Out of
-    # scope"): they need fixtures of their own, and the Haskell one needs a
-    # `cabal build`, so it belongs with the slow tests rather than in this tier.
-    "language-guide/languages/haskell.md",
-    "language-guide/languages/java.md",
-    "language-guide/languages/javascript.md",
-    "language-guide/languages/python.md",
+    # are unguarded, plus the illustrative `%%%` fragments on the same pages.
+    # Extending the tier to them is deliberately out of scope (see
+    # dev-docs/specs/2026-08-03-doc-example-drift-design.md, "Out of scope"):
+    # they need fixtures of their own, and the Haskell one needs a `cabal
+    # build`, so it belongs with the slow tests rather than in this tier.
+    "language-guide/languages/haskell.md": 4,
+    "language-guide/languages/java.md": 3,
+    "language-guide/languages/javascript.md": 4,
+    "language-guide/languages/python.md": 4,
     # Illustrative fragments rather than specifications: semantic.md shows the
     # `ClassName` / `%%%` code-block syntax in isolation, and migration.md
     # shows PLCC-versus-plcc-ng snippets. Neither is runnable, so there is
     # nothing for the behavior tier to execute.
-    "language-guide/semantic.md",
-    "migration.md",
+    "language-guide/semantic.md": 2,
+    "migration.md": 2,
 }
 
 
@@ -381,11 +388,20 @@ def test_every_runnable_spec_is_covered_or_allowlisted():
         covered.setdefault(page, set()).add(opening + 1)
 
     unguarded = []
+    miscounted = []
     for md in sorted(DOCS.rglob("*.md")):
         page = md.relative_to(DOCS).as_posix()
+        fences = find_spec_fences(_read(md))
         if page in UNCOVERED:
+            # Allowlisted, but only for the fences that were there when the
+            # exemption was written. A new one changes the count.
+            if len(fences) != UNCOVERED[page]:
+                miscounted.append(
+                    f"docs/{page}: UNCOVERED says {UNCOVERED[page]}, "
+                    f"found {len(fences)} at {fences}"
+                )
             continue
-        for line in find_spec_fences(_read(md)):
+        for line in fences:
             if line not in covered.get(page, ()):
                 unguarded.append(f"docs/{page}:{line}")
 
@@ -395,7 +411,18 @@ def test_every_runnable_spec_is_covered_or_allowlisted():
         + "\n\nA specification nothing runs can break and ship, which is the "
         "regression this tier exists to prevent. Either add a fixture under "
         "tests/fixtures/docs/ and register it in MANIFEST, or add the page to "
-        "UNCOVERED with the reason it is out of scope."
+        "UNCOVERED with the count and the reason it is out of scope."
+    )
+
+    assert not miscounted, (
+        "The number of runnable specifications on these allowlisted pages "
+        "changed:\n  "
+        + "\n  ".join(miscounted)
+        + "\n\nUNCOVERED exempts the fences that existed when the exemption was "
+        "written, not the page forever. If you added one, either give it a "
+        "fixture under tests/fixtures/docs/ and register it in MANIFEST, or "
+        "raise the count here to say deliberately that it is unguarded too. "
+        "If you removed one, lower the count."
     )
 
 

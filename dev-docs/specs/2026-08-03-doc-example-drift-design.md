@@ -141,10 +141,13 @@ language and behavior fails.
 
 The manifest is still a hand-enumeration, which is the root cause above, so it
 gets its own guard: every `%%%`-bearing fence in `docs/**/*.md` must be either
-registered in the manifest or named in an `UNCOVERED` allowlist with the reason
-it is out of scope. A new example on a new or an already-covered page therefore
-cannot land with zero coverage — the worst it can do is force whoever adds it to
-write down why it is unguarded.
+registered in the manifest or on a page named in an `UNCOVERED` allowlist, which
+records the reason the page is out of scope **and how many such fences it holds**.
+The count is what keeps the allowlist from becoming a blanket exemption: an entry
+covers the fences that existed when it was written, so adding one to an already
+allowlisted page changes the count and fails the guard too. A new example
+anywhere in `docs/` therefore cannot land with zero coverage — the worst it can
+do is force whoever adds it to write down that it is unguarded.
 
 Bats tests follow the existing conventions: `bats_require_minimum_version
 1.5.0` as the third line, paths under `BATS_TEST_TMPDIR`, no `mktemp`, no

@@ -15,7 +15,7 @@
 ### Test
 
 - **[#184](issues/184-docs-tier-followups.md) — Follow-ups left open by the docs example tier**
-  Seven non-blocking observations from the #181/#182/#183 reviews: the strict gate re-enumerates `mkdocs.yml`'s plugin list, `CONTRIBUTING` overstates the page-level coverage guard, and five diagnostics/test-hygiene items.
+  Six non-blocking observations from the #181/#182/#183 reviews: the strict gate re-enumerates `mkdocs.yml`'s plugin list, plus five diagnostics and test-hygiene items.
 
 ### Chore
 

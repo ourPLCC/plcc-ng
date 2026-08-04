@@ -156,11 +156,16 @@ are byte-identical to the fixture.
 Six fixtures are covered today: the Python and Java tabs of `quick-start.md`,
 `language-guide/index.md`, and `language-guide/examples.md`. Not yet covered are
 the four quick-reference specifications in `language-guide/languages/*.md` — all
-complete and copy-and-run, so all able to drift unnoticed. The `UNCOVERED`
-allowlist in `tests/docs/example_block_test.py` names every uncovered
-specification with the reason, and a test fails if a page grows a runnable
-specification that is in neither the `MANIFEST` nor that allowlist. New examples
-therefore cannot land silently unguarded.
+complete and copy-and-run, so all able to drift unnoticed.
+
+The `UNCOVERED` allowlist in `tests/docs/example_block_test.py` names each
+uncovered page, why it is exempt, and **how many** `%%%` fences it holds today. A
+test fails if a page grows a runnable specification that is in neither the
+`MANIFEST` nor that allowlist — and, because of the count, also if a page already
+on the allowlist grows one. So an exemption covers the fences that existed when it
+was written, not the page in perpetuity: adding an example anywhere in `docs/`
+forces you either to give it a fixture or to raise the count and say deliberately
+that it is unguarded.
 
 A page's fenced block and its fixture are one artifact stored in two places, and
 so are a page's output blocks and the fixture's `expected-*` files. Change both

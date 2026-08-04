@@ -5,15 +5,22 @@
 
 ## Description
 
-Seven observations from the reviews of #181/#182/#183 that were judged
+Six observations from the reviews of #181/#182/#183 that were judged
 non-blocking and deliberately not fixed on that branch. None weakens detection;
-they are diagnostics, drift risk, and one prose overstatement. Recorded here so
-they survive — they were previously only in a scratch ledger.
+they are diagnostics and test hygiene. Recorded here so they survive — they were
+previously only in a scratch ledger.
 
-The one review finding that *did* weaken a check — `docs-tests.yml`'s `paths:`
-filter omitting `mkdocs-strict.yml` and `bin/docs/build.bash`, so the strict gate
-could not be triggered by changes to its own inputs — was fixed on that branch
-rather than deferred here.
+Two review findings that *did* weaken something were fixed on that branch rather
+than deferred here:
+
+- `docs-tests.yml`'s `paths:` filter omitted `mkdocs-strict.yml` and
+  `bin/docs/build.bash`, so the strict gate could not be triggered by changes to
+  its own inputs.
+- `UNCOVERED` was a page-level allowlist that skipped every fence on a listed
+  page, so a new runnable specification added to an already-exempt page landed
+  unguarded — and `CONTRIBUTING.md` claimed otherwise. Raised by a Copilot review
+  of the PR. The allowlist now records a fence count per page, so an exemption
+  covers only the fences that existed when it was written.
 
 ### 1. The strict gate re-enumerates the plugin list
 
@@ -27,20 +34,7 @@ asserting `strict.plugins == mkdocs.plugins - {kroki}`. The second is better and
 is roughly the same shape as the `UNCOVERED` guard already in
 `tests/docs/example_block_test.py`.
 
-### 2. `CONTRIBUTING.md` overstates the coverage guard
-
-Around line 162: "New examples therefore cannot land silently unguarded." The
-guard is page-level, so a new example added to a page already named in
-`UNCOVERED` — for instance a second specification in
-`docs/language-guide/languages/python.md` — does land unguarded. The design doc's
-wording is precise ("a new example on a new or an already-covered page"), and
-`UNCOVERED`'s entries are pages rather than fences. Either tighten the guard to
-fence granularity or qualify the sentence.
-
-This is the same category of overstatement that #181/#182's branch existed to
-remove, which is why it is worth fixing rather than leaving.
-
-### 3. Whitespace-only drift produces a visually identical diff
+### 2. Whitespace-only drift produces a visually identical diff
 
 `tests/docs/example_block_test.py`'s failure output uses
 `difflib.unified_diff`, which emits no `\ No newline at end of file` marker and
@@ -50,14 +44,14 @@ The test still fails correctly — only the diagnostic is weak. `repr`-ing the
 differing lines, or noting "difference is whitespace-only" when
 `documented.split() == tested.split()`, would close it.
 
-### 4. Two extractor error branches are untested
+### 3. Two extractor error branches are untested
 
 `extract_tabbed_block`'s "is not followed by a fenced block" (both raise sites)
 and "has an under-indented line" have no test. Deleting either guard would not
 fail the suite. Impact is bounded: both only upgrade a would-be mismatch into a
 clearer message, so their loss degrades diagnostics rather than detection.
 
-### 5. The tab-selection test asserts only one direction
+### 4. The tab-selection test asserts only one direction
 
 `test_extract_selects_the_named_tab` extracts the *last* tab from a two-tab
 input; it never asserts that extracting the earlier tab stops before the adjacent
@@ -65,7 +59,7 @@ one. An over-running extractor would still be caught today (for the last tab it
 runs off the end and raises), so this is a missing direct pin rather than an
 uncovered failure mode. One extra assertion closes it.
 
-### 6. Focused runs of the docs test emit coverage noise
+### 5. Focused runs of the docs test emit coverage noise
 
 `bin/test/units.bash tests/docs/example_block_test.py` prints `CoverageWarning`
 plus `WARNING: Failed to generate report: No data to report.` — it is the repo's
@@ -74,7 +68,7 @@ The full-tier run is clean, and `bin/test/docs.bash` avoids it by calling
 `pdm run pytest` directly. Any fix touches coverage configuration, so it was left
 alone.
 
-### 7. `bin/test/docs.bash` fail-fast hides the second half
+### 6. `bin/test/docs.bash` fail-fast hides the second half
 
 It runs under `set -euo pipefail`, so a pytest failure aborts before bats runs
 and you cannot see both halves' results in one invocation. This matches
