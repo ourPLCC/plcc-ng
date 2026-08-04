@@ -1958,3 +1958,129 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 EOF
 )"
 ```
+
+---
+
+### Task 9: Delete the orphan nav entries and gate strict builds in CI
+
+**Run this BEFORE Task 7.** Numbered 9 because it was discovered during Task 7's
+`mkdocs build --strict` step; it must land before the branch's final commit so
+Task 7 can close #183 alongside #181 and #182.
+
+Closes [#183](../issues/183-docs-orphan-plantuml-nav-entries.md).
+
+`mkdocs build --strict` fails on three nav entries in `mkdocs.yml` that point at
+pages which do not exist. They are leftovers from #113's diagram-command rename.
+This predates the branch — `mkdocs.yml` is untouched by Tasks 1-8 and the same
+three lines are on `main`'s tip — but it blocks Task 7's verification, and the
+reason it survived is squarely this branch's subject: **nothing in CI runs
+`mkdocs build --strict`.** `docs.yml` publishes via `mike deploy` (no `--strict`)
+and only on push to `main` or release; `ci.yml` skips docs-only PRs entirely.
+
+**Files:**
+- Modify: `mkdocs.yml:88-90` (delete)
+- Modify: `.github/workflows/docs-tests.yml` (add one step)
+
+**Interfaces:**
+- Consumes: `.github/workflows/docs-tests.yml` as Task 5 created it.
+- Produces: nothing later tasks depend on, beyond #183 becoming closeable.
+
+- [ ] **Step 1: Confirm the failure and that the targets are orphans**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+pdm run mkdocs build --strict; echo "EXIT=$?"
+grep -n "plcc-diagram-build\|plcc-diagram-emit\|plcc-diagram-run" mkdocs.yml
+```
+
+Expected: a nonzero exit naming the three missing `plcc-plantuml-diagram-*`
+pages, and the grep showing `plcc-diagram-build`, `plcc-diagram-emit`, and
+`plcc-diagram-run` **already present** in the nav at lines 62, 65, and 67. That
+second check is what proves deletion loses nothing — do not skip it.
+
+- [ ] **Step 2: Delete the three orphan entries**
+
+In `mkdocs.yml`, delete exactly these three lines (88-90):
+
+```yaml
+      - plcc-plantuml-diagram-build: cli/commands/plcc-plantuml-diagram-build.md
+      - plcc-plantuml-diagram-emit: cli/commands/plcc-plantuml-diagram-emit.md
+      - plcc-plantuml-diagram-run: cli/commands/plcc-plantuml-diagram-run.md
+```
+
+Change nothing else in the file. Do not reorder or reformat the surrounding
+alphabetical list.
+
+- [ ] **Step 3: Confirm the strict build now passes**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+pdm run mkdocs build --strict; echo "EXIT=$?"
+```
+
+Expected: `EXIT=0`, no warnings.
+
+You may see a notice in the output recommending `pip install properdocs` for
+"MkDocs 2.0". That is a real deprecation notice from `properdocs`, a legitimate
+transitive dependency (`pdm.lock` pins 1.6.7 via `mkdocs-kroki-plugin`; see
+[#156](../issues/156-mkdocs-1x-successor-decision.md)). **Do not install it, and
+do not set any environment variable it suggests.** Choosing this project's
+MkDocs successor is tracked separately in #156 and is not part of this task.
+
+- [ ] **Step 4: Gate strict builds on documentation PRs**
+
+In `.github/workflows/docs-tests.yml`, add a step to the `docs` job immediately
+after the "Run documentation example tests" step:
+
+```yaml
+      - name: Build docs strictly
+        run: pdm run mkdocs build --strict
+```
+
+This workflow already triggers on `docs/**`, `*.md`, and `mkdocs.yml`, so a PR
+that breaks a nav target or a link now fails before merge. The gate belongs here
+rather than in `docs.yml`, which runs only on push to `main` and on release —
+a gate there would report the problem only after it had already shipped.
+
+- [ ] **Step 5: Verify the workflow still parses**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+pdm run python -c "
+import yaml, pathlib
+d = yaml.safe_load(pathlib.Path('.github/workflows/docs-tests.yml').read_text())
+steps = [s.get('name') or s.get('uses') for s in d['jobs']['docs']['steps']]
+print(steps)
+"
+```
+
+Expected: the step list ends with `'Run documentation example tests'` followed by
+`'Build docs strictly'`. If `pyyaml` is unavailable, say so and review the diff
+by eye instead.
+
+- [ ] **Step 6: Commit**
+
+```bash
+cd /workspaces/plcc-ng/.claude/worktrees/docs-run-contract-audit
+git add mkdocs.yml .github/workflows/docs-tests.yml
+git commit -m "$(cat <<'EOF'
+docs: drop orphan plantuml nav entries and gate strict builds
+
+mkdocs.yml still listed three command pages that #113's rename removed.
+The renamed pages were already in the nav, so the entries were pure
+orphans putting three dead links in the published site.
+
+It survived because nothing in CI runs `mkdocs build --strict`: docs.yml
+publishes via mike (no --strict) and only after merge, and ci.yml skips
+docs-only PRs. Adds the gate to docs-tests.yml, which already triggers on
+mkdocs.yml and docs/**, so a broken link fails the PR that introduces it.
+
+Closes #183.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+EOF
+)"
+```
+
+Note that the issue itself is closed by Task 7 via `bin/issues/close.bash 183`,
+not here — this commit only does the work.

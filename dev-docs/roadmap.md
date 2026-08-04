@@ -16,6 +16,8 @@
 
 - **[#181](issues/181-docs-run-contract-stale-python-examples.md) — Python examples in docs still use the pre-2.0.0 `_run()` print contract**
   All three `=== "Python"` tabs in `docs/` print from `_run()` instead of returning, so each exits 1 with a `specification_error`; the leaked `print` makes the documented output appear anyway, which is why it went unnoticed.
+- **[#183](issues/183-docs-orphan-plantuml-nav-entries.md) — Orphan plantuml nav entries put three dead links in the published docs**
+  `mkdocs.yml` still lists three command pages that #113's rename removed; the renamed pages are already in the nav, so the entries are pure orphans. Nothing in CI runs `mkdocs build --strict`, which is why it reached `main`.
 
 ### Test
 
