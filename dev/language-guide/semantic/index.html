@@ -2168,90 +2168,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-build
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-emit
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-run
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../cli/commands/plcc-python-emit/" class="md-nav__link">
         
   
@@ -2558,9 +2474,19 @@ generated class. For example:</p>
 on your target language — see your language's page below.</p>
 <h2 id="entry-point-_run">Entry point: <code>_run</code></h2>
 <p>The start symbol's class inherits from <code>_Start</code>, which defines a <code>_run</code>
-method that is called when you run a program with <code>plcc-rep</code>. The default
-implementation prints a string representation of the parse tree root.
-Override <code>_run</code> in your start class to implement your language's semantics.</p>
+method that is called when you run a program with <code>plcc-rep</code>. <code>_run</code>
+<strong>returns</strong> its output as a string; <code>plcc-rep</code> prints what it returns. The
+default implementation returns a string representation of the parse tree
+root. Override <code>_run</code> in your start class to implement your language's
+semantics.</p>
+<p>Returning something other than a string is a specification error, so
+convert explicitly when your semantics produce another type. Do not print
+or write to stdout from inside <code>_run</code> — that bypasses <code>plcc-rep</code>'s result
+protocol. <code>plcc-rep</code> echoes the stray text as-is, so it surfaces in every
+verbose format: under <code>plcc-rep --verbose-format=json</code> it lands among the
+JSON records as a line that is not JSON, breaking any consumer that parses
+the stream.</p>
+<p>Signatures differ by target language — see your language's page below.</p>
 <h2 id="signaling-errors-from-semantics">Signaling errors from semantics</h2>
 <p>When your semantics code needs to report a deliberate error — a type mismatch, a precondition violation, or any condition your language treats as an error — raise a <code>LanguageError</code>. <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
 <p>Raising any other exception is treated as a bug in your specification. <code>plcc-rep</code> prints a specification error and exits.</p>

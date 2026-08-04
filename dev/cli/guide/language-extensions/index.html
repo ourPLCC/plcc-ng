@@ -2151,90 +2151,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-build
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-emit
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-run
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../commands/plcc-python-emit/" class="md-nav__link">
         
   
@@ -2639,9 +2555,10 @@ custom name from <code>entry_point</code>):</p>
   It must never let a wrong-typed value flow into the <code>value</code> field
   silently.</li>
 <li>The entry-point implementation itself must never write to stdout. Doing
-  so bypasses the JSON envelope entirely; plain-text <code>plcc-rep</code> sessions
-  will still show it (by accident, since unparseable lines are echoed
-  as-is), but <code>plcc-rep --verbose-format=json</code> will not.</li>
+  so bypasses the JSON envelope entirely. <code>plcc-rep</code> echoes unparseable
+  lines as-is, so the stray text surfaces in every verbose format — and
+  under <code>plcc-rep --verbose-format=json</code> it lands among the JSON records
+  as a line that is not JSON, breaking consumers that parse the stream.</li>
 </ul>
 <p>This is what lets <code>plcc-rep --verbose-format=json</code> show a real, structured
 record for every result, regardless of which language emitted the
