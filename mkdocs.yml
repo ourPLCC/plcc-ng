@@ -85,9 +85,6 @@ nav:
       - plcc-parse: cli/commands/plcc-parse.md
       - plcc-parser-list: cli/commands/plcc-parser-list.md
       - plcc-parser-table: cli/commands/plcc-parser-table.md
-      - plcc-plantuml-diagram-build: cli/commands/plcc-plantuml-diagram-build.md
-      - plcc-plantuml-diagram-emit: cli/commands/plcc-plantuml-diagram-emit.md
-      - plcc-plantuml-diagram-run: cli/commands/plcc-plantuml-diagram-run.md
       - plcc-python-emit: cli/commands/plcc-python-emit.md
       - plcc-python-run: cli/commands/plcc-python-run.md
       - plcc-rep: cli/commands/plcc-rep.md

@@ -36,3 +36,5 @@ jobs:
         env:
           PLCC_NO_TEST_CACHE: "1"
         run: bin/test/docs.bash
+      - name: Build docs strictly
+        run: pdm run mkdocs build --strict
