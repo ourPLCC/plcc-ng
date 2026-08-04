@@ -2242,90 +2242,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cli/commands/plcc-plantuml-diagram-build.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-build
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../cli/commands/plcc-plantuml-diagram-emit.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-emit
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../cli/commands/plcc-plantuml-diagram-run.md" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    plcc-plantuml-diagram-run
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../../cli/commands/plcc-python-emit/" class="md-nav__link">
         
   
@@ -2771,7 +2687,7 @@ def eval(self):
 <span class="o">%%%</span>
 </code></pre></div>
 <p><code>_run()</code> must return a <code>str</code>. The runtime sends that string to <code>plcc-rep</code> as-is — it is not converted or coerced. Returning anything else (an <code>int</code>, a <code>list</code>, <code>None</code>, ...) raises a <code>specification_error</code>; convert explicitly (<code>str(x)</code>) if needed.</p>
-<p>Do not print or write to stdout from inside <code>_run()</code> — that bypasses <code>plcc-rep</code>'s JSON result envelope. Plain-text mode will still show what you printed, but <code>plcc-rep --verbose-format=json</code> will not.</p>
+<p>Do not print or write to stdout from inside <code>_run()</code> — that bypasses <code>plcc-rep</code>'s JSON result envelope. <code>plcc-rep</code> echoes the stray text as-is in every verbose format: plain-text mode shows it alongside the result, and <code>--verbose-format=json</code> emits it as a line that is not JSON among the JSON records, breaking any consumer that parses the stream.</p>
 <p>The default <code>_Start._run()</code> returns <code>str(self)</code>. Override it to replace the default behavior.</p>
 <h2 id="languageerror"><code>LanguageError</code></h2>
 <p>Raise <code>LanguageError</code> to signal a deliberate error in the defined language — a type mismatch, division by zero, or any condition your language treats as an error. <code>plcc-rep</code> prints the message and gives a fresh prompt; the session continues.</p>
