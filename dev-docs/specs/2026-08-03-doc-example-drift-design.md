@@ -114,21 +114,37 @@ spec plus input plus several expected outputs, so it gets a directory. The
 ## Part 3 — Two independent checks
 
 **Behavior** — new bats tier `tests/bats/docs/`. For each fixture, run the
-commands the page documents (`plcc-scan`, `plcc-parse`, `plcc-rep`), assert
-stdout matches the `expected-*` files and that exit status is 0. The exit-status
-assertion is the one that matters most: it is what turns a leaked `print` from
-invisible into a failure.
+commands the page documents (`plcc-scan`, `plcc-parse`, `plcc-rep`), assert the
+full output equals the `expected-*` file and that exit status is 0. What turns a
+leaked `print` from invisible into a failure is the pair. `plcc-rep` writes its
+specification error to stdout, not stderr (`src/plcc/cmd/output.py` implements
+`print_user_error` as a bare `print`), so the broken example's output is the
+documented text *plus* two error lines and exact equality fails on its own. The
+exit-status assertion is cheap defense in depth on top of that, and is the only
+detector for a nonzero exit whose output happens to match.
 
 **Identity** — `tests/docs/example_block_test.py` (pytest). For each fixture,
 extract the fenced block from the mapped `.md` inside the mapped `=== "Lang"`
 tab, de-indent it, and assert byte-equality with the fixture's `spec.plcc`,
-failing with a diff. Parameterized over a manifest mapping fixture →
-(md path, tab label). Pure file comparison, no subprocesses, milliseconds.
+failing with a diff. The same for the other direction of the page: each
+`expected-*` file is pinned to the heading of the section that documents the
+command producing it, and asserted byte-equal to the first unindented ```` ```text ````
+fence in it. Without that half, a `src/` change that altered a command's output
+format could be absorbed by updating the fixtures alone, leaving the page
+promising output the tool no longer produces with every tier green. Parameterized
+over a manifest mapping fixture → (spec tab, documented outputs). Pure file
+comparison, no subprocesses, milliseconds.
 
 Together these close both directions. Edit the doc without the fixture and
 identity fails. Edit the fixture without the doc and identity fails. Break the
-language and behavior fails. Neither check requires anyone to remember which
-docs a change affects, which is the root cause above.
+language and behavior fails.
+
+The manifest is still a hand-enumeration, which is the root cause above, so it
+gets its own guard: every `%%%`-bearing fence in `docs/**/*.md` must be either
+registered in the manifest or named in an `UNCOVERED` allowlist with the reason
+it is out of scope. A new example on a new or an already-covered page therefore
+cannot land with zero coverage — the worst it can do is force whoever adds it to
+write down why it is unguarded.
 
 Bats tests follow the existing conventions: `bats_require_minimum_version
 1.5.0` as the third line, paths under `BATS_TEST_TMPDIR`, no `mktemp`, no
@@ -171,7 +187,8 @@ never verifies documented output.
 `SCRIPT_DIR`/`PROJECT_ROOT`, `run_cached`, `SKIP_SETUP` support): runs the
 pytest identity check, then the bats tier. Wired into `bin/test/functional.bash`
 in both places — the no-argument tier list, and a `tests/bats/docs*` case in the
-path-routing `case` statement — and into `bin/test/all.bash`.
+path-routing `case` statement. `bin/test/all.bash` needs no change: it calls
+`functional.bash`, which now chains the tier.
 
 CI needs the tier reachable from **both** directions, because a doc example can
 break in two ways:
@@ -199,10 +216,13 @@ the two jobs above cover the gap at a fraction of the cost.
 ## Part 5 — Documenting the process
 
 CONTRIBUTING gets the docs tier in both the command table and the test-tier
-table, plus a short subsection under "Documentation conventions": every runnable
-spec in `docs/` has a fixture under `tests/fixtures/docs/`, the two are kept
-byte-identical by the identity check, and the way to add an example is to add
-the fixture first.
+table, plus a short subsection under "Documentation conventions": which runnable
+specs in `docs/` have a fixture under `tests/fixtures/docs/` and which do not
+yet, that a covered page and its fixture are kept byte-identical by the identity
+check in both the spec and the output direction, and that the way to add an
+example is to add the fixture first. The subsection names the uncovered pages
+rather than claiming the tier covers everything, since claiming coverage that
+does not exist is worse than admitting the gap.
 
 ## Testing strategy
 

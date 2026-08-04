@@ -370,10 +370,13 @@ _use() {
 
 Two things that matter:
 
-- `[ "$status" -eq 0 ]` is the assertion that catches the bug in this issue. The
-  output comparison alone would **pass** for the broken Python example, because
-  the leaked `print` puts `80` on stdout. Only the exit status reveals the
-  specification error. Never drop that line.
+- Both assertions together catch the bug in this issue, and neither line may be
+  dropped. The leaked `print` does put `80` on stdout — but `plcc-rep` writes its
+  specification error to stdout too (`src/plcc/cmd/output.py` implements
+  `print_user_error` as a bare `print`), so `$output` is `80` followed by two
+  error lines and the equality comparison fails on the extra text. The
+  `[ "$status" -eq 0 ]` line is cheap defense in depth on top of that: it is the
+  only detector for a nonzero exit whose output happens to match.
 - `$output` has trailing newlines stripped by bats, and `$(cat …)` strips them
   too, so the comparison is well-defined without any trailing-whitespace
   fiddling in the `expected-*` files.
@@ -1579,7 +1582,7 @@ the `bin/test/e2e.bash` row:
 Add a row to the **Test tiers** table, immediately after the **End-to-end** row:
 
 ```markdown
-| **Docs** | `tests/bats/docs/` (behavior) and `tests/docs/` (identity) | Every runnable specification in `docs/`, run through the commands its page documents and diffed against the output the page shows. The identity half asserts the page's fenced block is still byte-identical to the fixture that was run. |
+| **Docs** | `tests/bats/docs/` (behavior) and `tests/docs/` (identity) | A runnable specification from `docs/`, run through the commands its page documents and diffed against the output the page shows. The identity half asserts the page's fenced block is still byte-identical to the fixture that was run. Coverage is fixture-by-fixture, not yet every page. |
 ```
 
 In the `bin/test/functional.bash` row of the command table, the description
@@ -1593,7 +1596,7 @@ sentence-case paragraph:
 ```markdown
 ### Documentation examples
 
-Every runnable specification in `docs/` has a fixture directory under
+A covered runnable specification in `docs/` has a fixture directory under
 `tests/fixtures/docs/` holding the spec, its input, and the output each
 documented command produces. [bin/test/docs.bash](bin/test/docs.bash) runs the
 fixture through the real commands and asserts both the output and a zero exit
@@ -1605,9 +1608,13 @@ Change both in the same commit or the identity check fails. To add an example,
 add the fixture first, register it in the `MANIFEST` in
 `tests/docs/example_block_test.py`, and write the page from it.
 
-Asserting the exit status is the point, not a formality. A Python or JavaScript
-`_run()` that prints instead of returning still puts the expected text on
-stdout, so an output-only comparison passes while the example is broken.
+Compare the command's full output, not just a substring of it, and assert the
+exit status too. A Python or JavaScript `_run()` that prints instead of
+returning still puts the expected text on stdout — but under the 2.0.0 contract
+it also puts `plcc-rep`'s specification error there, on stdout rather than
+stderr, so exact equality against the expected file fails on the extra lines.
+The exit-status assertion is cheap defense in depth on top of that, and catches
+a nonzero exit whose output happens to match.
 
 The identity check departs from the co-location rule above in two ways, both
 deliberate. It lives in `tests/docs/` rather than beside a module in `src/`,
@@ -1698,9 +1705,11 @@ Three parts of that result matter:
 
 - The identity tests **passing** is correct — the two copies agree with each
   other. They are just both wrong. This is why identity alone is insufficient.
-- The `plcc-rep` test failing on `status` is the detection this whole plan
-  exists for. Note that its `$output` still contains `80`, so it would have
-  passed on output alone.
+- The `plcc-rep` test failing is the detection this whole plan exists for. It
+  fails on both assertions: `status` is 1, and `$output` is `80` followed by the
+  two specification-error lines, which `plcc-rep` prints to stdout rather than
+  stderr. Do not expect the output comparison to have passed here — it would
+  have caught this on its own; the status assertion is the redundancy.
 - The Python `plcc-scan` and `plcc-parse` tests **passing** is also correct:
   they stop before the interpreter is built and cannot see a broken `_run()`.
   For this class of bug the `plcc-rep` test is the only detector.

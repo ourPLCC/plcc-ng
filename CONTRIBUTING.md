@@ -78,7 +78,7 @@ plcc-ng is built test-first.
 
 [bin/test/units.bash](bin/test/units.bash) runs in seconds and is the tightest feedback loop available. Keep it green at every commit.
 
-The same narrow-and-rerun pattern applies to bats-covered work: [bin/test/commands.bash](bin/test/commands.bash), [bin/test/integration.bash](bin/test/integration.bash), and [bin/test/e2e.bash](bin/test/e2e.bash) all accept an optional path to a single file or subdirectory, so you can narrow to the bats test you're iterating on instead of rerunning the whole tier.
+The same narrow-and-rerun pattern applies to bats-covered work: [bin/test/commands.bash](bin/test/commands.bash), [bin/test/integration.bash](bin/test/integration.bash), [bin/test/e2e.bash](bin/test/e2e.bash), and [bin/test/docs.bash](bin/test/docs.bash) all accept an optional path to a single file or subdirectory, so you can narrow to the bats test you're iterating on instead of rerunning the whole tier.
 
 ## Test tiers
 
@@ -90,7 +90,7 @@ Tests are organized into tiers by scope. Each tier has its own directory and its
 | **Commands** | `tests/bats/commands/` | A single command exercised as a black box via its installed entry point. Stdin/stdout/exit-code contract. Level 2 orchestrators live here too even though they internally compose other commands — what distinguishes this tier is that only one installed command is invoked per test. |
 | **Integration** | `tests/bats/integration/` | Adjacent pipeline stages composed together (e.g. `plcc-tokens` piped into `plcc-trees`). Exercises the contract between two stages. |
 | **End-to-end** | `tests/bats/e2e/` | The full pipeline from spec file to final output, via `plcc-make` or equivalent orchestrator. Exercises the whole system against a fixture. |
-| **Docs** | `tests/bats/docs/` (behavior) and `tests/docs/` (identity) | Every runnable specification in `docs/`, run through the commands its page documents and diffed against the output the page shows. The identity half asserts the page's fenced block is still byte-identical to the fixture that was run. |
+| **Docs** | `tests/bats/docs/` (behavior) and `tests/docs/` (identity) | A runnable specification from `docs/`, run through the commands its page documents and diffed against the output the page shows. The identity half asserts the page's fenced block and every documented output block are still byte-identical to the fixture that was run. Coverage is fixture-by-fixture, not yet every page — see below. |
 | **Packaging** | [bin/test/packaging.bash](bin/test/packaging.bash) | Builds a wheel, installs it into a fresh venv, and verifies entry points and a smoke test. Catches `pyproject.toml` regressions. |
 
 Rules of thumb:
@@ -139,21 +139,37 @@ Section headings in `docs/` use sentence case: capitalize only the first word an
 
 ### Documentation examples
 
-Every runnable specification in `docs/` has a fixture directory under
+A covered runnable specification in `docs/` has a fixture directory under
 `tests/fixtures/docs/` holding the spec, its input, and the output each
 documented command produces. [bin/test/docs.bash](bin/test/docs.bash) runs the
 fixture through the real commands and asserts both the output and a zero exit
-status, then asserts the page's fenced code block is byte-identical to the
-fixture.
+status, then asserts the page's fenced code block and each output block it shows
+are byte-identical to the fixture.
 
-A page's fenced block and its fixture are one artifact stored in two places.
-Change both in the same commit or the identity check fails. To add an example,
-add the fixture first, register it in the `MANIFEST` in
-`tests/docs/example_block_test.py`, and write the page from it.
+Six fixtures are covered today: the Python and Java tabs of `quick-start.md`,
+`language-guide/index.md`, and `language-guide/examples.md`. Not yet covered are
+the four quick-reference specifications in `language-guide/languages/*.md` — all
+complete and copy-and-run, so all able to drift unnoticed. The `UNCOVERED`
+allowlist in `tests/docs/example_block_test.py` names every uncovered
+specification with the reason, and a test fails if a page grows a runnable
+specification that is in neither the `MANIFEST` nor that allowlist. New examples
+therefore cannot land silently unguarded.
 
-Asserting the exit status is the point, not a formality. A Python or JavaScript
-`_run()` that prints instead of returning still puts the expected text on
-stdout, so an output-only comparison passes while the example is broken.
+A page's fenced block and its fixture are one artifact stored in two places, and
+so are a page's output blocks and the fixture's `expected-*` files. Change both
+in the same commit or the identity check fails — including when a `src/` change
+makes a command's output legitimately different, which has to be reflected on
+the page as well as in the fixture. To add an example, add the fixture first,
+register it in the `MANIFEST` in `tests/docs/example_block_test.py`, and write
+the page from it.
+
+Compare the command's full output, not just a substring of it, and assert the
+exit status too. A Python or JavaScript `_run()` that prints instead of
+returning still puts the expected text on stdout — but under the 2.0.0 contract
+it also puts `plcc-rep`'s specification error there, on stdout rather than
+stderr, so exact equality against the expected file fails on the extra lines.
+The exit-status assertion is cheap defense in depth on top of that, and catches
+a nonzero exit whose output happens to match.
 
 The identity check departs from the co-location rule above in two ways, both
 deliberate. It lives in `tests/docs/` rather than beside a module in `src/`,
