@@ -2,6 +2,12 @@
 
 bats_require_minimum_version 1.5.0
 
+# bats' default `run` merges stderr into stdout, so every "$output" comparison
+# below asserts the command emitted nothing beyond the documented text on either
+# stream. That is deliberate and stricter than the page's claim: a stray banner
+# or deprecation notice on stderr should fail this tier, not slip past it. If one
+# does, fix the new output — do not reach for --separate-stderr.
+
 setup() {
     FIXTURES="$(git rev-parse --show-toplevel)/tests/fixtures/docs"
     WORK_DIR="${BATS_TEST_TMPDIR}/work"
