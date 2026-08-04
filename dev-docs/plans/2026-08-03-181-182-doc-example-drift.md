@@ -18,7 +18,7 @@ always edited as a pair. No `src/` change.
 (stdlib `difflib`, `pathlib` only), GitHub Actions.
 
 **Spec:** [2026-08-03-doc-example-drift-design.md](../specs/2026-08-03-doc-example-drift-design.md)
-**Issues:** [181](../issues/181-docs-run-contract-stale-python-examples.md) (docs), [182](../issues/182-test-doc-example-drift.md) (test)
+**Issues:** [181](../issues/done/181-docs-run-contract-stale-python-examples.md) (docs), [182](../issues/done/182-test-doc-example-drift.md) (test)
 
 ## Global Constraints
 
@@ -1752,8 +1752,8 @@ There is no commit in this task.
 ### Task 7: Full verification and close both issues
 
 **Files:**
-- Move: `dev-docs/issues/181-docs-run-contract-stale-python-examples.md` → `done/`
-- Move: `dev-docs/issues/182-test-doc-example-drift.md` → `done/`
+- Move: `dev-docs/issues/done/181-docs-run-contract-stale-python-examples.md` → `done/`
+- Move: `dev-docs/issues/done/182-test-doc-example-drift.md` → `done/`
 - Modify: `dev-docs/roadmap.md`
 
 **Interfaces:**
@@ -1977,7 +1977,7 @@ EOF
 `mkdocs build --strict` step; it must land before the branch's final commit so
 Task 7 can close #183 alongside #181 and #182.
 
-Closes [#183](../issues/183-docs-orphan-plantuml-nav-entries.md).
+Closes [#183](../issues/done/183-docs-orphan-plantuml-nav-entries.md).
 
 `mkdocs build --strict` fails on three nav entries in `mkdocs.yml` that point at
 pages which do not exist. They are leftovers from #113's diagram-command rename.
