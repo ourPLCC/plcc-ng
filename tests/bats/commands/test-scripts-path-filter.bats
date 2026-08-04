@@ -64,7 +64,7 @@ setup_functional_stub_tree() {
     cp "${PROJECT_ROOT}/bin/test/functional.bash" "${STUB_ROOT}/bin/test/functional.bash"
     cp "${PROJECT_ROOT}/bin/test/_cache.bash" "${STUB_ROOT}/bin/test/_cache.bash"
     ROUTE_LOG="${STUB_ROOT}/route-log"
-    for tier in units commands integration e2e; do
+    for tier in units commands integration e2e docs; do
         cat > "${STUB_ROOT}/bin/test/${tier}.bash" <<EOF
 #!/usr/bin/env bash
 printf '${tier} %s\n' "\$*" >> "${ROUTE_LOG}"
@@ -103,13 +103,19 @@ EOF
     [ "$(cat "${ROUTE_LOG}")" = "e2e tests/bats/e2e/happy-path.bats" ]
 }
 
+@test "functional.bash: docs-tier path routes only to docs.bash" {
+    setup_functional_stub_tree
+    "${STUB_ROOT}/bin/test/functional.bash" "tests/bats/docs/quick-start.bats"
+    [ "$(cat "${ROUTE_LOG}")" = "docs tests/bats/docs/quick-start.bats" ]
+}
+
 @test "functional.bash: non-bats-tier path routes only to units.bash" {
     setup_functional_stub_tree
     "${STUB_ROOT}/bin/test/functional.bash" "src/plcc/cmd/make_test.py"
     [ "$(cat "${ROUTE_LOG}")" = "units src/plcc/cmd/make_test.py" ]
 }
 
-@test "functional.bash: no argument runs all four sub-scripts" {
+@test "functional.bash: no argument runs all five sub-scripts" {
     setup_functional_stub_tree
     "${STUB_ROOT}/bin/test/functional.bash"
     run cat "${ROUTE_LOG}"
@@ -117,4 +123,5 @@ EOF
     [[ "$output" == *"commands "* ]]
     [[ "$output" == *"integration "* ]]
     [[ "$output" == *"e2e "* ]]
+    [[ "$output" == *"docs "* ]]
 }
