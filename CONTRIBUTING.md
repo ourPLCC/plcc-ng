@@ -59,6 +59,13 @@ All test scripts cache their output to `/tmp` so agents and tools can grep resul
 - In CI — the variable is set automatically for all test steps.
 - When you suspect the cache is stale and `bin/test/cache/clear.bash` is more than you need.
 
+### Docs
+
+| Command | What it does |
+|---|---|
+| [bin/docs/serve.bash](bin/docs/serve.bash) | Serve the documentation site locally with live reload via `mkdocs serve`. |
+| [bin/docs/build.bash](bin/docs/build.bash) | Build the site with `--strict` against `mkdocs-strict.yml`, so a broken link or a nav entry pointing at a missing file fails instead of warning. Run it before pushing a change that adds, renames, moves, or deletes a page. The config drops the `kroki` plugin, so the check needs no network. |
+
 ### Release
 
 | Command | What it does |
@@ -170,6 +177,13 @@ it also puts `plcc-rep`'s specification error there, on stdout rather than
 stderr, so exact equality against the expected file fails on the extra lines.
 The exit-status assertion is cheap defense in depth on top of that, and catches
 a nonzero exit whose output happens to match.
+
+A page's examples are only half of what can break. Adding, renaming, moving, or
+deleting a page can leave a nav entry or a link pointing at nothing, which
+`mkdocs build` reports as a warning and otherwise ignores. Run
+[bin/docs/build.bash](bin/docs/build.bash) to turn those warnings into a failure
+before pushing; the same script is the `Build docs strictly` step in
+`.github/workflows/docs-tests.yml`.
 
 The identity check departs from the co-location rule above in two ways, both
 deliberate. It lives in `tests/docs/` rather than beside a module in `src/`,

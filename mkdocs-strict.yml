@@ -1,0 +1,21 @@
+# Config for the strict nav-and-link gate run by bin/docs/build.bash.
+#
+# Identical to mkdocs.yml except that the `kroki` plugin is dropped. kroki
+# renders the `plantuml` fences by POSTing them to kroki.io, and it reports a
+# fetch failure through mkdocs' plugin logger, which `--strict` promotes to a
+# build abort. Keeping it here would let a kroki outage or rate-limit turn every
+# documentation PR red for a reason unrelated to the change, and a required
+# check that fails at random trains people to ignore it.
+#
+# What this gate checks is nav and link integrity — the orphan nav entries of
+# issue #183 — and that needs no network. The plantuml fences render as plain
+# code blocks here; the deployed site built from mkdocs.yml still renders them.
+#
+# INHERIT merges dicts and replaces everything else, so listing `plugins` here
+# replaces mkdocs.yml's list rather than appending to it.
+INHERIT: mkdocs.yml
+
+plugins:
+  - search
+  - include-markdown
+  - mike
