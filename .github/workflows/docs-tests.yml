@@ -7,10 +7,12 @@ on:
       - 'docs/**'
       - '*.md'
       - 'mkdocs.yml'
+      - 'mkdocs-strict.yml'
       - 'tests/fixtures/docs/**'
       - 'tests/bats/docs/**'
       - 'tests/docs/**'
       - 'bin/test/docs.bash'
+      - 'bin/docs/build.bash'
       - '.github/workflows/docs-tests.yml'
 
 jobs:
