@@ -32,8 +32,9 @@ up.
 1. `pdm run mkdocs build --strict`
 
 ```
-The following pages exist in the docs directory, but are not included in the "nav" configuration:
-  ...
+WARNING -  A reference to 'cli/commands/plcc-plantuml-diagram-build.md' is included in the 'nav' configuration, which is not found in the documentation files.
+WARNING -  A reference to 'cli/commands/plcc-plantuml-diagram-emit.md' is included in the 'nav' configuration, which is not found in the documentation files.
+WARNING -  A reference to 'cli/commands/plcc-plantuml-diagram-run.md' is included in the 'nav' configuration, which is not found in the documentation files.
 Aborted with 3 warnings in strict mode!
 ```
 
