@@ -34,3 +34,5 @@
   Pinned to 9.x (locked 9.21.2); latest is 10.5.3. Dev-only dependency, consider updating.
 - **[#156](issues/156-mkdocs-1x-successor-decision.md) — Decide our MkDocs 1.x successor**
   mkdocs-material hard-pins mkdocs<2; mkdocs-kroki-plugin already pulls in properdocs. Not urgent yet, but we'll need to pick ProperDocs, Zensical, or stay pinned once MkDocs 1.x actually breaks.
+- **[#189](issues/189-align-issue-system-with-languages-ng.md) — Adopt the languages-ng issue-system shape: issues never move, status is frontmatter**
+  Moving issues to `done/` on close keeps breaking links (14 are broken right now, despite #150's rewriting); making `closed:` a frontmatter date instead deletes the bug class and the machinery guarding it.
