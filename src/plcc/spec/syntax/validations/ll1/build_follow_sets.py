@@ -45,8 +45,11 @@ class FollowSetBuilder:
         if self._isLastOccuranceInRule(rules, index):
             self._addFollowOfLHS(lhs, nonterminal)
         else:
-            self._addFirstOfNextSymbol(rules[index + 1], nonterminal)
-            if self._canDeriveEmpty(rules[index + 1:]):
+            for j in range(index + 1, len(rules)):
+                self._addFirstOfNextSymbol(rules[j], nonterminal)
+                if not self._canDeriveEmpty([rules[j]]):
+                    break
+            else:
                 self._addFollowOfLHS(lhs, nonterminal)
 
     def _isLastOccuranceInRule(self, rules, index):

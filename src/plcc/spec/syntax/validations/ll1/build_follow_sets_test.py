@@ -79,10 +79,10 @@ def test_derive_empty():
         "s exp test TWO",
         "word s NEW"
     ])
-    assert follows["exp"] == {grammar.getEof(), "TEST"}
+    assert follows["exp"] == {grammar.getEof(), "TEST", "TWO"}
     assert follows["test"] == {"TWO"}
     assert follows["s"] == {"NEW"}
-    assert follows["word"] == {grammar.getEof(), "TEST"}
+    assert follows["word"] == {grammar.getEof(), "TEST", "TWO"}
 
 
 def test_follow_set_empty_rule():
@@ -177,6 +177,28 @@ def test_follow_propagates_eof_through_arbno_desugared_continuation():
         'ExprTail',
     ])
     assert grammar.getEof() in follows['ExprTail']
+
+
+def test_follow_set_walks_past_nullable_symbol_to_next_non_nullable():
+    """
+    Regression test for issue #188: the forward walk from a nonterminal's
+    occurrence must continue past a nullable next symbol and add FIRST of
+    each subsequent symbol until it hits one that cannot derive empty,
+    rather than stopping after the single next symbol.
+
+    S -> A B C, A -> a | epsilon, B -> b | epsilon, C -> c.
+    B is nullable, so FOLLOW(A) must include FIRST(B) - {epsilon} = {b}
+    AND FIRST(C) = {c}, not just {b}.
+    """
+    grammar, firsts, follows = setup([
+        'S A B C',
+        'A a',
+        'A',
+        'B b',
+        'B',
+        'C c',
+    ])
+    assert follows['A'] == {'b', 'c'}
 
 
 def setup(lines):

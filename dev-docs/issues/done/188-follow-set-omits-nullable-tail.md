@@ -22,7 +22,7 @@ entries and valid programs fail to parse — while `plcc-ll1` still reports
 `is_ll1: true` and no conflicts.
 
 The defect is in
-[`FollowSetBuilder._updateWithSingleOccuranceOfNonterminalInProduction`](../../src/plcc/spec/syntax/validations/ll1/build_follow_sets.py):
+[`FollowSetBuilder._updateWithSingleOccuranceOfNonterminalInProduction`](../../../src/plcc/spec/syntax/validations/ll1/build_follow_sets.py):
 
 ```python
 else:
@@ -41,7 +41,7 @@ A repeating (`**=`) nonterminal makes this easy to hit, because it is
 nullable by construction and is a natural thing to place in a sequence.
 
 Distinct from issue
-[#170](done/170-arbno-follow-set-missing-eof.md), which was about
+[#170](170-arbno-follow-set-missing-eof.md), which was about
 nullability being tested against only a nonterminal's first-registered
 production. That fix landed (`_canDeriveEmpty` now consults the FIRST sets);
 this is the separate forward-walk defect in the same function.
