@@ -1,6 +1,413 @@
 # CHANGELOG
 
 
+## v2.0.2 (2026-08-12)
+
+### Bug Fixes
+
+- **ll1**: Walk forward through nullable symbols when computing FOLLOW sets
+  ([`1071100`](https://github.com/ourPLCC/plcc-ng/commit/107110002437e5b358d8c27dc7e8231c3871fe0d))
+
+FOLLOW-set computation added FIRST of only the immediate next symbol after a nonterminal occurrence,
+  then jumped straight to checking whether the entire remainder was nullable - skipping every symbol
+  in between. A nonterminal followed by one nullable symbol and then a non-nullable one lost the
+  non-nullable symbol's FIRST set entirely, silently truncating FOLLOW and dropping parse-table
+  entries for empty alternatives.
+
+Fixes #188
+
+### Chores
+
+- Ignore .superpowers/ scratch directory
+  ([`f87dfbc`](https://github.com/ourPLCC/plcc-ng/commit/f87dfbc62b51b1b9c11b11ae033378b2814ad0ad))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+### Continuous Integration
+
+- Run the doc example tier, and state the real _run contract
+  ([`69b24c0`](https://github.com/ourPLCC/plcc-ng/commit/69b24c02d3f8332d27b7e58abde1674ec9d058a6))
+
+semantic.md described the pre-2.0.0 behaviour ("the default implementation prints...") and never
+  stated that _run returns a string, despite being the language guide's conceptual home for it.
+
+Two CI jobs, because a doc example breaks from two directions: a docs-only PR (which ci.yml skips)
+  and a src/ change (which the doc-path trigger misses).
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- Take the network out of the strict docs gate
+  ([`f4c2283`](https://github.com/ourPLCC/plcc-ng/commit/f4c2283efb813f63144534357dd971f7db540982))
+
+The Build docs strictly step ran `pdm run mkdocs build --strict` against mkdocs.yml, which loads the
+  kroki plugin. kroki POSTs the three plantuml fences to kroki.io and reports a fetch failure
+  through mkdocs' plugin logger, which --strict promotes to a build abort — so a kroki outage or
+  rate-limit would turn every docs PR red for a reason unrelated to the change. A required check
+  that fails at random trains people to ignore it.
+
+mkdocs-strict.yml INHERITs mkdocs.yml with kroki dropped. What this gate checks is nav and link
+  integrity, which is what #183 was about and needs no network; the deployed site still builds from
+  mkdocs.yml with kroki.
+
+bin/docs/build.bash runs the strict build, so the check has a local entry point — #183 existed
+  precisely because nobody ran it locally. The workflow step now calls the script, which also drops
+  its hidden dependency on the previous step having run `pdm install`.
+
+Verified: exit 0 today, and exit 1 with the expected warning when an orphan nav entry is
+  reintroduced.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- Trigger the docs workflow on the strict gate's own inputs
+  ([`f3a118e`](https://github.com/ourPLCC/plcc-ng/commit/f3a118eabc90636e6e5fac8eb1654990c50d8412))
+
+The paths filter listed mkdocs.yml and bin/test/docs.bash but not mkdocs-strict.yml or
+  bin/docs/build.bash, so a PR editing either of the strict gate's own inputs — including one that
+  broke them — skipped the workflow that consumes them. 'docs/**' does not match 'bin/docs/'.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+### Documentation
+
+- Correct the --verbose-format=json claim in five pages
+  ([`eb59299`](https://github.com/ourPLCC/plcc-ng/commit/eb592991f6e95380ee12b0bac205ede5678ebbfa))
+
+A stray print from _run() is not silently dropped under --verbose-format=json: rep.py echoes any
+  non-JSON line unconditionally, before verbose_format is consulted. The real failure mode is stream
+  corruption (a non-JSON line among the JSON records), not omission.
+
+Fixes the net-new sentence in semantic.md (Task 5) plus the identical pre-existing claim already
+  shipped in languages/{python,javascript,java}.md and cli/guide/language-extensions.md.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- Correct the exit-status rationale and the coverage claim
+  ([`8933755`](https://github.com/ourPLCC/plcc-ng/commit/8933755617624475e9ae6ed3f666e50820fcdc3f))
+
+Three places stated that an output-only comparison passes for a broken Python example. It does not:
+  plcc-rep writes its specification error to stdout, not stderr (src/plcc/cmd/output.py implements
+  print_user_error as a bare print), so the broken example's output is the documented text plus two
+  error lines and exact equality fails. The exit-status assertion is cheap defense in depth, not the
+  sole detector. Corrected in CONTRIBUTING.md, the design's Part 3, and the plan's Task 1 Step 4,
+  Task 5 Step 8, and Task 6 Step 2.
+
+Also: - "Every runnable specification in docs/ has a fixture" was false — six of nine %%%-bearing
+  pages are uncovered. CONTRIBUTING now names the six covered fixtures and the four uncovered
+  quick-reference specs, and points at the UNCOVERED allowlist that keeps the gap honest. - The
+  design claimed the tier is wired into bin/test/all.bash. It is not, and should not be: all.bash
+  calls functional.bash, which chains it. - The design claimed neither check requires remembering
+  which docs a change affects. That was false for new examples until the completeness guard landed;
+  it now describes the guard instead. - CONTRIBUTING's narrow-and-rerun paragraph omitted
+  bin/test/docs.bash, which accepts an optional path like the other three.
+
+The plan's quoted commit message in Task 1 Step 8 keeps the false claim, because it accurately
+  quotes a commit that was already made.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- Drop orphan plantuml nav entries and gate strict builds
+  ([`a18debe`](https://github.com/ourPLCC/plcc-ng/commit/a18debeb20831e45bf19b69d756a8eac12aadc2b))
+
+mkdocs.yml still listed three command pages that #113's rename removed. The renamed pages were
+  already in the nav, so the entries were pure orphans putting three dead links in the published
+  site.
+
+It survived because nothing in CI runs `mkdocs build --strict`: docs.yml publishes via mike (no
+  --strict) and only after merge, and ci.yml skips docs-only PRs. Adds the gate to docs-tests.yml,
+  which already triggers on mkdocs.yml and docs/**, so a broken link fails the PR that introduces
+  it.
+
+Closes #183.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Add issue 183 for orphan nav entries and the missing strict gate
+  ([`25c511a`](https://github.com/ourPLCC/plcc-ng/commit/25c511a9035c9e9ac70454e603c5dfece6d4c739))
+
+mkdocs build --strict fails on three nav entries left over from #113's diagram-command rename.
+  Pre-existing on main and unrelated to this branch's work, but it blocks Task 7's verification, and
+  the reason it survived is this branch's own subject: nothing in CI runs mkdocs build --strict.
+
+Adds Task 9 to the plan: delete the orphans and add the gate to docs-tests.yml, which already
+  triggers on mkdocs.yml and docs/**.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Close issue 188 (FOLLOW set omits nullable tail), update roadmap
+  ([`4ba434b`](https://github.com/ourPLCC/plcc-ng/commit/4ba434b44d547e16bed5ea1dd5f5dab3cbccc0d1))
+
+- **issues**: Close issues 181, 182, 183 (doc example drift), update roadmap
+  ([`40224f3`](https://github.com/ourPLCC/plcc-ng/commit/40224f32bfb63ebe9473b89c35c17784abdbb13b))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Commit the next-id increment for issue 183
+  ([`5b39a77`](https://github.com/ourPLCC/plcc-ng/commit/5b39a77c907c9d6652a4cc6f46cf6ce6bbc9454f))
+
+bin/issues/new.bash incremented .next-id.txt when issue 183 was created, but the file was left out
+  of that commit. Without it a fresh checkout would hand out 183 a second time.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 185-188 - upstream findings from the languages-ng port
+  ([`db4970d`](https://github.com/ourPLCC/plcc-ng/commit/db4970d8db7254fcf9cc82d2a1d6ac84873787cb))
+
+Migrated from the languages-ng repo's dev-docs/issues, where they were filed with `target:
+  ourPLCC/plcc-ng` and held pending go-ahead. Rewritten from this repo's perspective and re-verified
+  against current src/ rather than the installed CLI:
+
+- 185 plcc-rep parses each SOURCE independently (docs) - 186 plcc-rep deadlocks on a partial stdout
+  line (fix) - 187 plcc-rep lacks output and clean-exit record kinds (feat) - 188 FOLLOW set omits
+  the nullable tail (fix)
+
+The other four upstream-targeted issues in that repo (003, 004, 006, 010) already landed here as
+  162, 163, 164, and 174.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 189 - adopt the languages-ng issue-system shape
+  ([`e6d102e`](https://github.com/ourPLCC/plcc-ng/commit/e6d102e2a5178c6240895912a52fe3ee6fb3a2b4))
+
+The languages-ng issue system is a fork of this one that diverged in three ways: issues never move
+  (a `closed:` frontmatter date is the status), YAML frontmatter replaces the
+  `**Type:**`/`**Date:**` headers, and a `target:` field names the repo an issue is about.
+
+The first is the load-bearing one. Closing by `git mv` into done/ means every link written before a
+  close goes stale; #149 cleaned that up once and #150 built rewriting into close.bash to stop it
+  recurring, but 14 links under issues/done/ are broken today. Both remaining shapes are structural:
+  a link rewritten correctly at close time breaks when the issue it points *at* closes later, and
+  the blanket depth rewrite cannot distinguish an already-wrong relative path from a right one.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Record the docs-tier follow-ups as issue 184
+  ([`40ccdfd`](https://github.com/ourPLCC/plcc-ng/commit/40ccdfd5ad708d7c952d3884d8ca8a0663224ef2))
+
+Seven observations from the #181/#182/#183 reviews were judged non-blocking and left unfixed, but
+  were recorded only in a git-ignored scratch ledger that this workflow deletes when it finishes.
+  They would not have survived.
+
+Captured here with a roadmap entry so they live in the repo, per the issue conventions.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: Replace the invented transcript in issue 183
+  ([`1d86d45`](https://github.com/ourPLCC/plcc-ng/commit/1d86d45742663f1f41f6cff0abdbf7c21fc8ceeb))
+
+Steps to Reproduce quoted "The following pages exist in the docs directory, but are not included in
+  the 'nav' configuration:". mkdocs never emitted that here — it is the message for orphan *files*,
+  and deleting nav entries could not have fixed it. Replaced with the three warnings mkdocs actually
+  prints, captured by reintroducing the orphan entries and rerunning the strict build.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Add Task 8 for the functional.bash coverage gap
+  ([`831f308`](https://github.com/ourPLCC/plcc-ng/commit/831f3084e21287cfd48e9be8ab3e07322756d3d5))
+
+Task 5 added a fifth sub-script to functional.bash without updating
+  tests/bats/commands/test-scripts-path-filter.bats, which stubs each sub-script — so the
+  no-argument test now dies on a missing docs.bash. A plan defect: the plan changed functional.bash
+  without checking its coverage. Task 8 also adds the per-tier routing test the new arm lacked.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Correct the --verbose-format=json claim, and fix all five instances
+  ([`5536bdf`](https://github.com/ourPLCC/plcc-ng/commit/5536bdf6b6e68f5597f6b6756896257a041b1d83))
+
+A reviewer caught this in Task 5's net-new semantic.md text; verified against the running CLI. A
+  stray print from _run() IS echoed under --verbose-format=json — rep.py prints any non-JSON line
+  unconditionally, before verbose_format is consulted. The real failure mode is stream corruption,
+  not silent omission.
+
+The identical wrong claim is already shipped in languages/{python,javascript, java}.md and
+  cli/guide/language-extensions.md, so Step 1b corrects all four. The docs tier cannot catch a wrong
+  prose claim; noted as a design limitation.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Correct the predicted red state for the docs tier
+  ([`37d8c0c`](https://github.com/ourPLCC/plcc-ng/commit/37d8c0c51c92d13182667ec61358ec40d09bbe44))
+
+plcc-scan and plcc-parse exit 0 against a spec with a broken _run(): they stop at --through=scan and
+  --through=parse and never build the interpreter. Only plcc-rep reaches semantics, so the rep
+  test's exit-status assertion is the sole detector for this class of bug.
+
+Verified by running the broken quick-start spec through all three commands.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Correct the src/ constraint — Task 6 mutates only docs and fixtures
+  ([`3883679`](https://github.com/ourPLCC/plcc-ng/commit/3883679fecfd00bb3d2ea917607772c5cba7520c))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Implementation plan for doc example drift (#181, #182)
+  ([`bdc20ef`](https://github.com/ourPLCC/plcc-ng/commit/bdc20eff3c993ad789c35ebce422fc25ad52ec30))
+
+Seven tasks. Tasks 1-3 land a fixture and behaviour test per page against the broken example first,
+  confirm it fails for the documented reason, then fix page and fixture together. Task 4 adds the
+  identity check, Task 5 the prose fix and CI wiring, Task 6 red-proofs both halves independently.
+
+Also refines the design's CI section: docs-tests.yml alone would not fire for a src/ change that
+  breaks a working example, which is the 2.0.0 scenario itself, so ci.yml gets a docs job too.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Require the CONTRIBUTING deviation note in Task 5
+  ([`8e0db71`](https://github.com/ourPLCC/plcc-ng/commit/8e0db71f784cd530b89d63c7703916bea6d4c162))
+
+The design mandates documenting both convention deviations (tests/docs/ outside src/, and its
+  deliberate double-collection). Task 5's CONTRIBUTING text omitted them, which would leave the
+  docstring in tests/docs/example_block_test.py pointing at a CONTRIBUTING that documents only the
+  rule it breaks.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **plans**: Task 7 now closes three issues, not two
+  ([`d9f9ba3`](https://github.com/ourPLCC/plcc-ng/commit/d9f9ba3fdae6ea0268fbab0ef53c78f0162c3e94))
+
+Issue 183 was filed and fixed on this branch by Task 9, so it closes with 181 and 182. Also corrects
+  the expected check.bash line: seven issues are open before the step and .next-id.txt advanced to
+  184.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Add implementation plan for issue #188 fix
+  ([`495d9b8`](https://github.com/ourPLCC/plcc-ng/commit/495d9b8fea91c2445bc24c221605c518266f1666))
+
+- **specs**: Design doc-example drift fix for stale _run() examples
+  ([`79cf84b`](https://github.com/ourPLCC/plcc-ng/commit/79cf84b694f5e6005a68842dd994ba554c69776e))
+
+All three `=== "Python"` tabs in docs/ implement _run() by printing rather than returning, so each
+  exits 1 with a specification_error under the 2.0.0 contract. The leaked print still reaches the
+  terminal, so the documented output appears above the error — which is why three broken examples
+  shipped in 2.0.0 and survived a release.
+
+Root cause is scope: the 2.0.0 design enumerated affected docs by hand and scoped quick-start.md to
+  "update the Java example", since Java's void _run() could not compile. index.md and examples.md
+  were never listed.
+
+Adds #181 (the doc errors) and #182 (nothing executes doc examples, and ci.yml skips CI for
+  docs-only PRs), with roadmap entries and a design for fixture-backed doc examples verified by a
+  behavior tier plus a byte-identity check.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **specs**: Design for FOLLOW set nullable-tail fix (issue #188)
+  ([`bc0eea1`](https://github.com/ourPLCC/plcc-ng/commit/bc0eea13ee368303c5c2b2e721bc4955bb46ca8f))
+
+- **specs**: Note the test_derive_empty update in the FOLLOW-set fix docs
+  ([`134a261`](https://github.com/ourPLCC/plcc-ng/commit/134a2613a4d9ed10669ba6dd46dd5451b9792a5e))
+
+Final review flagged that the plan document claimed all 13 pre-existing build_follow_sets tests
+  would pass unchanged, but test_derive_empty's expected FOLLOW sets were correctly updated as part
+  of the fix (the old values encoded the bug). Record that in the plan and design docs so the
+  historical record is accurate.
+
+### Testing
+
+- **commands**: Cover the docs tier in functional.bash's routing tests
+  ([`78497a3`](https://github.com/ourPLCC/plcc-ng/commit/78497a3675ab5704ded5ae819e267d0299f58b1b))
+
+functional.bash gained a fifth sub-script and a fifth routing arm, but its stub tree still stubbed
+  only four, so the no-argument test died on a missing docs.bash (exit 127). Adds docs to the stub
+  tree, corrects the test's name and assertions from four to five, and adds the per-tier routing
+  test the new arm was missing.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Add doc-example tier and fix the quick-start Python example
+  ([`6d8b536`](https://github.com/ourPLCC/plcc-ng/commit/6d8b53643c11750f017abc43629e99a938feb10f))
+
+The Python tab printed from _run() instead of returning, so it exited 1 with a specification_error
+  under the 2.0.0 contract. The leaked print put the documented output on stdout anyway, which is
+  why it went unnoticed.
+
+Adds bin/test/docs.bash and tests/bats/docs/, which assert exit status as well as output — the
+  output comparison alone passes for the broken example.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Assert documented examples match the fixtures that were run
+  ([`b245ffe`](https://github.com/ourPLCC/plcc-ng/commit/b245ffebd2381e96eeabd150933960df286044b3))
+
+The bats tier proves the fixtures work; this proves the pages still contain what the fixtures ran.
+  Drift in either direction now fails with a unified diff.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Cover the language guide overview example and fix its Python tab
+  ([`dd67864`](https://github.com/ourPLCC/plcc-ng/commit/dd67864f4ad33114ed30a57bf286d4d0ae177ceb))
+
+Same pre-2.0.0 print idiom as the quick start: _run() printed instead of returning, so the example
+  exited 1.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Cover the subtraction example and fix its Python tab
+  ([`3682f17`](https://github.com/ourPLCC/plcc-ng/commit/3682f170d630f2ee13d20366b87aab298db4f230))
+
+_run() printed an int instead of returning a string. Rewriting print(x) to return x is not
+  sufficient here — eval() returns an int, which is also a specification_error. The fix wraps it in
+  str(), mirroring the Java tab's String.valueOf().
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Make UNCOVERED a per-page fence count, not a blanket exemption
+  ([`60e1ee8`](https://github.com/ourPLCC/plcc-ng/commit/60e1ee8de53ca0238e75da24af039ce41b78cc1e))
+
+The allowlist skipped every %%% fence on a listed page, so a new runnable specification added to an
+  already-exempt page — a second one in language-guide/languages/python.md, say — landed with zero
+  coverage and no failure. CONTRIBUTING claimed the opposite ("New examples therefore cannot land
+  silently unguarded"), which was the same overstatement this branch exists to remove.
+
+UNCOVERED now maps each page to how many such fences it holds, so an exemption covers the fences
+  that existed when it was written rather than the page forever. Verified by adding a fence to an
+  allowlisted page: the guard fails with "UNCOVERED says 4, found 5 at [26, 94, 113, 151, 215]".
+
+Corrects the CONTRIBUTING and design wording to match, and drops the item from #184 since it is no
+  longer a follow-up.
+
+Raised by a Copilot review of the PR.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Note that the bats tier's combined output capture is deliberate
+  ([`8557f06`](https://github.com/ourPLCC/plcc-ng/commit/8557f065b2a9fa0dc92e12fce22add1dcd6779ff))
+
+bats' default `run` merges stderr into stdout, so the "$output" comparisons assert the command emits
+  nothing beyond the documented text on either stream. That is stricter than the page's claim and
+  worth keeping, but a future benign stderr line would fail with a message about "the documented
+  output" and point the reader at the page rather than at the new stderr text. Say so in each file's
+  header.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **docs**: Pin the documented output blocks and guard MANIFEST completeness
+  ([`a5eac4f`](https://github.com/ourPLCC/plcc-ng/commit/a5eac4f64728c68162e49f2a3d75c317c431ad25))
+
+The identity check pinned only spec.plcc to its page tab, so the expected-* files were pinned to
+  nothing: a src/ change that altered plcc-scan's output format could be absorbed by updating the
+  fixtures, leaving every page showing output the tool no longer produces with every tier green.
+
+MANIFEST now declares each fixture's spec tab and its documented outputs, and extract_output_block()
+  pulls the first unindented ```text fence out of the named section. Unindented is the
+  discriminator: a tab's fence is indented four spaces, so an output lookup can never return a
+  specification.
+
+Two completeness gates close the hand-enumeration gap that MANIFEST otherwise reintroduces:
+
+- Every runnable specification in docs/ (every %%%-bearing fence) must be covered by MANIFEST or
+  named in UNCOVERED with a reason, so a new example cannot land with zero coverage. - Every
+  expected-* file in a fixture must be pinned to a heading, or declared unpinned with the reason the
+  page cannot show it.
+
+read_text() calls now pass encoding="utf-8"; docs/language-guide/index.md holds non-ASCII, which a
+  POSIX-locale runner would fail on.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+
 ## v2.0.1 (2026-07-29)
 
 ### Bug Fixes
