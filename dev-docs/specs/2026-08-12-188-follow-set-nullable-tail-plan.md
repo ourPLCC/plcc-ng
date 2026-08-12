@@ -115,6 +115,8 @@ Run: `bin/test/units.bash src/plcc/spec/syntax/validations/ll1/build_follow_sets
 
 Expected: PASS — all tests in the file pass, including the new one and the 13 pre-existing tests (`test_example`, `test_test_yourself_3`, `test_derives_epsilon`, `test_follow_set_one_rule`, `test_follow_set_captured_nonterminal`, `test_follow_set_one_nonterminal`, `test_derive_empty`, `test_follow_set_empty_rule`, `test__follow_set_with_terminal_after_captured_rule`, `test_left_recursive_nonterminal_inside_nullable_does_not_crash`, `test_follow_propagates_eof_through_nullable_registered_second`, `test_follow_propagates_eof_regardless_of_alternative_registration_order`, `test_follow_propagates_eof_through_arbno_desugared_continuation`).
 
+Note: `test_derive_empty`'s expected `follows["exp"]` and `follows["word"]` were updated to gain `"TWO"` as part of this task — the old expected values encoded the pre-fix under-approximation, so "pass unchanged" applies to the other 12 tests, not this one.
+
 - [ ] **Step 5: Run the full unit tier for a broader regression check**
 
 Run: `bin/test/units.bash`

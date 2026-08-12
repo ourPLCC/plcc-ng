@@ -62,6 +62,11 @@ No end-to-end/bats regression test — the defect is fully isolated and
 exercised at the `build_follow_sets` level, and the issue's own author
 recommended the unit test as the primary regression guard.
 
+The pre-existing `test_derive_empty` test's expected `follows["exp"]` and
+`follows["word"]` also gained `"TWO"` as a direct, correct consequence of
+this fix — the old expected values encoded the pre-fix under-approximation
+being corrected here.
+
 ## Out of scope
 
 - The end-to-end `ClassDecl` grammar repro from the issue's "Steps to
