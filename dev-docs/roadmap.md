@@ -8,8 +8,6 @@
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
 - **[#186](issues/186-rep-deadlocks-on-partial-stdout-line.md) — plcc-rep deadlocks on a partial stdout line**
   A semantic action that writes without a trailing newline merges with the JSON result line, so `_read_response` destroys the result and blocks forever — exit 124, no stdout, no stderr.
-- **[#188](issues/188-follow-set-omits-nullable-tail.md) — FOLLOW set omits the nullable tail, breaking empty alternatives**
-  `_updateWithSingleOccuranceOfNonterminalInProduction` adds FIRST of only the *next* symbol instead of walking forward through nullable ones, so empty alternatives silently lose parse-table entries while `plcc-ll1` still reports `is_ll1: true`.
 
 ### Feat
 

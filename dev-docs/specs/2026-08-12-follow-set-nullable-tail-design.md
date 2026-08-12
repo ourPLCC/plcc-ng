@@ -1,7 +1,7 @@
 # FOLLOW set nullable-tail design
 
 **Date:** 2026-08-12
-**Issue:** [188](../issues/188-follow-set-omits-nullable-tail.md) (FOLLOW set omits the nullable tail, breaking empty alternatives)
+**Issue:** [188](../issues/done/188-follow-set-omits-nullable-tail.md) (FOLLOW set omits the nullable tail, breaking empty alternatives)
 **Approach:** single commit, one-method fix
 
 ## Scope
