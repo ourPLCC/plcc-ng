@@ -8,6 +8,8 @@
   Two CLI invocations sharing the same `./plcc-ng/` build dir race on temp-file creation/cleanup and crash with a raw `FileNotFoundError` traceback instead of a friendly error.
 - **[#186](issues/186-rep-deadlocks-on-partial-stdout-line.md) — plcc-rep deadlocks on a partial stdout line**
   A semantic action that writes without a trailing newline merges with the JSON result line, so `_read_response` destroys the result and blocks forever — exit 124, no stdout, no stderr.
+- **[#190](issues/190-rep-kills-session-on-program-errors.md) — A program error kills the plcc-rep session and blames the specification**
+  Any exception a semantic action raises that is not a `LanguageError` becomes a `specification_error`, so one bad input ends the session and tells the user to go fix a specification that is not at fault.
 
 ### Feat
 
