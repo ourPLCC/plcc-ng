@@ -10,6 +10,8 @@
   A semantic action that writes without a trailing newline merges with the JSON result line, so `_read_response` destroys the result and blocks forever — exit 124, no stdout, no stderr.
 - **[#190](issues/190-rep-kills-session-on-program-errors.md) — A program error kills the plcc-rep session and blames the specification**
   Any exception a semantic action raises that is not a `LanguageError` becomes a `specification_error`, so one bad input ends the session and tells the user to go fix a specification that is not at fault.
+- **[#191](issues/191-rep-reports-resource-exhaustion-as-specification-error.md) — Interpreter resource exhaustion is reported as a specification error**
+  Exhausting the target runtime's call stack reads as `Specification error: RecursionError`, and the ceiling differs about eightfold between Python and the other targets, so the same program is fine on two of them.
 
 ### Feat
 
