@@ -20,7 +20,7 @@ Any grammar containing an alternative with an empty right-hand side makes
 as PlantUML's error image — the words **"Syntax error!"** — instead of a
 diagram.
 
-[`syntax_diagram/plantuml/emit.py`](../../src/plcc/diagram/syntax_diagram/plantuml/emit.py)
+[`syntax_diagram/plantuml/emit.py`](../../../src/plcc/diagram/syntax_diagram/plantuml/emit.py)
 renders an empty production as the empty string and joins alternatives with
 `' | '`, so a rule with an empty alternative comes out as:
 
@@ -57,7 +57,7 @@ Two existing unit tests pin the broken output, so the fix has to update them:
 - `test_arith_grammar_smoke` asserts `"ExprRest = 'PLUS', Term, ExprRest |  ;" in result`
 
 The shape was specified this way from the start — the same two assertions appear
-in [`2026-06-25-syntactic-ebnf-diagram.md`](../plans/2026-06-25-syntactic-ebnf-diagram.md),
+in [`2026-06-25-syntactic-ebnf-diagram.md`](../../plans/2026-06-25-syntactic-ebnf-diagram.md),
 the plan the emitter was built from. It was never a regression; the empty case
 was simply not rendered before it was pinned.
 
@@ -141,7 +141,7 @@ railroad diagram.
 
 **Secondary suggestion, separable from the fix.** The renderer returns HTTP 200
 with an error image, so
-[`plantuml/build.py`](../../src/plcc/diagram/plantuml/build.py) currently cannot
+[`plantuml/build.py`](../../../src/plcc/diagram/plantuml/build.py) currently cannot
 tell success from failure and `plcc-diagram` reports success either way. A check
 for PlantUML's error signature would turn a silently wrong PNG into a message.
 Left out of the fix here because it is a different concern and wants its own
