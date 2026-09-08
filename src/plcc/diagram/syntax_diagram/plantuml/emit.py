@@ -50,7 +50,20 @@ def build_ebnf(spec):
 
 
 def _render_alternatives(rules):
-    return ' | '.join(_render_rule(r) for r in rules)
+    # PlantUML EBNF has no notation for an empty alternative, so an empty
+    # right-hand side cannot be emitted as the empty string: `A = 'X' | ;` is
+    # a syntax error and renders as an error image rather than a diagram.
+    # Express the same language with optionality instead.
+    rendered = [_render_rule(r) for r in rules]
+    nonempty = [r for r in rendered if r]
+    if not nonempty:
+        # Every alternative is empty, so the rule matches only the empty
+        # string. An empty terminal draws as an empty box, which is the
+        # picture we want.
+        return "''"
+    if len(nonempty) < len(rendered):
+        return '[ ' + ' | '.join(nonempty) + ' ]'
+    return ' | '.join(rendered)
 
 
 def _render_rule(rule):

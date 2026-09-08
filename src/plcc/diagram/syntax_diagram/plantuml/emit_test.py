@@ -75,7 +75,40 @@ def test_repeating_rule_with_separator():
 
 def test_empty_production():
     result = build_ebnf(_spec([_RULE('Opt', None, [])]))
-    assert 'Opt =  ;' in result
+    assert "Opt = '' ;" in result
+
+
+def test_empty_alternative_becomes_optional():
+    rules = [
+        _RULE('ListTail', 'Some', [_T('COMMA'), _T('NUM'), _NT('ListTail')]),
+        _RULE('ListTail', 'Zero', []),
+    ]
+    result = build_ebnf(_spec(rules))
+    assert "ListTail = [ 'COMMA', 'NUM', ListTail ] ;" in result
+
+
+def test_empty_alternative_among_several_wraps_the_choice():
+    rules = [
+        _RULE('A', 'X', [_T('X')]),
+        _RULE('A', 'Y', [_T('Y')]),
+        _RULE('A', 'Nil', []),
+    ]
+    result = build_ebnf(_spec(rules))
+    assert "A = [ 'X' | 'Y' ] ;" in result
+
+
+def test_no_rule_ends_with_a_dangling_alternative():
+    # PlantUML rejects `A = 'X' | ;` and renders an error image instead of a
+    # diagram, and plcc-diagram exits 0 either way -- so guard the shape.
+    rules = [
+        _RULE('ListTail', 'Some', [_T('COMMA'), _NT('ListTail')]),
+        _RULE('ListTail', 'Zero', []),
+        _RULE('Opt', None, []),
+    ]
+    result = build_ebnf(_spec(rules))
+    for line in result.splitlines():
+        assert '| ;' not in line
+        assert not line.rstrip().endswith('= ;')
 
 
 def test_lhs_order_preserved():
@@ -98,5 +131,5 @@ def test_arith_grammar_smoke():
     result = build_ebnf(_spec(rules))
     assert '@startebnf' in result
     assert 'Program = Expr ;' in result
-    assert "ExprRest = 'PLUS', Term, ExprRest |  ;" in result
+    assert "ExprRest = [ 'PLUS', Term, ExprRest ] ;" in result
     assert "Term = 'NUM' ;" in result
