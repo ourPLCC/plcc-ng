@@ -73,9 +73,61 @@ def test_repeating_rule_with_separator():
     assert "Args = { Arg, 'COMMA' } ;" in result
 
 
+def test_repeating_rule_with_empty_alternative_is_not_double_wrapped():
+    # `{ ... }` already matches zero occurrences, so an empty alternative
+    # beside it needs no extra `[ ... ]` bypass around the repetition.
+    rules = [
+        _REPEAT('Items', [_NT('Item')]),
+        _RULE('Items', 'None', []),
+    ]
+    result = build_ebnf(_spec(rules))
+    assert 'Items = { Item } ;' in result
+
+
 def test_empty_production():
     result = build_ebnf(_spec([_RULE('Opt', None, [])]))
-    assert 'Opt =  ;' in result
+    assert "Opt = '' ;" in result
+
+
+def test_empty_alternative_becomes_optional():
+    rules = [
+        _RULE('ListTail', 'Some', [_T('COMMA'), _T('NUM'), _NT('ListTail')]),
+        _RULE('ListTail', 'Zero', []),
+    ]
+    result = build_ebnf(_spec(rules))
+    assert "ListTail = [ 'COMMA', 'NUM', ListTail ] ;" in result
+
+
+def test_empty_alternative_among_several_wraps_the_choice():
+    rules = [
+        _RULE('A', 'X', [_T('X')]),
+        _RULE('A', 'Y', [_T('Y')]),
+        _RULE('A', 'Nil', []),
+    ]
+    result = build_ebnf(_spec(rules))
+    assert "A = [ 'X' | 'Y' ] ;" in result
+
+
+def test_no_rule_ends_with_a_dangling_alternative():
+    # PlantUML rejects `A = 'X' | ;` and renders an error image instead of a
+    # diagram, and plcc-diagram exits 0 either way -- so guard the shape.
+    # The malformed output this pins is `A = 'X', B |  ;` (dangling `|`) and
+    # `Opt =  ;` (empty rhs), so check the parsed rhs rather than matching an
+    # exact-whitespace substring.
+    rules = [
+        _RULE('ListTail', 'Some', [_T('COMMA'), _NT('ListTail')]),
+        _RULE('ListTail', 'Zero', []),
+        _RULE('Opt', None, []),
+    ]
+    result = build_ebnf(_spec(rules))
+    for line in result.splitlines():
+        _head, sep, rhs = line.partition(' = ')
+        if not sep or not rhs.endswith(' ;'):
+            continue
+        rhs = rhs[:-2].strip()
+        assert rhs, f'empty right-hand side: {line!r}'
+        assert not rhs.startswith('|'), f'leading `|`: {line!r}'
+        assert not rhs.endswith('|'), f'dangling `|`: {line!r}'
 
 
 def test_lhs_order_preserved():
@@ -98,5 +150,5 @@ def test_arith_grammar_smoke():
     result = build_ebnf(_spec(rules))
     assert '@startebnf' in result
     assert 'Program = Expr ;' in result
-    assert "ExprRest = 'PLUS', Term, ExprRest |  ;" in result
+    assert "ExprRest = [ 'PLUS', Term, ExprRest ] ;" in result
     assert "Term = 'NUM' ;" in result
