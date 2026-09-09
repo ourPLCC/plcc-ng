@@ -54,16 +54,22 @@ def _render_alternatives(rules):
     # right-hand side cannot be emitted as the empty string: `A = 'X' | ;` is
     # a syntax error and renders as an error image rather than a diagram.
     # Express the same language with optionality instead.
-    rendered = [_render_rule(r) for r in rules]
-    nonempty = [r for r in rendered if r]
+    rendered = [(r, _render_rule(r)) for r in rules]
+    nonempty = [(r, text) for r, text in rendered if text]
     if not nonempty:
         # Every alternative is empty, so the rule matches only the empty
         # string. An empty terminal draws as an empty box, which is the
         # picture we want.
         return "''"
-    if len(nonempty) < len(rendered):
-        return '[ ' + ' | '.join(nonempty) + ' ]'
-    return ' | '.join(rendered)
+    texts = [text for _, text in nonempty]
+    if len(nonempty) == len(rendered):
+        return ' | '.join(texts)
+    if len(nonempty) == 1 and 'separator' in nonempty[0][0]:
+        # The sole non-empty alternative is a `{ ... }` repetition, which
+        # already matches zero occurrences -- wrapping it in `[ ... ]` would
+        # just be a bypass around a bypass.
+        return texts[0]
+    return '[ ' + ' | '.join(texts) + ' ]'
 
 
 def _render_rule(rule):
