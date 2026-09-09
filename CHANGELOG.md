@@ -1,6 +1,140 @@
 # CHANGELOG
 
 
+## v2.0.3 (2026-09-09)
+
+### Bug Fixes
+
+- **diagram**: Don't double-wrap a repetition with an empty alternative, tighten the guard
+  ([`07ab241`](https://github.com/ourPLCC/plcc-ng/commit/07ab241a1f59def4a354bb053f7da89c7814314b))
+
+Review follow-ups to the #192 fix:
+
+- `_render_alternatives` wrapped the sole non-empty alternative in `[ ... ]` even when it was
+  already a `{ ... }` repetition, which matches zero occurrences on its own -- a bypass around a
+  bypass. Emit the bare repetition in that case.
+
+- The last branch joined `rendered` (which could still hold empty strings in principle) rather than
+  the filtered list; join the non-empty texts.
+
+- `test_no_rule_ends_with_a_dangling_alternative` matched `'| ;'` and `'= ;'`, but the malformed
+  output is `'| ;'` and `'Opt = ;'` (two spaces) -- so the assertions passed against the pre-fix
+  code and guarded nothing. Parse the right-hand side and check it is non-empty and has no leading
+  or trailing `|`.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+- **diagram**: Render empty alternatives as optional in syntax diagrams
+  ([`4f3c24a`](https://github.com/ourPLCC/plcc-ng/commit/4f3c24ac0f68a21f00015f67a12e867d58ab2db4))
+
+PlantUML EBNF has no notation for an empty alternative, so rendering one as the empty string
+  produced `A = 'X' | ;` -- which PlantUML rejects, returning an error image that plcc-diagram then
+  reported as a successful render. Express the same language with optionality instead: drop the
+  empty alternatives and wrap what remains in `[ ... ]`. When every alternative is empty, emit `''`,
+  which draws as an empty box; `[ ]` is also a PlantUML syntax error and is not an option there.
+
+Both forms were rendered against plantuml.com to confirm, and the bypass line `[ ... ]` produces is
+  the right picture -- it is what "or nothing" means in a railroad diagram.
+
+Updates the two tests that pinned the malformed output, and adds a guard that no rule is ever
+  emitted with a dangling alternative, since the failure is invisible from the exit status.
+
+Fixes #192
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+### Chores
+
+- **devcontainer**: Restore build after upstream breakages
+  ([`3654050`](https://github.com/ourPLCC/plcc-ng/commit/3654050d7106049472461784993b88232c0d9f09))
+
+The devcontainer stopped building due to three independent upstream changes; no local config had
+  changed since June.
+
+1. Java feature. The lock pinned java:1 to 1.8.0, which selects a JDK with the regex
+  \s*\K17\.?[0-9]*\.?[0-9]*(\.[a-z0-9]+)*-ms\s*. That allows only dot-separated suffixes, but SDKMAN
+  now publishes every Microsoft build with a "+N" suffix (17.0.20+1-ms), so no ms version matched
+  and the version list came back empty. Bump to 1.8.3, which added a (\+[a-z0-9]+...)? branch.
+
+2. Base image. Debian bullseye reached EOL; bullseye-security has Valid-Until 2026-09-07 and is now
+  oldoldstable-security, so apt-get update rejects the expired Release file and exits 100. This was
+  masked by the Java failure, which ran first. Move to trixie, whose os-provided Python is 3.13 --
+  satisfying requires-python >=3.12 and matching the python3.13 path already referenced in
+  devcontainer.json. Bullseye provided 3.9.
+
+3. Claude Code feature. Its fallback runs apt-get install -y nodejs. On trixie nodejs only Suggests
+  npm, so node installed without npm and the feature's post-check failed. Add the Node feature, as
+  the feature's own error message recommends.
+
+Verified: devcontainer build succeeds, devcontainer up completes postStartCommand (pdm install
+  97/97, ghcup bootstrapped), and bin/test/units.bash reports 1259 passed, 1 skipped in-container.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+Claude-Session: https://claude.ai/code/session_015GxcHEGnoATyCJzcQthYkB
+
+### Documentation
+
+- **issues**: Close issue 192 (syntax diagram invalid EBNF), update roadmap
+  ([`73ce3b4`](https://github.com/ourPLCC/plcc-ng/commit/73ce3b413f17a13957fcc46660516bcfc6c8cfaa))
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 190 - program errors kill the plcc-rep session
+  ([`a4cb80c`](https://github.com/ourPLCC/plcc-ng/commit/a4cb80c8f20830e09dec5d779f86a9176472f5b3))
+
+Every exception a semantic action raises that is not a LanguageError is reported as a
+  specification_error, which exits the interpreter and then plcc-rep. One bad input ends the
+  session, and the user is told to fix a specification that is not at fault.
+
+Reported from downstream, where it was found porting a course language suite. The reproduction is a
+  self-contained 14-line spec built against plcc-ng alone, verified on 2.0.2 across the Python,
+  Java, and JavaScript targets.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 191 - resource exhaustion reads as a specification error
+  ([`3da40fa`](https://github.com/ourPLCC/plcc-ng/commit/3da40facbdaa533be6795e26a952b0f451b14f88))
+
+Exhausting the target runtime's call stack reaches the same non-LanguageError branch as issue 190
+  and is labeled a specification error, advising the user to edit a grammar that is not at fault.
+  Filed separately because the remedy may differ: continuing the session after a stack overflow is a
+  real question, where for 190 it is clearly correct.
+
+Includes the downstream port's measured ceilings across the three targets, which differ about
+  eightfold between Python and the other two.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 192 - syntax diagram emits invalid EBNF for empty alternatives
+  ([`c5f5703`](https://github.com/ourPLCC/plcc-ng/commit/c5f57031d46ac998e41981e75304b94ebc38743a))
+
+A rule with an empty alternative renders as a dangling `|`, which PlantUML rejects -- syntax.png
+  comes back as an error image while plcc-diagram still exits 0 and prints the output path.
+
+Not an edge case: recursion with an empty alternative is the standard LL(1) list idiom, it is the
+  textbook Syntax chapter's own example, and it is the shape plcc-ng's own LL(1) conflict message
+  tells the user to write. Class diagrams and `**=` grammars are unaffected.
+
+Two existing unit tests pin the broken output, and the same two assertions appear in the plan the
+  emitter was built from, so this was never a regression -- the empty case was pinned before it was
+  rendered.
+
+Reported from downstream, found while building a parser sandbox for a programming-languages course.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+- **issues**: File 193 - plcc-diagram reports success on a PlantUML error image
+  ([`0b48b20`](https://github.com/ourPLCC/plcc-ng/commit/0b48b200178ed757b3347dbc5229a293373abaf4))
+
+A malformed .puml comes back from plantuml.com as HTTP 200 with a "Syntax error!" PNG, and build.py
+  writes it and exits 0, so plcc-diagram prints the output path as if the render succeeded. Split
+  off from #192 as its own concern; the reproduction and the response-header findings were checked
+  directly against plantuml.com.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+
 ## v2.0.2 (2026-08-12)
 
 ### Bug Fixes
