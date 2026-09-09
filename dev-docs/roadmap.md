@@ -12,6 +12,8 @@
   Any exception a semantic action raises that is not a `LanguageError` becomes a `specification_error`, so one bad input ends the session and tells the user to go fix a specification that is not at fault.
 - **[#191](issues/191-rep-reports-resource-exhaustion-as-specification-error.md) — Interpreter resource exhaustion is reported as a specification error**
   Exhausting the target runtime's call stack reads as `Specification error: RecursionError`, and the ceiling differs about eightfold between Python and the other targets, so the same program is fine on two of them.
+- **[#193](issues/193-diagram-plantuml-render-error-reported-as-success.md) — plcc-diagram reports success when PlantUML renders an error image**
+  A malformed `.puml` comes back from `plantuml.com` as HTTP 200 with a "Syntax error!" PNG, and `build.py` writes it and exits 0, so `plcc-diagram` prints the output path as if the render had succeeded.
 
 ### Feat
 
