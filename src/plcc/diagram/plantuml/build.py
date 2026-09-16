@@ -1,8 +1,11 @@
 import base64
 import enum
+import ssl
 import sys
 import urllib.request
 import zlib
+
+import certifi
 
 from plcc.cli import parse_args
 
@@ -52,7 +55,8 @@ def main(argv=None):
             source = f.read()
         url = f'https://www.plantuml.com/plantuml/png/{_encode(source)}'
         req = urllib.request.Request(url, headers={'User-Agent': 'plcc-ng/1.0'})
-        with urllib.request.urlopen(req, timeout=30) as response:
+        context = ssl.create_default_context(cafile=certifi.where())
+        with urllib.request.urlopen(req, timeout=30, context=context) as response:
             png_bytes = response.read()
     except Exception as e:
         print(f"plcc-diagram-plantuml-build: {e}", file=sys.stderr)

@@ -1,3 +1,6 @@
+import ssl
+
+import certifi
 import pytest
 from unittest.mock import patch, MagicMock
 
@@ -42,7 +45,25 @@ def test_calls_plantuml_server_and_writes_png(tmp_path):
     req_called, = mock_urlopen.call_args.args
     assert req_called.full_url.startswith('https://www.plantuml.com/plantuml/png/')
     assert req_called.get_header('User-agent') == 'plcc-ng/1.0'
-    assert mock_urlopen.call_args.kwargs == {'timeout': 30}
+    kwargs = mock_urlopen.call_args.kwargs
+    assert kwargs['timeout'] == 30
+    assert isinstance(kwargs['context'], ssl.SSLContext)
+
+
+def test_urlopen_context_is_pinned_to_certifi_bundle(tmp_path):
+    src = tmp_path / "diagram.puml"
+    src.write_text("@startuml\n@enduml\n")
+    out = tmp_path / "diagram.png"
+    fake_png = b'\x89PNG fake'
+
+    mock_response = MagicMock()
+    mock_response.__enter__.return_value.read.return_value = fake_png
+
+    with patch('urllib.request.urlopen', return_value=mock_response) as mock_urlopen, \
+            patch('ssl.create_default_context', wraps=ssl.create_default_context) as mock_ctx:
+        run_main([f'--input={src}', f'--output={out}'])
+
+    mock_ctx.assert_called_once_with(cafile=certifi.where())
 
 
 def test_missing_input_file_exits_with_error(tmp_path, capsys):
