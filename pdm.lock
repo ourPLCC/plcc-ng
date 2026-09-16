@@ -4,8 +4,8 @@
 [metadata]
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
-lock_version = "4.5.0"
-content_hash = "sha256:11b2566834b1a68094154b114e2377961b6d6285febf4f7c9ce17c51299030d8"
+lock_version = "4.5.1"
+content_hash = "sha256:f7016014010cac229a3f525540b08e5bf0a74feafea2fdee673cdf845c0efd70"
 
 [[metadata.targets]]
 requires_python = "~=3.12"
@@ -94,7 +94,7 @@ name = "certifi"
 version = "2026.6.17"
 requires_python = ">=3.7"
 summary = "Python package for providing Mozilla's CA Bundle."
-groups = ["dev"]
+groups = ["default", "dev"]
 files = [
     {file = "certifi-2026.6.17-py3-none-any.whl", hash = "sha256:2227dcbaafe0d2f59279d1762ddddc37783ed4354594f194ffc31d20f41fc3db"},
     {file = "certifi-2026.6.17.tar.gz", hash = "sha256:024c88eeec92ca068db80f02b8b07c9cef7b9fe261d1d535abfd5abd6f6af432"},
