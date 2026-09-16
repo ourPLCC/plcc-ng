@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v2.0.4 (2026-09-16)
+
+### Bug Fixes
+
+- **diagram**: Pin plantuml.com TLS verification to the certifi CA bundle
+  ([`703b25f`](https://github.com/ourPLCC/plcc-ng/commit/703b25f8e94efc0d9d9b2a574f63c6ea0818a725))
+
+plcc-diagram-plantuml-build let urlopen fall back to the local Python install's implicit default SSL
+  context, so CERTIFICATE_VERIFY_FAILED depended on whatever ambient CA trust store happened to be
+  wired up on each machine. Pin verification to certifi's bundled root list instead so it's
+  deterministic across installs.
+
+Fixes #194
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Documentation
+
+- **issues**: File 194 - plcc-diagram-plantuml-build fails CERTIFICATE_VERIFY_FAILED
+  ([`3a35e6c`](https://github.com/ourPLCC/plcc-ng/commit/3a35e6c59ab84340d750177266afa4768ac883d4))
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+
 ## v2.0.3 (2026-09-09)
 
 ### Bug Fixes
