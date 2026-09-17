@@ -14,8 +14,6 @@
   Exhausting the target runtime's call stack reads as `Specification error: RecursionError`, and the ceiling differs about eightfold between Python and the other targets, so the same program is fine on two of them.
 - **[#193](issues/193-diagram-plantuml-render-error-reported-as-success.md) — plcc-diagram reports success when PlantUML renders an error image**
   A malformed `.puml` comes back from `plantuml.com` as HTTP 200 with a "Syntax error!" PNG, and `build.py` writes it and exits 0, so `plcc-diagram` prints the output path as if the render had succeeded.
-- **[#194](issues/194-plcc-diagram-plantuml-ssl-verify-failed.md) — plcc-diagram-plantuml-build fails with CERTIFICATE_VERIFY_FAILED on some student machines**
-  `urlopen` falls back to the local Python install's implicit default SSL context, so machines with an unpopulated or stale CA trust store (common on some macOS/Anaconda installs) can't verify plantuml.com's certificate, even when instructor machines on the same network are unaffected.
 
 ### Feat
 
