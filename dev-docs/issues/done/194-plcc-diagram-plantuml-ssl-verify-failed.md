@@ -15,7 +15,7 @@ documentation content, and never bumps the version either way.
 
 ## Description
 
-`plcc-diagram-plantuml-build` ([src/plcc/diagram/plantuml/build.py](../../src/plcc/diagram/plantuml/build.py))
+`plcc-diagram-plantuml-build` ([src/plcc/diagram/plantuml/build.py](../../../src/plcc/diagram/plantuml/build.py))
 renders diagrams by POSTing the encoded `.puml` source to
 `https://www.plantuml.com/plantuml/png/...` via `urllib.request.urlopen`.
 It calls `urlopen` with no explicit `context=`, so certificate verification
