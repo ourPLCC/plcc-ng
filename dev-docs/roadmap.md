@@ -21,6 +21,8 @@
   `plcc-rep` is named after its interaction mode (REPL), not its phase, breaking the `scan`/`parse`/`?` naming pattern; an alias or rename to `plcc-eval` would restore it.
 - **[#187](issues/187-rep-lacks-output-and-clean-exit-records.md) — plcc-rep lacks output and clean-exit record kinds**
   Semantic actions have no supported channel for user-visible output and no way to end the session cleanly, so output must be buffered into the result and a deliberate `exit` reads as a crash.
+- **[#195](issues/195-python-single-module-output.md) — Optionally generate Python output as a single module**
+  Each generated class gets its own file, so specs need `Class:import` blocks purely to undo the split; an opt-in single-module layout would make them unnecessary.
 
 ### Docs
 
