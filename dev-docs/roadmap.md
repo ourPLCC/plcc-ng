@@ -14,6 +14,8 @@
   Exhausting the target runtime's call stack reads as `Specification error: RecursionError`, and the ceiling differs about eightfold between Python and the other targets, so the same program is fine on two of them.
 - **[#193](issues/193-diagram-plantuml-render-error-reported-as-success.md) — plcc-diagram reports success when PlantUML renders an error image**
   A malformed `.puml` comes back from `plantuml.com` as HTTP 200 with a "Syntax error!" PNG, and `build.py` writes it and exits 0, so `plcc-diagram` prints the output path as if the render had succeeded.
+- **[#196](issues/196-java-top-fragment-silently-dropped.md) — A Java `top` fragment is silently discarded**
+  `java.md` documents a `top` fragment kind, but `java/emit.py` never passes `top_fragments` and its template never renders one, so the block is validated, carried into the model, and dropped with no error.
 
 ### Feat
 
