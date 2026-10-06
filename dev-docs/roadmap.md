@@ -24,7 +24,9 @@
 - **[#187](issues/187-rep-lacks-output-and-clean-exit-records.md) — plcc-rep lacks output and clean-exit record kinds**
   Semantic actions have no supported channel for user-visible output and no way to end the session cleanly, so output must be buffered into the result and a deliberate `exit` reads as a crash.
 - **[#195](issues/195-python-single-module-output.md) — Optionally generate Python output as a single module**
-  Each generated class gets its own file, so specs need `Class:import` blocks purely to undo the split; an opt-in single-module layout would make them unnecessary.
+  Each generated class gets its own file, so specs need `Class:import` blocks purely to undo the split; an opt-in single-module layout would make them unnecessary. Blocked on #197 resolving hook names.
+- **[#197](issues/197-language-neutral-fragment-hook-names.md) — Language-neutral names for fragment hooks**
+  `top`, `class`, and `file` were coined for Java: `top` means four different things across targets, `body` changes scope in Haskell, and `file` names an artifact #195 abolishes.
 
 ### Docs
 

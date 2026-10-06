@@ -36,6 +36,20 @@ the current layout, so the existing one-file-per-class behavior has to remain
 the default and stay byte-for-byte unchanged for specs that do not ask for
 anything different.
 
+### Status
+
+Designed in
+[2026-10-06-195-python-single-module-design.md](../specs/2026-10-06-195-python-single-module-design.md),
+which supersedes the open questions below.
+
+**Blocked on [#197](197-language-neutral-fragment-hook-names.md)** — and
+specifically on *resolving* the hook names there, not on implementing them.
+Single-module needs module-targeted hooks, because `Class:import` and
+`Class:top` are defined in terms of a per-class file that this mode abolishes.
+Shipping with provisional names would mean renaming a published hook later.
+Once the vocabulary is decided, this work can adopt it and proceed; #197's
+multi-module hooks and deprecation path can land separately.
+
 ### Open questions for design
 
 The boundaries are deliberately left open here; they are the substance of the
