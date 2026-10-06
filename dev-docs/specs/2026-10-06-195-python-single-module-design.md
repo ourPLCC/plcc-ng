@@ -50,7 +50,7 @@ that does not ask for the option generates byte-identical output to today.
 | What does not | `runtime/` stays a package; `main.py` stays the entry point |
 | Spec syntax | Whitespace-separated options after the language name |
 | Option enforcement | The language extension enforces its own list |
-| Per-class file hooks | `Class:top` and `Class:import` are errors in this mode |
+| Per-class file hooks | `Class:top`, `Class:import`, and the `file` kind are all errors in this mode |
 | Module hooks | Three regions, author chooses; names pending #197 |
 | Free-standing code position | Author's choice of region, not emitter-chosen |
 | Stale sibling imports | A hard error by construction, since the hook is gone |
@@ -242,11 +242,25 @@ not require imports to precede other module-level code, which is why
 `module:import` and `module:head` are adjacent rather than separated by
 anything structural.
 
-**`Class:top` and `Class:import` are errors in this mode**, not silently
-relocated. Both name a per-class file that does not exist here. The error tells
-the author which module hook to use, and that error is what makes stale
-sibling imports a build-time failure rather than a runtime `ModuleNotFoundError`
-— see §6.
+**Three fragment kinds are errors in this mode**, not silently relocated:
+`Class:top`, `Class:import`, and the `file` kind (a locator naming a class no
+grammar rule produces). All three are defined in terms of a per-class file that
+does not exist here — `file` most literally of all, since its documented
+contract is "replaces the entire file."
+
+Each error names the module hook to use instead. That is also what makes stale
+sibling imports a build-time failure rather than a runtime
+`ModuleNotFoundError` — see §6.
+
+The `file` kind is the subtle one, because it is reached by *fall-through*:
+`_compute_kind` returns `'file'` whenever the locator carries no recognized
+modifier and the name is not a known grammar class. So the check cannot simply
+look for an explicit tag — it must reject fragments whose computed kind is
+`'file'`. A consequence worth stating in the error text: under this mode a
+misspelled class name on a body block, which today silently becomes a standalone
+file, becomes a hard error instead. That is a strict improvement over the
+default path's behavior, and it is why the fall-through footgun is listed as out
+of scope rather than fixed here.
 
 **Why no topological sort is needed.** `_build_classes` appends each abstract
 base immediately before the alternatives that extend it, and `extends` is only
@@ -334,7 +348,8 @@ it, write a unit test."
 | `validation_test.py` | `module` is exempt from the `^[A-Z]` class-name rule; a bare `module` with no slot is still an error |
 | `build_model_test.py` | each module slot gets its own kind, distinct from `Class:top`/`Class:import` |
 | `ext/python/emit_test.py` | one `classes.py`, no per-class files, no `_Start.py`; region order (preamble → runtime imports → import → head → `_Start` → classes → tail); runtime imports appear exactly once; `main.py` imports from `classes`; unknown option rejected |
-| `ext/python/emit_test.py` | `Class:top` and `Class:import` each error under `single-module`, and the message names the module hook to use |
+| `ext/python/emit_test.py` | `Class:top`, `Class:import`, and a `file`-kind fragment each error under `single-module`, and each message names the module hook to use |
+| `ext/python/emit_test.py` | a misspelled body-block class name errors under `single-module` (it falls through to `file`) while still producing a standalone file on the default path |
 
 **The test that proves the point is e2e**, because it must actually run: a new
 fixture spec with a genuine cross-class reference and **no import blocks at
@@ -386,7 +401,9 @@ link warnings fail rather than pass silently.
 - Making the module name configurable.
 - Deduplicating hoisted imports.
 - The `_compute_kind` fall-through footgun noted in #195, where a misspelled
-  class name silently becomes a standalone file. Same code, separate issue.
+  class name silently becomes a standalone file. Same code, separate issue —
+  though note §3: under `single-module` it stops being silent for free, because
+  the `file` kind is rejected outright there.
 - **The hook vocabulary itself**
   ([#197](../issues/197-language-neutral-fragment-hook-names.md)): naming the
   slots, offering them on class targets in multi-module mode, migrating the
