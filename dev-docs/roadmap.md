@@ -16,6 +16,8 @@
   A malformed `.puml` comes back from `plantuml.com` as HTTP 200 with a "Syntax error!" PNG, and `build.py` writes it and exits 0, so `plcc-diagram` prints the output path as if the render had succeeded.
 - **[#196](issues/196-java-top-fragment-silently-dropped.md) — A Java `top` fragment is silently discarded**
   `java.md` documents a `top` fragment kind, but `java/emit.py` never passes `top_fragments` and its template never renders one, so the block is validated, carried into the model, and dropped with no error.
+- **[#198](issues/198-generated-file-name-collisions.md) — Grammar class names can collide with files plcc-ng generates**
+  A non-terminal named `<Main>` or `<Token>` overwrites or shadows the Java and Haskell entry point and runtime, breaking the build with errors about generated code; plcc-ng's own files need a name space author names cannot reach.
 
 ### Feat
 
