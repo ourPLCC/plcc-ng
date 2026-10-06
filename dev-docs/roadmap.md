@@ -14,6 +14,8 @@
   Exhausting the target runtime's call stack reads as `Specification error: RecursionError`, and the ceiling differs about eightfold between Python and the other targets, so the same program is fine on two of them.
 - **[#193](issues/193-diagram-plantuml-render-error-reported-as-success.md) — plcc-diagram reports success when PlantUML renders an error image**
   A malformed `.puml` comes back from `plantuml.com` as HTTP 200 with a "Syntax error!" PNG, and `build.py` writes it and exits 0, so `plcc-diagram` prints the output path as if the render had succeeded.
+- **[#196](issues/196-java-top-fragment-silently-dropped.md) — A Java `top` fragment is silently discarded**
+  `java.md` documents a `top` fragment kind, but `java/emit.py` never passes `top_fragments` and its template never renders one, so the block is validated, carried into the model, and dropped with no error.
 
 ### Feat
 
@@ -21,6 +23,10 @@
   `plcc-rep` is named after its interaction mode (REPL), not its phase, breaking the `scan`/`parse`/`?` naming pattern; an alias or rename to `plcc-eval` would restore it.
 - **[#187](issues/187-rep-lacks-output-and-clean-exit-records.md) — plcc-rep lacks output and clean-exit record kinds**
   Semantic actions have no supported channel for user-visible output and no way to end the session cleanly, so output must be buffered into the result and a deliberate `exit` reads as a crash.
+- **[#195](issues/195-python-single-module-output.md) — Optionally generate Python output as a single module**
+  Each generated class gets its own file, so specs need `Class:import` blocks purely to undo the split; an opt-in single-module layout would make them unnecessary. Blocked on #197 resolving hook names.
+- **[#197](issues/197-language-neutral-fragment-hook-names.md) — Language-neutral names for fragment hooks**
+  `top`, `class`, and `file` were coined for Java: `top` means four different things across targets, `body` changes scope in Haskell, and `file` names an artifact #195 abolishes.
 
 ### Docs
 
