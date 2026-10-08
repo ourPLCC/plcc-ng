@@ -92,7 +92,7 @@ them (see "Cross-repo work").
 
 **Collisions.** Every container on a machine shares one host clone (see
 "Setup"), so one person's sessions never collide. Collisions between people
-are possible until both push; `bin/check.bash` catches duplicates at pre-push
+are possible until both push; `bin/check.py` catches duplicates at pre-push
 and in CI, and `backlog doctor --fix` renumbers the unpushed one.
 
 ## Lifecycle
@@ -209,7 +209,7 @@ ourPLCC/issues
 ├── .backlog-version          # pinned Backlog.md version, e.g. 1.53.0
 ├── backlog/config.yml
 ├── backlog/{tasks,completed,drafts}/
-├── bin/check.bash
+├── bin/check.py
 ├── .githooks/{pre-commit,pre-push}
 ├── .github/workflows/check.yml
 ├── upstream/<version>/       # raw output of all five `backlog instructions` guides
@@ -222,7 +222,7 @@ ourPLCC/issues
   `/workspaces/issues/README.md`. Agents are pointed here, never at
   `backlog instructions` (whose guidance conflicts with ours on plans,
   cleanup, and drafts). It includes recovering from a rejected push from the
-  host (`git pull --rebase`, then `bin/check.bash` and, if IDs collided,
+  host (`git pull --rebase`, then `bin/check.py` and, if IDs collided,
   `backlog doctor --fix` in a container).
 - **`upstream/<version>/`:** raw output of each `backlog instructions` guide
   (`overview`, `task-creation`, `task-execution`, `task-finalization`,
@@ -234,11 +234,14 @@ ourPLCC/issues
   `.githooks/` run on maintainers' hosts, so tracker push access is code
   execution, the same trust as `bin/` in the code repos.
 
-### `bin/check.bash`
+### `bin/check.py`
 
-Portable bash + grep/awk: runs on the host without Node or Backlog.md, and
-must work with macOS's bash 3.2 and BSD tools (no associative arrays, no
-`mapfile`, no GNU-only flags). Scans `backlog/` only. Fails on:
+Python 3, standard library only. It runs in the container (pre-commit, via
+Backlog.md's auto-commit) and on the host (pre-push, since pushes happen
+there), so it must not depend on Node, Backlog.md, or the host's shell and
+tools: Python behaves the same on Linux and macOS, where git's Xcode Command
+Line Tools also provide `python3`. The hooks are one-line shell wrappers that
+call it. Scans `backlog/` only. Fails on:
 
 1. Duplicate IDs across `tasks/`, `completed/`, `archive/tasks/`, or a filename
    ID that differs from its frontmatter `id:` (compared case-insensitively:
@@ -371,7 +374,7 @@ is produced for human review, not applied silently.
 **Verification:** the number of files per folder equals the expected count
 from the input; `backlog task view <id>` succeeds for every converted ID
 (`task list` omits `completed/`, so it cannot be the count); `backlog doctor`
-and `bin/check.bash` are clean; and the report lists unmapped types,
+and `bin/check.py` are clean; and the report lists unmapped types,
 duplicate-number remaps, slug mismatches, and unresolved links.
 
 ### In the migrated code repo
