@@ -23,7 +23,8 @@
       "Bash(bin/test/integration.bash)",
       "Bash(bin/test/e2e.bash)",
       "Bash(bin/test/functional.bash)",
-      "Bash(check-jsonschema:*)"
+      "Bash(check-jsonschema:*)",
+      "Bash(backlog:*)"
     ]
   },
   "enabledPlugins": {
