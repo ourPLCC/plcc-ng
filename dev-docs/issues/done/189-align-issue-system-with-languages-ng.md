@@ -2,6 +2,7 @@
 
 **Type:** chore
 **Date:** 2026-08-11
+**Status:** superseded by #199
 
 <!--
 Classify by user-facing impact, not by whether something was "broken".
@@ -22,11 +23,11 @@ load-bearing.
 
 ### 1. Issues never move; `closed:` is the status
 
-Today a close does `git mv` into [issues/done/](done/), so an issue's path
+Today a close does `git mv` into [issues/done/](), so an issue's path
 changes exactly once in its life — and every link written before that
 moment goes stale. Issue
-[#149](done/149-fix-stale-issues-done-links.md) was the one-time cleanup of
-~23 such links; issue [#150](done/150-close-script-auto-fix-links.md) then
+[#149](149-fix-stale-issues-done-links.md) was the one-time cleanup of
+~23 such links; issue [#150](150-close-script-auto-fix-links.md) then
 built link-rewriting into `close.bash` so the class would stop recurring.
 
 **It did not stop recurring. There are 14 broken links in `issues/done/`
@@ -47,7 +48,7 @@ both are structural rather than bugs in the rewriting:
 - **Depth rewrites applied to already-wrong paths** (6 of the 14). #150's
   blanket "add one more `../` to anything climbing out of `issues/`" cannot
   tell a correct relative path from an incorrect one. #157 was filed with
-  `[issues/TEMPLATE.md](../TEMPLATE.md)` — already wrong by one level — and
+  `[issues/TEMPLATE.md](../../TEMPLATE.md)` — already wrong by one level — and
   the close deepened it to `../../TEMPLATE.md`, still wrong. The five
   `../../src/plcc/cmd/source_runner.py` links in #013/#014/#018/#020/#021
   are the same shape from before #150 landed.
@@ -55,7 +56,7 @@ both are structural rather than bugs in the rewriting:
 Under the languages-ng shape none of this exists. A link to an issue is
 `issues/NNN-slug.md` from the day it is filed until forever, no file ever
 changes depth, and `close.bash` touches no links at all — its
-[close.bash](../../bin/issues/close.bash) counterpart is *shorter* than
+[close.bash](../../../bin/issues/close.bash) counterpart is *shorter* than
 ours despite doing strictly more validation, because roughly 40 lines of
 link surgery are simply gone.
 
@@ -109,8 +110,8 @@ so a defect found here but belonging to another repo can be filed here
 without pretending it is ours. This is the weakest of the three for us:
 languages-ng needs it because it is downstream of this repo and
 accumulates upstream findings, whereas we are usually the upstream. It is
-not worthless — issues [#160](160-concurrent-plcc-build-dir-race.md)
-and [#161](161-rename-plcc-rep-to-plcc-eval.md) were hand-migrated
+not worthless — issues [#160](../160-concurrent-plcc-build-dir-race.md)
+and [#161](../161-rename-plcc-rep-to-plcc-eval.md) were hand-migrated
 from `ourPLCC/plcc-ng-demo`, and adjacent repos (`plcc-ng-demo`,
 `plcc-ng-devcontainer`) could use the same treatment — but it is easily
 dropped without affecting (1) or (2).
@@ -147,14 +148,14 @@ file having moved.
    `../NNN-slug.md` → `NNN-slug.md` for sibling issues, and one fewer `../`
    on paths climbing out of `issues/`. Fix the 14 broken ones by hand while
    in there.
-4. Port [check.bash](../../bin/issues/check.bash) from languages-ng (frontmatter
+4. Port [check.bash](../../../bin/issues/check.bash) from languages-ng (frontmatter
    validators, the `done/` guard, checkbox-vs-`closed` agreement) and delete
    `close.bash`'s link-rewriting block.
 5. Trim `tests/bats/commands/issues-close.bats` — most of its 126 lines
    exercise link rewriting that will no longer exist — and add coverage for
    the `closed:` fill-in.
-6. Update [issue-conventions.md](../issue-conventions.md) and
-   [CLAUDE.md](../../CLAUDE.md).
+6. Update [issue-conventions.md](../../issue-conventions.md) and
+   [CLAUDE.md](../../../CLAUDE.md).
 
 **Honest cost.** One directory holding 186 files, 177 of them closed, is
 worse to browse than 9-plus-an-archive. languages-ng has 38 issues total,
@@ -170,6 +171,6 @@ must be repointed at `done/` on close; theirs never change). Doing this
 before the next milestone list is written avoids the conversion entirely.
 
 Filed after hand-migrating issues
-[#185](185-rep-parses-each-source-independently.md)–[#188](188-follow-set-omits-nullable-tail.md)
+[#185](../185-rep-parses-each-source-independently.md)–[#188](../188-follow-set-omits-nullable-tail.md)
 from languages-ng, which is what surfaced the divergence between the two
 systems.

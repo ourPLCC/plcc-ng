@@ -2,7 +2,7 @@
 
 Issue: [#199](../issues/199-adopt-backlog-md-central-tracker.md)
 Date: 2026-10-08
-Supersedes: [#189](../issues/189-align-issue-system-with-languages-ng.md)
+Supersedes: [#189](../issues/done/189-align-issue-system-with-languages-ng.md)
 
 ## Problem
 
