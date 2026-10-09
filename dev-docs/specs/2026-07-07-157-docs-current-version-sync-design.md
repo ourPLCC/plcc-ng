@@ -1,7 +1,7 @@
 # Docs-only changes never reach current-version docs (issue 157) — design
 
 **Date:** 2026-07-07
-**Issue:** [157 - docs-only-changes-never-reach-current-version-docs](../issues/done/157-docs-only-changes-never-reach-current-version-docs.md)
+**Issue:** 157 - docs-only-changes-never-reach-current-version-docs (CR-157)
 
 ## Problem
 
@@ -10,7 +10,7 @@
 push to `main` redeploys the `dev` alias, but only a GitHub `release`
 event redeploys a version alias (e.g. `1.0`) and moves `latest`. Since
 `docs`-only commits never bump the version (by design — see
-[issues/TEMPLATE.md](../issues/TEMPLATE.md)), a docs-only PR merged to
+issues/TEMPLATE.md), a docs-only PR merged to
 `main` updates `dev` but never reaches `1.0`/`latest` until the next
 unrelated release. Discovered via issue #147 (heading capitalization):
 the fix appeared on the `dev` preview but not on the docs users are

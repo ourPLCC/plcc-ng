@@ -1,7 +1,7 @@
 # 176 — integration coverage for repetition rules at the `plcc-spec | plcc-ll1` boundary
 
 **Date:** 2026-07-29
-**Issue:** [176](../issues/done/176-integration-tier-has-no-arbno-coverage.md)
+**Issue:** CR-176
 
 ## Problem
 
@@ -17,7 +17,7 @@ covered at only two removes from itself: at the unit level
 (`src/plcc/ll1/ll1_result_builder_test.py`, in-memory `Grammar` objects, no
 subprocess) and at the e2e level (whole pipeline, asserting on `[1, 2, 3]`).
 
-Issue [174](../issues/done/174-arbno-drops-mid-body-terminal.md)'s bug lived
+Issue CR-174's bug lived
 exactly in that gap. `_handle_arbno` in
 [spec_json_decoder.py](../../src/plcc/ll1/spec_json_decoder.py) built the
 runtime `arbno.<nt>.rhs` list from capturing symbols only, silently dropping
@@ -59,8 +59,8 @@ Two alternatives were considered and rejected:
   `arbno` section at all, so `check-jsonschema` validates it as "anything goes."
   Fixing that means editing `src/plcc/schemas/ll1.schema.json`, which changes the
   shipped package and reclassifies this issue away from `test`. Split out as
-  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md); a sibling gap in the
-  `conflicts` section is [#180](../issues/done/180-ll1-schema-omits-conflict-type.md).
+  CR-179; a sibling gap in the
+  `conflicts` section is CR-180.
   This design therefore asserts structure with `python3 -c`, the same technique
   `spec-model.bats` already uses for `start`.
 
@@ -163,5 +163,5 @@ The full `bin/test/functional.bash` runs before the branch is pushed.
 - No change to `src/`. Issue 176 stays classified `test` and does not bump the
   release version.
 - The schema gaps found while designing this are recorded as
-  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md) and
-  [#180](../issues/done/180-ll1-schema-omits-conflict-type.md), not fixed here.
+  CR-179 and
+  CR-180, not fixed here.

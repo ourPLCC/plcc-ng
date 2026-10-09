@@ -1,6 +1,6 @@
 # Arbno drops mid-body non-capturing terminal — design
 
-**Issue:** [174](../issues/done/174-arbno-drops-mid-body-terminal.md)
+**Issue:** CR-174
 **Date:** 2026-07-28
 
 ## Problem

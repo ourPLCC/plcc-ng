@@ -1,6 +1,6 @@
 # Harden `close.bash` to auto-fix links — design
 
-**Issue:** [150](../issues/done/150-close-script-auto-fix-links.md)
+**Issue:** CR-150
 **Date:** 2026-07-06
 
 ## Problem

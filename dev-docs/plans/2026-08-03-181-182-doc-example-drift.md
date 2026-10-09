@@ -18,7 +18,7 @@ always edited as a pair. No `src/` change.
 (stdlib `difflib`, `pathlib` only), GitHub Actions.
 
 **Spec:** [2026-08-03-doc-example-drift-design.md](../specs/2026-08-03-doc-example-drift-design.md)
-**Issues:** [181](../issues/done/181-docs-run-contract-stale-python-examples.md) (docs), [182](../issues/done/182-test-doc-example-drift.md) (test)
+**Issues:** CR-181 (docs), CR-182 (test)
 
 ## Global Constraints
 
@@ -1986,7 +1986,7 @@ EOF
 `mkdocs build --strict` step; it must land before the branch's final commit so
 Task 7 can close #183 alongside #181 and #182.
 
-Closes [#183](../issues/done/183-docs-orphan-plantuml-nav-entries.md).
+Closes CR-183.
 
 `mkdocs build --strict` fails on three nav entries in `mkdocs.yml` that point at
 pages which do not exist. They are leftovers from #113's diagram-command rename.
@@ -2042,7 +2042,7 @@ Expected: `EXIT=0`, no warnings.
 You may see a notice in the output recommending `pip install properdocs` for
 "MkDocs 2.0". That is a real deprecation notice from `properdocs`, a legitimate
 transitive dependency (`pdm.lock` pins 1.6.7 via `mkdocs-kroki-plugin`; see
-[#156](../issues/156-mkdocs-1x-successor-decision.md)). **Do not install it, and
+CR-156). **Do not install it, and
 do not set any environment variable it suggests.** Choosing this project's
 MkDocs successor is tracked separately in #156 and is not part of this task.
 

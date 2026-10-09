@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-14
 **Branch:** fix/interactive-ctrl-d-blank-line
-**Issues:** [018](../issues/done/018-ctrl-d-exit-missing-newline.md), [020](../issues/done/020-ctrl-d-behavior-in-continuation.md), [021](../issues/done/021-blank-line-submit-silently-discards-incomplete-input.md)
+**Issues:** CR-18, CR-20, CR-21
 
 ---
 

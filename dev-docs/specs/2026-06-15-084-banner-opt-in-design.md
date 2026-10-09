@@ -1,7 +1,7 @@
 # Design: Make Banner Opt-In (Issue 084)
 
 **Date:** 2026-06-15
-**Issue:** [084](../issues/done/084-no-banner-default.md)
+**Issue:** CR-84
 
 ## Problem
 

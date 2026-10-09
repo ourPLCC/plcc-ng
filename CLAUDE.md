@@ -4,16 +4,26 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before making changes. It describes the 
 
 Do not write ad-hoc shell scripts. Check [bin/](bin/) first — the script you need probably already exists. If it does not, add one there and match the existing style.
 
-## Creating and closing issues
+## Tracking work
 
-Issue workflow conventions live in [dev-docs/issue-conventions.md](dev-docs/issue-conventions.md). The short version:
+Work is tracked as change requests (CRs) in the central tracker at
+`/workspaces/change-requests` ([ourPLCC/change-requests](https://github.com/ourPLCC/change-requests)),
+shared by all ourPLCC repos. Before any tracker work, read
+`/workspaces/change-requests/README.md` — it is the workflow guide. Do not use
+`backlog instructions`; its guidance differs from ours. This repo's project
+value is `plcc-ng`.
 
-To add a new issue to [dev-docs/issues/](dev-docs/issues/), always use [bin/issues/new.bash](bin/issues/new.bash):
+Agent-specific rules:
 
-```bash
-bin/issues/new.bash <slug> [type]
-```
-
-This reads [dev-docs/issues/.next-id.txt](dev-docs/issues/.next-id.txt) for the next ID, creates the file from the template with the date filled in, and increments the ID. Never assign issue numbers by hand or by scanning the directory. Add a roadmap entry in the same commit.
-
-To close an issue, always use [bin/issues/close.bash](bin/issues/close.bash) — as the final commit of the branch that does the work. It moves the file to `done/` and updates [dev-docs/roadmap.md](dev-docs/roadmap.md). Verify consistency any time with [bin/issues/check.bash](bin/issues/check.bash).
+- Use the `backlog` CLI (`BACKLOG_CWD` points it at the tracker). Never edit
+  tracker files by hand.
+- Create CRs or drafts only with the human's approval. During automated plan
+  execution, record discovered work in the CR's notes
+  (`backlog task edit CR-N --append-notes "…"`); it is triaged with the human
+  at clear-down.
+- Plans go in `.plans/` (gitignored, inside the worktree) and are never
+  committed. Specs go in `dev-docs/specs/` and do not cite CRs; the CR
+  references the spec.
+- Branch names start with the CR ID: `cr-1042-short-slug`.
+- Legacy issue numbers resolve as CRs: plcc-ng `#160` is `CR-160`
+  (`backlog task view 160`).
