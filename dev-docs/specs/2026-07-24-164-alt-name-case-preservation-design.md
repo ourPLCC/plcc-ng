@@ -1,6 +1,6 @@
 # camelCase alt-name case preservation — design
 
-**Issue:** [164](../issues/done/164-multi-capture-alt-name-case-mismatch.md)
+**Issue:** CR-164
 **Date:** 2026-07-24
 
 ## Problem
@@ -71,7 +71,7 @@ lowercases only the `name` branch, passing `alt` through unchanged.
 Bare-name full-lowercasing (`<OneMore>` → `onemore` instead of the
 arguably-more-correct `oneMore`) is a separate, non-crashing defect in
 the same fallback branch these sites all share, filed as
-[#168](../issues/done/168-bare-name-decapitalization-not-camelcase.md) rather
+CR-168 rather
 than fixed here — the two sides already agree on it, so it isn't broken
 in the way #164 is, and fixing it would change generated field names for
 every multi-word bare capture across all existing grammars, a much

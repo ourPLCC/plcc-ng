@@ -22,7 +22,7 @@ emitted shape is already correct, only its description was missing.
 `pyproject.toml`, already used by this file).
 
 **Spec:** [2026-07-29-180-ll1-schema-conflict-type-design.md](../specs/2026-07-29-180-ll1-schema-conflict-type-design.md)
-**Issue:** [180](../issues/done/180-ll1-schema-omits-conflict-type.md)
+**Issue:** CR-180
 
 ## Global Constraints
 
@@ -41,7 +41,7 @@ emitted shape is already correct, only its description was missing.
   match something other than reality — stop and re-read the spec.
 - Do not touch the `arbno` section of the schema, or the `parse_table` section.
   Only the `conflicts` item changes. `arbno` was described by
-  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md) and is done.
+  CR-179 and is done.
 - Both new tests go in the existing `tests/bats/commands/plcc-ll1.bats`. Do not
   create a new file — the commands tier names one file per command.
 - Do not modify the existing tests in that file. `setup()` gains two lines and

@@ -1,7 +1,7 @@
 # 180 — describe `conflict_type` in the ll1 output schema
 
 **Date:** 2026-07-29
-**Issue:** [180](../issues/done/180-ll1-schema-omits-conflict-type.md)
+**Issue:** CR-180
 
 ## Problem
 
@@ -41,7 +41,7 @@ that reaches the `conflicts` section at all.
 
 The schema addition is descriptive, not prescriptive: no production code
 changes and no output changes. It follows
-[#179](../issues/done/179-ll1-schema-omits-arbno-section.md), which described
+CR-179, which described
 the `arbno` section and established the negative-schema-test pattern this spec
 reuses.
 

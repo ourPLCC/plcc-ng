@@ -1,9 +1,9 @@
 # Optional single-module Python output — design
 
-Issue: [#195](../issues/195-python-single-module-output.md)
+Issue: CR-195
 Date: 2026-10-06
 
-> **Blocked on [#197](../issues/197-language-neutral-fragment-hook-names.md)** —
+> **Blocked on CR-197** —
 > on *resolving* the hook names there, not on implementing them. This mode needs
 > module-targeted hooks, and publishing provisional names would mean renaming a
 > published hook later. Hook names below are written in #197's sketch vocabulary
@@ -405,12 +405,12 @@ link warnings fail rather than pass silently.
   though note §3: under `single-module` it stops being silent for free, because
   the `file` kind is rejected outright there.
 - **The hook vocabulary itself**
-  ([#197](../issues/197-language-neutral-fragment-hook-names.md)): naming the
+  (CR-197): naming the
   slots, offering them on class targets in multi-module mode, migrating the
   existing docs, and deprecating `top`/`class`/`file`. This spec consumes the
   names and implements only the module target under `single-module`.
 - Java's silently discarded `top` fragment
-  ([#196](../issues/196-java-top-fragment-silently-dropped.md)), found while
+  (CR-196), found while
   auditing how `top` behaves per target.
 - Opt-in type annotations. Worth noting the interaction, since it motivated the
   preamble region: annotations must be deferred regardless of layout, because

@@ -1,7 +1,7 @@
 # Documentation Design for plcc-ng
 
 **Date:** 2026-06-07
-**Issue:** [065](../issues/done/065-design-end-user-documentation.md)
+**Issue:** CR-65
 
 ## Overview
 

@@ -2,7 +2,7 @@
 
 This document is the practical guide for working in this repository: the commands you run, the test tiers, and the conventions that keep work consistent. Read it before making changes.
 
-For architectural context, see [dev-docs/specs/2026-04-12-multi-lang-pipeline.md](dev-docs/specs/2026-04-12-multi-lang-pipeline.md) (architectural spec). Open work is tracked in [dev-docs/roadmap.md](dev-docs/roadmap.md); the issue workflow behind it is described in [dev-docs/issue-conventions.md](dev-docs/issue-conventions.md). This document does not duplicate them.
+For architectural context, see [dev-docs/specs/2026-04-12-multi-lang-pipeline.md](dev-docs/specs/2026-04-12-multi-lang-pipeline.md) (architectural spec). Work is tracked as change requests in the central [ourPLCC/change-requests](https://github.com/ourPLCC/change-requests) tracker; see [Tracking work](#tracking-work).
 
 ## Common commands
 
@@ -198,8 +198,21 @@ restriction, the units tier collects it too — so it runs in both tiers. That i
 kept on purpose: it means documentation drift is caught by the fastest tier.
 Do not add pytest config to suppress the second run.
 
+## Tracking work
+
+- **Reporting a problem or suggesting an idea:** open a
+  [GitHub issue](https://github.com/ourPLCC/plcc-ng/issues). That's all you
+  need.
+- **Maintainers:** work is tracked as change requests (CRs) in
+  [ourPLCC/change-requests](https://github.com/ourPLCC/change-requests), shared by all ourPLCC
+  repos; its [README](https://github.com/ourPLCC/change-requests#readme) is the
+  workflow guide. This repo's `project` value is `plcc-ng`. The devcontainer
+  mounts the tracker at `/workspaces/change-requests` and installs the pinned
+  `backlog` CLI.
+- Old issue numbers still resolve: plcc-ng `#160` is `CR-160`.
+
 ## Workflow
 
-Work happens on feature branches, not on `main`. Branch names describe the work (e.g. `fix-scanner-skip-regression`, `add-python-emitter`). Long-running initiatives may use a shared integration branch, but that is a property of the initiative, not a general rule — there is currently no such branch; everything merges directly to `main`.
+Work happens on feature branches, not on `main`. Branch names start with the CR ID and describe the work (e.g. `cr-1042-fix-scanner-skip-regression`). Long-running initiatives may use a shared integration branch, but that is a property of the initiative, not a general rule — there is currently no such branch; everything merges directly to `main`.
 
 Commits follow conventional-commit style (`feat(scope): …`, `fix(scope): …`, `docs(scope): …`, `test(scope): …`, `refactor(scope): …`, `build(scope): …`, `ci: …`, `chore: …`). Match the scope names already in use in the git log. The CI workflow skips automatically for pull requests that touch only `dev-docs/`, `docs/`, top-level `*.md` files, `mkdocs.yml`, or `mkdocs-dev.yml` — no `[skip ci]` annotation needed.

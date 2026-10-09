@@ -17,7 +17,7 @@ grammar-only fixture supplies the third body shape. No `src/` change.
 used by five files in this tier).
 
 **Spec:** [2026-07-29-176-integration-arbno-coverage-design.md](../specs/2026-07-29-176-integration-arbno-coverage-design.md)
-**Issue:** [176](../issues/done/176-integration-tier-has-no-arbno-coverage.md)
+**Issue:** CR-176
 
 ## Global Constraints
 
@@ -34,8 +34,8 @@ used by five files in this tier).
   reverted within the same task and never committed.
 - Do not touch `src/plcc/schemas/ll1.schema.json`. The schema's failure to
   describe the `arbno` section is real but is tracked separately as
-  [#179](../issues/done/179-ll1-schema-omits-arbno-section.md); a sibling gap in the
-  `conflicts` section is [#180](../issues/done/180-ll1-schema-omits-conflict-type.md).
+  CR-179; a sibling gap in the
+  `conflicts` section is CR-180.
 - All new tests go in the existing `tests/bats/integration/spec-ll1.bats`. Do
   not create a second file for this boundary — the tier names one file per
   pipeline boundary.

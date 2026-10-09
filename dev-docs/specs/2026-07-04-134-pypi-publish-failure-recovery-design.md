@@ -1,7 +1,7 @@
 # 134 — Recovery path for PyPI publish failure after tagging
 
 **Date:** 2026-07-04
-**Issue:** [dev-docs/issues/134-release-pypi-publish-failure-recovery.md](../issues/done/134-release-pypi-publish-failure-recovery.md)
+**Issue:** dev-docs/issues/134-release-pypi-publish-failure-recovery.md (CR-134)
 **Status:** Approved
 
 ## Problem

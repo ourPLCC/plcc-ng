@@ -1,6 +1,6 @@
 # Path filter for bats-backed test tiers — design
 
-**Issue:** [155](../issues/done/155-test-scripts-path-filter.md)
+**Issue:** CR-155
 **Date:** 2026-07-23
 
 ## Problem

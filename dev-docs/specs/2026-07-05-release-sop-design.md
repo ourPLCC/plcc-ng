@@ -1,6 +1,6 @@
 # Release SOP — design
 
-**Issue:** [130](../issues/done/130-release-sop.md)
+**Issue:** CR-130
 **Date:** 2026-07-05
 
 ## Problem

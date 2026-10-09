@@ -19,7 +19,7 @@ changes.
 existing tests in this file.
 
 **Spec:** [2026-07-29-178-bats-version-declaration-unenforced-design.md](../specs/2026-07-29-178-bats-version-declaration-unenforced-design.md)
-**Issue:** [178](../issues/done/178-bats-version-declaration-unenforced.md)
+**Issue:** CR-178
 
 ## Global Constraints
 

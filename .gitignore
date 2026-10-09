@@ -192,3 +192,6 @@ site-dev/
 
 # Subagent-driven development scratch (ledger, briefs, review packages)
 .superpowers/
+
+# Implementation plans live in the worktree and are never committed
+.plans/

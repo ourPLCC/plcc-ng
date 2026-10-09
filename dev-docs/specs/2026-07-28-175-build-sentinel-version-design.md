@@ -1,6 +1,6 @@
 # Build sentinel ignores the installed PLCC-ng version — design
 
-**Issue:** [175](../issues/done/175-build-sentinel-ignores-package-version.md)
+**Issue:** CR-175
 
 ## Problem
 

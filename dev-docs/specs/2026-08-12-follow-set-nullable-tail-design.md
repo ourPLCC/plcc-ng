@@ -1,7 +1,7 @@
 # FOLLOW set nullable-tail design
 
 **Date:** 2026-08-12
-**Issue:** [188](../issues/done/188-follow-set-omits-nullable-tail.md) (FOLLOW set omits the nullable tail, breaking empty alternatives)
+**Issue:** CR-188 (FOLLOW set omits the nullable tail, breaking empty alternatives)
 **Approach:** single commit, one-method fix
 
 ## Scope
@@ -20,7 +20,7 @@ it existentially across all of a nonterminal's alternatives, and
 rather than re-deriving nullability. No changes are needed there. This is
 purely a control-flow fix in the one method above.
 
-Distinct from issue [170](../issues/done/170-arbno-follow-set-missing-eof.md),
+Distinct from issue CR-170,
 which fixed nullability being tested against only a nonterminal's
 first-registered production. That fix already landed; this is the separate
 forward-walk defect in the same function.
@@ -74,8 +74,8 @@ being corrected here.
   test.
 - Any change to `build_first_sets.py`, `Grammar.py`, or nullability
   computation — already correct.
-- Issue [187](../issues/187-rep-lacks-output-and-clean-exit-records.md) and
-  [186](../issues/186-rep-deadlocks-on-partial-stdout-line.md) — unrelated
+- Issue CR-187 and
+  CR-186 — unrelated
   `plcc-rep` issues, not touched here.
 
 ## Commit message

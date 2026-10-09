@@ -1,7 +1,7 @@
 # 179 — describe the `arbno` section in the ll1 output schema
 
 **Date:** 2026-07-29
-**Issue:** [179](../issues/done/179-ll1-schema-omits-arbno-section.md)
+**Issue:** CR-179
 
 ## Problem
 
@@ -19,10 +19,10 @@ A malformed, truncated, or wrong-shaped `arbno` passes.
 
 That is the section carrying repetition-rule parse data: the `rhs` symbol list,
 the separator, and the computed `lookahead`. Issue
-[#174](../issues/done/174-arbno-drops-mid-body-terminal.md)'s bug lived exactly
+CR-174's bug lived exactly
 there — a non-capturing terminal dropped from `rhs`, and a `lookahead` computed
 from the wrong symbol — and schema validation could not have caught it. Issue
-[#176](../issues/done/176-integration-tier-has-no-arbno-coverage.md) added
+CR-176 added
 integration assertions for that shape with `python3 -c`, precisely because the
 schema was blind to it.
 
@@ -214,7 +214,7 @@ in the bats tiers — so no packaging or e2e concern follows from editing one.
   `plcc-ll1.bats` run on `trivial.plcc`, whose `arbno` is `{}`; they gain only
   the top-level presence check.
 - The suite gains its first negative schema test. Issue
-  [#180](../issues/done/180-ll1-schema-omits-conflict-type.md) is the same class of
+  CR-180 is the same class of
   gap in the `conflicts` section and can follow the pattern established here.
 - The schema still describes `arbno` structurally, not semantically. It cannot
   see a `lookahead` computed from the wrong symbol, or a symbol dropped from

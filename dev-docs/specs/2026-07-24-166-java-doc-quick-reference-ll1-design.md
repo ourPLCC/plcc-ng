@@ -1,6 +1,6 @@
 # Java doc's "Quick reference example" grammar is not LL(1) — design
 
-**Issue:** [166](../issues/done/166-java-doc-quick-reference-not-ll1.md)
+**Issue:** CR-166
 **Date:** 2026-07-24 (revised same day — see "Revision" below)
 
 ## Problem
@@ -51,7 +51,7 @@ continuation nonterminal's non-empty form before its epsilon form, so
 every `**=` rule whose repeated element has a nested epsilon alternative
 hits this — the end-of-input marker never propagates into that
 alternative's FOLLOW set, so the parse table has no entry for "stop
-here, input's done." Filed as its own bug: **[#170](../issues/done/170-arbno-follow-set-missing-eof.md)**.
+here, input's done." Filed as its own bug: **CR-170**.
 
 There is no way to keep the original left-factored grammar (`ExprTail`
 with an epsilon `End` alternative, under `Prog`'s arbno) and avoid this
