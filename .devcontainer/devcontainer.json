@@ -13,7 +13,14 @@
 		"source=${localWorkspaceFolder}/../change-requests,target=/workspaces/change-requests,type=bind",
 		"source=plcc-ng-claude,target=/home/vscode/.claude,type=volume"
 	],
-	"containerEnv": { "BACKLOG_CWD": "/workspaces/change-requests" },
+	"containerEnv": {
+		"BACKLOG_CWD": "/workspaces/change-requests",
+		"GIT_CONFIG_COUNT": "2",
+		"GIT_CONFIG_KEY_0": "safe.directory",
+		"GIT_CONFIG_VALUE_0": "/workspaces/change-requests",
+		"GIT_CONFIG_KEY_1": "safe.directory",
+		"GIT_CONFIG_VALUE_1": "/workspaces/plcc-ng"
+	},
 	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/change-requests/.backlog-version) && git -C /workspaces/change-requests status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null",
 
 	"customizations": {
