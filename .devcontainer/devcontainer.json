@@ -9,9 +9,12 @@
 		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
 	},
 	"initializeCommand": "test -d ../change-requests || git clone https://github.com/ourPLCC/change-requests ../change-requests; git -C ../change-requests config core.hooksPath .githooks",
-	"mounts": ["source=${localWorkspaceFolder}/../change-requests,target=/workspaces/change-requests,type=bind"],
+	"mounts": [
+		"source=${localWorkspaceFolder}/../change-requests,target=/workspaces/change-requests,type=bind",
+		"source=plcc-ng-claude,target=/home/vscode/.claude,type=volume"
+	],
 	"containerEnv": { "BACKLOG_CWD": "/workspaces/change-requests" },
-	"postCreateCommand": "npm i -g backlog.md@$(cat /workspaces/change-requests/.backlog-version) && git -C /workspaces/change-requests status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null",
+	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/change-requests/.backlog-version) && git -C /workspaces/change-requests status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null",
 
 	"customizations": {
 		"vscode": {
