@@ -1,6 +1,6 @@
 # Central change-request tracker (`ourPLCC/change-requests`) — design
 
-Issue: [#199](../issues/199-adopt-backlog-md-central-tracker.md)
+Issue: [#199](../issues/done/199-adopt-backlog-md-central-tracker.md)
 Date: 2026-10-08
 Supersedes: [#189](../issues/done/189-align-issue-system-with-languages-ng.md)
 

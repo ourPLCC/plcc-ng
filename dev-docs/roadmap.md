@@ -46,5 +46,3 @@
   Pinned to 9.x (locked 9.21.2); latest is 10.5.3. Dev-only dependency, consider updating.
 - **[#156](issues/156-mkdocs-1x-successor-decision.md) — Decide our MkDocs 1.x successor**
   mkdocs-material hard-pins mkdocs<2; mkdocs-kroki-plugin already pulls in properdocs. Not urgent yet, but we'll need to pick ProperDocs, Zensical, or stay pinned once MkDocs 1.x actually breaks.
-- **[#199](issues/199-adopt-backlog-md-central-tracker.md) — Move issue tracking to a central ourPLCC/issues repo using Backlog.md**
-  An in-repo tracker forces issue filings through branches and PRs (lost on abandoned branches, colliding IDs); work out adopting Backlog.md in one tracker repo for all ourPLCC repos.

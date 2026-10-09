@@ -25,7 +25,7 @@ same branch → PR → CI path as code, which causes three problems:
   each branch, so issues filed concurrently on different branches get
   the same number.
 - **Cross-repo drift.** `languages-ng` runs a fork of this issue system
-  that has diverged (see [#189](189-align-issue-system-with-languages-ng.md)),
+  that has diverged (see [#189](../189-align-issue-system-with-languages-ng.md)),
   and upstream/downstream findings are migrated between repos by hand
   (#160, #161, #185–#188).
 
@@ -87,10 +87,10 @@ This issue is to work out adoption and migration, not to carry them out.
 7. **Agent and tooling setup.** Changes to each repo's CLAUDE.md and
    contributing docs, devcontainer cloning of `.issues/`, the
    Backlog.md MCP server, and retiring `bin/issues/` and
-   [issue-conventions.md](../issue-conventions.md). Also the ownership
+   [issue-conventions.md](../../issue-conventions.md). Also the ownership
    quirk where git refuses this repo ("dubious ownership") in the
    devcontainer, which matters once a second repo is in play.
-8. **Relation to [#189](189-align-issue-system-with-languages-ng.md).**
+8. **Relation to [#189](../189-align-issue-system-with-languages-ng.md).**
    Most of #189 (issues never move, status in frontmatter) is likely
    superseded by Backlog.md's own conventions. Decide whether to close
    #189 as superseded or do it first as a stepping stone.
@@ -100,5 +100,5 @@ custom it can be, ID assignment (it scans active branches and takes a
 fresh snapshot of the remote before choosing an ID), how archived and
 completed tasks are stored, whether it can import existing Markdown
 issues, and how well it works for long design issues like
-[#197](197-language-neutral-fragment-hook-names.md) as opposed to small
+[#197](../197-language-neutral-fragment-hook-names.md) as opposed to small
 tasks.
