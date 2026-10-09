@@ -1,4 +1,4 @@
-# Central change-request tracker (`ourPLCC/issues`) — design
+# Central change-request tracker (`ourPLCC/change-requests`) — design
 
 Issue: [#199](../issues/199-adopt-backlog-md-central-tracker.md)
 Date: 2026-10-08
@@ -20,7 +20,7 @@ write travels the same branch → PR → CI path as code:
 
 ## Decision summary
 
-One tracker repo, `ourPLCC/issues`, managed with
+One tracker repo, `ourPLCC/change-requests`, managed with
 [Backlog.md](https://github.com/MrLesk/Backlog.md) (pinned version), shared by
 plcc-ng, languages-ng, plcc-ng-demo, and plcc-ng-devcontainer. Items are
 **change requests**, IDs `CR-N`. It is file-based (grep, diffs, scripted
@@ -204,7 +204,7 @@ there.
 ## The tracker repo
 
 ```text
-ourPLCC/issues
+ourPLCC/change-requests
 ├── README.md                 # the workflow guide (humans and agents)
 ├── .backlog-version          # pinned Backlog.md version, e.g. 1.53.0
 ├── backlog/config.yml
@@ -219,8 +219,8 @@ ourPLCC/issues
 - **README.md** is the single workflow guide for humans and agents: this
   document's conventions, operationalized, plus the Backlog.md version it was
   checked against. GitHub shows it on the repo page; agents read
-  `/workspaces/issues/README.md`. Agents are pointed here, never at
-  `backlog instructions` (whose guidance conflicts with ours on plans,
+  `/workspaces/change-requests/README.md`. Agents are pointed here, never
+  at `backlog instructions` (whose guidance conflicts with ours on plans,
   cleanup, and drafts). It includes recovering from a rejected push from the
   host (`git pull --rebase`, then `bin/check.py` and, if IDs collided,
   `backlog doctor --fix` in a container).
@@ -266,10 +266,10 @@ CI on every push to `main`, where `backlog doctor` also runs. CI only alerts
 **`.devcontainer/devcontainer.json`:**
 
 ```jsonc
-"initializeCommand": "test -d ../issues || git clone https://github.com/ourPLCC/issues ../issues; git -C ../issues config core.hooksPath .githooks",
-"mounts": ["source=${localWorkspaceFolder}/../issues,target=/workspaces/issues,type=bind"],
-"containerEnv": { "BACKLOG_CWD": "/workspaces/issues" },
-"postCreateCommand": "npm i -g backlog.md@$(cat /workspaces/issues/.backlog-version) && git -C /workspaces/issues status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null"
+"initializeCommand": "test -d ../change-requests || git clone https://github.com/ourPLCC/change-requests ../change-requests; git -C ../change-requests config core.hooksPath .githooks",
+"mounts": ["source=${localWorkspaceFolder}/../change-requests,target=/workspaces/change-requests,type=bind"],
+"containerEnv": { "BACKLOG_CWD": "/workspaces/change-requests" },
+"postCreateCommand": "npm i -g backlog.md@$(cat /workspaces/change-requests/.backlog-version) && git -C /workspaces/change-requests status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null"
 ```
 
 - The host keeps the ourPLCC code repos as siblings with the tracker clone
@@ -306,8 +306,9 @@ is the backstop.
   GitHub Issues; maintainers follow the tracker README (GitHub URL); this
   repo's `project` value; branches start with `cr-N-`.
 - `CLAUDE.md`: replaces the issue section with agent-only rules — read
-  `/workspaces/issues/README.md` before tracker work; plans in `.plans/`;
-  during automated execution, record discovered work in the CR's notes.
+  `/workspaces/change-requests/README.md` before tracker work; plans in
+  `.plans/`; during automated execution, record discovered work in the CR's
+  notes.
 
 ## Migration
 
@@ -399,7 +400,8 @@ checkpoint:
   `upstream/` snapshot, seed `CR-999`, `migrate/`), then a dry-run migration
   of plcc-ng's issues into it. Nothing published.
 - **Checkpoint (human):** review converted CRs, the triage list, and the
-  report; create `ourPLCC/issues` on GitHub with maintainer-only push; push
+  report; create `ourPLCC/change-requests` on GitHub with maintainer-only
+  push and GitHub Issues disabled (human reports go to the code repos); push
   from the host.
 - **Phase 2 — switch plcc-ng over** on a branch: **re-run the migration from
   `main`** (the freeze point — issues filed or closed elsewhere since the dry
