@@ -49,7 +49,7 @@ is completed with a `wontdo` label, never archived) and a small check script.
 | `statuses` | `[To Do, In Progress, Done]` | Backlog.md defaults; `Done` is the name `task complete` requires |
 | `default_status` | `To Do` | |
 | `types` | `[fix, feat, docs, test, refactor, chore]` | Each equals its conventional-commit type (below) |
-| `projects` | `[plcc-ng, languages-ng, plcc-ng-demo, plcc-ng-devcontainer, course-materials-ng]` | Validated on every CLI write |
+| `projects` | `[plcc-ng, languages-ng, plcc-ng-demo, plcc-ng-devcontainer, course-materials-ng, change-requests]` | Validated on every CLI write; `change-requests` is the tracker itself |
 | `labels` | `[wontdo]` | Marks `Done` CRs that were abandoned (see Lifecycle); not validated by the tool, so the check script does |
 | `check_active_branches` | `true` | Required for the pre-allocation fetch: with `false`, no fetch happens and a clone allocates an ID another clone already pushed (verified) |
 | `remote_operations` | `true` | Enables that fetch |
