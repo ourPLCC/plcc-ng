@@ -8,20 +8,20 @@
 		"ghcr.io/devcontainers-extra/features/pdm:2": {},
 		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
 	},
-	"initializeCommand": "test -d ../change-requests || git clone https://github.com/ourPLCC/change-requests ../change-requests; git -C ../change-requests config core.hooksPath .githooks",
+	"initializeCommand": "test -d ../dev || git clone https://github.com/ourPLCC/dev ../dev; git -C ../dev config core.hooksPath .githooks",
 	"mounts": [
-		"source=${localWorkspaceFolder}/../change-requests,target=/workspaces/change-requests,type=bind",
+		"source=${localWorkspaceFolder}/../dev,target=/workspaces/dev,type=bind",
 		"source=plcc-ng-claude,target=/home/vscode/.claude,type=volume"
 	],
 	"containerEnv": {
-		"BACKLOG_CWD": "/workspaces/change-requests",
+		"BACKLOG_CWD": "/workspaces/dev",
 		"GIT_CONFIG_COUNT": "2",
 		"GIT_CONFIG_KEY_0": "safe.directory",
-		"GIT_CONFIG_VALUE_0": "/workspaces/change-requests",
+		"GIT_CONFIG_VALUE_0": "/workspaces/dev",
 		"GIT_CONFIG_KEY_1": "safe.directory",
 		"GIT_CONFIG_VALUE_1": "/workspaces/plcc-ng"
 	},
-	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/change-requests/.backlog-version) && git -C /workspaces/change-requests status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null",
+	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/dev/.backlog-version) && git -C /workspaces/dev status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null",
 
 	"customizations": {
 		"vscode": {
