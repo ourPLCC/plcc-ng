@@ -25,12 +25,20 @@ value is `plcc-ng`. Old plcc-ng issue numbers still resolve: `#160` is
 If you cloned the tracker under its old name, rename the host folder
 `../change-requests` to `../dev` before rebuilding the container.
 
-[AGENTS.md](AGENTS.md) imports files from `../dev`. The first time you run
-Claude Code in this repo, it asks whether to allow imports from outside the
-repo; allow them, or agents never load the org guide. Until you approve,
-including in non-interactive `claude -p` runs, those imports are skipped
-without an error. To check, run `/memory` in a session and confirm it lists
-`ORG-AGENTS.md` and both `CONTRIBUTING.md` files.
+[AGENTS.md](AGENTS.md) imports files from `../dev`. Claude Code loads imports
+from outside the repo only once they are approved, and until then skips them
+without an error, so agents never load the org guide. It does not reliably ask
+for that approval, and the approval lives in `~/.claude.json`, which a rebuild
+discards. So the container approves them when it is created, by running
+[bin/install/claude-imports.bash](bin/install/claude-imports.bash). To check,
+run `/memory` in a session and confirm it lists `ORG-AGENTS.md` and both
+`CONTRIBUTING.md` files. If they are missing, quit every Claude Code session,
+since a running one can overwrite `~/.claude.json`, then run the script and
+start a new session.
+
+Keep each import in `AGENTS.md` on its own line with nothing after the path:
+Claude Code reads an import up to the next whitespace, so `@file.md,` looks
+for a file named `file.md,` and silently skips it.
 
 ## Common commands
 
@@ -48,6 +56,7 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 |---|---|
 | [bin/install/pdm.bash](bin/install/pdm.bash) | Install `pdm` via pip if not already on PATH. Idempotent. |
 | [bin/install/bats.bash](bin/install/bats.bash) | Install the pinned `bats` version under `~/.local/` if not already present. Idempotent. |
+| [bin/install/claude-imports.bash](bin/install/claude-imports.bash) | Approve [AGENTS.md](AGENTS.md)'s imports from `../dev` in `~/.claude.json`. Run by the devcontainer on creation. Idempotent. |
 
 ### Test
 

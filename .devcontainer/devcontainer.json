@@ -21,7 +21,7 @@
 		"GIT_CONFIG_KEY_1": "safe.directory",
 		"GIT_CONFIG_VALUE_1": "/workspaces/plcc-ng"
 	},
-	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/dev/.backlog-version) && git -C /workspaces/dev status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null",
+	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/dev/.backlog-version) && git -C /workspaces/dev status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null && ${containerWorkspaceFolder}/bin/install/claude-imports.bash",
 
 	"customizations": {
 		"vscode": {
