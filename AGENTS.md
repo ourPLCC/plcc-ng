@@ -1,4 +1,8 @@
-Read @../dev/ORG-AGENTS.md, @../dev/CONTRIBUTING.md, then @CONTRIBUTING.md before making changes.
+Read these, in order, before making changes:
+
+- @../dev/ORG-AGENTS.md
+- @../dev/CONTRIBUTING.md
+- @CONTRIBUTING.md
 
 ## Agent rules for this repo
 
