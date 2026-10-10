@@ -1,8 +1,36 @@
 # Contributing to plcc-ng
 
-This document is the practical guide for working in this repository: the commands you run, the test tiers, and the conventions that keep work consistent. Read it before making changes.
+This builds on the [ourPLCC developer guide](https://github.com/ourPLCC/dev/blob/main/CONTRIBUTING.md); read that first. Below is what's specific to this repo, and where it differs.
 
-For architectural context, see [dev-docs/specs/2026-04-12-multi-lang-pipeline.md](dev-docs/specs/2026-04-12-multi-lang-pipeline.md) (architectural spec). Work is tracked as change requests in the central [ourPLCC/change-requests](https://github.com/ourPLCC/change-requests) tracker; see [Tracking work](#tracking-work).
+For architectural context, see [dev-docs/specs/2026-04-12-multi-lang-pipeline.md](dev-docs/specs/2026-04-12-multi-lang-pipeline.md) (architectural spec).
+
+## Where this repo differs from the org guide
+
+Nowhere at present. Two leftovers from before the org guide are history, not
+deviations: [dev-docs/plans/](dev-docs/plans/) and the `*-plan.md` files in
+[dev-docs/specs/](dev-docs/specs/) are kept plans, and older spec filenames
+carry an issue number. Merged specs are frozen, so they stay; add no new ones
+of either kind.
+
+## Development environment
+
+Open the repo in its devcontainer. Before the container is created, it clones
+the [ourPLCC/dev](https://github.com/ourPLCC/dev) repo beside this one, as
+`../dev`, unless that folder already exists. The container mounts it at
+`/workspaces/dev`, points the `backlog` CLI at it through `BACKLOG_CWD`, and
+installs the pinned `backlog` version. In the tracker, this repo's `project`
+value is `plcc-ng`. Old plcc-ng issue numbers still resolve: `#160` is
+`CR-160`.
+
+If you cloned the tracker under its old name, rename the host folder
+`../change-requests` to `../dev` before rebuilding the container.
+
+[AGENTS.md](AGENTS.md) imports files from `../dev`. The first time you run
+Claude Code in this repo, it asks whether to allow imports from outside the
+repo; allow them, or agents never load the org guide. Until you approve,
+including in non-interactive `claude -p` runs, those imports are skipped
+without an error. To check, run `/memory` in a session and confirm it lists
+`ORG-AGENTS.md` and both `CONTRIBUTING.md` files.
 
 ## Common commands
 
@@ -198,21 +226,9 @@ restriction, the units tier collects it too — so it runs in both tiers. That i
 kept on purpose: it means documentation drift is caught by the fastest tier.
 Do not add pytest config to suppress the second run.
 
-## Tracking work
+## Branches and CI
 
-- **Reporting a problem or suggesting an idea:** open a
-  [GitHub issue](https://github.com/ourPLCC/plcc-ng/issues). That's all you
-  need.
-- **Maintainers:** work is tracked as change requests (CRs) in
-  [ourPLCC/change-requests](https://github.com/ourPLCC/change-requests), shared by all ourPLCC
-  repos; its [README](https://github.com/ourPLCC/change-requests#readme) is the
-  workflow guide. This repo's `project` value is `plcc-ng`. The devcontainer
-  mounts the tracker at `/workspaces/change-requests` and installs the pinned
-  `backlog` CLI.
-- Old issue numbers still resolve: plcc-ng `#160` is `CR-160`.
+Everything merges directly to `main`; there is currently no shared
+integration branch.
 
-## Workflow
-
-Work happens on feature branches, not on `main`. Branch names start with the CR ID and describe the work (e.g. `cr-1042-fix-scanner-skip-regression`). Long-running initiatives may use a shared integration branch, but that is a property of the initiative, not a general rule — there is currently no such branch; everything merges directly to `main`.
-
-Commits follow conventional-commit style (`feat(scope): …`, `fix(scope): …`, `docs(scope): …`, `test(scope): …`, `refactor(scope): …`, `build(scope): …`, `ci: …`, `chore: …`). Match the scope names already in use in the git log. The CI workflow skips automatically for pull requests that touch only `dev-docs/`, `docs/`, top-level `*.md` files, `mkdocs.yml`, or `mkdocs-dev.yml` — no `[skip ci]` annotation needed.
+The CI workflow skips automatically for pull requests that touch only `dev-docs/`, `docs/`, top-level `*.md` files, `mkdocs.yml`, or `mkdocs-dev.yml` — no `[skip ci]` annotation needed.
