@@ -41,24 +41,18 @@ class FollowSetBuilder:
             if symbol == nonterminal:
                 self._updateWithSingleOccuranceOfNonterminalInProduction(lhs, production, i, nonterminal)
 
-    def _updateWithSingleOccuranceOfNonterminalInProduction(self, lhs, rules, index, nonterminal):
-        if self._isLastOccuranceInRule(rules, index):
-            self._addFollowOfLHS(lhs, nonterminal)
+    def _updateWithSingleOccuranceOfNonterminalInProduction(self, lhs, production, index, nonterminal):
+        for symbol in production[index + 1:]:
+            self._addFirstOfSymbol(symbol, nonterminal)
+            if not self._isNullable(symbol):
+                break
         else:
-            for j in range(index + 1, len(rules)):
-                self._addFirstOfNextSymbol(rules[j], nonterminal)
-                if not self._canDeriveEmpty([rules[j]]):
-                    break
-            else:
-                self._addFollowOfLHS(lhs, nonterminal)
+            self._addFollowOfLHS(lhs, nonterminal)
 
-    def _isLastOccuranceInRule(self, rules, index):
-        return index + 1 == len(rules)
-
-    def _addFirstOfNextSymbol(self, nextSymbol, nonterminal):
-        nextFirst = self.firstSets[nextSymbol] - {self.grammar.getEpsilon()}
+    def _addFirstOfSymbol(self, symbol, nonterminal):
+        first = self.firstSets[symbol] - {self.grammar.getEpsilon()}
         origLen = len(self.followSets[nonterminal])
-        self.followSets[nonterminal].update(nextFirst)
+        self.followSets[nonterminal].update(first)
         if len(self.followSets[nonterminal]) > origLen:
             self._changed = True
 
@@ -68,8 +62,8 @@ class FollowSetBuilder:
         if len(self.followSets[nonterminal]) > origLen:
             self._changed = True
 
-    def _canDeriveEmpty(self, symbols):
+    def _isNullable(self, symbol):
         # A symbol is nullable iff epsilon is in its FIRST set - already
         # computed correctly (existential over all productions) by
         # build_first_sets, so reuse it rather than re-deriving here.
-        return all(self.grammar.getEpsilon() in self.firstSets[symbol] for symbol in symbols)
+        return self.grammar.getEpsilon() in self.firstSets[symbol]
