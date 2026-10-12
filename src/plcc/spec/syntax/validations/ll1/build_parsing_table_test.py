@@ -54,6 +54,35 @@ def test_first_follow_overlap_does_not_create_false_conflict():
     assert len(table.getCell('A', 'x')) == 1
 
 
+def test_empty_alternative_predicts_every_token_past_a_nullable_follower():
+    """
+    Regression test for CR-188 at the parse-table layer: a dropped cell for
+    an empty alternative, which plcc-ll1 silently accepted as LL(1).
+
+    S -> A B C, A -> a | epsilon, B -> b | epsilon, C -> c.
+    B is nullable, so FOLLOW(A) = {b, c} and A's empty alternative must be
+    predicted on c as well as b. The expected cells are written out rather
+    than read from build_follow_sets, because a truncated FOLLOW set would
+    shrink both the table and the expectation together.
+    """
+    grammar = createGrammar([
+        'S A B C',
+        'A a',
+        'A',
+        'B b',
+        'B',
+        'C c',
+    ])
+    firsts = build_first_sets(grammar)
+    follows = build_follow_sets(grammar, firsts)
+    table = build_parsing_table(firsts, follows, grammar)
+    assert table.getCell('A', 'a') == [('a',)]
+    assert table.getCell('A', 'b') == [()]
+    assert table.getCell('A', 'c') == [()]
+    assert table.getCell('B', 'b') == [('b',)]
+    assert table.getCell('B', 'c') == [()]
+
+
 def createGrammar(rules: list[str]) -> Grammar:
     g = Grammar()
     for r in rules:
