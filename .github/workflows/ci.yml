@@ -9,6 +9,9 @@ on:
       - '*.md'
       - 'mkdocs.yml'
 
+permissions:
+  contents: read
+
 jobs:
   units:
     name: Unit tests

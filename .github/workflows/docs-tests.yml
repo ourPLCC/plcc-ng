@@ -15,6 +15,9 @@ on:
       - 'bin/docs/build.bash'
       - '.github/workflows/docs-tests.yml'
 
+permissions:
+  contents: read
+
 jobs:
   docs:
     name: Documentation example tests

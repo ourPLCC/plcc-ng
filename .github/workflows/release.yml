@@ -11,14 +11,14 @@ on:
         default: ""
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read
 
 jobs:
   semantic-release:
     name: Semantic release
     if: inputs.tag == ''
     runs-on: ubuntu-latest
+    environment: release
     outputs:
       released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
@@ -50,6 +50,9 @@ jobs:
     if: ${{ !cancelled() && (inputs.tag != '' || needs.semantic-release.outputs.released == 'true') }}
     runs-on: ubuntu-latest
     environment: pypi
+    permissions:
+      contents: read
+      id-token: write
     env:
       RELEASE_TAG: ${{ inputs.tag != '' && inputs.tag || format('v{0}', needs.semantic-release.outputs.version) }}
     steps:
@@ -115,6 +118,7 @@ jobs:
     needs: [semantic-release, publish]
     if: ${{ !cancelled() && needs.publish.result == 'success' }}
     runs-on: ubuntu-latest
+    environment: release
     env:
       RELEASE_TAG: ${{ inputs.tag != '' && inputs.tag || format('v{0}', needs.semantic-release.outputs.version) }}
     steps:
