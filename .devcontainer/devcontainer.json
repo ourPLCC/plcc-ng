@@ -73,5 +73,9 @@
 		}
 	},
 
-	"postStartCommand": "${containerWorkspaceFolder}/bin/install/shared-clones.bash; ${containerWorkspaceFolder}/bin/install/backlog.bash --check; curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_INSTALL_STACK=0 BOOTSTRAP_HASKELL_INSTALL_HLS=0 sh && (grep -q ghcup ~/.bashrc || echo '. ~/.ghcup/env' >> ~/.bashrc) && pdm install"
+	// VS Code forwards the host's SSH agent on every attach, and no setting
+	// turns that off; remove the socket so nothing in the container finds it.
+	"postAttachCommand": "rm -f /tmp/vscode-ssh-auth-*.sock",
+
+	"postStartCommand":"${containerWorkspaceFolder}/bin/install/shared-clones.bash; ${containerWorkspaceFolder}/bin/install/backlog.bash --check; curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_INSTALL_STACK=0 BOOTSTRAP_HASKELL_INSTALL_HLS=0 sh && (grep -q ghcup ~/.bashrc || echo '. ~/.ghcup/env' >> ~/.bashrc) && pdm install"
 }
