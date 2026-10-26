@@ -48,6 +48,13 @@ ensure_clone() {
     if git -C "${dir}" rev-parse --verify --quiet HEAD &>/dev/null; then
         return
     fi
+    # A repo with refs is real work, maybe unpushed, not a clone that died
+    # before writing any; moving it to a temporary directory could lose it.
+    if [[ -e "${dir}/.git" && -n "$(git -C "${dir}" for-each-ref 2>/dev/null)" ]]; then
+        die "${dir} holds commits, but its HEAD does not resolve;" \
+            "check out a branch there (git -C ${dir} checkout main)," \
+            "then rerun bin/install/shared-clones.bash"
+    fi
     # The mount point itself cannot move, and git clone needs it empty, so an
     # interrupted clone's remains go to a temporary directory.
     if [[ -n "$(ls -A "${dir}")" ]]; then

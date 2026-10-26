@@ -85,6 +85,16 @@ head_of() {
     [ ! -e "${OURPLCC_CHANGE_REQUESTS}/stray.txt" ]
 }
 
+@test "refuses to move aside a repo with commits whose HEAD does not resolve" {
+    "${SCRIPT}"
+    git -C "${OURPLCC_CHANGE_REQUESTS}" checkout -q --orphan unborn
+    run "${SCRIPT}"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"${OURPLCC_CHANGE_REQUESTS}"* ]]
+    [ "$(head_of "${OURPLCC_CHANGE_REQUESTS}" main)" = "$(head_of "${OURPLCC_CHANGE_REQUESTS_URL}" main)" ]
+    [ -z "$(ls -A "${TMPDIR}")" ]
+}
+
 @test "fast-forwards dev's main when clean" {
     "${SCRIPT}"
     upstream_commit "${OURPLCC_DEV_URL}" bin/check.py
