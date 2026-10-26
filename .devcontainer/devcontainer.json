@@ -6,27 +6,48 @@
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers/features/java:1": { "version": "17" },
 		"ghcr.io/devcontainers-extra/features/pdm:2": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
 	},
-	"initializeCommand": "test -d ../dev || git clone https://github.com/ourPLCC/dev ../dev; git -C ../dev config core.hooksPath .githooks",
+	"remoteUser": "vscode",
 	"mounts": [
-		"source=${localWorkspaceFolder}/../dev,target=/workspaces/dev,type=bind",
+		"source=ourplcc-dev,target=/workspaces/dev,type=volume",
+		"source=ourplcc-change-requests,target=/workspaces/change-requests,type=volume",
+		"source=ourplcc-gh,target=/home/vscode/.config/gh,type=volume",
 		"source=plcc-ng-claude,target=/home/vscode/.claude,type=volume"
 	],
 	"containerEnv": {
-		"BACKLOG_CWD": "/workspaces/dev",
-		"GIT_CONFIG_COUNT": "2",
+		"BACKLOG_CWD": "/workspaces/change-requests",
+		"GIT_TERMINAL_PROMPT": "0",
+		"GIT_CONFIG_COUNT": "5",
 		"GIT_CONFIG_KEY_0": "safe.directory",
 		"GIT_CONFIG_VALUE_0": "/workspaces/dev",
 		"GIT_CONFIG_KEY_1": "safe.directory",
-		"GIT_CONFIG_VALUE_1": "/workspaces/plcc-ng"
+		"GIT_CONFIG_VALUE_1": "/workspaces/change-requests",
+		"GIT_CONFIG_KEY_2": "safe.directory",
+		"GIT_CONFIG_VALUE_2": "/workspaces/plcc-ng",
+		"GIT_CONFIG_KEY_3": "credential.https://github.com.helper",
+		"GIT_CONFIG_VALUE_3": "",
+		"GIT_CONFIG_KEY_4": "credential.https://github.com.helper",
+		"GIT_CONFIG_VALUE_4": "!gh auth git-credential"
 	},
-	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude && npm i -g backlog.md@$(cat /workspaces/dev/.backlog-version) && git -C /workspaces/dev status >/dev/null && git -C ${containerWorkspaceFolder} status >/dev/null && ${containerWorkspaceFolder}/bin/install/claude-imports.bash",
+	"remoteEnv": {
+		"SSH_AUTH_SOCK": ""
+	},
+	"postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude /home/vscode/.config /home/vscode/.config/gh && git -C ${containerWorkspaceFolder} status >/dev/null && ${containerWorkspaceFolder}/bin/install/claude-imports.bash && ${containerWorkspaceFolder}/bin/install/shared-clones.bash && ${containerWorkspaceFolder}/bin/install/backlog.bash && git -C /workspaces/dev status >/dev/null && git -C /workspaces/change-requests status >/dev/null",
 
 	"customizations": {
+		"codespaces": {
+			"repositories": {
+				"ourPLCC/dev": { "permissions": { "contents": "write" } },
+				"ourPLCC/change-requests": { "permissions": { "contents": "write" } }
+			}
+		},
 		"vscode": {
 			"settings":
 			{
+				"git.terminalAuthentication": false,
+				"github.gitAuthentication": false,
 				"plantuml.server": "https://www.plantuml.com/plantuml",
 				"plantuml.render": "PlantUMLServer",
 				"files.insertFinalNewline": true,
@@ -52,7 +73,5 @@
 		}
 	},
 
-	"postStartCommand": "curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_INSTALL_STACK=0 BOOTSTRAP_HASKELL_INSTALL_HLS=0 sh && (grep -q ghcup ~/.bashrc || echo '. ~/.ghcup/env' >> ~/.bashrc) && pdm install"
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"postStartCommand": "${containerWorkspaceFolder}/bin/install/shared-clones.bash; ${containerWorkspaceFolder}/bin/install/backlog.bash --check; curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_INSTALL_STACK=0 BOOTSTRAP_HASKELL_INSTALL_HLS=0 sh && (grep -q ghcup ~/.bashrc || echo '. ~/.ghcup/env' >> ~/.bashrc) && pdm install"
 }
