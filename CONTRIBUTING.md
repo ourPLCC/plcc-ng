@@ -14,16 +14,33 @@ of either kind.
 
 ## Development environment
 
-Open the repo in its devcontainer. Before the container is created, it clones
-the [ourPLCC/dev](https://github.com/ourPLCC/dev) repo beside this one, as
-`../dev`, unless that folder already exists. The container mounts it at
-`/workspaces/dev`, points the `backlog` CLI at it through `BACKLOG_CWD`, and
-installs the pinned `backlog` version. In the tracker, this repo's `project`
-value is `plcc-ng`. Old plcc-ng issue numbers still resolve: `#160` is
-`CR-160`.
+Open the repo in its devcontainer, on a Linux, macOS, or Windows host or in a
+Codespace. Nothing runs on the host. The container mounts two named volumes
+that every ourPLCC container on the machine shares: `ourplcc-dev` at
+`/workspaces/dev` and `ourplcc-change-requests` at
+`/workspaces/change-requests`. When it is created and each time it starts,
+[bin/install/shared-clones.bash](bin/install/shared-clones.bash) clones
+[ourPLCC/dev](https://github.com/ourPLCC/dev) and
+[ourPLCC/change-requests](https://github.com/ourPLCC/change-requests) into
+them if they are not there yet, and brings `dev`'s `main` up to date. If a
+clone fails, say because you are offline, the container still starts; run that
+script again once you are online. The container points the `backlog` CLI at
+the tracker through `BACKLOG_CWD`, and
+[bin/install/backlog.bash](bin/install/backlog.bash) installs the version
+`dev` pins. In the tracker, this repo's `project` value is `plcc-ng`. Old
+plcc-ng issue numbers still resolve: `#160` is `CR-160`.
 
-If you cloned the tracker under its old name, rename the host folder
-`../change-requests` to `../dev` before rebuilding the container.
+You push from inside the container, through `gh`, with a token of your own.
+Setting up that token, pushing tracker changes with `bin/push.bash`, what the
+container cannot do, and moving from the old host clone of `dev` are in the
+org guide's
+[Working in a devcontainer](https://github.com/ourPLCC/dev/blob/main/CONTRIBUTING.md#working-in-a-devcontainer).
+
+On a Windows host, open the repo with VS Code's **Dev Containers: Clone
+Repository in Container Volume**: bind mounts from Windows are slow, and a
+Windows clone commits a new script without its executable bit (mark it with
+`git update-index --chmod=+x`). It also speeds up macOS hosts. It is optional
+on both.
 
 [AGENTS.md](AGENTS.md) imports files from `../dev`. Claude Code loads imports
 from outside the repo only once they are approved, and until then skips them
@@ -56,6 +73,8 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 |---|---|
 | [bin/install/pdm.bash](bin/install/pdm.bash) | Install `pdm` via pip if not already on PATH. Idempotent. |
 | [bin/install/bats.bash](bin/install/bats.bash) | Install the pinned `bats` version under `~/.local/` if not already present. Idempotent. |
+| [bin/install/shared-clones.bash](bin/install/shared-clones.bash) | Clone `ourPLCC/dev` and `ourPLCC/change-requests` into the shared volumes if missing, point the tracker's hooks at `dev`'s, and fast-forward `dev`'s `main` when it is clean. Run by the devcontainer on creation and on every start. Idempotent. |
+| [bin/install/backlog.bash](bin/install/backlog.bash) | Install the `backlog` version pinned in `/workspaces/dev/.backlog-version`. With `--check`, only warn when the installed version differs (run on every start). Idempotent. |
 | [bin/install/claude-imports.bash](bin/install/claude-imports.bash) | Approve [AGENTS.md](AGENTS.md)'s imports from `../dev` in `~/.claude.json`. Run by the devcontainer on creation. Idempotent. |
 
 ### Test
