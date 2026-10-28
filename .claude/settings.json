@@ -25,6 +25,13 @@
       "Bash(bin/test/functional.bash)",
       "Bash(check-jsonschema:*)",
       "Bash(backlog:*)"
+    ],
+    "deny": [
+      "Bash(gh pr merge:*)",
+      "Bash(gh auth login:*)",
+      "Bash(gh auth refresh:*)",
+      "Bash(gh auth token:*)",
+      "Read(~/.config/gh/**)"
     ]
   },
   "enabledPlugins": {
