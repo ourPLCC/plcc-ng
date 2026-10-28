@@ -12,8 +12,9 @@ DEV="${OURPLCC_DEV:-/workspaces/dev}"
 VERSION_FILE="${DEV}/.backlog-version"
 
 installed_version() {
+    # A broken install reads as none, so --check still succeeds.
     if command -v backlog &>/dev/null; then
-        backlog --version
+        backlog --version 2>/dev/null || true
     fi
 }
 

@@ -88,6 +88,18 @@ EOF
     [ -z "$output" ]
 }
 
+@test "--check warns but succeeds when backlog --version fails" {
+    pin 1.53.0
+    cat > "${STUB_BIN}/backlog" <<EOF
+#!/usr/bin/env bash
+exit 1
+EOF
+    chmod +x "${STUB_BIN}/backlog"
+    run "${SCRIPT}" --check
+    [ "$status" -eq 0 ]
+    [ -n "$output" ]
+}
+
 @test "--check warns when backlog is not installed" {
     pin 1.53.0
     run "${SCRIPT}" --check
