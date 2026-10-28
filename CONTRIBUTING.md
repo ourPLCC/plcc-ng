@@ -23,14 +23,15 @@ that every ourPLCC container on the machine shares: `ourplcc-dev` at
 [ourPLCC/dev](https://github.com/ourPLCC/dev) and
 [ourPLCC/change-requests](https://github.com/ourPLCC/change-requests) into
 them if they are not there yet, and brings `dev`'s `main` up to date. If a
-clone fails, say because you are offline, the container still starts; run that
-script again once you are online. The container points the `backlog` CLI at
-the tracker through `BACKLOG_CWD`, and
-[bin/install/backlog.bash](bin/install/backlog.bash) installs the version
-`dev` pins. In the tracker, this repo's `project` value is `plcc-ng`. Old
+clone fails, say because you are offline, the container still starts; once
+you are online, run that script again, then
+[bin/install/backlog.bash](bin/install/backlog.bash), which installs the
+version `dev` pins and is skipped when a clone fails. The container points the
+`backlog` CLI at the tracker through `BACKLOG_CWD`. In the tracker, this repo's `project` value is `plcc-ng`. Old
 plcc-ng issue numbers still resolve: `#160` is `CR-160`.
 
-You push from inside the container, through `gh`, with a token of your own.
+You push from inside the container, through `gh`, with a token of your own
+(in a Codespace, with the token GitHub gives it).
 Setting up that token, pushing tracker changes with `bin/push.bash`, what the
 container cannot do, and moving from the old host clone of `dev` are in the
 org guide's
@@ -73,7 +74,7 @@ All operational commands live in [bin/](bin/). **Before writing a new script, ch
 |---|---|
 | [bin/install/pdm.bash](bin/install/pdm.bash) | Install `pdm` via pip if not already on PATH. Idempotent. |
 | [bin/install/bats.bash](bin/install/bats.bash) | Install the pinned `bats` version under `~/.local/` if not already present. Idempotent. |
-| [bin/install/shared-clones.bash](bin/install/shared-clones.bash) | Clone `ourPLCC/dev` and `ourPLCC/change-requests` into the shared volumes if missing, point the tracker's hooks at `dev`'s, and fast-forward `dev`'s `main` when it is clean. Run by the devcontainer on creation and on every start. Idempotent. |
+| [bin/install/shared-clones.bash](bin/install/shared-clones.bash) | Clone `ourPLCC/dev` and `ourPLCC/change-requests` into the shared volumes if missing, point the tracker's hooks at `dev`'s, and fast-forward `dev`'s `main` when `dev` is a clean checkout of `main`. Run by the devcontainer on creation and on every start. Idempotent. |
 | [bin/install/backlog.bash](bin/install/backlog.bash) | Install the `backlog` version pinned in `/workspaces/dev/.backlog-version`. With `--check`, only warn when the installed version differs (run on every start). Idempotent. |
 | [bin/install/claude-imports.bash](bin/install/claude-imports.bash) | Approve [AGENTS.md](AGENTS.md)'s imports from `../dev` in `~/.claude.json`. Run by the devcontainer on creation. Idempotent. |
 
